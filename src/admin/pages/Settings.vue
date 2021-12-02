@@ -305,9 +305,10 @@
                                 // If flat or percentage product_price or product_quantity or vendor_sale or commission is set. Remove the required field.
                                 let all_commisions = [ 'flat', 'percentage', 'product_price', 'product_quantity', 'vendor_sale', 'admin_percentage', 'additional_fee' ];
                                 if ( all_commisions.includes( value['commission_type'] ) ) {
-                                    this.errors = this.errors.filter(val => !all_commisions.includes(val));
+                                    this.errors = this.errors.filter(val => ! all_commisions.includes(val));
                                 }
 
+                                // Validation for new commission section input values.
                                 let new_commisions = [ 'product_price', 'product_quantity', 'vendor_sale' ];
                                 if ( new_commisions.includes( value['commission_type'] ) ) {
                                     const commission_type = value['commission_type']
@@ -331,74 +332,70 @@
                 return false;
             },
 
-            validateProductPriceAndQuantityCommission( commission_items = [], section, validateionItem = 'product_price' ){
-                const product_price_errors = [];
+            validateProductPriceAndQuantityCommission( commission_items = [], section, validateion_item = 'product_price' ){
+                // Declaring needed variables.
+                const fields_errors                    = [];
+                const new_commissions_and_other_fields = [ 'product_price', 'product_quantity', 'vendor_sale', 'rule', 'commission_type' ];
+                const percentage_error_messages        = {
+                    flat: this.__( 'Please Provide flat Commission Value', 'dokan' ),
+                    percentage: this.__( 'Please Provide Prcentage Commission Value', 'dokan' ),
+                    combine: this.__( 'Please Provide Both Flat And Percentage Commission Value', 'dokan' ),
+                };
 
+                /**
+                 * Looping through commission section items ( Product Price / Product Quantity / Vendor Sale )
+                 * Then validating all inputs value in commission section ( Product Price / Product Quantity / Vendor Sale )
+                 *
+                 * commission_items.forEach( ( element, index ) => {.....
+                 * This is looping commission secitons ( Product Price / Product Quantity / Vendor Sale )
+                 */
                 commission_items.forEach( ( element, index ) => {
+                    /**
+                     * Object.keys(element).forEach( validaiton_element => {.....
+                     * Here looping through every input fields of single commissino section( Product Price / Product Quantity / Vendor Sale )
+                     * input fields are (Product cost/product quantity/vendor sale), Rule, Commission type, commission value.
+                     */
                     Object.keys(element).forEach( validaiton_element => {
-                        const inputValue   = element[validaiton_element];
-                        let fieldSettings  = this.settingFields[section][validateionItem].fields;
-                        let curretSettings = fieldSettings;
+                        let input_value     = element[validaiton_element];
+                        let fieldSettings   = this.settingFields[section][validateion_item].fields;
+                        let curret_settings = fieldSettings[validaiton_element];
+                        let field_values    = this.settingValues[section][validateion_item];
 
-                        let fieldValues    = this.settingValues[section][validateionItem];
-
-                        if ( 'percentage' === validaiton_element || 'flat' === validaiton_element || 'combine' === validaiton_element ) {
-                            curretSettings = fieldSettings['admin_commission'].options[validaiton_element];
-                        } else {
-                            curretSettings = fieldSettings[validaiton_element];
-                        }
-
-                        if ( ( 'product_price' === validaiton_element || 'product_quantity' === validaiton_element || 'vendor_sale' === validaiton_element ) && ! this.isValidNumber( inputValue ) ) {
-                            product_price_errors.push({
+                        if ( new_commissions_and_other_fields.includes( validaiton_element ) && ( 'number' === curret_settings.type ? ( ! this.is_valid_number( input_value ) ) : ( ! this.is_valid_string( input_value ) ) ) ) {
+                            fields_errors.push({
                                 index: index,
                                 field: validaiton_element,
-                                msg: curretSettings.error_msg
+                                msg: curret_settings.error_msg
                             });
-                        } else if ( 'rule' === validaiton_element && ! this.isValidString( inputValue ) ) {
-                            product_price_errors.push({
-                                index: index,
-                                field: 'rule',
-                                msg: curretSettings.error_msg
-                            });
-                        } else if ( 'commission_type' === validaiton_element && ! this.isValidString( inputValue ) ) {
-                            product_price_errors.push({
-                                index: index,
-                                field: 'commission_type',
-                                msg: curretSettings.error_msg
-                            });
-                        } else if ( 'commission_type' === validaiton_element && this.isValidString( inputValue ) && ( 'combine' === inputValue || 'flat' === inputValue || 'percentage' === inputValue ) ) {
-                            const currentCommission = fieldValues[index];
+                        }
 
-                            if ( 'combine' === inputValue && ( ! this.isValidNumber( currentCommission.flat ) || ! this.isValidNumber( currentCommission.percentage ) ) ) {
-                                product_price_errors.push({
-                                    index: index,
-                                    field: 'combine',
-                                    msg: this.__( 'Please provide both flat and percentage commission value', 'dokan' )                                                   });
-                            } else if ( 'percentage' === inputValue && ! this.isValidNumber( currentCommission.percentage ) ) {
-                                product_price_errors.push({
-                                    index: index,
-                                    field: 'percentage',
-                                    msg: this.__( 'Please provide percentage commission value', 'dokan' )
-                                });
-                            } else if ( 'flat' === inputValue && ! this.isValidNumber( currentCommission.flat ) ) {
-                                product_price_errors.push({
-                                    index: index,
-                                    field: 'flat',
-                                    msg: this.__( 'Please provide flat commission value', 'dokan' )
-                                });
-                            }
+                        // Validating and injecting error for commissions ( flat/percentage/combine )
+                        const currentCommission = field_values[index];
+                        if (
+                            ( 'commission_type' === validaiton_element && this.is_valid_string( input_value ) )
+                            && (
+                                ( 'combine' === input_value && ( ! this.is_valid_number( currentCommission.flat ) || ! this.is_valid_number( currentCommission.percentage ) ) )
+                                || ( 'percentage' === input_value && ! this.is_valid_number( currentCommission.percentage ) )
+                                || ( 'flat' === input_value && ! this.is_valid_number( currentCommission.flat ) )
+                            )
+                        ) {
+                            fields_errors.push({
+                                index: index,
+                                field: input_value   ,
+                                msg: percentage_error_messages[input_value]
+                            });
                         }
                     });
                 });
 
-                return product_price_errors;
+                return fields_errors;
             },
 
-            isValidNumber( value ) {
+            is_valid_number( value ) {
                 if ( '' !== value
-                && undefined !== value
-                && null !== value
-                && value == Number( value )
+                    && undefined !== value
+                    && null !== value
+                    && value == Number( value )
                 ) {
                     return true;
                 }
@@ -406,10 +403,10 @@
                 return false;
             },
 
-            isValidString( value ) {
+            is_valid_string( value ) {
                 if ( '' !== value
-                && undefined !== value
-                && null !== value
+                    && undefined !== value
+                    && null !== value
                 ) {
                     return true;
                 }
