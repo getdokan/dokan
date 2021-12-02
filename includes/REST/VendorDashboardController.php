@@ -111,7 +111,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'balance'  => dokan_get_seller_balance( dokan_get_current_user_id() ),
                 'orders'   => dokan_count_orders( dokan_get_current_user_id() ),
                 'products' => dokan_count_posts( 'product', dokan_get_current_user_id() ),
-                'earnings' => dokan_author_total_sales( dokan_get_current_user_id() ),
+                'earnings' => wc_price( dokan_author_total_sales( dokan_get_current_user_id() ) ),
                 'views'    => dokan_author_pageviews( dokan_get_current_user_id() ),
             ]
         );
