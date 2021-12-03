@@ -92,6 +92,10 @@ class ProductCache {
             return;
         }
 
+        // Delete caches for wp-post and post-meta for this product.
+        wp_cache_delete( $product->get_id(), 'posts' );
+        wp_cache_delete( $product->get_id(), 'post_meta' );
+
         try {
             $store       = \WC_Data_Store::load( 'product-' . $product->get_type() );
             $class       = $store->get_current_class_name();
