@@ -6,4 +6,4 @@ Scenario('Check Customer Registration Functionality', ({ I }) => {
     helpers.pageStatus();
     helpers.customerRegisterSuccess();
     // helpers.checkVendor();
-});
+}).tag('@registration').tag('@multipleScenario');

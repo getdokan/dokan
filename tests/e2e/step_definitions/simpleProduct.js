@@ -1,38 +1,41 @@
 var Factory = require('rosie').Factory;
 var faker = require('faker');
 const helpers = require('../pages/helpers');
-const I = inject();
+const features_helper = require('../pages/features_helper');
+const { I, loginAs } = inject();
 
 Given('Existing balance of Admin will be checked', () => {
-    I.loginAsAdmin();
-    helpers.adminBalanceCheck();
+    loginAs('admin');
+    features_helper.adminBalanceCheck();
     helpers.adminlogout();
 });
 When('Customer purchase a simple product', () => {
-    I.loginAsCustomer();
-    I.amOnPage('/shop');
-    I.click('simple_pro_3');
+    loginAs('Customer');
+    // I.amOnPage('/shop');
+    // I.amOnPage('/store/vendor-one/');
+    // I.click('simple_pro_3');
+    I.amOnPage('/product/simple_pro_3-5/');
     //Place A new Order
     helpers.placeOrder();
     helpers.customerlogout();
 });
 Then('Admin balance and commission will be checked', async() => {
-    I.loginAsAdmin();
+    loginAs('admin');
     //Change Order Status
-    await helpers.getAdminComission();
-    await helpers.checkAdminCalculation();
+    await features_helper.getAdminComission();
+    await features_helper.checkAdminCalculation();
     helpers.adminlogout();
 });
 
 Then('Vendors Existing Balance will be checked and approve order status to comeplete', async() => {
-    I.loginAsVendor();
+    loginAs('Vendor');
     //Check Vendors Existing Balance
-    await helpers.checkExistingBalance();
+    await features_helper.checkExistingBalance();
     //Change Order Status
     helpers.updateOrderStatus();
 });
 Then('Vendor balance will update with addition of new order earning amount', async() => {
-    await helpers.grabCurrentEarnings();
+    await features_helper.grabCurrentEarnings();
     //start calculation matching
-    await helpers.balanceAssertEqual();
+    await features_helper.balanceAssertEqual();
 });

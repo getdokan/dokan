@@ -3,6 +3,7 @@ const { assert } = require("console");
 var Factory = require('rosie').Factory;
 var faker = require('faker');
 const locator = require('./locator');
+const helpers = require('./helpers');
 
 const { I } = inject();
 
@@ -788,7 +789,7 @@ module.exports = {
         I.seeElement("//span[@id='select2-filter-vendors-container']");
         I.seeElement("//span[@id='select2-filter-status-container']");
         I.seeElement("//input[@id='post-search-input']");
-        I.seeElement('#export-logs'); 
+        I.seeElement('#export-all-logs'); 
     },
     BackendToolPageElements() {
         // I.click('Tools'); //Click event facing problems because WordPress Have another Tools menu
@@ -914,8 +915,8 @@ module.exports = {
     },
     PrivacyPolicySettingsTabElements() {
         I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
-        I.click('Privacy Policy');
-        I.waitForElement('#dokan_privacy');
+        I.fillField('.dokan-admin-search-settings', 'Privacy Policy');
+        I.waitForElement('#dokan_privacy', 5);
         I.checkError();
     },
     SellerVerificationSettingsTabElements() {
@@ -976,7 +977,7 @@ module.exports = {
             I.selectOption("//select[@id='dokan_rma[rma_enable_refund_request]']","yes");
             I.selectOption("//select[@id='dokan_rma[rma_enable_coupon_request]']","yes");
             I.click("Save Changes");
-            I.see('Setting has been saved successfully.');
+            I.waitForText(locator.ConfirmationMessage, 5, locator.ConfirmationLocator);
     },
     WholesaleSettingsTabElements() {
         I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');
@@ -993,8 +994,7 @@ module.exports = {
         I.checkOption("//input[@id='dokan_wholesale[wholesale_price_display][wholesale_customer]']");
         I.selectOption("//select[@id='dokan_wholesale[need_approval_for_wholesale_customer]']","Yes");
         I.click("Save Changes");
-        I.see('Setting has been saved successfully.'); 
-        
+        I.waitForText(locator.ConfirmationMessage, 5, locator.ConfirmationLocator);        
     },
     GeolocationSettingsTabElements() {
         I.amOnPage('/wp-admin/admin.php?page=dokan#/settings');

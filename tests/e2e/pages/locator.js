@@ -6,10 +6,11 @@ module.exports = {
     // Locators for  Registration page
     // Start
     RegisterLocator: '#customer_login > div.u-column2.col-2',
-    EmailAddress: faker.internet.email(),
+    CustomerEmailAddress: faker.internet.email(),
+    VendorEmailAddress: faker.internet.email(),
     EmailAdressLocator: 'Email address',
     PasswordInput: '#reg_password',
-    PasswordValue: 'alvitazwar@54321',
+    PasswordValue: faker.internet.password(),
     FirstName: faker.name.firstName(),
     Lastname: faker.name.lastName(),
     Shopname: faker.name.title(),
@@ -21,7 +22,7 @@ module.exports = {
     // BDD LOCATORS 
     VendorBalance: '//article[@class="dokan-withdraw-area"]/div/div[1]/strong/span[1]',
     //Purchase Checkout Page
-    ViewCart: 'div.woocommerce-notices-wrapper > div > a',
+    ViewCart: 'div.woocommerce > div > a',
     ProceedCheckout: 'div.cart-collaterals > div > div > a',
     BillingFirstName: '#billing_first_name',
     BillingLastName: '#billing_last_name',
@@ -42,7 +43,7 @@ module.exports = {
     CustomerMoveCursor: 'div.dokani-user-menu > ul > li.dropdown > a',
 
     //WP-Admin Page Locators
-    AdminBalance: ' div.inside > div > div > ul > li.commission > a > strong > div',
+    AdminBalance: 'div.inside > div > div > ul > li.commission > a > strong > div',
     AdminComission: 'tr:nth-child(1) > td.column.commission > div',
     AdminMoveCursor: '#wp-admin-bar-my-account > a',
     AdminLogout: '#wp-admin-bar-logout > a',
@@ -306,7 +307,9 @@ module.exports = {
     //Product Create
     AuctionProduct: faker.commerce.productName(),
 
-
+    //Backend Settings
+    ConfirmationMessage:'Setting has been saved successfully.',
+    ConfirmationLocator: '#setting-message_updated',
 
 
 
