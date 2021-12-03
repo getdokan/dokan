@@ -41,7 +41,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                     $featured_products = dokan_get_featured_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-featured-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e('Featured Products'); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Featured Products' ); ?></h2>
 
                 <?php if ( $featured_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -72,7 +72,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                     $latest_products = dokan_get_latest_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-latest-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e('Latest Products'); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Latest Products' ); ?></h2>
 
                 <?php if ( $latest_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -103,7 +103,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                     $best_selling_products = dokan_get_best_selling_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-best-selling-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e('Best Selling Products'); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Best Selling Products' ); ?></h2>
 
                 <?php if ( $best_selling_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -131,10 +131,10 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                 // Top rated products section
                 if ( empty( $products_appearance['hide_top_rated_products'] ) ) {
-                    $top_rated_products = dokan_get_latest_products( $items_to_show, $vendor_id );
+                    $top_rated_products = dokan_get_top_rated_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-top-rated-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e('Top Rated Products'); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Top Rated Products' ); ?></h2>
 
                 <?php if ( $top_rated_products->have_posts() ) { ?>
                     <div class="seller-items">
