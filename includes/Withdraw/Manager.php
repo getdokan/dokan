@@ -243,7 +243,7 @@ class Manager {
             if ( empty( $user_id ) ) {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
             } else {
-                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
             Cache::set( $cache_key, $result, $cache_group );
