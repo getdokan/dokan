@@ -90,10 +90,16 @@ export default {
         background-color: rgb(0,0,0);
         background-color: rgba(0,0,0,0.7);
         z-index: 99900;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
         .modal-content {
             background-color: #fefefe;
             z-index: 100000;
-            margin: 8% auto;
+            margin: 4% auto;
             width: 500px;
             border-radius: 9px;
             text-align: center;
@@ -112,10 +118,10 @@ export default {
                     background: #fff;
                     font-size: 18px;
                     display: inline-block;
-                    line-height: 0px;
-                    padding: 20px 14px;
+                    line-height: 0;
+                    padding: 20px 13px;
                     &:before {
-                        content: "X";
+                        content: "\2715";
                         color: #484848;
                     }
                 }
