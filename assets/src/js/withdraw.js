@@ -151,7 +151,7 @@
             const nonce    = $( '#dokan-withdraw-schedule-request-submit').data('security');
             const form     = $( '#withdraw-schedule-popup' );
             const reserve  = $( '#withdraw-remaining-amount' ).val();
-            const minimum  = $( '#minimum-withdraw-amountt' ).val();
+            const minimum  = $( '#minimum-withdraw-amount' ).val();
 
             form.block({
                 message: null,
