@@ -562,7 +562,6 @@ jQuery(function($) {
   var Dokan_Seller = {
     init: function() {
       this.validate(this);
-      this.generateRecaptchaToken(this);
     },
 
     validate: function(self) {
@@ -573,7 +572,7 @@ jQuery(function($) {
           label.removeClass('error');
           label.remove();
         },
-        submitHandler: function(form) {
+        submitHandler: async function(form) {
           $(form).block({
             message: null,
             overlayCSS: {
@@ -582,6 +581,9 @@ jQuery(function($) {
               opacity: 0.6
             }
           });
+
+          // Run recaptcha executer
+          await self.executeRecaptcha();
 
           var form_data = $(form).serialize();
           $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -602,27 +604,23 @@ jQuery(function($) {
       });
     },
 
-    // Generate recaptcha token
-    generateRecaptchaToken: function(self) {
-      $('form#dokan-form-contact-seller input[type=submit]').hover(function() {
-        self.executeRecaptcha();
-      });
-    },
-
     // Execute recaptcha token request
     executeRecaptcha: function() {
-      const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
-      const recaptchaTokenField = $('#dokan_recaptcha_token');
+      return new Promise( function( resolve ) {
+        const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
+        const recaptchaTokenField = $('#dokan_recaptcha_token');
 
-      // Check if the recaptcha site key exists
-      if ( '' === recaptchaSiteKey ) {
-          return;
-      }
+        // Check if the recaptcha site key exists
+        if ( '' === recaptchaSiteKey ) {
+          resolve();
+        }
 
-      // Execute recaptcha after passing checks
-      grecaptcha.ready(function() {
-        grecaptcha.execute(recaptchaSiteKey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
-          recaptchaTokenField.val(token);
+        // Execute recaptcha after passing checks
+        grecaptcha.ready(function() {
+          grecaptcha.execute(recaptchaSiteKey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
+            recaptchaTokenField.val(token);
+            resolve();
+          });
         });
       });
     }
