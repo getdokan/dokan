@@ -102,12 +102,10 @@
         },
         handleWithdrawRequest: ( e ) => {
             e.preventDefault();
-            const amount  = $( 'input#withdraw-amount').val();
-            const nonce   = $( 'input#dokan_withdraw_nonce').val();
-            const form    = $( '#withdraw-request-popup' );
-            const method  = $( '#withdraw-method' ).val();
-            const reserve = $( '#withdraw-remaining-amount' ).val();
-            const minimum = $( '#minimum-withdraw-amountt' ).val();
+            const amount = $( 'input#withdraw-amount').val();
+            const nonce  = $( 'input#dokan_withdraw_nonce').val();
+            const form   = $( '#withdraw-request-popup' );
+            const method = $( '#withdraw-method' ).val();
 
             form.block({
                 message: null,
@@ -124,8 +122,6 @@
                     nonce: nonce,
                     amount: amount,
                     method: method,
-                    reserve: reserve,
-                    minimum: minimum,
                 },
                 ( response ) => {
                     if ( response.success ) {
@@ -154,6 +150,8 @@
             const schedule = $( "input[name='withdraw-schedule']:checked").val();
             const nonce    = $( '#dokan-withdraw-schedule-request-submit').data('security');
             const form     = $( '#withdraw-schedule-popup' );
+            const reserve  = $( '#withdraw-remaining-amount' ).val();
+            const minimum  = $( '#minimum-withdraw-amountt' ).val();
 
             form.block({
                 message: null,
@@ -168,7 +166,9 @@
                 {
                     action: 'dokan_handle_withdraw_schedule_change_request',
                     nonce: nonce,
-                    schedule: schedule
+                    schedule: schedule,
+                    reserve: reserve,
+                    minimum: minimum,
                 },
                 ( response ) => {
                     if ( response.success ) {
