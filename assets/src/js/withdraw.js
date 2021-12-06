@@ -102,10 +102,12 @@
         },
         handleWithdrawRequest: ( e ) => {
             e.preventDefault();
-            const amount = $( 'input#withdraw-amount').val();
-            const nonce  = $( 'input#dokan_withdraw_nonce').val();
-            const form   = $( '#withdraw-request-popup' );
-            const method = $( '#withdraw-method' ).val();
+            const amount  = $( 'input#withdraw-amount').val();
+            const nonce   = $( 'input#dokan_withdraw_nonce').val();
+            const form    = $( '#withdraw-request-popup' );
+            const method  = $( '#withdraw-method' ).val();
+            const reserve = $( '#withdraw-remaining-amount' ).val();
+            const minimum = $( '#minimum-withdraw-amountt' ).val();
 
             form.block({
                 message: null,
@@ -122,6 +124,8 @@
                     nonce: nonce,
                     amount: amount,
                     method: method,
+                    reserve: reserve,
+                    minimum: minimum,
                 },
                 ( response ) => {
                     if ( response.success ) {

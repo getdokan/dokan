@@ -442,7 +442,7 @@ function dokan_withdraw_is_disabled() {
  */
 function dokan_withdraw_get_withdrawable_active_methods() {
     return array_diff(
-        dokan_withdraw_get_active_methods(),
+        array_filter( dokan_withdraw_get_active_methods() ),
         apply_filters(
             'dokan_withdraw_split_payment_supported_methods',
             [
