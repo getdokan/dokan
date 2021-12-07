@@ -598,7 +598,6 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
-            wp_enqueue_script( 'dokan-form-validate' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
@@ -644,6 +643,21 @@ class Assets {
 
             if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['page'] ) ) {
                 wp_enqueue_script( 'dokan-flot' );
+            }
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['orders'] ) ||
+                isset( $wp->query_vars['coupons'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['return-request'] ) ||
+                isset( $wp->query_vars['staffs'] ) ||
+                isset( $wp->query_vars['tools'] ) ||
+                isset( $wp->query_vars['support'] ) ||
+                isset( $wp->query_vars['edit-account'] ) ||
+                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'payment', 'shipping', 'regular-shipping', 'social', 'seo' ], true ) )
+            ) {
+                wp_enqueue_script( 'dokan-form-validate' );
             }
         }
 
