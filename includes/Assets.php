@@ -623,13 +623,9 @@ class Assets {
             if (
                 isset( $wp->query_vars['page'] ) ||
                 isset( $wp->query_vars['products'] ) ||
-                isset( $wp->query_vars['reports'] ) ||
-                isset( $wp->query_vars['analytics'] )
+                isset( $wp->query_vars['reports'] )
             ) {
-                if ( ! $wp->query_vars['analytics'] ) {
-                    wp_enqueue_script( 'dokan-chart' );
-                }
-
+                wp_enqueue_script( 'dokan-chart' );
                 wp_enqueue_script( 'dokan-flot' );
             }
 
