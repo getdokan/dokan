@@ -14,7 +14,7 @@
     $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
     $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
 
-    $products_appearance     = dokan_get_option( 'store_products', 'dokan_appearance' );
+    $products_appearance     = dokan_get_option( 'store_products_section', 'dokan_appearance' );
     $show_featured_products  = isset( $profile_info['show_featured_products'] ) ? $profile_info['show_featured_products'] : 'yes';
     $show_latest_products    = isset( $profile_info['show_latest_products'] ) ? $profile_info['show_latest_products'] : 'yes';
     $show_best_sell_products = isset( $profile_info['show_best_sell_products'] ) ? $profile_info['show_best_sell_products'] : 'yes';
@@ -161,7 +161,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-        
+
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
