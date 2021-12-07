@@ -13,8 +13,9 @@ $store_info          = $store_user->get_shop_info();
 $map_location        = $store_user->get_location();
 $layout              = get_theme_mod( 'store_layout', 'left' );
 $vendor_id           = $store_user->id;
-$items_to_show       = apply_filters( 'dokan_store_products_section_number_of_items', get_option( 'woocommerce_catalog_columns', 3 ) );
 $products_appearance = dokan_get_option( 'store_products', 'dokan_appearance' );
+$store_settings      = dokan_get_store_info( $vendor_id );
+$items_to_show       = apply_filters( 'dokan_store_products_section_number_of_items', get_option( 'woocommerce_catalog_columns', 3 ) );
 $extra_product_block = 0;
 
 get_header( 'shop' );
@@ -38,7 +39,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 dokan_get_template_part( 'store-header' );
 
                 // Featured products section
-                if ( empty( $products_appearance['hide_featured_products'] ) ) {
+                if ( empty( $products_appearance['hide_featured_products'] ) && ( empty( $store_settings['show_featured_products'] ) || 'yes' === $store_settings['show_featured_products'] ) ) {
                     $extra_product_block = 1;
                     $featured_products   = dokan_get_featured_products( $items_to_show, $vendor_id );
                     ?>
@@ -70,7 +71,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Latest products section
-                if ( empty( $products_appearance['hide_latest_products'] ) ) {
+                if ( empty( $products_appearance['hide_latest_products'] ) && ( empty( $store_settings['show_latest_products'] ) || 'yes' === $store_settings['show_latest_products'] ) ) {
                     $extra_product_block = 1;
                     $latest_products     = dokan_get_latest_products( $items_to_show, $vendor_id );
                     ?>
@@ -102,7 +103,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Best selling products section
-                if ( empty( $products_appearance['hide_best_selling_products'] ) ) {
+                if ( empty( $products_appearance['hide_best_selling_products'] ) && ( empty( $store_settings['show_best_sell_products'] ) || 'yes' === $store_settings['show_best_sell_products'] ) ) {
                     $extra_product_block   = 1;
                     $best_selling_products = dokan_get_best_selling_products( $items_to_show, $vendor_id );
                     ?>
@@ -134,7 +135,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Top rated products section
-                if ( empty( $products_appearance['hide_top_rated_products'] ) ) {
+                if ( empty( $products_appearance['hide_top_rated_products'] ) && ( empty( $store_settings['show_top_rated_products'] ) || 'yes' === $store_settings['show_top_rated_products'] ) ) {
                     $extra_product_block = 1;
                     $top_rated_products  = dokan_get_top_rated_products( $items_to_show, $vendor_id );
                     ?>
