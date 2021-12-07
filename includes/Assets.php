@@ -565,6 +565,10 @@ class Assets {
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-timepicker' );
+
+            if ( isset( $wp->query_vars['products'] ) ) {
+                wp_enqueue_style( 'dokan-magnific-popup' );
+            }
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
