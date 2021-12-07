@@ -231,8 +231,8 @@
                                <input @click="toggleSelect" type="checkbox" :checked="isAllSelected" :title="isAllSelected ? __( 'Unselect All', 'dokan-lite' ) : __( 'Select All', 'dokan-lite' )">
                                <label>{{ selected_modules.length }} {{ __( 'Selected', 'dokan-lite' ) }}</label>
                            </li>
-                           <li class="activate" @click="onBulkAction('activate')"> {{ __( 'Activate', 'dokan-lite' ) }} </li>
-                           <li class="deactivate" @click="onBulkAction('deactivate')"> {{ __( 'Deactivate', 'dokan-lite' ) }} </li>
+                           <li class="activate" :class="{ 'loading': is_activating }" @click="onBulkAction('activate')"> {{ is_activating ? __( 'Activating..', 'dokan-lite' ) : __( 'Activate', 'dokan-lite' ) }} </li>
+                           <li class="deactivate" :class="{ 'loading': is_deactivating }" @click="onBulkAction('deactivate')"> {{ is_deactivating ? __( 'Deactivating..', 'dokan-lite' ) : __( 'Deactivate', 'dokan-lite' ) }} </li>
                            <li @click="selected_modules = []"> {{ __( 'Cancel', 'dokan-lite' ) }} </li>
                        </ul>
                        <ul v-else>
@@ -243,7 +243,7 @@
                            </li>
                        </ul>
                    </template>
-                   <div class="premium-modules" v-else>
+                   <div class="premium-modules-menu" v-else>
                        <h3> Premium Modules (12) </h3>
                        <div class="premium-modules-hint">
                            <svg class="premium-modules-hint-icon" width="13" height="20" viewBox="0 0 13 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -390,62 +390,143 @@
             </div>
 
             <div class="module-content">
-                <div class="dokan-modules" :class="currentView" v-if="isLoaded">
-                    <template v-if="filteredModules.length > 0">
-                        <div class="module-card" v-for="module in filteredModules">
-                            <div class="module-icon">
-                                <img :src="module.thumbnail" :alt="module.name" />
-                            </div>
-                            <div class="module-checkbox">
-                                <input type="checkbox" v-model="selected_modules" name="selected_modules[]" :value="module.id">
-                                <label :style="selected_modules.length ? 'opacity: 1' : ''"></label>
-                            </div>
-                            <div class="module-details">
-                                <h3>
-                                    {{ module.name }}
-                                    <label v-tooltip="module.name" :title="module.name">
-                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M13.8293 2.31625C10.7408 -0.771911 5.73322 -0.772255 2.64437 2.31625C-0.44413 5.40475 -0.443786 10.4123 2.64437 13.5011C5.73287 16.589 10.7404 16.5893 13.8293 13.5011C16.9174 10.4123 16.9171 5.40509 13.8293 2.31625ZM9.26804 11.3472C9.26804 11.917 8.80625 12.3788 8.23648 12.3788C7.66671 12.3788 7.20492 11.917 7.20492 11.3472V7.22099C7.20492 6.65122 7.66671 6.18943 8.23648 6.18943C8.80625 6.18943 9.26804 6.65122 9.26804 7.22099V11.3472ZM8.21826 5.4577C7.62407 5.4577 7.22795 5.03682 7.24033 4.51726C7.22795 3.97259 7.62407 3.56444 8.23029 3.56444C8.83685 3.56444 9.22059 3.97294 9.23331 4.51726C9.23297 5.03682 8.83719 5.4577 8.21826 5.4577Z" fill="#B1B1B1"/>
-                                        </svg>
-                                    </label>
-                                </h3>
-                                <p v-html="module.description"></p>
-                                <span>Vendor</span>
-                            </div>
-                            <div class="module-actions">
-                                <div class="module-action-links">
-                                    <a :href="module.doc_link" target="_blank">
-                                        <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M7.57717 5.71454C7.2983 5.71454 7.07201 5.48826 7.07201 5.20939V0.663086H0.505155C0.226285 0.663086 0 0.889371 0 1.16824V15.649C0 15.9279 0.226285 16.1542 0.505155 16.1542H11.6183C11.8972 16.1542 12.1235 15.9279 12.1235 15.649V5.71454H7.57717ZM6.56689 13.1233H2.52571C2.24684 13.1233 2.02056 12.897 2.02056 12.6182C2.02056 12.3393 2.24684 12.113 2.52571 12.113H6.56686C6.84573 12.113 7.07201 12.3393 7.07201 12.6182C7.07201 12.897 6.84576 13.1233 6.56689 13.1233ZM9.59776 11.1027H2.52571C2.24684 11.1027 2.02056 10.8764 2.02056 10.5976C2.02056 10.3187 2.24684 10.0924 2.52571 10.0924H9.59776C9.87663 10.0924 10.1029 10.3187 10.1029 10.5976C10.1029 10.8764 9.87663 11.1027 9.59776 11.1027ZM9.59776 9.08216H2.52571C2.24684 9.08216 2.02056 8.85588 2.02056 8.577C2.02056 8.29813 2.24684 8.07185 2.52571 8.07185H9.59776C9.87663 8.07185 10.1029 8.29813 10.1029 8.577C10.1029 8.85588 9.87663 9.08216 9.59776 9.08216Z" fill="#B1B1B1"/>
-                                        </svg>
-
-                                        {{ __( 'Docs', 'dokan-lite' ) }}
-                                    </a>
-                                    <a :href="module.doc_link" target="_blank">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8 0C3.58178 0 0 3.58172 0 8C0 12.4183 3.58178 16 8 16C12.4182 16 16 12.4183 16 8C16 3.58172 12.4182 0 8 0ZM10.765 8.42406L6.765 10.9241C6.68406 10.9746 6.59203 11 6.5 11C6.41663 11 6.33313 10.9792 6.25756 10.9373C6.09863 10.8491 6 10.6819 6 10.5V5.5C6 5.31812 6.09863 5.15088 6.25756 5.06275C6.4165 4.97412 6.61084 4.9795 6.765 5.07594L10.765 7.57594C10.9111 7.6675 11 7.82766 11 8C11 8.17234 10.9111 8.33253 10.765 8.42406Z" fill="#B1B1B1"/>
-                                        </svg>
-
-                                        {{ __( 'Video', 'dokan-lite' ) }}
-                                    </a>
+                <div class="dokan-modules" v-if="isLoaded">
+                    <div class="free-modules" :class="currentView">
+                        <template v-if="filteredModules.length > 0">
+                            <div class="module-card" v-for="module in filteredModules">
+                                <div class="module-icon">
+                                    <img :src="module.thumbnail" :alt="module.name" />
                                 </div>
-                                <div>
-                                    <switches :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                <div class="module-checkbox">
+                                    <input type="checkbox" v-model="selected_modules" name="selected_modules[]" :value="module.id">
+                                    <label :style="selected_modules.length ? 'opacity: 1' : ''"></label>
+                                </div>
+                                <div class="module-details">
+                                    <h3>
+                                        {{ module.name }}
+                                        <label v-if="module.required_plugins" v-tooltip="module.required_plugins" :title="module.required_plugins">
+                                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8293 2.31625C10.7408 -0.771911 5.73322 -0.772255 2.64437 2.31625C-0.44413 5.40475 -0.443786 10.4123 2.64437 13.5011C5.73287 16.589 10.7404 16.5893 13.8293 13.5011C16.9174 10.4123 16.9171 5.40509 13.8293 2.31625ZM9.26804 11.3472C9.26804 11.917 8.80625 12.3788 8.23648 12.3788C7.66671 12.3788 7.20492 11.917 7.20492 11.3472V7.22099C7.20492 6.65122 7.66671 6.18943 8.23648 6.18943C8.80625 6.18943 9.26804 6.65122 9.26804 7.22099V11.3472ZM8.21826 5.4577C7.62407 5.4577 7.22795 5.03682 7.24033 4.51726C7.22795 3.97259 7.62407 3.56444 8.23029 3.56444C8.83685 3.56444 9.22059 3.97294 9.23331 4.51726C9.23297 5.03682 8.83719 5.4577 8.21826 5.4577Z" fill="#B1B1B1"/>
+                                            </svg>
+                                        </label>
+                                    </h3>
+                                    <p v-html="module.description"></p>
+                                    <span>Vendor</span>
+                                </div>
+                                <div class="module-actions">
+                                    <div class="module-action-links">
+                                        <a :href="module.doc_link" target="_blank">
+                                            <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.57717 5.71454C7.2983 5.71454 7.07201 5.48826 7.07201 5.20939V0.663086H0.505155C0.226285 0.663086 0 0.889371 0 1.16824V15.649C0 15.9279 0.226285 16.1542 0.505155 16.1542H11.6183C11.8972 16.1542 12.1235 15.9279 12.1235 15.649V5.71454H7.57717ZM6.56689 13.1233H2.52571C2.24684 13.1233 2.02056 12.897 2.02056 12.6182C2.02056 12.3393 2.24684 12.113 2.52571 12.113H6.56686C6.84573 12.113 7.07201 12.3393 7.07201 12.6182C7.07201 12.897 6.84576 13.1233 6.56689 13.1233ZM9.59776 11.1027H2.52571C2.24684 11.1027 2.02056 10.8764 2.02056 10.5976C2.02056 10.3187 2.24684 10.0924 2.52571 10.0924H9.59776C9.87663 10.0924 10.1029 10.3187 10.1029 10.5976C10.1029 10.8764 9.87663 11.1027 9.59776 11.1027ZM9.59776 9.08216H2.52571C2.24684 9.08216 2.02056 8.85588 2.02056 8.577C2.02056 8.29813 2.24684 8.07185 2.52571 8.07185H9.59776C9.87663 8.07185 10.1029 8.29813 10.1029 8.577C10.1029 8.85588 9.87663 9.08216 9.59776 9.08216Z" fill="#B1B1B1"/>
+                                            </svg>
+
+                                            {{ __( 'Docs', 'dokan-lite' ) }}
+                                        </a>
+                                        <a :href="module.doc_link" target="_blank">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8 0C3.58178 0 0 3.58172 0 8C0 12.4183 3.58178 16 8 16C12.4182 16 16 12.4183 16 8C16 3.58172 12.4182 0 8 0ZM10.765 8.42406L6.765 10.9241C6.68406 10.9746 6.59203 11 6.5 11C6.41663 11 6.33313 10.9792 6.25756 10.9373C6.09863 10.8491 6 10.6819 6 10.5V5.5C6 5.31812 6.09863 5.15088 6.25756 5.06275C6.4165 4.97412 6.61084 4.9795 6.765 5.07594L10.765 7.57594C10.9111 7.6675 11 7.82766 11 8C11 8.17234 10.9111 8.33253 10.765 8.42406Z" fill="#B1B1B1"/>
+                                            </svg>
+
+                                            {{ __( 'Video', 'dokan-lite' ) }}
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <switches :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                    </div>
                                 </div>
                             </div>
+                        </template>
+
+                        <template v-else>
+                            <p><strong>{{ __( 'No modules found.', 'dokan' ) }}</strong></p>
+                        </template>
+                    </div>
+
+                    <div class="premium-modules-header">
+                        <h3>{{ __( 'Premium modules', 'dokan-lite' ) }}</h3>
+                        <div class="upgrade-plan" @click="toggleSidebar">
+                            {{ __( 'Upgrade' ) }}
+                            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.8646 9.47003C10.8646 9.10282 10.5701 8.80566 10.2063 8.80566H2.66464C2.30078 8.80566 2.00635 9.10282 2.00635 9.47003C2.00635 9.83724 2.30078 10.1344 2.66464 10.1344H10.2063C10.5701 10.1344 10.8646 9.83604 10.8646 9.47003Z" fill="url(#paint0_linear_574_7298)"/>
+                                <path d="M1.44472 4.37137C1.45528 4.37137 1.46466 4.37137 1.47521 4.37025L2.49789 7.91962H6.43615H10.3732L11.3959 4.37025C11.4065 4.37025 11.4158 4.37137 11.4264 4.37137C11.8498 4.37137 12.1934 4.04185 12.1934 3.63586C12.1934 3.22986 11.8498 2.90034 11.4264 2.90034C11.003 2.90034 10.6594 3.22986 10.6594 3.63586C10.6594 3.71458 10.6723 3.79106 10.6969 3.86191L8.84743 4.89883L6.85953 1.73858C7.06596 1.607 7.20317 1.38095 7.20317 1.12565C7.20317 0.719657 6.85953 0.390137 6.43616 0.390137C6.0128 0.390137 5.66915 0.719657 5.66915 1.12565C5.66915 1.38207 5.80521 1.607 6.0128 1.73858L4.0249 4.89883L2.1754 3.86191C2.19885 3.79106 2.21293 3.71458 2.21293 3.63586C2.21293 3.22986 1.8693 2.90034 1.44592 2.90034C1.02136 2.90034 0.677734 3.22986 0.677734 3.63586C0.677734 4.04185 1.02134 4.37137 1.44472 4.37137Z" fill="url(#paint1_linear_574_7298)"/>
+                                <defs>
+                                    <linearGradient id="paint0_linear_574_7298" x1="6.43546" y1="10.1344" x2="6.43546" y2="8.80567" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FD5900"/>
+                                        <stop offset="1" stop-color="#FFDE00"/>
+                                    </linearGradient>
+                                    <linearGradient id="paint1_linear_574_7298" x1="6.43558" y1="7.91962" x2="6.43558" y2="0.390142" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#FD5900"/>
+                                        <stop offset="1" stop-color="#FFDE00"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
-                    </template>
+                    </div>
 
-                    <template v-else>
-                        <p><strong>{{ __( 'No modules found.', 'dokan' ) }}</strong></p>
-                    </template>
+                    <div class="premium-modules" :class="currentView">
+                        <div class="module-card" v-for="module in modules">
+                                <div class="module-icon">
+                                    <img :src="module.thumbnail" :alt="module.name" />
+                                </div>
+                                <div class="module-checkbox">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="0.798828" y="0.935547" width="16.6977" height="16.6977" rx="2" fill="#1B1E22"/>
+                                        <path d="M13.8651 13.47C13.8651 13.1028 13.5706 12.8057 13.2068 12.8057H5.66513C5.30127 12.8057 5.00684 13.1028 5.00684 13.47C5.00684 13.8372 5.30127 14.1344 5.66513 14.1344H13.2068C13.5706 14.1344 13.8651 13.836 13.8651 13.47Z" fill="url(#paint0_linear_574_7546)"/>
+                                        <path d="M4.44472 8.37137C4.45528 8.37137 4.46466 8.37137 4.47521 8.37025L5.49789 11.9196H9.43615H13.3732L14.3959 8.37025C14.4065 8.37025 14.4158 8.37137 14.4264 8.37137C14.8498 8.37137 15.1934 8.04185 15.1934 7.63586C15.1934 7.22986 14.8498 6.90034 14.4264 6.90034C14.003 6.90034 13.6594 7.22986 13.6594 7.63586C13.6594 7.71458 13.6723 7.79106 13.6969 7.86191L11.8474 8.89883L9.85953 5.73858C10.066 5.607 10.2032 5.38095 10.2032 5.12565C10.2032 4.71966 9.85953 4.39014 9.43616 4.39014C9.0128 4.39014 8.66915 4.71966 8.66915 5.12565C8.66915 5.38207 8.80521 5.607 9.0128 5.73858L7.0249 8.89883L5.1754 7.86191C5.19885 7.79106 5.21293 7.71458 5.21293 7.63586C5.21293 7.22986 4.8693 6.90034 4.44592 6.90034C4.02136 6.90034 3.67773 7.22986 3.67773 7.63586C3.67773 8.04185 4.02134 8.37137 4.44472 8.37137Z" fill="url(#paint1_linear_574_7546)"/>
+                                        <defs>
+                                            <linearGradient id="paint0_linear_574_7546" x1="9.43595" y1="14.1344" x2="9.43595" y2="12.8057" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FD5900"/>
+                                                <stop offset="1" stop-color="#FFDE00"/>
+                                            </linearGradient>
+                                            <linearGradient id="paint1_linear_574_7546" x1="9.43558" y1="11.9196" x2="9.43558" y2="4.39014" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#FD5900"/>
+                                                <stop offset="1" stop-color="#FFDE00"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <div class="module-details">
+                                    <h3>
+                                        {{ module.name }}
+                                        <label v-tooltip="module.name" :title="module.name">
+                                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.8293 2.31625C10.7408 -0.771911 5.73322 -0.772255 2.64437 2.31625C-0.44413 5.40475 -0.443786 10.4123 2.64437 13.5011C5.73287 16.589 10.7404 16.5893 13.8293 13.5011C16.9174 10.4123 16.9171 5.40509 13.8293 2.31625ZM9.26804 11.3472C9.26804 11.917 8.80625 12.3788 8.23648 12.3788C7.66671 12.3788 7.20492 11.917 7.20492 11.3472V7.22099C7.20492 6.65122 7.66671 6.18943 8.23648 6.18943C8.80625 6.18943 9.26804 6.65122 9.26804 7.22099V11.3472ZM8.21826 5.4577C7.62407 5.4577 7.22795 5.03682 7.24033 4.51726C7.22795 3.97259 7.62407 3.56444 8.23029 3.56444C8.83685 3.56444 9.22059 3.97294 9.23331 4.51726C9.23297 5.03682 8.83719 5.4577 8.21826 5.4577Z" fill="#B1B1B1"/>
+                                            </svg>
+                                        </label>
+                                    </h3>
+                                    <p v-html="module.description"></p>
+                                    <span>Vendor</span>
+                                </div>
+                                <div class="module-actions">
+                                    <div class="module-action-links">
+                                        <a :href="module.doc_link" target="_blank">
+                                            <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.57717 5.71454C7.2983 5.71454 7.07201 5.48826 7.07201 5.20939V0.663086H0.505155C0.226285 0.663086 0 0.889371 0 1.16824V15.649C0 15.9279 0.226285 16.1542 0.505155 16.1542H11.6183C11.8972 16.1542 12.1235 15.9279 12.1235 15.649V5.71454H7.57717ZM6.56689 13.1233H2.52571C2.24684 13.1233 2.02056 12.897 2.02056 12.6182C2.02056 12.3393 2.24684 12.113 2.52571 12.113H6.56686C6.84573 12.113 7.07201 12.3393 7.07201 12.6182C7.07201 12.897 6.84576 13.1233 6.56689 13.1233ZM9.59776 11.1027H2.52571C2.24684 11.1027 2.02056 10.8764 2.02056 10.5976C2.02056 10.3187 2.24684 10.0924 2.52571 10.0924H9.59776C9.87663 10.0924 10.1029 10.3187 10.1029 10.5976C10.1029 10.8764 9.87663 11.1027 9.59776 11.1027ZM9.59776 9.08216H2.52571C2.24684 9.08216 2.02056 8.85588 2.02056 8.577C2.02056 8.29813 2.24684 8.07185 2.52571 8.07185H9.59776C9.87663 8.07185 10.1029 8.29813 10.1029 8.577C10.1029 8.85588 9.87663 9.08216 9.59776 9.08216Z" fill="#B1B1B1"/>
+                                            </svg>
+
+                                            {{ __( 'Docs', 'dokan-lite' ) }}
+                                        </a>
+                                        <a :href="module.doc_link" target="_blank">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8 0C3.58178 0 0 3.58172 0 8C0 12.4183 3.58178 16 8 16C12.4182 16 16 12.4183 16 8C16 3.58172 12.4182 0 8 0ZM10.765 8.42406L6.765 10.9241C6.68406 10.9746 6.59203 11 6.5 11C6.41663 11 6.33313 10.9792 6.25756 10.9373C6.09863 10.8491 6 10.6819 6 10.5V5.5C6 5.31812 6.09863 5.15088 6.25756 5.06275C6.4165 4.97412 6.61084 4.9795 6.765 5.07594L10.765 7.57594C10.9111 7.6675 11 7.82766 11 8C11 8.17234 10.9111 8.33253 10.765 8.42406Z" fill="#B1B1B1"/>
+                                            </svg>
+
+                                            {{ __( 'Video', 'dokan-lite' ) }}
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <switches :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
                 </div>
                 <div class="loading" v-else>
                     <loading></loading>
                 </div>
             </div>
         </div>
-        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>
+<!--        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>-->
     </div>
 </template>
 
@@ -475,6 +556,8 @@ export default {
             selected_categories: [],
             premium_modules: false,
             showPopup: true,
+            is_activating: false,
+            is_deactivating: false,
             filterMenu: [
                 {
                     title: 'My Modules',
@@ -607,12 +690,22 @@ export default {
         },
 
         onBulkAction( action ) {
-            let message = ( 'activate' == action ) ? this.__( 'All selected modules are successfully activated', 'dokan' ) : this.__( 'All selected modules are successfully deactivated', 'dokan' )
+            let message;
+
+            if ( 'activate' === action ) {
+                this.is_activating = true;
+                message = this.__( 'All selected modules are successfully activated', 'dokan' );
+            } else {
+                this.is_deactivating = true;
+                message = this.__('All selected modules are successfully deactivated', 'dokan');
+            }
 
             dokan.api.put('/admin/modules/' + action, {
                 module: this.selected_modules
             })
                 .done(response => {
+                    this.is_activating = false;
+                    this.is_deactivating = false;
                     this.selected_modules = [];
                     this.fetchModules();
                     this.$notify({
@@ -735,6 +828,16 @@ export default {
         box-sizing: border-box;
         border: 1px solid #e2e2e2;
         overflow-y: auto;
+
+        @media only screen and (max-width: 767px) {
+            position: absolute;
+            width: 100vw;
+            top: 45px;
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            top: 40px;
+        }
 
         &::-webkit-scrollbar {
             display: none;
@@ -912,6 +1015,7 @@ export default {
         align-items: center;
         justify-content: space-between;
         margin-bottom: 30px;
+        flex-wrap: wrap;
 
         .module-filter-left {
             ul {
@@ -923,9 +1027,17 @@ export default {
                     margin-bottom: 0;
                     cursor: pointer;
 
+                    @media only screen and (max-width: 767px) {
+                        margin-right: 10px;
+                    }
+
                     &:first-child {
                         padding-right: 30px;
                         border-right: 1px solid #d0d0d0;
+
+                        @media only screen and (max-width: 767px) {
+                            padding-right: 10px;
+                        }
                     }
 
                     a {
@@ -1003,6 +1115,7 @@ export default {
 
                     &.activate,
                     &.deactivate {
+                        position: relative;
                         font-size: .75rem;
                         font-weight: 500;
                         font-family: "SF Pro Text", sans-serif;
@@ -1012,9 +1125,39 @@ export default {
                         padding: 8px 20px;
                     }
 
+                    &.loading {
+                        padding-right: 35px;
+                        transition: all 0.3s ease;
+                        opacity: .7;
+
+                        &:after {
+                            position: absolute;
+                            content: "";
+                            top: 8px;
+                            right: 10px;
+                            pointer-events: none;
+                            width: 14px;
+                            height: 14px;
+                            border: 2px solid #f0f0f1;
+                            border-top-color: #2271b1;
+                            border-radius: 50%;
+                            animation: spin 1.5s linear infinite;
+                        }
+                    }
+
+                    @keyframes spin {
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+
                     &.activate {
                         color: #00b0a6;
                         margin-right: 15px;
+
+                        @media only screen and (max-width: 767px) {
+                            margin-right: 10px;
+                        }
                     }
 
                     &.deactivate {
@@ -1030,7 +1173,7 @@ export default {
                 }
             }
 
-            .premium-modules {
+            .premium-modules-menu {
                 display: flex;
                 align-items: center;
 
@@ -1102,6 +1245,12 @@ export default {
                         transition: all .3s ease;
                         box-sizing: border-box;
 
+                        @media only screen and (max-width: 767px) {
+                            right: -96px;
+                            top: 60px;
+                            left: unset;
+                        }
+
                         &:before,
                         &:after {
                             content: "";
@@ -1110,6 +1259,11 @@ export default {
                             border-right: 10px solid transparent;
                             top: -9px;
                             left: 22px;
+
+                            @media only screen and (max-width: 767px) {
+                                right: 101px;
+                                left: unset;
+                            }
                         }
 
                         &:before {
@@ -1189,6 +1343,10 @@ export default {
             display: flex;
             align-items: center;
 
+            @media only screen and (max-width: 767px){
+                margin-top: 30px;
+            }
+
             .module-category-filter {
                 display: flex;
                 align-items: center;
@@ -1223,6 +1381,11 @@ export default {
                         visibility: hidden;
                         transition: all .3s ease;
 
+                        @media only screen and (max-width: 767px){
+                            left: -4px;
+                            right: unset;
+                        }
+
                         &:before,
                         &:after {
                             content: "";
@@ -1231,6 +1394,11 @@ export default {
                             border-right: 10px solid transparent;
                             top: -9px;
                             right: 22px;
+
+                            @media only screen and (max-width: 767px){
+                                left: 9px;
+                                right: unset;
+                            }
                         }
 
                         &:before {
@@ -1333,11 +1501,18 @@ export default {
                 margin: 0 30px;
                 position: relative;
 
+                @media only screen and (min-width: 374px){
+                    margin: 0 20px;
+                }
+
                 input {
                     border: 1px solid #e2e2e2;
                     border-radius: 3px;
                     padding: 4px 16px;
-                    width: 270px;
+
+                    @media only screen and (min-width: 769px){
+                        width: 270px;
+                    }
 
                     &::placeholder {
                         color: #a5acb1;
@@ -1423,52 +1598,52 @@ export default {
         }
 
         .dokan-modules {
-            display: grid;
-            grid-gap: 20px;
-            grid-template-columns: repeat(1, 1fr);
+            .free-modules,
+            .premium-modules {
+                display: grid;
+                grid-gap: 20px;
+                grid-template-columns: repeat(1, 1fr);
 
-            &.grid-view {
-                @media only screen and (min-width: 768px) {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-
-                @media only screen and (min-width: 1200px) {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-
-                @media only screen and (min-width: 1600px) {
-                    grid-template-columns: repeat(4, 1fr);
-                }
-
-                .module-card {
-                    grid-template: "icon checkbox"
-                               "details details"
-                               "actions actions";
-
-                    .module-details {
-                        margin-bottom: 30px;
+                &.grid-view {
+                    @media only screen and (min-width: 768px) {
+                        grid-template-columns: repeat(2, 1fr);
                     }
 
-                    .module-icon {
-                        img {
-                            margin-bottom: 5px;
+                    @media only screen and (min-width: 1200px) {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+
+                    @media only screen and (min-width: 1600px) {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+
+                    .module-card {
+                        grid-template: "icon checkbox"
+                                   "details details"
+                                   "actions actions";
+
+                        .module-details {
+                            margin-bottom: 30px;
+                        }
+
+                        .module-icon {
+                            img {
+                                margin-bottom: 5px;
+                            }
                         }
                     }
                 }
 
+                &.list-view {
+                    .module-card {
+                        grid-template: "icon details details details details details details details details actions actions checkbox";
+                    }
 
-            }
-
-            &.list-view {
-                .module-card {
-                    grid-template: "icon details details details details actions checkbox";
-                    column-gap: 15px;
-                }
-
-                .module-checkbox {
-                    display: flex;
-                    align-items: center;
-                    justify-content: end;
+                    .module-checkbox {
+                        display: flex;
+                        align-items: center;
+                        justify-content: end;
+                    }
                 }
             }
 
@@ -1619,6 +1794,36 @@ export default {
                     }
                 }
             }
+
+            .premium-modules-header {
+                display: flex;
+                align-items: center;
+                margin: 47px 0 25px 0;
+
+                h3 {
+                    color: #1a9ed4;
+                    font-size: 13px;
+                    font-weight: 600;
+                    font-family: "SF Pro Text", sans-serif;
+                    border-bottom: 2px solid #1a9ed4;
+                    margin: 0 17px 0 0;
+                }
+
+                .upgrade-plan {
+                    color: #fff;
+                    background: #1b1e22;
+                    border-radius: 53px;
+                    padding: 7px 16px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+
+                    svg {
+                        margin-left: 6px;
+                    }
+                }
+            }
+
         }
     }
 }
