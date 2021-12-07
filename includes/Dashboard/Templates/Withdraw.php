@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
 use WP_Error;
 
 /**
@@ -639,7 +640,7 @@ class Withdraw {
         $payment_methods         = array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() );
         $default_withdraw_method = dokan_withdraw_get_default_method( $current_user_id );
         dokan_get_template_part( 'withdraw/request-form', '', array(
-            'amount'          => $balance,
+            'amount'          => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
             'withdraw_method' => $default_withdraw_method,
             'payment_methods' => $payment_methods,
         ) );
