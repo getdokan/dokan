@@ -563,11 +563,19 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'jquery-ui' );
             wp_enqueue_style( 'woocommerce-general' );
-            wp_enqueue_style( 'dokan-select2-css' );
             wp_enqueue_style( 'dokan-timepicker' );
 
             if ( isset( $wp->query_vars['products'] ) ) {
                 wp_enqueue_style( 'dokan-magnific-popup' );
+            }
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['orders'] ) ||
+                isset( $wp->query_vars['coupons'] ) ||
+                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
+            ) {
+                wp_enqueue_style( 'dokan-select2-css' );
             }
         }
 
