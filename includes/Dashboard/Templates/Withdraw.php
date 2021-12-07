@@ -625,7 +625,7 @@ class Withdraw {
         }
 
         if ( dokan()->withdraw->has_pending_request( $current_user_id ) ) {
-            $message = sprintf( '<p>%s</p><p>%s</p>', __( 'You already have pending withdraw request(s).', 'dokan-lite' ), __( 'Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' ) );
+            $message = __( 'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.', 'dokan-lite' );
             $this->show_error_messages( $message );
             return;
         }
