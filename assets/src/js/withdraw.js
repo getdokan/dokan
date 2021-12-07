@@ -152,6 +152,7 @@
             const form     = $( '#withdraw-schedule-popup' );
             const reserve  = $( '#withdraw-remaining-amount' ).val();
             const minimum  = $( '#minimum-withdraw-amount' ).val();
+            const method   = $( '#preferred-payment-method' ).val();
 
             form.block({
                 message: null,
@@ -169,6 +170,7 @@
                     schedule: schedule,
                     reserve: reserve,
                     minimum: minimum,
+                    method: method,
                 },
                 ( response ) => {
                     if ( response.success ) {
