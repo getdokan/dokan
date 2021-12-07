@@ -599,9 +599,7 @@ class Assets {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
             wp_enqueue_script( 'dokan-form-validate' );
-            wp_enqueue_script( 'dokan-chart' );
             wp_enqueue_script( 'dokan-flot' );
-            wp_enqueue_script( 'dokan-select2-js' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
@@ -626,6 +624,23 @@ class Assets {
                 isset( $wp->query_vars['tools'] )
             ) {
                 wp_enqueue_script( 'dokan-tabs' );
+            }
+
+            if (
+                isset( $wp->query_vars['page'] ) ||
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['reports'] )
+            ) {
+                wp_enqueue_script( 'dokan-chart' );
+            }
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['orders'] ) ||
+                isset( $wp->query_vars['coupons'] ) ||
+                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
+            ) {
+                wp_enqueue_script( 'dokan-select2-js' );
             }
         }
 
