@@ -626,6 +626,7 @@ class Assets {
                 isset( $wp->query_vars['reports'] )
             ) {
                 wp_enqueue_script( 'dokan-chart' );
+                wp_enqueue_script( 'dokan-flot' );
             }
 
             if (
@@ -639,10 +640,6 @@ class Assets {
 
             if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['coupons'] ) ) {
                 wp_enqueue_script( 'dokan-popup' );
-            }
-
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['page'] ) ) {
-                wp_enqueue_script( 'dokan-flot' );
             }
 
             if (
