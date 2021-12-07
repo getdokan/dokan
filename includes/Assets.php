@@ -598,7 +598,6 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
-            wp_enqueue_script( 'dokan-tooltip' );
             wp_enqueue_script( 'dokan-form-validate' );
             wp_enqueue_script( 'dokan-tabs' );
             wp_enqueue_script( 'dokan-chart' );
@@ -610,6 +609,18 @@ class Assets {
             wp_enqueue_script( 'dokan-popup' );
             wp_enqueue_script( 'wc-password-strength-meter' );
             wp_enqueue_script( 'dokan-script' );
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['orders'] ) ||
+                isset( $wp->query_vars['coupons'] ) ||
+                isset( $wp->query_vars['reports'] ) ||
+                isset( $wp->query_vars['return-request'] ) ||
+                isset( $wp->query_vars['support'] ) ||
+                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping', 'regular-shipping', 'seo' ], true ) )
+            ) {
+                wp_enqueue_script( 'dokan-tooltip' );
+            }
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
