@@ -599,7 +599,6 @@ class Assets {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
             wp_enqueue_script( 'dokan-form-validate' );
-            wp_enqueue_script( 'dokan-flot' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
@@ -641,6 +640,10 @@ class Assets {
 
             if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['coupons'] ) ) {
                 wp_enqueue_script( 'dokan-popup' );
+            }
+
+            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['page'] ) ) {
+                wp_enqueue_script( 'dokan-flot' );
             }
         }
 
