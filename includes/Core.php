@@ -23,6 +23,31 @@ class Core {
         add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
         add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
         add_action( 'admin_init', array( $this, 'redirect_after_activate' ), 999 );
+        add_filter( 'dokan_notices', [ $this, 'show_permalink_setting_notice' ] );
+    }
+
+    /**
+     * Display permalink format not working for Dokan notice
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param array $notices
+     *
+     * @return array
+     */
+    public function show_permalink_setting_notice( $notices ) {
+        $structure = get_option( 'permalink_structure' );
+
+        if ( empty( $structure ) || '/archives/%post_id%' === $structure ) {
+            /* translators: %s permalink settings url */
+            $notices[] = [
+                'type'        => 'alert',
+                'description' => sprintf( __( 'The <strong>Plain and Numeric</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href="%s">Settings > Permalinks</a>', 'dokan-lite' ), admin_url( 'options-permalink.php' ) ),
+                'priority'    => 1,
+            ];
+        }
+
+        return $notices;
     }
 
     /**
