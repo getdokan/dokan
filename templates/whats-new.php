@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.2',
+        'released' => '2021-11-30',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Caching Enhancement and Fixes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added tooltips for setting options',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Google Map and Mapbox setting fields will be always visible',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Product was creating via API even selling option was disabled for a vendor',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Withdraw details field value conflict with old withdraw data',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.1',
         'released' => '2021-11-12',
         'changes'  => [

@@ -145,6 +145,14 @@ export default {
                 .done( response => {
                     this.lite_versions = JSON.parse( response );
                     this.loading = false;
+                } )
+                .fail( response => {
+                    this.loading = false;
+                    this.$notify( {
+                        type: 'error',
+                        title: this.__( 'Error', 'dokan-lite' ),
+                        text: this.__( 'Something went wrong', 'dokan-lite' ),
+                    } )
                 } );
         },
 
@@ -154,6 +162,14 @@ export default {
                 .done( response => {
                     this.pro_versions = response;
                     this.loading = false;
+                } )
+                .fail( response => {
+                    this.loading = false;
+                    this.$notify({
+                        type: 'error',
+                        title: this.__( 'Error', 'dokan-lite' ),
+                        text: this.__( 'Something went wrong', 'dokan-lite' ),
+                    } )
                 } );
         },
 
@@ -213,7 +229,7 @@ export default {
 
         goToPosition( id ) {
             $('html, body').animate({
-                scrollTop: $( `#${id}` ).offset().top
+                scrollTop: $( `#${id}` ).offset().top - 50,
             }, 500);
         }
     },
