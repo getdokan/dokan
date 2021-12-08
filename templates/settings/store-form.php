@@ -161,7 +161,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-
+        
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
@@ -196,41 +196,41 @@
         if ( count( $sections ) > 0 ) {
             ?>
             <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
+                <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
 
-            <?php if ( empty( $products_block_appearance['hide_featured_products'] ) ) { ?>
+            <?php if ( empty( $products_block_appearance['hide_featured_products'] ) ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_featured_products" value="yes"<?php checked( $show_featured_products, 'yes' ); ?>> <?php esc_html_e( 'Show featured producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_featured_products" value="yes" <?php checked( $show_featured_products, 'yes' ); ?>> <?php esc_html_e( 'Show featured producdts section', 'dokan-lite' ); ?>
                     </label>
                 </div>
-            <?php } ?>
+            <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_latest_products'] ) ) { ?>
+            <?php if ( empty( $products_block_appearance['hide_latest_products'] ) ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_latest_products" value="yes"<?php checked( $show_latest_products, 'yes' ); ?>> <?php esc_html_e( 'Show latest producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_latest_products" value="yes" <?php checked( $show_latest_products, 'yes' ); ?>> <?php esc_html_e( 'Show latest producdts section', 'dokan-lite' ); ?>
                     </label>
                 </div>
-            <?php } ?>
+            <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_best_selling_products'] ) ) { ?>
+            <?php if ( empty( $products_block_appearance['hide_best_selling_products'] ) ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_best_sell_products" value="yes"<?php checked( $show_best_sell_products, 'yes' ); ?>> <?php esc_html_e( 'Show best selling producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_best_sell_products" value="yes" <?php checked( $show_best_sell_products, 'yes' ); ?>> <?php esc_html_e( 'Show best selling producdts section', 'dokan-lite' ); ?>
                     </label>
                 </div>
-            <?php } ?>
+            <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_top_rated_products'] ) ) { ?>
+            <?php if ( empty( $products_block_appearance['hide_top_rated_products'] ) ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_top_rated_products" value="yes"<?php checked( $show_top_rated_products, 'yes' ); ?>> <?php esc_html_e( 'Show top rated producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_top_rated_products" value="yes" <?php checked( $show_top_rated_products, 'yes' ); ?>> <?php esc_html_e( 'Show top rated producdts section', 'dokan-lite' ); ?>
                     </label>
                 </div>
-            <?php } ?>
+            <?php endif; ?>
             </div>
         </div>
         <?php } ?>

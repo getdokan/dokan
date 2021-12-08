@@ -14,7 +14,6 @@ $map_location              = $store_user->get_location();
 $layout                    = get_theme_mod( 'store_layout', 'left' );
 $vendor_id                 = $store_user->id;
 $products_block_appearance = dokan_get_option( 'store_products_section', 'dokan_appearance' );
-$store_settings            = dokan_get_store_info( $vendor_id );
 $items_to_show             = apply_filters( 'dokan_store_products_section_number_of_items', get_option( 'woocommerce_catalog_columns', 3 ) );
 $extra_product_block       = 0;
 
@@ -39,12 +38,12 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 dokan_get_template_part( 'store-header' );
 
                 // Featured products section
-                if ( empty( $products_block_appearance['hide_featured_products'] ) && ( empty( $store_settings['show_featured_products'] ) || 'yes' === $store_settings['show_featured_products'] ) ) {
+                if ( empty( $products_block_appearance['hide_featured_products'] ) && ( empty( $store_info['show_featured_products'] ) || 'yes' === $store_info['show_featured_products'] ) ) {
                     $extra_product_block = 1;
                     $featured_products   = dokan_get_featured_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-featured-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e( 'Featured Products' ); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Featured Products', 'dokan-lite' ); ?></h2>
 
                 <?php if ( $featured_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -71,12 +70,12 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Latest products section
-                if ( empty( $products_block_appearance['hide_latest_products'] ) && ( empty( $store_settings['show_latest_products'] ) || 'yes' === $store_settings['show_latest_products'] ) ) {
+                if ( empty( $products_block_appearance['hide_latest_products'] ) && ( empty( $store_info['show_latest_products'] ) || 'yes' === $store_info['show_latest_products'] ) ) {
                     $extra_product_block = 1;
                     $latest_products     = dokan_get_latest_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-latest-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e( 'Latest Products' ); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Latest Products', 'dokan-lite' ); ?></h2>
 
                 <?php if ( $latest_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -103,12 +102,12 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Best selling products section
-                if ( empty( $products_block_appearance['hide_best_selling_products'] ) && ( empty( $store_settings['show_best_sell_products'] ) || 'yes' === $store_settings['show_best_sell_products'] ) ) {
+                if ( empty( $products_block_appearance['hide_best_selling_products'] ) && ( empty( $store_info['show_best_sell_products'] ) || 'yes' === $store_info['show_best_sell_products'] ) ) {
                     $extra_product_block   = 1;
                     $best_selling_products = dokan_get_best_selling_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-best-selling-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e( 'Best Selling Products' ); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Best Selling Products', 'dokan-lite' ); ?></h2>
 
                 <?php if ( $best_selling_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -135,12 +134,12 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
                 }
 
                 // Top rated products section
-                if ( empty( $products_block_appearance['hide_top_rated_products'] ) && ( empty( $store_settings['show_top_rated_products'] ) || 'yes' === $store_settings['show_top_rated_products'] ) ) {
+                if ( empty( $products_block_appearance['hide_top_rated_products'] ) && ( empty( $store_info['show_top_rated_products'] ) || 'yes' === $store_info['show_top_rated_products'] ) ) {
                     $extra_product_block = 1;
                     $top_rated_products  = dokan_get_top_rated_products( $items_to_show, $vendor_id );
                     ?>
                 <div id="dokan-top-rated-products" class="dokan-products-display_section">
-                    <h2 class="products-list-heading"><?php esc_html_e( 'Top Rated Products' ); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'Top Rated Products', 'dokan-lite' ); ?></h2>
 
                 <?php if ( $top_rated_products->have_posts() ) { ?>
                     <div class="seller-items">
@@ -168,7 +167,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                 if ( ! empty( $extra_product_block ) ) {
                     ?>
-                    <h2 class="products-list-heading"><?php esc_html_e( 'All Products' ); ?></h2>
+                    <h2 class="products-list-heading"><?php esc_html_e( 'All Products', 'dokan-lite' ); ?></h2>
                     <?php
                 }
                 ?>
