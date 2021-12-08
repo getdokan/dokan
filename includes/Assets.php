@@ -563,18 +563,10 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'jquery-ui' );
             wp_enqueue_style( 'woocommerce-general' );
+            wp_enqueue_style( 'dokan-select2-css' );
 
             if ( isset( $wp->query_vars['products'] ) ) {
                 wp_enqueue_style( 'dokan-magnific-popup' );
-            }
-
-            if (
-                isset( $wp->query_vars['products'] ) ||
-                isset( $wp->query_vars['orders'] ) ||
-                isset( $wp->query_vars['coupons'] ) ||
-                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
-            ) {
-                wp_enqueue_style( 'dokan-select2-css' );
             }
 
             if (
@@ -598,11 +590,6 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
-            wp_enqueue_media();
-            wp_enqueue_script( 'dokan-accounting' );
-            wp_enqueue_script( 'serializejson' );
-            wp_enqueue_script( 'wc-password-strength-meter' );
-            wp_enqueue_script( 'dokan-script' );
 
             if (
                 isset( $wp->query_vars['products'] ) ||
@@ -615,6 +602,8 @@ class Assets {
             ) {
                 wp_enqueue_script( 'dokan-tooltip' );
             }
+
+            wp_enqueue_script( 'dokan-form-validate' );
 
             if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['tools'] ) ) {
                 wp_enqueue_script( 'dokan-tabs' );
@@ -629,33 +618,17 @@ class Assets {
                 wp_enqueue_script( 'dokan-flot' );
             }
 
-            if (
-                isset( $wp->query_vars['products'] ) ||
-                isset( $wp->query_vars['orders'] ) ||
-                isset( $wp->query_vars['coupons'] ) ||
-                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
-            ) {
-                wp_enqueue_script( 'dokan-select2-js' );
-            }
+            wp_enqueue_script( 'dokan-select2-js' );
+            wp_enqueue_media();
+            wp_enqueue_script( 'dokan-accounting' );
+            wp_enqueue_script( 'serializejson' );
 
             if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['coupons'] ) ) {
                 wp_enqueue_script( 'dokan-popup' );
             }
 
-            if (
-                isset( $wp->query_vars['products'] ) ||
-                isset( $wp->query_vars['orders'] ) ||
-                isset( $wp->query_vars['coupons'] ) ||
-                isset( $wp->query_vars['withdraw'] ) ||
-                isset( $wp->query_vars['return-request'] ) ||
-                isset( $wp->query_vars['staffs'] ) ||
-                isset( $wp->query_vars['tools'] ) ||
-                isset( $wp->query_vars['support'] ) ||
-                isset( $wp->query_vars['edit-account'] ) ||
-                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'payment', 'shipping', 'regular-shipping', 'social', 'seo' ], true ) )
-            ) {
-                wp_enqueue_script( 'dokan-form-validate' );
-            }
+            wp_enqueue_script( 'wc-password-strength-meter' );
+            wp_enqueue_script( 'dokan-script' );
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
