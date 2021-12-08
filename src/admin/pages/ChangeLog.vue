@@ -143,7 +143,7 @@ export default {
             this.loading = true;
             dokan.api.get( '/admin/changelog' )
                 .done( response => {
-                    this.lite_versions = response;
+                    this.lite_versions = JSON.parse( response );
                     this.loading = false;
                 } );
         },

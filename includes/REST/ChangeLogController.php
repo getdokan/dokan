@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
+use WeDevs\Dokan\Cache;
 use WP_REST_Server;
 
 /**
@@ -34,7 +35,13 @@ class ChangeLogController extends DokanRESTAdminController {
      * @return WP_REST_Response
      */
     public function get_change_log() {
-        require_once DOKAN_INC_DIR . '/Admin/whats-new.php';
+        $cache_key = 'changelog_lite_' . DOKAN_PLUGIN_VERSION;
+        $changelog = Cache::get_transient( $cache_key );
+
+        if ( false === $changelog ) {
+            require_once DOKAN_DIR . '/templates/whats-new.php';
+            Cache::set_transient( $cache_key, wp_json_encode( $changelog ) );
+        }
 
         return rest_ensure_response( $changelog );
     }
