@@ -260,7 +260,8 @@ export default {
             let self     = this;
             self.loading = true;
 
-            dokan.api.get(`/stores?search=${payload}`, {
+            dokan.api.get(`/stores`, {
+                search: payload,
                 page: this.currentPage,
                 orderby: this.sortBy,
                 order: this.sortOrder
