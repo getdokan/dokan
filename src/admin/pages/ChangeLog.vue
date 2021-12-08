@@ -160,7 +160,7 @@ export default {
             this.loading = true;
             dokan.api.get( '/admin/dokan-pro-changelog' )
                 .done( response => {
-                    this.pro_versions = response;
+                    this.pro_versions = JSON.parse( response );
                     this.loading = false;
                 } )
                 .fail( response => {
