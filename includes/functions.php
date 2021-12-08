@@ -3236,6 +3236,19 @@ function dokan_get_translated_days( $day = '' ) {
         'saturday'  => __( 'Saturday', 'dokan-lite' ),
     ];
 
+    $week_starts_on = get_option( 'start_of_week', 0 );
+    $day_keys       = array_keys( $all_days );
+
+    // Make our start day of the week using by week starts settings.
+    for ( $i = 0; $week_starts_on > $i; $i++ ) {
+        $shifted_key   = $day_keys[ $i ];
+        $shifted_value = $all_days[ $shifted_key ];
+
+        // Unset days and sets in the last.
+        unset( $all_days[ $shifted_key ] );
+        $all_days[ $shifted_key ] = $shifted_value;
+    }
+
     // Get days array if our $days is true.
     if ( empty( $day ) ) {
         return $all_days;
