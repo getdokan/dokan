@@ -13,7 +13,15 @@
         <div class="dokan-clearfix dokan-panel-inner-container">
             <div class="dokan-w8">
                 <p>
-                    <?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?> <strong> <a href="<?php echo function_exists( 'dokan_pro' ) ? esc_url( add_query_arg( 'chart', 'sales_statement', dokan_get_navigation_url( 'reports' ) ) ) : ''; ?>"><?php echo wp_kses_post( $balance ); ?></a></strong><br>
+                    <?php esc_html_e( 'Your Balance:', 'dokan-lite' ); ?> <strong>
+                        <?php if ( function_exists( 'dokan_pro' ) ) : ?>
+                        <a href="<?php echo function_exists( 'dokan_pro' ) ? esc_url( add_query_arg( 'chart', 'sales_statement', dokan_get_navigation_url( 'reports' ) ) ) : ''; ?>"><?php echo wp_kses_post( $balance ); ?></a>
+                        <?php
+                        else :
+                            echo wp_kses_post( $balance );
+                        endif;
+                        ?>
+                    </strong><br>
                     <?php if ( $withdraw_limit !== -1 ) : ?>
                     <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
                     <?php
