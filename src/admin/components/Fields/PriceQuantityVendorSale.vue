@@ -3,18 +3,70 @@
         <span>{{ commission_title }}</span>
 
         <template v-if="'' !== fieldValue[fieldData.name]">
-            <div class="new_commission_body" v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key">
-                <div class="new_commission_body_close"><span @click.prevent="removeCommissionFromList(key)" class="dashicons dashicons-remove"></span></div>
+            <fieldset class="new_commission_fields dokan-commission-wrapper" v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key">
+                <span @click.prevent="removeCommissionFromList(key)" class="dashicons dashicons-no remove-vpq-commission"></span>
+                <div class="commission-content-container">
+                    <div class="commission-inner-type-select">
+                        <label :for="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'">{{ fieldData.fields['commission_type'].label }}</label>
+                        <select :name="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" v-model="fieldValue[fieldData.name][key].commission_type">
+                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['commission_type'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['commission_type'].options[optionVal]"></option>
+                        </select>
+                        <p v-if="currentCommissionError( key, 'commission_type' )" class="dokan-error">
+                            {{ currentCommissionError( key, 'commission_type' ) }}
+                        </p>
+                    </div>
 
-                <div>
-                    <th scope="row">
+                    <div class="commission-inner-types">
+                        <div class="commission-inner-type-middle"><span class="commission-inner-type-middle-text">as</span></div>
+
+                        <div
+                            class="commission-inner-type-percentage"
+                            v-if="'combine' === fieldValue[fieldData.name][key].commission_type || 'percentage' === fieldValue[fieldData.name][key].commission_type"
+                        >
+                            <label >{{ __( 'Percentage', 'dokan' ) }}</label>
+                            <input type="number" :min="fieldData.min" class="dokan-commission-value" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
+                            <p v-if="currentCommissionError( key, 'percentage' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'percentage' ) }}
+                            </p>
+                            <span class="commisson-indecator">%</span>
+                        </div>
+
+                        <div class="commission-inner-type-middle" v-if="'combine' === fieldValue[fieldData.name][key].commission_type"><span class="commission-inner-type-middle-text">+</span></div>
+
+                        <div
+                            class="commission-inner-type-flat"
+                            v-if="'combine' === fieldValue[fieldData.name][key].commission_type || 'flat' === fieldValue[fieldData.name][key].commission_type"
+                        >
+                            <label >{{ __( 'Flat', 'dokan' ) }}</label>
+                            <input type="number" :min="fieldData.min" class="dokan-commission-value" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
+                            <span class="commisson-indecator" v-html="fieldData.currency_symbol"></span>
+                            <p v-if="currentCommissionError( key, 'flat' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'flat' ) }}
+                            </p>
+                            <p v-if="currentCommissionError( key, 'combine' )" class="dokan-error">
+                                {{ currentCommissionError( key, 'combine' ) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="commission-content-container">
+                    <div class="commission-inner-type-select">
+                        <label :for="sectionId + '[' + fieldData.fields['rule'].name +key + ']'">{{ __( 'When', 'dokan' ) }} {{ fieldData.fields['rule'].label }}</label>
+                        <select :name="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" v-model="fieldValue[fieldData.name][key].rule">
+                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['rule'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['rule'].options[optionVal]"></option>
+                        </select>
+
+                        <p v-if="currentCommissionError( key, 'rule' )" class="dokan-error">
+                            {{ currentCommissionError( key, 'rule' ) }}
+                        </p>
+                    </div>
+                    <div class="admin-commission-amount">
                         <label :for="sectionId + '[' + fieldData.fields[id].name +key + ']'">{{ fieldData.fields[id].label }}</label>
-                    </th>
-                    <td>
                         <input
                             type="number"
                             :min="fieldData.min"
-                            class="regular-text"
+                            class="sectionId + '[' + fieldData.fields[id].name +key + ']'"
                             :id="sectionId + '[' + fieldData.fields[id].name +key + ']'"
                             :name="sectionId + '[' + fieldData.fields[id].name +key + ']'"
                             v-model="fieldValue[fieldData.name][key][id]"
@@ -22,78 +74,14 @@
                         <p v-if="currentCommissionError( key, id )" class="dokan-error">
                             {{ currentCommissionError( key, id ) }}
                         </p>
-                    </td>
+                    </div>
                 </div>
 
-                <div>
-                    <th scope="row">
-                        <label :for="sectionId + '[' + fieldData.fields['rule'].name +key + ']'">{{ fieldData.fields['rule'].label }}</label>
-                    </th>
-                    <td>
-                        <select class="regular-text" :name="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" v-model="fieldValue[fieldData.name][key].rule">
-                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['rule'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['rule'].options[optionVal]"></option>
-                        </select>
-
-                        <p v-if="currentCommissionError( key, 'rule' )" class="dokan-error">
-                            {{ currentCommissionError( key, 'rule' ) }}
-                        </p>
-                    </td>
-                </div>
-
-                <div>
-                    <th scope="row">
-                        <label :for="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'">{{ fieldData.fields['commission_type'].label }}</label>
-                    </th>
-                    <td>
-                        <select class="regular-text" :name="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" v-model="fieldValue[fieldData.name][key].commission_type">
-                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['commission_type'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['commission_type'].options[optionVal]"></option>
-                        </select>
-                        <p v-if="currentCommissionError( key, 'commission_type' )" class="dokan-error">
-                            {{ currentCommissionError( key, 'commission_type' ) }}
-                        </p>
-                    </td>
-                </div>
-
-                <div>
-                    <th scope="row">
-                        <label :for="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'">{{ fieldData.fields['admin_commission'].label }}</label>
-                    </th>
-                    <td>
-                        <template v-if="'percentage' === fieldValue[fieldData.name][key].commission_type">
-                            <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
-                            <p v-if="currentCommissionError( key, 'percentage' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'percentage' ) }}
-                            </p>
-                        </template>
-                        <template v-else-if="'flat' === fieldValue[fieldData.name][key].commission_type">
-                            <input type="number" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
-                            <p v-if="currentCommissionError( key, 'flat' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'flat' ) }}
-                            </p>
-                        </template>
-
-                        <template v-else>
-                            <td class="percent_fee product-price-commission">
-                                <input type="text" :min="fieldData.min" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
-                                {{ '%' }}
-                            </td>
-
-                            <td class="fixed_fee product-price-commission">
-                                {{ '+' }}
-                                <input type="text" :min="fieldData.min" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
-                            </td>
-                            <p v-if="currentCommissionError( key, 'combine' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'combine' ) }}
-                            </p>
-                        </template>
-                    </td>
-                </div>
-
-            </div>
+            </fieldset>
         </template>
 
         <div>
-            <button @click.prevent="addNewCommission" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+            <button class="add_new_commission_set" @click.prevent="addNewCommission" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
         </div>
     </td>
 </template>
@@ -164,38 +152,116 @@ export default {
 </script>
 
 <style lang="less" scoped>
+    .dokan-hide{
+        display: none !important;
+    }
+    .dashicons-no-container{
+        display:block;
+        width: 100%;
+        margin-bottom: -25px;
+    }
 
-    .new_commission_body{
+    .new_commission_fields{
+        display:block;
+        box-sizing: border-box;
+        box-shadow: 0 0 0 transparent;
         border-radius: 4px;
-        border: 1px solid #8c8f94;
-        background-color: #fff;
-        padding: 8px;
-        margin: 8px 0;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 8px 0 rgba(140, 143, 148, 0.45);
+        transition: 0.3s;
+        position: relative;
 
-        .new_commission_body_close{
-            display: block;
-            width: 100%;
-            overflow: hidden;
+        & .dashicons-no{
+            cursor: pointer;
+            position: absolute;
+            right: 0%;
+            z-index: 9;
 
-            .dashicons-remove{
-                float: right;
-                display: block;
-                cursor: pointer;
-
-                &:hover{
-                    color: #d63638;
-                }
-
-                &:active{
-                    color: #e2573f;
-                }
+            &:hover{
+                color: #d63638;
             }
         }
 
-        .product-price-commission {
-                padding: 0;
-                margin-bottom: 0;
+        & input, select {
+            border-color: rgba(220, 220, 222, 0.75) !important;
+            box-shadow: inset 0 1px 2px rgb(0 0 0 .4) !important;
         }
     }
 
+    .commission-content-container {
+        display: flex;
+
+        & .admin-commission-amount {
+            flex: 1 1 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        & .commission-inner-type-select {
+            flex: 1 1 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        & .commission-inner-types {
+            flex: 1 1 50%;
+            display: flex;
+            & .commission-inner-type-middle {
+                flex: 1 1 10%;
+                display: flex;
+                justify-content: center;
+                position: relative;
+                & .commission-inner-type-middle-text {
+                    position: absolute;
+                    top: 60%;
+                }
+            }
+            & .commission-inner-type-percentage {
+                flex: 1 1 50%;
+                position:relative;
+            }
+            & .commission-inner-type-flat {
+                flex: 1 1 50%;
+                position:relative;
+            }
+        }
+        & .commission-condition-title{
+            flex: 1 0 40%;
+        }
+    }
+
+    .dokan-commission-value{
+        width: 100%;
+        padding-right: 20px !important;
+    }
+    .commisson-indecator{
+        position: absolute;
+        top: 60%;
+        right: 5px;
+        color: #8c8f94;
+    }
+    .add_new_commission_set {
+        border: none;
+        background-color: rgba(140, 143, 148, 1);
+        border-radius: 4px;
+        padding: 5px 12px;
+        color: #fff;
+        margin-top: -6px;
+        cursor: pointer;
+    }
+    @media screen and (max-width: 960px) {
+        .new_commission_fields{
+            display:block;
+            box-sizing: border-box;
+
+            box-shadow: 0 0 0 transparent;
+            border-radius: 4px;
+            /* border: 1px solid #8c8f94; */
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px 0 rgba(140, 143, 148, 0.45);
+            transition: 0.3s;
+        }
+    }
 </style>
