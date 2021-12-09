@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache;
+
 /**
  * Get help documents for admin
  *
@@ -678,16 +681,21 @@ function dokan_get_global_admin_notices() {
  * @return array | void
  */
 function dokan_get_promo_notices() {
-    $promos = [
-        [
-            'key'        => 'dokan-bfcm2021',
-            'start_date' => '2021-11-19 09:00:00 EST',
-            'end_date'   => '2021-11-30 23:00:00 EST',
-            'title'      => 'Irresistible Black Friday & Cyber Monday Deals.',
-            'content'    => 'Enjoy Up To 50% OFF on Dokan Pro.',
-            'link'       => 'https://wedevs.com/dokan/pricing?utm_medium=text&utm_source=wordpress-dokan-bfcm2021',
-        ],
-    ];
+    $promos = Cache::get_transient( 'dokan_promo_notices' );
+
+    if ( false === $promos ) {
+        $help_url  = 'https://raw.githubusercontent.com/weDevsOfficial/dokan-util/master/promotions.json';
+        $response  = wp_remote_get( $help_url, array( 'timeout' => 15 ) );
+        $promos = wp_remote_retrieve_body( $response );
+
+        if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+            $promos = '[]';
+        }
+
+        Cache::set_transient( 'dokan_promo_notices', $promos, DAY_IN_SECONDS );
+    }
+
+    $promos = json_decode( $promos, true );
 
     $notices          = [];
     $current_time_est = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
@@ -715,8 +723,8 @@ function dokan_get_promo_notices() {
                 'actions'           => [
                     [
                         'type'   => 'primary',
-                        'text'   => __( 'Get Deals', 'dokan-lite' ),
-                        'action' => $promo['link'],
+                        'text'   => $promo['action_title'],
+                        'action' => $promo['action_url'],
                         'target' => '_blank',
                     ],
                 ],
@@ -747,4 +755,15 @@ function dokan_sort_notices_by_priority( $a, $b ) {
     }
 
     return -1;
+}
+
+/**
+ * Check has new version in dokan lite and pro
+ *
+ * @since 3.3.3
+ *
+ * @return bool
+ */
+function dokan_has_new_version() {
+    return ! in_array( DOKAN_PLUGIN_VERSION, get_option( 'dokan_lite_whats_new_versions', array() ) ) || ( dokan()->is_pro_exists() && ! in_array( DOKAN_PRO_PLUGIN_VERSION, get_option( 'dokan_pro_whats_new_versions', array() ) ) );
 }

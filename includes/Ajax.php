@@ -56,7 +56,6 @@ class Ajax {
         add_action( 'wp_ajax_get_vendor_earning', [ $this, 'get_vendor_earning' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
-        add_filter( 'wp_ajax_dokan_dismiss_admin_setup_wizard_notice', [ $this, 'dismiss_admin_setup_wizard_notice' ] );
     }
 
     /**
@@ -1033,29 +1032,5 @@ class Ajax {
         update_option( 'dokan_hide_pro_nag', 'hide' );
 
         wp_send_json_success();
-    }
-
-    /**
-     * Dismisses admin setup wizard notice
-     *
-     * @since 3.3.3
-     *
-     * @return void
-     */
-    public function dismiss_admin_setup_wizard_notice() {
-        $post_data = wc_clean( wp_unslash( $_POST ) );
-
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
-        }
-
-        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
-
-        if ( isset( $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) && $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) {
-            update_option( 'dokan_admin_setup_wizard_ready', true );
-            wp_send_json_success();
-        }
     }
 }

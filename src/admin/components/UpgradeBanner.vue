@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="btn-upgrade">
-            <a target="_blank" href="https://wedevs.com/dokan/pricing/?utm_source=dokan-plugin&utm_medium=banner&utm_content=booking-integration&utm_campaign=upgrade-to-pro">{{ __( 'Upgrade to Premium', 'dokan-lite' ) }}</a>
+            <a target="_blank" href="https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=dokan-plugin-dashboard&utm_medium=wp-admin-promotion&utm_campaign=dokan-lite">{{ __( 'Upgrade to Premium', 'dokan-lite' ) }}</a>
         </div>
         <button class="close-banner" @click="dismiss()">
             <span class="dashicons dashicons-no-alt"></span>

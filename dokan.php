@@ -106,9 +106,8 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
-        add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
-        add_filter( 'dokan_global_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
 
+        $this->container['admin_notices'] = new \WeDevs\Dokan\Admin\Notices\Manager();
         $this->init_appsero_tracker();
 
         add_action( 'plugins_loaded', [ $this, 'woocommerce_not_loaded' ], 11 );
@@ -354,7 +353,6 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
             new \WeDevs\Dokan\Admin\LimitedTimePromotion();
-            new \WeDevs\Dokan\Admin\ReviewNotice();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
@@ -480,77 +478,6 @@ final class WeDevs_Dokan {
      */
     public function init_appsero_tracker() {
         $this->container['tracker'] = new \WeDevs\Dokan\Tracker();
-    }
-
-    /**
-     * Missing woocomerce notice
-     *
-     * @since 2.9.16
-     *
-     * @return void
-     */
-    public function render_missing_woocommerce_notice() {
-        // check wooCommerce is available and active
-        $has_woocommerce = $this->has_woocommerce();
-
-        // check if woocommerce installed
-        $woocommerce_installed = $this->is_woocommerce_installed();
-
-        if ( ( ! $has_woocommerce || ! $woocommerce_installed ) && current_user_can( 'activate_plugins' ) ) {
-            dokan_get_template(
-                'admin-notice-dependencies.php', [
-                    'has_woocommerce' => $has_woocommerce,
-                    'woocommerce_installed' => $woocommerce_installed,
-                ]
-            );
-        }
-    }
-
-    /**
-     * Render run admin setup wizard notice
-     *
-     * @since 2.9.27
-     *
-     * @param array $notices
-     *
-     * @return array
-     */
-    public function render_run_admin_setup_wizard_notice( $notices ) {
-        $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
-
-        if ( $ran_wizard ) {
-            return $notices;
-        }
-
-        // If vendor found, don't show the setup wizard as admin already ran the `setup wizard`
-        // without the `dokan_admin_setup_wizard_ready` option.
-        $vendor_count = dokan_get_seller_status_count();
-
-        if ( ! empty( $vendor_count['active'] ) ) {
-            update_option( 'dokan_admin_setup_wizard_ready', true );
-            return $notices;
-        }
-
-        $notices[] = [
-            'type'              => 'success',
-            'description'       => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
-            'priority'          => 1,
-            'show_close_button' => true,
-            'ajax_data'         => [
-                'dismiss_dokan_admin_setup_wizard_notice' => true,
-                'action'                                  => 'dokan_dismiss_admin_setup_wizard_notice',
-                'nonce'                                   => wp_create_nonce( 'dokan_admin' ),
-            ],
-            'actions'           => [
-                [
-                    'type'   => 'primary',
-                    'text'   => __( 'Run the Setup Wizard', 'dokan-lite' ),
-                    'action' => admin_url( 'admin.php?page=dokan-setup' ),
-                ],
-            ],
-        ];
-
-        return $notices;
     }
 
     /**

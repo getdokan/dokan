@@ -145,6 +145,9 @@ export default {
                 .done( response => {
                     this.lite_versions = JSON.parse( response );
                     this.loading = false;
+                    if ( dokan.hasNewVersion ) {
+                        this.dismissWhatsNewNotice( 'dokan-whats-new-notice' );
+                    }
                 } )
                 .fail( response => {
                     this.loading = false;
@@ -162,6 +165,9 @@ export default {
                 .done( response => {
                     this.pro_versions = JSON.parse( response );
                     this.loading = false;
+                    if( dokan.hasNewVersion ) {
+                        this.dismissWhatsNewNotice( 'dokan-pro-whats-new-notice' );
+                    }
                 } )
                 .fail( response => {
                     this.loading = false;
@@ -171,6 +177,19 @@ export default {
                         text: this.__( 'Something went wrong', 'dokan-lite' ),
                     } )
                 } );
+        },
+
+        dismissWhatsNewNotice( action ) {
+            $.ajax( {
+                url: dokan.ajaxurl,
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    action: action,
+                    nonce: dokan.nonce,
+                    dokan_promotion_dismissed: true,
+                },
+            } );
         },
 
         toggleReading( index ) {
@@ -188,6 +207,10 @@ export default {
         switchPackage( pack ) {
             if ( null === this.pro_versions && 'pro' === pack ) {
                 this.getDokanProChangeLog();
+            }
+
+            if ( null === this.lite_versions && 'lite' === pack ) {
+                this.getDokanLiteChangeLog();
             }
 
             this.active_package = pack;
@@ -231,12 +254,31 @@ export default {
             $('html, body').animate({
                 scrollTop: $( `#${id}` ).offset().top - 50,
             }, 500);
+        },
+
+        loadChangelogData() {
+            if ( 'dokan-pro' === this.$route.query.plugin ) {
+                this.active_package = 'pro';
+                if ( null === this.pro_versions ) {
+                    this.getDokanProChangeLog();
+                }
+            } else {
+                if ( null === this.lite_versions ) {
+                    this.getDokanLiteChangeLog();
+                }
+            }
+        }
+    },
+
+    watch: {
+        '$route.query.plugin'(){
+            this.loadChangelogData();
         }
     },
 
     created() {
-        this.getDokanLiteChangeLog();
         window.addEventListener( 'scroll', this.updatePosition );
+        this.loadChangelogData();
     },
 
     destroyed() {
