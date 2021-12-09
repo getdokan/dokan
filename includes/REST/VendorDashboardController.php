@@ -46,7 +46,7 @@ class VendorDashboardController extends \WP_REST_Controller {
             $this->namespace, '/' . $this->base . '/profile', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_profile_completeness' ],
+                    'callback'            => [ $this, 'get_profile_information' ],
                     'args'                => [],
                     'permission_callback' => 'is_user_logged_in',
                 ],
@@ -97,6 +97,16 @@ class VendorDashboardController extends \WP_REST_Controller {
                 ],
             ]
         );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/preferences', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_preferences' ],
+                    'args'                => [],
+                    'permission_callback' => 'is_user_logged_in',
+                ],
+            ]
+        );
     }
 
     /**
@@ -126,7 +136,7 @@ class VendorDashboardController extends \WP_REST_Controller {
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_profile_completeness() {
+    public function get_profile_information() {
         return rest_ensure_response(
             dokan_get_store_info( dokan_get_current_user_id() )
         );
@@ -196,6 +206,40 @@ class VendorDashboardController extends \WP_REST_Controller {
     public function get_orders_summary() {
         return rest_ensure_response(
             dokan_count_orders( dokan_get_current_user_id() )
+        );
+    }
+
+    /**
+     * Get Preferences.
+     *
+     * @since 3.3.3
+     *
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_preferences() {
+        return rest_ensure_response(
+            [
+                'currency'              => get_woocommerce_currency(),
+                'currency_position'     => get_option( 'woocommerce_currency_pos' ),
+                'currency_symbol'       => get_woocommerce_currency_symbol(),
+                'decimal_separator'     => wc_get_price_decimal_separator(),
+                'thousand_separator'    => wc_get_price_thousand_separator(),
+                'decimal_point'         => wc_get_price_decimals(),
+                'tax_calculation'       => get_option( 'woocommerce_calc_taxes' ),
+                'tax_display_cart'      => get_option( 'woocommerce_tax_display_cart' ),
+                'tax_round_at_subtotal' => get_option( 'woocommerce_tax_round_at_subtotal' ),
+                'coupon_enabled'        => get_option( 'woocommerce_enable_coupons' ),
+                'coupon_compound'       => get_option( 'woocommerce_calc_discounts_sequentially' ),
+                'weight_unit'           => get_option( 'woocommerce_weight_unit' ),
+                'dimension_unit'        => get_option( 'woocommerce_dimension_unit' ),
+                'product_reviews'       => get_option( 'woocommerce_enable_reviews' ),
+                'product_ratings'       => get_option( 'woocommerce_enable_review_rating' ),
+                'stock_management'      => get_option( 'woocommerce_manage_stock' ),
+                'timezone'              => wp_timezone_string(),
+                'date_format'           => get_option( 'date_format' ),
+                'time_format'           => get_option( 'time_format' ),
+                'language'              => get_locale(),
+            ]
         );
     }
 }
