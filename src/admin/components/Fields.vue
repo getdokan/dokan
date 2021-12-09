@@ -189,7 +189,14 @@
             </td>
         </template>
 
-        <template v-if="'disbursement-type' == fieldData.type && showDisbursementType( 'schedule')">
+        <template v-if="'disbursement_sub_section' === fieldData.type && ! hideWithdrawOption()">
+            <th colspan="3" class="dokan-settings-sub-section-title">
+                <label>{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data"></td>
+        </template>
+
+        <template v-if="'disbursement_method' === fieldData.type && ! hideWithdrawOption()">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -214,7 +221,32 @@
             </td>
         </template>
 
-        <template v-if="'schedule-quarterly' === fieldData.type && showSettingsField(  'quarterly' )">
+        <template v-if="'disbursement_type' === fieldData.type && showDisbursementType( 'schedule') && ! hideWithdrawOption()">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <fieldset>
+                    <template v-for="(optionVal, optionKey) in fieldData.options">
+                        <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
+                            {{ optionVal }}
+                        </label>
+                        <br>
+                    </template>
+                </fieldset>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </td>
+        </template>
+
+        <template v-if="'schedule_quarterly' === fieldData.type && showSettingsField(  'quarterly' )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -272,7 +304,7 @@
                     </div>
                     <div class="col-3">
                         <div class="dokan-input-group">
-                            <span class="dokan-input-group-addon">{{ __( 'Week day', 'dokan-lite' ) }}</span>
+                            <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                                 <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
@@ -296,7 +328,7 @@
             </td>
         </template>
 
-        <template v-if="'schedule-monthly' === fieldData.type && showSettingsField(  'monthly' )">
+        <template v-if="'schedule_monthly' === fieldData.type && showSettingsField(  'monthly' )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -318,7 +350,7 @@
                     </div>
                     <div class="col-3">
                         <div class="dokan-input-group">
-                            <span class="dokan-input-group-addon">{{ __( 'Week day', 'dokan-lite' ) }}</span>
+                            <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                                 <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
@@ -342,7 +374,7 @@
             </td>
         </template>
 
-        <template v-if="'schedule-biweekly' === fieldData.type && showSettingsField( 'biweekly')">
+        <template v-if="'schedule_biweekly' === fieldData.type && showSettingsField( 'biweekly')">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -354,7 +386,7 @@
             <td>
                 <div class="col-3">
                     <div class="dokan-input-group">
-                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First Week', 'dokan-lite' ) }}</span>
+                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First', 'dokan-lite' ) }}</span>
                         <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']" v-on:change="setDisbursementBiweeklySettings">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options.first" :value="optionKey" v-html="optionVal"></option>
@@ -363,7 +395,7 @@
                 </div>
                 <div class="col-3">
                     <div class="dokan-input-group">
-                        <span class="dokan-input-group-addon">{{ __( 'Second Week', 'dokan-lite' ) }}</span>
+                        <span class="dokan-input-group-addon">{{ __( 'Second', 'dokan-lite' ) }}</span>
                         <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.biweekly.second">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options.second" :value="optionKey" v-html="optionVal"></option>
@@ -372,7 +404,7 @@
                 </div>
                 <div class="col-3">
                     <div class="dokan-input-group">
-                        <span class="dokan-input-group-addon">{{ __( 'Week day', 'dokan-lite' ) }}</span>
+                        <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                         <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
@@ -396,7 +428,7 @@
             </td>
         </template>
 
-        <template v-if="'schedule-weekly' === fieldData.type && showSettingsField( 'weekly' )">
+        <template v-if="'schedule_weekly' === fieldData.type && showSettingsField( 'weekly' )">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
             </th>
@@ -911,11 +943,15 @@
             },
 
             showSettingsField( fieldKey ) {
-                return this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
+                return ! this.hideWithdrawOption() && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
             },
 
             showDisbursementType( fieldKey ) {
                 return this.fieldValue['disbursement'][fieldKey] !== '';
+            },
+
+            hideWithdrawOption( ) {
+                return ( 'hide_withdraw_option' in this.fieldValue ) && this.fieldValue['hide_withdraw_option'] === 'on';
             },
         }
     };
@@ -997,6 +1033,10 @@
     .col-3 {
         width: 24.5%;
         display: inline-block;
+
+        select {
+            width: 100%;
+        }
     }
     .dokan-schedule-week-day-container {
         padding: 15px 0;
