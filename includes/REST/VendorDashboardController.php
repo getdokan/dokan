@@ -249,131 +249,131 @@ class VendorDashboardController extends \WP_REST_Controller {
      */
     public function get_preferences_schema() {
         return array(
-            '$schema'              => 'http://json-schema.org/draft-04/schema#',
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
             // The title property marks the identity of the resource.
-            'title'                => 'preferences',
-            'type'                 => 'object',
+            'title'      => 'preferences',
+            'type'       => 'object',
             // In JSON Schema you can specify object properties in the properties attribute.
-            'properties'           => array(
-                'currency' => array(
-                    'description'  => esc_html__( 'Payment currency.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+            'properties' => array(
+                'currency'              => array(
+                    'description' => esc_html__( 'Payment currency.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'currency_position' => array(
-                    'description'  => esc_html__( 'Payment currency position.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'currency_position'     => array(
+                    'description' => esc_html__( 'Payment currency position.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'currency_symbol' => array(
-                    'description'  => esc_html__( 'Currency symbol.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'currency_symbol'       => array(
+                    'description' => esc_html__( 'Currency symbol.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'decimal_separator' => array(
-                    'description'  => esc_html__( 'Decimal separator.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'decimal_separator'     => array(
+                    'description' => esc_html__( 'Decimal separator.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'thousand_separator' => array(
-                    'description'  => esc_html__( 'Thousand separator.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'thousand_separator'    => array(
+                    'description' => esc_html__( 'Thousand separator.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'decimal_point' => array(
-                    'description'  => esc_html__( 'Decimal point.', 'dokan-lite' ),
-                    'type'         => 'integer',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'decimal_point'         => array(
+                    'description' => esc_html__( 'Decimal point.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'tax_calculation' => array(
-                    'description'  => esc_html__( 'Tax Calculation enabled or not.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'tax_calculation'       => array(
+                    'description' => esc_html__( 'Tax Calculation enabled or not.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'tax_display_cart' => array(
-                    'description'  => esc_html__( 'Tax display in cart price.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'tax_display_cart'      => array(
+                    'description' => esc_html__( 'Tax display in cart price.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
                 'tax_round_at_subtotal' => array(
-                    'description'  => esc_html__( 'Tax Tax price round up in subtotal.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                    'description' => esc_html__( 'Tax Tax price round up in subtotal.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'coupon_enabled' => array(
-                    'description'  => esc_html__( 'Coupon enabled in store.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'coupon_enabled'        => array(
+                    'description' => esc_html__( 'Coupon enabled in store.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'coupon_compound' => array(
-                    'description'  => esc_html__( 'Compound coupon calculation.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'coupon_compound'       => array(
+                    'description' => esc_html__( 'Compound coupon calculation.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'weight_unit' => array(
-                    'description'  => esc_html__( 'Measurement unit for weight.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'weight_unit'           => array(
+                    'description' => esc_html__( 'Measurement unit for weight.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'dimension_unit' => array(
-                    'description'  => esc_html__( 'Measurement unit for dimension.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'dimension_unit'        => array(
+                    'description' => esc_html__( 'Measurement unit for dimension.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'product_reviews' => array(
-                    'description'  => esc_html__( 'Enabled product reviews.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'product_reviews'       => array(
+                    'description' => esc_html__( 'Enabled product reviews.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'product_ratings' => array(
-                    'description'  => esc_html__( 'Enabled product rating.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'product_ratings'       => array(
+                    'description' => esc_html__( 'Enabled product rating.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'stock_management' => array(
-                    'description'  => esc_html__( 'Enabled product stock management.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'stock_management'      => array(
+                    'description' => esc_html__( 'Enabled product stock management.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'timezone' => array(
-                    'description'  => esc_html__( 'Store timezone.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'timezone'              => array(
+                    'description' => esc_html__( 'Store timezone.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'date_format' => array(
-                    'description'  => esc_html__( 'Store date format.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'date_format'           => array(
+                    'description' => esc_html__( 'Store date format.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'time_format' => array(
-                    'description'  => esc_html__( 'Store time format.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'time_format'           => array(
+                    'description' => esc_html__( 'Store time format.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
-                'language' => array(
-                    'description'  => esc_html__( 'Store language.', 'dokan-lite' ),
-                    'type'         => 'string',
-                    'context'      => array( 'view' ),
-                    'readonly'     => true,
+                'language'              => array(
+                    'description' => esc_html__( 'Store language.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
             ),
         );
