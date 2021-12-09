@@ -517,9 +517,9 @@ class Settings {
 
             // Get & set 7 days opening & closing time for update dokan store time.
             foreach ( $dokan_days as $day_key => $day ) {
-                $opening_time          = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
-                $closing_time          = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
-                $store_status          = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+                $opening_time = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
+                $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
+                $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
 
                 // If pass null value or our store is not open then our store will be close.
                 if ( empty( $opening_time ) || is_array( $opening_time ) || empty( $closing_time ) || is_array( $closing_time ) || 'open' !== $store_status ) {
