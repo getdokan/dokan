@@ -54,7 +54,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                                 <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                            <?php endwhile; // end of the loop. ?>
+                            <?php endwhile; ?>
 
                         <?php woocommerce_product_loop_end(); ?>
 
@@ -86,7 +86,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                                 <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                            <?php endwhile; // end of the loop. ?>
+                            <?php endwhile; ?>
 
                         <?php woocommerce_product_loop_end(); ?>
 
@@ -118,7 +118,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                                 <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                            <?php endwhile; // end of the loop. ?>
+                            <?php endwhile; ?>
 
                         <?php woocommerce_product_loop_end(); ?>
 
@@ -150,7 +150,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                                 <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                            <?php endwhile; // end of the loop. ?>
+                            <?php endwhile; ?>
 
                         <?php woocommerce_product_loop_end(); ?>
 
