@@ -633,28 +633,9 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
 }
 
 /**
- * Dokan specific notices
+ * This method will display notices under only Dokan menu and all of its sub-menu pages
  *
- * @since DOKAN_LITE_SINCE
- *
- * @return array | void
- */
-function dokan_get_notices() {
-    $notices = apply_filters( 'dokan_notices', [] );
-
-    if ( empty( $notices ) ) {
-        return;
-    }
-
-    uasort( $notices, 'dokan_sort_by_priority' );
-
-    return array_values( $notices );
-}
-
-/**
- * Dokan global notices
- *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.3
  *
  * @return array | void
  */
@@ -665,7 +646,26 @@ function dokan_get_admin_notices() {
         return;
     }
 
-    uasort( $notices, 'dokan_sort_by_priority' );
+    uasort( $notices, 'dokan_sort_notices_by_priority' );
+
+    return array_values( $notices );
+}
+
+/**
+ * This method will display notices under all pages including Dokan menu and sub-menu pages
+ *
+ * @since 3.3.3
+ *
+ * @return array | void
+ */
+function dokan_get_global_admin_notices() {
+    $notices = apply_filters( 'dokan_global_admin_notices', [] );
+
+    if ( empty( $notices ) ) {
+        return;
+    }
+
+    uasort( $notices, 'dokan_sort_notices_by_priority' );
 
     return array_values( $notices );
 }
@@ -673,7 +673,7 @@ function dokan_get_admin_notices() {
 /**
  * Dokan promotional notices
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.3
  *
  * @return array | void
  */
@@ -728,7 +728,7 @@ function dokan_get_promo_notices() {
         return;
     }
 
-    uasort( $notices, 'dokan_sort_by_priority' );
+    uasort( $notices, 'dokan_sort_notices_by_priority' );
 
     return array_values( $notices );
 }
@@ -741,7 +741,7 @@ function dokan_get_promo_notices() {
  *
  * @return integer
  */
-function dokan_sort_by_priority( $a, $b ) {
+function dokan_sort_notices_by_priority( $a, $b ) {
     if ( isset( $a['priority'] ) && isset( $b['priority'] ) ) {
         return $a['priority'] - $b['priority'];
     }

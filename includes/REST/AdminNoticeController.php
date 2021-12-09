@@ -20,19 +20,19 @@ class AdminNoticeController extends DokanRESTAdminController {
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/notices', [
+            $this->namespace, '/admin-notices', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_notices' ],
+                    'callback'            => [ $this, 'dokan_get_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
         );
         register_rest_route(
-            $this->namespace, '/admin-notices', [
+            $this->namespace, '/global-admin-notices', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_admin_notices' ],
+                    'callback'            => [ $this, 'dokan_get_global_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
@@ -53,10 +53,23 @@ class AdminNoticeController extends DokanRESTAdminController {
      *
      * @return WP_REST_Response
      */
-    public function get_notices() {
+    public function dokan_get_admin_notices() {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
-        $notices = dokan_get_notices();
+        $notices = dokan_get_admin_notices();
+
+        return rest_ensure_response( $notices );
+    }
+
+    /**
+     * Get dokan global notices
+     *
+     * @return WP_REST_Response
+     */
+    public function dokan_get_global_admin_notices() {
+        require_once DOKAN_INC_DIR . '/Admin/functions.php';
+
+        $notices = dokan_get_global_admin_notices();
 
         return rest_ensure_response( $notices );
     }
@@ -70,19 +83,6 @@ class AdminNoticeController extends DokanRESTAdminController {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
 
         $notices = dokan_get_promo_notices();
-
-        return rest_ensure_response( $notices );
-    }
-
-    /**
-     * Get dokan global notices
-     *
-     * @return WP_REST_Response
-     */
-    public function get_admin_notices() {
-        require_once DOKAN_INC_DIR . '/Admin/functions.php';
-
-        $notices = dokan_get_admin_notices();
 
         return rest_ensure_response( $notices );
     }

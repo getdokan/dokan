@@ -23,7 +23,7 @@ class Core {
         add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
         add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
         add_action( 'admin_init', array( $this, 'redirect_after_activate' ), 999 );
-        add_filter( 'dokan_notices', [ $this, 'show_permalink_setting_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
     }
 
     /**

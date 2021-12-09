@@ -37,14 +37,14 @@ class Hooks {
     }
 
     /**
-     * Display admin notices
+     * Build and Display admin notices via Vue.js
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.3.3
      *
      * @return void
      */
     public function admin_notices() {
-        dokan_get_template_part( 'admin-notices' );
+        echo '<div id="dokan-admin-notices"></div>';
     }
 
     /**

@@ -302,11 +302,10 @@ ul {
                 color: #000000;
                 font-size: 30px;
                 text-align: center;
-                margin: 0;
                 padding: 45px 0 0;
                 font-weight: 800;
                 font-family: "SF Pro Text", sans-serif;
-                margin-bottom: 28px;
+                margin: 0 0 28px;
             }
 
             .switch-button-wrap {
@@ -327,13 +326,14 @@ ul {
                     background: none;
                     border-radius: 27px;
                     border: none;
-                    font-size: 0.8rem;
-                    font-weight: 500;
                     color: #cc7376;
                     display: inline-block;
                     position: relative;
                     transition: all .2s ease;
                     cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 500;
+                    font-family: "SF Pro Text", sans-serif;
                 }
 
                 .active {
@@ -369,6 +369,8 @@ ul {
                     font-size: 13px;
                     text-align: center;
                     cursor: pointer;
+                    font-weight: 500;
+                    font-family: "SF Pro Text", sans-serif;
                 }
 
                 .dashicons {
@@ -498,11 +500,12 @@ ul {
 
                             .feature-badge {
                                 color: #ffffff;
+                                font-size: 15px;
+                                font-weight: 600;
                                 padding: 6px 14px;
                                 border-radius: 3px;
-                                font-weight: 600;
-                                font-size: 15px;
                                 display: inline-block;
+                                font-family: "SF Pro Text", sans-serif;
                             }
 
                             .badge-green {
@@ -564,8 +567,8 @@ ul {
                         margin-top: 30px;
 
                         a {
-                            font-weight: 600;
                             font-size: 13px;
+                            font-weight: normal;
                             text-decoration: none;
                             padding: 6px 14px;
                             display: inline-block;
@@ -573,6 +576,7 @@ ul {
                             background: #ffffff;
                             border-radius: 3px;
                             border: 1px solid #E2E2E2;
+                            font-family: "SF Pro Text", sans-serif;
 
                             &:focus {
                                 box-shadow: none;

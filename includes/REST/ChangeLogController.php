@@ -41,7 +41,7 @@ class ChangeLogController extends DokanRESTAdminController {
         if ( false === $changelog ) {
             require_once DOKAN_DIR . '/templates/whats-new.php';
             $changelog = wp_json_encode( $changelog );
-            Cache::set_transient( $cache_key, $changelog );
+            Cache::set_transient( $cache_key, $changelog, '', MONTH_IN_SECONDS * 2 );
         }
 
         return rest_ensure_response( $changelog );
