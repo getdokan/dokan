@@ -148,6 +148,11 @@ class Assets {
                 'name'      => 'ProModules',
                 'component' => 'ProModules',
             ],
+            [
+                'path'      => '/changelog',
+                'name'      => 'ChangeLog',
+                'component' => 'ChangeLog',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
