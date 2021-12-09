@@ -13,7 +13,7 @@
                 <div class="dropdown">
                     <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
                     <div class="list-item">
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="<?php echo $has_dokan_lite_new_version || $has_dokan_pro_new_version ? 'active' : ''  ?>">
+                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="active">
                             <div class="dokan-icon">
                                 <div class="icon-whats-new"></div>
                             </div>
