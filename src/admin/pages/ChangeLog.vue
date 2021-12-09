@@ -277,8 +277,8 @@ export default {
     },
 
     created() {
-        window.addEventListener( 'scroll', this.updatePosition );
         this.loadChangelogData();
+        window.addEventListener( 'scroll', this.updatePosition );
     },
 
     destroyed() {

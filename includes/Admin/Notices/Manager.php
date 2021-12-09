@@ -30,8 +30,8 @@ class Manager {
      * @return void
      */
     private function init_classes() {
-        $this->container['setup_wizard'] = new SetupWizard();
-        $this->container['whats_new'] = new WhatsNew();
+        $this->container['setup_wizard']  = new SetupWizard();
+        $this->container['whats_new']     = new WhatsNew();
         $this->container['plugin_review'] = new PluginReview();
     }
 

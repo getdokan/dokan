@@ -684,9 +684,9 @@ function dokan_get_promo_notices() {
     $promos = Cache::get_transient( 'dokan_promo_notices' );
 
     if ( false === $promos ) {
-        $help_url  = 'https://raw.githubusercontent.com/weDevsOfficial/dokan-util/master/promotions.json';
-        $response  = wp_remote_get( $help_url, array( 'timeout' => 15 ) );
-        $promos = wp_remote_retrieve_body( $response );
+        $promo_notice_url = 'https://raw.githubusercontent.com/weDevsOfficial/dokan-util/master/promotions.json';
+        $response         = wp_remote_get( $promo_notice_url, array( 'timeout' => 15 ) );
+        $promos           = wp_remote_retrieve_body( $response );
 
         if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
             $promos = '[]';
@@ -695,11 +695,9 @@ function dokan_get_promo_notices() {
         Cache::set_transient( 'dokan_promo_notices', $promos, DAY_IN_SECONDS );
     }
 
-    $promos = json_decode( $promos, true );
-
-    $notices          = [];
-    $current_time_est = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
-
+    $promos                  = json_decode( $promos, true );
+    $notices                 = [];
+    $current_time_est        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
     $already_displayed_promo = get_option( '_dokan_limited_time_promo', [] );
 
     foreach ( $promos as $promo ) {

@@ -153,7 +153,7 @@ export default {
                     showCancelButton: true,
                     confirmButtonText: action.text,
                     cancelButtonText: this.__( 'Cancel', 'dokan-lite' ),
-                }).then( ( response ) => {
+                } ).then( ( response ) => {
                     if ( response.value ) {
                         this.handleRequest( action, index );
                     }
