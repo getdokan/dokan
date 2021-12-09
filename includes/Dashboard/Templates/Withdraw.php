@@ -41,6 +41,7 @@ class Withdraw {
         $this->errors = new WP_Error();
 
         if ( dokan_withdraw_is_disabled() ) {
+            $this->redirect_to_dashboard();
             return;
         }
 
@@ -718,5 +719,19 @@ class Withdraw {
             return $active_menu;
         }
         return 'withdraw';
+    }
+
+    /**
+     * Redirect to vendor dashboard.
+     *
+     * @since 3.3.1
+     *
+     * @return void
+     */
+    public function redirect_to_dashboard() {
+        if ( preg_match( '/\/withdraw(-requests)?\//i', $_SERVER['REQUEST_URI'] ) ) {
+            wp_safe_redirect( dokan_get_navigation_url( '/' ) );
+            exit;
+        }
     }
 }
