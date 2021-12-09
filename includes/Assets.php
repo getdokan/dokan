@@ -13,10 +13,10 @@ class Assets {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_script' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_script' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
         }
     }
 
@@ -530,7 +530,7 @@ class Assets {
      *
      * @since 3.2.7
      */
-    public function load_dokan_global_script() {
+    public function load_dokan_global_scripts() {
         // Dokan helper JS file, need to load this file
         wp_enqueue_script( 'dokan-util-helper' );
 
