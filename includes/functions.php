@@ -3240,7 +3240,7 @@ function dokan_get_translated_days( $day = '' ) {
     $day_keys       = array_keys( $all_days );
 
     // Make our start day of the week using by week starts settings.
-    for ( $i = 0; $week_starts_on > $i; $i++ ) {
+    for ( $i = 0; $i < $week_starts_on; $i++ ) {
         $shifted_key   = $day_keys[ $i ];
         $shifted_value = $all_days[ $shifted_key ];
 

@@ -520,15 +520,14 @@ class Settings {
                 $opening_time          = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
                 $closing_time          = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
                 $store_status          = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
-                $current_day           = [];
-                $current_day['status'] = $store_status;
 
                 // If pass null value or our store is not open then our store will be close.
                 if ( empty( $opening_time ) || is_array( $opening_time ) || empty( $closing_time ) || is_array( $closing_time ) || 'open' !== $store_status ) {
-                    $current_day['status']        = 'close';
-                    $current_day['opening_time']  = '';
-                    $current_day['closing_time']  = '';
-                    $dokan_store_time[ $day_key ] = $current_day;
+                    $dokan_store_time[ $day_key ] = [
+                        'status'       => 'close',
+                        'opening_time' => '',
+                        'closing_time' => '',
+                    ];
 
                     continue;
                 }
@@ -541,11 +540,12 @@ class Settings {
                 $closing_time = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
                 $closing_time = $closing_time->format( 'g:i a' );
 
-                // Get and set current day's data for update dokan store time.
-                $current_day['status']        = $store_status;
-                $current_day['opening_time']  = $opening_time;
-                $current_day['closing_time']  = $closing_time;
-                $dokan_store_time[ $day_key ] = $current_day;    // Make dokan store time data here.
+                // Get and set current day's data for update dokan store time. Make dokan store time data here.
+                $dokan_store_time[ $day_key ] = [
+                    'status'       => $store_status,
+                    'opening_time' => $opening_time,
+                    'closing_time' => $closing_time,
+                ];
             }
 
             // Update store settings info.
