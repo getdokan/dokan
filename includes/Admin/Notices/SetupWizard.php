@@ -3,11 +3,15 @@
 namespace WeDevs\Dokan\Admin\Notices;
 
 /**
- * Handle WooCommerce missing notice
+ * Setup wizard notice handler class
+ *
+ * @since 3.3.3
  */
 class SetupWizard {
     /**
      * Class constructor
+     *
+     * @since 3.3.3
      */
     public function __construct() {
         add_filter( 'dokan_global_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );

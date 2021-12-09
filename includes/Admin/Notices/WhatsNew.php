@@ -2,9 +2,16 @@
 
 namespace WeDevs\Dokan\Admin\Notices;
 
+/**
+ * What's new notice handler class
+ *
+ * @since 3.3.3
+ */
 class WhatsNew {
     /**
      * Class Constructor
+     *
+     * @since 3.3.3
      */
     public function __construct() {
         add_action( 'dokan_admin_notices', [ $this, 'show_whats_new_notice' ] );

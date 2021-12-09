@@ -6,12 +6,16 @@ use WeDevs\Dokan\Traits\ChainableContainer;
 
 /**
  * Dokan Admin notices handler class
+ *
+ * @since 3.3.3
  */
 class Manager {
     use ChainableContainer;
 
     /**
      * Class constructor
+     *
+     * @since 3.3.3
      */
     public function __construct() {
         $this->init_classes();
