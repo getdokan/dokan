@@ -14,32 +14,11 @@ use WP_Widget;
 class StoreContactForm extends WP_Widget {
 
     /**
-     * Google reCaptcha site key
-     *
-     * @since 3.3.2
-     *
-     * @var string
-     */
-    protected $recaptcha_site_key;
-
-    /**
-     * Google reCaptcha secret key
-     *
-     * @since 3.3.2
-     *
-     * @var string
-     */
-    protected $recaptcha_secret_key;
-
-    /**
      * Constructor
      *
      * @return void
      */
     public function __construct() {
-        $this->recaptcha_site_key   = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
-        $this->recaptcha_secret_key = dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' );
-
         $widget_ops = array(
 			'classname' => 'dokan-store-contact',
 			'description' => __( 'Dokan Vendor Contact Form', 'dokan-lite' ),
@@ -104,8 +83,6 @@ class StoreContactForm extends WP_Widget {
                     'email'      => $email,
                 )
             );
-
-            wp_localize_script( 'dokan-script', 'google_recaptcha', [ 'recaptcha_sitekey' => $this->recaptcha_site_key ] );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
