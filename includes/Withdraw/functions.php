@@ -379,7 +379,7 @@ function dokan_mask_email_address( $email ) {
     }
 
     list( $first, $last ) = explode( '@', $email );
-    $first       = str_replace( substr( $first, '3' ), str_repeat( '*', strlen( $first ) - 3 ), $first );
+    $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
     $last        = explode( '.', $last );
     $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
 
