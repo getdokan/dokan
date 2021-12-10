@@ -118,9 +118,11 @@ export default {
         },
 
         startAutoSlide() {
-            this.timer = setInterval(() => {
-                this.slideNotice(1);
-            }, this.interval);
+            if ( ! this.loading ) {
+                this.timer = setInterval(() => {
+                    this.slideNotice(1);
+                }, this.interval);
+            }
         },
 
         stopAutoSlide() {
@@ -134,8 +136,6 @@ export default {
                 method: 'post',
                 dataType: 'json',
                 data: notice.ajax_data,
-            } ).always( () => {
-                this.loading = false;
             } ).done( () => {
                 this.notices.splice( index, 1 );
                 this.current_notice = 1;
@@ -143,8 +143,6 @@ export default {
         },
 
         handleAction( action, index ) {
-            this.stopAutoSlide();
-
             if ( action.confirm_message ) {
                 this.$swal( {
                     title: this.__( 'Are you sure?', 'dokan-lite' ),
