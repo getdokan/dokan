@@ -678,10 +678,10 @@ function dokan_get_global_admin_notices() {
  *
  * @since 3.3.3
  *
- * @return array | void
+ * @return array
  */
 function dokan_get_promo_notices() {
-    $promos = Cache::get_transient( 'dokan_promo_notices' );
+    $promos = Cache::get_transient( 'promo_notices' );
 
     if ( false === $promos ) {
         $promo_notice_url = 'https://raw.githubusercontent.com/weDevsOfficial/dokan-util/master/promotions.json';
@@ -695,9 +695,14 @@ function dokan_get_promo_notices() {
         Cache::set_transient( 'dokan_promo_notices', $promos, DAY_IN_SECONDS );
     }
 
-    $promos                  = json_decode( $promos, true );
-    $notices                 = [];
-    $current_time_est        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
+    $promos  = json_decode( $promos, true );
+    $notices = [];
+    // check if api data is valid
+    if ( empty( $promos ) || ! is_array( $promos ) ) {
+        return $notices;
+    }
+
+    $est_timestamp           = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->getTimestamp();
     $already_displayed_promo = get_option( '_dokan_limited_time_promo', [] );
 
     foreach ( $promos as $promo ) {
@@ -705,33 +710,35 @@ function dokan_get_promo_notices() {
             continue;
         }
 
-        if ( strtotime( $promo['start_date'] ) < strtotime( $current_time_est ) && strtotime( $current_time_est ) < strtotime( $promo['end_date'] ) ) {
-            $notices[] = [
-                'type'              => 'promotion',
-                'title'             => $promo['title'],
-                'description'       => $promo['content'],
-                'priority'          => 10,
-                'show_close_button' => true,
-                'ajax_data'         => [
-                    'dokan_limited_time_promotion_dismissed' => true,
-                    'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
-                    'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
-                    'key'                                    => $promo['key'],
-                ],
-                'actions'           => [
-                    [
-                        'type'   => 'primary',
-                        'text'   => $promo['action_title'],
-                        'action' => $promo['action_url'],
-                        'target' => '_blank',
-                    ],
-                ],
-            ];
+        if ( $est_timestamp < strtotime( $promo['start_date'] ) || $est_timestamp > strtotime( $promo['end_date'] ) ) {
+            continue;
         }
+
+        $notices[] = [
+            'type'              => 'promotion',
+            'title'             => $promo['title'],
+            'description'       => $promo['content'],
+            'priority'          => 10,
+            'show_close_button' => true,
+            'ajax_data'         => [
+                'dokan_limited_time_promotion_dismissed' => true,
+                'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
+                'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
+                'key'                                    => $promo['key'],
+            ],
+            'actions'           => [
+                [
+                    'type'   => 'primary',
+                    'text'   => $promo['action_title'],
+                    'action' => $promo['action_url'],
+                    'target' => '_blank',
+                ],
+            ],
+        ];
     }
 
     if ( empty( $notices ) ) {
-        return;
+        return $notices;
     }
 
     uasort( $notices, 'dokan_sort_notices_by_priority' );
