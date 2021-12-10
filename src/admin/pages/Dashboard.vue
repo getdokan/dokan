@@ -2,7 +2,7 @@
     <div class="dokan-dashboard">
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
 
-        <UpgradeBanner v-if="!hasPro"></UpgradeBanner>
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
         <div class="widgets-wrapper">
 
@@ -12,7 +12,7 @@
                         <ul>
                             <li class="sale">
                                 <div class="dashicons dashicons-chart-bar"></div>
-                                <router-link :to="hasPro ? {name: 'Reports'} : ''">
+                                <router-link :to="hasPro ? { name: 'Reports' } : ''">
                                     <strong>
                                         <currency :amount="overview.sales.this_month"></currency>
                                     </strong>

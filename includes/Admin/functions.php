@@ -636,7 +636,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
 }
 
 /**
- * This method will display notices under only Dokan menu and all of its sub-menu pages
+ * This method will display notices only under Dokan menu and all of its sub-menu pages
  *
  * @since 3.3.3
  *
@@ -744,6 +744,8 @@ function dokan_get_promo_notices() {
  *
  * @param array $a
  * @param array $b
+ *
+ * @since 3.3.3
  *
  * @return integer
  */

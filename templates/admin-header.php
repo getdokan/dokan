@@ -1,7 +1,7 @@
 <div class="dokan-admin-header">
     <div class="dokan-admin-header-logo">
         <img src="<?php echo DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png'; ?>" alt="Dokan Logo" />
-        <span class="dokan-admin-header__version">v<?php echo DOKAN_PLUGIN_VERSION ?></span>
+        <span class="dokan-admin-header-version">v<?php echo DOKAN_PLUGIN_VERSION ?></span>
     </div>
 
     <div class="dokan-admin-header-menu">
