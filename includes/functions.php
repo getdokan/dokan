@@ -3281,15 +3281,19 @@ function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
     $dokan_store_time   = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
     $dokan_closing_time = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
 
-    if ( ! empty( $dokan_closing_time ) && is_array( $dokan_closing_time ) ) {
-        return $dokan_closing_time[ $index ];
+    if ( empty( $dokan_closing_time ) ) {
+        return '';
     }
 
-    if ( ! empty( $dokan_closing_time ) ) {
+    if ( ! is_array( $dokan_closing_time ) ) {
         return $dokan_closing_time;
     }
 
-    return '';
+    if ( isset( $dokan_closing_time[ $index ] ) ) {
+        return $dokan_closing_time[ $index ];
+    }
+
+    return $dokan_closing_time[0]; // return the 1st index or the whole array according to your need
 }
 
 /**
