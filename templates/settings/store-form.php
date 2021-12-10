@@ -52,8 +52,8 @@
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
 
     $store_status = [
-        'open'  => __( 'Open', 'dokan-lite' ),
         'close' => __( 'Close', 'dokan-lite' ),
+        'open'  => __( 'Open', 'dokan-lite' ),
     ];
 
     $args = [
