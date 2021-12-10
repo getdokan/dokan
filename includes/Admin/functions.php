@@ -646,7 +646,7 @@ function dokan_get_admin_notices() {
     $notices = apply_filters( 'dokan_admin_notices', [] );
 
     if ( empty( $notices ) ) {
-        return;
+        return $notices;
     }
 
     uasort( $notices, 'dokan_sort_notices_by_priority' );
@@ -659,13 +659,13 @@ function dokan_get_admin_notices() {
  *
  * @since 3.3.3
  *
- * @return array | void
+ * @return array
  */
 function dokan_get_global_admin_notices() {
     $notices = apply_filters( 'dokan_global_admin_notices', [] );
 
     if ( empty( $notices ) ) {
-        return;
+        return $notices;
     }
 
     uasort( $notices, 'dokan_sort_notices_by_priority' );

@@ -107,7 +107,9 @@ final class WeDevs_Dokan {
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
 
+        // Register admin notices to container and load notices
         $this->container['admin_notices'] = new \WeDevs\Dokan\Admin\Notices\Manager();
+
         $this->init_appsero_tracker();
 
         add_action( 'plugins_loaded', [ $this, 'woocommerce_not_loaded' ], 11 );
@@ -352,7 +354,6 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\Settings();
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
-            new \WeDevs\Dokan\Admin\LimitedTimePromotion();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();

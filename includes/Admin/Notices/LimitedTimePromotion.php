@@ -1,7 +1,7 @@
 <?php
 
 
-namespace WeDevs\Dokan\Admin;
+namespace WeDevs\Dokan\Admin\Notices;
 
 /**
  * Limited time promotion class
@@ -30,7 +30,7 @@ class LimitedTimePromotion {
     }
 
     /**
-     * Shows promotions
+     * Render promotional notices via vue.js
      *
      * @return void
      */
