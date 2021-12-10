@@ -36,15 +36,15 @@ class AdminNotice {
 
         $notices[] = [
             'type'              => 'info',
-            'title'             => __( 'Dokan Data Update Required', 'dokan' ),
+            'title'             => __( 'Dokan Data Update Required', 'dokan-lite' ),
             'description'       => __( 'We need to update your install to the latest version', 'dokan-lite' ),
             'priority'          => 1,
             'actions'           => [
                 [
                     'type'            => 'primary',
-                    'text'            => __( 'Update', 'dokan' ),
-                    'loading_text'    => __( 'Updating...', 'dokan' ),
-                    'competed_text'   => __( 'Updated', 'dokan' ),
+                    'text'            => __( 'Update', 'dokan-lite' ),
+                    'loading_text'    => __( 'Updating...', 'dokan-lite' ),
+                    'competed_text'   => __( 'Updated', 'dokan-lite' ),
                     'reload'          => true,
                     'confirm_message' => __( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ),
                     'ajax_data'       => [
