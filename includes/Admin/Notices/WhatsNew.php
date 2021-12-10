@@ -15,7 +15,7 @@ class WhatsNew {
      */
     public function __construct() {
         add_action( 'dokan_admin_notices', [ $this, 'show_whats_new_notice' ] );
-        add_action( 'wp_ajax_dokan-whats-new-notice', array( $this, 'dismiss_new_notice' ) );
+        add_action( 'wp_ajax_dokan-whats-new-notice', [ $this, 'dismiss_new_notice' ] );
     }
 
     /**
