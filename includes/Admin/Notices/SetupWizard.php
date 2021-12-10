@@ -14,7 +14,7 @@ class SetupWizard {
      * @since 3.3.3
      */
     public function __construct() {
-        add_filter( 'dokan_global_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
         add_filter( 'wp_ajax_dokan_dismiss_admin_setup_wizard_notice', [ $this, 'dismiss_admin_setup_wizard_notice' ] );
     }
 

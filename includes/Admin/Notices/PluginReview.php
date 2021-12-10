@@ -19,7 +19,7 @@ class PluginReview {
      * @since 3.3.1
      */
     public function __construct() {
-        add_action( 'dokan_global_admin_notices', [ $this, 'show_ask_for_review_notice' ] );
+        add_action( 'dokan_admin_notices', [ $this, 'show_ask_for_review_notice' ] );
         add_action( 'wp_ajax_dokan_ask_for_review_notice_action', [ $this, 'review_notice_action_ajax_handler' ] );
     }
 
@@ -33,15 +33,6 @@ class PluginReview {
      * @return array
      */
     public function show_ask_for_review_notice( $notices ) {
-        global $pagenow;
-
-        // Pages to exclude the notice.
-        $exclude = apply_filters( 'dokan_ask_for_review_admin_notice_exclude_pages', [ 'users.php', 'tools.php', 'options-general.php', 'options-writing.php', 'options-reading.php', 'options-discussion.php', 'options-media.php', 'options-permalink.php', 'options-privacy.php', 'edit-comments.php', 'upload.php', 'media-new.php', 'import.php', 'export.php', 'site-health.php', 'export-personal-data.php', 'erase-personal-data.php' ] );
-
-        if ( in_array( $pagenow, $exclude, true ) ) {
-            return $notices;
-        }
-
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return $notices;
         }
