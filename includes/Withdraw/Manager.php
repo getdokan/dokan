@@ -44,7 +44,7 @@ class Manager {
 
         if ( $amount < $limit ) {
             // translators: %s: withdraw limit amount
-            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %s', 'dokan-lite' ), wc_price( $limit ) ) );
+            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than or equal to %s', 'dokan-lite' ), wc_price( $limit ) ) );
         }
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
