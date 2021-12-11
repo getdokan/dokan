@@ -3293,7 +3293,7 @@ function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
         return $dokan_closing_time[ $index ];
     }
 
-    return $dokan_closing_time[0]; // return the 1st index or the whole array according to your need
+    return $dokan_closing_time[0]; // return the 1st index
 }
 
 /**
