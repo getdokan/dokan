@@ -344,13 +344,10 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        $captcha_sitekey   = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
-        $captcha_secretkey = dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' );
-        $captcha_action    = 'dokan_contact_seller_recaptcha';
-
-        // Validate captcha if checking enabled from admin setting
-        if ( ! empty( $captcha_sitekey ) && ! empty( $captcha_secretkey ) ) {
-            $recaptcha_validate = $this->recaptcha_validation_handler( $captcha_action, $captcha_token, $captcha_secretkey );
+        // Validate recaptcha if site key and secret key exist
+        if ( dokan_get_recpatcha_site_and_secret_keys( true ) ) {
+            $recaptcha_keys     = dokan_get_recpatcha_site_and_secret_keys();
+            $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_keys['site_key'], $recaptcha_keys['secret_key'] );
 
             if ( empty( $recaptcha_validate ) ) {
                 $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );

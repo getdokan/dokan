@@ -505,15 +505,16 @@ class Assets {
             }
         }
 
-        // Script for contact form widget google recaptcha
+        // Scripts for contact form widget google recaptcha
         if ( dokan_is_store_page() || is_product() ) {
-            if ( ! empty( dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ) && ! empty( dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ) ) ) {
+            // Checks if recaptcha site key and secret key exist
+            if ( dokan_get_recpatcha_site_and_secret_keys( true ) ) {
                 wp_enqueue_script( 'dokan-google-recaptcha' );
+
+                // Localized script for recaptcha
+                wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ] );
             }
         }
-
-        // Localized script for google recaptcha
-        wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ] );
 
         wp_enqueue_script( 'dokan-login-form-popup' );
 
