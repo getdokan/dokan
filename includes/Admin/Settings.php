@@ -595,7 +595,7 @@ class Settings {
                     'name'  => 'recaptcha_validation_label',
                     'label' => __( 'Google reCaptcha Validation', 'dokan-lite' ),
                     'type'  => 'html',
-                    'desc'    => __( '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">reCaptcha v3</a> credentials required to enable store contact form invisible captcha', 'dokan-lite' ),
+                    'desc'    => __( '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">reCaptcha v3</a> credentials required to enable store contact form invisible captcha. <a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">Get Help</a>', 'dokan-lite' ),
                 ],
                 'recaptcha_site_key'         => [
                     'name'    => 'recaptcha_site_key',

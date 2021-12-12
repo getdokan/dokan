@@ -1049,7 +1049,7 @@ class Ajax {
     /**
      * Handler for reCaptcha validation request.
      *
-     * @since 3.3.2
+     * @since 3.3.3
      *
      * @param string $action
      * @param string $token
