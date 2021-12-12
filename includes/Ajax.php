@@ -324,7 +324,7 @@ class Ajax {
         $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
         $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-        $captcha_token   = ! empty( $_POST['dokan_recaptcha_token'] ) ? wp_unslash( $_POST['dokan_recaptcha_token'] ) : '';
+        $recaptcha_token = ! empty( $_POST['dokan_recaptcha_token'] ) ? wp_unslash( $_POST['dokan_recaptcha_token'] ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {
@@ -347,7 +347,7 @@ class Ajax {
         // Validate recaptcha if site key and secret key exist
         if ( dokan_get_recpatcha_site_and_secret_keys( true ) ) {
             $recaptcha_keys     = dokan_get_recpatcha_site_and_secret_keys();
-            $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_keys['site_key'], $recaptcha_keys['secret_key'] );
+            $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
 
             if ( empty( $recaptcha_validate ) ) {
                 $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
