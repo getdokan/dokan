@@ -324,7 +324,6 @@ class Ajax {
         $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
         $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
         $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-        $captcha_action  = ! empty( $_POST['dokan_recaptcha_action'] ) ? sanitize_key( wp_unslash( $_POST['dokan_recaptcha_action'] ) ) : '';
         $captcha_token   = ! empty( $_POST['dokan_recaptcha_token'] ) ? wp_unslash( $_POST['dokan_recaptcha_token'] ) : '';
         $error_template  = '<span class="alert alert-danger error">%s</span>';
 
@@ -347,6 +346,7 @@ class Ajax {
 
         $captcha_sitekey   = dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' );
         $captcha_secretkey = dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' );
+        $captcha_action    = 'dokan_contact_seller_recaptcha';
 
         // Validate captcha if checking enabled from admin setting
         if ( ! empty( $captcha_sitekey ) && ! empty( $captcha_secretkey ) ) {

@@ -583,7 +583,7 @@ jQuery(function($) {
           });
 
           // Run recaptcha executer
-          await self.executeRecaptcha( 'form#dokan-form-contact-seller .dokan_recaptcha_token', 'dokan_contact_seller_recaptcha' );
+          await dokan_execute_recaptcha( 'form#dokan-form-contact-seller .dokan_recaptcha_token', 'dokan_contact_seller_recaptcha' );
 
           var form_data = $(form).serialize();
           $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -601,27 +601,6 @@ jQuery(function($) {
               .removeClass('valid');
           });
         }
-      });
-    },
-
-    // Execute recaptcha token request
-    executeRecaptcha: function(inputFieldSelector, action) {
-      return new Promise( function(resolve) {
-        const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
-        const recaptchaTokenField = $(inputFieldSelector);
-
-        // Check if the recaptcha site key exists
-        if ( '' === recaptchaSiteKey ) {
-          resolve();
-        }
-
-        // Execute recaptcha after passing checks
-        grecaptcha.ready(function() {
-          grecaptcha.execute(recaptchaSiteKey, { action: action }).then(function(token) {
-            recaptchaTokenField.val(token);
-            resolve();
-          });
-        });
       });
     }
   };

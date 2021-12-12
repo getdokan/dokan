@@ -512,6 +512,7 @@ class Assets {
             }
         }
 
+        // Localized script for google recaptcha
         wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ] );
 
         wp_enqueue_script( 'dokan-login-form-popup' );

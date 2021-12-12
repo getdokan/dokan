@@ -74,3 +74,33 @@ function dokan_get_i18n_date_format( format = true ) {
       break;
   }
 }
+
+/**
+ * Execute recaptcha token request
+ *
+ * @since 3.3.3
+ *
+ * @param {string} inputFieldSelector The input field for recaptcha token
+ * @param {string} action The action for recaptcha
+ *
+ * @return {Promise} Return Promise
+ */
+function dokan_execute_recaptcha(inputFieldSelector, action) {
+  return new Promise( function(resolve) {
+    const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
+    const recaptchaTokenField = document.querySelector(inputFieldSelector);
+
+    // Check if the recaptcha site key exists
+    if ( '' === recaptchaSiteKey ) {
+      resolve();
+    }
+
+    // Execute recaptcha after passing checks
+    grecaptcha.ready(function() {
+      grecaptcha.execute(recaptchaSiteKey, { action: action }).then(function(token) {
+        recaptchaTokenField.value = token;
+        resolve();
+      });
+    });
+  });
+}
