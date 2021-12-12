@@ -77,10 +77,10 @@ class StoreContactForm extends WP_Widget {
 
             dokan_get_template_part(
                 'widgets/store-contact-form', '', array(
-                    'seller_id'  => $seller_id,
-                    'store_info' => $store_info,
-                    'username'   => $username,
-                    'email'      => $email,
+					'seller_id'  => $seller_id,
+					'store_info' => $store_info,
+					'username'   => $username,
+					'email'      => $email,
                 )
             );
 

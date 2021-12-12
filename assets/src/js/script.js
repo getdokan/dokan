@@ -583,7 +583,7 @@ jQuery(function($) {
           });
 
           // Run recaptcha executer
-          await self.executeRecaptcha();
+          await self.executeRecaptcha( 'form#dokan-form-contact-seller .dokan_recaptcha_token', 'dokan_contact_seller_recaptcha' );
 
           var form_data = $(form).serialize();
           $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -605,10 +605,10 @@ jQuery(function($) {
     },
 
     // Execute recaptcha token request
-    executeRecaptcha: function() {
-      return new Promise( function( resolve ) {
+    executeRecaptcha: function(inputFieldSelector, action) {
+      return new Promise( function(resolve) {
         const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
-        const recaptchaTokenField = $('#dokan_recaptcha_token');
+        const recaptchaTokenField = $(inputFieldSelector);
 
         // Check if the recaptcha site key exists
         if ( '' === recaptchaSiteKey ) {
@@ -617,7 +617,7 @@ jQuery(function($) {
 
         // Execute recaptcha after passing checks
         grecaptcha.ready(function() {
-          grecaptcha.execute(recaptchaSiteKey, { action: 'dokan_contact_seller_recaptcha' }).then(function(token) {
+          grecaptcha.execute(recaptchaSiteKey, { action: action }).then(function(token) {
             recaptchaTokenField.val(token);
             resolve();
           });
