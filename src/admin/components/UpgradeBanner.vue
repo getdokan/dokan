@@ -430,21 +430,6 @@ export default {
         }
     }
 }
-@media only screen and (min-width: 1367px) {
-    .dokan-promo-banner {
-        background-position: bottom -5px right 165px;
-        .content {
-            .details {
-                flex: 0 0 190px;
-            }
-
-            .features {
-                grid-template-columns: repeat(3,minmax(0,1fr));
-            }
-        }
-    }
-}
-
 
 @media (min-width: 769px) and (max-width: 1024px) {
     .dokan-promo-banner {
@@ -455,6 +440,21 @@ export default {
 
             .features {
                 display: none;
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 1367px) {
+    .dokan-promo-banner {
+        background-position: bottom -5px right 165px;
+        .content {
+            .details {
+                flex: 0 0 190px;
+            }
+
+            .features {
+                grid-template-columns: repeat(3,minmax(0,1fr));
             }
         }
     }
