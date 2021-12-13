@@ -1,5 +1,5 @@
 <template>
-    <AdminNotice endpoint="notices/global"></AdminNotice>
+    <AdminNotice endpoint="global"></AdminNotice>
 </template>
 
 <script>

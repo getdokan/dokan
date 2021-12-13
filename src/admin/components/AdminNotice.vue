@@ -56,7 +56,7 @@ export default {
     props: {
         endpoint: {
             type: String,
-            default: 'notices/admin'
+            default: 'admin'
         },
         interval: {
             type: Number,
@@ -82,7 +82,7 @@ export default {
 
     methods: {
         fetch() {
-            dokan.api.get( `/admin/${this.endpoint}` )
+            dokan.api.get( `/admin/notices/${this.endpoint}` )
                 .done( response => {
                     this.notices = response.filter( notice => notice.description );
                     if (response.length > 1){

@@ -1,5 +1,5 @@
 <template>
-    <AdminNotice :interval="10000" endpoint="notices/promo"></AdminNotice>
+    <AdminNotice :interval="10000" endpoint="promo"></AdminNotice>
 </template>
 
 <script>
