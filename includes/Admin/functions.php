@@ -1,7 +1,5 @@
 <?php
 
-use WeDevs\Dokan\Cache;
-
 /**
  * Get help documents for admin
  *
