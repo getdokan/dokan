@@ -321,6 +321,7 @@ class Assets {
             ],
             'dokan-google-recaptcha' => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+                'deps'      => [ 'dokan-util-helper' ],
                 'in_footer' => false,
             ],
 
@@ -395,7 +396,7 @@ class Assets {
             ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'dokan-google-recaptcha' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
