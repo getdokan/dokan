@@ -15,7 +15,7 @@
                 <div class="dropdown">
                     <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
                     <div class="list-item">
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/changelog' ) ); ?>" class="<?php echo dokan_has_new_version() ? 'active' : ''; ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'dokan#/changelog' ), admin_url( 'admin.php' ) ) ); ?>" class="<?php echo dokan_has_new_version() ? 'active' : ''; ?>">
                             <div class="dokan-icon">
                                 <div class="icon-whats-new"></div>
                             </div>
@@ -45,7 +45,7 @@
                             </div>
                             <?php esc_html_e( 'FAQ', 'dokan-lite' ); ?>
                         </a>
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/help' ) ); ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'dokan#/help' ), admin_url( 'admin.php' ) ) ); ?>">
                             <div class="dokan-icon">
                                 <div class="icon-basic"></div>
                             </div>
@@ -57,7 +57,7 @@
                             </div>
                             <?php esc_html_e( 'Request a Feature', 'dokan-lite' ); ?>
                         </a>
-                        <a href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-setup' ) ); ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'dokan-setup' ), admin_url( 'admin.php' ) ) ); ?>">
                             <div class="dokan-icon">
                                 <div class="icon-setup-wizard"></div>
                             </div>
