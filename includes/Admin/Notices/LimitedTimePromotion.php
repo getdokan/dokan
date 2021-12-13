@@ -50,11 +50,11 @@ class LimitedTimePromotion {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        $post_data = wp_unslash( $_POST );
+        $key = isset( $_POST['key'] ) ? sanitize_text_field( wp_unslash( $_POST['key'] ) ) : '';
 
-        if ( ! empty( $post_data['dokan_limited_time_promotion_dismissed'] ) ) {
+        if ( ! empty( $key ) && ! empty( sanitize_text_field( wp_unslash( $_POST['dokan_limited_time_promotion_dismissed'] ) ) ) ) {
             $already_displayed_promo   = get_option( $this->promo_option_key, [] );
-            $already_displayed_promo[] = $post_data['key'];
+            $already_displayed_promo[] = $key;
 
             update_option( $this->promo_option_key, $already_displayed_promo );
             wp_send_json_success();

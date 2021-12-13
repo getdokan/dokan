@@ -81,9 +81,7 @@ class SetupWizard {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        $post_data = wp_unslash( $_POST );
-
-        if ( ! empty( $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) ) {
+        if ( ! empty( sanitize_text_field( wp_unslash( $_POST['dismiss_dokan_admin_setup_wizard_notice'] ) ) ) ) {
             update_option( 'dokan_admin_setup_wizard_ready', true );
             wp_send_json_success();
         }
