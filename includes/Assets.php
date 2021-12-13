@@ -395,7 +395,7 @@ class Assets {
             ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'dokan-google-recaptcha' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
@@ -508,11 +508,13 @@ class Assets {
         // Scripts for contact form widget google recaptcha
         if ( dokan_is_store_page() || is_product() ) {
             // Checks if recaptcha site key and secret key exist
-            if ( dokan_get_recpatcha_site_and_secret_keys( true ) ) {
+            if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
+                $recaptcha_keys = dokan_get_recaptcha_site_and_secret_keys();
+
                 wp_enqueue_script( 'dokan-google-recaptcha' );
 
                 // Localized script for recaptcha
-                wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ) ] );
+                wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
 

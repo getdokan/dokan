@@ -345,8 +345,8 @@ class Ajax {
         }
 
         // Validate recaptcha if site key and secret key exist
-        if ( dokan_get_recpatcha_site_and_secret_keys( true ) ) {
-            $recaptcha_keys     = dokan_get_recpatcha_site_and_secret_keys();
+        if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
+            $recaptcha_keys     = dokan_get_recaptcha_site_and_secret_keys();
             $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
 
             if ( empty( $recaptcha_validate ) ) {

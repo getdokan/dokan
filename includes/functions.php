@@ -4170,7 +4170,7 @@ function dokan_get_vendor_store_banner_height() {
  *
  * @return array|bool
  */
-function dokan_get_recpatcha_site_and_secret_keys( $bool = false ) {
+function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
     $recaptcha_keys = [
         'site_key'   => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
         'secret_key' => dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ),
