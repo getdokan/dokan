@@ -308,11 +308,11 @@ class Customizer {
         $wp_customize->add_setting(
             'dokan_appearance[store_products_section][hide_featured_products]',
             [
-                'default'              => '',
+                'default'              => 'on',
                 'type'                 => 'option',
                 'capability'           => $this->capability,
-                'sanitize_callback'    => [ $this, 'bool_to_string' ],
-                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+                'sanitize_callback'    => [ $this, 'bool_to_on_off' ],
+                'sanitize_js_callback' => [ $this, 'on_off_to_bool' ],
             ]
         );
 
@@ -329,11 +329,11 @@ class Customizer {
         $wp_customize->add_setting(
             'dokan_appearance[store_products_section][hide_latest_products]',
             [
-                'default'              => '',
+                'default'              => 'on',
                 'type'                 => 'option',
                 'capability'           => $this->capability,
-                'sanitize_callback'    => [ $this, 'bool_to_string' ],
-                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+                'sanitize_callback'    => [ $this, 'bool_to_on_off' ],
+                'sanitize_js_callback' => [ $this, 'on_off_to_bool' ],
             ]
         );
 
@@ -348,22 +348,22 @@ class Customizer {
         );
 
         $wp_customize->add_setting(
-            'dokan_appearance[store_products_section][hide_best_selling_products]',
+            'dokan_appearance[store_products_section][hide_best_sell_products]',
             [
-                'default'              => '',
+                'default'              => 'on',
                 'type'                 => 'option',
                 'capability'           => $this->capability,
-                'sanitize_callback'    => [ $this, 'bool_to_string' ],
-                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+                'sanitize_callback'    => [ $this, 'bool_to_on_off' ],
+                'sanitize_js_callback' => [ $this, 'on_off_to_bool' ],
             ]
         );
 
         $wp_customize->add_control(
-            'hide_best_selling_products',
+            'hide_best_sell_products',
             [
                 'label'    => __( 'Hide best selling products', 'dokan-lite' ),
                 'section'  => 'dokan_store',
-                'settings' => 'dokan_appearance[store_products_section][hide_best_selling_products]',
+                'settings' => 'dokan_appearance[store_products_section][hide_best_sell_products]',
                 'type'     => 'checkbox',
             ]
         );
@@ -371,11 +371,11 @@ class Customizer {
         $wp_customize->add_setting(
             'dokan_appearance[store_products_section][hide_top_rated_products]',
             [
-                'default'              => '',
+                'default'              => 'on',
                 'type'                 => 'option',
                 'capability'           => $this->capability,
-                'sanitize_callback'    => [ $this, 'bool_to_string' ],
-                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+                'sanitize_callback'    => [ $this, 'bool_to_on_off' ],
+                'sanitize_js_callback' => [ $this, 'on_off_to_bool' ],
             ]
         );
 

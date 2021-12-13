@@ -15,10 +15,10 @@
     $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
 
     $products_block_appearance = dokan_get_option( 'store_products_section', 'dokan_appearance' );
-    $show_featured_products    = isset( $profile_info['show_featured_products'] ) ? $profile_info['show_featured_products'] : 'yes';
-    $show_latest_products      = isset( $profile_info['show_latest_products'] ) ? $profile_info['show_latest_products'] : 'yes';
-    $show_best_sell_products   = isset( $profile_info['show_best_sell_products'] ) ? $profile_info['show_best_sell_products'] : 'yes';
-    $show_top_rated_products   = isset( $profile_info['show_top_rated_products'] ) ? $profile_info['show_top_rated_products'] : 'yes';
+    $hide_featured_products    = isset( $profile_info['hide_featured_products'] ) ? $profile_info['hide_featured_products'] : 'no';
+    $hide_latest_products      = isset( $profile_info['hide_latest_products'] ) ? $profile_info['hide_latest_products'] : 'no';
+    $hide_best_sell_products   = isset( $profile_info['hide_best_sell_products'] ) ? $profile_info['hide_best_sell_products'] : 'no';
+    $hide_top_rated_products   = isset( $profile_info['hide_top_rated_products'] ) ? $profile_info['hide_top_rated_products'] : 'no';
 
     $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
     $address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';
@@ -161,7 +161,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-        
+
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
@@ -189,45 +189,41 @@
         </div>
 
         <?php
-        $sections = array_filter( $products_block_appearance, function( $value ) {
-            return empty( $value );
-        } );
-
-        if ( count( $sections ) > 0 ) {
+        if ( array_search( 'off', $products_block_appearance ) ) {
             ?>
             <div class="dokan-form-group">
                 <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
 
-            <?php if ( empty( $products_block_appearance['hide_featured_products'] ) ) : ?>
+            <?php if ( isset( $products_block_appearance['hide_featured_products'] ) && 'off' === $products_block_appearance['hide_featured_products'] ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_featured_products" value="yes" <?php checked( $show_featured_products, 'yes' ); ?>> <?php esc_html_e( 'Show featured producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_hide_featured_products" value="yes" <?php checked( $hide_featured_products, 'yes' ); ?>> <?php esc_html_e( 'Hide featured products section', 'dokan-lite' ); ?>
                     </label>
                 </div>
             <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_latest_products'] ) ) : ?>
+            <?php if ( isset( $products_block_appearance['hide_latest_products'] ) && 'off' === $products_block_appearance['hide_latest_products'] ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_latest_products" value="yes" <?php checked( $show_latest_products, 'yes' ); ?>> <?php esc_html_e( 'Show latest producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_hide_latest_products" value="yes" <?php checked( $hide_latest_products, 'yes' ); ?>> <?php esc_html_e( 'Hide latest products section', 'dokan-lite' ); ?>
                     </label>
                 </div>
             <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_best_selling_products'] ) ) : ?>
+            <?php if ( isset( $products_block_appearance['hide_best_sell_products'] ) && 'off' === $products_block_appearance['hide_best_sell_products'] ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_best_sell_products" value="yes" <?php checked( $show_best_sell_products, 'yes' ); ?>> <?php esc_html_e( 'Show best selling producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_hide_best_sell_products" value="yes" <?php checked( $hide_best_sell_products, 'yes' ); ?>> <?php esc_html_e( 'Hide best selling products section', 'dokan-lite' ); ?>
                     </label>
                 </div>
             <?php endif; ?>
 
-            <?php if ( empty( $products_block_appearance['hide_top_rated_products'] ) ) : ?>
+            <?php if ( isset( $products_block_appearance['hide_top_rated_products'] ) && 'off' === $products_block_appearance['hide_top_rated_products'] ) : ?>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="setting_show_top_rated_products" value="yes" <?php checked( $show_top_rated_products, 'yes' ); ?>> <?php esc_html_e( 'Show top rated producdts section', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_hide_top_rated_products" value="yes" <?php checked( $hide_top_rated_products, 'yes' ); ?>> <?php esc_html_e( 'Hide top rated products section', 'dokan-lite' ); ?>
                     </label>
                 </div>
             <?php endif; ?>

@@ -377,6 +377,7 @@ final class WeDevs_Dokan {
         $this->container['commission']    = new \WeDevs\Dokan\Commission();
         $this->container['customizer']    = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
+        $this->container['store_section'] = new \WeDevs\Dokan\SingleStoreSections();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
