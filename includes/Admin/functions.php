@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Get help documents for admin
  *
