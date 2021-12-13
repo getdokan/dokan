@@ -97,9 +97,9 @@ class Manager {
         $structure = get_option( 'permalink_structure' );
 
         if ( empty( $structure ) || '/archives/%post_id%' === $structure ) {
-            /* translators: %s permalink settings url */
             $notices[] = [
                 'type'        => 'alert',
+                /* translators: %s permalink settings url */
                 'description' => sprintf( __( 'The <strong>Plain and Numeric</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href="%s">Settings > Permalinks</a>', 'dokan-lite' ), admin_url( 'options-permalink.php' ) ),
                 'priority'    => 1,
             ];

@@ -42,17 +42,17 @@ class LimitedTimePromotion {
      * Dismisses limited time promo notice
      */
     public function dismiss_limited_time_promo() {
-        $post_data = wp_unslash( $_POST );
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
+        $post_data = wp_unslash( $_POST );
 
-        if ( isset( $post_data['dokan_limited_time_promotion_dismissed'] ) && $post_data['dokan_limited_time_promotion_dismissed'] ) {
+        if ( ! empty( $post_data['dokan_limited_time_promotion_dismissed'] ) ) {
             $already_displayed_promo   = get_option( $this->promo_option_key, [] );
             $already_displayed_promo[] = $post_data['key'];
 

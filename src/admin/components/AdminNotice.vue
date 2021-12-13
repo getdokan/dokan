@@ -56,7 +56,7 @@ export default {
     props: {
         endpoint: {
             type: String,
-            default: 'admin-notices'
+            default: 'notices/admin'
         },
         interval: {
             type: Number,

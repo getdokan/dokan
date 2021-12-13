@@ -55,10 +55,11 @@
         .dokan-notice-slides {
             position: relative;
             overflow: hidden;
-            min-height: 130px;
+            min-height: 110px;
             border: 1px solid #dfe2e7;
             border-radius: 0 5px 5px 0;
             background: #fff;
+            padding: 15px 0;
 
             .dokan-admin-notice {
                 position: absolute;
@@ -163,7 +164,7 @@
                     .dokan-btn {
                         font-size: 12px;
                         font-weight: 300;
-                        padding: 8px 15px;
+                        padding: 6px 12px;
                         margin-right: 15px;
                         margin-top: 10px;
                         border-radius: 3px;
@@ -180,7 +181,7 @@
                     }
 
                     .btn-dokan {
-                        padding: 10px 15px;
+                        padding: 8px 12px;
                     }
 
                     .dokan-btn-primary {
@@ -258,7 +259,7 @@
             justify-content: center;
 
             .notice-count {
-                margin: 0 12px;
+                margin: 0 8px;
                 color: #acacac;
                 font-size: 12px;
                 font-weight: normal;
@@ -275,6 +276,7 @@
             .next,
             .prev {
                 margin-top: 2px;
+                padding: 0 2px;
                 cursor: pointer;
             }
 
@@ -300,7 +302,7 @@
             }
 
             .slide-notice {
-                bottom: 10px;
+                bottom: 0;
                 top: unset;
                 right: 10px;
                 padding: 3px 5px;
@@ -322,7 +324,7 @@
 
             .slide-notice {
                 bottom: 0;
-                right: 12px;
+                right: 10px;
                 padding: 3px 8px;
                 top: unset;
             }
@@ -332,15 +334,7 @@
     @media screen and (min-width: 577px) and (max-width: 768px) {
         .dokan-admin-notices {
             .dokan-notice-slides {
-                min-height: 175px;
-            }
-        }
-    }
-
-    @media screen and (min-width: 769px) and (max-width: 1024px) {
-        .dokan-admin-notices {
-            .dokan-notice-slides {
-                min-height: 150px;
+                min-height: 160px;
             }
         }
     }

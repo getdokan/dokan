@@ -141,7 +141,7 @@ export default {
 
         getDokanLiteChangeLog() {
             this.loading = true;
-            dokan.api.get( '/admin/changelog' )
+            dokan.api.get( '/admin/changelog/lite' )
                 .done( response => {
                     this.lite_versions = JSON.parse( response );
                     this.loading = false;
@@ -161,7 +161,7 @@ export default {
 
         getDokanProChangeLog() {
             this.loading = true;
-            dokan.api.get( '/admin/dokan-pro-changelog' )
+            dokan.api.get( '/admin/changelog/pro' )
                 .done( response => {
                     this.pro_versions = JSON.parse( response );
                     this.loading = false;

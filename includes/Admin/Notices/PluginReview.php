@@ -63,7 +63,8 @@ class PluginReview {
 
         $notices[] = [
             'type'              => 'info',
-            'description'       => __( 'Enjoying <strong>Dokan multivendor</strong>? If our plugin is performing well for you, it would be great if you could kindly write a review about <strong>Dokan</strong> on <strong>WordPress.org</strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ),
+            'title'             => __( 'Enjoying Dokan Multivendor Marketplace?', 'dokan-lite' ),
+            'description'       => __( 'If our plugin is performing well for you, it would be great if you could kindly write a review about <strong>Dokan</strong> on <strong>WordPress.org</strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ),
             'priority'          => 1,
             'show_close_button' => true,
             'ajax_data'         => [

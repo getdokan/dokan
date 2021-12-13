@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\Admin\Notices\Helper;
+
 class Assets {
 
     /**
@@ -881,7 +883,7 @@ class Assets {
                 'currency'        => $this->get_localized_price(),
                 'proNag'          => dokan()->is_pro_exists() ? 'hide' : get_option( 'dokan_hide_pro_nag', 'show' ),
                 'hasPro'          => dokan()->is_pro_exists(),
-                'showPromoBanner' => empty( dokan_get_promo_notices() ),
+                'showPromoBanner' => empty( Helper::dokan_get_promo_notices() ),
                 'hasNewVersion'   => dokan_has_new_version(),
                 'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
                 'i18n'            => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],

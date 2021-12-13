@@ -7,19 +7,28 @@ use WeDevs\Dokan\Cache;
 use WP_REST_Server;
 
 /**
- * Dokan Change log
+ * Dokan Changelog handler class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.3
  */
 class ChangeLogController extends DokanRESTAdminController {
     /**
+     * Route base.
+     *
+     * @var string
+     */
+    protected $base = 'changelog';
+
+    /**
      * Register all routes related with stores
+     *
+     * @since 3.3.3
      *
      * @return void
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/changelog', [
+            $this->namespace, '/' . $this->base . '/lite', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_change_log' ],
@@ -32,6 +41,8 @@ class ChangeLogController extends DokanRESTAdminController {
     /**
      * Get Change Logs
      *
+     * @since 3.3.3
+     *
      * @return WP_REST_Response
      */
     public function get_change_log() {
@@ -41,7 +52,7 @@ class ChangeLogController extends DokanRESTAdminController {
         if ( false === $changelog ) {
             require_once DOKAN_DIR . '/templates/whats-new.php';
             $changelog = wp_json_encode( $changelog );
-            Cache::set_transient( $cache_key, $changelog, '', MONTH_IN_SECONDS * 2 );
+            Cache::set_transient( $cache_key, $changelog, '', MONTH_IN_SECONDS );
         }
 
         return rest_ensure_response( $changelog );

@@ -67,12 +67,5 @@
                 </div>
             </div>
         </div>
-        <!--<div class="menu-item">
-            <div class="item">
-                <div class="dokan-icon icon-notification-bell">
-                    <span class="notification-count">4</span>
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>

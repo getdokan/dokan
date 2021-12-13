@@ -21,7 +21,7 @@ class WhatsNew {
     /**
      * Show update notice
      *
-     * @since 1.0
+     * @since 3.3.3
      *
      * @param array $notices
      *
@@ -64,25 +64,23 @@ class WhatsNew {
     /**
      * Dismiss new notice
      *
-     * @since 1.0
+     * @since 3.3.3
      *
      * @return void
      */
     public function dismiss_new_notice() {
-        $post_data = wc_clean( wp_unslash( $_POST ) );
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
 
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
-        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
-
-        if ( ! empty( $post_data['dokan_promotion_dismissed'] ) ) {
+        if ( ! empty( sanitize_key( wp_unslash( $_POST['dokan_promotion_dismissed'] ) ) ) ) {
             $versions = get_option( 'dokan_lite_whats_new_versions', array() );
 
-            if ( ! in_array( DOKAN_PLUGIN_VERSION, $versions ) ) {
+            if ( ! in_array( DOKAN_PLUGIN_VERSION, $versions, true ) ) {
                 $versions[] = DOKAN_PLUGIN_VERSION;
             }
 

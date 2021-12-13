@@ -73,17 +73,17 @@ class SetupWizard {
      * @return void
      */
     public function dismiss_admin_setup_wizard_notice() {
-        $post_data = wc_clean( wp_unslash( $_POST ) );
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
-        if ( ! wp_verify_nonce( $post_data['nonce'], 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
+        $post_data = wp_unslash( $_POST );
 
-        if ( isset( $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) && $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) {
+        if ( ! empty( $post_data['dismiss_dokan_admin_setup_wizard_notice'] ) ) {
             update_option( 'dokan_admin_setup_wizard_ready', true );
             wp_send_json_success();
         }
