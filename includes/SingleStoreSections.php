@@ -72,23 +72,13 @@ class SingleStoreSections {
             return;
         }
 
-        // Get featured products
-        $featured_products = dokan_get_featured_products( $this->items_to_show, $store_user->ID );
-
-        // Check if there is featured products to preview.
-        if ( ! $featured_products->have_posts() ) {
-            return;
-        }
-
-        // Include product tempate after passing all checks.
-        dokan_get_template_part( 'store-products-block', '', [
-            'products_type' => $featured_products,
-            'section_id'    => 'dokan-featured-products',
-            'section_title' => __( 'Featured Products', 'dokan-lite' ),
-        ] );
-
-        // Turned additional products section to true
-        $this->has_additional_products_section = true;
+        // Get featured products section.
+        $this->get_addtional_products_section(
+            'dokan_get_featured_products',
+            $store_user->ID,
+            'dokan-featured-products',
+            __( 'Featured Products', 'dokan-lite' )
+        );
     }
 
     /**
@@ -107,23 +97,13 @@ class SingleStoreSections {
             return;
         }
 
-        // Get latest products.
-        $latest_products = dokan_get_latest_products( $this->items_to_show, $store_user->ID );
-
-        // Check if there is latest products to preview.
-        if ( ! $latest_products->have_posts() ) {
-            return;
-        }
-
-        // Include product tempate after passing all checks.
-        dokan_get_template_part( 'store-products-block', '', [
-            'products_type' => $latest_products,
-            'section_id'    => 'dokan-latest-products',
-            'section_title' => __( 'Latest Products', 'dokan-lite' ),
-        ] );
-
-        // Turned additional products section to true
-        $this->has_additional_products_section = true;
+        // Get latest products section.
+        $this->get_addtional_products_section(
+            'dokan_get_latest_products',
+            $store_user->ID,
+            'dokan-latest-products',
+            __( 'Latest Products', 'dokan-lite' )
+        );
     }
 
     /**
@@ -142,23 +122,13 @@ class SingleStoreSections {
             return;
         }
 
-        // Get best selling products.
-        $best_selling_products = dokan_get_best_selling_products( $this->items_to_show, $store_user->ID );
-
-        // Check if there is best selling products to preview.
-        if ( ! $best_selling_products->have_posts() ) {
-            return;
-        }
-
-        // Include product tempate after passing all checks.
-        dokan_get_template_part( 'store-products-block', '', [
-            'products_type' => $best_selling_products,
-            'section_id'    => 'dokan-best-selling-products',
-            'section_title' => __( 'Best Selling Products', 'dokan-lite' ),
-        ] );
-
-        // Turned additional products section to true
-        $this->has_additional_products_section = true;
+        // Get best selling products section.
+        $this->get_addtional_products_section(
+            'dokan_get_best_selling_products',
+            $store_user->ID,
+            'dokan-best-selling-products',
+            __( 'Best Selling Products', 'dokan-lite' )
+        );
     }
 
     /**
@@ -177,22 +147,32 @@ class SingleStoreSections {
             return;
         }
 
-        // Get top rated products.
-        $top_rated_products = dokan_get_top_rated_products( $this->items_to_show, $store_user->ID );
+        // Get top rated products section.
+        $this->get_addtional_products_section(
+            'dokan_get_top_rated_products',
+            $store_user->ID,
+            'dokan-top-rated-products',
+            __( 'Top Rated Products', 'dokan-lite' )
+        );
+    }
 
-        // Check if there is top rated products to preview.
-        if ( ! $top_rated_products->have_posts() ) {
+    public function get_addtional_products_section( $function_name, $vendor_id, $section_id, $section_title ) {
+        // Get products.
+        $products = $function_name( $this->items_to_show, $vendor_id );
+
+        // Check if there is any product.
+        if ( ! $products->have_posts() ) {
             return;
         }
 
-        // Include product tempate after passing all checks.
+        // Include product template after passing all checks.
         dokan_get_template_part( 'store-products-block', '', [
-            'products_type' => $top_rated_products,
-            'section_id'    => 'dokan-top-rated-products',
-            'section_title' => __( 'Top Rated Products', 'dokan-lite' ),
+            'products_type' => $products,
+            'section_id'    => $section_id,
+            'section_title' => $section_title,
         ] );
 
-        // Turned additional products section to true
+        // Turn additional products section to true
         $this->has_additional_products_section = true;
     }
 
