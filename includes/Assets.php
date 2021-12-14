@@ -319,6 +319,11 @@ class Assets {
                 'deps'      => [ 'jquery' ],
                 'in_footer' => false,
             ],
+            'dokan-google-recaptcha' => [
+                'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+                'deps'      => [ 'dokan-util-helper' ],
+                'in_footer' => false,
+            ],
 
             // customize scripts
             'customize-base' => [
@@ -436,7 +441,7 @@ class Assets {
             'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
-            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),   
+            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
             /**
              * Filter of maximun a vendor can add tags.
              *
@@ -498,6 +503,19 @@ class Assets {
                 wp_enqueue_script( 'dokan-vendor-registration' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
+            }
+        }
+
+        // Scripts for contact form widget google recaptcha
+        if ( dokan_is_store_page() || is_product() ) {
+            // Checks if recaptcha site key and secret key exist
+            if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
+                $recaptcha_keys = dokan_get_recaptcha_site_and_secret_keys();
+
+                wp_enqueue_script( 'dokan-google-recaptcha' );
+
+                // Localized script for recaptcha
+                wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
 
