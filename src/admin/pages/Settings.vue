@@ -113,6 +113,8 @@
                 hasPro: dokan.hasPro ? true : false,
                 searchText: '',
                 awaitingSearch: false,
+                withdrawMethods: {},
+                isSaveConfirm: false,
             }
         },
 
@@ -190,6 +192,7 @@
 
                         self.showLoading = false;
                         self.isLoaded = true;
+                        self.setWithdrawMethods();
                     }
                 });
             },
@@ -213,22 +216,32 @@
                 file_frame.open();
             },
 
-            saveSettings( fieldData, section ) {
-                if ( ! this.formIsValid( section ) ) {
+            async saveSettings(fieldData, section) {
+                if (!this.formIsValid(section)) {
                     return;
+                }
+
+                if ('dokan_withdraw' === section) {
+                    const consent = await this.setPaymentChangeAnnouncementAction(fieldData, section);
+                    fieldData.send_announcement_for_payment_change = false;
+
+                    if ('value' in consent && consent.value === true) {
+                        fieldData.send_announcement_for_payment_change = this.getDifference( this.withdrawMethods, fieldData.withdraw_methods );
+                    }
+                    this.withdrawMethods = fieldData.withdraw_methods;
                 }
 
                 var self = this,
                     data = {
-                        action : 'dokan_save_settings',
+                        action: 'dokan_save_settings',
                         nonce: dokan.nonce,
                         settingsData: fieldData,
                         section: section
                     };
                 self.showLoading = true;
 
-                jQuery.post( dokan.ajaxurl, data )
-                    .done( function ( response ) {
+                jQuery.post(dokan.ajaxurl, data)
+                    .done(function (response) {
                         var settings = response.data.settings;
 
                         self.isSaved = true;
@@ -236,27 +249,64 @@
 
                         self.message = response.data.message;
 
-                        self.settingValues[ settings.name ] = settings.value;
+                        self.settingValues[settings.name] = settings.value;
 
                         let option;
 
-                        for ( option in fieldData ) {
+                        for (option in fieldData) {
                             const fieldName = `${section}.${option}`;
 
-                            if ( self.refreshable_props[ fieldName ] ) {
+                            if (self.refreshable_props[fieldName]) {
                                 window.location.reload();
                                 break;
                             }
                         }
 
                         self.validationErrors = [];
-                    } )
-                    .fail( function ( jqXHR ) {
+                    })
+                    .fail(function (jqXHR) {
                         self.validationErrors = jqXHR.responseJSON.data.errors;
-                    } )
-                    .always( function () {
+                    })
+                    .always(function () {
                         self.showLoading = false;
-                    } );
+                    });
+            },
+            setWithdrawMethods() {
+                if ( 'withdraw_methods' in this.settingValues.dokan_withdraw ) {
+                    this.withdrawMethods = this.settingValues.dokan_withdraw.withdraw_methods;
+                }
+            },
+
+            async setPaymentChangeAnnouncementAction( fieldValue, section ) {
+                if ( ! ( 'withdraw_methods' in fieldValue ) || 'dokan_withdraw' !== section ) {
+                    return Promise.resolve( {value: false} );
+                }
+
+                const diff = this.getDifference( this.withdrawMethods, fieldValue.withdraw_methods );
+
+                if ( Object.keys( diff ).length === 0 ) {
+                    return Promise.resolve({value: false});
+                }
+
+                return this.$swal({
+                    title: this.__('Withdraw Method Changed'),
+                    text: this.__('Do you want to send an announcement to vendors about the removal of currently active payment method?'),
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: this.__('Yes, send announcement!')
+                });
+            },
+
+            getDifference(objA, objB) {
+                const keys = Object.keys(objB);
+                let difference = {};
+
+                keys.forEach( (key) => {
+                    if ( '' !== objA[key] && '' === objB[key] ) {
+                        difference[key] = key;
+                    }
+                });
+                return difference;
             },
 
             formIsValid( section ) {
