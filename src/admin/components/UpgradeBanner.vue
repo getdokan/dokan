@@ -445,7 +445,7 @@ export default {
     }
 }
 
-@media only screen and (min-width: 1367px) {
+@media only screen and (min-width: 1450px) {
     .dokan-promo-banner {
         background-position: bottom -5px right 165px;
         .content {
