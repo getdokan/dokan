@@ -631,14 +631,3 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
 
     return $data;
 }
-
-/**
- * Check has new version in dokan lite and pro
- *
- * @since 3.3.3
- *
- * @return bool
- */
-function dokan_has_new_version() {
-    return ! in_array( DOKAN_PLUGIN_VERSION, get_option( 'dokan_lite_whats_new_versions', array() ) ) || ( dokan()->is_pro_exists() && ! in_array( DOKAN_PRO_PLUGIN_VERSION, get_option( 'dokan_pro_whats_new_versions', array() ) ) );
-}

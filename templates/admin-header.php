@@ -8,14 +8,14 @@
         <div class="menu-item">
             <div class="item">
                 <div class="dokan-icon icon-question-mark">
-                    <?php if ( dokan_has_new_version() ) : ?>
+                    <?php if ( \WeDevs\Dokan\Admin\Notices\Helper::dokan_has_new_version() ) : ?>
                         <span class="whats-new-pointer"></span>
                     <?php endif; ?>
                 </div>
                 <div class="dropdown">
                     <h3><?php esc_html_e( 'Get Help', 'dokan-lite' ); ?></h3>
                     <div class="list-item">
-                        <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'dokan#/changelog' ), admin_url( 'admin.php' ) ) ); ?>" class="<?php echo dokan_has_new_version() ? 'active' : ''; ?>">
+                        <a href="<?php echo esc_url( add_query_arg( array( 'page' => 'dokan#/changelog' ), admin_url( 'admin.php' ) ) ); ?>" class="<?php echo \WeDevs\Dokan\Admin\Notices\Helper::dokan_has_new_version() ? 'active' : ''; ?>">
                             <div class="dokan-icon">
                                 <div class="icon-whats-new"></div>
                             </div>
