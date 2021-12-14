@@ -20,7 +20,7 @@ class SingleStoreSections {
      *
      * @var array
      */
-    public $products_section_appearance;
+    public $products_section_appearance = [];
 
     /**
      * Products to display in each additional sections.
@@ -29,16 +29,16 @@ class SingleStoreSections {
      *
      * @var int
      */
-    public $items_to_show;
+    public $items_to_show = 3;
 
     /**
      * If there is any additional products section.
      *
      * @since 3.3.3
      *
-     * @var int
+     * @var bool
      */
-    public $has_additional_products_section;
+    public $has_additional_products_section = false;
 
     /**
      * SingleStoreSections constructor.
@@ -67,13 +67,10 @@ class SingleStoreSections {
      * @return void
      */
     public function render_featured_products_section( $store_user, $store_info ) {
-        // Check if featured products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $store_info, 'hide_featured_products' ) ) {
-            return;
-        }
-
         // Get featured products section.
         $this->get_addtional_products_section(
+            $store_info,
+            'hide_featured_products',
             'dokan_get_featured_products',
             $store_user->ID,
             'dokan-featured-products',
@@ -92,13 +89,10 @@ class SingleStoreSections {
      * @return void
      */
     public function render_latest_products_section( $store_user, $store_info ) {
-        // Check if latest products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $store_info, 'hide_latest_products' ) ) {
-            return;
-        }
-
         // Get latest products section.
         $this->get_addtional_products_section(
+            $store_info,
+            'hide_latest_products',
             'dokan_get_latest_products',
             $store_user->ID,
             'dokan-latest-products',
@@ -117,13 +111,10 @@ class SingleStoreSections {
      * @return void
      */
     public function render_best_selling_products_section( $store_user, $store_info ) {
-        // Check if best selling products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $store_info, 'hide_best_sell_products' ) ) {
-            return;
-        }
-
         // Get best selling products section.
         $this->get_addtional_products_section(
+            $store_info,
+            'hide_best_sell_products',
             'dokan_get_best_selling_products',
             $store_user->ID,
             'dokan-best-selling-products',
@@ -142,13 +133,10 @@ class SingleStoreSections {
      * @return void
      */
     public function render_top_rated_products_section( $store_user, $store_info ) {
-        // Check if top rated products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $store_info, 'hide_top_rated_products' ) ) {
-            return;
-        }
-
         // Get top rated products section.
         $this->get_addtional_products_section(
+            $store_info,
+            'hide_top_rated_products',
             'dokan_get_top_rated_products',
             $store_user->ID,
             'dokan-top-rated-products',
@@ -156,7 +144,37 @@ class SingleStoreSections {
         );
     }
 
-    public function get_addtional_products_section( $function_name, $vendor_id, $section_id, $section_title ) {
+    /**
+     * Render additional title for regualr products block.
+     *
+     * @since 3.3.3
+     *
+     * @return void
+     */
+    public function render_additional_title_for_regular_products() {
+        // Check if there is any additional procucts block
+        if ( empty( $this->has_additional_products_section ) ) {
+            return;
+        }
+
+        ?>
+            <h2 class="products-list-heading"><?php esc_html_e( 'All Products' ); ?></h2>
+        <?php
+    }
+
+    /**
+     * Get additional products section based on requirements.
+     *
+     * @since 3.3.3
+     *
+     * @return void
+     */
+    public function get_addtional_products_section( $store_info, $settings_key, $function_name, $vendor_id, $section_id, $section_title ) {
+        // Check if desired products section visibility enabled by admin and vendor.
+        if ( ! $this->is_products_block_visible( $store_info, $settings_key ) ) {
+            return;
+        }
+
         // Get products.
         $products = $function_name( $this->items_to_show, $vendor_id );
 
@@ -199,23 +217,5 @@ class SingleStoreSections {
         }
 
         return true;
-    }
-
-    /**
-     * Render additional title for regualr products block.
-     *
-     * @since 3.3.3
-     *
-     * @return void
-     */
-    public function render_additional_title_for_regular_products() {
-        // Check if there is any additional procucts block
-        if ( empty( $this->has_additional_products_section ) ) {
-            return;
-        }
-
-        ?>
-            <h2 class="products-list-heading"><?php esc_html_e( 'All Products' ); ?></h2>
-        <?php
     }
 }
