@@ -96,7 +96,7 @@ class Products {
             'is_downloadable' => $is_downloadable,
             'is_virtual'      => $is_virtual,
             'digital_mode'    => $digital_mode,
-            'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
+            'class'           => 'show_if_subscription hide_if_variable-subscription show_if_simple',
         ) );
     }
 
