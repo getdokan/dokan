@@ -161,7 +161,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-
+        
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>

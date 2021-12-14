@@ -208,12 +208,12 @@ class SingleStoreSections {
      * @return bool
      */
     public function is_products_block_visible( $store_info, $key ) {
-        // Check if top rated products section enabled by admin.
+        // Check if current products section enabled by admin.
         if ( ! isset( $this->products_section_appearance[ $key ] ) || 'on' === $this->products_section_appearance[ $key ] ) {
             return false;
         }
 
-        // Check if top rated products section enabled by vendor.
+        // Check if current products section enabled by vendor.
         if ( isset( $store_info[ $key ] ) && 'yes' === $store_info[ $key ] ) {
             return false;
         }
