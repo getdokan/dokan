@@ -337,12 +337,18 @@ export default {
 
         fetchRequests() {
             this.loading = true;
-            let url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+            var user_id = '';
             if (parseInt(this.filter.user_id) > 0) {
-                url += '&user_id=' + this.filter.user_id;
+                user_id = this.filter.user_id;
             }
 
-            dokan.api.get(url)
+            const data = {
+                per_page: this.perPage,
+                page: this.currentPage,
+                status: this.currentStatus,
+                user_id: user_id,
+            };
+            dokan.api.get('/withdraw', data)
             .done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;
