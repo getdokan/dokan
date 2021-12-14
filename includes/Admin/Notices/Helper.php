@@ -68,7 +68,7 @@ class Helper {
                 $promos = '[]';
             }
 
-            Cache::set_transient( 'dokan_promo_notices', $promos, DAY_IN_SECONDS );
+            Cache::set_transient( 'promo_notices', $promos, DAY_IN_SECONDS );
         }
 
         $promos  = json_decode( $promos, true );
@@ -120,6 +120,17 @@ class Helper {
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
 
         return array_values( $notices );
+    }
+
+    /**
+     * Check has new version in dokan lite and pro
+     *
+     * @since 3.3.3
+     *
+     * @return bool
+     */
+    public static function dokan_has_new_version() {
+        return ! in_array( DOKAN_PLUGIN_VERSION, get_option( 'dokan_lite_whats_new_versions', array() ) ) || ( dokan()->is_pro_exists() && ! in_array( DOKAN_PRO_PLUGIN_VERSION, get_option( 'dokan_pro_whats_new_versions', array() ) ) );
     }
 
     /**
