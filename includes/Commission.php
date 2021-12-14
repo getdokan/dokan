@@ -122,7 +122,7 @@ class Commission {
 
         foreach ( $formatted_meta as $key => $meta ) {
             if ( in_array( $meta->key, $meta_to_hide, true ) ) {
-                unset( $formatted_meta[ $meta->key ] );
+                unset( $formatted_meta[ $key ] );
             }
         }
 
