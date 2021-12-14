@@ -515,7 +515,7 @@ class Assets {
                 wp_enqueue_script( 'dokan-google-recaptcha' );
 
                 // Localized script for recaptcha
-                wp_localize_script( 'dokan-google-recaptcha', 'google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
+                wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
 

@@ -54,11 +54,11 @@ function dokan_get_i18n_date_format( format = true ) {
  async function dokan_sweetalert( message = '' , options = {} ) {
   const defaults = {
     text              : message,
-    showCancelButton  : true, 
+    showCancelButton  : true,
     confirmButtonColor:'#28a745',
     cancelButtonColor :'#dc3545',
   };
-  
+
   const args    = { ...defaults, ...options };
 
   switch( args.action ) {
@@ -87,12 +87,12 @@ function dokan_get_i18n_date_format( format = true ) {
  */
 function dokan_execute_recaptcha(inputFieldSelector, action) {
   return new Promise( function(resolve) {
-    // Check if google_recaptcha object exists
-    if ( 'undefined' === typeof google_recaptcha ) {
+    // Check if dokan_google_recaptcha object exists
+    if ( 'undefined' === typeof dokan_google_recaptcha ) {
       resolve();
     }
 
-    const recaptchaSiteKey    = google_recaptcha.recaptcha_sitekey;
+    const recaptchaSiteKey    = dokan_google_recaptcha.recaptcha_sitekey;
     const recaptchaTokenField = document.querySelector(inputFieldSelector);
 
     // Check if the recaptcha site key exists
