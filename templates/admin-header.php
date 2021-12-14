@@ -4,8 +4,6 @@
         <span class="dokan-admin-header-version">v<?php echo DOKAN_PLUGIN_VERSION ?></span>
     </div>
 
-    <?php $has_new_version = WeDevs\Dokan\Admin\Notices\Helper::dokan_has_new_version() ?>
-
     <div class="dokan-admin-header-menu">
         <div class="menu-item">
             <div class="item">
