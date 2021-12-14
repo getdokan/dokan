@@ -78,7 +78,7 @@ class Helper {
             return $notices;
         }
 
-        $est_timestamp           = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->getTimestamp();
+        $est_time_now            = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
         $already_displayed_promo = get_option( '_dokan_limited_time_promo', [] );
 
         foreach ( $promos as $promo ) {
@@ -86,7 +86,7 @@ class Helper {
                 continue;
             }
 
-            if ( $est_timestamp < strtotime( $promo['start_date'] ) || $est_timestamp > strtotime( $promo['end_date'] ) ) {
+            if ( $promo['start_date'] >= $est_time_now && $promo['end_date'] > $est_time_now ) {
                 continue;
             }
 
