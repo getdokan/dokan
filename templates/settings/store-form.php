@@ -188,11 +188,9 @@
             </div>
         </div>
 
-        <?php
-        if ( array_search( 'off', $products_block_appearance ) ) {
-            ?>
-            <div class="dokan-form-group">
-                <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
+        <?php if ( array_search( 'off', $products_block_appearance ) ) : ?>
+        <div class="dokan-form-group">
+            <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
 
@@ -229,7 +227,7 @@
             <?php endif; ?>
             </div>
         </div>
-        <?php } ?>
+        <?php endif; ?>
 
         <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">

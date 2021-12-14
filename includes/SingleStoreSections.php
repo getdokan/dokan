@@ -41,6 +41,24 @@ class SingleStoreSections {
     public $has_additional_products_section = false;
 
     /**
+     * Vendor ID.
+     *
+     * @since 3.3.3
+     *
+     * @var int
+     */
+    public $vendor_id = 0;
+
+    /**
+     * Store info.
+     *
+     * @since 3.3.3
+     *
+     * @var array
+     */
+    public $store_info = [];
+
+    /**
      * SingleStoreSections constructor.
      *
      * @since 3.3.3
@@ -49,11 +67,29 @@ class SingleStoreSections {
         $this->products_section_appearance = dokan_get_option( 'store_products_section', 'dokan_appearance' );
         $this->items_to_show               = apply_filters( 'dokan_store_products_section_number_of_items', get_option( 'woocommerce_catalog_columns', 3 ) );
 
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_featured_products_section' ], 5, 2 );
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_latest_products_section' ], 5, 2 );
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_best_selling_products_section' ], 5, 2 );
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_top_rated_products_section' ], 5, 2 );
+        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_products_sections' ], 5, 2 );
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_title_for_regular_products' ], 99 );
+    }
+
+    /**
+     * Render additional products section.
+     *
+     * @since 3.3.3
+     *
+     * @param object $store_user
+     * @param array  $store_info
+     *
+     * @return void
+     */
+    public function render_additional_products_sections( $store_user, $store_info ) {
+        $this->vendor_id  = $store_user->ID;
+        $this->store_info = $store_info;
+
+        // Render additional products sections.
+        $this->render_featured_products_section();
+        $this->render_latest_products_section();
+        $this->render_best_selling_products_section();
+        $this->render_top_rated_products_section();
     }
 
     /**
@@ -61,18 +97,13 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param object $store_user_data
-     * @param array  $store_info
-     *
      * @return void
      */
-    public function render_featured_products_section( $store_user, $store_info ) {
+    public function render_featured_products_section() {
         // Get featured products section.
         $this->get_addtional_products_section(
-            $store_info,
             'hide_featured_products',
             'dokan_get_featured_products',
-            $store_user->ID,
             'dokan-featured-products',
             __( 'Featured Products', 'dokan-lite' )
         );
@@ -83,18 +114,13 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param object $store_user_data
-     * @param array  $store_info
-     *
      * @return void
      */
-    public function render_latest_products_section( $store_user, $store_info ) {
+    public function render_latest_products_section() {
         // Get latest products section.
         $this->get_addtional_products_section(
-            $store_info,
             'hide_latest_products',
             'dokan_get_latest_products',
-            $store_user->ID,
             'dokan-latest-products',
             __( 'Latest Products', 'dokan-lite' )
         );
@@ -105,18 +131,13 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param object $store_user_data
-     * @param array  $store_info
-     *
      * @return void
      */
-    public function render_best_selling_products_section( $store_user, $store_info ) {
+    public function render_best_selling_products_section() {
         // Get best selling products section.
         $this->get_addtional_products_section(
-            $store_info,
             'hide_best_sell_products',
             'dokan_get_best_selling_products',
-            $store_user->ID,
             'dokan-best-selling-products',
             __( 'Best Selling Products', 'dokan-lite' )
         );
@@ -127,25 +148,20 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param object $store_user_data
-     * @param array  $store_info
-     *
      * @return void
      */
-    public function render_top_rated_products_section( $store_user, $store_info ) {
+    public function render_top_rated_products_section() {
         // Get top rated products section.
         $this->get_addtional_products_section(
-            $store_info,
             'hide_top_rated_products',
             'dokan_get_top_rated_products',
-            $store_user->ID,
             'dokan-top-rated-products',
             __( 'Top Rated Products', 'dokan-lite' )
         );
     }
 
     /**
-     * Render additional title for regualr products block.
+     * Render additional title for regular products block.
      *
      * @since 3.3.3
      *
@@ -167,16 +183,21 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
+     * @param string $settings_key
+     * @param string $function_name
+     * @param string $section_id
+     * @param string $section_title
+     *
      * @return void
      */
-    public function get_addtional_products_section( $store_info, $settings_key, $function_name, $vendor_id, $section_id, $section_title ) {
+    public function get_addtional_products_section( $settings_key, $function_name, $section_id, $section_title ) {
         // Check if desired products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $store_info, $settings_key ) ) {
+        if ( ! $this->is_products_block_visible( $settings_key ) ) {
             return;
         }
 
         // Get products.
-        $products = $function_name( $this->items_to_show, $vendor_id );
+        $products = $function_name( $this->items_to_show, $this->vendor_id );
 
         // Check if there is any product.
         if ( ! $products->have_posts() ) {
@@ -198,23 +219,22 @@ class SingleStoreSections {
 
 
     /**
-     * Checks products block visibility settings by admin and vendor.
+     * Check products block visibility settings by admin and vendor.
      *
      * @since 3.3.3
      *
-     * @param array  $store_info
      * @param string $key
      *
      * @return bool
      */
-    public function is_products_block_visible( $store_info, $key ) {
+    public function is_products_block_visible( $key ) {
         // Check if current products section enabled by admin.
         if ( ! isset( $this->products_section_appearance[ $key ] ) || 'on' === $this->products_section_appearance[ $key ] ) {
             return false;
         }
 
         // Check if current products section enabled by vendor.
-        if ( isset( $store_info[ $key ] ) && 'yes' === $store_info[ $key ] ) {
+        if ( isset( $this->store_info[ $key ] ) && 'yes' === $this->store_info[ $key ] ) {
             return false;
         }
 
