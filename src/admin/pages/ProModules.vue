@@ -2,7 +2,6 @@
     <div id="lite-modules">
         <div class="dokan-modules-wrap">
             <h1>{{ __( 'Modules', 'dokan' ) }}</h1>
-            <AdminNotice></AdminNotice>
 
             <div class="module-content">
                 <div class="wp-list-table widefat dokan-modules">
@@ -50,15 +49,12 @@
 </template>
 
 <script>
-let AdminNotice = dokan_get_lib('AdminNotice');
-
 import ModuleUpgradePopup from '../components/ModuleUpgradePopup.vue';
 
 export default {
     name: "ProModules",
     components: {
         ModuleUpgradePopup,
-        AdminNotice,
     },
     data() {
         return {
