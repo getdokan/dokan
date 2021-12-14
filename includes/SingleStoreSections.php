@@ -158,7 +158,7 @@ class SingleStoreSections {
         }
 
         ?>
-            <h2 class="products-list-heading"><?php esc_html_e( 'All Products' ); ?></h2>
+            <h2 class="products-list-heading"><?php esc_html_e( 'All Products', 'dokan-lite' ); ?></h2>
         <?php
     }
 
@@ -184,11 +184,13 @@ class SingleStoreSections {
         }
 
         // Include product template after passing all checks.
-        dokan_get_template_part( 'store-products-block', '', [
-            'products_type' => $products,
-            'section_id'    => $section_id,
-            'section_title' => $section_title,
-        ] );
+        dokan_get_template_part(
+            'store-products-block', '', [
+                'products_type' => $products,
+                'section_id'    => $section_id,
+                'section_title' => $section_title,
+            ]
+        );
 
         // Turn additional products section to true
         $this->has_additional_products_section = true;
