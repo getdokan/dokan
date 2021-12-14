@@ -86,31 +86,29 @@ class Helper {
                 continue;
             }
 
-            if ( $promo['start_date'] >= $est_time_now && $promo['end_date'] > $est_time_now ) {
-                continue;
-            }
-
-            $notices[] = [
-                'type'              => 'promotion',
-                'title'             => $promo['title'],
-                'description'       => $promo['content'],
-                'priority'          => 10,
-                'show_close_button' => true,
-                'ajax_data'         => [
-                    'dokan_limited_time_promotion_dismissed' => true,
-                    'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
-                    'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
-                    'key'                                    => $promo['key'],
-                ],
-                'actions'           => [
-                    [
-                        'type'   => 'primary',
-                        'text'   => $promo['action_title'],
-                        'action' => $promo['action_url'],
-                        'target' => '_blank',
+            if ( $est_time_now >= $promo['start_date'] && $est_time_now <= $promo['end_date'] ) {
+                $notices[] = [
+                    'type'              => 'promotion',
+                    'title'             => $promo['title'],
+                    'description'       => $promo['content'],
+                    'priority'          => 10,
+                    'show_close_button' => true,
+                    'ajax_data'         => [
+                        'dokan_limited_time_promotion_dismissed' => true,
+                        'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
+                        'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
+                        'key'                                    => $promo['key'],
                     ],
-                ],
-            ];
+                    'actions'           => [
+                        [
+                            'type'   => 'primary',
+                            'text'   => $promo['action_title'],
+                            'action' => $promo['action_url'],
+                            'target' => '_blank',
+                        ],
+                    ],
+                ];
+            }
         }
 
         if ( empty( $notices ) ) {
