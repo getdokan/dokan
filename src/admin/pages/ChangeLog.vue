@@ -1,10 +1,9 @@
 <template>
     <div class="dokan-help-page">
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="section-wrapper">
             <div class="dokan-notice">
                 <h2></h2>
+                <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
             </div>
             <div class="change-log" :class="hasPro ? 'pro-change-log' : 'lite-change-log'" id="change-log">
                 <h3>{{ __( 'Dokan Changelog', 'dokan-lite' ) }}</h3>
