@@ -306,6 +306,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.3.4 ( Dec 15, 2021 ) ###
+
+- **fix:** Asset loading issue for admin notice
+
 ### v3.3.3 ( Dec 15, 2021 ) ###
 
 - **new:** Added what’s New page for Dokan Lite #1427
