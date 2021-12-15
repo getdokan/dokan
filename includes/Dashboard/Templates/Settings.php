@@ -780,26 +780,6 @@ class Settings {
             case 'paypal/edit':
                 $heading = __( 'Paypal Settings', 'dokan-lite' );
                 break;
-
-            case 'dokan-moip-connect':
-            case 'dokan-moip-connect/edit':
-                $heading = __( 'Wirecard(MOIP) Settings', 'dokan-lite' );
-                break;
-
-            case 'dokan-stripe-connect':
-            case 'dokan-stripe-connect/edit':
-                $heading = __( 'Stripe Settings', 'dokan-lite' );
-                break;
-
-            case 'skrill':
-            case 'skrill/edit':
-                $heading = __( 'Skrill Settings', 'dokan-lite' );
-                break;
-
-            case 'dokan-paypal-marketplace':
-            case 'dokan-paypal-marketplace/edit':
-                $heading = __( 'Dokan Paypal Marketplace Settings', 'dokan-lite' );
-                break;
         }
 
         /**
