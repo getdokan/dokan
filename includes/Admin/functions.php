@@ -625,6 +625,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id ) {
                 }
             });
         });
+
     </script>
     <?php
 

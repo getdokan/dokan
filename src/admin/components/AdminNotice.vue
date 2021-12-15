@@ -85,9 +85,7 @@ export default {
             dokan.api.get( `/admin/notices/${this.endpoint}` )
                 .done( response => {
                     this.notices = response.filter( notice => notice.description || notice.title );
-                    if (response.length > 1){
-                        this.startAutoSlide();
-                    }
+                    this.startAutoSlide();
                 });
         },
 
@@ -118,7 +116,7 @@ export default {
         },
 
         startAutoSlide() {
-            if ( ! this.loading ) {
+            if ( ! this.loading && this.notices.length > 1 ) {
                 this.timer = setInterval(() => {
                     this.slideNotice(1);
                 }, this.interval);
@@ -126,8 +124,10 @@ export default {
         },
 
         stopAutoSlide() {
-            clearInterval( this.timer );
-            this.timer = null;
+            if (! this.loading && this.notices.length > 1){
+                clearInterval( this.timer );
+                this.timer = null;
+            }
         },
 
         hideNotice( notice, index ) {
