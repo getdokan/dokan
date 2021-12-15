@@ -41,7 +41,8 @@ class WhatsNew {
 
         $notices[] = [
             'type'              => 'info',
-            'description'       => __( 'Check What\'s new in Dokan', 'dokan-lite' ),
+            /* translators: %s: plugin version */
+            'title'             => sprintf( __( 'Check What\'s new in Dokan Version %s', 'dokan-lite' ), DOKAN_PLUGIN_VERSION ),
             'priority'          => 10,
             'show_close_button' => true,
             'ajax_data'         => [
@@ -52,7 +53,7 @@ class WhatsNew {
             'actions'           => [
                 [
                     'type'   => 'primary',
-                    'text'   => __( 'What\'s New', 'dokan-lite' ),
+                    'text'   => __( 'View Details', 'dokan-lite' ),
                     'action' => esc_url( add_query_arg( array( 'page' => 'dokan#/changelog?plugin=dokan' ), admin_url( 'admin.php' ) ) ),
                 ],
             ],

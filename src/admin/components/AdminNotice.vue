@@ -4,7 +4,7 @@
             <transition-group :name="transitionName" tag="div" class="dokan-notice-slides">
                 <template v-for="(notice, index) in notices">
                     <div class="dokan-admin-notice" :key="index" v-show="(index + 1) === current_notice" :class="`dokan-${notice.type}`" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
-                        <div class="notice-content" :style="! notice.title || ! notice.actions ? 'align-items: center' : ''">
+                        <div class="notice-content" :style="! notice.title || ! notice.actions || ! notice.description ? 'align-items: center' : ''">
                             <div class="logo-wrap">
                                 <div class="dokan-logo"></div>
                                 <span class="dokan-icon" :class="`dokan-icon-${notice.type}`"></span>
@@ -84,7 +84,7 @@ export default {
         fetch() {
             dokan.api.get( `/admin/notices/${this.endpoint}` )
                 .done( response => {
-                    this.notices = response.filter( notice => notice.description );
+                    this.notices = response.filter( notice => notice.description || notice.title );
                     if (response.length > 1){
                         this.startAutoSlide();
                     }
