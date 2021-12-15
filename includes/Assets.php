@@ -414,12 +414,12 @@ class Assets {
             'dokan-admin-notice-js' => [
                 'src'     => $asset_url . '/js/dokan-admin-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version' => filemtime( $asset_path . '/js/dokan-admin-notice.js' ),
+                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
             ],
             'dokan-promo-notice-js' => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version' => filemtime( $asset_path . '/js/dokan-promo-notice.js' ),
+                'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
         ];
 
