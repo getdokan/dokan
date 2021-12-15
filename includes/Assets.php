@@ -218,6 +218,9 @@ class Assets {
             'dokan-timepicker' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/timepicker/timepicker.min.css',
             ],
+            'dokan-date-range-picker' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/date-range-picker/daterangepicker.css',
+            ],
             'dokan-admin-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
@@ -329,6 +332,10 @@ class Assets {
                 'src'       => $asset_url . '/vendors/jquery-ui/timepicker/timepicker.min.js',
                 'deps'      => [ 'jquery' ],
                 'in_footer' => false,
+            ],
+            'dokan-date-range-picker' => [
+                'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.js',
+                'deps'      => [ 'jquery', 'dokan-moment' ],
             ],
             'dokan-google-recaptcha' => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
