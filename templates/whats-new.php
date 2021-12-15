@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.3',
+        'released' => '2021-12-15',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added what’s New page for Dokan',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Grouped all Dokan admin notices into a single notice with slider',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'reCaptcha integration added to store contact form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Redesigned Dokan admin header section. Also added some useful links under admin bar.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'select2 dropdown margin issue fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix loading issue while loading Dokan pages when permalink sets to plain text, Also added a notice to instruct users to change permalink setting.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.2',
         'released' => '2021-11-30',
         'changes'  => [
