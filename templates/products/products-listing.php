@@ -104,18 +104,19 @@
                                             <th><?php esc_html_e( 'SKU', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Stock', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
-                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?></th>
+                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?><?php echo '<span class="tips earning-info" title="' . esc_html__( 'Earning could be greater than or less than the calculated value based on different criteria like tax and shipping fee receiver', 'dokan-lite' ) . '"></span>';?></th>
                                             <th><?php esc_html_e( 'Type', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Views', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php do_action( 'dokan_product_list_before_table_body_start' ); ?>
                                         <?php
                                         $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
-                                        $product_types  = apply_filters( 'dokan_product_types', 'simple' );
+                                        $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
                                         $get_data       = wp_unslash( $_GET );
 
                                         $args = array(

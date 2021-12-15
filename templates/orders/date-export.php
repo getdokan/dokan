@@ -32,7 +32,7 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
         <div class="dokan-form-group">
-            <input type="text" class="datepicker" style="width:120px; padding-bottom:7px" name="order_date" id="order_date_filter" placeholder="<?php esc_attr_e( 'Filter by Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date ); ?>">
+            <input type="text" autocomplete="off" class="datepicker" style="width:120px; padding-bottom:7px" name="order_date" id="order_date_filter" placeholder="<?php esc_attr_e( 'Filter by Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date ); ?>">
             <select name="customer_id" id="dokan-filter-customer" style="width:220px" class="dokan-form-control"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?><option>
             </select>
@@ -41,17 +41,19 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
         </div>
     </form>
 
-    <form action="" method="POST" class="dokan-right">
-        <div class="dokan-form-group">
-            <?php
-                wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
-            ?>
-            <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
-            <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
-            <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
-            <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
-        </div>
-    </form>
+    <?php if ( current_user_can( 'seller' ) || current_user_can( 'dokan_export_order' ) ) : ?>
+        <form action="" method="POST" class="dokan-right">
+            <div class="dokan-form-group">
+                <?php
+                    wp_nonce_field( 'dokan_vendor_order_export_action', 'dokan_vendor_order_export_nonce' );
+                ?>
+                <input type="submit" name="dokan_order_export_all"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export All', 'dokan-lite' ); ?>">
+                <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
+                <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
+                <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
+            </div>
+        </form>
+    <?php endif; ?>
 
     <div class="dokan-clearfix"></div>
 </div>

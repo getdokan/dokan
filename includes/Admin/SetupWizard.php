@@ -700,7 +700,7 @@ class SetupWizard {
         $options = array();
 
         $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? $_post_data['withdraw_methods'] : array();
-        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? sanitize_text_field( $_post_data['withdraw_limit'] ) : 0;
+        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? ( sanitize_text_field( $_post_data['withdraw_limit'] ) < 0 ? 0 : sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
         $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? $_post_data['withdraw_order_status'] : array();
 
         /**

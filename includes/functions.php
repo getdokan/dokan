@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache;
+
 /**
  * Dokan Admin menu position
  *
@@ -31,7 +34,7 @@ function dokana_admin_menu_capability() {
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
         $staff_id  = get_current_user_id();
-        $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
+        $vendor_id = (int) get_user_meta( $staff_id, '_vendor_id', true );
 
         if ( empty( $vendor_id ) ) {
             return $staff_id;
@@ -188,25 +191,21 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  * @return array
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
-    global $wpdb;
+    // get all function arguments as key => value pairs
+    $args = get_defined_vars();
 
-    $exclude_product_types      = esc_sql( $exclude_product_types );
-    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
-    $exclude_product_types_key  = implode( '-', $exclude_product_types );
-    $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
-    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
-    $counts                     = wp_cache_get( $cache_key, $cache_group );
-    $tracked_cache_keys         = get_option( $cache_group, [] );
-
-    if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
-        $tracked_cache_keys[] = $cache_key;
-        update_option( $cache_group, $tracked_cache_keys );
-    }
+    $cache_group = "seller_product_data_$user_id";
+    $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
         if ( ! $results ) {
+            global $wpdb;
+            $exclude_product_types      = esc_sql( $exclude_product_types );
+            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+
             $results = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
@@ -242,7 +241,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
         $counts['total'] = $total;
         $counts          = (object) $counts;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -264,16 +263,9 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
 function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
     global $wpdb;
 
-    $cache_group   = 'dokan_cache_seller_product_stock_data_' . $user_id;
-    $cache_key     = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
-    $counts        = wp_cache_get( $cache_key, $cache_group );
-    $get_old_cache = get_option( $cache_group, [] );
-
-    if ( ! in_array( $cache_key, $get_old_cache, true ) ) {
-        $get_old_cache[] = $cache_key;
-    }
-
-    update_option( $cache_group, $get_old_cache );
+    $cache_group = 'seller_product_stock_data_' . $user_id;
+    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
@@ -309,7 +301,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
         $counts = $total;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -329,8 +321,9 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
-    $cache_key = 'dokan-count-comments-' . $post_type . '-' . $user_id;
-    $counts    = wp_cache_get( $cache_key, 'dokan-lite' );
+    $cache_group = "count_{$post_type}_comments_{$user_id}";
+    $cache_key   = 'comments';
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $count = $wpdb->get_results(
@@ -373,7 +366,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -391,10 +384,10 @@ function dokan_count_comments( $post_type, $user_id ) {
 function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
-    $cache_key = 'dokan-pageview-' . $seller_id;
-    $pageview  = wp_cache_get( $cache_key, 'dokan_page_view' );
+    $cache_key   = "pageview_{$seller_id}";
+    $pageview    = Cache::get( $cache_key );
 
-    if ( $pageview === false ) {
+    if ( false === $pageview ) {
         $count = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT SUM(meta_value) as pageview
@@ -407,7 +400,7 @@ function dokan_author_pageviews( $seller_id ) {
 
         $pageview = $count->pageview;
 
-        wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600 * 4 );
+        Cache::set( $cache_key, $pageview );
     }
 
     return $pageview;
@@ -425,22 +418,19 @@ function dokan_author_pageviews( $seller_id ) {
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-earning-' . $seller_id;
-    $earnings    = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = "earning_{$seller_id}";
+    $earnings    = Cache::get( $cache_key, $cache_group );
 
-    if ( $earnings === false ) {
-        $count = $wpdb->get_row(
+    if ( false === $earnings ) {
+        $earnings = (int) $wpdb->get_var(
             $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
 
-        $earnings = $count->earnings;
-
-        wp_cache_set( $cache_key, $earnings, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
+        Cache::set( $cache_key, $earnings, $cache_group );
     }
 
-    return apply_filters( 'dokan_seller_total_sales', $earnings );
+    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
 }
 
 /**
@@ -477,7 +467,13 @@ function dokan_generate_sync_table() {
     if ( $orders ) {
         foreach ( $orders as $order ) {
             $wc_order         = wc_get_order( $order->order_id );
-            $admin_commission = dokan_get_admin_commission_by( $wc_order, $order->seller_id );
+
+            if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
+                $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
+            } else {
+                $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
+                $net_amount       = $order_total - $admin_commission;
+            }
 
             $wpdb->insert(
                 $table_name,
@@ -485,7 +481,7 @@ function dokan_generate_sync_table() {
                     'order_id'     => $order->order_id,
                     'seller_id'    => $order->seller_id,
                     'order_total'  => $order->order_total,
-                    'net_amount'   => $order->order_total - $admin_commission,
+                    'net_amount'   => $net_amount,
                     'order_status' => $order->order_status,
                 ],
                 [
@@ -682,24 +678,27 @@ function dokan_get_new_post_status() {
 /**
  * Function to get the client ip address
  *
+ * @since 3.3.1 Updated some logic
+ *
  * @return string
  */
 function dokan_get_client_ip() {
-    $ipaddress = '';
-    $_server   = $_SERVER;
-
-    if ( isset( $_server['HTTP_CLIENT_IP'] ) ) {
-        $ipaddress = $_server['HTTP_CLIENT_IP'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_X_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_X_FORWARDED'];
-    } elseif ( isset( $_server['HTTP_FORWARDED_FOR'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED_FOR'];
-    } elseif ( isset( $_server['HTTP_FORWARDED'] ) ) {
-        $ipaddress = $_server['HTTP_FORWARDED'];
-    } elseif ( isset( $_server['REMOTE_ADDR'] ) ) {
-        $ipaddress = $_server['REMOTE_ADDR'];
+    if ( isset( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+        // Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
+        // Make sure we always only send through the first IP in the list which should always be the client IP.
+        $ipaddress = (string) rest_is_ip_address( trim( current( preg_split( '/,/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) );
+    } elseif ( isset( $_SERVER['HTTP_X_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED_FOR'] ) );
+    } elseif ( isset( $_SERVER['HTTP_FORWARDED'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['HTTP_FORWARDED'] ) );
+    } elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ipaddress = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
     } else {
         $ipaddress = 'UNKNOWN';
     }
@@ -1040,17 +1039,40 @@ function dokan_locate_template( $template_name, $template_path = '', $default_pa
  *
  * @param string $page
  * @param string $context
+ * @param string $subpage
  *
  * @return string url of the page
  */
-function dokan_get_page_url( $page, $context = 'dokan' ) {
+function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
     if ( $context == 'woocommerce' ) {
         $page_id = wc_get_page_id( $page );
     } else {
         $page_id = dokan_get_option( $page, 'dokan_pages' );
     }
 
-    return apply_filters( 'dokan_get_page_url', get_permalink( $page_id ), $page_id, $context );
+    $url = get_permalink( $page_id );
+
+    if ( $subpage ) {
+        $url = dokan_add_subpage_to_url( $url, $subpage );
+    }
+
+    return apply_filters( 'dokan_get_page_url', $url, $page_id, $context, $subpage );
+}
+
+/**
+ * Add subpage to url: this will add wpml like plugin compatibility
+ *
+ * @param string $url
+ * @param string $subpage
+ *
+ * @since 3.2.14
+ *
+ * @return false|string
+ */
+function dokan_add_subpage_to_url( $url, $subpage ) {
+    $url_parts         = wp_parse_url( $url );
+    $url_parts['path'] = $url_parts['path'] . $subpage;
+    return http_build_url( '', $url_parts );
 }
 
 /**
@@ -1603,8 +1625,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y' ),
-                    'month' => date( 'm' ),
+                    'year'  => dokan_current_datetime()->format( 'Y' ),
+                    'month' => dokan_current_datetime()->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
@@ -1616,8 +1638,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y', strtotime( 'last month' ) ),
-                    'month' => date( 'm', strtotime( 'last month' ) ),
+                    'year'  => dokan_current_datetime()->modify( 'last month' )->format( 'Y' ),
+                    'month' => dokan_current_datetime()->modify( 'last month' )->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
@@ -2138,9 +2160,7 @@ function dokan_get_navigation_url( $name = '' ) {
     $url = get_permalink( $page_id );
 
     if ( ! empty( $name ) ) {
-        $urlParts         = wp_parse_url( $url );
-        $urlParts['path'] = $urlParts['path'] . $name . '/';
-        $url              = http_build_url( '', $urlParts );
+        $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
     return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
@@ -2777,79 +2797,6 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
 }
 
 /**
- * Keep record of keys by group name
- *
- * @since 2.6.9
- *
- * @param string $key
- * @param string $group
- *
- * @return void
- */
-function dokan_cache_update_group( $key, $group ) {
-    $keys = get_option( $group, [] );
-
-    if ( in_array( $key, $keys ) ) {
-        return;
-    }
-
-    $keys[] = $key;
-    update_option( $group, $keys );
-}
-
-/**
- * Bulk clear cache values by group name
- *
- * @since 2.6.9
- *
- * @param string $group
- *
- * @return void
- */
-function dokan_cache_clear_group( $group ) {
-    $keys = get_option( $group, [] );
-
-    if ( ! empty( $keys ) ) {
-        foreach ( $keys as $key ) {
-            wp_cache_delete( $key, $group );
-            unset( $keys[ $key ] );
-        }
-    }
-
-    update_option( $group, $keys );
-}
-
-//cache reset actions
-add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 );
-add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
-add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
-add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
-
-/**
- * Reset cache group related to seller orders
- */
-function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
-    dokan_cache_clear_group( 'dokan_seller_data_' . $seller_id );
-}
-
-function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
-    $seller_id = dokan_get_seller_id_by_order( $order_id );
-    dokan_cache_clear_group( 'dokan_seller_data_' . $seller_id );
-}
-
-/**
- * Reset cache group related to seller products
- */
-function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
-    $seller_id = dokan_get_current_user_id();
-
-    dokan_clear_product_caches( $product_id );
-    dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
-    dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
-    dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
-}
-
-/**
  * Get seller earning for a given product
  *
  * @since 2.6.9
@@ -2968,8 +2915,8 @@ function dokan_get_all_caps() {
             'dokan_manage_order'      => __( 'Manage order', 'dokan-lite' ),
             'dokan_manage_order_note' => __( 'Manage order note', 'dokan-lite' ),
             'dokan_manage_refund'     => __( 'Manage refund', 'dokan-lite' ),
+            'dokan_export_order'      => __( 'Export order', 'dokan-lite' ),
         ],
-
         'coupon' => [
             'dokan_add_coupon'    => __( 'Add coupon', 'dokan-lite' ),
             'dokan_edit_coupon'   => __( 'Edit coupon', 'dokan-lite' ),
@@ -3980,7 +3927,7 @@ function dokan_is_vendor_info_hidden( $option = null ) {
  * Function current_datetime() compatibility for wp version < 5.3
  *
  * @since 3.1.1
- * @throws Exception
+ *
  * @return DateTimeImmutable
  */
 function dokan_current_datetime() {
@@ -4041,9 +3988,9 @@ function dokan_wp_timezone_string() {
  *
  * @param string|timestamp $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
+ *
  * @since 3.1.1
  *
- * @throws Exception
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {
@@ -4102,6 +4049,27 @@ function dokan_format_datetime( $date = '', $format = false ) {
 }
 
 /**
+ * This method will convert datetime string into timestamp
+ *
+ * @since 3.2.15
+ * @param string $date_string
+ * @param bool $gmt_date
+ * @return bool|int date timestamp on success, false otherwise
+ */
+function dokan_get_timestamp( $date_string, $gmt_date = false ) {
+    // get current time
+    $now = dokan_current_datetime();
+    // convert to gmt time
+    if ( $gmt_date ) {
+        $now = $now->setTimezone( new DateTimeZone( 'UTC' ) );
+    }
+    // modify current date
+    $now = $now->modify( $date_string );
+
+    return $now ? $now->getTimestamp() : false;
+}
+
+/**
  * Get threshold day for a user
  *
  * @param $user_id
@@ -4118,4 +4086,77 @@ function dokan_get_withdraw_threshold( $user_id ) {
     }
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
+}
+
+/**
+ * Insert a value or key/value pair (assoc array) after a specific key in an array.  If key doesn't exist, value is appended
+ * to the end of the array.
+ *
+ * @param array $old_array
+ * @param array $new_array
+ * @param string $insert_after_key
+ *
+ * @since 3.2.16
+ *
+ * @return array
+ */
+function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key ) {
+    $keys   = array_keys( $old_array );
+    $index  = array_search( $insert_after_key, $keys, true );
+    $pos    = false === $index ? count( $old_array ) : $index + 1;
+
+    return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
+}
+
+/**
+ * Check a order have apply admin coupon
+ *
+ * @since 3.2.16
+ *
+ * @param WC_Order $order
+ * @param int      $vendor_id
+ * @param int      $product_id
+ *
+ * @return bool
+ */
+function dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id = 0 ) {
+    if (
+        function_exists( 'dokan_is_admin_coupon_used_for_vendors' ) &&
+        dokan_is_admin_coupon_used_for_vendors( $order, $vendor_id, $product_id ) ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Get vendor store banner width
+ *
+ * Added new filter hook for vendor store
+ * banner width size @hook dokan_store_banner_default_width
+ *
+ * @since 3.2.15
+ *
+ * @return int $width Banner width
+ */
+function dokan_get_vendor_store_banner_width() {
+    $width = absint( apply_filters( 'dokan_store_banner_default_width', dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) ) );
+
+    return ( $width !== 0 ) ? $width : 625;
+}
+
+/**
+ * Get vendor store banner height
+ *
+ * Added new filter hook for vendor
+ * store banner height size @hook dokan_store_banner_default_height
+ *
+ * @since 3.2.15
+ *
+ * @return int $height Banner height
+ */
+function dokan_get_vendor_store_banner_height() {
+    $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
+
+    return ( $height !== 0 ) ? $height : 300;
 }

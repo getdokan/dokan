@@ -182,6 +182,7 @@
                     if ( ! $found ) data.unshift( tag );
                 },
                 minimumInputLength: 2,
+                maximumSelectionLength: dokan.maximum_tags_select_length !== undefined ? dokan.maximum_tags_select_length : -1,
                 ajax: {
                     url: dokan.ajaxurl,
                     dataType: 'json',
@@ -417,7 +418,7 @@
                     value = self.val();
 
                 if ( value == '' ) {
-                    self.closest( 'li' ).find( 'strong' ).html( 'Attribute Name' );
+                    self.closest( 'li' ).find( 'strong' ).html( dokan.i18n_attribute_label );
                 } else {
                     self.closest( 'li' ).find( 'strong' ).html( value );
                 }
@@ -444,12 +445,16 @@
                 });
             },
 
-            addNewExtraAttr: function(e) {
+            addNewExtraAttr: async function(e) {
                 e.preventDefault();
 
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
-                var new_attribute_name = window.prompt( dokan.new_attribute_prompt );
+                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
+                    action : 'prompt', 
+                    input  :'text'
+                } );
+                var new_attribute_name = result.value;
 
                 if ( new_attribute_name ) {
 
@@ -462,7 +467,10 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            window.alert( response.error );
+                            dokan_sweetalert( response.error, { 
+                                action : 'alert',
+                                icon   : 'warning'
+                            } );
                         } else if ( response.slug ) {
                             $wrapper.find( 'select.dokan_attribute_values' ).append( '<option value="' + response.slug + '" selected="selected">' + response.name + '</option>' );
                             $wrapper.find( 'select.dokan_attribute_values' ).trigger( 'change' );
@@ -515,10 +523,16 @@
                 });
             },
 
-            removeAttribute: function(evt) {
+            removeAttribute: async function(evt) {
                 evt.stopPropagation();
+                evt.preventDefault();
 
-                if ( window.confirm( dokan.remove_attribute ) ) {
+                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
+                    action :'confirm',
+                    icon   :'warning' 
+                } );
+
+                if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
                     var $parent = $( this ).closest('li.product-attribute-list');
 
                     $parent.fadeOut( 300, function() {
@@ -856,6 +870,7 @@
             var product_type    = $( '#product_type' ).val();
             var is_virtual      = $( 'input#_virtual:checked' ).length;
             var is_downloadable = $( 'input#_downloadable:checked' ).length;
+            let shippingTaxContainer  = $( '.dokan-product-shipping-tax' );
 
             // Hide/Show all with rules.
             var hide_classes = '.hide_if_downloadable, .hide_if_virtual';
@@ -885,6 +900,18 @@
             }
             if ( is_virtual ) {
                 $( '.hide_if_virtual' ).hide();
+
+                if ( 1 === $( '.dokan-product-shipping-tax .dokan-section-content' ).first().children().length ) {
+                    shippingTaxContainer.hide();
+                } else {
+                    if ( shippingTaxContainer.hasClass('hide_if_virtual') ) {
+                        shippingTaxContainer.removeClass('hide_if_virtual');
+                    }
+
+                    shippingTaxContainer.show();
+                }
+            } else {
+                shippingTaxContainer.show();
             }
 
             $( '.hide_if_' + product_type ).hide();
@@ -940,7 +967,7 @@
             let sale_price = $( 'input.dokan-product-sales-price' ).val();
             let earning_suggestion = $('.simple-product span.vendor-price');
 
-            earning_suggestion.html( 'Calculating' );
+            earning_suggestion.html( dokan.i18n_calculating );
 
             $.get( dokan.ajaxurl, {
                 action: 'get_vendor_earning',

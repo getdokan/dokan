@@ -5,7 +5,7 @@ dokanWebpack([0],[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(29);
 var disposed = false
@@ -64,7 +64,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(18);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
@@ -141,11 +141,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(47);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(118);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(116)
+  __webpack_require__(117)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -192,6 +192,12 @@ if (false) {(function () {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -304,15 +310,15 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(21);
 //
 //
 //
@@ -686,7 +692,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -721,7 +727,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -948,7 +954,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1031,7 +1037,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1212,7 +1218,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1441,19 +1447,15 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */,
 /* 16 */,
-/* 17 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
-/* 18 */
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(31);
 var disposed = false
@@ -1505,11 +1507,11 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(32);
 var disposed = false
@@ -1557,9 +1559,8 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 20 */,
-/* 21 */,
-/* 22 */
+/* 22 */,
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1610,12 +1611,11 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 23 */,
 /* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(26);
 var disposed = false
@@ -1768,7 +1768,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(33);
 var disposed = false
@@ -2018,7 +2018,7 @@ var render = function() {
                   innerHTML: _vm._s(
                     _vm.sprintf(
                       _vm.__(
-                        "You can change your profile picutre on %s",
+                        "You can change your profile picture on %s",
                         "dokan-lite"
                       ),
                       "<a href='https://gravatar.com/' target='_blank'>Gravatar</a>"
@@ -2478,7 +2478,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(36);
 var disposed = false
@@ -2815,7 +2815,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(39);
 var disposed = false
@@ -3489,7 +3489,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
 //
@@ -3740,7 +3740,7 @@ var Currency = dokan_get_lib('Currency');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
@@ -4296,9 +4296,9 @@ var Currency = dokan_get_lib('Currency');
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(127);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(130);
 //
 //
 //
@@ -5181,11 +5181,11 @@ var Currency = dokan_get_lib('Currency');
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(51);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(125);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(126);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(124)
+  __webpack_require__(125)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5331,9 +5331,11 @@ var Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(136);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
 //
 //
 //
@@ -5415,6 +5417,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 var Loading = dokan_get_lib('Loading');
+
 
 
 
@@ -5709,6 +5712,25 @@ var Loading = dokan_get_lib('Loading');
       });
       self.settingFields = settingFields;
       self.settingSections = settingSections;
+    },
+    handleDataClearCheckboxEvent: function handleDataClearCheckboxEvent() {
+      var self = this;
+      __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
+        if (__WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).is(':checked')) {
+          self.$swal({
+            title: self.__('Are you sure?', 'dokan-lite'),
+            type: 'warning',
+            html: self.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
+            showCancelButton: true,
+            confirmButtonText: self.__('Okay', 'dokan-lite'),
+            cancelButtonText: self.__('Cancel', 'dokan-lite')
+          }).then(function (response) {
+            if (response.dismiss) {
+              self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+            }
+          });
+        }
+      });
     }
   },
   created: function created() {
@@ -5721,6 +5743,9 @@ var Loading = dokan_get_lib('Loading');
 
     this.settingSections = dokan.settings_sections;
     this.settingFields = dokan.settings_fields;
+  },
+  updated: function updated() {
+    this.handleDataClearCheckboxEvent();
   }
 });
 
@@ -5729,9 +5754,9 @@ var Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(139);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(140);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(24);
 
@@ -5741,6 +5766,91 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -6320,7 +6430,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(172);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(173);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
 //
 //
@@ -7063,7 +7173,7 @@ var Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(182);
 //
 //
 //
@@ -7398,14 +7508,15 @@ var Loading = dokan_get_lib('Loading');
 /* 102 */,
 /* 103 */,
 /* 104 */,
-/* 105 */
+/* 105 */,
+/* 106 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(109);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(186);
 
 
 
@@ -7441,17 +7552,17 @@ new Vue({
 Object(__WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__["a" /* default */])('dokan');
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(45);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(109);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(107)
+  __webpack_require__(108)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -7497,13 +7608,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7534,20 +7645,20 @@ if (false) {
 }
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(111);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(111);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(131);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_Settings_vue__ = __webpack_require__(134);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Vendors_vue__ = __webpack_require__(170);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_VendorCapabilities_vue__ = __webpack_require__(176);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_ProModules_vue__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_Settings_vue__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Vendors_vue__ = __webpack_require__(171);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_VendorCapabilities_vue__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_ProModules_vue__ = __webpack_require__(180);
 
 
 
@@ -7605,18 +7716,18 @@ parseRouteComponent(dokan.routes);
 }));
 
 /***/ }),
-/* 110 */,
-/* 111 */
+/* 111 */,
+/* 112 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(46);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(119);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(112)
+  __webpack_require__(113)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -7662,22 +7773,22 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 113 */,
 /* 114 */,
 /* 115 */,
-/* 116 */
+/* 116 */,
+/* 117 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7726,7 +7837,7 @@ if (false) {
 }
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8221,17 +8332,17 @@ if (false) {
 }
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(48);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(121);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(122);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(120)
+  __webpack_require__(121)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8277,13 +8388,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8757,17 +8868,17 @@ if (false) {
 }
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(49);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(131);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(123)
+  __webpack_require__(124)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8813,12 +8924,6 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 123 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 124 */
 /***/ (function(module, exports) {
 
@@ -8826,6 +8931,12 @@ if (false) {(function () {
 
 /***/ }),
 /* 125 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8915,11 +9026,11 @@ if (false) {
 }
 
 /***/ }),
-/* 126 */,
 /* 127 */,
 /* 128 */,
 /* 129 */,
-/* 130 */
+/* 130 */,
+/* 131 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9508,17 +9619,17 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(52);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(134);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(132)
+  __webpack_require__(133)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9564,13 +9675,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9641,17 +9752,17 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(53);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(170);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(135)
+  __webpack_require__(136)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9697,23 +9808,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(54);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(165);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(166);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(137)
+  __webpack_require__(138)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9759,13 +9870,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 138 */,
 /* 139 */,
 /* 140 */,
 /* 141 */,
@@ -9792,7 +9902,8 @@ if (false) {(function () {
 /* 162 */,
 /* 163 */,
 /* 164 */,
-/* 165 */
+/* 165 */,
+/* 166 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9814,7 +9925,9 @@ var render = function() {
                     attrs: { colspan: "2" }
                   },
                   [_c("label", [_vm._v(_vm._s(_vm.fieldData.label))])]
-                )
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" })
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -9832,173 +9945,217 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  (_vm.fieldData.type || "text") === "checkbox"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    (_vm.fieldData.type || "text") === "checkbox"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: "checkbox"
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: "checkbox"
-                        },
-                        domProps: {
-                          checked: Array.isArray(
-                            _vm.fieldValue[_vm.fieldData.name]
-                          )
-                            ? _vm._i(_vm.fieldValue[_vm.fieldData.name], null) >
-                              -1
-                            : _vm.fieldValue[_vm.fieldData.name]
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.fieldValue[_vm.fieldData.name],
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = null,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.fieldValue,
-                                    _vm.fieldData.name,
-                                    $$a.concat([$$v])
-                                  )
+                          domProps: {
+                            checked: Array.isArray(
+                              _vm.fieldValue[_vm.fieldData.name]
+                            )
+                              ? _vm._i(
+                                  _vm.fieldValue[_vm.fieldData.name],
+                                  null
+                                ) > -1
+                              : _vm.fieldValue[_vm.fieldData.name]
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.fieldValue[_vm.fieldData.name],
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
                               } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.fieldValue,
-                                    _vm.fieldData.name,
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $$c
+                                )
                               }
-                            } else {
-                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$c)
                             }
                           }
-                        }
-                      })
-                    : (_vm.fieldData.type || "text") === "radio"
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
+                        })
+                      : (_vm.fieldData.type || "text") === "radio"
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: "radio"
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: "radio"
-                        },
-                        domProps: {
-                          checked: _vm._q(
-                            _vm.fieldValue[_vm.fieldData.name],
-                            null
-                          )
-                        },
-                        on: {
-                          change: function($event) {
-                            return _vm.$set(
-                              _vm.fieldValue,
-                              _vm.fieldData.name,
+                          domProps: {
+                            checked: _vm._q(
+                              _vm.fieldValue[_vm.fieldData.name],
                               null
                             )
-                          }
-                        }
-                      })
-                    : _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.fieldValue[_vm.fieldData.name],
-                            expression: "fieldValue[fieldData.name]"
-                          }
-                        ],
-                        staticClass: "regular-text",
-                        class: [
-                          {
-                            "dokan-input-validation-error": _vm.hasValidationError(
-                              _vm.fieldData.name
-                            )
                           },
-                          _vm.fieldData.class
-                        ],
-                        attrs: {
-                          id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          name: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                          type: _vm.fieldData.type || "text"
-                        },
-                        domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          on: {
+                            change: function($event) {
+                              return _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                null
+                              )
                             }
-                            _vm.$set(
-                              _vm.fieldValue,
-                              _vm.fieldData.name,
-                              $event.target.value
-                            )
                           }
-                        }
-                      }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                        })
+                      : _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          class: [
+                            {
+                              "dokan-input-validation-error": _vm.hasValidationError(
+                                _vm.fieldData.name
+                              )
+                            },
+                            _vm.fieldData.class
+                          ],
+                          attrs: {
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name:
+                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            type: _vm.fieldData.type || "text"
+                          },
+                          domProps: {
+                            value: _vm.fieldValue[_vm.fieldData.name]
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10016,75 +10173,106 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
                     class: [
-                      {
-                        "dokan-input-validation-error": _vm.hasValidationError(
-                          _vm.fieldData.name
-                        )
-                      },
-                      _vm.fieldData.class
-                    ],
-                    attrs: {
-                      type: "number",
-                      min: _vm.fieldData.min,
-                      max: _vm.fieldData.max,
-                      step: _vm.fieldData.step,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      class: [
+                        {
+                          "dokan-input-validation-error": _vm.hasValidationError(
+                            _vm.fieldData.name
+                          )
+                        },
+                        _vm.fieldData.class
+                      ],
+                      attrs: {
+                        type: "number",
+                        min: _vm.fieldData.min,
+                        max: _vm.fieldData.max,
+                        step: _vm.fieldData.step,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10104,73 +10292,87 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
-                    class: {
-                      wc_input_decimal:
-                        _vm.allSettingsValues.dokan_selling.commission_type ==
-                        "percentage",
-                      wc_input_price:
-                        _vm.allSettingsValues.dokan_selling.commission_type ==
-                        "flat"
-                    },
-                    attrs: {
-                      type: "text",
-                      min: _vm.fieldData.min,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      class: {
+                        wc_input_decimal:
+                          _vm.allSettingsValues.dokan_selling.commission_type ==
+                          "percentage",
+                        wc_input_price:
+                          _vm.allSettingsValues.dokan_selling.commission_type ==
+                          "flat"
+                      },
+                      attrs: {
+                        type: "text",
+                        min: _vm.fieldData.min,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10190,6 +10392,8 @@ var render = function() {
                     [_vm._v(_vm._s(_vm.fieldData.label))]
                   )
                 ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data combine-tips-style" }),
                 _vm._v(" "),
                 _c("td", { staticClass: "percent_fee" }, [
                   _c("input", {
@@ -10237,13 +10441,11 @@ var render = function() {
                       }
                     }
                   }),
-                  _vm._v("\n                " + _vm._s("%") + "\n            ")
+                  _vm._v("\n            " + _vm._s("%") + "\n        ")
                 ]),
                 _vm._v(" "),
                 _c("td", { staticClass: "fixed_fee" }, [
-                  _vm._v(
-                    "\n                " + _vm._s("+") + "\n                "
-                  ),
+                  _vm._v("\n            " + _vm._s("+") + "\n            "),
                   _c("input", {
                     directives: [
                       {
@@ -10294,34 +10496,34 @@ var render = function() {
                 _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.__(
                               "Both percentage and fixed fee is required.",
                               "dokan-lite"
                             )
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.getError(_vm.fieldData.fields.percent_fee.label)
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
                   ? _c("p", { staticClass: "dokan-error combine-commission" }, [
                       _vm._v(
-                        "\n                " +
+                        "\n            " +
                           _vm._s(
                             _vm.getError(_vm.fieldData.fields.fixed_fee.label)
                           ) +
-                          "\n            "
+                          "\n        "
                       )
                     ])
                   : _vm._e(),
@@ -10347,66 +10549,97 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text",
-                    attrs: {
-                      type: "textarea",
-                      rows: _vm.fieldData.rows,
-                      cols: _vm.fieldData.cols,
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text",
+                      attrs: {
+                        type: "textarea",
+                        rows: _vm.fieldData.rows,
+                        cols: _vm.fieldData.cols,
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10424,100 +10657,135 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("fieldset", [
-                    _c(
-                      "label",
-                      {
-                        attrs: {
-                          for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                        }
-                      },
-                      [
-                        _c("input", {
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
                           directives: [
                             {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
                             }
                           ],
-                          staticClass: "checkbox",
-                          attrs: {
-                            type: "checkbox",
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            "true-value": "on",
-                            "false-value": "off"
-                          },
-                          domProps: {
-                            checked: Array.isArray(
-                              _vm.fieldValue[_vm.fieldData.name]
-                            )
-                              ? _vm._i(
-                                  _vm.fieldValue[_vm.fieldData.name],
-                                  null
-                                ) > -1
-                              : _vm._q(_vm.fieldValue[_vm.fieldData.name], "on")
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.fieldValue[_vm.fieldData.name],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? "on" : "off"
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $$c
-                                )
-                              }
-                            }
-                          }
-                        }),
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(_vm.fieldData.desc) +
-                            "\n                "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
                     : _vm._e()
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c(
+                        "label",
+                        {
+                          attrs: {
+                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                          }
+                        },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "checkbox",
+                            attrs: {
+                              type: "checkbox",
+                              id:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              name:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              "true-value": "on",
+                              "false-value": "off"
+                            },
+                            domProps: {
+                              checked: Array.isArray(
+                                _vm.fieldValue[_vm.fieldData.name]
+                              )
+                                ? _vm._i(
+                                    _vm.fieldValue[_vm.fieldData.name],
+                                    null
+                                  ) > -1
+                                : _vm._q(
+                                    _vm.fieldValue[_vm.fieldData.name],
+                                    "on"
+                                  )
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.fieldValue[_vm.fieldData.name],
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? "on" : "off"
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $$c
+                                  )
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.fieldData.desc) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10535,146 +10803,181 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
                             {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name][optionKey]"
-                                  }
-                                ],
-                                staticClass: "checkbox",
-                                attrs: {
-                                  type: "checkbox",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  "true-value": optionKey,
-                                  "false-value": ""
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fieldValue[_vm.fieldData.name][
-                                      optionKey
-                                    ]
-                                  )
-                                    ? _vm._i(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        null
-                                      ) > -1
-                                    : _vm._q(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        optionKey
-                                      )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a =
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? optionKey : ""
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        optionKey,
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("br")
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
                     : _vm._e()
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _vm._l(_vm.fieldData.options, function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _c(
+                              "label",
+                              {
+                                attrs: {
+                                  for:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "][" +
+                                    optionKey +
+                                    "]"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        _vm.fieldValue[_vm.fieldData.name][
+                                          optionKey
+                                        ],
+                                      expression:
+                                        "fieldValue[fieldData.name][optionKey]"
+                                    }
+                                  ],
+                                  staticClass: "checkbox",
+                                  attrs: {
+                                    type: "checkbox",
+                                    id:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    name:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    "true-value": optionKey,
+                                    "false-value": ""
+                                  },
+                                  domProps: {
+                                    checked: Array.isArray(
+                                      _vm.fieldValue[_vm.fieldData.name][
+                                        optionKey
+                                      ]
+                                    )
+                                      ? _vm._i(
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                          null
+                                        ) > -1
+                                      : _vm._q(
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                          optionKey
+                                        )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$a =
+                                          _vm.fieldValue[_vm.fieldData.name][
+                                            optionKey
+                                          ],
+                                        $$el = $event.target,
+                                        $$c = $$el.checked ? optionKey : ""
+                                      if (Array.isArray($$a)) {
+                                        var $$v = null,
+                                          $$i = _vm._i($$a, $$v)
+                                        if ($$el.checked) {
+                                          $$i < 0 &&
+                                            _vm.$set(
+                                              _vm.fieldValue[
+                                                _vm.fieldData.name
+                                              ],
+                                              optionKey,
+                                              $$a.concat([$$v])
+                                            )
+                                        } else {
+                                          $$i > -1 &&
+                                            _vm.$set(
+                                              _vm.fieldValue[
+                                                _vm.fieldData.name
+                                              ],
+                                              optionKey,
+                                              $$a
+                                                .slice(0, $$i)
+                                                .concat($$a.slice($$i + 1))
+                                            )
+                                        }
+                                      } else {
+                                        _vm.$set(
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                          optionKey,
+                                          $$c
+                                        )
+                                      }
+                                    }
+                                  }
+                                }),
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(optionVal) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("br")
+                          ]
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10694,6 +10997,42 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      "combine" === _vm.fieldData.type
+                        ? "tooltips-data combine-tips-style"
+                        : "tooltips-data"
+                    ]
+                  },
+                  [
+                    _vm.fieldData.tooltip
+                      ? _c("span", [
+                          _c("i", {
+                            directives: [
+                              {
+                                name: "tooltip",
+                                rawName: "v-tooltip",
+                                value: _vm.fieldData.tooltip,
+                                expression: "fieldData.tooltip"
+                              }
+                            ],
+                            staticClass: "dashicons dashicons-editor-help tips",
+                            attrs: { title: _vm.fieldData.tooltip }
+                          })
+                        ])
+                      : _vm._e()
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     !_vm.fieldData.grouped
                       ? _c(
@@ -10840,7 +11179,7 @@ var render = function() {
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
                           _vm._v(
-                            "\n              " +
+                            "\n                " +
                               _vm._s(
                                 _vm.getValidationErrorMessage(
                                   _vm.fieldData.name
@@ -10875,70 +11214,82 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    ],
-                    staticClass: "regular-text wpsa-url",
-                    attrs: {
-                      type: "text",
-                      id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                      name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                    },
-                    domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.fieldValue[_vm.fieldData.name],
+                          expression: "fieldValue[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
+                      ],
+                      staticClass: "regular-text wpsa-url",
+                      attrs: {
+                        type: "text",
+                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                      },
+                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.fieldValue,
+                            _vm.fieldData.name,
+                            $event.target.value
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "button wpsa-browse",
-                    attrs: { type: "button", value: "Choose File" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.$emit(
-                          "openMedia",
-                          {
-                            sectionId: _vm.sectionId,
-                            name: _vm.fieldData.name
-                          },
-                          $event
-                        )
+                    }),
+                    _vm._v(" "),
+                    _c("input", {
+                      staticClass: "button wpsa-browse",
+                      attrs: { type: "button", value: "Choose File" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.$emit(
+                            "openMedia",
+                            {
+                              sectionId: _vm.sectionId,
+                              name: _vm.fieldData.name
+                            },
+                            $event
+                          )
+                        }
                       }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -10956,8 +11307,17 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     _c("color-picker", {
                       model: {
@@ -11003,22 +11363,51 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _vm.hasError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(_vm.getError(_vm.fieldData.label)) +
-                            "\n            "
-                        )
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
                       ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11060,7 +11449,9 @@ var render = function() {
                       )
                     ])
                   ]
-                )
+                ),
+                _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" })
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11078,85 +11469,98 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", { staticClass: "dokan-settings-field-type-radio" }, [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fieldValue[_vm.fieldData.name],
-                                    expression: "fieldValue[fieldData.name]"
-                                  }
-                                ],
-                                staticClass: "radio",
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : "",
+                      "dokan-settings-field-type-radio"
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _vm._l(_vm.fieldData.options, function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _c(
+                              "label",
+                              {
                                 attrs: {
-                                  type: "radio",
-                                  id:
+                                  for:
                                     _vm.sectionId +
                                     "[" +
                                     _vm.fieldData.name +
                                     "][" +
                                     optionKey +
-                                    "]",
-                                  name: optionKey
-                                },
-                                domProps: {
-                                  value: optionKey,
-                                  checked: _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    optionKey
-                                  )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    return _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
+                                    "]"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fieldValue[_vm.fieldData.name],
+                                      expression: "fieldValue[fieldData.name]"
+                                    }
+                                  ],
+                                  staticClass: "radio",
+                                  attrs: {
+                                    type: "radio",
+                                    id:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]",
+                                    name: optionKey
+                                  },
+                                  domProps: {
+                                    value: optionKey,
+                                    checked: _vm._q(
+                                      _vm.fieldValue[_vm.fieldData.name],
                                       optionKey
                                     )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        optionKey
+                                      )
+                                    }
                                   }
-                                }
-                              }),
-                              _vm._v(
-                                " " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          )
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                                }),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(optionVal) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ]
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11174,9 +11578,35 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
                 _c(
                   "td",
-                  { attrs: { width: "72%" } },
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ],
+                    attrs: { width: "72%" }
+                  },
                   [
                     _c("text-editor", {
                       model: {
@@ -11212,96 +11642,128 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", { attrs: { width: "72%" } }, [
-                  _c(
-                    "ul",
-                    { staticClass: "dokan-settings-repeatable-list" },
-                    _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
-                      optionVal,
-                      optionKey
-                    ) {
-                      return _vm.fieldValue[_vm.fieldData.name]
-                        ? _c("li", [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(optionVal.value) +
-                                " "
-                            ),
-                            !optionVal.must_use
-                              ? _c("span", {
-                                  staticClass:
-                                    "dashicons dashicons-no-alt remove-item",
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.removeItem(
-                                        optionKey,
-                                        _vm.fieldData.name
-                                      )
-                                    }
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _c("span", {
-                              staticClass: "repeatable-item-description",
-                              domProps: { innerHTML: _vm._s(optionVal.desc) }
-                            })
-                          ])
-                        : _vm._e()
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.repeatableItem[_vm.fieldData.name],
-                        expression: "repeatableItem[fieldData.name]"
-                      }
+                _c("td", { staticClass: "tooltips-data" }, [
+                  _vm.fieldData.tooltip
+                    ? _c("span", [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.fieldData.tooltip,
+                              expression: "fieldData.tooltip"
+                            }
+                          ],
+                          staticClass: "dashicons dashicons-editor-help tips",
+                          attrs: { title: _vm.fieldData.tooltip }
+                        })
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
                     ],
-                    staticClass: "regular-text",
-                    attrs: { type: "text" },
-                    domProps: { value: _vm.repeatableItem[_vm.fieldData.name] },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                    attrs: { width: "72%" }
+                  },
+                  [
+                    _c(
+                      "ul",
+                      { staticClass: "dokan-settings-repeatable-list" },
+                      _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
+                        optionVal,
+                        optionKey
+                      ) {
+                        return _vm.fieldValue[_vm.fieldData.name]
+                          ? _c("li", [
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(optionVal.value) +
+                                  " "
+                              ),
+                              !optionVal.must_use
+                                ? _c("span", {
+                                    staticClass:
+                                      "dashicons dashicons-no-alt remove-item",
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.removeItem(
+                                          optionKey,
+                                          _vm.fieldData.name
+                                        )
+                                      }
+                                    }
+                                  })
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("span", {
+                                staticClass: "repeatable-item-description",
+                                domProps: { innerHTML: _vm._s(optionVal.desc) }
+                              })
+                            ])
+                          : _vm._e()
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.repeatableItem[_vm.fieldData.name],
+                          expression: "repeatableItem[fieldData.name]"
                         }
-                        _vm.$set(
-                          _vm.repeatableItem,
-                          _vm.fieldData.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "button dokan-repetable-add-item-btn",
-                      attrs: { href: "#" },
+                      ],
+                      staticClass: "regular-text",
+                      attrs: { type: "text" },
+                      domProps: {
+                        value: _vm.repeatableItem[_vm.fieldData.name]
+                      },
                       on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.addItem(
-                            _vm.fieldData.type,
-                            _vm.fieldData.name
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.repeatableItem,
+                            _vm.fieldData.name,
+                            $event.target.value
                           )
                         }
                       }
-                    },
-                    [_vm._v("+")]
-                  ),
-                  _vm._v(" "),
-                  _c("p", {
-                    staticClass: "description",
-                    domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                  })
-                ])
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button dokan-repetable-add-item-btn",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.addItem(
+                              _vm.fieldData.type,
+                              _vm.fieldData.name
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("+")]
+                    ),
+                    _vm._v(" "),
+                    _c("p", {
+                      staticClass: "description",
+                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    })
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11319,105 +11781,120 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "div",
-                    { staticClass: "radio-image-container" },
-                    [
-                      _vm._l(_vm.fieldData.options, function(image, name) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              staticClass: "radio-image",
-                              class: {
-                                active:
-                                  _vm.fieldValue[_vm.fieldData.name] === name,
-                                "not-active":
-                                  _vm.fieldValue[_vm.fieldData.name] !== name
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.fieldValue[_vm.fieldData.name],
-                                    expression: "fieldValue[fieldData.name]"
-                                  }
-                                ],
-                                staticClass: "radio",
-                                attrs: {
-                                  type: "radio",
-                                  name: _vm.fieldData.name
-                                },
-                                domProps: {
-                                  value: name,
-                                  checked: _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    name
-                                  )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    return _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
+                _c(
+                  "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "radio-image-container" },
+                      [
+                        _vm._l(_vm.fieldData.options, function(image, name) {
+                          return [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "radio-image",
+                                class: {
+                                  active:
+                                    _vm.fieldValue[_vm.fieldData.name] === name,
+                                  "not-active":
+                                    _vm.fieldValue[_vm.fieldData.name] !== name
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fieldValue[_vm.fieldData.name],
+                                      expression: "fieldValue[fieldData.name]"
+                                    }
+                                  ],
+                                  staticClass: "radio",
+                                  attrs: {
+                                    type: "radio",
+                                    name: _vm.fieldData.name
+                                  },
+                                  domProps: {
+                                    value: name,
+                                    checked: _vm._q(
+                                      _vm.fieldValue[_vm.fieldData.name],
                                       name
                                     )
-                                  }
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                { staticClass: "current-option-indicator" },
-                                [
-                                  _c("span", {
-                                    staticClass: "dashicons dashicons-yes"
-                                  }),
-                                  _vm._v(
-                                    " " + _vm._s(_vm.__("Active", "dokan-lite"))
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c("img", { attrs: { src: image } }),
-                              _vm._v(" "),
-                              _c("span", { staticClass: "active-option" }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass:
-                                      "button button-primary button-hero",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        _vm.fieldValue[
-                                          _vm.fieldData.name
-                                        ] = name
-                                      }
-                                    }
                                   },
+                                  on: {
+                                    change: function($event) {
+                                      return _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        name
+                                      )
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  { staticClass: "current-option-indicator" },
                                   [
+                                    _c("span", {
+                                      staticClass: "dashicons dashicons-yes"
+                                    }),
                                     _vm._v(
-                                      "\n                                " +
-                                        _vm._s(_vm.__("Select", "dokan-lite")) +
-                                        "\n                            "
+                                      " " +
+                                        _vm._s(_vm.__("Active", "dokan-lite"))
                                     )
                                   ]
-                                )
-                              ])
-                            ]
-                          )
-                        ]
-                      })
-                    ],
-                    2
-                  )
-                ])
+                                ),
+                                _vm._v(" "),
+                                _c("img", { attrs: { src: image } }),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "active-option" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "button button-primary button-hero",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.fieldValue[
+                                            _vm.fieldData.name
+                                          ] = name
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                " +
+                                          _vm._s(
+                                            _vm.__("Select", "dokan-lite")
+                                          ) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          ]
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
@@ -11435,8 +11912,17 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
+                _c("td", { staticClass: "tooltips-data" }),
+                _vm._v(" "),
                 _c(
                   "td",
+                  {
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
                   [
                     _c("input", {
                       attrs: {
@@ -11506,17 +11992,17 @@ if (false) {
 }
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(63);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(168);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(169);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(167)
+  __webpack_require__(168)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11562,13 +12048,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11656,7 +12142,7 @@ if (false) {
 }
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11939,17 +12425,17 @@ if (false) {
 }
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(64);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(176);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(171)
+  __webpack_require__(172)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11995,23 +12481,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(65);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(175);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(173)
+  __webpack_require__(174)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12057,13 +12543,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12203,7 +12689,7 @@ if (false) {
 }
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12534,17 +13020,17 @@ if (false) {
 }
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(66);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(179);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(177)
+  __webpack_require__(178)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12590,13 +13076,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12721,17 +13207,17 @@ if (false) {
 }
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(67);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(185);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(180)
+  __webpack_require__(181)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12777,23 +13263,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(68);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(183);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(184);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(182)
+  __webpack_require__(183)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12839,13 +13325,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12955,7 +13441,7 @@ if (false) {
 }
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13121,7 +13607,7 @@ if (false) {
 }
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13157,4 +13643,4 @@ function menuFix(slug) {
 /* harmony default export */ __webpack_exports__["a"] = (menuFix);
 
 /***/ })
-],[105]);
+],[106]);

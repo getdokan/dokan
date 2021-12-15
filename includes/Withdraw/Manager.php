@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
+use WeDevs\Dokan\Cache;
 use WP_Error;
 use WeDevs\Dokan\Withdraw\Withdraws;
 
@@ -230,12 +231,22 @@ class Manager {
      * @return array
      */
     public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
-        global $wpdb;
+        // get all function arguments as key => value pairs
+        $args = get_defined_vars();
 
-        if ( empty( $user_id ) ) {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
-        } else {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+        $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_{$user_id}";
+        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
+        $result      = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $result ) {
+            global $wpdb;
+            if ( empty( $user_id ) ) {
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
+            } else {
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+            }
+
+            Cache::set( $cache_key, $result, $cache_group );
         }
 
         return $result;
