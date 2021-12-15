@@ -102,6 +102,13 @@ class Manager {
                 /* translators: %s permalink settings url */
                 'description' => sprintf( __( 'The <strong>Plain and Numeric</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href="%s">Settings > Permalinks</a>', 'dokan-lite' ), admin_url( 'options-permalink.php' ) ),
                 'priority'    => 1,
+                'actions'     => [
+                    [
+                        'type'   => 'primary',
+                        'text'   => __( 'Go to Settings', 'dokan-lite' ),
+                        'action' => admin_url( 'options-permalink.php' ),
+                    ],
+                ],
             ];
         }
 

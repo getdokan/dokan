@@ -11,7 +11,7 @@
                             </div>
                             <div class="dokan-message">
                                 <h3 v-if="notice.title">{{ notice.title }}</h3>
-                                <div v-html="notice.description"></div>
+                                <div v-if="notice.description" v-html="notice.description"></div>
                                 <template v-if="notice.actions && notice.actions.length">
                                     <template v-for="action in notice.actions">
                                         <a v-if="action.action" class="dokan-btn" :class="[`dokan-btn-${action.type}`, action.class]" :target="action.target ? action.target : '_self'" :href="action.action">{{ action.text }}</a>
