@@ -317,30 +317,42 @@ class Ajax {
      * Catches the form submission from store page
      */
     public function contact_seller() {
-        check_ajax_referer( 'dokan_contact_seller' );
+        if ( ! isset( $_POST['dokan_contact_seller_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_contact_seller_nonce'] ) ), 'dokan_contact_seller' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
 
-        $posted = $_POST;
-
-        $contact_name    = sanitize_text_field( $posted['name'] );
-        $contact_email   = sanitize_email( $posted['email'] );
-        $contact_message = wp_strip_all_tags( $posted['message'] );
-        $error_template  = '<div class="alert alert-danger">%s</div>';
+        $contact_name    = ! empty( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+        $contact_email   = ! empty( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+        $contact_message = ! empty( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+        $recaptcha_token = ! empty( $_POST['dokan_recaptcha_token'] ) ? wp_unslash( $_POST['dokan_recaptcha_token'] ) : ''; // phpcs:ignore
+        $error_template  = '<span class="alert alert-danger error">%s</span>';
 
         if ( empty( $contact_name ) ) {
             $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
-        if ( empty( $contact_name ) ) {
-            $message = sprintf( $error_template, __( 'Please provide your name.', 'dokan-lite' ) );
+        if ( empty( $contact_email ) ) {
+            $message = sprintf( $error_template, __( 'Please provide your email.', 'dokan-lite' ) );
             wp_send_json_error( $message );
         }
 
-        $seller = get_user_by( 'id', (int) $posted['seller_id'] );
+        $seller = ! empty( $_POST['seller_id'] ) ? get_user_by( 'id', absint( wp_unslash( $_POST['seller_id'] ) ) ) : 0;
 
-        if ( ! $seller ) {
+        if ( empty( $seller ) ) {
             $message = sprintf( $error_template, __( 'Something went wrong!', 'dokan-lite' ) );
             wp_send_json_error( $message );
+        }
+
+        // Validate recaptcha if site key and secret key exist
+        if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
+            $recaptcha_keys     = dokan_get_recaptcha_site_and_secret_keys();
+            $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
+
+            if ( empty( $recaptcha_validate ) ) {
+                $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
+                wp_send_json_error( $message );
+            }
         }
 
         do_action( 'dokan_trigger_contact_seller_mail', $seller->user_email, $contact_name, $contact_email, $contact_message );
@@ -1032,5 +1044,46 @@ class Ajax {
         update_option( 'dokan_hide_pro_nag', 'hide' );
 
         wp_send_json_success();
+    }
+
+    /**
+     * Handler for reCaptcha validation request.
+     *
+     * @since 3.3.3
+     *
+     * @param string $action
+     * @param string $token
+     * @param string $secretkey
+     *
+     * @return boolean
+     */
+    public function recaptcha_validation_handler( $action, $token, $secretkey ) {
+        if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
+            return false;
+        }
+
+        $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
+        $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
+        $response_body = wp_remote_retrieve_body( $response );
+        $response_data = json_decode( $response_body, true );
+
+        // Check if the response data is not empty
+        if ( empty( $response_data['success'] ) ) {
+            return false;
+        }
+
+        // Validate reCaptcha action
+        if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
+            return false;
+        }
+
+        // Validate reCaptcha score
+        $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5 );
+        if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
+            return false;
+        }
+
+        // Return success after passing checks
+        return $response_data['success'];
     }
 }
