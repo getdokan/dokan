@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\Admin\Notices\Helper;
+
 class Assets {
 
     /**
@@ -13,10 +15,10 @@ class Assets {
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_helper_script' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
         }
     }
 
@@ -148,6 +150,11 @@ class Assets {
                 'name'      => 'ProModules',
                 'component' => 'ProModules',
             ],
+            [
+                'path'      => '/changelog',
+                'name'      => 'ChangeLog',
+                'component' => 'ChangeLog',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
@@ -240,6 +247,10 @@ class Assets {
             'dokan-wp-version-before-5-3' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
+            ],
+            'dokan-global-admin-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
         ];
 
@@ -400,6 +411,16 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
+            'dokan-admin-notice-js' => [
+                'src'     => $asset_url . '/js/dokan-admin-notice.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'version' => filemtime( $asset_path . '/js/dokan-admin-notice.js' ),
+            ],
+            'dokan-promo-notice-js' => [
+                'src'     => $asset_url . '/js/dokan-promo-notice.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'version' => filemtime( $asset_path . '/js/dokan-promo-notice.js' ),
+            ],
         ];
 
         return $scripts;
@@ -529,13 +550,20 @@ class Assets {
      *
      * @since 3.2.7
      */
-    public function load_dokan_helper_script() {
+    public function load_dokan_global_scripts() {
         // Dokan helper JS file, need to load this file
         wp_enqueue_script( 'dokan-util-helper' );
 
         $localize_data = [
             'i18n_date_format' => wc_date_format(),
         ];
+
+        if ( is_admin() ) {
+            wp_enqueue_style( 'dokan-global-admin-css' );
+            wp_enqueue_script( 'dokan-admin-notice-js' );
+            wp_enqueue_script( 'dokan-promo-notice-js' );
+            wp_localize_script( 'dokan-vue-vendor', 'dokan', $this->get_admin_localized_scripts() );
+        }
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
     }
@@ -873,6 +901,8 @@ class Assets {
                 'currency'        => $this->get_localized_price(),
                 'proNag'          => dokan()->is_pro_exists() ? 'hide' : get_option( 'dokan_hide_pro_nag', 'show' ),
                 'hasPro'          => dokan()->is_pro_exists(),
+                'showPromoBanner' => empty( Helper::dokan_get_promo_notices() ),
+                'hasNewVersion'   => Helper::dokan_has_new_version(),
                 'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
                 'i18n'            => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],
                 'urls'            => [

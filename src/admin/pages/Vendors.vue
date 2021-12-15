@@ -1,10 +1,11 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="vendor-list">
             <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan-lite') }}</h1>
             <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
+            <AdminNotice></AdminNotice>
+
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <!-- Add other component here here -->
             <component v-for="(vendorHeaderArea, index) in dokanVendorHeaderArea"
@@ -95,9 +96,10 @@
 import AddVendor from './AddVendor.vue'
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
-let ListTable = dokan_get_lib('ListTable');
-let Switches  = dokan_get_lib('Switches');
-let Search    = dokan_get_lib('Search');
+let ListTable   = dokan_get_lib('ListTable');
+let Switches    = dokan_get_lib('Switches');
+let Search      = dokan_get_lib('Search');
+let AdminNotice = dokan_get_lib('AdminNotice');
 
 export default {
 
@@ -109,6 +111,7 @@ export default {
         Search,
         AddVendor,
         UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
