@@ -277,12 +277,12 @@
                 }
             },
 
-            async setPaymentChangeAnnouncementAction( fieldValue, section ) {
-                if ( ! ( 'withdraw_methods' in fieldValue ) || 'dokan_withdraw' !== section ) {
+            async setPaymentChangeAnnouncementAction( fieldData, section ) {
+                if ( ! ( 'withdraw_methods' in fieldData ) || 'dokan_withdraw' !== section ) {
                     return Promise.resolve( {value: false} );
                 }
 
-                const diff = this.getDifference( this.withdrawMethods, fieldValue.withdraw_methods );
+                const diff = this.getDifference( this.withdrawMethods, fieldData.withdraw_methods );
 
                 if ( Object.keys( diff ).length === 0 ) {
                     return Promise.resolve({value: false});
