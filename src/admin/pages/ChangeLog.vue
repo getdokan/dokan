@@ -147,9 +147,6 @@ export default {
                 .done( response => {
                     this.lite_versions = JSON.parse( response );
                     this.loading = false;
-                    if ( dokan.hasNewVersion ) {
-                        this.dismissWhatsNewNotice( 'dokan-whats-new-notice' );
-                    }
                 } )
                 .fail( response => {
                     this.loading = false;
@@ -167,9 +164,6 @@ export default {
                 .done( response => {
                     this.pro_versions = JSON.parse( response );
                     this.loading = false;
-                    if( dokan.hasNewVersion ) {
-                        this.dismissWhatsNewNotice( 'dokan-pro-whats-new-notice' );
-                    }
                 } )
                 .fail( response => {
                     this.loading = false;
@@ -181,7 +175,9 @@ export default {
                 } );
         },
 
-        dismissWhatsNewNotice( action ) {
+        dismissWhatsNewNotice() {
+            let action = 'pro' === this.active_package ? 'dokan-pro-whats-new-notice' : 'dokan-whats-new-notice';
+
             $.ajax( {
                 url: dokan.ajaxurl,
                 method: 'post',
@@ -280,6 +276,9 @@ export default {
 
     created() {
         this.loadChangelogData();
+        if ( dokan.hasNewVersion ) {
+            this.dismissWhatsNewNotice();
+        }
         window.addEventListener( 'scroll', this.updatePosition );
     },
 
