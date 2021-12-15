@@ -76,8 +76,8 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param object $store_user
-     * @param array  $store_info
+     * @param object $store_user Store user data
+     * @param array  $store_info Store info data
      *
      * @return void
      */
@@ -102,7 +102,7 @@ class SingleStoreSections {
     public function render_featured_products_section() {
         // Get featured products section.
         $this->get_addtional_products_section(
-            'hide_featured_products',
+            'featured_products',
             'dokan_get_featured_products',
             'dokan-featured-products',
             __( 'Featured Products', 'dokan-lite' )
@@ -119,7 +119,7 @@ class SingleStoreSections {
     public function render_latest_products_section() {
         // Get latest products section.
         $this->get_addtional_products_section(
-            'hide_latest_products',
+            'latest_products',
             'dokan_get_latest_products',
             'dokan-latest-products',
             __( 'Latest Products', 'dokan-lite' )
@@ -136,7 +136,7 @@ class SingleStoreSections {
     public function render_best_selling_products_section() {
         // Get best selling products section.
         $this->get_addtional_products_section(
-            'hide_best_sell_products',
+            'best_sell_products',
             'dokan_get_best_selling_products',
             'dokan-best-selling-products',
             __( 'Best Selling Products', 'dokan-lite' )
@@ -153,7 +153,7 @@ class SingleStoreSections {
     public function render_top_rated_products_section() {
         // Get top rated products section.
         $this->get_addtional_products_section(
-            'hide_top_rated_products',
+            'top_rated_products',
             'dokan_get_top_rated_products',
             'dokan-top-rated-products',
             __( 'Top Rated Products', 'dokan-lite' )
@@ -183,16 +183,20 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param string $settings_key
-     * @param string $function_name
-     * @param string $section_id
-     * @param string $section_title
+     * @param string $handle        Products handle for generating customizer and settings keys
+     * @param string $function_name Function name for getting desired products
+     * @param string $section_id    Section id for using at HTML markup
+     * @param string $section_title Section title to preview as heading
      *
      * @return void
      */
-    public function get_addtional_products_section( $settings_key, $function_name, $section_id, $section_title ) {
+    public function get_addtional_products_section( $handle, $function_name, $section_id, $section_title ) {
+        // Customizer and settings keys to check products section visibility
+        $customizer_key = 'hide_' . $handle;
+        $settings_key   = 'show_' . $handle;
+
         // Check if desired products section visibility enabled by admin and vendor.
-        if ( ! $this->is_products_block_visible( $settings_key ) ) {
+        if ( ! $this->is_products_block_visible( $customizer_key, $settings_key ) ) {
             return;
         }
 
@@ -223,18 +227,19 @@ class SingleStoreSections {
      *
      * @since 3.3.3
      *
-     * @param string $key
+     * @param string $customizer_key Cusomizer key for checking products section visibility by admin
+     * @param string $settings_key   Settings key for checking products section visibility by vendor
      *
      * @return bool
      */
-    public function is_products_block_visible( $key ) {
+    public function is_products_block_visible( $customizer_key, $settings_key ) {
         // Check if current products section enabled by admin.
-        if ( ! isset( $this->products_section_appearance[ $key ] ) || 'on' === $this->products_section_appearance[ $key ] ) {
+        if ( ! isset( $this->products_section_appearance[ $customizer_key ] ) || 'on' === $this->products_section_appearance[ $customizer_key ] ) {
             return false;
         }
 
         // Check if current products section enabled by vendor.
-        if ( isset( $this->store_info[ $key ] ) && 'yes' === $this->store_info[ $key ] ) {
+        if ( isset( $this->store_info[ $settings_key ] ) && 'no' === $this->store_info[ $settings_key ] ) {
             return false;
         }
 
