@@ -401,7 +401,7 @@
                                 </div>
                                 <div class="module-details">
                                     <h3>
-                                        {{ module.name }}
+                                        <a :href="module.mod_link" target="_blank">{{ module.name }}</a>
                                         <label v-if="module.required_plugins" v-tooltip="module.required_plugins" :title="module.required_plugins">
                                             <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M13.8293 2.31625C10.7408 -0.771911 5.73322 -0.772255 2.64437 2.31625C-0.44413 5.40475 -0.443786 10.4123 2.64437 13.5011C5.73287 16.589 10.7404 16.5893 13.8293 13.5011C16.9174 10.4123 16.9171 5.40509 13.8293 2.31625ZM9.26804 11.3472C9.26804 11.917 8.80625 12.3788 8.23648 12.3788C7.66671 12.3788 7.20492 11.917 7.20492 11.3472V7.22099C7.20492 6.65122 7.66671 6.18943 8.23648 6.18943C8.80625 6.18943 9.26804 6.65122 9.26804 7.22099V11.3472ZM8.21826 5.4577C7.62407 5.4577 7.22795 5.03682 7.24033 4.51726C7.22795 3.97259 7.62407 3.56444 8.23029 3.56444C8.83685 3.56444 9.22059 3.97294 9.23331 4.51726C9.23297 5.03682 8.83719 5.4577 8.21826 5.4577Z" fill="#B1B1B1"/>
@@ -1624,6 +1624,8 @@ export default {
                         grid-template-rows: 67px;
                         grid-row-gap: 14px;
                         align-content: space-between;
+                        min-height: 280px;
+                        box-sizing: border-box;
                     }
 
                     .module-details {
@@ -1735,11 +1737,15 @@ export default {
                     grid-area: details;
 
                     h3 {
-                        color: #000000;
-                        font-size: 1rem;
-                        font-weight: bold;
-                        font-family: "SF Pro Text", sans-serif;
                         margin: 0;
+
+                        a {
+                            color: #000000;
+                            font-size: 1rem;
+                            font-weight: bold;
+                            font-family: "SF Pro Text", sans-serif;
+                            text-decoration: none;
+                        }
 
                         label {
                             margin-left: 4px;
