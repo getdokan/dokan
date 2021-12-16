@@ -7,7 +7,7 @@ Tested up to: 5.8.2
 WC requires at least: 3.0
 WC tested up to: 5.9.0
 Requires PHP: 5.6
-Stable tag: 3.3.2
+Stable tag: 3.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,7 +109,7 @@ In the [Pro Version](https://wedevs.com/dokan/pricing/?utm_campaign=dokan-wordpr
 
 = DYNAMIC SETTINGS FOR SHIPPING CONDITIONS =
 
-Admin can extend flexibility to individual vendors to have control over their shipping based on various conditions including setting rates, tracking shipments with available integrations, and much more. 
+Admin can extend flexibility to individual vendors to have control over their shipping based on various conditions including setting rates, tracking shipments with available integrations, and much more.
 
 * [Vendor Table rate shipping](https://wedevs.com/dokan/modules/table-rate-shipping) (Pro) - Multi-vendor support on setting shipping rates based on location, price, weight, shipping class, or item count of the shipment.
 
@@ -305,6 +305,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.3.4 ( Dec 15, 2021 ) =
+
+- **fix:** Asset loading issue for admin notice
+
+= v3.3.3 ( Dec 15, 2021 ) =
+
+- **new:** Added what’s New page for Dokan Lite #1427
+- **new:** Grouped all Dokan admin notices into a single notice with slider #1427
+- **update:** reCaptcha integration added to store contact form #1422
+- **update:** Redesigned Dokan admin header section. Also added some useful links under admin bar. #1427
+- **fix:** select2 dropdown margin issue fixed #1446
+- **fix:** Fix loading issue while loading Dokan pages when permalink sets to plain text, Also added a notice to instruct users to change permalink setting. #1444
 
 = v3.3.2 ( Nov 30, 2021 ) =
 

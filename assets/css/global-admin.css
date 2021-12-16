@@ -47,7 +47,11 @@
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides {
   position: relative;
   overflow: hidden;
-  min-height: 130px;
+  min-height: 110px;
+  border: 1px solid #dfe2e7;
+  border-radius: 0 5px 5px 0;
+  background: #fff;
+  padding: 15px 0;
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice {
   position: absolute;
@@ -56,11 +60,8 @@
   right: 0;
   display: flex;
   align-items: center;
-  min-height: 93px;
-  padding: 16px 20px;
-  border: 1px solid #dfe2e7;
-  border-radius: 0 5px 5px 0;
-  background: #fff;
+  min-height: 100%;
+  padding: 0 20px;
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice.dokan-success {
   border-left: 2px solid #82b642;
@@ -138,7 +139,7 @@
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .dokan-message .dokan-btn {
   font-size: 12px;
   font-weight: 300;
-  padding: 8px 15px;
+  padding: 6px 12px;
   margin-right: 15px;
   margin-top: 10px;
   border-radius: 3px;
@@ -153,7 +154,7 @@
   opacity: 0.7;
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .dokan-message .btn-dokan {
-  padding: 10px 15px;
+  padding: 8px 12px;
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .dokan-message .dokan-btn-primary {
   color: #fff;
@@ -212,12 +213,14 @@
   border: 1px solid #b5bfc9;
   border-radius: 3px;
   background: #fff;
-  transform: translateY(-50%);
+  min-width: 77px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice .notice-count {
-  margin: 0 12px;
+  margin: 0 8px;
   color: #acacac;
   font-size: 12px;
   font-weight: normal;
@@ -230,6 +233,7 @@
 .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice .next,
 .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice .prev {
   margin-top: 2px;
+  padding: 0 2px;
   cursor: pointer;
 }
 .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice .next.active svg path,
@@ -238,16 +242,13 @@
 }
 @media only screen and (max-width: 375px) {
   .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides {
-    min-height: 247px;
+    min-height: 245px;
   }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice {
-    min-height: 205px;
-  }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .message {
+  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .dokan-message {
     margin: 0 0 0 23px;
   }
   .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice {
-    bottom: 10px;
+    bottom: 0;
     top: unset;
     right: 10px;
     padding: 3px 5px;
@@ -255,35 +256,21 @@
 }
 @media screen and (min-width: 376px) and (max-width: 576px) {
   .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides {
-    min-height: 188px;
+    min-height: 195px;
   }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice {
-    min-height: 155px;
-  }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .message {
+  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice .dokan-message {
     margin: 0 0 0 23px;
   }
   .dokan-admin-notices-wrap .dokan-admin-notices .slide-notice {
     bottom: 0;
-    right: 12px;
+    right: 10px;
     padding: 3px 8px;
     top: unset;
   }
 }
 @media screen and (min-width: 577px) and (max-width: 768px) {
   .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides {
-    min-height: 168px;
-  }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice {
-    min-height: 140px;
-  }
-}
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides {
-    min-height: 140px;
-  }
-  .dokan-admin-notices-wrap .dokan-admin-notices .dokan-notice-slides .dokan-admin-notice {
-    min-height: 115px;
+    min-height: 160px;
   }
 }
 .dokan-admin-notices-wrap .slide-next-enter-active,
