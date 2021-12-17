@@ -719,12 +719,6 @@ class Settings {
                     'email' => sanitize_email( $post_data['settings']['paypal']['email'] ),
                 );
             }
-
-            if ( isset( $post_data['settings']['skrill'] ) ) {
-                $dokan_settings['payment']['skrill'] = array(
-                    'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
-                );
-            }
         }
 
         $dokan_settings = array_merge( $prev_dokan_settings, $dokan_settings );
