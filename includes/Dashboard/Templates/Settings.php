@@ -193,17 +193,21 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $methods       = dokan_withdraw_get_active_methods();
-        $currentuser   = dokan_get_current_user_id();
-        $profile_info  = dokan_get_store_info( dokan_get_current_user_id() );
-        $method_key    = str_replace( '/manage-', '', $slug_suffix );
-        $is_edit_mode  = false;
-        $mis_match_map = [
-            'dokan-stripe-connect' => 'stripe',
-            'dokan-moip-connect'   => 'moip'
-        ];
+        $methods      = dokan_withdraw_get_active_methods();
+        $currentuser  = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
+        $method_key   = str_replace( '/manage-', '', $slug_suffix );
+        $is_edit_mode = false;
 
-        $unused_methods       = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], [ 'stripe', 'moip' ] );
+        /**
+         * This filter is only used if the Payment method has different key than the key used in meta value of
+         * meta key 'dokan_profile_settings' for that Payment method
+         *
+         * @since DOKAN_LITE_SINCE
+         */
+        $mis_match_map = apply_filters( 'payment_method_key_for_store_payment_settings', [] );
+
+        $unused_methods       = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
         $unused_methods_assoc = array_reduce(
             $unused_methods,
             function ( $in_dropdown, $method_key ) {
