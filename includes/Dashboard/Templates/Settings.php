@@ -236,11 +236,6 @@ class Settings {
             []
         );
 
-        $icon_mismatch_map = [
-            'dokan-stripe-connect'     => 'stripe',
-            'dokan-paypal-marketplace' => 'paypal'
-        ];
-
         if ( stripos( $method_key, '/edit' ) !== false ) {
             $is_edit_mode = true;
             $method_key   = str_replace( '/edit', '', $method_key );
@@ -261,7 +256,6 @@ class Settings {
                 [
                     'methods'           => $methods,
                     'unused_methods'    => $unused_methods_assoc,
-                    'icon_mismatch_map' => $icon_mismatch_map,
                 ]
             );
 

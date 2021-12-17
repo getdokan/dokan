@@ -23,7 +23,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <li>
                             <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
                                 <div>
-                                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( isset( $icon_mismatch_map[ $method_key ] ) ? $icon_mismatch_map[ $method_key ] : $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon(  $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                                     <span>
                                         <?php
                                         //translators: %s: payment method title
@@ -53,7 +53,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <li>
             <div>
                 <div>
-                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( isset( $icon_mismatch_map[ $method_key ] ) ? $icon_mismatch_map[ $method_key ] : $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                     <span>
                         <?php
                         esc_html_e( $method['title'], 'dokan-lite' );
