@@ -388,7 +388,6 @@ function dokan_withdraw_get_method_icon( $method_key ) {
         case 'paypal':
             $method_icon = $asset_path . 'paypal.svg';
             break;
-        case 'bank':
         default:
             $method_icon = $asset_path . 'bank.svg';
     }
