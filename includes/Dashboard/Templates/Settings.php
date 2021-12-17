@@ -781,7 +781,7 @@ class Settings {
          *
          * @param string $heading previous heading
          */
-        $heading = apply_filters( "dokan_vendor_dashboard_payment_settings_heading", $heading, $slug );
+        $heading = apply_filters( "dokan_withdraw_method_settings_title", $heading, $slug );
 
         return $heading;
     }
