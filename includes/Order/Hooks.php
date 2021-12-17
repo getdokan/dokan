@@ -293,7 +293,6 @@ class Hooks {
             $product_id = $item['data']->get_id();
 
             $available_vendors[]  = dokan_get_vendor_by_product( $product_id, true );
-
             $available_products[] = $product_id;
         }
 
