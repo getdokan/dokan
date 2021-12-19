@@ -84,7 +84,7 @@ class VendorCache {
     /**
      * Clear Vendor Cache Group after changing wp_user.
      *
-     * @since 3.3.4
+     * @since 3.3.5
      *
      * @param int   $user_id
      * @param array $userdata
@@ -124,7 +124,7 @@ class VendorCache {
     /**
      * Clear Vendor Cache Group after updated wp user.
      *
-     * @since 3.3.4
+     * @since 3.3.5
      *
      * @param int   $user_id
      * @param array $old_user_data
@@ -139,7 +139,7 @@ class VendorCache {
     /**
      * Clear Vendor Cache Group before deleting wp user.
      *
-     * @since 3.3.4
+     * @since 3.3.5
      *
      * @param int   $user_id
      * @param array $reassign
