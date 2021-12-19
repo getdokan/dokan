@@ -88,13 +88,16 @@ class VendorCache {
      *
      * @param int   $user_id
      * @param array $userdata
+     * @param bool  $is_user_delete; if user deletes, pass it to true. default - false
      *
      * @return void
      */
-    private function clear_wp_user_cache( $user_id, $userdata = null ) {
+    private function clear_wp_user_cache( $user_id, $userdata = null, $is_user_delete = false ) {
+        $needs_cache_delete = false;
+
         // If a user is created with seller role, then delete vendor cache.
         if ( ! empty( $userdata ) && ! empty( $userdata['role'] ) && 'seller' === $userdata['role'] ) {
-            self::delete();
+            $needs_cache_delete = true;
         } else {
             $user = get_user_by( 'id', $user_id );
             if ( ! $user ) {
@@ -102,7 +105,16 @@ class VendorCache {
             }
 
             if ( in_array( 'seller', (array) $user->roles ) ) {
-                self::delete();
+                $needs_cache_delete = true;
+            }
+        }
+
+        if ( $needs_cache_delete ) {
+            self::delete();
+
+            // On delete user, clear product caches of that vendor too.
+            if ( $is_user_delete ) {
+                ProductCache::delete( $user_id );
             }
         }
     }
@@ -147,6 +159,6 @@ class VendorCache {
      * @return void
      */
     public function before_deleting_wp_user( $user_id, $reassign ) {
-        $this->clear_wp_user_cache( $user_id, null );
+        $this->clear_wp_user_cache( $user_id, null, true );
     }
 }
