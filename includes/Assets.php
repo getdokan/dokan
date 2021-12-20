@@ -358,52 +358,52 @@ class Assets {
             'dokan-admin' => [
                 'src'       => $asset_url . '/js/dokan-admin.js',
                 'deps'      => [ 'jquery', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . '/js/dokan-admin.js' ),
+                'version'   => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
                 'src'       => $asset_url . '/js/vendor-registration.js',
                 'deps'      => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . '/js/vendor-registration.js' ),
+                'version'   => filemtime( $asset_path . 'js/vendor-registration.js' ),
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
                 'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip' ],
-                'version'   => filemtime( $asset_path . '/js/dokan.js' ),
+                'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
                 'src'       => $asset_url . '/js/vue-vendor.js',
-                'version'   => filemtime( $asset_path . '/js/vue-vendor.js' ),
+                'version'   => filemtime( $asset_path . 'js/vue-vendor.js' ),
                 'deps'      => [ 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' ],
             ],
             'dokan-vue-bootstrap' => [
                 'src'       => $asset_url . '/js/vue-bootstrap.js',
                 'deps'      => $bootstrap_deps,
-                'version'   => filemtime( $asset_path . '/js/vue-bootstrap.js' ),
+                'version'   => filemtime( $asset_path . 'js/vue-bootstrap.js' ),
             ],
             'dokan-vue-admin' => [
                 'src'       => $asset_url . '/js/vue-admin.js',
                 'deps'      => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
-                'version'   => filemtime( $asset_path . '/js/vue-admin.js' ),
+                'version'   => filemtime( $asset_path . 'js/vue-admin.js' ),
             ],
             'dokan-vue-frontend' => [
                 'src'       => $asset_url . '/js/vue-frontend.js',
                 'deps'      => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version'   => filemtime( $asset_path . '/js/vue-frontend.js' ),
+                'version'   => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
             'dokan-wp-packages' => [
                 'src'       => $asset_url . '/js/dokan-wp.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => filemtime( $asset_path . '/js/dokan-wp.js' ),
+                'version'   => filemtime( $asset_path . 'js/dokan-wp.js' ),
             ],
             'dokan-login-form-popup' => [
                 'src'       => $asset_url . '/js/login-form-popup.js',
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . '/js/login-form-popup.js' ),
+                'version'   => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
             'dokan-sweetalert2' => [
                 'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
                 'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . '/vendors/sweetalert2/sweetalert2.all.min.js' ),
+                'version'   => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
@@ -558,7 +558,7 @@ class Assets {
             'i18n_date_format' => wc_date_format(),
         ];
 
-        // Load assets only admin pages and don't load on customizer page
+        // Load only admin pages except customizer page
         if ( is_admin() && ! is_customize_preview() ) {
             wp_enqueue_style( 'dokan-global-admin-css' );
             wp_enqueue_script( 'dokan-admin-notice-js' );
