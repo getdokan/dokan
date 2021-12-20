@@ -219,7 +219,7 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/timepicker/timepicker.min.css',
             ],
             'dokan-date-range-picker' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/date-range-picker/daterangepicker.css',
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/date-range-picker/daterangepicker.min.css',
             ],
             'dokan-admin-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
@@ -334,7 +334,7 @@ class Assets {
                 'in_footer' => false,
             ],
             'dokan-date-range-picker' => [
-                'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.js',
+                'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
                 'deps'      => [ 'jquery', 'dokan-moment' ],
             ],
             'dokan-google-recaptcha' => [
