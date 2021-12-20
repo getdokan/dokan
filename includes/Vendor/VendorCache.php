@@ -86,36 +86,22 @@ class VendorCache {
      *
      * @since 3.3.5
      *
-     * @param int   $user_id
-     * @param array $userdata
-     * @param bool  $is_user_delete; if user deletes, pass it to true. default - false
+     * @param int  $user_id
+     * @param bool $is_user_delete; if user deletes, pass it to true. default - false
      *
      * @return void
      */
-    private function clear_wp_user_cache( $user_id, $userdata = null, $is_user_delete = false ) {
-        $needs_cache_delete = false;
-
-        // If a user is created with seller role, then delete vendor cache.
-        if ( ! empty( $userdata ) && ! empty( $userdata['role'] ) && 'seller' === $userdata['role'] ) {
-            $needs_cache_delete = true;
-        } else {
-            $user = get_user_by( 'id', $user_id );
-            if ( ! $user ) {
-                return;
-            }
-
-            if ( in_array( 'seller', (array) $user->roles ) ) {
-                $needs_cache_delete = true;
-            }
+    private function clear_wp_user_cache( $user_id, $is_user_delete = false ) {
+        // check user has dokandar capability
+        if ( ! user_can( $user_id, 'dokandar' ) ) {
+            return;
         }
 
-        if ( $needs_cache_delete ) {
-            self::delete();
+        self::delete();
 
-            // On delete user, clear product caches of that vendor too.
-            if ( $is_user_delete ) {
-                ProductCache::delete( $user_id );
-            }
+        // On delete user, clear product caches of that vendor too.
+        if ( $is_user_delete ) {
+            ProductCache::delete( $user_id );
         }
     }
 
@@ -130,7 +116,7 @@ class VendorCache {
      * @return void
      */
     public function after_created_new_wp_user( $user_id, $userdata = null ) {
-        $this->clear_wp_user_cache( $user_id, $userdata );
+        $this->clear_wp_user_cache( $user_id );
     }
 
     /**
@@ -145,7 +131,7 @@ class VendorCache {
      * @return void
      */
     public function after_updated_wp_user( $user_id, $old_user_data, $userdata = null ) {
-        $this->clear_wp_user_cache( $user_id, $userdata );
+        $this->clear_wp_user_cache( $user_id );
     }
 
     /**
@@ -159,6 +145,6 @@ class VendorCache {
      * @return void
      */
     public function before_deleting_wp_user( $user_id, $reassign ) {
-        $this->clear_wp_user_cache( $user_id, null, true );
+        $this->clear_wp_user_cache( $user_id, true );
     }
 }
