@@ -558,7 +558,8 @@ class Assets {
             'i18n_date_format' => wc_date_format(),
         ];
 
-        if ( is_admin() ) {
+        // Load assets only admin pages and don't load on customizer page
+        if ( is_admin() && ! is_customize_preview() ) {
             wp_enqueue_style( 'dokan-global-admin-css' );
             wp_enqueue_script( 'dokan-admin-notice-js' );
             wp_enqueue_script( 'dokan-promo-notice-js' );
