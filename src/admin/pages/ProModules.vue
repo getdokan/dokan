@@ -429,7 +429,8 @@
                                         </a>
                                     </div>
                                     <div>
-                                        <switches :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                        <switches v-if="hasPro" :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                        <svg v-else @click="togglePopup( true )" xmlns="http://www.w3.org/2000/svg" width="42" height="20"><rect width="42" height="20" rx="10" fill="#c0c3c6"/><circle cx="6" cy="6" r="6" transform="translate(6 4)" fill="#fff"/></svg>
                                     </div>
                                 </div>
                             </div>
@@ -513,7 +514,8 @@
                                         </a>
                                     </div>
                                     <div>
-                                        <switches :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                        <switches v-if="hasPro" :enabled="module.active" :value="module.id" @input="onSwitch"></switches>
+                                        <svg v-else @click="togglePopup( true )" xmlns="http://www.w3.org/2000/svg" width="42" height="20"><rect width="42" height="20" rx="10" fill="#c0c3c6"/><circle cx="6" cy="6" r="6" transform="translate(6 4)" fill="#fff"/></svg>
                                     </div>
                                 </div>
                             </div>
@@ -524,7 +526,7 @@
                 </div>
             </div>
         </div>
-<!--        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>-->
+        <ModuleUpgradePopup @toggle="togglePopup" :show-popup="showPopup"></ModuleUpgradePopup>
     </div>
 </template>
 
@@ -554,6 +556,7 @@ export default {
             selected_categories: [],
             premium_modules: false,
             showPopup: true,
+            hasPro: false,//dokan.hasPro ? true : false,
             is_activating: false,
             is_deactivating: false,
             filterMenu: [
@@ -1623,7 +1626,6 @@ export default {
                                 "actions actions";
                         grid-template-rows: 67px;
                         grid-row-gap: 14px;
-                        align-content: space-between;
                         min-height: 280px;
                         box-sizing: border-box;
                     }
@@ -1776,6 +1778,7 @@ export default {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    margin-top: auto;
 
                     .module-action-links {
                         display: flex;
