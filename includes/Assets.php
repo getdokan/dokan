@@ -335,7 +335,7 @@ class Assets {
             ],
             'dokan-date-range-picker' => [
                 'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
-                'deps'      => [ 'jquery', 'dokan-moment' ],
+                'deps'      => [ 'jquery', 'dokan-moment', 'dokan-util-helper' ],
             ],
             'dokan-google-recaptcha' => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
