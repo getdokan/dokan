@@ -38,7 +38,7 @@ abstract class DokanStoreProducts {
      *
      * @var bool
      */
-    public static $additional_products_section = 0;
+    public static $has_additional_products_section = false;
 
     /**
      * Vendor ID.
@@ -116,8 +116,8 @@ abstract class DokanStoreProducts {
             ]
         );
 
-        // Increase counts for additional products section
-        self::$additional_products_section++;
+        // Turns additional products section stat to true
+        self::$has_additional_products_section = true;
     }
 
     /**
@@ -128,11 +128,15 @@ abstract class DokanStoreProducts {
      * @return void
      */
     public function render_additional_title_for_regular_products() {
-        // Check if there is only one additional procucts block
-        if ( 1 !== self::$additional_products_section ) {
+        // Check if there is any additional procucts section
+        if ( empty( self::$has_additional_products_section ) ) {
             return;
         }
 
+        // Turns additional products section stat to false again
+        self::$has_additional_products_section = false;
+
+        // Print the additional title for regular products
         ?>
             <h2 class="products-list-heading"><?php esc_html_e( 'All Products', 'dokan-lite' ); ?></h2>
         <?php
