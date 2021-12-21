@@ -1,17 +1,80 @@
 dokanWebpack([0],[
 /* 0 */,
-/* 1 */,
-/* 2 */
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
+
+/***/ }),
+/* 2 */,
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(49);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(122);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(28)
+  __webpack_require__(121)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/UpgradeBanner.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75a73b30", Component.options)
+  } else {
+    hotAPI.reload("data-v-75a73b30", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 4 */,
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(12);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(32);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(31)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -57,14 +120,14 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(21);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
@@ -135,73 +198,11 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(47);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(118);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(117)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/components/UpgradeBanner.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75a73b30", Component.options)
-  } else {
-    hotAPI.reload("data-v-75a73b30", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(58);
 //
 //
 //
@@ -310,15 +311,15 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(24);
 //
 //
 //
@@ -692,7 +693,7 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -727,7 +728,7 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -954,7 +955,7 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1037,11 +1038,11 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_multiselect__);
 //
 //
@@ -1218,12 +1219,12 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_multiselect__);
 //
 //
@@ -1447,21 +1448,23 @@ module.exports = jQuery;
 });
 
 /***/ }),
-/* 16 */,
 /* 17 */,
 /* 18 */,
 /* 19 */,
-/* 20 */
+/* 20 */,
+/* 21 */,
+/* 22 */,
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(34);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(30)
+  __webpack_require__(33)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1507,13 +1510,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(35);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1559,12 +1562,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 22 */,
-/* 23 */
+/* 25 */,
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -1611,17 +1614,17 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(29);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(25)
+  __webpack_require__(28)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1667,13 +1670,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1764,13 +1767,13 @@ if (false) {
 }
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(36);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1816,13 +1819,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1853,13 +1856,13 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1904,7 +1907,7 @@ if (false) {
 }
 
 /***/ }),
-/* 32 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1977,7 +1980,7 @@ if (false) {
 }
 
 /***/ }),
-/* 33 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2474,17 +2477,17 @@ if (false) {
 }
 
 /***/ }),
-/* 34 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(39);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(35)
+  __webpack_require__(38)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2530,13 +2533,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 35 */
+/* 38 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 36 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2811,17 +2814,17 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(16);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(42);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(38)
+  __webpack_require__(41)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2867,13 +2870,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 39 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3464,12 +3467,11 @@ if (false) {
 }
 
 /***/ }),
-/* 40 */,
-/* 41 */,
-/* 42 */,
 /* 43 */,
 /* 44 */,
-/* 45 */
+/* 45 */,
+/* 46 */,
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3485,12 +3487,12 @@ if (false) {
 });
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
 //
 //
 //
@@ -3613,6 +3615,7 @@ if (false) {
 var Postbox = dokan_get_lib('Postbox');
 var Loading = dokan_get_lib('Loading');
 var Currency = dokan_get_lib('Currency');
+var AdminNotice = dokan_get_lib('AdminNotice');
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -3622,7 +3625,8 @@ var Currency = dokan_get_lib('Currency');
     Loading: Loading,
     Chart: __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__["a" /* default */],
     Currency: Currency,
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
   },
   data: function data() {
     return {
@@ -3697,10 +3701,122 @@ var Currency = dokan_get_lib('Currency');
 });
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3718,8 +3834,9 @@ var Currency = dokan_get_lib('Currency');
   name: "UpgradeBanner",
   data: function data() {
     return {
-      show: true,
-      upgradeURL: dokan.urls.upgradeToPro
+      show: dokan.showPromoBanner,
+      upgradeURL: dokan.urls.upgradeToPro,
+      features: [this.__('Table rate shipping', 'dokan-lite'), this.__('Vendor Reviews', 'dokan-lite'), this.__('Product Subscriptions', 'dokan-lite'), this.__('Auction', 'dokan-lite'), this.__('Delivery Time', 'dokan-lite')]
     };
   },
   computed: {
@@ -3736,13 +3853,13 @@ var Currency = dokan_get_lib('Currency');
 });
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
 //
 //
 //
@@ -3856,6 +3973,7 @@ var Currency = dokan_get_lib('Currency');
 var ListTable = dokan_get_lib('ListTable');
 var Modal = dokan_get_lib('Modal');
 var Currency = dokan_get_lib('Currency');
+var AdminNotice = dokan_get_lib('AdminNotice');
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -3864,7 +3982,8 @@ var Currency = dokan_get_lib('Currency');
     ListTable: ListTable,
     Modal: Modal,
     Currency: Currency,
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
   },
   data: function data() {
     return {
@@ -4056,13 +4175,19 @@ var Currency = dokan_get_lib('Currency');
       var _this = this;
 
       this.loading = true;
-      var url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+      var user_id = '';
 
       if (parseInt(this.filter.user_id) > 0) {
-        url += '&user_id=' + this.filter.user_id;
+        user_id = this.filter.user_id;
       }
 
-      dokan.api.get(url).done(function (response, status, xhr) {
+      var data = {
+        per_page: this.perPage,
+        page: this.currentPage,
+        status: this.currentStatus,
+        user_id: user_id
+      };
+      dokan.api.get('/withdraw', data).done(function (response, status, xhr) {
         _this.requests = response;
         _this.loading = false;
 
@@ -4291,14 +4416,14 @@ var Currency = dokan_get_lib('Currency');
 });
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(134);
 //
 //
 //
@@ -5175,17 +5300,17 @@ var Currency = dokan_get_lib('Currency');
 });
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(53);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(130);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(125)
+  __webpack_require__(129)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5231,7 +5356,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5270,11 +5395,12 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+//
 //
 //
 //
@@ -5298,13 +5424,15 @@ if (false) {(function () {
 //
 var Postbox = dokan_get_lib('Postbox');
 var Loading = dokan_get_lib('Loading');
+var AdminNotice = dokan_get_lib('AdminNotice');
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Help',
   components: {
     Postbox: Postbox,
     Loading: Loading,
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
   },
   data: function data() {
     return {
@@ -5327,14 +5455,291 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(137);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(167);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var Loading = dokan_get_lib('Loading');
+var AdminNotice = dokan_get_lib('AdminNotice');
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'ChangeLog',
+  components: {
+    Loading: Loading,
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
+  },
+  data: function data() {
+    return {
+      active_package: 'lite',
+      current_version: 'lite-0',
+      scrollPosition: null,
+      openVersions: [],
+      activeVersionBorder: '',
+      lite_versions: null,
+      pro_versions: null,
+      loading: false,
+      hasPro: dokan.hasPro ? true : false
+    };
+  },
+  methods: {
+    formatReleaseDate: function formatReleaseDate(date) {
+      return __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.datepicker.formatDate(dokan_get_i18n_date_format(), new Date(date));
+    },
+    badgeClass: function badgeClass(key) {
+      switch (key) {
+        case 'New':
+        case 'New Module':
+        case 'New Feature':
+          return 'badge-green';
+
+        case 'Fix':
+          return 'badge-red';
+
+        default:
+          return 'badge-blue';
+      }
+    },
+    getDokanLiteChangeLog: function getDokanLiteChangeLog() {
+      var _this = this;
+
+      this.loading = true;
+      dokan.api.get('/admin/changelog/lite').done(function (response) {
+        _this.lite_versions = JSON.parse(response);
+        _this.loading = false;
+      }).fail(function (response) {
+        _this.loading = false;
+
+        _this.$notify({
+          type: 'error',
+          title: _this.__('Error', 'dokan-lite'),
+          text: _this.__('Something went wrong', 'dokan-lite')
+        });
+      });
+    },
+    getDokanProChangeLog: function getDokanProChangeLog() {
+      var _this2 = this;
+
+      this.loading = true;
+      dokan.api.get('/admin/changelog/pro').done(function (response) {
+        _this2.pro_versions = JSON.parse(response);
+        _this2.loading = false;
+      }).fail(function (response) {
+        _this2.loading = false;
+
+        _this2.$notify({
+          type: 'error',
+          title: _this2.__('Error', 'dokan-lite'),
+          text: _this2.__('Something went wrong', 'dokan-lite')
+        });
+      });
+    },
+    dismissWhatsNewNotice: function dismissWhatsNewNotice() {
+      var action = 'pro' === this.active_package ? 'dokan-pro-whats-new-notice' : 'dokan-whats-new-notice';
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.ajax({
+        url: dokan.ajaxurl,
+        method: 'post',
+        dataType: 'json',
+        data: {
+          action: action,
+          nonce: dokan.nonce,
+          dokan_promotion_dismissed: true
+        }
+      });
+    },
+    toggleReading: function toggleReading(index) {
+      if (this.isOpenVersion(index)) {
+        return this.openVersions.splice(this.openVersions.indexOf(index), 1);
+      }
+
+      return this.openVersions.push(index);
+    },
+    isOpenVersion: function isOpenVersion(index) {
+      return this.openVersions.includes(index);
+    },
+    switchPackage: function switchPackage(pack) {
+      if (null === this.pro_versions && 'pro' === pack) {
+        this.getDokanProChangeLog();
+      }
+
+      if (null === this.lite_versions && 'lite' === pack) {
+        this.getDokanLiteChangeLog();
+      }
+
+      this.active_package = pack;
+    },
+    isActivePackage: function isActivePackage(pack) {
+      return this.active_package === pack;
+    },
+    addBorder: function addBorder() {
+      var _this3 = this;
+
+      var timeout;
+      clearTimeout(timeout);
+      this.activeVersionBorder = 'border: 1px solid #2271b1';
+      timeout = setTimeout(function () {
+        _this3.activeVersionBorder = '';
+      }, 3000);
+    },
+    jumpVersion: function jumpVersion(id) {
+      this.current_version = id;
+      this.goToPosition(id);
+      this.addBorder();
+    },
+    isCurrentVersion: function isCurrentVersion(index) {
+      return this.current_version === index;
+    },
+    updatePosition: function updatePosition() {
+      this.scrollPosition = window.scrollY;
+    },
+    scrollTop: function scrollTop() {
+      this.goToPosition('change-log');
+    },
+    goToPosition: function goToPosition(id) {
+      __WEBPACK_IMPORTED_MODULE_0_jquery___default()('html, body').animate({
+        scrollTop: __WEBPACK_IMPORTED_MODULE_0_jquery___default()("#".concat(id)).offset().top - 50
+      }, 500);
+    },
+    loadChangelogData: function loadChangelogData() {
+      if ('dokan-pro' === this.$route.query.plugin) {
+        this.active_package = 'pro';
+
+        if (null === this.pro_versions) {
+          this.getDokanProChangeLog();
+        }
+      } else {
+        if (null === this.lite_versions) {
+          this.getDokanLiteChangeLog();
+        }
+      }
+    }
+  },
+  watch: {
+    '$route.query.plugin': function $routeQueryPlugin() {
+      this.loadChangelogData();
+    }
+  },
+  created: function created() {
+    this.loadChangelogData();
+
+    if (dokan.hasNewVersion) {
+      this.dismissWhatsNewNotice();
+    }
+
+    window.addEventListener('scroll', this.updatePosition);
+  },
+  destroyed: function destroyed() {
+    window.removeEventListener('scroll', this.updatePosition);
+  }
+});
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(144);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
 //
 //
@@ -5417,6 +5822,7 @@ var Loading = dokan_get_lib('Loading');
 //
 //
 var Loading = dokan_get_lib('Loading');
+var AdminNotice = dokan_get_lib('AdminNotice');
 
 
 
@@ -5427,7 +5833,8 @@ var Loading = dokan_get_lib('Loading');
     Fields: __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__["a" /* default */],
     Loading: Loading,
     SettingsBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__["a" /* default */],
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
   },
   data: function data() {
     return {
@@ -5750,15 +6157,15 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 54 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(146);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(147);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(27);
 
 
 
@@ -6385,15 +6792,15 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 });
 
 /***/ }),
-/* 55 */,
-/* 56 */,
-/* 57 */,
 /* 58 */,
 /* 59 */,
 /* 60 */,
 /* 61 */,
 /* 62 */,
-/* 63 */
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6426,12 +6833,13 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 });
 
 /***/ }),
-/* 64 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(173);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+//
 //
 //
 //
@@ -6530,6 +6938,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 var ListTable = dokan_get_lib('ListTable');
 var Switches = dokan_get_lib('Switches');
 var Search = dokan_get_lib('Search');
+var AdminNotice = dokan_get_lib('AdminNotice');
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Vendors',
   components: {
@@ -6537,7 +6946,8 @@ var Search = dokan_get_lib('Search');
     Switches: Switches,
     Search: Search,
     AddVendor: __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__["a" /* default */],
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */]
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__["a" /* default */],
+    AdminNotice: AdminNotice
   },
   data: function data() {
     return {
@@ -6665,7 +7075,8 @@ var Search = dokan_get_lib('Search');
 
       var self = this;
       self.loading = true;
-      dokan.api.get("/stores?search=".concat(payload), {
+      dokan.api.get("/stores", {
+        search: payload,
         page: this.currentPage,
         orderby: this.sortBy,
         order: this.sortOrder
@@ -6791,13 +7202,13 @@ var Search = dokan_get_lib('Search');
 });
 
 /***/ }),
-/* 65 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(40);
 //
 //
 //
@@ -7022,11 +7433,11 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 66 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(52);
 //
 //
 //
@@ -7169,11 +7580,11 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 67 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(189);
 //
 //
 //
@@ -7406,7 +7817,7 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 68 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7472,9 +7883,6 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 69 */,
-/* 70 */,
-/* 71 */,
 /* 72 */,
 /* 73 */,
 /* 74 */,
@@ -7509,14 +7917,18 @@ var Loading = dokan_get_lib('Loading');
 /* 103 */,
 /* 104 */,
 /* 105 */,
-/* 106 */
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(110);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(193);
 
 
 
@@ -7552,17 +7964,17 @@ new Vue({
 Object(__WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__["a" /* default */])('dokan');
 
 /***/ }),
-/* 107 */
+/* 111 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(47);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(113);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(108)
+  __webpack_require__(112)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -7608,13 +8020,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 108 */
+/* 112 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 109 */
+/* 113 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7645,20 +8057,22 @@ if (false) {
 }
 
 /***/ }),
-/* 110 */
+/* 114 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(123);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_Settings_vue__ = __webpack_require__(135);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Vendors_vue__ = __webpack_require__(171);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_VendorCapabilities_vue__ = __webpack_require__(177);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_ProModules_vue__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__ = __webpack_require__(187);
+
 
 
 
@@ -7675,13 +8089,14 @@ Vue.use(Router);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_5_admin_pages_Settings_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_7_admin_pages_VendorCapabilities_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_ProModules_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 
 if (!dokan.hasPro || VersionCompare(dokan.proVersion, '2.9.14', '>')) {
-  dokan_add_route(__WEBPACK_IMPORTED_MODULE_6_admin_pages_Vendors_vue__["a" /* default */]);
+  dokan_add_route(__WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__["a" /* default */]);
 }
 /**
  * Parse the route array and bind required components
@@ -7716,18 +8131,18 @@ parseRouteComponent(dokan.routes);
 }));
 
 /***/ }),
-/* 111 */,
-/* 112 */
+/* 115 */,
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(48);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(123);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(113)
+  __webpack_require__(117)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -7773,22 +8188,22 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 113 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 114 */,
-/* 115 */,
-/* 116 */,
 /* 117 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 118 */
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7797,30 +8212,788 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.show && _vm.showUpgrade
-    ? _c("div", { staticClass: "dokan-upgrade-bar" }, [
-        _vm._v("\n    You're using "),
-        _c("span", [_vm._v("Dokan Lite")]),
-        _vm._v(". To unlock more features, consider\n    "),
+    ? _c("div", { staticClass: "dokan-promo-banner notice" }, [
+        _c("div", { staticClass: "thumbnail" }, [
+          _c(
+            "svg",
+            {
+              attrs: {
+                viewBox: "0 0 219 146",
+                fill: "none",
+                xmlns: "http://www.w3.org/2000/svg"
+              }
+            },
+            [
+              _c("g", { attrs: { filter: "url(#filter0_d_72_951)" } }, [
+                _c("rect", {
+                  attrs: {
+                    x: "38.7048",
+                    y: "24.5641",
+                    width: "122.83",
+                    height: "92.5357",
+                    rx: "2.75404",
+                    fill: "white"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M38.7048 27.3181C38.7048 25.7971 39.9379 24.5641 41.4589 24.5641H158.781C160.302 24.5641 161.535 25.7971 161.535 27.3181V34.4786H38.7048V27.3181Z",
+                  fill: "#5165FF"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  cx: "46.1408",
+                  cy: "29.7967",
+                  r: "1.37702",
+                  fill: "#FF2323"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  cx: "51.098",
+                  cy: "29.7967",
+                  r: "1.37702",
+                  fill: "#FF9A23"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  cx: "56.0553",
+                  cy: "29.7967",
+                  r: "1.37702",
+                  fill: "#3FD826"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  x: "48.6194",
+                  y: "42.7407",
+                  width: "58.9364",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "56.511",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "62.019",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "67.5271",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "73.0352",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "78.5432",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "84.0514",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "89.5593",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  opacity: "0.2",
+                  x: "48.6194",
+                  y: "95.0675",
+                  width: "103.001",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  x: "48.6194",
+                  y: "46.5963",
+                  width: "25.888",
+                  height: "1.65242",
+                  rx: "0.826212",
+                  fill: "#35D893"
+                }
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                attrs: {
+                  x: "48.6194",
+                  y: "102.779",
+                  width: "21.4815",
+                  height: "4.95727",
+                  rx: "2.47864",
+                  fill: "#F86C57"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  opacity: "0.91",
+                  cx: "165.911",
+                  cy: "71.0891",
+                  r: "48.0891",
+                  fill: "url(#paint0_linear_72_951)",
+                  "fill-opacity": "0.08"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  opacity: "0.91",
+                  cx: "165.911",
+                  cy: "71.0891",
+                  r: "42.9732",
+                  fill: "url(#paint1_linear_72_951)",
+                  "fill-opacity": "0.08"
+                }
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                attrs: {
+                  opacity: "0.91",
+                  cx: "165.911",
+                  cy: "71.0892",
+                  r: "38.3689",
+                  fill: "url(#paint2_linear_72_951)",
+                  "fill-opacity": "0.09"
+                }
+              }),
+              _vm._v(" "),
+              _c("g", { attrs: { filter: "url(#filter1_d_72_951)" } }, [
+                _c("circle", {
+                  attrs: {
+                    cx: "165.911",
+                    cy: "71.0891",
+                    r: "33.2531",
+                    fill: "url(#paint3_linear_72_951)"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M159.755 57.3334L159.751 58H156.026V51.9546H159.751V52.6212H156.844V54.6293H159.199V55.2705H156.844V57.3334H159.755ZM161.312 54.3466C161.405 54.2426 161.503 54.1483 161.607 54.064C161.711 53.9796 161.821 53.9079 161.936 53.8488C162.054 53.7869 162.178 53.7405 162.307 53.7096C162.44 53.6759 162.582 53.659 162.734 53.659C162.967 53.659 163.172 53.6984 163.349 53.7771C163.529 53.853 163.679 53.9627 163.797 54.1062C163.918 54.2468 164.009 54.4169 164.071 54.6166C164.133 54.8163 164.164 55.0371 164.164 55.279V58H163.409V55.279C163.409 54.9555 163.334 54.7052 163.185 54.528C163.039 54.348 162.815 54.258 162.514 54.258C162.292 54.258 162.084 54.3115 161.89 54.4183C161.699 54.5252 161.521 54.6701 161.358 54.8529V58H160.603V53.7265H161.055C161.161 53.7265 161.228 53.7785 161.253 53.8826L161.312 54.3466ZM166.101 53.7265V58.3164C166.101 58.488 166.079 58.6469 166.034 58.7931C165.989 58.9422 165.917 59.0715 165.818 59.1812C165.72 59.2909 165.593 59.3767 165.439 59.4386C165.287 59.5033 165.104 59.5356 164.89 59.5356C164.8 59.5356 164.717 59.5286 164.641 59.5145C164.565 59.5004 164.49 59.4793 164.414 59.4512L164.443 59.0462C164.449 59.0209 164.459 59.0012 164.473 58.9872C164.484 58.9759 164.501 58.9689 164.523 58.9661C164.546 58.9633 164.575 58.9619 164.612 58.9619C164.646 58.9647 164.689 58.9661 164.743 58.9661C164.962 58.9661 165.118 58.914 165.211 58.81C165.304 58.7087 165.35 58.5442 165.35 58.3164V53.7265H166.101ZM166.257 52.3849C166.257 52.4581 166.242 52.527 166.211 52.5917C166.183 52.6535 166.143 52.7098 166.093 52.7604C166.045 52.8082 165.989 52.8462 165.924 52.8743C165.859 52.9024 165.79 52.9165 165.717 52.9165C165.644 52.9165 165.575 52.9024 165.51 52.8743C165.449 52.8462 165.394 52.8082 165.346 52.7604C165.298 52.7098 165.26 52.6535 165.232 52.5917C165.204 52.527 165.19 52.4581 165.19 52.3849C165.19 52.3118 165.204 52.2429 165.232 52.1782C165.26 52.1107 165.298 52.0531 165.346 52.0053C165.394 51.9546 165.449 51.9153 165.51 51.8871C165.575 51.859 165.644 51.845 165.717 51.845C165.79 51.845 165.859 51.859 165.924 51.8871C165.989 51.9153 166.045 51.9546 166.093 52.0053C166.143 52.0531 166.183 52.1107 166.211 52.1782C166.242 52.2429 166.257 52.3118 166.257 52.3849ZM169.136 53.659C169.448 53.659 169.73 53.711 169.98 53.8151C170.23 53.9191 170.444 54.0668 170.621 54.258C170.798 54.4493 170.933 54.6813 171.026 54.9541C171.122 55.2241 171.17 55.5264 171.17 55.8611C171.17 56.1986 171.122 56.5024 171.026 56.7724C170.933 57.0424 170.798 57.273 170.621 57.4642C170.444 57.6555 170.23 57.8031 169.98 57.9072C169.73 58.0084 169.448 58.0591 169.136 58.0591C168.821 58.0591 168.537 58.0084 168.284 57.9072C168.034 57.8031 167.82 57.6555 167.643 57.4642C167.466 57.273 167.329 57.0424 167.234 56.7724C167.141 56.5024 167.094 56.1986 167.094 55.8611C167.094 55.5264 167.141 55.2241 167.234 54.9541C167.329 54.6813 167.466 54.4493 167.643 54.258C167.82 54.0668 168.034 53.9191 168.284 53.8151C168.537 53.711 168.821 53.659 169.136 53.659ZM169.136 57.4727C169.558 57.4727 169.873 57.332 170.081 57.0508C170.289 56.7667 170.393 56.3716 170.393 55.8654C170.393 55.3563 170.289 54.9597 170.081 54.6757C169.873 54.3916 169.558 54.2496 169.136 54.2496C168.923 54.2496 168.735 54.2862 168.575 54.3593C168.418 54.4324 168.286 54.5379 168.179 54.6757C168.075 54.8135 167.996 54.9836 167.942 55.1861C167.892 55.3858 167.866 55.6122 167.866 55.8654C167.866 56.3716 167.971 56.7667 168.179 57.0508C168.39 57.332 168.709 57.4727 169.136 57.4727ZM175.677 53.7265L173.294 59.2614C173.269 59.3176 173.236 59.3626 173.197 59.3964C173.16 59.4301 173.103 59.447 173.024 59.447H172.467L173.247 57.7511L171.484 53.7265H172.134C172.198 53.7265 172.249 53.7434 172.286 53.7771C172.325 53.808 172.352 53.8432 172.366 53.8826L173.509 56.5741C173.554 56.6922 173.592 56.816 173.623 56.9453C173.662 56.8131 173.704 56.688 173.749 56.5699L174.859 53.8826C174.876 53.8376 174.904 53.801 174.943 53.7729C174.986 53.742 175.032 53.7265 175.083 53.7265H175.677Z",
+                  fill: "white"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M162.358 88.9794C162.358 89.4322 162.286 89.8485 162.142 90.2282C161.999 90.605 161.796 90.9299 161.535 91.2027C161.273 91.4755 160.958 91.6878 160.59 91.8397C160.224 91.9888 159.819 92.0633 159.375 92.0633C158.931 92.0633 158.526 91.9888 158.16 91.8397C157.794 91.6878 157.481 91.4755 157.219 91.2027C156.958 90.9299 156.755 90.605 156.612 90.2282C156.468 89.8485 156.397 89.4322 156.397 88.9794C156.397 88.5266 156.468 88.1118 156.612 87.7349C156.755 87.3552 156.958 87.029 157.219 86.7562C157.481 86.4806 157.794 86.2668 158.16 86.1149C158.526 85.9631 158.931 85.8871 159.375 85.8871C159.819 85.8871 160.224 85.9631 160.59 86.1149C160.958 86.2668 161.273 86.4806 161.535 86.7562C161.796 87.029 161.999 87.3552 162.142 87.7349C162.286 88.1118 162.358 88.5266 162.358 88.9794ZM161.518 88.9794C161.518 88.6082 161.467 88.2749 161.366 87.9796C161.265 87.6843 161.121 87.4354 160.936 87.2329C160.75 87.0276 160.525 86.8701 160.261 86.7604C159.996 86.6507 159.701 86.5959 159.375 86.5959C159.052 86.5959 158.758 86.6507 158.493 86.7604C158.229 86.8701 158.002 87.0276 157.814 87.2329C157.628 87.4354 157.485 87.6843 157.384 87.9796C157.282 88.2749 157.232 88.6082 157.232 88.9794C157.232 89.3507 157.282 89.6839 157.384 89.9793C157.485 90.2717 157.628 90.5207 157.814 90.726C158.002 90.9285 158.229 91.0845 158.493 91.1942C158.758 91.3011 159.052 91.3545 159.375 91.3545C159.701 91.3545 159.996 91.3011 160.261 91.1942C160.525 91.0845 160.75 90.9285 160.936 90.726C161.121 90.5207 161.265 90.2717 161.366 89.9793C161.467 89.6839 161.518 89.3507 161.518 88.9794ZM164.347 86.6212V88.7347H166.832V89.4013H164.347V92H163.528V85.9546H167.254V86.6212H164.347ZM169.118 86.6212V88.7347H171.602V89.4013H169.118V92H168.299V85.9546H172.024V86.6212H169.118Z",
+                  fill: "white"
+                }
+              }),
+              _vm._v(" "),
+              _c("g", { attrs: { filter: "url(#filter2_d_72_951)" } }, [
+                _c("path", {
+                  attrs: {
+                    d:
+                      "M148.98 68.4417C149.078 67.7745 149.265 67.193 149.54 66.6972C149.822 66.2014 150.168 65.7882 150.578 65.4576C150.994 65.1271 151.468 64.8822 152.001 64.7231C152.534 64.5578 153.106 64.4752 153.718 64.4752C154.379 64.4752 154.967 64.5701 155.481 64.7598C155.995 64.9434 156.43 65.1944 156.785 65.5127C157.14 65.831 157.409 66.2014 157.593 66.6237C157.776 67.04 157.868 67.4807 157.868 67.9459C157.868 68.3683 157.825 68.7417 157.74 69.0661C157.654 69.3844 157.525 69.6629 157.354 69.9016C157.189 70.1342 156.981 70.3332 156.73 70.4985C156.485 70.6576 156.203 70.7923 155.885 70.9025C157.366 71.4228 158.107 72.4328 158.107 73.9325C158.107 74.6425 157.978 75.2608 157.721 75.7872C157.464 76.3136 157.118 76.7513 156.684 77.1002C156.255 77.4491 155.756 77.7123 155.187 77.8898C154.618 78.0612 154.024 78.1469 153.406 78.1469C152.769 78.1469 152.203 78.0796 151.707 77.9449C151.211 77.8041 150.771 77.5899 150.385 77.3022C149.999 77.0084 149.66 76.635 149.366 76.182C149.078 75.729 148.827 75.1904 148.613 74.566L149.88 74.0518C150.211 73.9233 150.517 73.8896 150.798 73.9508C151.08 74.012 151.282 74.1528 151.404 74.3732C151.68 74.8812 151.97 75.2516 152.276 75.4842C152.589 75.7107 152.953 75.8239 153.369 75.8239C153.687 75.8239 153.963 75.7719 154.195 75.6678C154.434 75.5576 154.63 75.4199 154.783 75.2546C154.942 75.0832 155.062 74.8904 155.141 74.6762C155.221 74.4619 155.261 74.2446 155.261 74.0243C155.261 73.7366 155.239 73.4795 155.196 73.253C155.16 73.0204 155.049 72.8215 154.866 72.6562C154.682 72.4909 154.404 72.3654 154.03 72.2797C153.663 72.1879 153.149 72.142 152.488 72.142V70.1771C153.045 70.1771 153.495 70.1342 153.837 70.0485C154.18 69.9628 154.443 69.8465 154.627 69.6996C154.817 69.5466 154.942 69.363 155.003 69.1487C155.065 68.9345 155.095 68.6988 155.095 68.4417C155.095 67.9153 154.967 67.5113 154.71 67.2297C154.459 66.942 154.073 66.7982 153.553 66.7982C153.13 66.7982 152.772 66.9114 152.478 67.1379C152.191 67.3583 151.992 67.6337 151.882 67.9643C151.753 68.3009 151.585 68.5244 151.377 68.6345C151.169 68.7447 150.872 68.7692 150.486 68.708L148.98 68.4417ZM169.108 71.3065C169.108 72.4756 168.983 73.4887 168.732 74.3456C168.481 75.2026 168.132 75.9127 167.685 76.4758C167.244 77.039 166.718 77.4583 166.106 77.7337C165.5 78.0092 164.842 78.1469 164.132 78.1469C163.422 78.1469 162.764 78.0092 162.158 77.7337C161.558 77.4583 161.037 77.039 160.597 76.4758C160.156 75.9127 159.81 75.2026 159.559 74.3456C159.314 73.4887 159.192 72.4756 159.192 71.3065C159.192 70.1373 159.314 69.1242 159.559 68.2673C159.81 67.4103 160.156 66.7002 160.597 66.1371C161.037 65.5739 161.558 65.1577 162.158 64.8884C162.764 64.6129 163.422 64.4752 164.132 64.4752C164.842 64.4752 165.5 64.6129 166.106 64.8884C166.718 65.1577 167.244 65.5739 167.685 66.1371C168.132 66.7002 168.481 67.4103 168.732 68.2673C168.983 69.1242 169.108 70.1373 169.108 71.3065ZM166.17 71.3065C166.17 70.3821 166.112 69.6262 165.996 69.0385C165.879 68.4448 165.723 67.9796 165.527 67.6429C165.338 67.3062 165.12 67.0767 164.875 66.9543C164.631 66.8257 164.383 66.7614 164.132 66.7614C163.881 66.7614 163.633 66.8257 163.388 66.9543C163.149 67.0767 162.935 67.3062 162.745 67.6429C162.562 67.9796 162.412 68.4448 162.295 69.0385C162.185 69.6262 162.13 70.3821 162.13 71.3065C162.13 72.2369 162.185 72.9959 162.295 73.5835C162.412 74.1712 162.562 74.6364 162.745 74.9792C162.935 75.3158 163.149 75.5485 163.388 75.677C163.633 75.7994 163.881 75.8606 164.132 75.8606C164.383 75.8606 164.631 75.7994 164.875 75.677C165.12 75.5485 165.338 75.3158 165.527 74.9792C165.723 74.6364 165.879 74.1712 165.996 73.5835C166.112 72.9959 166.17 72.2369 166.17 71.3065ZM176.51 67.8633C176.51 68.353 176.421 68.7998 176.244 69.2038C176.066 69.6078 175.831 69.9567 175.537 70.2505C175.243 70.5382 174.9 70.7617 174.509 70.9208C174.123 71.08 173.719 71.1595 173.297 71.1595C172.831 71.1595 172.403 71.08 172.011 70.9208C171.625 70.7617 171.289 70.5382 171.001 70.2505C170.72 69.9567 170.499 69.6078 170.34 69.2038C170.181 68.7998 170.101 68.353 170.101 67.8633C170.101 67.3552 170.181 66.8961 170.34 66.486C170.499 66.0698 170.72 65.7147 171.001 65.4209C171.289 65.1271 171.625 64.9006 172.011 64.7414C172.403 64.5762 172.831 64.4935 173.297 64.4935C173.762 64.4935 174.19 64.5762 174.582 64.7414C174.98 64.9006 175.32 65.1271 175.601 65.4209C175.889 65.7147 176.112 66.0698 176.271 66.486C176.431 66.8961 176.51 67.3552 176.51 67.8633ZM174.325 67.8633C174.325 67.5511 174.297 67.294 174.242 67.092C174.193 66.8839 174.123 66.7186 174.031 66.5962C173.939 66.4738 173.829 66.3881 173.701 66.3391C173.578 66.2901 173.443 66.2656 173.297 66.2656C173.15 66.2656 173.015 66.2901 172.893 66.3391C172.77 66.3881 172.666 66.4738 172.58 66.5962C172.495 66.7186 172.427 66.8839 172.378 67.092C172.329 67.294 172.305 67.5511 172.305 67.8633C172.305 68.1571 172.329 68.4019 172.378 68.5978C172.427 68.7937 172.495 68.9498 172.58 69.0661C172.666 69.1824 172.77 69.265 172.893 69.314C173.015 69.363 173.15 69.3875 173.297 69.3875C173.443 69.3875 173.578 69.363 173.701 69.314C173.829 69.265 173.939 69.1824 174.031 69.0661C174.123 68.9498 174.193 68.7937 174.242 68.5978C174.297 68.4019 174.325 68.1571 174.325 67.8633ZM180.715 65.0444C180.807 64.9404 180.921 64.8455 181.055 64.7598C181.19 64.668 181.377 64.6221 181.615 64.6221H183.69L173.609 77.596C173.517 77.7123 173.401 77.8102 173.26 77.8898C173.125 77.9633 172.96 78 172.764 78H170.634L180.715 65.0444ZM184.205 74.8598C184.205 75.3495 184.116 75.7994 183.938 76.2095C183.761 76.6135 183.525 76.9625 183.231 77.2563C182.937 77.544 182.595 77.7674 182.203 77.9265C181.817 78.0857 181.413 78.1653 180.991 78.1653C180.526 78.1653 180.097 78.0857 179.705 77.9265C179.32 77.7674 178.983 77.544 178.695 77.2563C178.414 76.9625 178.194 76.6135 178.034 76.2095C177.875 75.7994 177.796 75.3495 177.796 74.8598C177.796 74.3518 177.875 73.8927 178.034 73.4825C178.194 73.0663 178.414 72.7113 178.695 72.4175C178.983 72.1236 179.32 71.8971 179.705 71.738C180.097 71.5727 180.526 71.4901 180.991 71.4901C181.456 71.4901 181.885 71.5727 182.276 71.738C182.674 71.8971 183.014 72.1236 183.296 72.4175C183.583 72.7113 183.807 73.0663 183.966 73.4825C184.125 73.8927 184.205 74.3518 184.205 74.8598ZM182.019 74.8598C182.019 74.5538 181.992 74.2997 181.937 74.0977C181.888 73.8896 181.817 73.7243 181.725 73.6019C181.634 73.4795 181.523 73.3938 181.395 73.3448C181.272 73.2958 181.138 73.2714 180.991 73.2714C180.844 73.2714 180.709 73.2958 180.587 73.3448C180.464 73.3938 180.36 73.4795 180.275 73.6019C180.189 73.7243 180.122 73.8896 180.073 74.0977C180.024 74.2997 179.999 74.5538 179.999 74.8598C179.999 75.1536 180.024 75.3985 180.073 75.5944C180.122 75.7902 180.189 75.9463 180.275 76.0626C180.36 76.1789 180.464 76.2616 180.587 76.3105C180.709 76.3595 180.844 76.384 180.991 76.384C181.138 76.384 181.272 76.3595 181.395 76.3105C181.523 76.2616 181.634 76.1789 181.725 76.0626C181.817 75.9463 181.888 75.7902 181.937 75.5944C181.992 75.3985 182.019 75.1536 182.019 74.8598Z",
+                    fill: "white"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("g", { attrs: { filter: "url(#filter3_d_72_951)" } }, [
+                _c("rect", {
+                  attrs: {
+                    x: "19",
+                    y: "38.3818",
+                    width: "50.2355",
+                    height: "17.2853",
+                    rx: "8.64266",
+                    fill: "white"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M42.394 48.9926C42.394 50.0814 41.6317 50.7359 40.0117 50.7359C38.3917 50.7359 37.6294 50.0814 37.6294 48.9926V47.1386C37.6294 46.0497 38.3931 45.3953 40.0117 45.3953C41.6303 45.3953 42.394 46.0497 42.394 47.1386V48.9926ZM41.1062 47.2885C41.1062 46.6831 40.9184 46.337 40.0061 46.337C39.0938 46.337 38.9074 46.6831 38.9074 47.2885V48.844C38.9074 49.448 39.0952 49.7941 40.0061 49.7941C40.917 49.7941 41.1062 49.448 41.1062 48.844V47.2885Z",
+                  fill: "#4D4D4F"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M46.011 47.7439C47.488 48.2694 47.5371 49.4676 48.1425 50.5578C47.9011 50.6184 47.6557 50.6614 47.4081 50.6867C46.0418 50.6867 46.814 48.6253 44.7736 48.289V50.6867C44.7736 50.6867 43.4843 50.6867 43.4843 50.0421V43.0465C43.4843 43.0465 44.7736 43.0465 44.7736 43.6911V47.2982C45.3579 47.2086 45.6845 46.7727 46.1301 45.9305C46.3193 45.5732 46.6906 45.4442 47.0816 45.4442C47.3198 45.4489 47.556 45.489 47.7823 45.5634C47.24 46.3061 46.9036 47.3865 46.011 47.7439Z",
+                  fill: "#4D4D4F"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M51.6206 47.0307C51.6206 46.6733 51.4216 46.3566 50.6593 46.3566C49.8269 46.3566 49.0743 46.6369 49.0743 47.4777C48.7856 47.0909 48.6974 46.784 48.6974 46.5164C48.6974 45.6545 49.8563 45.3953 50.6691 45.3953C52.1251 45.3953 52.8987 46.0091 52.8987 47.0895V50.712C52.6603 50.5991 52.3985 50.5448 52.1349 50.5537C51.6402 50.5537 51.1441 50.7317 50.5794 50.7317C49.5592 50.7317 48.5586 50.3547 48.5586 49.1761C48.5586 47.3277 51.2142 47.8126 51.6206 47.0307ZM51.65 48.041C51.4216 48.5666 49.8367 48.2793 49.8367 49.1621C49.8367 49.6078 50.1632 49.8362 50.7279 49.8362C51.044 49.8362 51.357 49.7753 51.65 49.6568V48.041Z",
+                  fill: "#4D4D4F"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M57.2092 47.1792C57.2092 46.6537 56.9612 46.3566 56.2577 46.3566C55.9389 46.3599 55.622 46.4071 55.316 46.4967V50.6868C55.316 50.6868 54.0281 50.6868 54.0281 50.0422V45.3953C54.3061 45.5298 54.6106 45.6007 54.9194 45.6027C55.4057 45.6027 55.8611 45.3953 56.3964 45.3953C57.4166 45.3953 58.4985 45.7414 58.4985 47.0307V50.6868C58.4985 50.6868 57.2106 50.6672 57.2106 50.0422L57.2092 47.1792Z",
+                  fill: "#4D4D4F"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M29.8406 42.6191C29.8406 42.6191 34.4371 42.2814 34.4371 46.2486C34.4371 50.2159 33.2221 51.0133 32.1571 51.2641C32.1571 51.2641 36.5882 52.332 36.5882 46.7503C36.5882 41.1687 30.9365 41.9745 29.8406 42.6191Z",
+                  fill: "#F2634D"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M33.578 49.3681C33.578 49.3681 33.1352 50.9082 31.7899 51.103C30.4446 51.2978 30.2021 50.5719 29.2674 50.6209C29.2568 50.522 29.266 50.422 29.2945 50.3267C29.323 50.2314 29.3702 50.1427 29.4333 50.0658C29.4965 49.989 29.5743 49.9255 29.6623 49.8791C29.7503 49.8327 29.8466 49.8042 29.9457 49.7955C30.701 49.6932 32.115 49.8922 33.0553 49.298C33.0553 49.298 33.6159 49.0065 33.721 48.865L33.578 49.3681Z",
+                  fill: "#F2634D"
+                }
+              }),
+              _vm._v(" "),
+              _c("path", {
+                attrs: {
+                  d:
+                    "M29.7705 42.8966V44.8066V49.5615C29.8166 49.549 29.8634 49.5397 29.9107 49.5334C30.1755 49.505 30.4417 49.491 30.7081 49.4914C30.9883 49.4914 31.2868 49.4802 31.5895 49.4536V47.2086C31.5895 46.4644 31.5433 45.7021 31.5895 44.9664C31.6149 44.7457 31.7 44.5361 31.8355 44.36C31.9711 44.184 32.152 44.0482 32.3589 43.9672C32.5253 43.9058 32.7028 43.8801 32.8798 43.892C33.0568 43.9038 33.2293 43.9528 33.3861 44.0359C32.3334 43.2799 31.0664 42.8807 29.7705 42.8966Z",
+                  fill: "#F2634D"
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "defs",
+                [
+                  _c(
+                    "filter",
+                    {
+                      attrs: {
+                        id: "filter0_d_72_951",
+                        x: "1.43337",
+                        y: "0.796776",
+                        width: "197.373",
+                        height: "167.079",
+                        filterUnits: "userSpaceOnUse",
+                        "color-interpolation-filters": "sRGB"
+                      }
+                    },
+                    [
+                      _c("feFlood", {
+                        attrs: {
+                          "flood-opacity": "0",
+                          result: "BackgroundImageFix"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          in: "SourceAlpha",
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                          result: "hardAlpha"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feOffset", { attrs: { dy: "13.5042" } }),
+                      _vm._v(" "),
+                      _c("feGaussianBlur", {
+                        attrs: { stdDeviation: "18.6357" }
+                      }),
+                      _vm._v(" "),
+                      _c("feComposite", {
+                        attrs: { in2: "hardAlpha", operator: "out" }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.11 0"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in2: "BackgroundImageFix",
+                          result: "effect1_dropShadow_72_951"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in: "SourceGraphic",
+                          in2: "effect1_dropShadow_72_951",
+                          result: "shape"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "filter",
+                    {
+                      attrs: {
+                        id: "filter1_d_72_951",
+                        x: "113.302",
+                        y: "28.4061",
+                        width: "105.219",
+                        height: "105.219",
+                        filterUnits: "userSpaceOnUse",
+                        "color-interpolation-filters": "sRGB"
+                      }
+                    },
+                    [
+                      _c("feFlood", {
+                        attrs: {
+                          "flood-opacity": "0",
+                          result: "BackgroundImageFix"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          in: "SourceAlpha",
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                          result: "hardAlpha"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feOffset", { attrs: { dy: "9.92629" } }),
+                      _vm._v(" "),
+                      _c("feGaussianBlur", {
+                        attrs: { stdDeviation: "9.67814" }
+                      }),
+                      _vm._v(" "),
+                      _c("feComposite", {
+                        attrs: { in2: "hardAlpha", operator: "out" }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.11 0"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in2: "BackgroundImageFix",
+                          result: "effect1_dropShadow_72_951"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in: "SourceGraphic",
+                          in2: "effect1_dropShadow_72_951",
+                          result: "shape"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "filter",
+                    {
+                      attrs: {
+                        id: "filter2_d_72_951",
+                        x: "134.629",
+                        y: "64.1312",
+                        width: "63.5586",
+                        height: "41.6571",
+                        filterUnits: "userSpaceOnUse",
+                        "color-interpolation-filters": "sRGB"
+                      }
+                    },
+                    [
+                      _c("feFlood", {
+                        attrs: {
+                          "flood-opacity": "0",
+                          result: "BackgroundImageFix"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          in: "SourceAlpha",
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                          result: "hardAlpha"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feOffset", { attrs: { dy: "13.6395" } }),
+                      _vm._v(" "),
+                      _c("feGaussianBlur", {
+                        attrs: { stdDeviation: "6.99175" }
+                      }),
+                      _vm._v(" "),
+                      _c("feComposite", {
+                        attrs: { in2: "hardAlpha", operator: "out" }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          type: "matrix",
+                          values:
+                            "0 0 0 0 0.633333 0 0 0 0 0.0860081 0 0 0 0 0 0 0 0 0.38 0"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in2: "BackgroundImageFix",
+                          result: "effect1_dropShadow_72_951"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in: "SourceGraphic",
+                          in2: "effect1_dropShadow_72_951",
+                          result: "shape"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "filter",
+                    {
+                      attrs: {
+                        id: "filter3_d_72_951",
+                        x: "0.094183",
+                        y: "29.7392",
+                        width: "88.0471",
+                        height: "55.0969",
+                        filterUnits: "userSpaceOnUse",
+                        "color-interpolation-filters": "sRGB"
+                      }
+                    },
+                    [
+                      _c("feFlood", {
+                        attrs: {
+                          "flood-opacity": "0",
+                          result: "BackgroundImageFix"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          in: "SourceAlpha",
+                          type: "matrix",
+                          values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                          result: "hardAlpha"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feOffset", { attrs: { dy: "10.2632" } }),
+                      _vm._v(" "),
+                      _c("feGaussianBlur", {
+                        attrs: { stdDeviation: "9.45291" }
+                      }),
+                      _vm._v(" "),
+                      _c("feComposite", {
+                        attrs: { in2: "hardAlpha", operator: "out" }
+                      }),
+                      _vm._v(" "),
+                      _c("feColorMatrix", {
+                        attrs: {
+                          type: "matrix",
+                          values:
+                            "0 0 0 0 0 0 0 0 0 0.095 0 0 0 0 0.2375 0 0 0 0.25 0"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in2: "BackgroundImageFix",
+                          result: "effect1_dropShadow_72_951"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("feBlend", {
+                        attrs: {
+                          mode: "normal",
+                          in: "SourceGraphic",
+                          in2: "effect1_dropShadow_72_951",
+                          result: "shape"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "linearGradient",
+                    {
+                      attrs: {
+                        id: "paint0_linear_72_951",
+                        x1: "216.161",
+                        y1: "71.332",
+                        x2: "122.442",
+                        y2: "71.332",
+                        gradientUnits: "userSpaceOnUse"
+                      }
+                    },
+                    [
+                      _c("stop", { attrs: { "stop-color": "#FFA5A5" } }),
+                      _vm._v(" "),
+                      _c("stop", {
+                        attrs: {
+                          offset: "1",
+                          "stop-color": "#FFA5A5",
+                          "stop-opacity": "0"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "linearGradient",
+                    {
+                      attrs: {
+                        id: "paint1_linear_72_951",
+                        x1: "218.051",
+                        y1: "74.8431",
+                        x2: "133.515",
+                        y2: "74.3029",
+                        gradientUnits: "userSpaceOnUse"
+                      }
+                    },
+                    [
+                      _c("stop", { attrs: { "stop-color": "#FF6262" } }),
+                      _vm._v(" "),
+                      _c("stop", {
+                        attrs: {
+                          offset: "1",
+                          "stop-color": "#FF6262",
+                          "stop-opacity": "0"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "linearGradient",
+                    {
+                      attrs: {
+                        id: "paint2_linear_72_951",
+                        x1: "212.38",
+                        y1: "71.3321",
+                        x2: "133.245",
+                        y2: "71.3321",
+                        gradientUnits: "userSpaceOnUse"
+                      }
+                    },
+                    [
+                      _c("stop", { attrs: { "stop-color": "#FE6868" } }),
+                      _vm._v(" "),
+                      _c("stop", {
+                        attrs: {
+                          offset: "1",
+                          "stop-color": "#FE6868",
+                          "stop-opacity": "0"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "linearGradient",
+                    {
+                      attrs: {
+                        id: "paint3_linear_72_951",
+                        x1: "165.911",
+                        y1: "28.3761",
+                        x2: "165.911",
+                        y2: "104.342",
+                        gradientUnits: "userSpaceOnUse"
+                      }
+                    },
+                    [
+                      _c("stop", { attrs: { "stop-color": "#FF9F8F" } }),
+                      _vm._v(" "),
+                      _c("stop", {
+                        attrs: { offset: "1", "stop-color": "#F95F47" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "content" }, [
+          _c("div", { staticClass: "details" }, [
+            _c("h3", [_vm._v(_vm._s(_vm.__("Dokan Premium", "dokan-lite")))]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                _vm._s(
+                  _vm.__(
+                    "Unleash the full potential of your marketplace with more premium features.",
+                    "dokan-lite"
+                  )
+                )
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "features" },
+            [
+              _vm._l(_vm.features, function(feature) {
+                return _c("label", { key: feature }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(feature) +
+                      "\n                "
+                  ),
+                  _c("span")
+                ])
+              }),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  attrs: {
+                    target: "_blank",
+                    href: "https://wedevs.com/dokan/modules"
+                  }
+                },
+                [
+                  _vm._v(
+                    _vm._s(_vm.__("See All Premium Modules", "dokan-lite"))
+                  )
+                ]
+              )
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "btn-upgrade" }, [
+          _c(
+            "a",
+            {
+              attrs: {
+                target: "_blank",
+                href:
+                  "https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=dokan-plugin-dashboard&utm_medium=wp-admin-promotion&utm_campaign=dokan-lite"
+              }
+            },
+            [_vm._v(_vm._s(_vm.__("Upgrade to Premium", "dokan-lite")))]
+          )
+        ]),
+        _vm._v(" "),
         _c(
-          "a",
+          "button",
           {
-            attrs: { target: "_blank", rel: "noopener", href: _vm.upgradeURL }
-          },
-          [_vm._v("\n        Upgrading to Pro")]
-        ),
-        _vm._v(".\n\n    "),
-        _c(
-          "div",
-          {
-            staticClass: "close-button",
-            attrs: { title: "Dismiss the notice" },
+            staticClass: "close-banner",
             on: {
               click: function($event) {
                 return _vm.dismiss()
               }
             }
           },
-          [_vm._v("\n        ×\n    ")]
+          [_c("span", { staticClass: "dashicons dashicons-no-alt" })]
         )
       ])
     : _vm._e()
@@ -7837,7 +9010,7 @@ if (false) {
 }
 
 /***/ }),
-/* 119 */
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7849,9 +9022,11 @@ var render = function() {
     "div",
     { staticClass: "dokan-dashboard" },
     [
-      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-      _vm._v(" "),
       _c("h1", [_vm._v(_vm._s(_vm.__("Dashboard", "dokan-lite")))]),
+      _vm._v(" "),
+      _c("AdminNotice"),
+      _vm._v(" "),
+      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "widgets-wrapper" }, [
         _c(
@@ -8332,17 +9507,17 @@ if (false) {
 }
 
 /***/ }),
-/* 120 */
+/* 124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(50);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(126);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(121)
+  __webpack_require__(125)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8388,13 +9563,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 121 */
+/* 125 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 122 */
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8402,459 +9577,448 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "withdraw-requests" },
-        [
-          _c("h1", [_vm._v(_vm._s(_vm.__("Withdraw Requests", "dokan-lite")))]),
-          _vm._v(" "),
-          _vm.showModal
-            ? _c(
-                "modal",
-                {
-                  attrs: { title: _vm.__("Update Note", "dokan-lite") },
-                  on: {
-                    close: function($event) {
-                      _vm.showModal = false
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "withdraw-requests" },
+      [
+        _c("h1", [_vm._v(_vm._s(_vm.__("Withdraw Requests", "dokan-lite")))]),
+        _vm._v(" "),
+        _c("AdminNotice"),
+        _vm._v(" "),
+        !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
+        _vm._v(" "),
+        _vm.showModal
+          ? _c(
+              "modal",
+              {
+                attrs: { title: _vm.__("Update Note", "dokan-lite") },
+                on: {
+                  close: function($event) {
+                    _vm.showModal = false
+                  }
+                }
+              },
+              [
+                _c("template", { slot: "body" }, [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.editing.note,
+                        expression: "editing.note"
+                      }
+                    ],
+                    attrs: { rows: "3" },
+                    domProps: { value: _vm.editing.note },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.editing, "note", $event.target.value)
+                      }
                     }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("template", { slot: "footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button button-primary button-large",
+                      on: {
+                        click: function($event) {
+                          return _vm.updateNote()
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Update Note", "dokan-lite")))]
+                  )
+                ])
+              ],
+              2
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("ul", { staticClass: "subsubsub" }, [
+          _c(
+            "li",
+            [
+              _c(
+                "router-link",
+                {
+                  class: { current: _vm.currentStatus === "pending" },
+                  attrs: {
+                    to: { name: "Withdraw", query: { status: "pending" } }
                   }
                 },
                 [
-                  _c("template", { slot: "body" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.editing.note,
-                          expression: "editing.note"
-                        }
-                      ],
-                      attrs: { rows: "3" },
-                      domProps: { value: _vm.editing.note },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.editing, "note", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("template", { slot: "footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "button button-primary button-large",
-                        on: {
-                          click: function($event) {
-                            return _vm.updateNote()
-                          }
-                        }
-                      },
-                      [_vm._v(_vm._s(_vm.__("Update Note", "dokan-lite")))]
-                    )
+                  _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.pending))
                   ])
-                ],
-                2
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c("ul", { staticClass: "subsubsub" }, [
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
-                    class: { current: _vm.currentStatus === "pending" },
-                    attrs: {
-                      to: { name: "Withdraw", query: { status: "pending" } }
-                    }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.pending))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
-                    class: { current: _vm.currentStatus === "approved" },
-                    attrs: {
-                      to: { name: "Withdraw", query: { status: "approved" } }
-                    }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.approved))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
-                    class: { current: _vm.currentStatus === "cancelled" },
-                    attrs: {
-                      to: { name: "Withdraw", query: { status: "cancelled" } }
-                    }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("Cancelled", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.cancelled))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            )
-          ]),
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
-            "list-table",
-            {
-              attrs: {
-                columns: _vm.columns,
-                rows: _vm.requests,
-                loading: _vm.loading,
-                "action-column": _vm.actionColumn,
-                actions: _vm.actions,
-                "show-cb": _vm.showCb,
-                "bulk-actions": _vm.bulkActions,
-                "not-found": _vm.notFound,
-                "total-pages": _vm.totalPages,
-                "total-items": _vm.totalItems,
-                "per-page": _vm.perPage,
-                "current-page": _vm.currentPage,
-                text: _vm.$root.listTableTexts()
-              },
-              on: {
-                pagination: _vm.goToPage,
-                "action:click": _vm.onActionClick,
-                "bulk:click": _vm.onBulkAction
-              },
-              scopedSlots: _vm._u([
+            "li",
+            [
+              _c(
+                "router-link",
                 {
-                  key: "seller",
-                  fn: function(data) {
-                    return [
-                      _c("img", {
-                        attrs: {
-                          src: data.row.user.gravatar,
-                          alt: data.row.user.store_name,
-                          width: "50"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("strong", [
-                        _c(
-                          "a",
-                          { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
-                          [
-                            _vm._v(
-                              _vm._s(
-                                data.row.user.store_name
-                                  ? data.row.user.store_name
-                                  : _vm.__("(no name)", "dokan-lite")
-                              )
-                            )
-                          ]
-                        )
-                      ])
-                    ]
+                  class: { current: _vm.currentStatus === "approved" },
+                  attrs: {
+                    to: { name: "Withdraw", query: { status: "approved" } }
                   }
                 },
+                [
+                  _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.approved))
+                  ])
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            [
+              _c(
+                "router-link",
                 {
-                  key: "vendor",
-                  fn: function(ref) {
-                    var row = ref.row
-                    return [
+                  class: { current: _vm.currentStatus === "cancelled" },
+                  attrs: {
+                    to: { name: "Withdraw", query: { status: "cancelled" } }
+                  }
+                },
+                [
+                  _vm._v(_vm._s(_vm.__("Cancelled", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.cancelled))
+                  ])
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "list-table",
+          {
+            attrs: {
+              columns: _vm.columns,
+              rows: _vm.requests,
+              loading: _vm.loading,
+              "action-column": _vm.actionColumn,
+              actions: _vm.actions,
+              "show-cb": _vm.showCb,
+              "bulk-actions": _vm.bulkActions,
+              "not-found": _vm.notFound,
+              "total-pages": _vm.totalPages,
+              "total-items": _vm.totalItems,
+              "per-page": _vm.perPage,
+              "current-page": _vm.currentPage,
+              text: _vm.$root.listTableTexts()
+            },
+            on: {
+              pagination: _vm.goToPage,
+              "action:click": _vm.onActionClick,
+              "bulk:click": _vm.onBulkAction
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "seller",
+                fn: function(data) {
+                  return [
+                    _c("img", {
+                      attrs: {
+                        src: data.row.user.gravatar,
+                        alt: data.row.user.store_name,
+                        width: "50"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("strong", [
                       _c(
-                        "router-link",
-                        { attrs: { to: "/vendors/" + row.vendor.id } },
+                        "a",
+                        { attrs: { href: _vm.vendorUrl(data.row.user.id) } },
                         [
                           _vm._v(
-                            "\n                    " +
-                              _vm._s(
-                                row.vendor.name
-                                  ? row.vendor.name
-                                  : _vm.__("(no name)", "dokan-lite")
-                              ) +
-                              "\n                "
+                            _vm._s(
+                              data.row.user.store_name
+                                ? data.row.user.store_name
+                                : _vm.__("(no name)", "dokan-lite")
+                            )
                           )
                         ]
                       )
-                    ]
-                  }
-                },
-                {
-                  key: "amount",
-                  fn: function(data) {
-                    return [
-                      _c("currency", { attrs: { amount: data.row.amount } })
-                    ]
-                  }
-                },
-                {
-                  key: "status",
-                  fn: function(data) {
-                    return [
-                      _c("span", { class: data.row.status }, [
-                        _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
-                      ])
-                    ]
-                  }
-                },
-                {
-                  key: "created",
-                  fn: function(data) {
-                    return [
-                      _vm._v(
-                        "\n                " +
-                          _vm._s(
-                            _vm.moment(data.row.created).format("MMM D, YYYY")
-                          ) +
-                          "\n            "
-                      )
-                    ]
-                  }
-                },
-                {
-                  key: "method_details",
-                  fn: function(data) {
-                    return [
-                      _c("div", {
-                        staticClass: "method_details_inner",
-                        domProps: {
-                          innerHTML: _vm._s(
-                            _vm.getPaymentDetails(
-                              data.row.method,
-                              data.row.details
-                            )
-                          )
-                        }
-                      })
-                    ]
-                  }
-                },
-                {
-                  key: "actions",
-                  fn: function(data) {
-                    return [
-                      data.row.status === "pending"
-                        ? [
-                            _c("div", { staticClass: "button-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button button-small",
-                                  attrs: {
-                                    title: _vm.__(
-                                      "Approve Request",
-                                      "dokan-lite"
-                                    )
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.changeStatus(
-                                        "approved",
-                                        data.row.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("span", {
-                                    staticClass: "dashicons dashicons-yes"
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button button-small",
-                                  attrs: {
-                                    title: _vm.__("Add Note", "dokan-lite")
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.openNoteModal(
-                                        data.row.note,
-                                        data.row.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("span", {
-                                    staticClass:
-                                      "dashicons dashicons-testimonial"
-                                  })
-                                ]
-                              )
-                            ])
-                          ]
-                        : data.row.status === "approved"
-                        ? [
-                            _c("div", { staticClass: "button-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button button-small",
-                                  attrs: {
-                                    title: _vm.__("Add Note", "dokan-lite")
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.openNoteModal(
-                                        data.row.note,
-                                        data.row.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("span", {
-                                    staticClass:
-                                      "dashicons dashicons-testimonial"
-                                  })
-                                ]
-                              )
-                            ])
-                          ]
-                        : [
-                            _c("div", { staticClass: "button-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button button-small",
-                                  attrs: {
-                                    title: _vm.__(
-                                      "Mark as Pending",
-                                      "dokan-lite"
-                                    )
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.changeStatus(
-                                        "pending",
-                                        data.row.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("span", {
-                                    staticClass: "dashicons dashicons-backup"
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "button button-small",
-                                  attrs: {
-                                    title: _vm.__("Add Note", "dokan-lite")
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.openNoteModal(
-                                        data.row.note,
-                                        data.row.id
-                                      )
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("span", {
-                                    staticClass:
-                                      "dashicons dashicons-testimonial"
-                                  })
-                                ]
-                              )
-                            ])
-                          ]
-                    ]
-                  }
+                    ])
+                  ]
                 }
-              ])
-            },
-            [
-              _vm._v(" "),
-              _vm._v(" "),
-              _vm._v(" "),
-              _vm._v(" "),
-              _vm._v(" "),
-              _vm._v(" "),
-              _c("template", { slot: "filters" }, [
-                _c("select", {
-                  staticStyle: { width: "190px" },
-                  attrs: {
-                    id: "filter-vendors",
-                    "data-placeholder": _vm.__("Filter by vendor", "dokan-lite")
-                  }
-                }),
-                _vm._v(" "),
-                _vm.filter.user_id
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "button",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            _vm.filter.user_id = 0
-                          }
-                        }
-                      },
-                      [_vm._v("×")]
+              },
+              {
+                key: "vendor",
+                fn: function(ref) {
+                  var row = ref.row
+                  return [
+                    _c(
+                      "router-link",
+                      { attrs: { to: "/vendors/" + row.vendor.id } },
+                      [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(
+                              row.vendor.name
+                                ? row.vendor.name
+                                : _vm.__("(no name)", "dokan-lite")
+                            ) +
+                            "\n                "
+                        )
+                      ]
                     )
-                  : _vm._e()
-              ])
-            ],
-            2
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+                  ]
+                }
+              },
+              {
+                key: "amount",
+                fn: function(data) {
+                  return [
+                    _c("currency", { attrs: { amount: data.row.amount } })
+                  ]
+                }
+              },
+              {
+                key: "status",
+                fn: function(data) {
+                  return [
+                    _c("span", { class: data.row.status }, [
+                      _vm._v(_vm._s(_vm._f("capitalize")(data.row.status)))
+                    ])
+                  ]
+                }
+              },
+              {
+                key: "created",
+                fn: function(data) {
+                  return [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(
+                          _vm.moment(data.row.created).format("MMM D, YYYY")
+                        ) +
+                        "\n            "
+                    )
+                  ]
+                }
+              },
+              {
+                key: "method_details",
+                fn: function(data) {
+                  return [
+                    _c("div", {
+                      staticClass: "method_details_inner",
+                      domProps: {
+                        innerHTML: _vm._s(
+                          _vm.getPaymentDetails(
+                            data.row.method,
+                            data.row.details
+                          )
+                        )
+                      }
+                    })
+                  ]
+                }
+              },
+              {
+                key: "actions",
+                fn: function(data) {
+                  return [
+                    data.row.status === "pending"
+                      ? [
+                          _c("div", { staticClass: "button-group" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-small",
+                                attrs: {
+                                  title: _vm.__("Approve Request", "dokan-lite")
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.changeStatus(
+                                      "approved",
+                                      data.row.id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-yes"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-small",
+                                attrs: {
+                                  title: _vm.__("Add Note", "dokan-lite")
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.openNoteModal(
+                                      data.row.note,
+                                      data.row.id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-testimonial"
+                                })
+                              ]
+                            )
+                          ])
+                        ]
+                      : data.row.status === "approved"
+                      ? [
+                          _c("div", { staticClass: "button-group" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-small",
+                                attrs: {
+                                  title: _vm.__("Add Note", "dokan-lite")
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.openNoteModal(
+                                      data.row.note,
+                                      data.row.id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-testimonial"
+                                })
+                              ]
+                            )
+                          ])
+                        ]
+                      : [
+                          _c("div", { staticClass: "button-group" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-small",
+                                attrs: {
+                                  title: _vm.__("Mark as Pending", "dokan-lite")
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.changeStatus(
+                                      "pending",
+                                      data.row.id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-backup"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "button button-small",
+                                attrs: {
+                                  title: _vm.__("Add Note", "dokan-lite")
+                                },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.openNoteModal(
+                                      data.row.note,
+                                      data.row.id
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-testimonial"
+                                })
+                              ]
+                            )
+                          ])
+                        ]
+                  ]
+                }
+              }
+            ])
+          },
+          [
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _c("template", { slot: "filters" }, [
+              _c("select", {
+                staticStyle: { width: "190px" },
+                attrs: {
+                  id: "filter-vendors",
+                  "data-placeholder": _vm.__("Filter by vendor", "dokan-lite")
+                }
+              }),
+              _vm._v(" "),
+              _vm.filter.user_id
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "button",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.filter.user_id = 0
+                        }
+                      }
+                    },
+                    [_vm._v("×")]
+                  )
+                : _vm._e()
+            ])
+          ],
+          2
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -8868,17 +10032,17 @@ if (false) {
 }
 
 /***/ }),
-/* 123 */
+/* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(51);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(135);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(124)
+  __webpack_require__(128)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8924,19 +10088,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 124 */
+/* 128 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 125 */
+/* 129 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 126 */
+/* 130 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9026,11 +10190,11 @@ if (false) {
 }
 
 /***/ }),
-/* 127 */,
-/* 128 */,
-/* 129 */,
-/* 130 */,
-/* 131 */
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9619,17 +10783,17 @@ if (false) {
 }
 
 /***/ }),
-/* 132 */
+/* 136 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(54);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(138);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(133)
+  __webpack_require__(137)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9675,13 +10839,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 133 */
+/* 137 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 134 */
+/* 138 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9693,9 +10857,11 @@ var render = function() {
     "div",
     { staticClass: "dokan-help-page" },
     [
-      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-      _vm._v(" "),
       _c("h1", [_vm._v(_vm._s(_vm.__("Help", "dokan-lite")))]),
+      _vm._v(" "),
+      _c("AdminNotice"),
+      _vm._v(" "),
+      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
       _vm._v(" "),
       _vm.docs !== null
         ? _c(
@@ -9752,17 +10918,574 @@ if (false) {
 }
 
 /***/ }),
-/* 135 */
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__ = __webpack_require__(55);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__ = __webpack_require__(141);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(136)
+  __webpack_require__(140)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-254fdb80"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/ChangeLog.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-254fdb80", Component.options)
+  } else {
+    hotAPI.reload("data-v-254fdb80", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 141 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "dokan-help-page" }, [
+    _c("div", { staticClass: "section-wrapper" }, [
+      _c(
+        "div",
+        { staticClass: "dokan-notice" },
+        [
+          _c("h2"),
+          _vm._v(" "),
+          _c("AdminNotice"),
+          _vm._v(" "),
+          !_vm.hasPro ? _c("UpgradeBanner") : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "change-log",
+          class: _vm.hasPro ? "pro-change-log" : "lite-change-log",
+          attrs: { id: "change-log" }
+        },
+        [
+          _c("h3", [_vm._v(_vm._s(_vm.__("Dokan Changelog", "dokan-lite")))]),
+          _vm._v(" "),
+          _vm.hasPro
+            ? _c(
+                "div",
+                { staticClass: "switch-button-wrap" },
+                [
+                  _c("transition-group", { attrs: { name: "fade" } }, [
+                    _c("span", {
+                      key: 1,
+                      staticClass: "active",
+                      style: _vm.isActivePackage("pro") ? "right: 0" : "left: 0"
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        key: 2,
+                        staticClass: "switch-button lite",
+                        class: { "active-case": _vm.isActivePackage("lite") },
+                        on: {
+                          click: function($event) {
+                            return _vm.switchPackage("lite")
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.__("Lite", "dokan-lite")))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        key: 3,
+                        staticClass: "switch-button pro",
+                        class: { "active-case": _vm.isActivePackage("pro") },
+                        on: {
+                          click: function($event) {
+                            return _vm.switchPackage("pro")
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.__("PRO", "dokan-lite")))]
+                    )
+                  ])
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.loading
+            ? _c("div", { staticClass: "jump-version" }, [
+                _c("p", [
+                  _vm._v(
+                    _vm._s(_vm.__("Jump to version", "dokan-lite")) + "... "
+                  ),
+                  _c("span", {
+                    staticClass: "dashicons dashicons-arrow-down-alt2"
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "version-menu" }, [
+                  _c("div", { staticClass: "version-dropdown" }, [
+                    _c(
+                      "ul",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.isActivePackage("lite"),
+                            expression: "isActivePackage( 'lite' )"
+                          }
+                        ]
+                      },
+                      _vm._l(_vm.lite_versions, function(version, index) {
+                        return _c(
+                          "li",
+                          {
+                            class: {
+                              current: _vm.isCurrentVersion("lite-" + index)
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.jumpVersion("lite-" + index)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(version.version) +
+                                "\n                                "
+                            ),
+                            0 === index
+                              ? _c("span", [
+                                  _vm._v(
+                                    "(" +
+                                      _vm._s(_vm.__("Latest", "dokan-lite")) +
+                                      ")"
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.isCurrentVersion("lite-" + index) && 0 !== index
+                              ? _c("span", [
+                                  _vm._v(
+                                    "(" +
+                                      _vm._s(_vm.__("Current", "dokan-lite")) +
+                                      ")"
+                                  )
+                                ])
+                              : _vm._e()
+                          ]
+                        )
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.isActivePackage("pro"),
+                            expression: "isActivePackage( 'pro' )"
+                          }
+                        ]
+                      },
+                      _vm._l(_vm.pro_versions, function(version, index) {
+                        return _c(
+                          "li",
+                          {
+                            class: {
+                              current: _vm.isCurrentVersion("pro-" + index)
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.jumpVersion("pro-" + index)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(version.version) +
+                                "\n                                "
+                            ),
+                            0 === index
+                              ? _c("span", [
+                                  _vm._v(
+                                    "(" +
+                                      _vm._s(_vm.__("Latest", "dokan-lite")) +
+                                      ")"
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.isCurrentVersion("pro-" + index) && 0 !== index
+                              ? _c("span", [
+                                  _vm._v(
+                                    "(" +
+                                      _vm._s(_vm.__("Current", "dokan-lite")) +
+                                      ")"
+                                  )
+                                ])
+                              : _vm._e()
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ])
+            : _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "version-list" },
+        [
+          _vm._l(_vm.lite_versions, function(version, index) {
+            return _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.isActivePackage("lite"),
+                    expression: "isActivePackage( 'lite' )"
+                  }
+                ],
+                staticClass: "version",
+                class: 0 === index ? "latest-version" : "old-version",
+                attrs: { id: "lite-" + index }
+              },
+              [
+                _c("div", { staticClass: "version-number" }, [
+                  _c("h4", [_vm._v(_vm._s(version.version))]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      _vm._s(_vm.formatReleaseDate(version.released)) + " "
+                    ),
+                    0 === index
+                      ? _c("label", [
+                          _vm._v(_vm._s(_vm.__("Latest", "dokan-lite")))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "card-version",
+                    style: _vm.isCurrentVersion("lite-" + index)
+                      ? _vm.activeVersionBorder
+                      : ""
+                  },
+                  [
+                    _c(
+                      "transition-group",
+                      { attrs: { name: "slide", tag: "div" } },
+                      _vm._l(version.changes, function(changes, key, i) {
+                        return 0 === index ||
+                          i < 1 ||
+                          _vm.isOpenVersion("lite-" + index)
+                          ? _c(
+                              "div",
+                              {
+                                key: "index-" + i,
+                                staticClass: "feature-list"
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "feature-badge",
+                                    class: _vm.badgeClass(key)
+                                  },
+                                  [_vm._v(_vm._s(key))]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(changes, function(change, j) {
+                                  return 0 === index ||
+                                    j < 2 ||
+                                    _vm.isOpenVersion("lite-" + index)
+                                    ? _c("div", { staticClass: "feature" }, [
+                                        _c("h5", [
+                                          _vm._v(_vm._s(change.title))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", {
+                                          domProps: {
+                                            innerHTML: _vm._s(
+                                              change.description
+                                            )
+                                          }
+                                        })
+                                      ])
+                                    : _vm._e()
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    0 !== index && Object.keys(version.changes).length > 1
+                      ? _c("div", { staticClass: "continue-reading" }, [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.toggleReading("lite-" + index)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.isOpenVersion("lite-" + index)
+                                    ? _vm.__("View Less...", "dokan-lite")
+                                    : _vm.__(
+                                        "Continue reading...",
+                                        "dokan-lite"
+                                      )
+                                )
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]
+            )
+          }),
+          _vm._v(" "),
+          _vm._l(_vm.pro_versions, function(version, index) {
+            return _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.isActivePackage("pro"),
+                    expression: "isActivePackage( 'pro' )"
+                  }
+                ],
+                staticClass: "version",
+                class: 0 === index ? "latest-version" : "old-version",
+                attrs: { id: "pro-" + index }
+              },
+              [
+                _c("div", { staticClass: "version-number" }, [
+                  _c("h4", [_vm._v(_vm._s(version.version))]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      _vm._s(_vm.formatReleaseDate(version.released)) + " "
+                    ),
+                    0 === index
+                      ? _c("label", [
+                          _vm._v(_vm._s(_vm.__("Latest", "dokan-lite")))
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "card-version",
+                    style: _vm.isCurrentVersion("pro-" + index)
+                      ? _vm.activeVersionBorder
+                      : ""
+                  },
+                  [
+                    _c(
+                      "transition-group",
+                      { attrs: { name: "slide", tag: "div" } },
+                      _vm._l(version.changes, function(changes, key, i) {
+                        return 0 === index ||
+                          i < 1 ||
+                          _vm.isOpenVersion("pro-" + index)
+                          ? _c(
+                              "div",
+                              {
+                                key: "index-" + i,
+                                staticClass: "feature-list"
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "feature-badge",
+                                    class: _vm.badgeClass(key)
+                                  },
+                                  [_vm._v(_vm._s(key))]
+                                ),
+                                _vm._v(" "),
+                                _vm._l(changes, function(change, j) {
+                                  return 0 === index ||
+                                    j < 2 ||
+                                    _vm.isOpenVersion("pro-" + index)
+                                    ? _c("div", { staticClass: "feature" }, [
+                                        _c("h5", [
+                                          _vm._v(_vm._s(change.title))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", {
+                                          domProps: {
+                                            innerHTML: _vm._s(
+                                              change.description
+                                            )
+                                          }
+                                        })
+                                      ])
+                                    : _vm._e()
+                                })
+                              ],
+                              2
+                            )
+                          : _vm._e()
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    0 !== index && Object.keys(version.changes).length > 1
+                      ? _c("div", { staticClass: "continue-reading" }, [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.toggleReading("pro-" + index)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.isOpenVersion("pro-" + index)
+                                    ? _vm.__("View Less...", "dokan-lite")
+                                    : _vm.__(
+                                        "Continue reading...",
+                                        "dokan-lite"
+                                      )
+                                )
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]
+            )
+          })
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "scroll-to-top",
+        style:
+          _vm.scrollPosition > 300 ? "opacity: 1; visibility: visible" : "",
+        on: { click: _vm.scrollTop }
+      },
+      [_c("span", { staticClass: "dashicons dashicons-arrow-up-alt" })]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-254fdb80", esExports)
+  }
+}
+
+/***/ }),
+/* 142 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(56);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(177);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(143)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9808,23 +11531,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 136 */
+/* 143 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 137 */
+/* 144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(57);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(173);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(138)
+  __webpack_require__(145)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9870,19 +11593,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 138 */
+/* 145 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 139 */,
-/* 140 */,
-/* 141 */,
-/* 142 */,
-/* 143 */,
-/* 144 */,
-/* 145 */,
 /* 146 */,
 /* 147 */,
 /* 148 */,
@@ -9903,7 +11619,14 @@ if (false) {(function () {
 /* 163 */,
 /* 164 */,
 /* 165 */,
-/* 166 */
+/* 166 */,
+/* 167 */,
+/* 168 */,
+/* 169 */,
+/* 170 */,
+/* 171 */,
+/* 172 */,
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11992,17 +13715,17 @@ if (false) {
 }
 
 /***/ }),
-/* 167 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(66);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(176);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(168)
+  __webpack_require__(175)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12048,13 +13771,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 168 */
+/* 175 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 169 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12142,7 +13865,7 @@ if (false) {
 }
 
 /***/ }),
-/* 170 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12153,260 +13876,274 @@ var render = function() {
   return _c(
     "div",
     [
-      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "dokan-settings" }, [
-        _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
-          _vm._v(_vm._s(_vm.__("Settings", "dokan-lite")))
-        ]),
-        _vm._v(" "),
-        _vm.isSaved
-          ? _c(
-              "div",
-              {
-                staticClass: "settings-error notice is-dismissible",
-                class: { updated: _vm.isUpdated, error: !_vm.isUpdated },
-                attrs: { id: "setting-message_updated" }
-              },
-              [
-                _c("p", [
-                  _c("strong", { domProps: { innerHTML: _vm._s(_vm.message) } })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "notice-dismiss",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.isSaved = false
-                      }
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "screen-reader-text" }, [
-                      _vm._v(
-                        _vm._s(_vm.__("Dismiss this notice.", "dokan-lite"))
-                      )
-                    ])
-                  ]
-                )
-              ]
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c("div", { staticClass: "dokan-settings-wrap" }, [
-          _c(
-            "div",
-            { staticClass: "nav-tab-wrapper" },
-            [
-              _c("div", { staticClass: "search-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.searchText,
-                      expression: "searchText"
-                    }
-                  ],
-                  ref: "searchInSettings",
-                  staticClass: "dokan-admin-search-settings",
-                  attrs: { type: "text", placeholder: "Search e.g. vendor" },
-                  domProps: { value: _vm.searchText },
-                  on: {
-                    input: [
-                      function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.searchText = $event.target.value
-                      },
-                      _vm.searchInSettings
-                    ]
-                  }
-                }),
-                _vm._v(" "),
-                "" !== _vm.searchText
-                  ? _c("span", {
-                      staticClass: "dashicons dashicons-no-alt",
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.clearSearch.apply(null, arguments)
-                        }
-                      }
+      _c(
+        "div",
+        { staticClass: "dokan-settings" },
+        [
+          _c("h2", { staticStyle: { "margin-bottom": "15px" } }, [
+            _vm._v(_vm._s(_vm.__("Settings", "dokan-lite")))
+          ]),
+          _vm._v(" "),
+          _c("AdminNotice"),
+          _vm._v(" "),
+          !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
+          _vm._v(" "),
+          _vm.isSaved
+            ? _c(
+                "div",
+                {
+                  staticClass: "settings-error notice is-dismissible",
+                  class: { updated: _vm.isUpdated, error: !_vm.isUpdated },
+                  attrs: { id: "setting-message_updated" }
+                },
+                [
+                  _c("p", [
+                    _c("strong", {
+                      domProps: { innerHTML: _vm._s(_vm.message) }
                     })
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.settingSections, function(section) {
-                return [
+                  ]),
+                  _vm._v(" "),
                   _c(
-                    "a",
+                    "button",
                     {
-                      class: [
-                        "nav-tab",
-                        _vm.currentTab === section.id ? "nav-tab-active" : ""
-                      ],
-                      attrs: { href: "#" },
+                      staticClass: "notice-dismiss",
+                      attrs: { type: "button" },
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.changeTab(section)
+                          _vm.isSaved = false
                         }
                       }
                     },
                     [
-                      _c("span", {
-                        staticClass: "dashicons",
-                        class: section.icon
-                      }),
-                      _vm._v(
-                        " " + _vm._s(section.title) + "\n                    "
-                      )
+                      _c("span", { staticClass: "screen-reader-text" }, [
+                        _vm._v(
+                          _vm._s(_vm.__("Dismiss this notice.", "dokan-lite"))
+                        )
+                      ])
                     ]
                   )
                 ]
-              })
-            ],
-            2
-          ),
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "metabox-holder" },
-            [
-              _vm._l(_vm.settingFields, function(fields, index) {
-                return _vm.isLoaded
-                  ? [
-                      _vm.currentTab === index
-                        ? _c(
-                            "div",
-                            { staticClass: "group", attrs: { id: index } },
-                            [
-                              _c(
-                                "form",
-                                {
-                                  attrs: {
-                                    method: "post",
-                                    action: "options.php"
-                                  }
-                                },
-                                [
-                                  _c("input", {
+          _c("div", { staticClass: "dokan-settings-wrap" }, [
+            _c(
+              "div",
+              { staticClass: "nav-tab-wrapper" },
+              [
+                _c("div", { staticClass: "search-box" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.searchText,
+                        expression: "searchText"
+                      }
+                    ],
+                    ref: "searchInSettings",
+                    staticClass: "dokan-admin-search-settings",
+                    attrs: { type: "text", placeholder: "Search e.g. vendor" },
+                    domProps: { value: _vm.searchText },
+                    on: {
+                      input: [
+                        function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.searchText = $event.target.value
+                        },
+                        _vm.searchInSettings
+                      ]
+                    }
+                  }),
+                  _vm._v(" "),
+                  "" !== _vm.searchText
+                    ? _c("span", {
+                        staticClass: "dashicons dashicons-no-alt",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.clearSearch.apply(null, arguments)
+                          }
+                        }
+                      })
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.settingSections, function(section) {
+                  return [
+                    _c(
+                      "a",
+                      {
+                        class: [
+                          "nav-tab",
+                          _vm.currentTab === section.id ? "nav-tab-active" : ""
+                        ],
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.changeTab(section)
+                          }
+                        }
+                      },
+                      [
+                        _c("span", {
+                          staticClass: "dashicons",
+                          class: section.icon
+                        }),
+                        _vm._v(
+                          " " + _vm._s(section.title) + "\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "metabox-holder" },
+              [
+                _vm._l(_vm.settingFields, function(fields, index) {
+                  return _vm.isLoaded
+                    ? [
+                        _vm.currentTab === index
+                          ? _c(
+                              "div",
+                              { staticClass: "group", attrs: { id: index } },
+                              [
+                                _c(
+                                  "form",
+                                  {
                                     attrs: {
-                                      type: "hidden",
-                                      name: "option_page"
-                                    },
-                                    domProps: { value: index }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("input", {
-                                    attrs: {
-                                      type: "hidden",
-                                      name: "action",
-                                      value: "update"
+                                      method: "post",
+                                      action: "options.php"
                                     }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("table", { staticClass: "form-table" }, [
-                                    _vm.showSectionTitle(fields)
-                                      ? _c("thead", [
-                                          _c(
-                                            "tr",
-                                            {
-                                              staticClass:
-                                                "dokan-settings-field-type-sub_section"
-                                            },
-                                            [
-                                              _c(
-                                                "th",
-                                                {
-                                                  staticClass:
-                                                    "dokan-settings-sub-section-title",
-                                                  attrs: { colspan: "2" }
-                                                },
-                                                [
-                                                  _c("label", [
-                                                    _vm._v(
-                                                      _vm._s(
-                                                        _vm.sectionTitle(index)
-                                                      )
-                                                    )
-                                                  ])
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        ])
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _c(
-                                      "tbody",
-                                      _vm._l(fields, function(field, fieldId) {
-                                        return _c("Fields", {
-                                          key: fieldId,
-                                          attrs: {
-                                            "section-id": index,
-                                            id: fieldId,
-                                            "field-data": field,
-                                            "field-value":
-                                              _vm.settingValues[index],
-                                            "all-settings-values":
-                                              _vm.settingValues,
-                                            errors: _vm.errors,
-                                            validationErrors:
-                                              _vm.validationErrors,
-                                            "toggle-loading-state":
-                                              _vm.toggleLoadingState
-                                          },
-                                          on: { openMedia: _vm.showMedia }
-                                        })
-                                      }),
-                                      1
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("p", { staticClass: "submit" }, [
+                                  },
+                                  [
                                     _c("input", {
-                                      staticClass: "button button-primary",
                                       attrs: {
-                                        type: "submit",
-                                        name: "submit",
-                                        id: "submit",
-                                        value: "Save Changes"
+                                        type: "hidden",
+                                        name: "option_page"
                                       },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.saveSettings(
-                                            _vm.settingValues[index],
-                                            index
-                                          )
-                                        }
+                                      domProps: { value: index }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      attrs: {
+                                        type: "hidden",
+                                        name: "action",
+                                        value: "update"
                                       }
-                                    })
-                                  ])
-                                ]
-                              )
-                            ]
-                          )
-                        : _vm._e()
-                    ]
-                  : _vm._e()
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _vm.showLoading
-            ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
-            : _vm._e()
-        ])
-      ]),
+                                    }),
+                                    _vm._v(" "),
+                                    _c("table", { staticClass: "form-table" }, [
+                                      _vm.showSectionTitle(fields)
+                                        ? _c("thead", [
+                                            _c(
+                                              "tr",
+                                              {
+                                                staticClass:
+                                                  "dokan-settings-field-type-sub_section"
+                                              },
+                                              [
+                                                _c(
+                                                  "th",
+                                                  {
+                                                    staticClass:
+                                                      "dokan-settings-sub-section-title",
+                                                    attrs: { colspan: "2" }
+                                                  },
+                                                  [
+                                                    _c("label", [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.sectionTitle(
+                                                            index
+                                                          )
+                                                        )
+                                                      )
+                                                    ])
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c(
+                                        "tbody",
+                                        _vm._l(fields, function(
+                                          field,
+                                          fieldId
+                                        ) {
+                                          return _c("Fields", {
+                                            key: fieldId,
+                                            attrs: {
+                                              "section-id": index,
+                                              id: fieldId,
+                                              "field-data": field,
+                                              "field-value":
+                                                _vm.settingValues[index],
+                                              "all-settings-values":
+                                                _vm.settingValues,
+                                              errors: _vm.errors,
+                                              validationErrors:
+                                                _vm.validationErrors,
+                                              "toggle-loading-state":
+                                                _vm.toggleLoadingState
+                                            },
+                                            on: { openMedia: _vm.showMedia }
+                                          })
+                                        }),
+                                        1
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("p", { staticClass: "submit" }, [
+                                      _c("input", {
+                                        staticClass: "button button-primary",
+                                        attrs: {
+                                          type: "submit",
+                                          name: "submit",
+                                          id: "submit",
+                                          value: "Save Changes"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.saveSettings(
+                                              _vm.settingValues[index],
+                                              index
+                                            )
+                                          }
+                                        }
+                                      })
+                                    ])
+                                  ]
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ]
+                    : _vm._e()
+                })
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _vm.showLoading
+              ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+              : _vm._e()
+          ])
+        ],
+        1
+      ),
       _vm._v(" "),
       !_vm.hasPro ? _c("SettingsBanner") : _vm._e()
     ],
@@ -12425,17 +14162,17 @@ if (false) {
 }
 
 /***/ }),
-/* 171 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(67);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(183);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(172)
+  __webpack_require__(179)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12481,23 +14218,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 172 */
+/* 179 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 173 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(68);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(182);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(174)
+  __webpack_require__(181)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12543,13 +14280,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 174 */
+/* 181 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 175 */
+/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12689,7 +14426,7 @@ if (false) {
 }
 
 /***/ }),
-/* 176 */
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12697,316 +14434,314 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "vendor-list" },
-        [
-          _c("h1", { staticClass: "wp-heading-inline" }, [
-            _vm._v(_vm._s(_vm.__("Vendors", "dokan-lite")))
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "page-title-action",
-              on: {
-                click: function($event) {
-                  return _vm.addNew()
-                }
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "vendor-list" },
+      [
+        _c("h1", { staticClass: "wp-heading-inline" }, [
+          _vm._v(_vm._s(_vm.__("Vendors", "dokan-lite")))
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "page-title-action",
+            on: {
+              click: function($event) {
+                return _vm.addNew()
               }
-            },
-            [_vm._v(_vm._s(_vm.__("Add New", "dokan-lite")))]
+            }
+          },
+          [_vm._v(_vm._s(_vm.__("Add New", "dokan-lite")))]
+        ),
+        _vm._v(" "),
+        _c("AdminNotice"),
+        _vm._v(" "),
+        !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.dokanVendorHeaderArea, function(vendorHeaderArea, index) {
+          return _c(vendorHeaderArea, { key: index, tag: "component" })
+        }),
+        _vm._v(" "),
+        _c("hr", { staticClass: "wp-header-end" }),
+        _vm._v(" "),
+        _c("ul", { staticClass: "subsubsub" }, [
+          _c(
+            "li",
+            [
+              _c(
+                "router-link",
+                {
+                  attrs: {
+                    to: { name: "Vendors", query: { status: "all" } },
+                    "active-class": "current",
+                    exact: ""
+                  }
+                },
+                [
+                  _vm._v(_vm._s(_vm.__("All", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.all))
+                  ])
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
           ),
           _vm._v(" "),
-          _vm._l(_vm.dokanVendorHeaderArea, function(vendorHeaderArea, index) {
-            return _c(vendorHeaderArea, { key: index, tag: "component" })
-          }),
+          _c(
+            "li",
+            [
+              _c(
+                "router-link",
+                {
+                  attrs: {
+                    to: { name: "Vendors", query: { status: "approved" } },
+                    "active-class": "current",
+                    exact: ""
+                  }
+                },
+                [
+                  _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.approved))
+                  ])
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
+          ),
           _vm._v(" "),
-          _c("hr", { staticClass: "wp-header-end" }),
-          _vm._v(" "),
-          _c("ul", { staticClass: "subsubsub" }, [
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
+          _c(
+            "li",
+            [
+              _c(
+                "router-link",
+                {
+                  attrs: {
+                    to: { name: "Vendors", query: { status: "pending" } },
+                    "active-class": "current",
+                    exact: ""
+                  }
+                },
+                [
+                  _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
+                  _c("span", { staticClass: "count" }, [
+                    _vm._v(_vm._s(_vm.counts.pending))
+                  ])
+                ]
+              ),
+              _vm._v(" | ")
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("search", {
+          attrs: { title: _vm.__("Search Vendors", "dokan-lite") },
+          on: { searched: _vm.doSearch }
+        }),
+        _vm._v(" "),
+        _c("list-table", {
+          attrs: {
+            columns: _vm.columns,
+            loading: _vm.loading,
+            rows: _vm.vendors,
+            actions: _vm.actions,
+            actionColumn: "store_name",
+            "show-cb": _vm.showCb,
+            "total-items": _vm.totalItems,
+            "bulk-actions": _vm.bulkActions,
+            "total-pages": _vm.totalPages,
+            "per-page": _vm.perPage,
+            "current-page": _vm.currentPage,
+            "action-column": _vm.actionColumn,
+            "not-found": "No vendors found.",
+            "sort-by": _vm.sortBy,
+            "sort-order": _vm.sortOrder,
+            text: _vm.$root.listTableTexts()
+          },
+          on: {
+            sort: _vm.sortCallback,
+            pagination: _vm.goToPage,
+            "action:click": _vm.onActionClick,
+            "bulk:click": _vm.onBulkAction,
+            searched: _vm.doSearch
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "store_name",
+              fn: function(data) {
+                return [
+                  _c("img", {
                     attrs: {
-                      to: { name: "Vendors", query: { status: "all" } },
-                      "active-class": "current",
-                      exact: ""
+                      src: data.row.gravatar,
+                      alt: data.row.store_name,
+                      width: "50"
                     }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("All", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.all))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
-                    attrs: {
-                      to: { name: "Vendors", query: { status: "approved" } },
-                      "active-class": "current",
-                      exact: ""
-                    }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("Approved", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.approved))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "li",
-              [
-                _c(
-                  "router-link",
-                  {
-                    attrs: {
-                      to: { name: "Vendors", query: { status: "pending" } },
-                      "active-class": "current",
-                      exact: ""
-                    }
-                  },
-                  [
-                    _vm._v(_vm._s(_vm.__("Pending", "dokan-lite")) + " "),
-                    _c("span", { staticClass: "count" }, [
-                      _vm._v(_vm._s(_vm.counts.pending))
-                    ])
-                  ]
-                ),
-                _vm._v(" | ")
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("search", {
-            attrs: { title: _vm.__("Search Vendors", "dokan-lite") },
-            on: { searched: _vm.doSearch }
-          }),
-          _vm._v(" "),
-          _c("list-table", {
-            attrs: {
-              columns: _vm.columns,
-              loading: _vm.loading,
-              rows: _vm.vendors,
-              actions: _vm.actions,
-              actionColumn: "store_name",
-              "show-cb": _vm.showCb,
-              "total-items": _vm.totalItems,
-              "bulk-actions": _vm.bulkActions,
-              "total-pages": _vm.totalPages,
-              "per-page": _vm.perPage,
-              "current-page": _vm.currentPage,
-              "action-column": _vm.actionColumn,
-              "not-found": "No vendors found.",
-              "sort-by": _vm.sortBy,
-              "sort-order": _vm.sortOrder,
-              text: _vm.$root.listTableTexts()
-            },
-            on: {
-              sort: _vm.sortCallback,
-              pagination: _vm.goToPage,
-              "action:click": _vm.onActionClick,
-              "bulk:click": _vm.onBulkAction,
-              searched: _vm.doSearch
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "store_name",
-                fn: function(data) {
-                  return [
-                    _c("img", {
-                      attrs: {
-                        src: data.row.gravatar,
-                        alt: data.row.store_name,
-                        width: "50"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "strong",
-                      [
-                        _vm.hasPro
-                          ? _c(
-                              "router-link",
-                              { attrs: { to: "/vendors/" + data.row.id } },
-                              [
-                                _vm._v(
-                                  _vm._s(
-                                    data.row.store_name
-                                      ? data.row.store_name
-                                      : _vm.__("(no name)", "dokan-lite")
-                                  )
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "strong",
+                    [
+                      _vm.hasPro
+                        ? _c(
+                            "router-link",
+                            { attrs: { to: "/vendors/" + data.row.id } },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  data.row.store_name
+                                    ? data.row.store_name
+                                    : _vm.__("(no name)", "dokan-lite")
                                 )
-                              ]
-                            )
-                          : _c(
-                              "a",
-                              { attrs: { href: _vm.editUrl(data.row.id) } },
-                              [
-                                _vm._v(
-                                  _vm._s(
-                                    data.row.store_name
-                                      ? data.row.store_name
-                                      : _vm.__("(no name)", "dokan-lite")
-                                  )
+                              )
+                            ]
+                          )
+                        : _c(
+                            "a",
+                            { attrs: { href: _vm.editUrl(data.row.id) } },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  data.row.store_name
+                                    ? data.row.store_name
+                                    : _vm.__("(no name)", "dokan-lite")
                                 )
-                              ]
-                            )
-                      ],
-                      1
-                    )
-                  ]
-                }
-              },
-              {
-                key: "email",
-                fn: function(data) {
-                  return [
-                    _c("a", { attrs: { href: "mailto:" + data.row.email } }, [
-                      _vm._v(_vm._s(data.row.email))
-                    ])
-                  ]
-                }
-              },
-              {
-                key: "categories",
-                fn: function(ref) {
-                  var row = ref.row
-                  return [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(
-                          row.categories
-                            .map(function(category) {
-                              return category.name
-                            })
-                            .join(", ")
-                        ) +
-                        "\n            "
-                    )
-                  ]
-                }
-              },
-              {
-                key: "registered",
-                fn: function(data) {
-                  return [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(
-                          _vm.moment(data.row.registered).format("MMM D, YYYY")
-                        ) +
-                        "\n            "
-                    )
-                  ]
-                }
-              },
-              {
-                key: "enabled",
-                fn: function(data) {
-                  return [
-                    _c("switches", {
-                      attrs: { enabled: data.row.enabled, value: data.row.id },
-                      on: { input: _vm.onSwitch }
-                    })
-                  ]
-                }
-              },
-              {
-                key: "row-actions",
-                fn: function(data) {
-                  return _vm._l(_vm.actions, function(action, index) {
-                    return _c(
-                      "span",
-                      { class: action.key },
-                      [
-                        _vm.hasPro && action.key == "edit"
-                          ? _c(
-                              "router-link",
-                              {
-                                attrs: {
-                                  to: {
-                                    path: "vendors/" + data.row.id,
-                                    query: { edit: "true" }
-                                  }
-                                }
-                              },
-                              [_vm._v(_vm._s(action.label))]
-                            )
-                          : !_vm.hasPro && action.key == "edit"
-                          ? _c(
-                              "a",
-                              { attrs: { href: _vm.editUrl(data.row.id) } },
-                              [_vm._v(_vm._s(action.label))]
-                            )
-                          : action.key == "products"
-                          ? _c(
-                              "a",
-                              { attrs: { href: _vm.productUrl(data.row.id) } },
-                              [_vm._v(_vm._s(action.label))]
-                            )
-                          : action.key == "orders"
-                          ? _c(
-                              "a",
-                              { attrs: { href: _vm.ordersUrl(data.row.id) } },
-                              [_vm._v(_vm._s(action.label))]
-                            )
-                          : action.key == "switch_to"
-                          ? _c(
-                              "a",
-                              { attrs: { href: _vm.switchToUrl(data.row) } },
-                              [_vm._v(_vm._s(action.label))]
-                            )
-                          : _c("a", { attrs: { href: "#" } }, [
-                              _vm._v(_vm._s(action.label))
-                            ]),
-                        _vm._v(" "),
-                        index !== _vm.actions.length - 1
-                          ? [_vm._v(" | ")]
-                          : _vm._e()
-                      ],
-                      2
-                    )
-                  })
-                }
+                              )
+                            ]
+                          )
+                    ],
+                    1
+                  )
+                ]
               }
-            ])
-          }),
-          _vm._v(" "),
-          _vm.loadAddVendor
-            ? _c("add-vendor", { attrs: { "vendor-id": _vm.vendorId } })
-            : _vm._e()
-        ],
-        2
-      )
-    ],
-    1
-  )
+            },
+            {
+              key: "email",
+              fn: function(data) {
+                return [
+                  _c("a", { attrs: { href: "mailto:" + data.row.email } }, [
+                    _vm._v(_vm._s(data.row.email))
+                  ])
+                ]
+              }
+            },
+            {
+              key: "categories",
+              fn: function(ref) {
+                var row = ref.row
+                return [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(
+                        row.categories
+                          .map(function(category) {
+                            return category.name
+                          })
+                          .join(", ")
+                      ) +
+                      "\n            "
+                  )
+                ]
+              }
+            },
+            {
+              key: "registered",
+              fn: function(data) {
+                return [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(
+                        _vm.moment(data.row.registered).format("MMM D, YYYY")
+                      ) +
+                      "\n            "
+                  )
+                ]
+              }
+            },
+            {
+              key: "enabled",
+              fn: function(data) {
+                return [
+                  _c("switches", {
+                    attrs: { enabled: data.row.enabled, value: data.row.id },
+                    on: { input: _vm.onSwitch }
+                  })
+                ]
+              }
+            },
+            {
+              key: "row-actions",
+              fn: function(data) {
+                return _vm._l(_vm.actions, function(action, index) {
+                  return _c(
+                    "span",
+                    { class: action.key },
+                    [
+                      _vm.hasPro && action.key == "edit"
+                        ? _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  path: "vendors/" + data.row.id,
+                                  query: { edit: "true" }
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(action.label))]
+                          )
+                        : !_vm.hasPro && action.key == "edit"
+                        ? _c(
+                            "a",
+                            { attrs: { href: _vm.editUrl(data.row.id) } },
+                            [_vm._v(_vm._s(action.label))]
+                          )
+                        : action.key == "products"
+                        ? _c(
+                            "a",
+                            { attrs: { href: _vm.productUrl(data.row.id) } },
+                            [_vm._v(_vm._s(action.label))]
+                          )
+                        : action.key == "orders"
+                        ? _c(
+                            "a",
+                            { attrs: { href: _vm.ordersUrl(data.row.id) } },
+                            [_vm._v(_vm._s(action.label))]
+                          )
+                        : action.key == "switch_to"
+                        ? _c(
+                            "a",
+                            { attrs: { href: _vm.switchToUrl(data.row) } },
+                            [_vm._v(_vm._s(action.label))]
+                          )
+                        : _c("a", { attrs: { href: "#" } }, [
+                            _vm._v(_vm._s(action.label))
+                          ]),
+                      _vm._v(" "),
+                      index !== _vm.actions.length - 1
+                        ? [_vm._v(" | ")]
+                        : _vm._e()
+                    ],
+                    2
+                  )
+                })
+              }
+            }
+          ])
+        }),
+        _vm._v(" "),
+        _vm.loadAddVendor
+          ? _c("add-vendor", { attrs: { "vendor-id": _vm.vendorId } })
+          : _vm._e()
+      ],
+      2
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -13020,17 +14755,17 @@ if (false) {
 }
 
 /***/ }),
-/* 177 */
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(69);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(186);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(178)
+  __webpack_require__(185)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -13076,13 +14811,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 178 */
+/* 185 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 179 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13207,17 +14942,17 @@ if (false) {
 }
 
 /***/ }),
-/* 180 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(70);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(192);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(181)
+  __webpack_require__(188)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -13263,23 +14998,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 181 */
+/* 188 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 182 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(71);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(191);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(183)
+  __webpack_require__(190)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -13325,13 +15060,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 183 */
+/* 190 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 184 */
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13441,7 +15176,7 @@ if (false) {
 }
 
 /***/ }),
-/* 185 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13607,7 +15342,7 @@ if (false) {
 }
 
 /***/ }),
-/* 186 */
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13643,4 +15378,4 @@ function menuFix(slug) {
 /* harmony default export */ __webpack_exports__["a"] = (menuFix);
 
 /***/ })
-],[106]);
+],[110]);
