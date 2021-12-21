@@ -34,12 +34,12 @@
                     <p class="unlock">{{ __( 'Unlock', 'dokan-lite' ) }}</p>
                     <h1>{{ __( '20+ Modules', 'dokan-lite' ) }}</h1>
                     <p class="text-brand">{{ __( 'with Dokan Premium Plans', 'dokan-lite' ) }}</p>
-                    <p>
+                    <p class="upgrade-text">
                         {{ __( 'We’re sorry', 'dokan-lite' ) }}, <br>
                         {{ __( "Dokan Modules are not available on Dokan Lite. Please upgrade to a PRO plan to unlock the modules of your choice.", 'dokan-lite' ) }}
                     </p>
 
-                    <a class="upgrade-to-pro" target="_blank" rel="noopener noreferrer" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
+                    <a class="upgrade-button" target="_blank" rel="noopener noreferrer" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
 
                     <div class="promo-card">
                         <svg width="318" height="181" viewBox="0 0 318 181" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,7 +86,7 @@
                         </svg>
                     </div>
 
-                    <span><a target="_blank" rel="noopener noreferrer" href="https://wedevs.com/docs/dokan/getting-started/installation-2/">{{ __( 'Already upgraded?', 'dokan-lite' ) }}</a></span>
+                    <a target="_blank" class="already-updated" rel="noopener noreferrer" href="https://wedevs.com/docs/dokan/getting-started/installation-2/">{{ __( 'Already upgraded?', 'dokan-lite' ) }}</a>
                 </div>
                 <span @click="closePopup" class="close">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +111,7 @@ export default {
     data() {
         return {
             upgradeURL: dokan.urls.upgradeToPro,
-            hasPro: false,//dokan.hasPro ? true : false,
+            hasPro: dokan.hasPro ? true : false,
         }
     },
     methods: {
@@ -141,14 +141,24 @@ export default {
         }
 
         .modal-content {
-            background-color: #fff;
             margin: 4% auto;
-            width: 405px;
+            max-width: 400px;
             border-radius: 4px;
             text-align: center;
             position: relative;
             padding: 25px 40px;
+            background-color: #fff;
             box-sizing: border-box;
+
+            @media only screen and (max-width: 576px) {
+                max-width: 325px;
+                padding: 25px 15px;
+                margin: 12% auto;
+            }
+
+            @media (min-width: 577px) and (max-width: 1024px) {
+                margin: 6% auto;
+            }
 
             span {
                 &.close {
@@ -164,7 +174,7 @@ export default {
 
                 .unlock {
                     color: #FF5722;
-                    font-size: 16px;
+                    font-size: 1rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
                     margin: 0 0 5px;
@@ -175,7 +185,7 @@ export default {
                     background: #e9f3ff;
                     border-radius: 37px;
                     color: #1C81FA;
-                    font-size: 16px;
+                    font-size: 1rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
                     display: inline-block;
@@ -185,25 +195,24 @@ export default {
                 h1 {
                     padding: 0;
                     margin-bottom: 13px;
-                    font-size: 24px;
+                    font-size: 1.5rem;
                     font-weight: bold;
                     font-family: "SF Pro Text", sans-serif;
                 }
 
-                p {
+                .upgrade-text {
                     margin: 0;
-                    font-size: 13px;
+                    font-size: .813rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
-                    padding: 0 2px;
                 }
 
-                .upgrade-to-pro {
+                .upgrade-button {
                     background: #FF5722;
                     border-radius: 3px;
                     padding: 10px 18px;
                     font-weight: 400;
-                    font-size: 12px;
+                    font-size: .75rem;
                     font-family: "SF Pro Text", sans-serif;
                     margin: 30px 0;
                     display: inline-block;
@@ -213,16 +222,19 @@ export default {
 
                 .promo-card {
                     margin-bottom: 25px;
+
+                    svg {
+                        width: 100%;
+
+                    }
                 }
 
-                span {
-                    a {
-                        color: #758598;
-                        font-size: 14px;
-                        font-weight: normal;
-                        font-family: "SF Pro Text", sans-serif;
-                        text-decoration: none;
-                    }
+                .already-updated {
+                    color: #758598;
+                    font-size: .875rem;
+                    font-weight: normal;
+                    font-family: "SF Pro Text", sans-serif;
+                    text-decoration: none;
                 }
             }
         }

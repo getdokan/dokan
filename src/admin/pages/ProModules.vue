@@ -226,7 +226,7 @@
             <div class="module-filter-wrap">
                <div class="module-filter-left">
                    <template v-if="!premium_modules">
-                       <ul v-if="selected_modules.length">
+                       <ul v-if="selected_modules.length" class="bulk-actions">
                            <li>
                                <input @click="toggleSelect" type="checkbox" :checked="isAllSelected" :title="isAllSelected ? __( 'Deselect All', 'dokan-lite' ) : __( 'Select All', 'dokan-lite' )">
                                <label>{{ selected_modules.length }} {{ __( 'Selected', 'dokan-lite' ) }}</label>
@@ -242,8 +242,8 @@
                        </ul>
                    </template>
                    <div class="premium-modules-menu" v-else>
-                       <h3> {{ __( 'Premium Modules', 'dokan-lite' ) }} (12) </h3>
                        <div class="premium-modules-hint">
+                           <h3> {{ __( 'Premium Modules', 'dokan-lite' ) }} (12) </h3>
                            <svg class="premium-modules-hint-icon" width="13" height="20" viewBox="0 0 13 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                <path d="M3.53174 13.8701C3.57259 14.1969 3.61344 14.4829 3.61344 14.8097H9.08737C9.08737 14.4829 9.12822 14.1561 9.16907 13.8701H3.53174Z" fill="#60ADE4"/>
                                <path d="M3.61377 15.627V17.0567C3.61377 17.3018 3.77717 17.4652 4.02227 17.4652H4.14482C4.34907 18.4865 5.28863 19.3035 6.35074 19.3035C7.45369 19.3035 8.3524 18.5273 8.55665 17.4652H8.6792C8.9243 17.4652 9.0877 17.3018 9.0877 17.0567V15.627H3.61377Z" fill="#60ADE4"/>
@@ -352,19 +352,21 @@
                            </div>
                        </div>
                    </div>
-                   <div class="search-box">
-                        <input type="text" placeholder="Search..." v-model="search">
-                        <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.54563 7.66118L12.1454 10.2609C12.5359 10.6515 12.5359 11.2847 12.1454 11.6752C11.7548 12.0657 11.1216 12.0657 10.7311 11.6752L8.13126 9.07537C8.12344 9.06756 8.11698 9.05898 8.11051 9.0504C8.10554 9.04381 8.10056 9.03721 8.09497 9.03095C7.31898 9.54251 6.39016 9.84107 5.39119 9.84107C2.67393 9.84107 0.471191 7.63824 0.471191 4.92102C0.471191 2.20377 2.67398 0.000976562 5.39124 0.000976562C8.1085 0.000976562 10.3113 2.20377 10.3113 4.92107C10.3113 5.91999 10.0127 6.84886 9.50117 7.62485C9.50741 7.63041 9.51398 7.63537 9.52054 7.64032C9.52917 7.64683 9.53778 7.65334 9.54563 7.66118ZM2.17432 4.92248C2.17432 6.69776 3.61346 8.1369 5.38879 8.1369C7.16402 8.1369 8.60321 6.69776 8.60321 4.92248C8.60321 3.1472 7.16402 1.70801 5.38879 1.70801C3.6135 1.70801 2.17432 3.14715 2.17432 4.92248Z" fill="#CBCBCB"/>
-                        </svg>
-                   </div>
-                   <div class="module-view-mode">
-                       <svg @click="changeView( 'list-view' )" v-show="'grid-view' === currentView" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25346 0H13.7465C14.4388 0 15 0.383756 15 0.857143V3H0V0.857143C0 0.383756 0.561191 0 1.25346 0ZM0 5.5H15V8.5H0V5.5ZM0 13.1429C0 13.6162 0.561191 14 1.25346 14H13.7465C14.4388 14 15 13.6162 15 13.1429V11H0V13.1429Z" fill="#CECECE"/>
-                       </svg>
-                       <svg @click="changeView( 'grid-view' )" v-show="'list-view' === currentView" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path fill-rule="evenodd" clip-rule="evenodd" d="M2.68478 0.484375C1.63834 0.484375 0.790039 1.33268 0.790039 2.37911V4.98168C0.790039 6.02812 1.63834 6.87642 2.68478 6.87642H5.28735C6.33378 6.87642 7.18208 6.02812 7.18208 4.98168V2.37911C7.18208 1.33268 6.33378 0.484375 5.28735 0.484375H2.68478ZM11.2927 0.484375C10.2463 0.484375 9.39799 1.33268 9.39799 2.37911V4.98168C9.39799 6.02812 10.2463 6.87642 11.2927 6.87642H13.8953C14.9417 6.87642 15.79 6.02812 15.79 4.98168V2.37911C15.79 1.33268 14.9417 0.484375 13.8953 0.484375H11.2927ZM0.790039 10.9871C0.790039 9.94063 1.63834 9.09233 2.68478 9.09233H5.28735C6.33378 9.09233 7.18208 9.94063 7.18208 10.9871V13.5896C7.18208 14.6361 6.33378 15.4844 5.28735 15.4844H2.68478C1.63834 15.4844 0.790039 14.6361 0.790039 13.5896V10.9871ZM11.2927 9.09233C10.2463 9.09233 9.39799 9.94063 9.39799 10.9871V13.5896C9.39799 14.6361 10.2463 15.4844 11.2927 15.4844H13.8953C14.9417 15.4844 15.79 14.6361 15.79 13.5896V10.9871C15.79 9.94063 14.9417 9.09233 13.8953 9.09233H11.2927Z" fill="#CECECE"/>
-                       </svg>
+                   <div class="search-box-view-mode">
+                       <div class="search-box">
+                           <input type="text" placeholder="Search..." v-model="search" @focus="isExpanded = true" @blur="isExpanded = false" :style="isExpanded ? 'width: 345px': ''">
+                           <svg @click="isExpanded = ! isExpanded" width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path fill-rule="evenodd" clip-rule="evenodd" d="M9.54563 7.66118L12.1454 10.2609C12.5359 10.6515 12.5359 11.2847 12.1454 11.6752C11.7548 12.0657 11.1216 12.0657 10.7311 11.6752L8.13126 9.07537C8.12344 9.06756 8.11698 9.05898 8.11051 9.0504C8.10554 9.04381 8.10056 9.03721 8.09497 9.03095C7.31898 9.54251 6.39016 9.84107 5.39119 9.84107C2.67393 9.84107 0.471191 7.63824 0.471191 4.92102C0.471191 2.20377 2.67398 0.000976562 5.39124 0.000976562C8.1085 0.000976562 10.3113 2.20377 10.3113 4.92107C10.3113 5.91999 10.0127 6.84886 9.50117 7.62485C9.50741 7.63041 9.51398 7.63537 9.52054 7.64032C9.52917 7.64683 9.53778 7.65334 9.54563 7.66118ZM2.17432 4.92248C2.17432 6.69776 3.61346 8.1369 5.38879 8.1369C7.16402 8.1369 8.60321 6.69776 8.60321 4.92248C8.60321 3.1472 7.16402 1.70801 5.38879 1.70801C3.6135 1.70801 2.17432 3.14715 2.17432 4.92248Z" fill="#CBCBCB"/>
+                           </svg>
+                       </div>
+                       <div class="module-view-mode">
+                           <svg @click="changeView( 'list-view' )" v-show="'grid-view' === currentView" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25346 0H13.7465C14.4388 0 15 0.383756 15 0.857143V3H0V0.857143C0 0.383756 0.561191 0 1.25346 0ZM0 5.5H15V8.5H0V5.5ZM0 13.1429C0 13.6162 0.561191 14 1.25346 14H13.7465C14.4388 14 15 13.6162 15 13.1429V11H0V13.1429Z" fill="#CECECE"/>
+                           </svg>
+                           <svg @click="changeView( 'grid-view' )" v-show="'list-view' === currentView" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path fill-rule="evenodd" clip-rule="evenodd" d="M2.68478 0.484375C1.63834 0.484375 0.790039 1.33268 0.790039 2.37911V4.98168C0.790039 6.02812 1.63834 6.87642 2.68478 6.87642H5.28735C6.33378 6.87642 7.18208 6.02812 7.18208 4.98168V2.37911C7.18208 1.33268 6.33378 0.484375 5.28735 0.484375H2.68478ZM11.2927 0.484375C10.2463 0.484375 9.39799 1.33268 9.39799 2.37911V4.98168C9.39799 6.02812 10.2463 6.87642 11.2927 6.87642H13.8953C14.9417 6.87642 15.79 6.02812 15.79 4.98168V2.37911C15.79 1.33268 14.9417 0.484375 13.8953 0.484375H11.2927ZM0.790039 10.9871C0.790039 9.94063 1.63834 9.09233 2.68478 9.09233H5.28735C6.33378 9.09233 7.18208 9.94063 7.18208 10.9871V13.5896C7.18208 14.6361 6.33378 15.4844 5.28735 15.4844H2.68478C1.63834 15.4844 0.790039 14.6361 0.790039 13.5896V10.9871ZM11.2927 9.09233C10.2463 9.09233 9.39799 9.94063 9.39799 10.9871V13.5896C9.39799 14.6361 10.2463 15.4844 11.2927 15.4844H13.8953C14.9417 15.4844 15.79 14.6361 15.79 13.5896V10.9871C15.79 9.94063 14.9417 9.09233 13.8953 9.09233H11.2927Z" fill="#CECECE"/>
+                           </svg>
+                       </div>
                    </div>
                </div>
             </div>
@@ -556,7 +558,8 @@ export default {
             selected_categories: [],
             premium_modules: false,
             showPopup: true,
-            hasPro: false,//dokan.hasPro ? true : false,
+            isExpanded: false,
+            hasPro: dokan.hasPro ? true : false,
             is_activating: false,
             is_deactivating: false,
             filterMenu: [
@@ -1010,7 +1013,23 @@ export default {
         margin-bottom: 30px;
         flex-wrap: wrap;
 
+        @media only screen and (max-width: 576px) {
+            display: block;
+        }
+
         .module-filter-left {
+            .bulk-actions {
+                li {
+                    &:first-child {
+                        @media only screen and (max-width: 576px){
+                            padding-right: 0;
+                            border-right: 0;
+                            display: block;
+                            margin-bottom: 30px;
+                        }
+                    }
+                }
+            }
             ul {
                 margin: 0;
 
@@ -1020,17 +1039,9 @@ export default {
                     margin-bottom: 0;
                     cursor: pointer;
 
-                    @media only screen and (max-width: 767px) {
-                        margin-right: 10px;
-                    }
-
                     &:first-child {
                         padding-right: 30px;
                         border-right: 1px solid #d0d0d0;
-
-                        @media only screen and (max-width: 767px) {
-                            padding-right: 10px;
-                        }
                     }
 
                     a {
@@ -1173,18 +1184,22 @@ export default {
                 display: flex;
                 align-items: center;
 
-                h3 {
-                    margin: 0;
-                    display: flex;
-                    align-items: center;
-                    font-size: 1.125rem;
-                    font-weight: bold;
-                    font-family: "SF Pro Text", sans-serif;
+                @media only screen and (max-width: 576px){
+                    flex-direction: column-reverse;
+                    align-items: start;
                 }
 
                 .premium-modules-hint {
                     position: relative;
-                    margin-left: 15px;
+                    display: flex;
+                    align-items: center;
+
+                    h3 {
+                        margin: 0 20px 0 0;
+                        font-size: 1.125rem;
+                        font-weight: bold;
+                        font-family: "SF Pro Text", sans-serif;
+                    }
 
                     &:hover .upgrade-plan-dropdown {
                         top: 50px;
@@ -1241,10 +1256,14 @@ export default {
                         transition: all .3s ease;
                         box-sizing: border-box;
 
-                        @media only screen and (max-width: 767px) {
+                        @media only screen and (max-width: 768px) {
                             right: -96px;
                             top: 60px;
                             left: unset;
+                        }
+
+                        @media (min-width: 769px) and (max-width: 1024px) {
+                            left: 110px;
                         }
 
                         &:before,
@@ -1256,9 +1275,13 @@ export default {
                             top: -9px;
                             left: 22px;
 
-                            @media only screen and (max-width: 767px) {
+                            @media only screen and (max-width: 768px) {
                                 right: 101px;
                                 left: unset;
+                            }
+
+                            @media (min-width: 769px) and (max-width: 1024px) {
+                                left: 118px;
                             }
                         }
 
@@ -1330,6 +1353,11 @@ export default {
                         margin-left: 30px;
                         display: flex;
                         align-items: center;
+
+                        @media only screen and (max-width: 768px) {
+                            margin-left: 0;
+                            margin-bottom: 20px;
+                        }
                     }
                 }
             }
@@ -1339,8 +1367,9 @@ export default {
             display: flex;
             align-items: center;
 
-            @media only screen and (max-width: 767px){
+            @media only screen and (max-width: 576px){
                 margin-top: 30px;
+                position: relative;
             }
 
             .module-category-filter {
@@ -1500,21 +1529,44 @@ export default {
                 }
             }
 
+            .search-box-view-mode {
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+
+                @media only screen and (max-width: 576px){
+                    position: absolute;
+                    top: -7px;
+                    right: 0;
+                }
+            }
+
             .search-box {
                 margin: 0 30px;
                 position: relative;
 
-                @media only screen and (min-width: 374px){
+                @media only screen and (min-width: 576px){
                     margin: 0 20px;
                 }
 
                 input {
                     border: 1px solid #e2e2e2;
                     border-radius: 3px;
-                    padding: 4px 16px;
+                    padding: 8px 16px;
+                    line-height: unset;
 
-                    @media only screen and (min-width: 769px){
+                    @media only screen and (min-width: 1025px){
                         width: 270px;
+                    }
+
+                    @media (min-width: 577px) and (max-width: 1024px){
+                        width: 165px;
+                    }
+
+                    @media only screen and (max-width: 576px){
+                        width: 30px;
+                        min-height: 30px;
+                        padding: 6px 16px;
                     }
 
                     &::placeholder {
@@ -1527,8 +1579,13 @@ export default {
 
                 svg {
                     position: absolute;
-                    right: 18px;
+                    right: 16px;
                     top: 14px;
+
+                    @media only screen and (max-width: 576px){
+                        right: 11px;
+                        top: 11px;
+                    }
                 }
             }
         }
@@ -1633,6 +1690,10 @@ export default {
                     .module-details {
                         margin-bottom: 12px;
                     }
+
+                    .module-actions {
+                        margin-top: auto;
+                    }
                 }
 
                 &.list-view {
@@ -1640,6 +1701,7 @@ export default {
                         grid-template-areas: "icon details actions checkbox";
                         grid-template-columns: 101px auto 280px 50px;
                         grid-column-gap: 15px;
+                        overflow-x: auto;
                     }
 
                     .module-checkbox {
@@ -1778,7 +1840,6 @@ export default {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-top: auto;
 
                     .module-action-links {
                         display: flex;
