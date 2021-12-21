@@ -25,7 +25,8 @@ class LimitedTimePromotion {
      * LimitedTimePromotion constructor
      */
     public function __construct() {
-        add_action( 'admin_notices', [ $this, 'show_promotions' ] );
+        add_action( 'admin_notices', [ $this, 'render_promo_notices_html' ], 8 );
+        add_action( 'admin_notices', [ $this, 'enqueue_promo_notices_scripts' ] );
         add_action( 'wp_ajax_dokan_dismiss_limited_time_promotional_notice', [ $this, 'dismiss_limited_time_promo' ] );
     }
 
@@ -34,8 +35,20 @@ class LimitedTimePromotion {
      *
      * @return void
      */
-    public function show_promotions() {
+    public function render_promo_notices_html() {
         echo '<div id="dokan-promo-notices"></div>';
+    }
+
+    /**
+     * Enqueue dokan promo notices scripts
+     *
+     * @since 3.3.5
+     *
+     * @return void
+     */
+    public function enqueue_promo_notices_scripts() {
+        wp_enqueue_script( 'dokan-promo-notice-js' );
+        wp_localize_script( 'dokan-vue-vendor', 'dokan', dokan()->scripts->get_admin_localized_scripts() );
     }
 
     /**

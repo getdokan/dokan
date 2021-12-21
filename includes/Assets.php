@@ -558,14 +558,6 @@ class Assets {
             'i18n_date_format' => wc_date_format(),
         ];
 
-        // Load only admin pages except customizer page
-        if ( is_admin() && ! is_customize_preview() ) {
-            wp_enqueue_style( 'dokan-global-admin-css' );
-            wp_enqueue_script( 'dokan-admin-notice-js' );
-            wp_enqueue_script( 'dokan-promo-notice-js' );
-            wp_localize_script( 'dokan-vue-vendor', 'dokan', $this->get_admin_localized_scripts() );
-        }
-
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
     }
     /**
