@@ -344,11 +344,19 @@
         } );
 
         // Set timepicker jquery here.
-        $( '.time .dokan-form-control' ).timepicker({
-            scrollDefault: 'now',
-            maxTime: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:59' : '11:59 pm' ?>',
-            timeFormat: '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-            step: '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
+        $( '.dokan-store-times .time .opening-time' ).timepicker({
+            scrollDefault : 'now',
+            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm' ?>',
+            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
+        });
+
+        $( '.dokan-store-times .time .closing-time' ).timepicker({
+            scrollDefault : 'now',
+            minTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '00:59' : '00:29 am' ?>',
+            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:59' : '11:59 pm' ?>',
+            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
         });
 
         var dokan_address_wrapper = $( '.dokan-address-fields' );

@@ -3339,7 +3339,7 @@ function dokan_is_store_open( $user_id ) {
         }
     }
 
-    return apply_filters( 'dokan_is_store_open', $store_open, $status, $schedule );
+    return apply_filters( 'dokan_is_store_open', $store_open, $status, $schedule, $store_user->get_shop_info() );
 }
 
 /**
