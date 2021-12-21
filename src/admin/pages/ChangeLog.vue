@@ -203,6 +203,8 @@ export default {
         },
 
         switchPackage( pack ) {
+            this.active_package = pack;
+
             if ( null === this.pro_versions && 'pro' === pack ) {
                 this.getDokanProChangeLog();
             }
@@ -211,7 +213,9 @@ export default {
                 this.getDokanLiteChangeLog();
             }
 
-            this.active_package = pack;
+            if ( dokan.hasNewVersion ) {
+                this.dismissWhatsNewNotice();
+            }
         },
 
         isActivePackage( pack ) {
@@ -256,14 +260,9 @@ export default {
 
         loadChangelogData() {
             if ( 'dokan-pro' === this.$route.query.plugin ) {
-                this.active_package = 'pro';
-                if ( null === this.pro_versions ) {
-                    this.getDokanProChangeLog();
-                }
+                this.switchPackage( 'pro' );
             } else {
-                if ( null === this.lite_versions ) {
-                    this.getDokanLiteChangeLog();
-                }
+                this.switchPackage( 'lite' )
             }
         }
     },
@@ -276,9 +275,6 @@ export default {
 
     created() {
         this.loadChangelogData();
-        if ( dokan.hasNewVersion ) {
-            this.dismissWhatsNewNotice();
-        }
         window.addEventListener( 'scroll', this.updatePosition );
     },
 
