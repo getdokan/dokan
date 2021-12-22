@@ -1,9 +1,9 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="dokan-settings">
             <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+            <AdminNotice></AdminNotice>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
                 <p><strong v-html="message"></strong></p>
@@ -79,7 +79,9 @@
 </template>
 
 <script>
-    let Loading = dokan_get_lib('Loading');
+    let Loading     = dokan_get_lib('Loading');
+    let AdminNotice = dokan_get_lib('AdminNotice');
+
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
@@ -94,6 +96,7 @@
             Loading,
             SettingsBanner,
             UpgradeBanner,
+            AdminNotice,
         },
 
         data () {
