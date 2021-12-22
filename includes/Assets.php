@@ -33,10 +33,8 @@ class Assets {
         if ( 'toplevel_page_dokan' === $hook ) {
             $localize_script = $this->get_admin_localized_scripts();
 
-            // Load dokan global admin notices styles, admin and promo notices scripts
+            // Load dokan global admin styles
             wp_enqueue_style( 'dokan-global-admin-css' );
-            wp_enqueue_script( 'dokan-admin-notice-js' );
-            wp_enqueue_script( 'dokan-promo-notice-js' );
 
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
