@@ -45,7 +45,7 @@ class Manager {
      */
     private function init_hooks() {
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
-        add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ], 8 );
+        add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
     }
 
