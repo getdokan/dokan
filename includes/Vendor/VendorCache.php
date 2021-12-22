@@ -25,16 +25,9 @@ class VendorCache {
         add_action( 'dokan_store_profile_saved', [ $this, 'after_update_vendor_profile' ], 10, 2 );
 
         /* Clear wp-user related caches */
-        add_action( 'delete_user', [ $this, 'before_deleting_wp_user' ], 10, 2 ); // this will support both 5.5 and latest wp version
-
-        // Check wp-version, from version 5.8, `$userdata` added.
-        if ( version_compare( get_bloginfo( 'version' ), '5.8', '>=' ) ) {
-            add_action( 'user_register', [ $this, 'after_created_new_wp_user' ], 10, 2 );
-            add_action( 'profile_update', [ $this, 'after_updated_wp_user' ], 10, 3 );
-        } else {
-            add_action( 'user_register', [ $this, 'after_created_new_wp_user' ], 10, 1 );
-            add_action( 'profile_update', [ $this, 'after_updated_wp_user' ], 10, 2 );
-        }
+        add_action( 'user_register', [ $this, 'after_created_new_wp_user' ], 10 );
+        add_action( 'profile_update', [ $this, 'after_updated_wp_user' ], 10, 2 );
+        add_action( 'delete_user', [ $this, 'before_deleting_wp_user' ], 10, 2 );
     }
 
     /**
@@ -110,12 +103,11 @@ class VendorCache {
      *
      * @since 3.3.2
      *
-     * @param int   $user_id
-     * @param array $userdata
+     * @param int $user_id
      *
      * @return void
      */
-    public function after_created_new_wp_user( $user_id, $userdata = null ) {
+    public function after_created_new_wp_user( $user_id ) {
         $this->clear_wp_user_cache( $user_id );
     }
 
@@ -126,11 +118,10 @@ class VendorCache {
      *
      * @param int   $user_id
      * @param array $old_user_data
-     * @param array $userdata
      *
      * @return void
      */
-    public function after_updated_wp_user( $user_id, $old_user_data, $userdata = null ) {
+    public function after_updated_wp_user( $user_id, $old_user_data ) {
         $this->clear_wp_user_cache( $user_id );
     }
 
