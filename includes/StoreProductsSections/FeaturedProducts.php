@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\StoreProductsSections;
 
-use WeDevs\Dokan\Abstracts\DokanStoreProducts;
+use WeDevs\Dokan\StoreProductsSections\DokanStoreProducts;
 
 /**
  * Featured products section class.

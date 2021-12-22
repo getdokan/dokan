@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Abstracts;
+namespace WeDevs\Dokan\StoreProductsSections;
 
 /**
  * Single store products class.
