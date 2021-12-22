@@ -377,10 +377,10 @@ final class WeDevs_Dokan {
         $this->container['commission']            = new \WeDevs\Dokan\Commission();
         $this->container['customizer']            = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']              = new \WeDevs\Dokan\Upgrade\Manager();
-        $this->container['featured_products']     = new \WeDevs\Dokan\StoreProductsSections\FeaturedProductsSection();
-        $this->container['latest_products']       = new \WeDevs\Dokan\StoreProductsSections\LatestProductsSection();
-        $this->container['best_selling_products'] = new \WeDevs\Dokan\StoreProductsSections\BestSellingProductsSection();
-        $this->container['top_rated_products']    = new \WeDevs\Dokan\StoreProductsSections\TopRatedProductsSection();
+        $this->container['featured_products']     = new \WeDevs\Dokan\StoreProductsSections\FeaturedProducts();
+        $this->container['latest_products']       = new \WeDevs\Dokan\StoreProductsSections\LatestProducts();
+        $this->container['best_selling_products'] = new \WeDevs\Dokan\StoreProductsSections\BestSellingProducts();
+        $this->container['top_rated_products']    = new \WeDevs\Dokan\StoreProductsSections\TopRatedProducts();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {

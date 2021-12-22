@@ -107,6 +107,9 @@ abstract class DokanStoreProducts {
             return;
         }
 
+        // Turns additional products section stat to true
+        self::$has_additional_products_section = true;
+
         // Include product template after passing all checks.
         dokan_get_template_part(
             'store-products-block', '', [
@@ -115,9 +118,6 @@ abstract class DokanStoreProducts {
                 'section_title' => $args['section_title'],
             ]
         );
-
-        // Turns additional products section stat to true
-        self::$has_additional_products_section = true;
     }
 
     /**

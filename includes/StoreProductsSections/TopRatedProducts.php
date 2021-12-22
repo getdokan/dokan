@@ -13,7 +13,7 @@ use WeDevs\Dokan\Abstracts\DokanStoreProducts;
  *
  * @package dokan
  */
-class TopRatedProductsSection extends DokanStoreProducts {
+class TopRatedProducts extends DokanStoreProducts {
 
     /**
      * Get products section data.
