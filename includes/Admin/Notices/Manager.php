@@ -34,7 +34,6 @@ class Manager {
         $this->container['setup_wizard']           = new SetupWizard();
         $this->container['plugin_review']          = new PluginReview();
         $this->container['limited_time_promotion'] = new LimitedTimePromotion();
-        // $this->container['global_admin_notices']   = new GlobalAdminNotices();
     }
 
     /**
@@ -46,19 +45,19 @@ class Manager {
      */
     private function init_hooks() {
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_global_admin_styles' ] );
+        add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ], 8 );
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
     }
 
     /**
-     * Enqueue dokan global admin notices css
+     * Render dokan global admin notices via Vue.js
      *
-     * @since 3.3.5
+     * @since 3.3.3
      *
      * @return void
      */
-    public function enqueue_global_admin_styles() {
-        wp_enqueue_style( 'dokan-global-admin-css' );
+    public function render_global_admin_notices_html() {
+        echo '<div id="dokan-admin-notices"></div>';
     }
 
     /**

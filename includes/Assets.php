@@ -16,6 +16,8 @@ class Assets {
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
             add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_admin_notice_styles' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_admin_notice_scripts' ], 99 );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
             add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
@@ -560,6 +562,31 @@ class Assets {
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
     }
+
+    /**
+     *  Enqueue global admin styles
+     *
+     * @since 3.3.5
+     *
+     * @return void
+     */
+    public function load_admin_notice_styles() {
+        wp_enqueue_style( 'dokan-global-admin-css' );
+    }
+
+    /**
+     *  Enqueue global admin and promo notices scripts
+     *
+     * @since 3.3.5
+     *
+     * @return void
+     */
+    public function load_admin_notice_scripts() {
+        wp_enqueue_script( 'dokan-admin-notice-js' );
+        wp_enqueue_script( 'dokan-promo-notice-js' );
+        wp_localize_script( 'dokan-vue-vendor', 'dokan', $this->get_admin_localized_scripts() );
+    }
+
     /**
      * Load form validate script args
      *
