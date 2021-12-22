@@ -3579,6 +3579,36 @@ function dokan_commission_types() {
 }
 
 /**
+ * Dokan new commission types
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_new_commission_types() {
+    return apply_filters(
+        'dokan_new_commission_types', [
+            'vendor_sale'      => __( 'Vendor Sale', 'dokan-lite' ),
+            'product_price'    => __( 'Product Price', 'dokan-lite' ),
+            'product_quantity' => __( 'Product Quantity', 'dokan-lite' ),
+        ]
+    );
+}
+
+/**
+ * Returns true if passed commission type is a new commission type.
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param string $commission_type
+ *
+ * @return boolean
+ */
+function dokan_is_new_commission_type( $commission_type ) {
+    return in_array( $commission_type, array_keys( dokan_new_commission_types() ) );
+}
+
+/**
  * Dokan Login Form
  *
  * @since 2.9.11
