@@ -4217,3 +4217,29 @@ function get_i18n_time_format( $format = '' ) {
 
     return strtr( $format, $replacements );
 }
+
+/**
+ * Get google recaptcha site key and secret key
+ *
+ * @param bool $bool
+ *
+ * @since 3.3.3
+ *
+ * @return array|bool
+ */
+function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
+    $recaptcha_keys = [
+        'site_key'   => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+        'secret_key' => dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ),
+    ];
+
+    if ( $bool ) {
+        if ( empty( $recaptcha_keys['site_key'] ) || empty( $recaptcha_keys['secret_key'] ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    return $recaptcha_keys;
+}

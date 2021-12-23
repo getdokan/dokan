@@ -7,7 +7,7 @@ Tested up to: 5.8.2
 WC requires at least: 3.0
 WC tested up to: 5.9.0
 Requires PHP: 5.6
-Stable tag: 3.3.2
+Stable tag: 3.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,9 +56,9 @@ Dokan is the fastest way to start eCommerce and earn through commissions with pr
 
 👨 [“This is why we are proud to be using Dokan as with it we are able to give you all the tools to help manage and run a successful business.”](https://wedevs.com/143965/michael-delaneys-story-successful-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) – Michael Delaney, Owner of [ShoppeRegion](https://shopperregion.com/)
 
-💁 [“It was really important to me that sellers did not need to ever see the WordPress backend. Dokan offered this solution.”](https://wedevs.com/138474/dokan-success-stories-mash-ie/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) - Simon & Rozz Lewis, owner of [Mash.ie](https://mash.ie/)
+👨 [“This is why we are proud to be using Dokan as with it we are able to give you all the tools to help manage and run a successful business.”](https://wedevs.com/143965/michael-delaneys-story-successful-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) – Michael Delaney, Owner of [ShoppeRegion](https://shopperregion.com/)
 
-👨 [”Dokan allows our coral farmers to setup their own vendor store and publish their corals to a wide audience.”](https://wedevs.com/135434/communitycorals-dokan-success-story/) -  Dominique Deutzmann, Founder of [CommunityCorals](https://www.communitycorals.de/)
+[“Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors”](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) - Bernd Payer, Founder [JOSHi](https://www.joshi.at)
 
 💁 “The functionality delivers everything that you need to grow your marketplace.” -  [Hawk and Peddle](http://hawkandpeddle.co.uk/)
 
@@ -106,6 +106,17 @@ As an admin, you can use Dokan in a way where you can control everything that ha
 In the [Pro Version](https://wedevs.com/dokan/pricing/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) with a bunch of super features, updates, and scope for powerful add-ons.
 
 ➡️ [Learn More](https://wedevs.com/dokan/pricing/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⬅️
+
+= DYNAMIC SETTINGS FOR SHIPPING CONDITIONS =
+
+Admin can extend flexibility to individual vendors to have control over their shipping based on various conditions including setting rates, tracking shipments with available integrations, and much more.
+
+* [Vendor Table rate shipping](https://wedevs.com/dokan/modules/table-rate-shipping) (Pro) - Multi-vendor support on setting shipping rates based on location, price, weight, shipping class, or item count of the shipment.
+
+* [Delivery Time](https://wedevs.com/dokan/modules/delivery-time) (Pro) -  Let customers choose the time and date they want their product delivered.
+
+* [ShipStation](https://wedevs.com/dokan/modules/shipstation/) (Pro) - Enable vendors to import, manage, and ship orders hassle-free with the leading shipping application for online marketplaces.
+
 
 = PLAYS NICE WITH OTHER PLUGINS =
 
@@ -198,6 +209,9 @@ Now never get bored with the old fashioned appearance of your store. Have full c
 
 Dokan comes with a number of extended features that were built around idea that someone with the potential should not be restricted to achieve his/her dream because of any shortcomings. Like,
 
+* [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
+* [Rank Math SEO](https://wedevs.com/dokan/modules/rank-math-seo) (Pro) - Let your vendors manage their product SEO with an easy-to-navigate frontend dashboard and drive traffic to your eCommerce site.
+* [Dokan Paypal Marketplace](https://wedevs.com/dokan/modules/dokan-paypal-marketplace) (Pro) - Make your marketplace payment system smoother than ever with the advanced PayPal integration with all PayPal Commerce Platform (PCP) features.
 * [PDF Invoice](https://wedevs.com/dokan/modules/pdf-invoice/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Create automated multi seller invoices with templates & download in PDF.
 * [Product Duplicator](https://wedevs.com/dokan/modules/product-duplicator/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Enable vendors to copy a product that another seller is already selling.
 * [Ajax Live Search](https://wedevs.com/dokan/modules/ajax-live-search/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Turn your regular search bar into an instant advanced product searching tool.
@@ -291,6 +305,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.3.4 ( Dec 15, 2021 ) =
+
+- **fix:** Asset loading issue for admin notice
+
+= v3.3.3 ( Dec 15, 2021 ) =
+
+- **new:** Added what’s New page for Dokan Lite #1427
+- **new:** Grouped all Dokan admin notices into a single notice with slider #1427
+- **update:** reCaptcha integration added to store contact form #1422
+- **update:** Redesigned Dokan admin header section. Also added some useful links under admin bar. #1427
+- **fix:** select2 dropdown margin issue fixed #1446
+- **fix:** Fix loading issue while loading Dokan pages when permalink sets to plain text, Also added a notice to instruct users to change permalink setting. #1444
 
 = v3.3.2 ( Nov 30, 2021 ) =
 
