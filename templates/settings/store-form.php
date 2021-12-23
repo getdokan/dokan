@@ -384,10 +384,6 @@
 
                 if ( formattedOpenValue > formattedCloseValue ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-                    $( 'html, body' ).animate( {
-                        scrollTop: self.offset().top - 120
-                    }, 300 );
-
                     e.preventDefault();
                     return false;
                 }
