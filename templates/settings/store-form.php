@@ -359,6 +359,43 @@
             step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
         });
 
+        // Add validation for store time when changed.
+        $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
+            const self              = $( this ),
+                openValue           = self.find( '.opening-time' ).val(),
+                closeValue          = self.find( '.closing-time' ).val(),
+                formattedOpenValue  = moment( openValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' ),
+                formattedCloseValue = moment( closeValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' );
+
+            if ( formattedOpenValue > formattedCloseValue ) {
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+            } else {
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+            }
+        });
+
+        $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
+            $( '.dokan-store-times' ).each( function () {
+                const self              = $( this ),
+                    openValue           = self.find( '.opening-time' ).val(),
+                    closeValue          = self.find( '.closing-time' ).val(),
+                    formattedOpenValue  = moment( openValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' ),
+                    formattedCloseValue = moment( closeValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' );
+
+                if ( formattedOpenValue > formattedCloseValue ) {
+                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                    $( 'html, body' ).animate( {
+                        scrollTop: self.offset().top - 120
+                    }, 300 );
+
+                    e.preventDefault();
+                    return false;
+                }
+
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+            });
+        });
+
         var dokan_address_wrapper = $( '.dokan-address-fields' );
         var dokan_address_select = {
             init: function () {

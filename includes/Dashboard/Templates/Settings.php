@@ -521,8 +521,25 @@ class Settings {
                 $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
                 $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
 
+                // Check & make 12 hours format data for save.
+                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
+                $opening_time      = $opening_time ? $opening_time->format( 'g:i a' ) : '';
+
+                // Check & make 12 hours format data for save.
+                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $closing_timestamp = $closing_time ? $closing_time->getTimestamp() : $closing_time;
+                $closing_time      = $closing_time ? $closing_time->format( 'g:i a' ) : '';
+
+                // If our opening time is less than closing time.
+                if ( $opening_timestamp > $closing_timestamp ) {
+                    $user_data    = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings', true );
+                    $opening_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['opening_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['opening_time'] : '';
+                    $closing_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['closing_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['closing_time'] : '';
+                }
+
                 // If pass null value or our store is not open then our store will be close.
-                if ( empty( $opening_time ) || is_array( $opening_time ) || empty( $closing_time ) || is_array( $closing_time ) || 'open' !== $store_status ) {
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
                     $dokan_store_time[ $day_key ] = [
                         'status'       => 'close',
                         'opening_time' => '',
@@ -530,22 +547,6 @@ class Settings {
                     ];
 
                     continue;
-                }
-
-                // Check & make 12 hours format data for save.
-                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
-                $opening_timestamp = $opening_time->getTimestamp();
-                $opening_time      = $opening_time->format( 'g:i a' );
-
-                // Check & make 12 hours format data for save.
-                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
-                $closing_timestamp = $closing_time->getTimestamp();
-                $closing_time      = $closing_time->format( 'g:i a' );
-
-                // If our opening time is less than closing time.
-                if ( $opening_timestamp > $closing_timestamp ) {
-                    $opening_time = '';
-                    $closing_time = '';
                 }
 
                 // Get and set current day's data for update dokan store time. Make dokan store time data here.
