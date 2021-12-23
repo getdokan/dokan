@@ -4,6 +4,34 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.5',
+        'released' => '2021-12-15',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fatal error while creating new vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Conflict Dokan admin notices scripts with customizer page and WPML string translation page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.4',
+        'released' => '2021-12-15',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Asset loading issue for admin notices',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.3',
         'released' => '2021-12-15',
         'changes'  => [
