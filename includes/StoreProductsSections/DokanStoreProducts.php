@@ -59,6 +59,15 @@ abstract class DokanStoreProducts {
     public $store_info = [];
 
     /**
+     * Settings capability.
+     *
+     * @since 3.3.5
+     *
+     * @var string
+     */
+    public $capability = 'manage_options';
+
+    /**
      * DokanStoreProducts constructor.
      *
      * @since 3.3.5
@@ -69,6 +78,7 @@ abstract class DokanStoreProducts {
 
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_products_section' ], 5, 2 );
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_title_for_regular_products' ], 99 );
+        add_action( 'dokan_store_customizer_after_vendor_products', [ $this, 'render_customizer_settings_fields' ] );
     }
 
     /**
@@ -140,6 +150,101 @@ abstract class DokanStoreProducts {
         ?>
             <h2 class="products-list-heading"><?php esc_html_e( 'All Products', 'dokan-lite' ); ?></h2>
         <?php
+    }
+
+    /**
+     * Render customizer settings data.
+     *
+     * @since 3.3.5
+     *
+     * @param object $wp_customize
+     *
+     * @return void
+     */
+    public function render_customizer_settings_fields( $wp_customize ) {
+        $wp_customize->add_setting(
+            'dokan_appearance[store_products_section][hide_featured_products]',
+            [
+                'default'              => 'on',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => 'dokan_bool_to_on_off',
+                'sanitize_js_callback' => 'dokan_on_off_to_bool',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_featured_products',
+            [
+                'label'    => __( 'Hide featured products', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[store_products_section][hide_featured_products]',
+                'type'     => 'checkbox',
+            ]
+        );
+
+        $wp_customize->add_setting(
+            'dokan_appearance[store_products_section][hide_latest_products]',
+            [
+                'default'              => 'on',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => 'dokan_bool_to_on_off',
+                'sanitize_js_callback' => 'dokan_on_off_to_bool',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_latest_products',
+            [
+                'label'    => __( 'Hide latest products', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[store_products_section][hide_latest_products]',
+                'type'     => 'checkbox',
+            ]
+        );
+
+        $wp_customize->add_setting(
+            'dokan_appearance[store_products_section][hide_best_sell_products]',
+            [
+                'default'              => 'on',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => 'dokan_bool_to_on_off',
+                'sanitize_js_callback' => 'dokan_on_off_to_bool',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_best_sell_products',
+            [
+                'label'    => __( 'Hide best selling products', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[store_products_section][hide_best_sell_products]',
+                'type'     => 'checkbox',
+            ]
+        );
+
+        $wp_customize->add_setting(
+            'dokan_appearance[store_products_section][hide_top_rated_products]',
+            [
+                'default'              => 'on',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => 'dokan_bool_to_on_off',
+                'sanitize_js_callback' => 'dokan_on_off_to_bool',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_top_rated_products',
+            [
+                'label'    => __( 'Hide top rated products', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[store_products_section][hide_top_rated_products]',
+                'type'     => 'checkbox',
+            ]
+        );
     }
 
     /**

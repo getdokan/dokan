@@ -4186,3 +4186,33 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
 
     return $recaptcha_keys;
 }
+
+/**
+* Converts a 'on' or 'off' to boolean
+*
+* @since 3.3.5
+*
+* @param string $value
+*
+* @return bool
+*/
+function dokan_on_off_to_bool( $value ) {
+   return $value === 'on' ? true : false;
+}
+
+/**
+* Converts a boolean value to a 'on' or 'off'.
+*
+* @since 3.3.5
+*
+* @param bool $bool
+*
+* @return string
+*/
+function dokan_bool_to_on_off( $bool ) {
+   if ( ! is_bool( $bool ) ) {
+       $bool = dokan_on_off_to_bool( $bool );
+   }
+
+   return true === $bool ? 'on' : 'off';
+}
