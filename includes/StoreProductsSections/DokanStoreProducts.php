@@ -91,6 +91,15 @@ abstract class DokanStoreProducts {
     abstract public function get_products_section_data();
 
     /**
+     * Get customizer settings data.
+     *
+     * @since 3.3.5
+     *
+     * @return array
+     */
+    abstract public function get_customizer_settings_data();
+
+    /**
      * Render additional products section.
      *
      * @since 3.3.5
@@ -162,8 +171,11 @@ abstract class DokanStoreProducts {
      * @return void
      */
     public function render_customizer_settings_fields( $wp_customize ) {
+        // Get data for customizer settings data.
+        $args = $this->get_customizer_settings_data();
+
         $wp_customize->add_setting(
-            'dokan_appearance[store_products_section][hide_featured_products]',
+            'dokan_appearance[store_products_section][' . $args['customizer_key'] . ']',
             [
                 'default'              => 'on',
                 'type'                 => 'option',
@@ -174,74 +186,11 @@ abstract class DokanStoreProducts {
         );
 
         $wp_customize->add_control(
-            'hide_featured_products',
+            $args['customizer_key'],
             [
-                'label'    => __( 'Hide featured products', 'dokan-lite' ),
+                'label'    => $args['customizer_title'],
                 'section'  => 'dokan_store',
-                'settings' => 'dokan_appearance[store_products_section][hide_featured_products]',
-                'type'     => 'checkbox',
-            ]
-        );
-
-        $wp_customize->add_setting(
-            'dokan_appearance[store_products_section][hide_latest_products]',
-            [
-                'default'              => 'on',
-                'type'                 => 'option',
-                'capability'           => $this->capability,
-                'sanitize_callback'    => 'dokan_bool_to_on_off',
-                'sanitize_js_callback' => 'dokan_on_off_to_bool',
-            ]
-        );
-
-        $wp_customize->add_control(
-            'hide_latest_products',
-            [
-                'label'    => __( 'Hide latest products', 'dokan-lite' ),
-                'section'  => 'dokan_store',
-                'settings' => 'dokan_appearance[store_products_section][hide_latest_products]',
-                'type'     => 'checkbox',
-            ]
-        );
-
-        $wp_customize->add_setting(
-            'dokan_appearance[store_products_section][hide_best_sell_products]',
-            [
-                'default'              => 'on',
-                'type'                 => 'option',
-                'capability'           => $this->capability,
-                'sanitize_callback'    => 'dokan_bool_to_on_off',
-                'sanitize_js_callback' => 'dokan_on_off_to_bool',
-            ]
-        );
-
-        $wp_customize->add_control(
-            'hide_best_sell_products',
-            [
-                'label'    => __( 'Hide best selling products', 'dokan-lite' ),
-                'section'  => 'dokan_store',
-                'settings' => 'dokan_appearance[store_products_section][hide_best_sell_products]',
-                'type'     => 'checkbox',
-            ]
-        );
-
-        $wp_customize->add_setting(
-            'dokan_appearance[store_products_section][hide_top_rated_products]',
-            [
-                'default'              => 'on',
-                'type'                 => 'option',
-                'capability'           => $this->capability,
-                'sanitize_callback'    => 'dokan_bool_to_on_off',
-                'sanitize_js_callback' => 'dokan_on_off_to_bool',
-            ]
-        );
-
-        $wp_customize->add_control(
-            'hide_top_rated_products',
-            [
-                'label'    => __( 'Hide top rated products', 'dokan-lite' ),
-                'section'  => 'dokan_store',
-                'settings' => 'dokan_appearance[store_products_section][hide_top_rated_products]',
+                'settings' => 'dokan_appearance[store_products_section][' . $args['customizer_key'] . ']',
                 'type'     => 'checkbox',
             ]
         );

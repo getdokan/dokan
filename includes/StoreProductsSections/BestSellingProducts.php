@@ -31,4 +31,18 @@ class BestSellingProducts extends DokanStoreProducts {
             'section_title'  => __( 'Best Selling Products', 'dokan-lite' ),
         ];
     }
+
+    /**
+     * Get customizer settings data.
+     *
+     * @since 3.3.5
+     *
+     * @return array
+     */
+    public function get_customizer_settings_data() {
+        return [
+            'customizer_title' => __( 'Hide best selling products', 'dokan-lite' ),
+            'customizer_key'   => 'hide_best_sell_products',
+        ];
+    }
 }
