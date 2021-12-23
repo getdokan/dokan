@@ -32,24 +32,6 @@ abstract class DokanStoreProducts {
     public $items_to_show = 3;
 
     /**
-     * Store products section setting fields counter.
-     *
-     * @since 3.3.5
-     *
-     * @var bool
-     */
-    public static $store_setting_fields_counter = 0;
-
-    /**
-     * Additional products section status.
-     *
-     * @since 3.3.5
-     *
-     * @var bool
-     */
-    public static $has_additional_products_section = false;
-
-    /**
      * Vendor ID.
      *
      * @since 3.3.5
@@ -74,7 +56,25 @@ abstract class DokanStoreProducts {
      *
      * @var string
      */
-    public $capability = 'manage_options';
+    protected $capability = 'manage_options';
+
+    /**
+     * Store products section setting fields counter.
+     *
+     * @since 3.3.5
+     *
+     * @var bool
+     */
+    public static $store_setting_fields_counter = 0;
+
+    /**
+     * Additional products section status.
+     *
+     * @since 3.3.5
+     *
+     * @var bool
+     */
+    public static $has_additional_products_section = false;
 
     /**
      * DokanStoreProducts constructor.

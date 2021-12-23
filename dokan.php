@@ -359,26 +359,23 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
-        $this->container['pageview']              = new \WeDevs\Dokan\PageViews();
-        $this->container['seller_wizard']         = new \WeDevs\Dokan\Vendor\SetupWizard();
-        $this->container['core']                  = new \WeDevs\Dokan\Core();
-        $this->container['scripts']               = new \WeDevs\Dokan\Assets();
-        $this->container['email']                 = new \WeDevs\Dokan\Emails\Manager();
-        $this->container['vendor']                = new \WeDevs\Dokan\Vendor\Manager();
-        $this->container['product']               = new \WeDevs\Dokan\Product\Manager();
-        $this->container['shortcodes']            = new \WeDevs\Dokan\Shortcodes\Shortcodes();
-        $this->container['registration']          = new \WeDevs\Dokan\Registration();
-        $this->container['order']                 = new \WeDevs\Dokan\Order\Manager();
-        $this->container['api']                   = new \WeDevs\Dokan\REST\Manager();
-        $this->container['withdraw']              = new \WeDevs\Dokan\Withdraw\Manager();
-        $this->container['dashboard']             = new \WeDevs\Dokan\Dashboard\Manager();
-        $this->container['commission']            = new \WeDevs\Dokan\Commission();
-        $this->container['customizer']            = new \WeDevs\Dokan\Customizer();
-        $this->container['upgrades']              = new \WeDevs\Dokan\Upgrade\Manager();
-        $this->container['featured_products']     = new \WeDevs\Dokan\StoreProductsSections\FeaturedProducts();
-        $this->container['latest_products']       = new \WeDevs\Dokan\StoreProductsSections\LatestProducts();
-        $this->container['best_selling_products'] = new \WeDevs\Dokan\StoreProductsSections\BestSellingProducts();
-        $this->container['top_rated_products']    = new \WeDevs\Dokan\StoreProductsSections\TopRatedProducts();
+        $this->container['pageview']       = new \WeDevs\Dokan\PageViews();
+        $this->container['seller_wizard']  = new \WeDevs\Dokan\Vendor\SetupWizard();
+        $this->container['core']           = new \WeDevs\Dokan\Core();
+        $this->container['scripts']        = new \WeDevs\Dokan\Assets();
+        $this->container['email']          = new \WeDevs\Dokan\Emails\Manager();
+        $this->container['vendor']         = new \WeDevs\Dokan\Vendor\Manager();
+        $this->container['product']        = new \WeDevs\Dokan\Product\Manager();
+        $this->container['shortcodes']     = new \WeDevs\Dokan\Shortcodes\Shortcodes();
+        $this->container['registration']   = new \WeDevs\Dokan\Registration();
+        $this->container['order']          = new \WeDevs\Dokan\Order\Manager();
+        $this->container['api']            = new \WeDevs\Dokan\REST\Manager();
+        $this->container['withdraw']       = new \WeDevs\Dokan\Withdraw\Manager();
+        $this->container['dashboard']      = new \WeDevs\Dokan\Dashboard\Manager();
+        $this->container['commission']     = new \WeDevs\Dokan\Commission();
+        $this->container['customizer']     = new \WeDevs\Dokan\Customizer();
+        $this->container['upgrades']       = new \WeDevs\Dokan\Upgrade\Manager();
+        $this->container['store_products'] = new \WeDevs\Dokan\StoreProductsSections\Manager();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
