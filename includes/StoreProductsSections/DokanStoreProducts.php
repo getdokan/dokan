@@ -216,12 +216,12 @@ abstract class DokanStoreProducts {
     }
 
     public function render_store_settings_form_fields( $vendor, $profile_info ) {
-        if ( ! array_search( 'off', $this->products_section_appearance ) ) {
+        if ( ! array_search( 'off', $this->products_section_appearance, true ) ) {
             return;
         }
 
         $args                  = $this->get_store_settings_data();
-        $show_products_section = isset( $profile_info[$args['settings_key']] ) ? $profile_info[$args['settings_key']] : 'no';
+        $show_products_section = isset( $profile_info[ $args['settings_key'] ] ) ? $profile_info[ $args['settings_key'] ] : 'no';
 
         // Increase store products section setting fields counter
         self::$store_setting_fields_counter++;
@@ -237,7 +237,7 @@ abstract class DokanStoreProducts {
 
             <div class="dokan-w5 dokan-text-left">
 
-            <?php if ( isset( $this->products_section_appearance[$args['customizer_key']] ) && 'off' === $this->products_section_appearance[$args['customizer_key']] ) : ?>
+            <?php if ( isset( $this->products_section_appearance[ $args['customizer_key'] ] ) && 'off' === $this->products_section_appearance[ $args['customizer_key'] ] ) : ?>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="<?php echo esc_attr( $args['settings_field_name'] ); ?>" value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php echo esc_html( $args['settings_field_label'] ); ?>
