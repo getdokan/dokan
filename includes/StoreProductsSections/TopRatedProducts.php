@@ -45,4 +45,20 @@ class TopRatedProducts extends DokanStoreProducts {
             'customizer_key'   => 'hide_top_rated_products',
         ];
     }
+
+    /**
+     * Get store settings data.
+     *
+     * @since 3.3.5
+     *
+     * @return array
+     */
+    public function get_store_settings_data() {
+        return [
+            'customizer_key'       => 'hide_top_rated_products',
+            'settings_key'         => 'show_top_rated_products',
+            'settings_field_name'  => 'setting_show_top_rated_products',
+            'settings_field_label' => __( 'Show top rated products section', 'dokan-lite' ),
+        ];
+    }
 }

@@ -45,4 +45,20 @@ class LatestProducts extends DokanStoreProducts {
             'customizer_key'   => 'hide_latest_products',
         ];
     }
+
+    /**
+     * Get store settings data.
+     *
+     * @since 3.3.5
+     *
+     * @return array
+     */
+    public function get_store_settings_data() {
+        return [
+            'customizer_key'       => 'hide_latest_products',
+            'settings_key'         => 'show_latest_products',
+            'settings_field_name'  => 'setting_show_latest_products',
+            'settings_field_label' => __( 'Show latest products section', 'dokan-lite' ),
+        ];
+    }
 }
