@@ -4162,7 +4162,7 @@ function dokan_get_vendor_store_banner_height() {
 }
 
 /**
- * Format Dokan times used by moment js.
+ * Dokan times format used for moment js.
  *
  * @since 3.3.5
  *
