@@ -87,8 +87,10 @@ abstract class DokanStoreProducts {
 
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_products_section' ], 5, 2 );
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_title_for_regular_products' ], 99 );
+
         add_action( 'dokan_store_customizer_after_vendor_products', [ $this, 'render_customizer_settings_fields' ] );
         add_action( 'dokan_settings_after_store_more_products', [ $this, 'render_store_settings_form_fields' ], 10, 2 );
+        add_filter( 'dokan_store_profile_settings_args', [ $this, 'process_store_products_section_settings' ] );
     }
 
     /**
@@ -231,6 +233,8 @@ abstract class DokanStoreProducts {
                 <?php
                 if ( 1 === self::$store_setting_fields_counter ) {
                     esc_html_e( 'Store page product sections', 'dokan-lite' );
+                } elseif ( self::$store_setting_fields_counter > 1 ) {
+                    echo '&nbsp;';
                 }
                 ?>
             </label>
@@ -248,6 +252,30 @@ abstract class DokanStoreProducts {
             </div>
         </div>
         <?php
+    }
+
+    /**
+     * Process store products section settings input data.
+     *
+     * @since 3.3.5
+     *
+     * @param array $dokan_settings Dokan settings data
+     *
+     * @return array
+     */
+    public function process_store_products_section_settings( $dokan_settings ) {
+        // Validate nonce
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan_store_settings_nonce' ) ) {
+            return $dokan_settings;
+        }
+
+        // Add inputs to the store settings args
+        $dokan_settings['show_featured_products']  = isset( $_POST['setting_show_featured_products'] ) ? sanitize_text_field( $_POST['setting_show_featured_products'] ) : 'no';
+        $dokan_settings['show_latest_products']    = isset( $_POST['setting_show_latest_products'] ) ? sanitize_text_field( $_POST['setting_show_latest_products'] ) : 'no';
+        $dokan_settings['show_best_sell_products'] = isset( $_POST['setting_show_best_sell_products'] ) ? sanitize_text_field( $_POST['setting_show_best_sell_products'] ) : 'no';
+        $dokan_settings['show_top_rated_products'] = isset( $_POST['setting_show_top_rated_products'] ) ? sanitize_text_field( $_POST['setting_show_top_rated_products'] ) : 'no';
+
+        return $dokan_settings;
     }
 
     /**
