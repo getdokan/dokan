@@ -270,10 +270,10 @@ abstract class DokanStoreProducts {
         }
 
         // Add inputs to the store settings args
-        $dokan_settings['show_featured_products']  = isset( $_POST['setting_show_featured_products'] ) ? sanitize_text_field( $_POST['setting_show_featured_products'] ) : 'no';
-        $dokan_settings['show_latest_products']    = isset( $_POST['setting_show_latest_products'] ) ? sanitize_text_field( $_POST['setting_show_latest_products'] ) : 'no';
-        $dokan_settings['show_best_sell_products'] = isset( $_POST['setting_show_best_sell_products'] ) ? sanitize_text_field( $_POST['setting_show_best_sell_products'] ) : 'no';
-        $dokan_settings['show_top_rated_products'] = isset( $_POST['setting_show_top_rated_products'] ) ? sanitize_text_field( $_POST['setting_show_top_rated_products'] ) : 'no';
+        $dokan_settings['show_featured_products']  = isset( $_POST['setting_show_featured_products'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_featured_products'] ) ) : 'no';
+        $dokan_settings['show_latest_products']    = isset( $_POST['setting_show_latest_products'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_latest_products'] ) ) : 'no';
+        $dokan_settings['show_best_sell_products'] = isset( $_POST['setting_show_best_sell_products'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_best_sell_products'] ) ) : 'no';
+        $dokan_settings['show_top_rated_products'] = isset( $_POST['setting_show_top_rated_products'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_top_rated_products'] ) ) : 'no';
 
         return $dokan_settings;
     }
