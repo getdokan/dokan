@@ -183,7 +183,7 @@ abstract class DokanStoreProducts {
     }
 
     /**
-     * Render customizer settings data.
+     * Render customizer settings fields.
      *
      * @since 3.3.6
      *
@@ -217,7 +217,17 @@ abstract class DokanStoreProducts {
         );
     }
 
-    public function render_store_settings_form_fields( $vendor, $profile_info ) {
+    /**
+     * Render store settings form fields.
+     *
+     * @since 3.3.6
+     *
+     * @param int   $vendor_id    Vendor id
+     * @param array $profile_info Vendor profile info
+     *
+     * @return void
+     */
+    public function render_store_settings_form_fields( $vendor_id, $profile_info ) {
         if ( ! array_search( 'off', $this->products_section_appearance, true ) ) {
             return;
         }
