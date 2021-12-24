@@ -56,7 +56,7 @@ class Divi {
         }
 
         // Add delivery time styles for dokan seller order page.
-        if ( dokan_get_navigation_url( 'orders' ) ) {
+        if ( isset( $_GET['order_id'] ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $style .= '.delivery-time-date-picker { padding: .8em !important;}';
         }
 
