@@ -80,6 +80,7 @@ class UserProfile {
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
         $banner_width      = dokan_get_vendor_store_banner_width();
         $banner_height     = dokan_get_vendor_store_banner_height();
+        $admin_commission  = dokan_is_new_commission_type( $admin_commission_type ) ? 0 : $admin_commission;
         $admin_commission  = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state = array(
