@@ -2,7 +2,7 @@
 /**
  * The template for display additional products section
  *
- * @since 3.3.3
+ * @since 3.3.6
  */
 ?>
 <div id="<?php echo esc_attr( $section_id ); ?>" class="dokan-products-display_section">

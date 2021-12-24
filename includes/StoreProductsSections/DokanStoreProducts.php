@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\StoreProductsSections;
  *
  * For displaying additional products sections to single store page.
  *
- * @since 3.3.5
+ * @since 3.3.6
  *
  * @package dokan
  */
@@ -16,7 +16,7 @@ abstract class DokanStoreProducts {
     /**
      * Products section appearance settings.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var array
      */
@@ -25,7 +25,7 @@ abstract class DokanStoreProducts {
     /**
      * Products to display in each additional sections.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var int
      */
@@ -34,7 +34,7 @@ abstract class DokanStoreProducts {
     /**
      * Vendor ID.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var int
      */
@@ -43,7 +43,7 @@ abstract class DokanStoreProducts {
     /**
      * Store info.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var array
      */
@@ -52,7 +52,7 @@ abstract class DokanStoreProducts {
     /**
      * Settings capability.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var string
      */
@@ -61,7 +61,7 @@ abstract class DokanStoreProducts {
     /**
      * Store products section setting fields counter.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var bool
      */
@@ -70,7 +70,7 @@ abstract class DokanStoreProducts {
     /**
      * Additional products section status.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @var bool
      */
@@ -79,7 +79,7 @@ abstract class DokanStoreProducts {
     /**
      * DokanStoreProducts constructor.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      */
     public function __construct() {
         $this->products_section_appearance = dokan_get_option( 'store_products_section', 'dokan_appearance' );
@@ -96,7 +96,7 @@ abstract class DokanStoreProducts {
     /**
      * Get products section data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
@@ -105,7 +105,7 @@ abstract class DokanStoreProducts {
     /**
      * Get customizer settings data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
@@ -114,7 +114,7 @@ abstract class DokanStoreProducts {
     /**
      * Get store settings data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
@@ -123,7 +123,7 @@ abstract class DokanStoreProducts {
     /**
      * Render additional products section.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @param object $store_user Store user data
      * @param array  $store_info Store info data
@@ -163,7 +163,7 @@ abstract class DokanStoreProducts {
     /**
      * Render additional title for regular products block.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return void
      */
@@ -185,7 +185,7 @@ abstract class DokanStoreProducts {
     /**
      * Render customizer settings data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @param object $wp_customize
      *
@@ -257,7 +257,7 @@ abstract class DokanStoreProducts {
     /**
      * Process store products section settings input data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @param array $dokan_settings Dokan settings data
      *
@@ -281,7 +281,7 @@ abstract class DokanStoreProducts {
     /**
      * Check products block visibility settings by admin and vendor.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @param string $customizer_key Cusomizer key for checking products section visibility by admin
      * @param string $settings_key   Settings key for checking products section visibility by vendor

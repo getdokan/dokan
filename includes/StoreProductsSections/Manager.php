@@ -7,7 +7,7 @@ use Wedevs\Dokan\Traits\ChainableContainer;
 /**
  * Dokan store products section manager class
  *
- * @since 3.3.5
+ * @since 3.3.6
  */
 class Manager {
     use ChainableContainer;
@@ -15,7 +15,7 @@ class Manager {
     /**
      * Class constructor
      *
-     * @since 3.3.5
+     * @since 3.3.6
      */
     public function __construct() {
         $this->init_classes();
@@ -24,7 +24,7 @@ class Manager {
     /**
      * Register all products section classes to chainable container
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return void
      */

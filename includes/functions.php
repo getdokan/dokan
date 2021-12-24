@@ -4190,7 +4190,7 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
 /**
 * Converts a 'on' or 'off' to boolean
 *
-* @since 3.3.5
+* @since 3.3.6
 *
 * @param string $value
 *
@@ -4203,7 +4203,7 @@ function dokan_on_off_to_bool( $value ) {
 /**
 * Converts a boolean value to a 'on' or 'off'.
 *
-* @since 3.3.5
+* @since 3.3.6
 *
 * @param bool $bool
 *

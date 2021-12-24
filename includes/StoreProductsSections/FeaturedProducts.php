@@ -9,7 +9,7 @@ use WeDevs\Dokan\StoreProductsSections\DokanStoreProducts;
  *
  * For displaying featured products section to single store page.
  *
- * @since 3.3.5
+ * @since 3.3.6
  *
  * @package dokan
  */
@@ -18,7 +18,7 @@ class FeaturedProducts extends DokanStoreProducts {
     /**
      * Get products section data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
@@ -35,7 +35,7 @@ class FeaturedProducts extends DokanStoreProducts {
     /**
      * Get customizer settings data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
@@ -49,7 +49,7 @@ class FeaturedProducts extends DokanStoreProducts {
     /**
      * Get store settings data.
      *
-     * @since 3.3.5
+     * @since 3.3.6
      *
      * @return array
      */
