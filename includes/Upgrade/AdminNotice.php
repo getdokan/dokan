@@ -15,11 +15,13 @@ class AdminNotice {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @param array $notices
+     *
+     * @return array
      */
-    public static function show_notice() {
+    public static function show_notice( $notices ) {
         if ( ! current_user_can( 'update_plugins' ) || dokan()->upgrades->has_ongoing_process() ) {
-            return;
+            return $notices;
         }
 
         if ( ! dokan()->upgrades->is_upgrade_required() ) {
@@ -29,13 +31,31 @@ class AdminNotice {
              * @since 3.0.0
              */
             do_action( 'dokan_upgrade_is_not_required' );
-            return;
+            return $notices;
         }
 
-        dokan_get_template_part( 'upgrade-notice' );
-        wp_enqueue_style( 'dokan-upgrade', DOKAN_PLUGIN_ASSEST . '/css/dokan-upgrade.css', [], DOKAN_PLUGIN_VERSION );
-        wp_localize_script( 'dokan-vue-vendor', 'dokan', dokan()->scripts->get_admin_localized_scripts() );
-        wp_enqueue_script( 'dokan-upgrade', DOKAN_PLUGIN_ASSEST . '/js/dokan-upgrade.js', [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ], DOKAN_PLUGIN_VERSION, true );
+        $notices[] = [
+            'type'              => 'info',
+            'title'             => __( 'Dokan Data Update Required', 'dokan-lite' ),
+            'description'       => __( 'We need to update your install to the latest version', 'dokan-lite' ),
+            'priority'          => 1,
+            'actions'           => [
+                [
+                    'type'            => 'primary',
+                    'text'            => __( 'Update', 'dokan-lite' ),
+                    'loading_text'    => __( 'Updating...', 'dokan-lite' ),
+                    'competed_text'   => __( 'Updated', 'dokan-lite' ),
+                    'reload'          => true,
+                    'confirm_message' => __( 'It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?', 'dokan-lite' ),
+                    'ajax_data'       => [
+                        'action'   => 'dokan_do_upgrade',
+                        '_wpnonce' => wp_create_nonce( 'dokan_admin' ),
+                    ],
+                ],
+            ],
+        ];
+
+        return $notices;
     }
 
     /**
