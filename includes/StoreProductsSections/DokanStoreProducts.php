@@ -152,7 +152,8 @@ abstract class DokanStoreProducts {
 
         // Include product template after passing all checks.
         dokan_get_template_part(
-            'store-products-block', '', [
+            'store-products-section', '', [
+                'products_type' => $args['products_type'],
                 'products'      => $args['products'],
                 'section_id'    => $args['section_id'],
                 'section_title' => $args['section_title'],

@@ -24,6 +24,7 @@ class BestSellingProducts extends DokanStoreProducts {
      */
     public function get_products_section_data() {
         return [
+            'products_type'  => 'best_sell_products',
             'customizer_key' => 'hide_best_sell_products',
             'settings_key'   => 'show_best_sell_products',
             'products'       => dokan_get_best_selling_products( $this->items_to_show, $this->vendor_id ),
