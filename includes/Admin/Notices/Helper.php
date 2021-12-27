@@ -71,11 +71,12 @@ class Helper {
             Cache::set_transient( 'promo_notices', $promos, DAY_IN_SECONDS );
         }
 
-        $promos  = json_decode( $promos, true );
-        $notices = [];
+        $promos = json_decode( $promos, true );
+        $notice = [];
+
         // check if api data is valid
         if ( empty( $promos ) || ! is_array( $promos ) ) {
-            return $notices;
+            return $notice;
         }
 
         $est_time_now            = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'EST' ) )->format( 'Y-m-d H:i:s T' );
@@ -87,37 +88,11 @@ class Helper {
             }
 
             if ( $est_time_now >= $promo['start_date'] && $est_time_now <= $promo['end_date'] ) {
-                $notices[] = [
-                    'type'              => 'promotion',
-                    'title'             => $promo['title'],
-                    'description'       => $promo['content'],
-                    'priority'          => 10,
-                    'show_close_button' => true,
-                    'ajax_data'         => [
-                        'dokan_limited_time_promotion_dismissed' => true,
-                        'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
-                        'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
-                        'key'                                    => $promo['key'],
-                    ],
-                    'actions'           => [
-                        [
-                            'type'   => 'primary',
-                            'text'   => $promo['action_title'],
-                            'action' => $promo['action_url'],
-                            'target' => '_blank',
-                        ],
-                    ],
-                ];
+                $notice = $promo;
             }
         }
 
-        if ( empty( $notices ) ) {
-            return $notices;
-        }
-
-        uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
-
-        return array_values( $notices );
+        return $notice;
     }
 
     /**
