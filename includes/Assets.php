@@ -566,6 +566,7 @@ class Assets {
 
         $localize_data = [
             'i18n_date_format' => wc_date_format(),
+            'i18n_time_format' => wc_time_format(),
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
@@ -794,7 +795,6 @@ class Assets {
                 'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
                 'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
-                'i18n_time_format'                    => get_i18n_time_format(),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
             ];
 
