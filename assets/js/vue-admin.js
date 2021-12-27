@@ -5656,6 +5656,8 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return this.openVersions.includes(index);
     },
     switchPackage: function switchPackage(pack) {
+      this.active_package = pack;
+
       if (null === this.pro_versions && 'pro' === pack) {
         this.getDokanProChangeLog();
       }
@@ -5664,7 +5666,9 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         this.getDokanLiteChangeLog();
       }
 
-      this.active_package = pack;
+      if (dokan.hasNewVersion) {
+        this.dismissWhatsNewNotice();
+      }
     },
     isActivePackage: function isActivePackage(pack) {
       return this.active_package === pack;
@@ -5700,15 +5704,9 @@ var AdminNotice = dokan_get_lib('AdminNotice');
     },
     loadChangelogData: function loadChangelogData() {
       if ('dokan-pro' === this.$route.query.plugin) {
-        this.active_package = 'pro';
-
-        if (null === this.pro_versions) {
-          this.getDokanProChangeLog();
-        }
+        this.switchPackage('pro');
       } else {
-        if (null === this.lite_versions) {
-          this.getDokanLiteChangeLog();
-        }
+        this.switchPackage('lite');
       }
     }
   },
@@ -5719,11 +5717,6 @@ var AdminNotice = dokan_get_lib('AdminNotice');
   },
   created: function created() {
     this.loadChangelogData();
-
-    if (dokan.hasNewVersion) {
-      this.dismissWhatsNewNotice();
-    }
-
     window.addEventListener('scroll', this.updatePosition);
   },
   destroyed: function destroyed() {
@@ -6839,6 +6832,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(180);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+//
 //
 //
 //
@@ -14456,13 +14450,13 @@ var render = function() {
           [_vm._v(_vm._s(_vm.__("Add New", "dokan-lite")))]
         ),
         _vm._v(" "),
-        _c("AdminNotice"),
-        _vm._v(" "),
-        !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
-        _vm._v(" "),
         _vm._l(_vm.dokanVendorHeaderArea, function(vendorHeaderArea, index) {
           return _c(vendorHeaderArea, { key: index, tag: "component" })
         }),
+        _vm._v(" "),
+        _c("AdminNotice"),
+        _vm._v(" "),
+        !_vm.hasPro ? _c("UpgradeBanner") : _vm._e(),
         _vm._v(" "),
         _c("hr", { staticClass: "wp-header-end" }),
         _vm._v(" "),
