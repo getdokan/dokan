@@ -85,7 +85,7 @@
                             v-on:updateCommissionState="updateCommissionState"
                             v-on:removeCommissionFromList="removeCommissionFromList"
                         />
-                        <button @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+                        <button class="add_new_commission_set" @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
                     </div>
 
                     <div class="column" v-else>
@@ -333,4 +333,14 @@ export default {
         }
     }
 }
+
+.add_new_commission_set {
+        border: none;
+        background-color: #8c8f94;
+        border-radius: 4px;
+        padding: 5px 12px;
+        color: #fff;
+        margin-top: -6px;
+        cursor: pointer;
+    }
 </style>

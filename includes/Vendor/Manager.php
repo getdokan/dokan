@@ -330,7 +330,7 @@ class Manager {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
             }
 
-            if ( isset( $data['admin_commission'] ) && ( is_array( wc_clean( $data['admin_commission'] ) ) ||is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
+            if ( isset( $data['admin_commission'] ) && ( is_array( wc_clean( $data['admin_commission'] ) ) || is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $admin_commission = $data['admin_commission'];
                 $admin_commission = is_array( $admin_commission ) ? wc_clean( $admin_commission ) : wc_format_decimal( $admin_commission );
 
