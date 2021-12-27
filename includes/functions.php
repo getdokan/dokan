@@ -3609,6 +3609,21 @@ function dokan_is_new_commission_type( $commission_type ) {
 }
 
 /**
+ * Dokan new and old default commission types
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return array
+ */
+function dokan_new_and_old_commission_types() {
+    $new_commission_if_pro_exists = dokan()->is_pro_exists() ? dokan_new_commission_types() : [];
+
+    return apply_filters(
+        'dokan_new_and_old_commission_types', array_merge( dokan_commission_types(), $new_commission_if_pro_exists )
+    );
+}
+
+/**
  * Dokan Login Form
  *
  * @since 2.9.11
