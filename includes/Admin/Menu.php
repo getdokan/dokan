@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Admin\Notices\Helper;
+
 class Menu {
 
     /**
@@ -98,6 +100,8 @@ class Menu {
      * @return void
      */
     public function dashboard() {
+        $has_new_version = Helper::dokan_has_new_version();
+
         include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }

@@ -61,7 +61,7 @@ function dokan_save_product( $args ) {
         $post_arr['ID'] = absint( $data['ID'] );
 
         if ( ! dokan_is_product_author( $post_arr['ID'] ) ) {
-            return new WP_Error( 'not-own', __( 'I swear this is not your product!', 'dokan-lite' ) );
+            return new WP_Error( 'not-own', __( 'Sorry, You can not modify another vendor\'s product !', 'dokan-lite' ) );
         }
 
         $is_updating = true;
@@ -481,7 +481,7 @@ function dokan_product_get_row_action( $post ) {
                 ), 'dokan-delete-product'
             ),
             'class' => 'delete',
-            'other' => 'onclick="return confirm( \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
+            'other' => 'onclick="dokan_show_delete_prompt( event, \'' . __( 'Are you sure?', 'dokan-lite' ) . '\' );"',
         ];
     }
 
@@ -518,13 +518,15 @@ function dokan_product_get_row_action( $post ) {
 /**
  * Dokan get vendor by product
  *
- * @param int|object $id Product ID or Product Object
+ * @param int|WC_Product $product Product ID or Product Object
+ * @param bool $get_vendor return true to get vendor id, otherwise it will return \WeDevs\Dokan\Vendor\Vendor object
  *
  * @since  2.9.8
+ * @since 3.2.16 added $id parameter
  *
- * @return Dokan_Vendor|false on faiure
+ * @return int|\WeDevs\Dokan\Vendor\Vendor|false on failure
  */
-function dokan_get_vendor_by_product( $product ) {
+function dokan_get_vendor_by_product( $product, $get_vendor = false ) {
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
@@ -541,7 +543,7 @@ function dokan_get_vendor_by_product( $product ) {
 
     $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product );
 
-    return dokan()->vendor->get( $vendor_id );
+    return false === $get_vendor ? dokan()->vendor->get( $vendor_id ) : (int) $vendor_id;
 }
 
 /**

@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WeDevs\Dokan\Cache;
+
 /**
  * Order Management API
  *
@@ -31,17 +33,14 @@ class Manager {
         $args = wp_parse_args( $args, $default );
 
         $offset      = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = 'dokan_seller_data_' . $args['seller_id'];
+        $cache_group = "seller_order_data_{$args['seller_id']}";
+        $cache_key   = 'seller_orders_all_' . md5( wp_json_encode( $args ) ); // Use all arguments to create a hash used as cache key
 
-        // Use all arguments to create a hash used as cache key
-        $cache_key = 'dokan_seller_orders-' . md5( json_encode( $args ) );
+        $orders = Cache::get( $cache_key, $cache_group );
 
-        $orders = wp_cache_get( $cache_key, $cache_group );
-
-        $join        = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-        $where       = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-
-        if ( $orders === false ) {
+        if ( false === $orders ) {
+            $join         = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
+            $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
 
@@ -69,8 +68,7 @@ class Manager {
                 }, $orders
             );
 
-            wp_cache_set( $cache_key, $orders, $cache_group );
-            dokan_cache_update_group( $cache_key, $cache_group );
+            Cache::set( $cache_key, $orders, $cache_group );
         }
 
         return $orders;
@@ -339,10 +337,22 @@ class Manager {
             return;
         }
 
+        $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
+
+        if ( ! $seller_id ) {
+            return;
+        }
+
         foreach ( $used_coupons as $item ) {
             $coupon = new \WC_Coupon( $item->get_code() );
 
-            if ( $coupon && ! is_wp_error( $coupon ) && array_intersect( $product_ids, $coupon->get_product_ids() ) ) {
+            if (
+                $coupon &&
+                ! is_wp_error( $coupon ) &&
+                ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
+                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                )
+            ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
                     array(

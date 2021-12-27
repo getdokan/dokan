@@ -8,12 +8,12 @@ use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
 
 /**
-* Admin Settings Class
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Admin Settings Class
+ *
+ * @package dokan
+ *
+ * @since 3.0.0
+ */
 class Settings {
 
     use AjaxResponseError;
@@ -356,6 +356,7 @@ class Settings {
                     'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
+                    'tooltip' => __( 'If checked, vendors will not be prompted through a guided setup process but redirected straight to the vendor dashboard.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -373,6 +374,7 @@ class Settings {
                     'desc'    => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
+                    'tooltip' => __( 'Prompt Terms and Condition check for Vendors when creating store on your site', 'dokan-lite' ),
                 ],
                 'store_products_per_page' => [
                     'name'    => 'store_products_per_page',
@@ -380,6 +382,7 @@ class Settings {
                     'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
+                    'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -398,6 +401,7 @@ class Settings {
                     'type'    => 'select',
                     'options' => $commission_types,
                     'default' => 'percentage',
+                    'tooltip' => __( 'Select a commission type', 'dokan-lite' ),
                 ],
                 'admin_percentage'       => [
                     'name'              => 'admin_percentage',
@@ -448,6 +452,7 @@ class Settings {
                     'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
+                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from Dashboard -> Vendors.', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
@@ -455,6 +460,7 @@ class Settings {
                     'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
+                    'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
                     'name'    => 'order_status_change',
@@ -462,6 +468,7 @@ class Settings {
                     'desc'    => __( 'Allow vendor to update order status', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'on',
+                    'tooltip' => __( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -483,6 +490,7 @@ class Settings {
                     'type'    => 'multicheck',
                     'default' => [ 'paypal' => 'paypal' ],
                     'options' => dokan_withdraw_get_methods(),
+                    'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                 ],
                 'withdraw_limit'      => [
                     'name'                       => 'withdraw_limit',
@@ -503,6 +511,7 @@ class Settings {
                         'wc-completed'  => 'wc-completed',
                     ),
                     'options' => $withdraw_order_status_options,
+                    'tooltip' => __( 'Select the order status that will allow vendors to make withdraw request. We prefer you select "completed", "processing".', 'dokan-lite' ),
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',
@@ -545,6 +554,7 @@ class Settings {
                     'options'     => $pages_array,
                     /* translators: %s: dokan pages  */
                     'desc'        => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ),
+                    'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
                 ],
             ],
             'dokan_appearance' => [
@@ -569,25 +579,35 @@ class Settings {
                 ],
                 'gmap_api_key'               => [
                     'name'    => 'gmap_api_key',
-                    'show_if' => [
-                        'map_api_source' => [
-                            'equal' => 'google_maps',
-                        ],
-                    ],
                     'label'   => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
-                    'show_if' => [
-                        'map_api_source' => [
-                            'equal' => 'mapbox',
-                        ],
-                    ],
                     'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
+                ],
+                'recaptcha_validation_label' => [
+                    'name'  => 'recaptcha_validation_label',
+                    'label' => __( 'Google reCaptcha Validation', 'dokan-lite' ),
+                    'type'  => 'html',
+                    'desc'  => sprintf( '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">%s</a> %s. <a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">%s</a>', __( 'reCaptcha v3', 'dokan-lite' ), __( 'credentials required to enable store contact form invisible captcha', 'dokan-lite' ), __( 'Get Help', 'dokan-lite' ) ),
+                ],
+                'recaptcha_site_key'         => [
+                    'name'    => 'recaptcha_site_key',
+                    'label'   => __( 'Site Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 site key.', 'dokan-lite' ),
+                ],
+                'recaptcha_secret_key'       => [
+                    'name'    => 'recaptcha_secret_key',
+                    'label'   => __( 'Secret Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 secret key.', 'dokan-lite' ),
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
@@ -607,6 +627,7 @@ class Settings {
                         'layout3' => DOKAN_PLUGIN_ASSEST . '/images/store-header-templates/layout3.png',
                     ],
                     'default' => 'default',
+                    'tooltip' => __( 'Choose your header design from any of the templates provided. You can change it again anytime.', 'dokan-lite' ),
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
@@ -660,6 +681,7 @@ class Settings {
                     'type'    => 'textarea',
                     'rows'    => 5,
                     'default' => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
+                    'tooltip' => __( 'Customize the Privacy Policy text that will be displayed on your store.', 'dokan-lite' ),
                 ],
             ],
         ];
@@ -806,6 +828,7 @@ class Settings {
             'desc'    => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin.', 'dokan-lite' ),
             'type'    => 'checkbox',
             'default' => 'off',
+            'tooltip' => __( 'Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won\'t happen when the plugins are deactivated..', 'dokan-lite' ),
         ];
 
         return $settings_fields;
