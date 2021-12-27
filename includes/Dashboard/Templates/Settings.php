@@ -521,6 +521,11 @@ class Settings {
                 $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
                 $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
 
+                // If open or closing time is array then return from here.
+                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
+                    continue;
+                }
+
                 // Check & make 12 hours format data for save.
                 $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
                 $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
