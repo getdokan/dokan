@@ -1,83 +1,18 @@
 <template>
     <td>
-        <span>{{ commission_title }}</span>
+        <p>{{ commission_title }}</p>
 
         <template v-if="'' !== fieldValue[fieldData.name]">
-            <fieldset class="new_commission_fields dokan-commission-wrapper" v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key">
-                <span @click.prevent="removeCommissionFromList(key)" class="dashicons dashicons-no remove-vpq-commission"></span>
-                <div class="commission-content-container">
-                    <div class="commission-inner-type-select">
-                        <label :for="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'">{{ fieldData.fields['commission_type'].label }}</label>
-                        <select :name="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['commission_type'].name +key + ']'" v-model="fieldValue[fieldData.name][key].commission_type">
-                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['commission_type'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['commission_type'].options[optionVal]"></option>
-                        </select>
-                        <p v-if="currentCommissionError( key, 'commission_type' )" class="dokan-error">
-                            {{ currentCommissionError( key, 'commission_type' ) }}
-                        </p>
-                    </div>
-
-                    <div class="commission-inner-types">
-                        <div class="commission-inner-type-middle"><span class="commission-inner-type-middle-text">as</span></div>
-
-                        <div
-                            class="commission-inner-type-percentage"
-                            v-if="'combine' === fieldValue[fieldData.name][key].commission_type || 'percentage' === fieldValue[fieldData.name][key].commission_type"
-                        >
-                            <label >{{ __( 'Percentage', 'dokan' ) }}</label>
-                            <input type="number" :min="fieldData.min" class="dokan-commission-value" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].percentage">
-                            <p v-if="currentCommissionError( key, 'percentage' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'percentage' ) }}
-                            </p>
-                            <span class="commisson-indecator">%</span>
-                        </div>
-
-                        <div class="commission-inner-type-middle" v-if="'combine' === fieldValue[fieldData.name][key].commission_type"><span class="commission-inner-type-middle-text">+</span></div>
-
-                        <div
-                            class="commission-inner-type-flat"
-                            v-if="'combine' === fieldValue[fieldData.name][key].commission_type || 'flat' === fieldValue[fieldData.name][key].commission_type"
-                        >
-                            <label >{{ __( 'Flat', 'dokan' ) }}</label>
-                            <input type="number" :min="fieldData.min" class="dokan-commission-value" :id="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" :name="sectionId + '[' + fieldData.fields['admin_commission'].name +key + ']'" v-model="fieldValue[fieldData.name][key].flat">
-                            <span class="commisson-indecator" v-html="fieldData.currency_symbol"></span>
-                            <p v-if="currentCommissionError( key, 'flat' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'flat' ) }}
-                            </p>
-                            <p v-if="currentCommissionError( key, 'combine' )" class="dokan-error">
-                                {{ currentCommissionError( key, 'combine' ) }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="commission-content-container">
-                    <div class="commission-inner-type-select">
-                        <label :for="sectionId + '[' + fieldData.fields['rule'].name +key + ']'">{{ __( 'When', 'dokan' ) }} {{ fieldData.fields['rule'].label }}</label>
-                        <select :name="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" :id="sectionId + '[' + fieldData.fields['rule'].name +key + ']'" v-model="fieldValue[fieldData.name][key].rule">
-                            <option v-for="( optionVal, key ) in Object.keys( fieldData.fields['rule'].options )" :key="key" :value="optionVal" v-html="fieldData.fields['rule'].options[optionVal]"></option>
-                        </select>
-
-                        <p v-if="currentCommissionError( key, 'rule' )" class="dokan-error">
-                            {{ currentCommissionError( key, 'rule' ) }}
-                        </p>
-                    </div>
-                    <div class="admin-commission-amount">
-                        <label :for="sectionId + '[' + fieldData.fields[id].name +key + ']'">{{ fieldData.fields[id].label }}</label>
-                        <input
-                            type="number"
-                            :min="fieldData.min"
-                            class="sectionId + '[' + fieldData.fields[id].name +key + ']'"
-                            :id="sectionId + '[' + fieldData.fields[id].name +key + ']'"
-                            :name="sectionId + '[' + fieldData.fields[id].name +key + ']'"
-                            v-model="fieldValue[fieldData.name][key][id]"
-                        >
-                        <p v-if="currentCommissionError( key, id )" class="dokan-error">
-                            {{ currentCommissionError( key, id ) }}
-                        </p>
-                    </div>
-                </div>
-
-            </fieldset>
+            <SinglePriceQuantityVendorSale
+                v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key"
+                :commission="commission"
+                :allCommission="fieldValue[fieldData.name]"
+                :selectedCommissionName="fieldData.fields[id].name"
+                :selectedCommissionLabel="fieldData.fields[id].label"
+                :index="key"
+                v-on:updateCommissionState="updateCommissionState"
+                v-on:removeCommissionFromList="removeCommissionFromList"
+            />
         </template>
 
         <div>
@@ -87,8 +22,13 @@
 </template>
 
 <script>
+import SinglePriceQuantityVendorSale from './SinglePriceQuantityVendorSale.vue';
+
 export default {
     name : 'PriceQuantityVendorSale',
+    components  :{
+        SinglePriceQuantityVendorSale
+    },
     props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'commission_title'],
     methods: {
 
@@ -99,10 +39,6 @@ export default {
 
                 commissions.push( dummyData );
                 this.fieldValue[this.id] = commissions;
-            },
-
-            removeCommissionFromList( key ) {
-                this.fieldValue[this.id].splice( key, 1 );
             },
 
             currentCommissionError( index, field ) {
@@ -146,6 +82,16 @@ export default {
                 });
 
                 return dummyData;
+            },
+
+            updateCommissionState( obj ) {
+                let { value, field, index, type  } = obj;
+                this.fieldValue[this.fieldData.name][index][field] = type === 'number' ? Number( value ) : String( value );
+            },
+
+            removeCommissionFromList( obj ) {
+                let { value, field, index, type  } = obj;
+                this.fieldValue[this.id].splice( index, 1 );
             },
     },
 }

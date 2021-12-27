@@ -1,6 +1,6 @@
 <template>
     <fieldset class="new_commission_fields dokan-commission-wrapper" >
-        <span @click.prevent="removeCommissionFromList( $event.target.value, selectedCommission.name, index, 'number' )" class="dashicons dashicons-no remove-vpq-commission"></span>
+        <span @click.prevent="removeCommissionFromList( $event.target.value, selectedCommissionName, index, 'number' )" class="dashicons dashicons-no remove-vpq-commission"></span>
         <div class="commission-content-container">
             <div class="commission-inner-type-select">
                 <label :for="'commission_type' + index">{{ __( 'Commission type', 'dokan-lite') }}</label>
@@ -51,13 +51,13 @@
                 </select>
             </div>
             <div class="admin-commission-amount">
-                <label :for="selectedCommission.name + index">{{ selectedCommission.label }}</label>
+                <label :for="selectedCommissionName + index">{{ selectedCommissionLabel }}</label>
                 <input
-                    @input="updateCommissionValue( $event.target.value, selectedCommission.name, index, 'number' )"
-                    :value="commission[selectedCommission.name]"
+                    @input="updateCommissionValue( $event.target.value, selectedCommissionName, index, 'number' )"
+                    :value="commission[selectedCommissionName]"
                     type="number"
-                    :name="selectedCommission.name + index"
-                    :id="selectedCommission.name + index"
+                    :name="selectedCommissionName + index"
+                    :id="selectedCommissionName + index"
                     class="dokan-commission-value"
                     :placeholder="__( 'Write here', 'dokan-lite')"
                 >
@@ -69,7 +69,7 @@
 <script>
 export default {
     name : 'SinglePriceQuantityVendorSale',
-    props: [ 'commission', 'allCommission', 'selectedCommission', 'index' ],
+    props: [ 'commission', 'allCommission', 'selectedCommissionName', 'selectedCommissionLabel', 'index' ],
     data(){
         return{
             currentCommissionType:this.commission.commission_type,

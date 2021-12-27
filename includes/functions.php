@@ -3579,23 +3579,6 @@ function dokan_commission_types() {
 }
 
 /**
- * Dokan new commission types
- *
- * @since DOKAN_LITE_SINCE
- *
- * @return array
- */
-function dokan_new_commission_types() {
-    return apply_filters(
-        'dokan_new_commission_types', [
-            'vendor_sale'      => __( 'Vendor Sale', 'dokan-lite' ),
-            'product_price'    => __( 'Product Price', 'dokan-lite' ),
-            'product_quantity' => __( 'Product Quantity', 'dokan-lite' ),
-        ]
-    );
-}
-
-/**
  * Returns true if passed commission type is a new commission type.
  *
  * @since DOKAN_LITE_SINCE
@@ -3605,7 +3588,7 @@ function dokan_new_commission_types() {
  * @return boolean
  */
 function dokan_is_new_commission_type( $commission_type ) {
-    return in_array( $commission_type, array_keys( dokan_new_commission_types() ) );
+    return function_exists( 'dokan_new_commission_types' ) && in_array( $commission_type, array_keys( dokan_new_commission_types() ) ) ? true : false;
 }
 
 /**
@@ -3616,7 +3599,7 @@ function dokan_is_new_commission_type( $commission_type ) {
  * @return array
  */
 function dokan_new_and_old_commission_types() {
-    $new_commission_if_pro_exists = dokan()->is_pro_exists() ? dokan_new_commission_types() : [];
+    $new_commission_if_pro_exists = function_exists( 'dokan_new_commission_types' ) ? dokan_new_commission_types() : [];
 
     return apply_filters(
         'dokan_new_and_old_commission_types', array_merge( dokan_commission_types(), $new_commission_if_pro_exists )
