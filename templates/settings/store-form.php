@@ -364,8 +364,8 @@
             const self              = $( this ),
                 openValue           = self.find( '.opening-time' ).val(),
                 closeValue          = self.find( '.closing-time' ).val(),
-                formattedOpenValue  = moment( openValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' ),
-                formattedCloseValue = moment( closeValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' );
+                formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
+                formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
 
             if ( formattedOpenValue > formattedCloseValue ) {
                 self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
@@ -379,8 +379,8 @@
                 const self              = $( this ),
                     openValue           = self.find( '.opening-time' ).val(),
                     closeValue          = self.find( '.closing-time' ).val(),
-                    formattedOpenValue  = moment( openValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' ),
-                    formattedCloseValue = moment( closeValue, '<?php echo get_i18n_time_format(); ?>' ).format( 'HH:mm' );
+                    formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
+                    formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
 
                 if ( formattedOpenValue > formattedCloseValue ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
