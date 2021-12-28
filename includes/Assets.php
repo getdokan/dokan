@@ -621,7 +621,7 @@ class Assets {
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
 
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['coupons'] ) ) {
+            if ( isset( $wp->query_vars['products'] ) ) {
                 wp_enqueue_script( 'dokan-popup' );
             }
 
