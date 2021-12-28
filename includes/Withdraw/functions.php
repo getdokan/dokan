@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache;
+
 /**
  * Get default withdraw methods for vendor
  *
@@ -226,8 +229,9 @@ function dokan_withdraw_method_bank( $store_settings ) {
 function dokan_get_withdraw_count( $user_id = null ) {
     global $wpdb;
 
-    $cache_key = 'dokan_withdraw_count-' . $user_id;
-    $counts    = wp_cache_get( $cache_key );
+    $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_$user_id";
+    $cache_key   = "get_withdraw_count_{$user_id}";
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $counts = [
@@ -253,6 +257,8 @@ function dokan_get_withdraw_count( $user_id = null ) {
                 }
             }
         }
+
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;

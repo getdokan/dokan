@@ -3759,6 +3759,9 @@ div.media-sidebar a.edit-attachment {
   float: left;
   display: block;
 }
+.select2-container--open .select2-dropdown--below {
+  margin-top: 5px !important;
+}
 .dokan-settings-content .dokan-settings-area {
   position: relative;
 }
