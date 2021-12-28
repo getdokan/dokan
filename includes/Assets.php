@@ -609,7 +609,6 @@ class Assets {
 
             if (
                 isset( $wp->query_vars['page'] ) ||
-                isset( $wp->query_vars['products'] ) ||
                 isset( $wp->query_vars['reports'] )
             ) {
                 wp_enqueue_script( 'dokan-chart' );
