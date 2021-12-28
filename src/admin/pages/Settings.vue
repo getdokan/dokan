@@ -311,107 +311,12 @@
                                 if ( all_commisions.includes( value['commission_type'] ) ) {
                                     this.errors = this.errors.filter(val => ! all_commisions.includes(val));
                                 }
-
-                                // Validation for new commission section input values.
-                                let new_commisions = [ 'product_price', 'product_quantity', 'vendor_sale' ];
-                                if ( new_commisions.includes( value['commission_type'] ) ) {
-                                    const commission_type = value['commission_type']
-                                    const commission_items = this.settingValues[section][commission_type];
-
-                                    const errors = this.validateProductPriceAndQuantityCommission( commission_items, section, commission_type );
-
-                                    if ( errors.length >= 1 ) {
-                                        this.errors.push( { [commission_type]:errors } );
-                                    }
-                                }
                             }
                         }
                     } );
                 } );
 
                 if ( this.errors.length < 1 ) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            validateProductPriceAndQuantityCommission( commission_items = [], section, validateion_item = 'product_price' ){
-                // Declaring needed variables.
-                const fields_errors                    = [];
-                const new_commissions_and_other_fields = [ 'product_price', 'product_quantity', 'vendor_sale', 'rule', 'commission_type' ];
-                const percentage_error_messages        = {
-                    flat: this.__( 'Please Provide flat Commission Value', 'dokan' ),
-                    percentage: this.__( 'Please Provide Prcentage Commission Value', 'dokan' ),
-                    combine: this.__( 'Please Provide Both Flat And Percentage Commission Value', 'dokan' ),
-                };
-
-                /**
-                 * Looping through commission section items ( Product Price / Product Quantity / Vendor Sale )
-                 * Then validating all inputs value in commission section ( Product Price / Product Quantity / Vendor Sale )
-                 *
-                 * commission_items.forEach( ( element, index ) => {.....
-                 * This is looping commission secitons ( Product Price / Product Quantity / Vendor Sale )
-                 */
-                commission_items.forEach( ( element, index ) => {
-                    /**
-                     * Object.keys(element).forEach( validaiton_element => {.....
-                     * Here looping through every input fields of single commissino section( Product Price / Product Quantity / Vendor Sale )
-                     * input fields are (Product cost/product quantity/vendor sale), Rule, Commission type, commission value.
-                     */
-                    Object.keys(element).forEach( validaiton_element => {
-                        let input_value     = element[validaiton_element];
-                        let fieldSettings   = this.settingFields[section][validateion_item].fields;
-                        let curret_settings = fieldSettings[validaiton_element];
-                        let field_values    = this.settingValues[section][validateion_item];
-
-                        if ( new_commissions_and_other_fields.includes( validaiton_element ) && ( 'number' === curret_settings.type ? ( ! this.is_valid_number( input_value ) ) : ( ! this.is_valid_string( input_value ) ) ) ) {
-                            fields_errors.push({
-                                index: index,
-                                field: validaiton_element,
-                                msg: curret_settings.error_msg
-                            });
-                        }
-
-                        // Validating and injecting error for commissions ( flat/percentage/combine )
-                        const currentCommission = field_values[index];
-                        if (
-                            ( 'commission_type' === validaiton_element && this.is_valid_string( input_value ) )
-                            && (
-                                ( 'combine' === input_value && ( ! this.is_valid_number( currentCommission.flat ) || ! this.is_valid_number( currentCommission.percentage ) ) )
-                                || ( 'percentage' === input_value && ! this.is_valid_number( currentCommission.percentage ) )
-                                || ( 'flat' === input_value && ! this.is_valid_number( currentCommission.flat ) )
-                            )
-                        ) {
-                            fields_errors.push({
-                                index: index,
-                                field: input_value   ,
-                                msg: percentage_error_messages[input_value]
-                            });
-                        }
-                    });
-                });
-
-                return fields_errors;
-            },
-
-            is_valid_number( value ) {
-                if ( '' !== value
-                    && undefined !== value
-                    && null !== value
-                    && value == Number( value )
-                ) {
-                    return true;
-                }
-
-                return false;
-            },
-
-            is_valid_string( value ) {
-                if ( '' !== value
-                    && undefined !== value
-                    && null !== value
-                ) {
                     return true;
                 }
 

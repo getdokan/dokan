@@ -41,29 +41,6 @@ export default {
                 this.fieldValue[this.id] = commissions;
             },
 
-            currentCommissionError( index, field ) {
-                let allErrors = this.errors;
-
-                let result = false;
-
-                if ( 'object' === typeof allErrors ) {
-                    Object.keys( allErrors ).forEach( item => {
-                        if ( undefined !== allErrors[item][this.id] ) {
-                            let productQuantityCommissionErrors = allErrors[item][this.id];
-                            Object.keys( productQuantityCommissionErrors ).forEach( ( element, itemIndex ) => {
-                                let errorObj = productQuantityCommissionErrors[element];
-
-                                if ( errorObj.index === index && errorObj.field === field  ) {
-                                    result = errorObj.msg;
-                                }
-                            });
-                        }
-                    } );
-                }
-
-                return result;
-            },
-
             getDummyData() {
                 const allFields = this.fieldData.fields;
 
