@@ -229,12 +229,12 @@ abstract class DokanStoreProducts {
      * @return void
      */
     public function render_store_settings_form_fields( $vendor_id, $profile_info ) {
-        if ( ! array_search( 'off', $this->products_section_appearance, true ) ) {
+        if ( empty( $this->products_section_appearance ) || ! array_search( 'off', $this->products_section_appearance, true ) ) {
             return;
         }
 
         $args                  = $this->get_store_settings_data();
-        $show_products_section = isset( $profile_info[ $args['settings_key'] ] ) ? $profile_info[ $args['settings_key'] ] : 'no';
+        $show_products_section = isset( $profile_info[ $args['settings_key'] ] ) ? $profile_info[ $args['settings_key'] ] : 'yes';
 
         // Increase store products section setting fields counter
         self::$store_setting_fields_counter++;
