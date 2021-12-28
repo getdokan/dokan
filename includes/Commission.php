@@ -439,12 +439,6 @@ class Commission {
      * @return float
      */
     public function get_product_wise_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
-        // if ( dokan_is_new_commission_type( $commission_type ) ) {
-        //     $product          = wc_get_product( $product_id );
-        //     $all_commissions  = $product->get_meta( 'dokan_per_product_commission_fees' );
-        //     return $this->get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions );
-        // }
-
         $additional_fee = null; $falt_fee = null;
 
         // get[product,category,vendor,global]_wise_additional_fee
@@ -660,6 +654,13 @@ class Commission {
         // get[product,category,vendor,global]_wise_type
         if ( is_callable( [ $this, $func_type ] ) ) {
             $commission_type = $this->$func_type( $get_type_by );
+        }
+
+        /**
+         * If commission is not set return null early.
+         */
+        if ( empty( $commission_type ) ) {
+            return null;
         }
 
         /**
