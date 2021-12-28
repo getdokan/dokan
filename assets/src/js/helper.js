@@ -118,7 +118,7 @@ function dokan_get_formatted_time( time, format ) {
     campm       = hours >= 12 ? 'PM' : 'AM',
     convertTime = ( time ) => {
       // Check correct time format and split into components
-      time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+      time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
       if ( time.length > 1 ) {
         time    = time.slice (1);
