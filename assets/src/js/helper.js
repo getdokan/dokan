@@ -109,7 +109,7 @@ function dokan_get_i18n_time_format( format = true ) {
  * @return {string} Return formatted time.
  */
 function dokan_get_formatted_time( time, format ) {
-  const times   = new Date( Date.parse( `Dec 24 ${time}` ) ),
+  const times   = new Date( Date.parse( `Jan 1 ${time}` ) ), // We used this dummy date for getting time info.
     add0        = function( t ) { return t < 10 ? '0' + t : t; },
     hours       = times.getHours(),
     minutes     = times.getMinutes(),
