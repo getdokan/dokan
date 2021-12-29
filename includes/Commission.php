@@ -1060,10 +1060,6 @@ class Commission {
      * @return array|null
      */
     private function get_satisfied_commission( $compare, $commission_type, $all_commissions ) {
-        if ( ! is_array( $all_commissions ) ) {
-            return null;
-        }
-
         $type = null; $flat = null; $percentage = null;
 
         foreach ( $all_commissions as $key => $value ) {
