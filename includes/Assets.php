@@ -501,6 +501,8 @@ class Assets {
             }
         }
 
+        wp_enqueue_script( 'dokan-login-form-popup' );
+
         do_action( 'dokan_enqueue_scripts' );
     }
 
