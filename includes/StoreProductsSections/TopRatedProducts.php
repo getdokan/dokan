@@ -24,7 +24,7 @@ class TopRatedProducts extends DokanStoreProducts {
      */
     public function get_products_section_data() {
         return [
-            'products_type'  => 'top_rated_products',
+            'products_type'  => 'top_rated',
             'customizer_key' => 'hide_top_rated_products',
             'settings_key'   => 'show_top_rated_products',
             'products'       => dokan_get_top_rated_products( $this->items_to_show, $this->vendor_id ),

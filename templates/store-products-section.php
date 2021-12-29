@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php do_action( 'dokan_store_' . $products_type . '_section_before' ); ?>
+<?php do_action( "dokan_store_before_{$products_type}_products_section" ); ?>
 
 <div id="<?php echo esc_attr( $section_id ); ?>" class="dokan-products-display_section">
     <h2 class="products-list-heading"><?php echo esc_html( $section_title ); ?></h2>
@@ -27,4 +27,4 @@
     </div>
 </div>
 
-<?php do_action( 'dokan_store_' . $products_type . '_section_after' ); ?>
+<?php do_action( "dokan_store_after_{$products_type}_products_section" ); ?>

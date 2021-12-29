@@ -24,7 +24,7 @@ class FeaturedProducts extends DokanStoreProducts {
      */
     public function get_products_section_data() {
         return [
-            'products_type'  => 'featured_products',
+            'products_type'  => 'featured',
             'customizer_key' => 'hide_featured_products',
             'settings_key'   => 'show_featured_products',
             'products'       => dokan_get_featured_products( $this->items_to_show, $this->vendor_id ),

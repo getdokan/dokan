@@ -24,7 +24,7 @@ class LatestProducts extends DokanStoreProducts {
      */
     public function get_products_section_data() {
         return [
-            'products_type'  => 'latest_products',
+            'products_type'  => 'latest',
             'customizer_key' => 'hide_latest_products',
             'settings_key'   => 'show_latest_products',
             'products'       => dokan_get_latest_products( $this->items_to_show, $this->vendor_id ),
