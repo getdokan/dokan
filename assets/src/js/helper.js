@@ -42,6 +42,31 @@ function dokan_get_i18n_date_format( format = true ) {
 }
 
 /**
+ * Turns date format into date range picker supported format
+ *
+ * @since 3.3.6
+ *
+ * @param {string} dateFormat Dokan i18n date format
+ *
+ * @return {string} Date range picker supported date format
+ */
+function dokan_get_date_range_picker_date_format(dateFormat) {
+    switch (dateFormat) {
+        case 'dd/mm/yy':
+            return 'DD/MM/YYYY';
+            break;
+        case 'mm/dd/yy':
+            return 'MM/DD/YYYY';
+            break;
+        case 'yy-mm-dd':
+            return 'YYYY-MM-DD';
+            break;
+        default:
+            return 'MMMM D, YYYY';
+    }
+}
+
+/**
  * Dokan Sweet Alert
  *
  * @since 3.2.13
