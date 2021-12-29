@@ -1013,21 +1013,20 @@ class Commission {
     /**
      * Returns satisfied commission [flat/percentage/combine] from different commission array set.
      *
-     * @param string $product_id_also_vendor_id
+     * @param string $product_id
      * @param string $commission_type
      * @param int|float $product_price
      * @param string $key
      *
      * @return void
      */
-    public function get_satisfied_commission_from_new_commission_set( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions ) {
+    public function get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions ) {
         if ( ! is_array( $all_commissions ) ) {
             return null;
         }
 
         switch ( $commission_type ) {
             case 'vendor_sale':
-                // return $this->get_vendor_sale_satisfied_commission( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions );
                 if ( empty( $this->get_order_id() ) || empty( $this->get_order_subtotal() ) ) {
                     return null;
                 }
@@ -1036,12 +1035,10 @@ class Commission {
                 break;
 
             case 'product_price':
-                // return $this->get_product_price_satisfied_commission( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions );
                 return $this->get_satisfied_commission( $product_price, 'product_price', $all_commissions );
                 break;
 
             case 'product_quantity':
-                // return $this->get_product_quantity_satisfied_commission( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions );
                 $product_quantity = $this->get_order_qunatity();
                 return $this->get_satisfied_commission( $product_quantity, 'product_quantity', $all_commissions );
                 break;
@@ -1051,137 +1048,6 @@ class Commission {
                 break;
         }
     }
-
-    // /**
-    //  * Returns an array of satisfied [flat/percentage/combine] commission, for product_price commission type
-    //  *
-    //  * @param  int $product_id_also_vendor_id
-    //  * @param  string $commission_type
-    //  * @param  int|float $product_price
-    //  * @param  array $all_commissions
-    //  *
-    //  * @return array|null
-    //  */
-    // private function get_product_price_satisfied_commission( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions ) {
-    //     if ( ! is_array( $all_commissions ) ) {
-    //         return null;
-    //     }
-
-    //     $type = null; $flat = null; $percentage = null;
-
-    //     foreach ( $all_commissions as $key => $value ) {
-    //         if (
-    //             ( isset( $value['product_price'] )
-    //             && $value['rule'] === 'upto'
-    //             && $product_price <= $value['product_price'] )
-    //             ||
-    //             ( isset( $value['product_price'] )
-    //             && $value['rule'] === 'more_than'
-    //             && $product_price > $value['product_price'] )
-
-    //         ) {
-    //             $type       = $value['commission_type'];
-    //             $flat       = $value['flat'];
-    //             $percentage = $value['percentage'];
-
-    //             break;
-    //         }
-    //     }
-
-    //     return [
-    //         'type'       => $type,
-    //         'flat'       => $flat,
-    //         'percentage' => $percentage,
-    //     ];
-    // }
-
-    // /**
-    //  * Returns an array of satisfied [flat/percentage/combine] commission, for product_quantity commission type.
-    //  *
-    //  * @param  int $product_id_also_vendor_id
-    //  * @param  string $commission_type
-    //  * @param  int|float $product_price
-    //  * @param  array $all_commissions
-    //  *
-    //  * @return array|null
-    //  */
-    // private function get_product_quantity_satisfied_commission( $product_id_also_vendor_id, $commission_type, $product_price, $all_commissions ) {
-    //     if ( ! is_array( $all_commissions ) ) {
-    //         return null;
-    //     }
-
-    //     $type = null; $flat = null; $percentage = null;
-
-    //     foreach ( $all_commissions as $key => $value ) {
-    //         if (
-    //             ( isset( $value['product_quantity'] )
-    //             && $value['rule'] === 'upto'
-    //             && $this->get_order_qunatity() <= $value['product_quantity'] )
-    //             ||
-    //             ( isset( $value['product_price'] )
-    //             && $value['rule'] === 'more_than'
-    //             && $this->get_order_qunatity() > $value['product_quantity'] )
-
-    //         ) {
-    //             $type       = $value['commission_type'];
-    //             $flat       = $value['flat'];
-    //             $percentage = $value['percentage'];
-
-    //             break;
-    //         }
-    //     }
-
-    //     return [
-    //         'type'       => $type,
-    //         'flat'       => $flat,
-    //         'percentage' => $percentage,
-    //     ];
-    // }
-
-    // /**
-    //  * Returns an array of satisfied [flat/percentage/combine] commission, for vendor_sale commission type.
-    //  *
-    //  * @param  int $product_id_also_vendor_id
-    //  * @param  string $commission_type
-    //  * @param  int|float $product_price
-    //  * @param  array $all_commissions
-    //  *
-    //  * @return array|null
-    //  */
-    // private function get_vendor_sale_satisfied_commission( $product_id_or_vendor_id, $commission_type, $product_price, $all_commissions ) {
-    //     if ( ! is_array( $all_commissions ) || empty( $this->get_order_id() ) || empty( $this->get_order_subtotal() ) ) {
-    //         return null;
-    //     }
-
-    //     $total_sale = $this->get_order_subtotal();
-
-    //     $type = null; $flat = null; $percentage = null;
-
-    //     foreach ( $all_commissions as $key => $value ) {
-    //         if (
-    //             ( isset( $value['vendor_sale'] )
-    //             && $value['rule'] === 'upto'
-    //             && $total_sale <= $value['vendor_sale'] )
-    //             ||
-    //             ( isset( $value['product_price'] )
-    //             && $value['rule'] === 'more_than'
-    //             && $total_sale > $value['vendor_sale'] )
-
-    //         ) {
-    //             $type       = $value['commission_type'];
-    //             $flat       = $value['flat'];
-    //             $percentage = $value['percentage'];
-
-    //             break;
-    //         }
-    //     }
-
-    //     return [
-    //         'type'       => $type,
-    //         'flat'       => $flat,
-    //         'percentage' => $percentage,
-    //     ];
-    // }
 
     /**
      * Returns an array of satisfied [flat/percentage/combine] commission, for vendor_sale,

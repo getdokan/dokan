@@ -194,7 +194,7 @@ export default {
     }
     .commisson-indecator{
         position: absolute;
-        top: 50%;
+        top: 55%;
         right: 5px;
         color: #8c8f94;
     }
