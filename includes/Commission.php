@@ -21,7 +21,7 @@ class Commission {
     /**
      * Order subtotal holder
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.3.6
      *
      * @var integer|float
      */
@@ -30,7 +30,7 @@ class Commission {
     /**
      * Order item id to save applied commission type in order meta.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.3.6
      *
      * @var integer
      */
@@ -175,7 +175,7 @@ class Commission {
     /**
      * Set order subtotal amount
      *
-     * @since  DOKAN_PRO_SINCE
+     * @since  3.3.6
      *
      * @param  int|float $subtotal
      *
@@ -188,7 +188,7 @@ class Commission {
     /**
      * Get order subtotal amount
      *
-     * @since  DOKAN_PRO_SINCE
+     * @since  3.3.6
      *
      * @return int|float $subtotal
      */
@@ -199,7 +199,7 @@ class Commission {
     /**
      * Set order item id to save applied commission type in order meta.
      *
-     * @since  DOKAN_PRO_SINCE
+     * @since  3.3.6
      *
      * @param  int|float $order_id
      *
@@ -212,7 +212,7 @@ class Commission {
     /**
      * Get order item id to save applied commission type in order meta.
      *
-     * @since  DOKAN_PRO_SINCE
+     * @since  3.3.6
      *
      * @return int|float $order_id
      */
@@ -373,11 +373,12 @@ class Commission {
     public function get_global_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
         // If new commissions is satisfied and found then return it.
         if ( dokan_is_new_commission_type( $commission_type ) ) {
-            $all_commissions  = dokan_get_option( $commission_type, 'dokan_selling', 0 );
+            $all_commissions = dokan_get_option( $commission_type, 'dokan_selling', 0 );
             return $this->get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions );
         }
 
-        $additional_fee = null; $falt_fee = null;
+        $additional_fee = null;
+        $falt_fee       = null;
 
         // get[product,category,vendor,global]_wise_additional_fee
         if ( is_callable( [ $this, $func_fee ] ) ) {
@@ -407,7 +408,7 @@ class Commission {
      * @return float
      */
     public function get_vendor_wise_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
-        $commissions  = get_user_meta( $vendor_id, 'dokan_admin_percentage', true );
+        $commissions = get_user_meta( $vendor_id, 'dokan_admin_percentage', true );
 
         // If new commissions is satisfied and found then return it.
         if ( dokan_is_new_commission_type( $commission_type ) ) {
@@ -442,7 +443,8 @@ class Commission {
      * @return float
      */
     public function get_product_wise_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
-        $additional_fee = null; $falt_fee = null;
+        $additional_fee = null;
+        $falt_fee       = null;
 
         // calling, get_product_wise_additional_fee
         if ( is_callable( [ $this, $func_fee ] ) ) {
@@ -489,7 +491,8 @@ class Commission {
      * @return float
      */
     public function get_category_wise_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
-        $additional_fee = null; $falt_fee = null;
+        $additional_fee = null;
+        $falt_fee       = null;
 
         $terms = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
 
@@ -694,7 +697,7 @@ class Commission {
          *
          * @since 3.0.0
          */
-        if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ] ) ) {
+        if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ], true ) ) {
             $commission_type = 'flat';
         }
 
@@ -706,7 +709,7 @@ class Commission {
         if (
             is_null( $commission_rate )
             || empty( $commission_rate['type'] )
-            || ( 'combine' !== $commission_rate['type'] && empty( $commission_rate[$commission_rate['type'] ] ) )
+            || ( 'combine' !== $commission_rate['type'] && empty( $commission_rate[ $commission_rate['type'] ] ) )
             || ( 'combine' === $commission_rate['type'] && empty( $commission_rate['flat'] ) && empty( $commission_rate['percentage'] ) )
         ) {
             return null;
@@ -1013,6 +1016,8 @@ class Commission {
     /**
      * Returns satisfied commission [flat/percentage/combine] from different commission array set.
      *
+     * @since 3.3.6
+     *
      * @param string $product_id
      * @param string $commission_type
      * @param int|float $product_price
@@ -1032,26 +1037,24 @@ class Commission {
                 }
                 $total_sale = $this->get_order_subtotal();
                 return $this->get_satisfied_commission( $total_sale, 'vendor_sale', $all_commissions );
-                break;
 
             case 'product_price':
                 return $this->get_satisfied_commission( $product_price, 'product_price', $all_commissions );
-                break;
 
             case 'product_quantity':
                 $product_quantity = $this->get_order_qunatity();
                 return $this->get_satisfied_commission( $product_quantity, 'product_quantity', $all_commissions );
-                break;
 
             default:
                 return null;
-                break;
         }
     }
 
     /**
      * Returns an array of satisfied [flat/percentage/combine] commission, for vendor_sale,
      * product_price, product_quantity commission type.
+     *
+     * @since  3.3.6
      *
      * @param  int $compare Vendor sale amount or product total quantity or product price.
      * @param  string $commission_type vendor_sale / product_price / product_quantity.
@@ -1060,17 +1063,19 @@ class Commission {
      * @return array|null
      */
     private function get_satisfied_commission( $compare, $commission_type, $all_commissions ) {
-        $type = null; $flat = null; $percentage = null;
+        $type       = null;
+        $flat       = null;
+        $percentage = null;
 
         foreach ( $all_commissions as $key => $value ) {
             if (
-                ( isset( $value[$commission_type] )
+                ( isset( $value[ $commission_type ] )
                 && $value['rule'] === 'upto'
-                && $compare <= $value[$commission_type] )
+                && $compare <= $value[ $commission_type ] )
                 ||
-                ( isset( $value[$commission_type] )
+                ( isset( $value[ $commission_type ] )
                 && $value['rule'] === 'more_than'
-                && $compare > $value[$commission_type] )
+                && $compare > $value[ $commission_type ] )
 
             ) {
                 $type       = $value['commission_type'];

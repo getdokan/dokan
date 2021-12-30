@@ -252,7 +252,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
  *
  * @global WPDB $wpdb
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.6
  *
  * @param string $post_type
  * @param int    $user_id
@@ -3581,7 +3581,7 @@ function dokan_commission_types() {
 /**
  * Returns true if passed commission type is a new commission type.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.6
  *
  * @param string $commission_type
  *
@@ -3594,7 +3594,7 @@ function dokan_is_new_commission_type( $commission_type ) {
 /**
  * Dokan new and old default commission types
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.6
  *
  * @return array
  */
@@ -3935,7 +3935,7 @@ function dokan_clear_product_caches( $product ) {
 /**
  * Check which vendor info should be hidden
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.6
  *
  * @param string $option
  *
@@ -4102,7 +4102,7 @@ function dokan_get_timestamp( $date_string, $gmt_date = false ) {
  *
  * @param $user_id
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.3.6
  *
  * @return integer threshold day
  */
