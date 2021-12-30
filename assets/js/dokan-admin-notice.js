@@ -572,17 +572,23 @@ if (false) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(261);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+
 
 var Vue = dokan_get_lib('Vue');
-new Vue({
-  el: '#dokan-admin-notices',
-  render: function render(h) {
-    return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
-  },
-  created: function created() {
-    this.setLocaleData(dokan.i18n['dokan-lite']);
-  }
-});
+
+if (__WEBPACK_IMPORTED_MODULE_1_jquery___default()('#dokan-admin-notices').length) {
+  new Vue({
+    el: '#dokan-admin-notices',
+    render: function render(h) {
+      return h(__WEBPACK_IMPORTED_MODULE_0__App_vue__["a" /* default */]);
+    },
+    created: function created() {
+      this.setLocaleData(dokan.i18n['dokan-lite']);
+    }
+  });
+}
 
 /***/ }),
 
