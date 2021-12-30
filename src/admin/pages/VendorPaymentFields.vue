@@ -282,16 +282,15 @@ export default {
         },
 
         updateCommissionState( obj ) {
-            let { value, field, index, type  } = obj;
+            let { value, field, index, type  } = obj
 
-            let oldCommissions = [...this.vendorInfo.admin_commission];
-            oldCommissions[index][field] = type === 'number' ? Number( value ) : String( value );
-
+            const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission))
+            oldCommissions[index][field] = value;
             this.$emit('setAdminCommissoinArray', oldCommissions);
         },
 
         removeCommissionFromList( obj ) {
-            let { value, field, index, type  } = obj;
+            let { field, index, type  } = obj;
 
             let oldCommissions = [...this.vendorInfo.admin_commission];
             oldCommissions.splice( index, 1 );

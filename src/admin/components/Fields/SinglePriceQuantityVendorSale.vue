@@ -1,6 +1,6 @@
 <template>
     <fieldset class="new_commission_fields dokan-commission-wrapper" >
-        <span @click.prevent="removeCommissionFromList( $event.target.value, selectedCommissionName, index, 'number' )" class="dashicons dashicons-no remove-vpq-commission"></span>
+        <span @click.prevent="removeCommissionFromList( selectedCommissionName, index, 'number' )" class="dashicons dashicons-no remove-vpq-commission"></span>
         <div class="commission-content-container">
             <div class="commission-inner-type-select">
                 <label :for="'commission_type' + index">{{ __( 'Commission type', 'dokan-lite') }}</label>
@@ -16,7 +16,7 @@
 
                 <div
                     class="commission-inner-type-percentage"
-                    v-if="'combine' === currentCommissionType || 'percentage' === currentCommissionType"
+                    v-if="'combine' === commission.commission_type || 'percentage' === commission.commission_type"
                 >
                     <label >{{ __( 'Percentage', 'dokan' ) }}</label>
                     <input :value="commission.percentage" @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )" type="number" class="dokan-commission-value">
@@ -24,11 +24,11 @@
                     <span class="commisson-indecator">%</span>
                 </div>
 
-                <div class="commission-inner-type-middle" v-if="'combine' === currentCommissionType"><span class="commission-inner-type-middle-text">+</span></div>
+                <div class="commission-inner-type-middle" v-if="'combine' === commission.commission_type"><span class="commission-inner-type-middle-text">+</span></div>
 
                 <div
                     class="commission-inner-type-flat"
-                    v-if="'combine' === currentCommissionType || 'flat' === currentCommissionType"
+                    v-if="'combine' === commission.commission_type || 'flat' === commission.commission_type"
                 >
                     <label >{{ __( 'Flat', 'dokan' ) }}</label>
                     <input :value="commission.flat" @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )" type="number" class="dokan-commission-value">
@@ -70,14 +70,8 @@
 export default {
     name : 'SinglePriceQuantityVendorSale',
     props: [ 'commission', 'allCommission', 'selectedCommissionName', 'selectedCommissionLabel', 'index' ],
-    data(){
-        return{
-            currentCommissionType:this.commission.commission_type,
-        }
-    },
     methods: {
             updateCommissionValue( event, field, index, type ) {
-                field === 'commission_type' ? this.currentCommissionType = event : '';
                 this.$emit(
                     'updateCommissionState',
                     {
@@ -89,11 +83,10 @@ export default {
                 );
             },
 
-            removeCommissionFromList( event, field, index, type ) {
+            removeCommissionFromList( field, index, type ) {
                 this.$emit(
                     'removeCommissionFromList',
                     {
-                        value: event,
                         field: field,
                         index: index,
                         type: type
@@ -194,7 +187,7 @@ export default {
     }
     .commisson-indecator{
         position: absolute;
-        top: 55%;
+        top: 50%;
         right: 5px;
         color: #8c8f94;
     }

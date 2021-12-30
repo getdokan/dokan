@@ -1,7 +1,5 @@
 <template>
-    <td>
-        <p>{{ commission_title }}</p>
-
+    <td class="new-commission-holder">
         <template v-if="'' !== fieldValue[fieldData.name]">
             <SinglePriceQuantityVendorSale
                 v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key"
@@ -29,13 +27,13 @@ export default {
     components  :{
         SinglePriceQuantityVendorSale
     },
-    props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'commission_title'],
+    props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
     methods: {
 
             addNewCommission() {
                 const dummyData = this.getDummyData();
 
-                const commissions = '' === this.fieldValue[this.id] ? dummyData : this.fieldValue[this.id];
+                const commissions = '' === this.fieldValue[this.id] ? [] : this.fieldValue[this.id];
 
                 commissions.push( dummyData );
                 this.fieldValue[this.id] = commissions;
@@ -67,8 +65,10 @@ export default {
             },
 
             removeCommissionFromList( obj ) {
-                let { value, field, index, type  } = obj;
-                this.fieldValue[this.id].splice( index, 1 );
+                let { field, index, type  } = obj;
+                let all_commissions = [...this.fieldValue[this.id]];
+                all_commissions.splice( index, 1 )
+                this.fieldValue[this.id] = all_commissions;
             },
     },
 }
@@ -77,6 +77,9 @@ export default {
 <style lang="less" scoped>
     .dokan-hide{
         display: none !important;
+    }
+    .new-commission-holder{
+        line-height: 2 !important;
     }
     .dashicons-no-container{
         display:block;

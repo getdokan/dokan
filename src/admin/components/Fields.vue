@@ -135,7 +135,6 @@
                 :errors="errors"
                 :toggleLoadingState="toggleLoadingState"
                 :validationErrors="validationErrors"
-                :commission_title="__( 'Product quantity commission', 'dokan-lite' )"
             />
         </template>
 
