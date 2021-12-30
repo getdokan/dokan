@@ -986,20 +986,7 @@
         }
 
         $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
-            dokan_show_earning_suggestion( function() {
-
-                if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
-                    if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
-                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                        $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                        $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
-                    } else {
-                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
-                        $( 'input[type=submit]' ).removeAttr( 'disabled');
-                        $( 'button[type=submit]' ).removeAttr( 'disabled');
-                    }
-                }
-            } );
+            dokan_show_earning_suggestion();
 
         }, 750 ) );
 
