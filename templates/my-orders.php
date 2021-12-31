@@ -8,8 +8,12 @@
 <?php
     global $woocommerce;
 
+    $page  = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
+    $limit = 10;
+
     $customer_orders = get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
-        'numberposts' => -1,
+        'numberposts' => $limit,
+        'offset'      => $limit * ( $page - 1 ),
         'meta_key'    => '_customer_user',
         'meta_value'  => get_current_user_id(),
         'post_type'   => 'shop_order',
@@ -101,6 +105,36 @@
 
         </table>
 
+    <?php
+        $customer_orders_count = count( get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
+            'numberposts' => -1,
+            'meta_key'    => '_customer_user',
+            'meta_value'  => get_current_user_id(),
+            'post_type'   => 'shop_order',
+            'post_status' => 'wc-publish',
+        ) ) ) );
+
+        $num_of_pages = ceil( $customer_orders_count / $limit );
+
+        $base_url  = get_permalink( $my_order_page_id = dokan_get_option( 'my_orders', 'dokan_pages' ) );
+
+        if ( $num_of_pages > 1 ) {
+            echo '<div class="pagination-wrap">';
+            $page_links = paginate_links( [
+                'current'   => $page,
+                'total'     => $num_of_pages,
+                'base'      => $base_url . '%_%',
+                'format'    => '?pagenum=%#%',
+                'add_args'  => false,
+                'type'      => 'array',
+            ] );
+
+            echo "<ul class='pagination'>\n\t<li>";
+            echo join( "</li>\n\t<li>", $page_links );
+            echo "</li>\n</ul>\n";
+            echo '</div>';
+        }
+        ?>
     <?php else: ?>
 
         <p class="dokan-info"><?php esc_html_e( 'No orders found!', 'dokan-lite' ); ?></p>
