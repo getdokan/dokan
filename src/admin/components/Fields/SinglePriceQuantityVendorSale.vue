@@ -7,7 +7,7 @@
                 <select @change="updateCommissionValue( $event.target.value, 'commission_type', index, 'string' )" :value="commission.commission_type" class="dokan-commission-input" :name="'commission_type' + index" :id="'commission_type' + index">
                     <option value="flat">{{ __( 'Flat', 'dokan-lite') }}</option>
                     <option value="percentage">{{ __( 'Percentage', 'dokan-lite') }}</option>
-                    <option value="combine">{{ __( 'Combine', 'dokan-lite') }}</option>
+                    <option value="combine">{{ __( 'Combined', 'dokan-lite') }}</option>
                 </select>
             </div>
 

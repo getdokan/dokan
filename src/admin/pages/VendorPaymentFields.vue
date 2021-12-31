@@ -166,7 +166,7 @@ export default {
                 },
                 {
                     name: 'combine',
-                    label: this.__( 'Combine', 'dokan-lite' )
+                    label: this.__( 'Combined', 'dokan-lite' )
                 },
                 {
                     name: 'vendor_sale',
