@@ -332,7 +332,26 @@ class Manager {
 
             if ( isset( $data['admin_commission'] ) && ( is_array( wc_clean( $data['admin_commission'] ) ) || is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $admin_commission = $data['admin_commission'];
-                $admin_commission = is_array( $admin_commission ) ? wc_clean( $admin_commission ) : wc_format_decimal( $admin_commission );
+
+                if ( is_array( $admin_commission )  ) {
+                    $all_commission_set = [];
+
+                    foreach ( $admin_commission as $key => $value ) {
+                        $single_commission_set = [
+                            $data['admin_commission_type'] => absint( $data['admin_commission_type'] ),
+                            'rule'                         => sanitize_text_field( $value['rule'] ),
+                            'commission_type'              => sanitize_text_field( $value['commission_type'] ),
+                            'percentage'                   => absint( $value['percentage'] ),
+                            'flat'                         => absint( $value['flat'] ),
+                        ];
+
+                        array_push( $all_commission_set, $single_commission_set );
+                    }
+
+                    $admin_commission = $all_commission_set;
+                } else {
+                    $admin_commission = absint( $admin_commission );
+                }
 
                 $vendor->update_meta( 'dokan_admin_percentage', $admin_commission );
 

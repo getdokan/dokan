@@ -75,6 +75,7 @@
                     </div>
 
                     <div class="column" v-else-if="newCommissions.includes( selectedCommissionType.name )">
+                        <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <SinglePriceQuantityVendorSale
                             v-for="( commission, index ) in vendorInfo.admin_commission"
                             :key="index"
@@ -265,7 +266,7 @@ export default {
         getAndCheckCommissionType( begin = false ) {
             let selectedCommissionName = this.selectedCommissionType.name;
             let commissionData = {...this.newCommissionData};
-            commissionData[selectedCommissionName] = 1;
+            commissionData[selectedCommissionName] = 10;
 
             if ( this.newCommissions.includes( selectedCommissionName ) ) {
                 return begin ? [commissionData] : commissionData;

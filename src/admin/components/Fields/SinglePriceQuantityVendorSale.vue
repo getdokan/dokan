@@ -19,7 +19,16 @@
                     v-if="'combine' === commission.commission_type || 'percentage' === commission.commission_type"
                 >
                     <label >{{ __( 'Percentage', 'dokan' ) }}</label>
-                    <input :value="commission.percentage" @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )" type="number" class="dokan-commission-value">
+                    <input
+                        :value="commission.percentage"
+                        @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )"
+                        class="dokan-commission-value"
+                        type="number"
+                        min="1"
+                        max="9999"
+                        maxlength="10"
+                        oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;"
+                    >
 
                     <span class="commisson-indecator">%</span>
                 </div>
@@ -31,7 +40,16 @@
                     v-if="'combine' === commission.commission_type || 'flat' === commission.commission_type"
                 >
                     <label >{{ __( 'Flat', 'dokan' ) }}</label>
-                    <input :value="commission.flat" @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )" type="number" class="dokan-commission-value">
+                    <input
+                        :value="commission.flat"
+                        @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )"
+                        class="dokan-commission-value"
+                        type="number"
+                        min="1"
+                        max="9999"
+                        maxlength="10"
+                        oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;"
+                    >
 
                     <span class="commisson-indecator" v-html="get_currency_symbol()"></span>
                 </div>
@@ -55,11 +73,14 @@
                 <input
                     @input="updateCommissionValue( $event.target.value, selectedCommissionName, index, 'number' )"
                     :value="commission[selectedCommissionName]"
-                    type="number"
                     :name="selectedCommissionName + index"
                     :id="selectedCommissionName + index"
                     class="dokan-commission-value"
-                    :placeholder="__( 'Write here', 'dokan-lite')"
+                    type="number"
+                    min="1"
+                    max="9999"
+                    maxlength="10"
+                    oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;"
                 >
             </div>
         </div>
