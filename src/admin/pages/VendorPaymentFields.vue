@@ -190,7 +190,7 @@ export default {
             newCommissions: [ 'vendor_sale', 'product_price', 'product_quantity' ],
             newCommissionData: {
                 rule: 'upto',
-                commission_type: 'percentage',
+                commission_type: 'flat',
                 flat: 10,
                 percentage: 10
             },
