@@ -77,7 +77,7 @@
                     <div class="column" v-else-if="newCommissions.includes( selectedCommissionType.name )">
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <SinglePriceQuantityVendorSale
-                            v-for="( commission, index ) in vendorInfo.admin_commission"
+                            v-for="( commission, index ) in get_vendor_commission_array( vendorInfo.admin_commission )"
                             :key="index"
                             :commission="commission"
                             :allCommission="vendorInfo.admin_commission"
@@ -86,8 +86,11 @@
                             :index="index"
                             v-on:updateCommissionState="updateCommissionState"
                             v-on:removeCommissionFromList="removeCommissionFromList"
+                            class="new-commission-container"
                         />
-                        <button class="add_new_commission_set" @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+                        <fieldset>
+                            <button class="add_new_commission_set" @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
+                        </fieldset>
                     </div>
 
                     <div class="column" v-else>
@@ -170,11 +173,11 @@ export default {
                 },
                 {
                     name: 'vendor_sale',
-                    label: this.__( 'Vendor sale', 'dokan-lite' )
+                    label: this.__( 'Vendor Sale', 'dokan-lite' )
                 },
                 {
                     name: 'product_price',
-                    label: this.__( 'Product price', 'dokan-lite' )
+                    label: this.__( 'Product Price', 'dokan-lite' )
                 },
                 {
                     name: 'product_quantity',
@@ -277,6 +280,11 @@ export default {
 
         addNewCommissionData() {
             let oldCommissions = [...this.vendorInfo.admin_commission];
+
+            if ( 'string' === typeof this.vendorInfo.admin_commission ) {
+                oldCommissions = [];
+            }
+
             oldCommissions.push( this.getAndCheckCommissionType() );
 
             this.$emit('setAdminCommissoinArray', oldCommissions);
@@ -298,6 +306,13 @@ export default {
 
             this.$emit('setAdminCommissoinArray', oldCommissions);
         },
+
+        get_vendor_commission_array( commissions ) {
+            let all_commissions = [];
+            all_commissions = 'string' === typeof commissions ? [] : commissions;
+
+            return all_commissions;
+        }
     },
 };
 </script>
@@ -335,13 +350,17 @@ export default {
     }
 }
 
+.new-commission-container{
+    margin-top: 10px;
+}
+
 .add_new_commission_set {
         border: none;
         background-color: #8c8f94;
         border-radius: 4px;
         padding: 5px 12px;
         color: #fff;
-        margin-top: -6px;
+        margin-top: 5px;
         cursor: pointer;
-    }
+}
 </style>
