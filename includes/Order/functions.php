@@ -83,8 +83,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
         $start_date_q = ( $start_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $start_date ) : '';
         $end_date_q   = ( $end_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $end_date ) : '';
-        $total_low_q  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
-        $total_high_q = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
+        $total_low_q  = empty( $total_low ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $total_low );
+        $total_high_q = empty( $total_high ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $total_high );
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
