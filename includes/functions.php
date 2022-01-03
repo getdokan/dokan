@@ -2498,7 +2498,7 @@ function dokan_seller_address_fields( $verified = false, $required = false ) {
             'state'    => [
                 'required' => 0,
             ],
-            'proof_residence'   => [
+            'proof'    => [
                 'required' => 1,
             ],
         ]

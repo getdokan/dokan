@@ -14,7 +14,9 @@ $address_city    = isset( $profile_info['address']['city'] ) ? $profile_info['ad
 $address_zip     = isset( $profile_info['address']['zip'] ) ? $profile_info['address']['zip'] : '';
 $address_country = isset( $profile_info['address']['country'] ) ? $profile_info['address']['country'] : '';
 $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
-$vendor_avatar   = isset( $profile_info['address']['avatar'] ) ? $profile_info['address']['avatar'] : '';
+$vendor_proof    = isset( $profile_info['address']['proof'] ) ? $profile_info['address']['proof'] : '';
+
+error_log( print_R( $vendor_proof, 1 ) );
 
 ?>
 
@@ -143,7 +145,7 @@ $vendor_avatar   = isset( $profile_info['address']['avatar'] ) ? $profile_info['
             <?php } ?>
             </div>
         <?php } ?>
-        <?php if ( $seller_address_fields['proof_residence'] ) : ?>
+        <?php if ( $seller_address_fields['proof'] ) : ?>
             <div class="dokan-form-group">
                 <label class="control-label" for="dokan_address[state]"><?php esc_html_e( 'Proof of Residence', 'dokan-lite' ); ?>
                     <?php
@@ -152,18 +154,18 @@ $vendor_avatar   = isset( $profile_info['address']['avatar'] ) ? $profile_info['
                     ?>
                 </label>
                 <br/>
-                <div class="proof-button-area" style="display: <?php echo $vendor_avatar ? 'none' : 'block' ?>;">
-                    <a href="#" id="vendor-avatar" class="dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Proof', 'dokan-lite' ); ?></a>
+                <div class="proof-button-area" style="display: <?php echo $vendor_proof ? 'none' : 'block' ?>;">
+                    <a href="#" id="vendor-proof" class="dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Proof', 'dokan-lite' ); ?></a>
                     <input type="hidden"
-                        id="vendor-avatar-url"
-                        name="dokan_address[avatar]"
+                        id="vendor-proof-url"
+                        name="dokan_address[proof]"
                         <?php echo esc_attr( $required ) ?>
-                        value="<?php echo $vendor_avatar ? esc_url( $vendor_avatar ) : $vendor_avatar; ?>" />
+                        value="<?php echo $vendor_proof ? esc_url( $vendor_proof ) : $vendor_proof; ?>" />
                 </div>
                 <div class="vendor_img_container">
-                    <?php if ( $vendor_avatar ) : ?>
-                        <img src="<?php echo esc_url( $vendor_avatar ); ?>" />
-                        <a class="dokan-close dokan-remove-gravatar-image">×</a>
+                    <?php if ( $vendor_proof ) : ?>
+                        <img src="<?php echo esc_url( $vendor_proof ); ?>" />
+                        <a class="dokan-close dokan-remove-proof-image">×</a>
                     <?php endif; ?>
                 </div>
             </div>
