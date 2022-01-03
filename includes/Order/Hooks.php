@@ -92,7 +92,10 @@ class Hooks {
     public function change_order_item_display_meta_value( $display_value, $meta ) {
         if ( 'seller_id' === $meta->key ) {
             $vendor = dokan()->vendor->get( $display_value );
-            $url    = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            $url    = get_edit_user_link( $display_value );
+            if ( function_exists( 'dokan_pro' ) ) {
+                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            }
 
             return '<a href=' . $url . " '>" . $vendor->get_shop_name() . '</a>';
         }
