@@ -118,13 +118,13 @@ class Orders {
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $order_date   = ( isset( $_POST['order_date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date'] ) ) : null;
-            $order_status = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
+            $order_date_start = ( isset( $_POST['order_date_start'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_start'] ) ) : null;
+            $order_date_end   = ( isset( $_POST['order_date_end'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_end'] ) ) : null;
+            $order_status     = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
+            $total_high       = ! empty( $_POST['total_high'] ) ? absint( wp_unslash( $_POST['total_high'] ) ) : '';
+            $total_low        = ! empty( $_POST['total_low'] ) ? absint( wp_unslash( $_POST['total_low'] ) ) : '';
 
-            $total_high          = ! empty( $_POST['total_high'] ) ? absint( wp_unslash( $_POST['total_high'] ) ) : '';
-            $total_low           = ! empty( $_POST['total_low'] ) ? absint( wp_unslash( $_POST['total_low'] ) ) : '';
-
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id, $total_high, $total_low );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, null, 10000000, 0, $customer_id, $total_high, $total_low, $order_date_start, $order_date_end );
             dokan_order_csv_export( $user_orders );
             exit();
         }

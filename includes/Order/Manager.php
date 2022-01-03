@@ -28,9 +28,11 @@ class Manager {
             'paged'       => 1,
             'limit'       => 10,
             'date'        => null,
+            'start_date'  => null,
+            'end_date'    => null,
             'sort_order'  => 'DESC',
             'total_high'  => '',
-            'total_low'   => ''
+            'total_low'   => '',
         ];
 
         $args = wp_parse_args( $args, $default );
@@ -50,6 +52,8 @@ class Manager {
             $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+            $start_date_q = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
+            $end_date_q   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
             $total_low_q  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
             $total_high_q = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
@@ -64,6 +68,8 @@ class Manager {
                     {$where}
                     p.post_status != 'trash'
                     {$date_query}
+                    {$start_date_q}
+                    {$end_date_q}
                     {$status_where}
                     {$total_low_q}
                     {$total_high_q}

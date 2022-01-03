@@ -54,7 +54,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  *
  * @return array
  */
-function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null, $total_high, $total_low ) {
+function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null, $total_high = '', $total_low = '', $start_date = '', $end_date = '' ) {
     // get all function arguments as key => value pairs
     $args = get_defined_vars();
 
@@ -81,6 +81,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
 
         $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
+        $start_date_q = ( $start_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $start_date ) : '';
+        $end_date_q   = ( $end_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $end_date ) : '';
         $total_low_q  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
         $total_high_q = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
@@ -98,6 +100,8 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
                 {$status_where}
                 {$total_low_q}
                 {$total_high_q}
+                {$start_date_q}
+                {$end_date_q}
                 {$exclude}
             GROUP BY do.order_id
             ORDER BY {$order_by} {$order}
