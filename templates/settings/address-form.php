@@ -16,8 +16,6 @@ $address_country = isset( $profile_info['address']['country'] ) ? $profile_info[
 $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
 $vendor_proof    = isset( $profile_info['address']['proof'] ) ? $profile_info['address']['proof'] : '';
 
-error_log( print_R( $vendor_proof, 1 ) );
-
 ?>
 
 <input type="hidden" id="dokan_selected_country" value="<?php echo esc_attr( $address_country )?>" />
