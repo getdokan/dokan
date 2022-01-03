@@ -103,8 +103,8 @@
         </div>
         <div class="content">
             <div class="details">
-                <h3>{{ __( 'Dokan Premium', 'dokan-lite' ) }}</h3>
-                <p>{{ __('Unleash the full potential of your marketplace with more premium features.', 'dokan-lite') }}</p>
+                <h3>{{ __( 'Dokan Premium', 'dokan-lite' ) }} <span class="dokan-offer">{{ __( 'Enjoy', 'dokan-lite' ) }} <span class="penchant-off">{{ __( '30%', 'dokan-lite' ) }}</span>{{ __( 'OFF', 'dokan-lite' ) }}</span></h3>
+                <p>{{ __( 'Unleash the full potential of your marketplace with more premium features.', 'dokan-lite') }}</p>
             </div>
             <div class="features">
                 <label>
@@ -204,6 +204,10 @@ export default {
                 font-style: normal;
                 font-family: "SF Pro Text", sans-serif;
                 margin: 0;
+
+                .dokan-offer {
+                    display: none;
+                }
             }
 
             p {
@@ -340,27 +344,54 @@ export default {
             .details {
                 text-align: left;
                 flex: unset;
-                width: 85%;
+                width: 80%;
                 margin-bottom: 20px;
 
                 h3 {
                     font-size: 15px;
+
+                    .dokan-offer {
+                        font-size: 13px;
+                        font-weight: 300;
+                        margin-left: 15px;
+                        display: inline-block;
+                    }
+
+                    .penchant-off {
+                        margin: 0 5px;
+                        padding: 3px 8px;
+                        background-color: rgba(249, 95, 71, .15);
+                        color: #E04932;
+                        font-size: 15px;
+                        font-weight: 900;
+                        border-radius: 5px;
+                    }
+                }
+
+                p {
+                    font-size: 13px;
                 }
             }
 
             .features {
                 flex-wrap: wrap;
                 row-gap: 0;
-                column-gap: 0;
+                column-gap: 1rem;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
 
                 .hidden-sm {
                     display: none;
                 }
 
+                label {
+                    font-size: 13px;
+                    font-weight: 300;
+                }
+
                 a {
                     margin-top: 20px;
                     display: block;
+                    font-size: 13px;
                 }
             }
         }
