@@ -42,28 +42,44 @@ function dokan_get_i18n_date_format( format = true ) {
 }
 
 /**
- * Turns date format into date range picker supported format
+ * Get date range picker supported date format
  *
  * @since 3.3.6
  *
- * @param {string} dateFormat Dokan i18n date format
- *
  * @return {string} Date range picker supported date format
  */
-function dokan_get_date_range_picker_date_format(dateFormat) {
-    switch (dateFormat) {
-        case 'dd/mm/yy':
-            return 'DD/MM/YYYY';
-            break;
-        case 'mm/dd/yy':
-            return 'MM/DD/YYYY';
-            break;
-        case 'yy-mm-dd':
-            return 'YYYY-MM-DD';
-            break;
-        default:
-            return 'MMMM D, YYYY';
+function dokan_get_date_range_picker_date_format() {
+  let formatMap  = {
+    // Day
+    dd : 'DD',
+    D  : 'D',
+    d  : 'D',
+    DD : 'DD',
+    // Month
+    MM : 'MMMM',
+    mm : 'MM',
+    M  : 'MM',
+    m  : 'MM',
+    // Year
+    yy : 'YYYY',
+    y  : 'YYYY'
+  }
+
+  let i = 0;
+  let char = '';
+  let dateRangePickerFormat = '';
+
+  for ( i = 0; i < dokan_get_i18n_date_format().length; i++ ) {
+    char = dokan_get_i18n_date_format();
+
+    if ( char in formatMap ) {
+      dateRangePickerFormat += formatMap[char];
+    } else {
+      dateRangePickerFormat += char;
     }
+  }
+
+  return dateRangePickerFormat;
 }
 
 /**
