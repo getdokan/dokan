@@ -49,30 +49,31 @@ function dokan_get_i18n_date_format( format = true ) {
  * @return {string} Date range picker supported date format
  */
 function dokan_get_date_range_picker_date_format() {
-  let formatMap  = {
+  let formatMap = {
     // Day
-    dd : 'DD',
-    D  : 'D',
-    d  : 'D',
-    DD : 'DD',
+    d: 'D',
+    D: 'DD',
+    j: 'D',
+    l: 'DD',
     // Month
-    MM : 'MMMM',
-    mm : 'MM',
-    M  : 'MM',
-    m  : 'MM',
+    F: 'MMMM',
+    m: 'MM',
+    M: 'MM',
+    n: 'M',
     // Year
-    yy : 'YYYY',
-    y  : 'YYYY'
+    o: 'YYYY', // not exactly same. see php date doc for details
+    Y: 'YYYY',
+    y: 'YY'
   }
 
   let i = 0;
   let char = '';
   let dateRangePickerFormat = '';
 
-  for ( i = 0; i < dokan_get_i18n_date_format().length; i++ ) {
-    char = dokan_get_i18n_date_format();
+  for (i = 0; i < dokan_helper.i18n_date_format.length; i++) {
+    char = dokan_helper.i18n_date_format[i];
 
-    if ( char in formatMap ) {
+    if (char in formatMap) {
       dateRangePickerFormat += formatMap[char];
     } else {
       dateRangePickerFormat += char;
