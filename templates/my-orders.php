@@ -7,19 +7,41 @@
 
 <?php
     global $woocommerce;
+    require_once DOKAN_INC_DIR . '/my-orders-functions.php';
 
-    $page  = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
-    $limit = 10;
+    $page       = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
+    $limit      = 10;
+    $start_date = empty( $_GET['start_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['start_date'] ) );
+    $end_date   = empty( $_GET['end_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['end_date'] ) );
+    $max_price  = empty( $_GET['max_price'] ) ? '' : absint( wp_unslash( $_GET['max_price'] ) );
+    $min_price  = empty( $_GET['min_price'] ) ? '' : absint( wp_unslash( $_GET['min_price'] ) );
+    $status     = empty( $_GET['status'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['status'] ) );
 
-    $customer_orders = get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
-        'numberposts' => $limit,
-        'offset'      => $limit * ( $page - 1 ),
-        'meta_key'    => '_customer_user',
-        'meta_value'  => get_current_user_id(),
-        'post_type'   => 'shop_order',
-        'post_status' => 'wc-publish',
-    ) ) );
+    $customer_orders = dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $limit, $page );
+    $statuses = wc_get_order_statuses();
 
+    $customer_orders = dokan_filter_orders_by_status( $customer_orders, $status );
+    ?>
+
+    <form method="GET" action="">
+        <div class="dokan-form-group">
+            <input type="text" name="start_date" class="datepicker" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
+            <input type="text" name="end_date" class="datepicker" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
+            <input type="number" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $min_price ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
+            <input type="number" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $max_price ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
+            <select name="status" placeholder="<?php esc_attr_e( 'Filter by order status', 'dokan-lite' ); ?>">
+                <option value="" <?php selected( '', $status ); ?>><?php esc_html_e( 'All', 'dokan-lite' ); ?></option>
+                <?php foreach ( $statuses as $status_key => $status_text) : ?>
+                <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="dokan-form-group">
+            <button type="submit" class="dokan-btn dokan-btn-primary">Filter</button>
+        </div>
+    </form>
+
+    <?php
     if ( $customer_orders ) : ?>
 
         <h2><?php echo esc_html( apply_filters( 'woocommerce_my_account_my_orders_title', __( 'Recent Orders', 'dokan-lite' ) ) ); ?></h2>
@@ -38,9 +60,7 @@
             </thead>
 
             <tbody><?php
-                $statuses = wc_get_order_statuses();
-                foreach ( $customer_orders as $customer_order ) {
-                    $order = new WC_Order( $customer_order );
+                foreach ( $customer_orders as $order ) {
                     $item_count = $order->get_item_count();
 
                     ?><tr class="order">
@@ -106,13 +126,7 @@
         </table>
 
     <?php
-        $customer_orders_count = count( get_posts( apply_filters( 'woocommerce_my_account_my_orders_query', array(
-            'numberposts' => -1,
-            'meta_key'    => '_customer_user',
-            'meta_value'  => get_current_user_id(),
-            'post_type'   => 'shop_order',
-            'post_status' => 'wc-publish',
-        ) ) ) );
+        $customer_orders_count = count( dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price ) );
 
         $num_of_pages = ceil( $customer_orders_count / $limit );
 
@@ -140,3 +154,13 @@
         <p class="dokan-info"><?php esc_html_e( 'No orders found!', 'dokan-lite' ); ?></p>
 
     <?php endif; ?>
+
+<script>
+    (function($){
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-m-d'
+            });
+        });
+    })(jQuery);
+</script>
