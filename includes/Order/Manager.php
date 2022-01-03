@@ -29,6 +29,8 @@ class Manager {
             'limit'       => 10,
             'date'        => null,
             'sort_order'  => 'DESC',
+            'total_high'  => '',
+            'total_low'   => ''
         ];
 
         $args = wp_parse_args( $args, $default );
@@ -48,6 +50,8 @@ class Manager {
             $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
             $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+            $total_low_q  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
+            $total_high_q = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
             $orders = $wpdb->get_results(
                 $wpdb->prepare(
@@ -61,6 +65,8 @@ class Manager {
                     p.post_status != 'trash'
                     {$date_query}
                     {$status_where}
+                    {$total_low_q}
+                    {$total_high_q}
                 GROUP BY do.order_id
                 ORDER BY p.post_date {$args['sort_order']}
                 LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']

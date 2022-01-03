@@ -28,8 +28,9 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
 
 $filter_date  = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : '';
 $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
-$sort_order   = isset( $_GET['sort_order'] ) ? sanitize_text_field( $_GET['sort_order'] ) : 'DESC';
-
+$sort_order   = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unslash( $_GET['sort_order'] ) ) : 'DESC';
+$total_high   = ! empty( $_GET['total_high'] ) ? absint( wp_unslash( $_GET['total_high'] ) ) : '';
+$total_low    = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['total_low'] ) ) : '';
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
@@ -54,6 +55,9 @@ $sort_order   = isset( $_GET['sort_order'] ) ? sanitize_text_field( $_GET['sort_
                 <?php endforeach; ?>
             </select>
 
+            <input name="total_low" type="number" value="<?php echo esc_attr( $total_low ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Minimum Order Total', 'dokan-lite'); ?>">
+            <input name="total_high" type="number" value="<?php echo esc_attr( $total_high ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Maximum Order Total', 'dokan-lite' ); ?>">
+
             <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
         </div>
     </form>
@@ -69,6 +73,8 @@ $sort_order   = isset( $_GET['sort_order'] ) ? sanitize_text_field( $_GET['sort_
                 <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
                 <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
                 <input type="hidden" name="order" value="<?php echo esc_attr( $sort_order ); ?>">
+                <input type="hidden" name="total_high" value="<?php echo esc_attr( $total_high); ?>" >
+                <input type="hidden" name="total_low" value="<?php echo esc_attr( $total_low); ?>" >
             </div>
         </form>
     <?php endif; ?>

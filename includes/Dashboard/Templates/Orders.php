@@ -121,14 +121,17 @@ class Orders {
             $order_date   = ( isset( $_POST['order_date'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date'] ) ) : null;
             $order_status = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
 
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id );
+            $total_high          = ! empty( $_POST['total_high'] ) ? absint( wp_unslash( $_POST['total_high'] ) ) : '';
+            $total_low           = ! empty( $_POST['total_low'] ) ? absint( wp_unslash( $_POST['total_low'] ) ) : '';
+
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, $order_date, 10000000, 0, $customer_id, $total_high, $total_low );
             dokan_order_csv_export( $user_orders );
             exit();
         }
-        
+
         /**
          * Just after exporting the csv file
-         * 
+         *
          * @since 3.2.13 removed hook argument
          * use $_POST superglobal to access post data
          */
