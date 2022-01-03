@@ -206,7 +206,10 @@ if ( $user_orders ) {
         'seller_id'   => $seller_id,
         'status'      => $order_status,
         'customer_id' => $customer_id,
-        'date'        => $order_date,
+        'start_date'  => $order_date_start,
+        'end_date'    => $order_date_end,
+        'total_high'  => $total_high,
+        'total_low'   => $total_low,
     ] );
 
     // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );

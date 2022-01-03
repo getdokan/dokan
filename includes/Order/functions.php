@@ -223,7 +223,11 @@ function dokan_get_seller_orders_number( $args = [] ) {
             $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
             $customer_where = $wpdb->prepare(" AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
         }
-        $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+        $date_where   = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+        $start_date_q = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
+        $end_date_q   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
+        $total_low_q  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
+        $total_high_q = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
         $count = (int) $wpdb->get_var(
             $wpdb->prepare(
@@ -235,6 +239,10 @@ function dokan_get_seller_orders_number( $args = [] ) {
                     do.seller_id = %d AND
                     p.post_status != 'trash'
                     {$status_where}
+                    {$start_date_q}
+                    {$end_date_q}
+                    {$total_high_q}
+                    {$total_low_q}
                     {$customer_where}
                     {$date_where}", $seller_id
             )
