@@ -4199,7 +4199,7 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
  *
  * @return boolean
  */
-function dokan_handle_recaptcha_validation( $action, $token, $secretkey, $min_eligible_score = 0.5 ) {
+function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
     // Check if action, token and secret key exist.
     if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
         return false;
@@ -4222,6 +4222,7 @@ function dokan_handle_recaptcha_validation( $action, $token, $secretkey, $min_el
     }
 
     // Validate reCaptcha score.
+    $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5, $action );
     if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
         return false;
     }
