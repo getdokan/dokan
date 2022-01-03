@@ -97,7 +97,7 @@ class Hooks {
                 $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
             }
 
-            return '<a href=' . $url . " '>" . $vendor->get_shop_name() . '</a>';
+            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
         }
         return $display_value;
     }
