@@ -44,9 +44,22 @@ class Manager {
      * @return void
      */
     private function init_hooks() {
+        add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_admin_notices_styles' ] );
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
+    }
+
+    /**
+     * Load admin notices style and styles
+     *
+     * @since 3.3.6
+     *
+     * @return void
+     */
+    public function load_dokan_admin_notices_styles() {
+        wp_register_style( 'dokan-global-admin-css', DOKAN_PLUGIN_ASSEST . '/css/global-admin.css', false, filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ) );
+        wp_enqueue_style( 'dokan-global-admin-css' );
     }
 
     /**

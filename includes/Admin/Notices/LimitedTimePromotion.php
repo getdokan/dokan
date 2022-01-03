@@ -35,17 +35,7 @@ class LimitedTimePromotion {
      * @return void
      */
     public function render_promo_notices_html() {
-        $notice = Helper::dokan_get_promo_notices();
-
-        if ( empty( $notice ) ) {
-            return;
-        }
-
-        dokan_get_template(
-            'limited-time-promo-notice.php', [
-                'notice' => $notice,
-            ]
-        );
+        echo '<div id="dokan-promo-notices"></div>';
     }
 
     /**
