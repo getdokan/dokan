@@ -14,6 +14,7 @@ $address_city    = isset( $profile_info['address']['city'] ) ? $profile_info['ad
 $address_zip     = isset( $profile_info['address']['zip'] ) ? $profile_info['address']['zip'] : '';
 $address_country = isset( $profile_info['address']['country'] ) ? $profile_info['address']['country'] : '';
 $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
+$vendor_avatar   = isset( $profile_info['address']['avatar'] ) ? $profile_info['address']['avatar'] : '';
 
 ?>
 
@@ -142,5 +143,30 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             <?php } ?>
             </div>
         <?php } ?>
+        <?php if ( $seller_address_fields['proof_residence'] ) : ?>
+            <div class="dokan-form-group">
+                <label class="control-label" for="dokan_address[state]"><?php esc_html_e( 'Proof of Residence', 'dokan-lite' ); ?>
+                    <?php
+                    $required = ! empty( $seller_address_fields['proof_residence']['required'] ) ? 'required' : '';
+                    echo ( ! empty( $required ) ? '<span class="required">*</span>' : '' );
+                    ?>
+                </label>
+                <br/>
+                <div class="proof-button-area" style="display: <?php echo $vendor_avatar ? 'none' : 'block' ?>;">
+                    <a href="#" id="vendor-avatar" class="dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Proof', 'dokan-lite' ); ?></a>
+                    <input type="hidden"
+                        id="vendor-avatar-url"
+                        name="dokan_address[avatar]"
+                        <?php echo esc_attr( $required ) ?>
+                        value="<?php echo $vendor_avatar ? esc_url( $vendor_avatar ) : $vendor_avatar; ?>" />
+                </div>
+                <div class="vendor_img_container">
+                    <?php if ( $vendor_avatar ) : ?>
+                        <img src="<?php echo esc_url( $vendor_avatar ); ?>" />
+                        <a class="dokan-close dokan-remove-gravatar-image">×</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

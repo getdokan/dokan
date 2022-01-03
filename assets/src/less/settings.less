@@ -133,6 +133,41 @@
         font-weight: normal;
         font-size: 12px;
       }
+
+      .vendor_img_container {
+        position: relative;
+        margin-top: 15px;
+
+        img {
+          border-radius: 50%;
+          height: 80px !important;
+          width: 80px;
+        }
+
+        .dokan-close {
+          position: absolute;
+          width: 80px;
+          height: 80px;
+          background: #000;
+          top: 0;
+          left: 0;
+          opacity: 0.7;
+          font-size: 70px;
+          text-align: center;
+          color: #f00;
+          padding-top: 5px;
+          border-radius: 50%;
+          transition: .3s ease-in-out;
+          transform: scale(0);
+        }
+
+        &:hover {
+          .dokan-close {
+            transform: scale(1);
+            cursor: pointer;
+          }
+        }
+      }
     }
     .dokan-form-group {
       .checkbox {
