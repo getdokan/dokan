@@ -9,6 +9,7 @@ $paged               = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 
 $order_date          = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : null;
 $allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
 $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
+$sort_order          = isset( $_GET['sort_order'] ) ? sanitize_text_field( $_GET['sort_order'] ) : 'DESC';
 
 $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
@@ -23,6 +24,7 @@ $user_orders  = dokan()->vendor->get( $seller_id )->get_orders( [
     'paged'       => $paged,
     'limit'       => $limit,
     'date'        => $order_date,
+    'sort_order'  => $sort_order,
 ] );
 
 if ( $user_orders ) {

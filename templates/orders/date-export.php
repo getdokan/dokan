@@ -10,8 +10,9 @@
  */
 ?>
 <?php
-$user_string = '';
-$user_id     = '';
+$user_string     = '';
+$user_id         = '';
+$orders_statuses = wc_get_order_statuses();
 
 if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
     $user_id = absint( $_GET['customer_id'] ); // WPCS: input var ok, sanitization ok.
@@ -27,17 +28,33 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
 
 $filter_date  = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : '';
 $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
+$sort_order   = isset( $_GET['sort_order'] ) ? sanitize_text_field( $_GET['sort_order'] ) : 'DESC';
 
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
         <div class="dokan-form-group">
             <input type="text" autocomplete="off" class="datepicker" style="width:120px; padding-bottom:7px" name="order_date" id="order_date_filter" placeholder="<?php esc_attr_e( 'Filter by Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date ); ?>">
+
             <select name="customer_id" id="dokan-filter-customer" style="width:220px" class="dokan-form-control"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?><option>
             </select>
+
+            <select name="sort_order" class="dokan-form-control">
+                <option value="DESC" <?php selected( 'DESC', $sort_order ); ?> ><?php esc_html_e( 'Newer Orders First', 'dokan-lite'); ?> </option>
+                <option value="ASC" <?php selected( 'ASC', $sort_order ); ?> ><?php esc_html_e( 'Older Orders First', 'dokan-lite'); ?> </option>
+            </select>
+
+            <select name="order_status" class="dokan-form-control">
+                <option value="all" <?php selected( 'all', $order_status ); ?>><?php esc_html_e( 'All', 'dokan-lite' ); ?></option>
+                <?php
+                foreach ( $orders_statuses as $status_key => $status_name ) :
+                    ?>
+                    <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $order_status ); ?>><?php esc_html_e( $status_name ); ?></option>
+                <?php endforeach; ?>
+            </select>
+
             <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
-            <input type="hidden" name="order_status" value="<?php echo  esc_attr( $order_status ); ?>">
         </div>
     </form>
 
@@ -51,6 +68,7 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
                 <input type="submit" name="dokan_order_export_filtered"  class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Export Filtered', 'dokan-lite' ); ?>">
                 <input type="hidden" name="order_date" value="<?php echo esc_attr( $filter_date ); ?>">
                 <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
+                <input type="hidden" name="order" value="<?php echo esc_attr( $sort_order ); ?>">
             </div>
         </form>
     <?php endif; ?>
