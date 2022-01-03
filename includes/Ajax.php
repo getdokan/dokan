@@ -347,7 +347,8 @@ class Ajax {
         // Validate recaptcha if site key and secret key exist
         if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
             $recaptcha_keys     = dokan_get_recaptcha_site_and_secret_keys();
-            $recaptcha_validate = dokan_handle_recaptcha_validation( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
+            $min_eligible_score = apply_filters( 'dokan_store_contact_recaptcha_minimum_eligible_score', 0.5 );
+            $recaptcha_validate = dokan_handle_recaptcha_validation( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'], $min_eligible_score );
 
             if ( empty( $recaptcha_validate ) ) {
                 $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
