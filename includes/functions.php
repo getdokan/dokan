@@ -252,7 +252,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
  *
  * @global WPDB $wpdb
  *
- * @since 3.3.6
+ * @since DOKAN_LITE_SINCE
  *
  * @param string $post_type
  * @param int    $user_id
@@ -3935,7 +3935,7 @@ function dokan_clear_product_caches( $product ) {
 /**
  * Check which vendor info should be hidden
  *
- * @since 3.3.6
+ * @since DOKAN_LITE_SINCE
  *
  * @param string $option
  *
@@ -4102,7 +4102,7 @@ function dokan_get_timestamp( $date_string, $gmt_date = false ) {
  *
  * @param $user_id
  *
- * @since 3.3.6
+ * @since DOKAN_LITE_SINCE
  *
  * @return integer threshold day
  */
