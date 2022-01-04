@@ -36,8 +36,8 @@
                 <?php endforeach; ?>
             </select>
             <select name="sort_order" class="dokan-form-control">
-                <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>>Newer Orders First</option>
-                <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>>Older Orders First</option>
+                <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
+                <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
             </select>
         </div>
         <div class="dokan-form-group">
