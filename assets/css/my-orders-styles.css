@@ -1,0 +1,11 @@
+#dokan-my-orders-filter {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#dokan-my-orders-filter input,
+#dokan-my-orders-filter select {
+    max-width: 200px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

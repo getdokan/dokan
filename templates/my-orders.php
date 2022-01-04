@@ -8,6 +8,7 @@
 <?php
     global $woocommerce;
     require_once DOKAN_INC_DIR . '/my-orders-functions.php';
+    wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], false );
 
     $page       = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
     $limit      = 10;
@@ -25,7 +26,7 @@
     ?>
 
     <form method="GET" action="">
-        <div class="dokan-form-group">
+        <div id="dokan-my-orders-filter">
             <input type="text" name="start_date" class="datepicker" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
             <input type="text" name="end_date" class="datepicker" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
             <input type="number" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $min_price ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
@@ -42,7 +43,7 @@
             </select>
         </div>
         <div class="dokan-form-group">
-            <button type="submit" class="dokan-btn dokan-btn-primary">Filter</button>
+            <button type="submit" class="dokan-btn dokan-btn-info">Filter</button>
         </div>
     </form>
 
