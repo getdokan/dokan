@@ -28,14 +28,14 @@
         <div id="dokan-my-orders-filter">
             <input type="text" name="start_date" class="datepicker" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
             <input type="text" name="end_date" class="datepicker" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
-            <input type="number" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $min_price ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
-            <input type="number" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $max_price ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             <select name="status" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Filter by order status', 'dokan-lite' ); ?>">
                 <option value="" <?php selected( '', $status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
                 <?php foreach ( $statuses as $status_key => $status_text) : ?>
-                <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
+                    <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
                 <?php endforeach; ?>
             </select>
+            <input type="number" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $min_price ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
+            <input type="number" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $max_price ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
