@@ -44,7 +44,9 @@ function dokan_filter_orders_by_status( $customer_orders, $status ) {
  *
  * @return array
  */
-function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $sort_order = '', $limit = '', $page = '' ) {
+function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $vendor_id, $sort_order = '', $limit = '', $page = '' ) {
+    global $wpdb;
+
     $date_query = [];
     if ( ! empty( $start_date ) ) {
         $date_query = [
@@ -91,6 +93,21 @@ function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_pri
 
     $args['orderby'] = 'ID';
     $args['order']   = $sort_order;
+
+    if ( ! empty( $vendor_id ) ) {
+        $order_ids = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d",
+                $vendor_id
+            )
+        );
+
+        if ( empty( $order_ids ) ) {
+            $order_ids = [ 0 ];
+        }
+
+        $args['post__in'] = $order_ids;
+    }
 
     $customer_orders = get_posts(
         apply_filters(

@@ -16,11 +16,12 @@
     $min_price  = empty( $_GET['min_price'] ) ? '' : absint( wp_unslash( $_GET['min_price'] ) );
     $status     = empty( $_GET['status'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['status'] ) );
     $sort_order = empty( $_GET['sort_order'] ) ? 'DESC' : sanitize_text_field( wp_unslash( $_GET['sort_order'] ) );
+    $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
-    $customer_orders = dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $sort_order, $limit, $page );
-    $statuses = wc_get_order_statuses();
-
+    $statuses        = wc_get_order_statuses();
+    $customer_orders = dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $vendor_id, $sort_order, $limit, $page );
     $customer_orders = dokan_filter_orders_by_status( $customer_orders, $status );
+    $vendors         = dokan()->vendor->get_vendors( [ 'number' => -1 ] );
     ?>
 
     <form method="GET" action="">
@@ -38,6 +39,13 @@
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
+            </select>
+            <select name="vendor" class="dokan-form-control" class="dokan-my-order-select2">
+                <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
+                <?php foreach ( $vendors as $vendor ) :
+                    $sellershop = dokan_get_store_info( $vendor->id );?>
+                    <option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor->id, $vendor_id ); ?>><?php echo esc_html( $sellershop['store_name'] ); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="dokan-form-group">
@@ -138,7 +146,7 @@
         </table>
 
     <?php
-        $customer_orders_count = count( dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price ) );
+        $customer_orders_count = count( dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $vendor_id ) );
 
         $num_of_pages = ceil( $customer_orders_count / $limit );
 
