@@ -40,7 +40,7 @@
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
             </select>
-            <select name="vendor" class="dokan-form-control" class="dokan-my-order-select2">
+            <select name="vendor" class="dokan-form-control dokan-my-order-select2">
                 <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
                 <?php foreach ( $vendors as $vendor ) :
                     $sellershop = dokan_get_store_info( $vendor->id );?>
@@ -178,6 +178,10 @@
 <script>
     (function($){
         $(document).ready(function(){
+            $('.dokan-my-order-select2').select2({
+                allowClear: true,
+            });
+
             $('.datepicker').datepicker({
                 dateFormat: 'yy-m-d'
             });
