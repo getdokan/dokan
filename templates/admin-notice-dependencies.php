@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             // translators: 1$-2$: opening and closing <strong> tags, 3$-4$: link tags, takes to woocommerce plugin on wp.org, 5$-6$: opening and closing link tags, leads to plugins.php in admin
                             $text        = sprintf( esc_html__( '%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$sactivate WooCommerce &raquo;%6$s',  'dokan-lite' ), '<strong>', '</strong>', '<a href="https://wordpress.org/plugins/woocommerce/">', '</a>', '<a href="' .  esc_url( $install_url ) . '">', '</a>' );
                         }
-                        ?>
+                    ?>
                     <div><?php echo $text; ?></div>
                 </div>
             </div>
