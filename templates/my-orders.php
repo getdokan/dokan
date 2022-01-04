@@ -41,7 +41,7 @@
             </select>
         </div>
         <div class="dokan-form-group">
-            <button type="submit" class="dokan-btn dokan-btn-info">Filter</button>
+            <button type="submit" class="dokan-btn dokan-btn-info"> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
         </div>
     </form>
 
@@ -58,7 +58,7 @@
                     <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
                     <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
                     <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
-                    <th class="order-total"><span class="nobr"><?php esc_html_e( 'Item List', 'dokan-lite' ); ?></span></th>
+                    <th class="order-total"><span class="nobr"><?php esc_html_e( 'Items List', 'dokan-lite' ); ?></span></th>
                     <th class="order-total"><span class="nobr"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></span></th>
                     <th class="order-actions">&nbsp;</th>
                 </tr>
