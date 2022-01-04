@@ -41,7 +41,7 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
             </select>
 
             <select name="order_status" class="dokan-form-control">
-                <option value="all" <?php selected( 'all', $order_status ); ?>><?php esc_html_e( 'All', 'dokan-lite' ); ?></option>
+                <option value="all" <?php selected( 'all', $order_status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
                 <?php
                 foreach ( $orders_statuses as $status_key => $status_name ) :
                     ?>
