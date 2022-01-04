@@ -52,7 +52,7 @@ class LimitedTimePromotion {
 
         $key = isset( $_POST['key'] ) ? sanitize_text_field( wp_unslash( $_POST['key'] ) ) : '';
 
-        if ( ! empty( $key ) && ! empty( sanitize_text_field( wp_unslash( $_POST['dokan_limited_time_promotion_dismissed'] ) ) ) ) {
+        if ( ! empty( $key ) ) {
             $already_displayed_promo   = get_option( $this->promo_option_key, [] );
             $already_displayed_promo[] = $key;
 

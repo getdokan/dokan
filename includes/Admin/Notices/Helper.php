@@ -94,10 +94,9 @@ class Helper {
                     'priority'          => 10,
                     'show_close_button' => true,
                     'ajax_data'         => [
-                        'dokan_limited_time_promotion_dismissed' => true,
-                        'action'                                 => 'dokan_dismiss_limited_time_promotional_notice',
-                        'nonce'                                  => wp_create_nonce( 'dokan_admin' ),
-                        'key'                                    => $promo['key'],
+                        'action' => 'dokan_dismiss_limited_time_promotional_notice',
+                        'nonce'  => wp_create_nonce( 'dokan_admin' ),
+                        'key'    => $promo['key'],
                     ],
                     'actions'           => [
                         [
