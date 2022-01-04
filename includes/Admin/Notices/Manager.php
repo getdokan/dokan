@@ -58,7 +58,7 @@ class Manager {
      * @return void
      */
     public function load_dokan_admin_notices_styles() {
-        wp_enqueue_style( 'dokan-global-admin-css', DOKAN_PLUGIN_ASSEST . '/css/global-admin.css', false, filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ) );
+        wp_enqueue_style( 'dokan-global-admin-css', DOKAN_PLUGIN_ASSEST . '/css/global-admin.css', [], filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ) );
     }
 
     /**
