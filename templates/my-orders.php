@@ -7,8 +7,6 @@
 
 <?php
     global $woocommerce;
-    require_once DOKAN_INC_DIR . '/my-orders-functions.php';
-    wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], false );
 
     $page       = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
     $limit      = 10;

@@ -18,6 +18,9 @@ class MyOrders extends DokanShortcode {
             return;
         }
 
+        require_once DOKAN_INC_DIR . '/my-orders-functions.php';
+        wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], DOKAN_PLUGIN_VERSION );
+
         ob_start();
 
         dokan_get_template_part( 'my-orders' );
