@@ -1,6 +1,7 @@
 #dokan-my-orders-filter {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 #dokan-my-orders-filter input,
