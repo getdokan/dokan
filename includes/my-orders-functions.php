@@ -44,7 +44,7 @@ function dokan_filter_orders_by_status( $customer_orders, $status ) {
  *
  * @return array
  */
-function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $limit = '', $page = '' ) {
+function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $sort_order = '', $limit = '', $page = '' ) {
     $date_query = [];
     if ( ! empty( $start_date ) ) {
         $date_query = [
@@ -84,6 +84,13 @@ function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_pri
         $args['numberposts'] = $limit;
         $args['offset']      = $limit * ( $page - 1 );
     }
+
+    if ( ! empty( $sort_order ) && ! in_array( $sort_order, [ 'ASC', 'DESC' ], true ) ) {
+        $sort_order = 'DESC';
+    }
+
+    $args['orderby'] = 'ID';
+    $args['order']   = $sort_order;
 
     $customer_orders = get_posts(
         apply_filters(
