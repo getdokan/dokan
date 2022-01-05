@@ -49,17 +49,13 @@ function dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_pri
 
     $date_query = [];
     if ( ! empty( $start_date ) ) {
-        $date_query = [
-            'after'     => $start_date,
-            'inclusive' => true,
-        ];
+        $date_query['after']     = $start_date;
+        $date_query['inclusive'] = true;
     }
 
     if ( ! empty( $end_date ) ) {
-        $date_query = [
-            'before'    => $end_date,
-            'inclusive' => true,
-        ];
+        $date_query['before']    = $end_date;
+        $date_query['inclusive'] = true;
     }
 
     $args = [
