@@ -63,7 +63,7 @@ abstract class DokanStoreProducts {
      *
      * @since 3.3.6
      *
-     * @var bool
+     * @var int
      */
     public static $store_setting_fields_counter = 0;
 
@@ -229,37 +229,38 @@ abstract class DokanStoreProducts {
      * @return void
      */
     public function render_store_settings_form_fields( $vendor_id, $profile_info ) {
-        if ( empty( $this->products_section_appearance ) || ! array_search( 'off', $this->products_section_appearance, true ) ) {
+        $args = $this->get_store_settings_data();
+
+        // Check if current products section visibility enabled by admin
+        if ( empty( $this->products_section_appearance[ $args['customizer_key'] ] ) || 'on' === $this->products_section_appearance[ $args['customizer_key'] ] ) {
             return;
         }
 
-        $args                  = $this->get_store_settings_data();
-        $show_products_section = isset( $profile_info[ $args['settings_key'] ] ) ? $profile_info[ $args['settings_key'] ] : 'yes';
-
-        // Increase store products section setting fields counter
+        // Increase store products section setting field counter
         self::$store_setting_fields_counter++;
+
         ?>
         <div class="dokan-form-group">
-            <label class="dokan-w3 dokan-control-label">
-                <?php
-                if ( 1 === self::$store_setting_fields_counter ) {
-                    esc_html_e( 'Store page product sections', 'dokan-lite' );
-                } elseif ( self::$store_setting_fields_counter > 1 ) {
-                    echo '&nbsp;';
-                }
-                ?>
-            </label>
+        <?php
+        // Print store setting input fields for products section by conditional checking
+        if ( 1 === self::$store_setting_fields_counter ) {
+            ?>
+            <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Store page product sections', 'dokan-lite' ); ?></label>
+            <?php
+        } else {
+            ?>
+            <label class="dokan-w3 dokan-control-label">&nbsp;</label>
+            <?php
+        }
 
-            <div class="dokan-w5 dokan-text-left">
-
-            <?php if ( isset( $this->products_section_appearance[ $args['customizer_key'] ] ) && 'off' === $this->products_section_appearance[ $args['customizer_key'] ] ) : ?>
-                <div class="checkbox">
+        // Current products section visibility setting by vendor
+        $show_products_section = isset( $profile_info[ $args['settings_key'] ] ) ? $profile_info[ $args['settings_key'] ] : 'yes';
+        ?>
+            <div class="dokan-w5 dokan-text-left"><div class="checkbox">
                     <label>
                         <input type="checkbox" name="<?php echo esc_attr( $args['settings_field_name'] ); ?>" value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php echo esc_html( $args['settings_field_label'] ); ?>
                     </label>
                 </div>
-            <?php endif; ?>
-
             </div>
         </div>
         <?php
