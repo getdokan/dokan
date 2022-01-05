@@ -344,8 +344,11 @@ export default {
             .details {
                 text-align: left;
                 flex: unset;
-                width: 80%;
                 margin-bottom: 20px;
+
+                p {
+                    width: 80%;
+                }
 
                 h3 {
                     font-size: 15px;
@@ -403,6 +406,17 @@ export default {
     }
 }
 
+@media only screen and (max-width: 375px) {
+    .dokan-promo-banner {
+        .content {
+            .details {
+                p {
+                    width: 85%;
+                }
+            }
+        }
+    }
+}
 
 @media (min-width: 577px) and (max-width: 991px) {
     .dokan-promo-banner {
