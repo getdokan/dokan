@@ -61,7 +61,8 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
             <input name="total_high" type="number" value="<?php echo esc_attr( $total_high ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Maximum Order Total', 'dokan-lite' ); ?>">
         </div>
         <div class="dokan-form-group">
-            <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
+            <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
+            <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
         </div>
     </form>
 
