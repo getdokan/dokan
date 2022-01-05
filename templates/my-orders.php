@@ -49,7 +49,8 @@
             </select>
         </div>
         <div class="dokan-form-group">
-            <button type="submit" class="dokan-btn dokan-btn-info"> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
+            <button type="submit" class="dokan-btn dokan-btn-info"><span class="fa fa-filter"></span> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
+            <a id="dokan-my-order-filter-reset" class="dokan-btn"><span class="fa fa-undo"></span> <?php esc_html_e( 'Reset', 'dokan-lite' ); ?></a>
         </div>
     </form>
 
@@ -184,6 +185,10 @@
 
             $('.datepicker').datepicker({
                 dateFormat: 'yy-m-d'
+            });
+
+            $('a#dokan-my-order-filter-reset').click(function (){
+                window.location = window.location.href.split('?')[0];
             });
         });
     })(jQuery);
