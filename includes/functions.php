@@ -4227,6 +4227,6 @@ function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
         return false;
     }
 
-    // Return true after passing all checks.
-    return true;
+    // Return success status after passing checks
+    return $response_data['success'];
 }
