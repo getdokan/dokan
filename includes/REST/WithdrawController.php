@@ -357,6 +357,10 @@ class WithdrawController extends WP_REST_Controller {
                 'ip'      => dokan_get_client_ip(),
             ];
 
+            if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
+                throw new DokanException( 'dokan_rest_withdraw_error', __( 'You already have a pending withdraw request', 'dokan-lite' ), 400 );
+            }
+
             $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
 
             if ( is_wp_error( $validate_request ) ) {
