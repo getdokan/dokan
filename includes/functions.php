@@ -4195,7 +4195,6 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
  * @param string $action
  * @param string $token
  * @param string $secretkey
- * @param string $min_eligible_score
  *
  * @return boolean
  */
@@ -4227,6 +4226,6 @@ function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
         return false;
     }
 
-    // Return success status after passing checks
+    // Return success status after passing checks.
     return $response_data['success'];
 }
