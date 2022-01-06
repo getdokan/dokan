@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Admin;
+namespace WeDevs\Dokan\Admin\Notices;
 
 /**
  * Review notice class.
@@ -11,7 +11,7 @@ namespace WeDevs\Dokan\Admin;
  *
  * @package dokan
  */
-class ReviewNotice {
+class PluginReview {
 
     /**
      * ReviewNotice constructor.
@@ -19,7 +19,7 @@ class ReviewNotice {
      * @since 3.3.1
      */
     public function __construct() {
-        add_action( 'admin_notices', [ $this, 'show_ask_for_review_notice' ], 0, 1 );
+        add_action( 'dokan_admin_notices', [ $this, 'show_ask_for_review_notice' ] );
         add_action( 'wp_ajax_dokan_ask_for_review_notice_action', [ $this, 'review_notice_action_ajax_handler' ] );
     }
 
@@ -28,32 +28,25 @@ class ReviewNotice {
      *
      * @since 3.3.1
      *
-     * @return void
+     * @param array $notices
+     *
+     * @return array
      */
-    public function show_ask_for_review_notice() {
-        global $pagenow;
-
-        // Pages to exclude the notice.
-        $exclude = apply_filters( 'dokan_ask_for_review_admin_notice_exclude_pages', [ 'users.php', 'tools.php', 'options-general.php', 'options-writing.php', 'options-reading.php', 'options-discussion.php', 'options-media.php', 'options-permalink.php', 'options-privacy.php', 'edit-comments.php', 'upload.php', 'media-new.php', 'import.php', 'export.php', 'site-health.php', 'export-personal-data.php', 'erase-personal-data.php' ] );
-
-        if ( in_array( $pagenow, $exclude, true ) ) {
-            return;
-        }
-
+    public function show_ask_for_review_notice( $notices ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            return;
+            return $notices;
         }
 
         // Check if notice was hidden.
         if ( 'yes' === get_option( 'dokan_review_notice_hidden', 'no' ) ) {
-            return;
+            return $notices;
         }
 
         // Check if notice postponed.
         $notice_postponed = get_option( 'dokan_review_notice_postponed' );
 
         if ( ! empty( $notice_postponed ) && $notice_postponed > time() ) {
-            return;
+            return $notices;
         }
 
         // Check if plugin install time exists.
@@ -64,12 +57,50 @@ class ReviewNotice {
             $eligible_time      = dokan_current_datetime()->modify( "+$initial_delay_days  days" );
 
             if ( $eligible_time->getTimestamp() < time() ) {
-                return;
+                return $notices;
             }
         }
 
-        // All checking passed, display admin notice.
-        dokan_get_template( 'admin-notice/ask-for-review.php' );
+        $notices[] = [
+            'type'              => 'info',
+            'title'             => __( 'Enjoying Dokan Multivendor Marketplace?', 'dokan-lite' ),
+            'description'       => __( 'If our plugin is performing well for you, it would be great if you could kindly write a review about <strong>Dokan</strong> on <strong>WordPress.org</strong>. It would give us insights to grow and improve this plugin.', 'dokan-lite' ),
+            'priority'          => 1,
+            'show_close_button' => true,
+            'ajax_data'         => [
+                'key'    => 'dokan-notice-dismiss',
+                'action' => 'dokan_ask_for_review_notice_action',
+                'nonce'  => wp_create_nonce( 'dokan_admin_review_notice_nonce' ),
+            ],
+            'actions'           => [
+                [
+                    'type'   => 'primary',
+                    'text'   => __( 'Yes, You Deserve It', 'dokan-lite' ),
+                    'action' => esc_url( 'https://wordpress.org/support/plugin/dokan-lite/reviews/?filter=5#new-post' ),
+                    'target' => '_blank',
+                ],
+                [
+                    'type'      => 'secondary',
+                    'text'      => __( 'Maybe Later', 'dokan-lite' ),
+                    'ajax_data' => [
+                        'key'    => 'dokan-notice-postponed',
+                        'action' => 'dokan_ask_for_review_notice_action',
+                        'nonce'  => wp_create_nonce( 'dokan_admin_review_notice_nonce' ),
+                    ],
+                ],
+                [
+                    'type'      => 'secondary',
+                    'text'      => __( 'I\'ve Added My Review', 'dokan-lite' ),
+                    'ajax_data' => [
+                        'key'    => 'dokan-notice-dismiss',
+                        'action' => 'dokan_ask_for_review_notice_action',
+                        'nonce'  => wp_create_nonce( 'dokan_admin_review_notice_nonce' ),
+                    ],
+                ],
+            ],
+        ];
+
+        return $notices;
     }
 
     /**

@@ -591,6 +591,24 @@ class Settings {
                     'type'    => 'text',
                     'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
                 ],
+                'recaptcha_validation_label' => [
+                    'name'  => 'recaptcha_validation_label',
+                    'label' => __( 'Google reCaptcha Validation', 'dokan-lite' ),
+                    'type'  => 'html',
+                    'desc'  => sprintf( '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">%s</a> %s. <a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">%s</a>', __( 'reCaptcha v3', 'dokan-lite' ), __( 'credentials required to enable store contact form invisible captcha', 'dokan-lite' ), __( 'Get Help', 'dokan-lite' ) ),
+                ],
+                'recaptcha_site_key'         => [
+                    'name'    => 'recaptcha_site_key',
+                    'label'   => __( 'Site Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 site key.', 'dokan-lite' ),
+                ],
+                'recaptcha_secret_key'       => [
+                    'name'    => 'recaptcha_secret_key',
+                    'label'   => __( 'Secret Key', 'dokan-lite' ),
+                    'type'    => 'text',
+                    'tooltip' => __( 'Insert Google reCaptcha v3 secret key.', 'dokan-lite' ),
+                ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
