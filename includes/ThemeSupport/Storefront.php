@@ -56,7 +56,7 @@ class Storefront {
      * @return void
      */
     public function reset_style() {
-        // Global theme specific styles to fix date range picker js brocken layout issue
+        // Global theme specific styles to fix date range picker js broken layout issue
         $style = '.daterangepicker .calendar-table td, .daterangepicker .calendar-table th { padding: 5px 10px; } .daterangepicker td.in-range { background-color: #ebf4f8 !important; } .daterangepicker td.active, .daterangepicker td.active:hover { background-color: #357ebd !important; }';
 
         // Check if the current page is dokan store listing page.
