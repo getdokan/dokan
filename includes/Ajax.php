@@ -350,7 +350,7 @@ class Ajax {
             $recaptcha_validate = dokan_handle_recaptcha_validation( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
 
             if ( empty( $recaptcha_validate ) ) {
-                $message = sprintf( $error_template, __( 'reCaptcha varification failed!', 'dokan-lite' ) );
+                $message = sprintf( $error_template, __( 'reCaptcha verification failed!', 'dokan-lite' ) );
                 wp_send_json_error( $message );
             }
         }
