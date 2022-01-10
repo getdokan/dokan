@@ -126,7 +126,7 @@ function dokan_withdraw_get_method_title( $method_key ) {
 function render_withdraw_method_details( $request ) {
     $details = maybe_unserialize( $request->details );
     if ( isset( $details['value'] ) && 'custom' === $request->method ) {
-        return '- ' . $details['value'];
+        return ' - ' . $details['value'];
     }
 }
 
