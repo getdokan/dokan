@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.8.2  
+**Tested up to:** 5.8.3  
 **WC requires at least:** 3.0  
 **WC tested up to:** 6.0.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.3.5  
+**Stable tag:** 3.3.6  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -305,6 +305,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.3.6 ( Jan 10, 2022 ) ###
+
+- **fix:** css class added for styling order details page #1468
+- **fix:** Item meta is not being deleted from the order details page of the WordPress dashboard #1458
+- **fix:** Showing Vendor or Store Name on the order details page of WooCommerce #1456
+- **fix:** Conflict with Siteground optimizer plugin #1474
 
 ### v3.3.5 ( Dec 23, 2021 ) ###
 
