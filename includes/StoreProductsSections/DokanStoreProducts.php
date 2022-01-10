@@ -157,6 +157,8 @@ abstract class DokanStoreProducts {
                 'products'      => $args['products'],
                 'section_id'    => $args['section_id'],
                 'section_title' => $args['section_title'],
+                'store_user'    => $store_user,
+                'store_info'    => $store_info,
             ]
         );
     }
