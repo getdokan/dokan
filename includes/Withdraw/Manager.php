@@ -292,7 +292,7 @@ class Manager {
 
             return [
                 'value' => $store_settings['payment']['custom']['value'],
-                'method' => dokan_get_option( 'dokan_withdraw_method_custom', 'dokan_withdraw' ),
+                'method' => dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' ),
             ];
         }
 
@@ -314,15 +314,12 @@ class Manager {
         switch ( absint( $code ) ) {
             case 0:
                 return 'pending';
-                break;
 
             case 1:
                 return 'approved';
-                break;
 
             case 2:
                 return 'cancelled';
-                break;
         }
 
         return null;
