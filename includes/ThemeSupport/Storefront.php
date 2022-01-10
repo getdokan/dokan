@@ -56,12 +56,19 @@ class Storefront {
      * @return void
      */
     public function reset_style() {
-        if ( ! dokan_is_store_listing() ) {
-            return;
+        $style = '';
+
+        // Check if the current page is dokan vendor dashboard page
+        if ( dokan_is_seller_dashboard() ) {
+            // Styles to fix date range picker js broken layout issue
+            $style .= '.daterangepicker .calendar-table td, .daterangepicker .calendar-table th { padding: 5px 10px; } .daterangepicker td.in-range { background-color: #ebf4f8 !important; } .daterangepicker td.active, .daterangepicker td.active:hover { background-color: #357ebd !important; }';
         }
 
-        $style = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
-        $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
+        // Check if the current page is dokan store listing page.
+        if ( dokan_is_store_listing() ) {
+            $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
+            $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
+        }
 
         wp_add_inline_style( 'dokan-style', $style );
     }
