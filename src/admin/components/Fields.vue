@@ -1,5 +1,5 @@
 <template>
-    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shoudShow">
+    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <th colspan="2" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
@@ -437,8 +437,8 @@ export default {
     },
 
     computed: {
-        shoudShow() {
-            let shoudShow = true;
+        shouldShow() {
+            let shouldShow = true;
 
             if ( this.fieldData.show_if ) {
                 const conditions = this.fieldData.show_if;
@@ -455,43 +455,49 @@ export default {
                     switch ( operator ) {
                         case 'greater_than':
                             if ( ! (dependencyValue > value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'greater_than_equal':
                             if ( ! (dependencyValue >= value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
                             if ( ! (dependencyValue < value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
                             if ( ! (dependencyValue <= value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'contains':
+                            if ( ! Object.values(dependencyValue).includes( value ) ) {
+                                shouldShow = false;
                             }
                             break;
 
                         case 'equal':
                         default:
                             if ( dependencyValue != value ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
                     }
 
-                    if ( ! shoudShow ) {
+                    if ( ! shouldShow ) {
                         break;
                     }
                 }
             }
 
-            return shoudShow;
+            return shouldShow;
         },
 
         mapApiSource() {

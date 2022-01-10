@@ -284,9 +284,18 @@ class Manager {
      * @param  string $method
      * @param  int    $user_id
      *
-     * @return integer
+     * @return array
      */
     public function get_formatted_details( $method, $user_id ) {
+        if ( 'custom' === $method ) {
+            $store_settings = dokan_get_store_info( $user_id );
+
+            return [
+                'value' => $store_settings['payment']['custom']['value'],
+                'method' => dokan_get_option( 'dokan_withdraw_method_custom', 'dokan_withdraw' ),
+            ];
+        }
+
         $vendor = dokan()->vendor->get( $user_id );
 
         return isset( $vendor->get_payment_profiles()[ $method ] ) ? (array) $vendor->get_payment_profiles()[ $method ] : [];
