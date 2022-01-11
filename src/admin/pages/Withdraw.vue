@@ -426,14 +426,10 @@ export default {
         },
 
         getPaymentTitle(method, data) {
-            let title;
+            let title = data.method_title;
 
-            if ( data.details[method] !== undefined ) {
-                if ( 'custom' === method ) {
-                    title = data.details[method].method || '';
-                } else {
-                    title = data.method_title;
-                }
+            if ( data.details[method] !== undefined && 'dokan_custom' === method  ) {
+                title = data.details[method].method ?? '';
             }
 
             return dokan.hooks.applyFilters( 'dokan_get_payment_title', title, method, data );
@@ -470,7 +466,7 @@ export default {
                     if ( data.bank.hasOwnProperty('swift') ) {
                         details += '<p>' + this.sprintf( this.__( 'Swift Code: %s', 'dokan-lite' ), data.bank.swift ) + '</p>';
                     }
-                } else if ( 'custom' === method ) {
+                } else if ( 'dokan_custom' === method ) {
                     details = data[method].value || '';
                 }
             }
