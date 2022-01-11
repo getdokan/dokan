@@ -263,16 +263,13 @@ class Manager {
         switch ( $status ) {
             case 'pending':
                 return 0;
-                break;
 
             case 'completed':
             case 'approved':
                 return 1;
-                break;
 
             case 'cancelled':
                 return 2;
-                break;
         }
 
         return null;
