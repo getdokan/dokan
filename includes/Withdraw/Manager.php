@@ -287,11 +287,11 @@ class Manager {
      * @return array
      */
     public function get_formatted_details( $method, $user_id ) {
-        if ( 'custom' === $method ) {
+        if ( 'dokan_custom' === $method ) {
             $store_settings = dokan_get_store_info( $user_id );
 
             return [
-                'value' => $store_settings['payment']['custom']['value'],
+                'value' => $store_settings['payment']['dokan_custom']['value'],
                 'method' => dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' ),
             ];
         }

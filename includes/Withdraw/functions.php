@@ -104,29 +104,22 @@ function dokan_withdraw_get_method( $method_key ) {
  *
  * @return string
  */
-function dokan_withdraw_get_method_title( $method_key ) {
+function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     $registered = dokan_withdraw_register_methods();
 
-    if ( 'custom' === $method_key ) {
-        return dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' );
-    } elseif ( isset( $registered[ $method_key ] ) ) {
-        return $registered[ $method_key ]['title'];
+    if ( 'dokan_custom' === $method_key ) {
+        $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' );
+        if ( null !== $request ) {
+            $details = maybe_unserialize( $request->details );
+            if ( isset( $details['value'] ) ) {
+                $title .= ' - ' . $details['value'];
+            }
+        }
+        return $title;
     }
 
-    return '';
-}
-
-/**
- * Get withdraw method details (email/phone)
- *
- * @param object $request
- *
- * @return string
- */
-function render_withdraw_method_details( $request ) {
-    $details = maybe_unserialize( $request->details );
-    if ( isset( $details['value'] ) && 'custom' === $request->method ) {
-        return '- ' . $details['value'];
+    if ( isset( $registered[ $method_key ] ) ) {
+        return $registered[ $method_key ]['title'];
     }
 }
 
