@@ -3970,6 +3970,10 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 //
 //
 //
+//
+//
+//
+//
 var ListTable = dokan_get_lib('ListTable');
 var Modal = dokan_get_lib('Modal');
 var Currency = dokan_get_lib('Currency');
@@ -4256,6 +4260,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         }
       }
     },
+    getPaymentTitle: function getPaymentTitle(method, data) {
+      var title = data.method_title;
+
+      if (data.details[method] !== undefined && 'dokan_custom' === method) {
+        var _data$details$method$;
+
+        title = (_data$details$method$ = data.details[method].method) !== null && _data$details$method$ !== void 0 ? _data$details$method$ : '';
+      }
+
+      return dokan.hooks.applyFilters('dokan_get_payment_title', title, method, data);
+    },
     getPaymentDetails: function getPaymentDetails(method, data) {
       var details = '—';
 
@@ -4286,6 +4301,8 @@ var AdminNotice = dokan_get_lib('AdminNotice');
           if (data.bank.hasOwnProperty('swift')) {
             details += '<p>' + this.sprintf(this.__('Swift Code: %s', 'dokan-lite'), data.bank.swift) + '</p>';
           }
+        } else if ('dokan_custom' === method) {
+          details = data[method].value || '';
         }
       }
 
@@ -6599,8 +6616,8 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     };
   },
   computed: {
-    shoudShow: function shoudShow() {
-      var shoudShow = true;
+    shouldShow: function shouldShow() {
+      var shouldShow = true;
 
       if (this.fieldData.show_if) {
         var conditions = this.fieldData.show_if;
@@ -6626,28 +6643,35 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
           switch (operator) {
             case 'greater_than':
               if (!(dependencyValue > value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'greater_than_equal':
               if (!(dependencyValue >= value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'less_than':
               if (!(dependencyValue < value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'less_than':
               if (!(dependencyValue <= value)) {
-                shoudShow = false;
+                shouldShow = false;
+              }
+
+              break;
+
+            case 'contains':
+              if (!Object.values(dependencyValue).includes(value)) {
+                shouldShow = false;
               }
 
               break;
@@ -6655,19 +6679,19 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
             case 'equal':
             default:
               if (dependencyValue != value) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
           }
 
-          if (!shoudShow) {
+          if (!shouldShow) {
             break;
           }
         }
       }
 
-      return shoudShow;
+      return shouldShow;
     },
     mapApiSource: function mapApiSource() {
       var _this$allSettingsValu, _this$allSettingsValu2;
@@ -9817,6 +9841,21 @@ var render = function() {
                 }
               },
               {
+                key: "method_title",
+                fn: function(data) {
+                  return [
+                    _c("div", {
+                      staticClass: "method_title_inner",
+                      domProps: {
+                        innerHTML: _vm._s(
+                          _vm.getPaymentTitle(data.row.method, data.row)
+                        )
+                      }
+                    })
+                  ]
+                }
+              },
+              {
                 key: "method_details",
                 fn: function(data) {
                   return [
@@ -9975,6 +10014,7 @@ var render = function() {
             ])
           },
           [
+            _vm._v(" "),
             _vm._v(" "),
             _vm._v(" "),
             _vm._v(" "),
@@ -11628,7 +11668,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.shoudShow
+  return _vm.shouldShow
     ? _c(
         "tr",
         { class: [_vm.id, "dokan-settings-field-type-" + _vm.fieldData.type] },
@@ -13834,11 +13874,11 @@ var render = function() {
           },
           [
             _vm._v(
-              "\n            " +
+              "\r\n            " +
                 _vm._s(
                   _vm.__("Check Out All Vendor Functionalities", "dokan-lite")
                 ) +
-                "\n        "
+                "\r\n        "
             )
           ]
         )

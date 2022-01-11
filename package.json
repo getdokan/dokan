@@ -1,14 +1,14 @@
 {
   "name": "dokan",
-  "version": "3.3.6",
+  "version": "3.3.5",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
   "private": true,
   "scripts": {
-    "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
-    "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
-    "build": "WEBPACK_ENV=production webpack",
+    "dev": "webpack --progress --colors --watch --hide-modules --env development",
+    "dev:build": "webpack --progress --colors --hide-modules --env production",
+    "build": "webpack --env production",
     "makepot": "wpvuei18n makepot",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
   },
