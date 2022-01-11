@@ -467,7 +467,7 @@ export default {
                         details += '<p>' + this.sprintf( this.__( 'Swift Code: %s', 'dokan-lite' ), data.bank.swift ) + '</p>';
                     }
                 } else if ( 'dokan_custom' === method ) {
-                    details = data[method].value || '';
+                    details = data[method].value ?? '';
                 }
             }
 
