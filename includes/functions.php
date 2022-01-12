@@ -4216,3 +4216,23 @@ function dokan_bool_to_on_off( $bool ) {
 
    return true === $bool ? 'on' : 'off';
 }
+
+/**
+ * Get additional products sections.
+ *
+ * @since 3.3.7
+ *
+ * @return array
+ */
+function dokan_get_additional_products_sections() {
+    $products_sections = apply_filters(
+        'dokan_additional_products_sections', [
+            'featured',
+            'latest',
+            'best_selling',
+            'top_rated',
+        ]
+    );
+
+    return $products_sections ? $products_sections : [];
+}
