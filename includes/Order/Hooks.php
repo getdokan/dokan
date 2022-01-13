@@ -537,7 +537,6 @@ class Hooks {
                     __( '<strong>Error!</strong> Could not add product %1$s to cart, Vendor can\'t buy their own product.', 'dokan-lite' ),
                     get_the_title( $product_id )
                 ),
-
                 [
                     'strong' => [],
                 ]
