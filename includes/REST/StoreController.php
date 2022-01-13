@@ -281,6 +281,19 @@ class StoreController extends WP_REST_Controller {
             $stores = dokan()->vendor->get_vendors( $args );
         }
 
+        // if no stores found in then we are searching again with meta value. here need to search by phone number.
+        if ( ! count( $stores ) && ! empty( $search_text ) ) {
+            $args['meta_query'] = [
+                [
+                    'key'     => 'dokan_profile_settings',
+                    'value'   => $search_text,
+                    'compare' => 'LIKE',
+                ],
+            ];
+
+            $stores = dokan()->vendor->get_vendors( $args );
+        }
+
         $data_objects = [];
 
         foreach ( $stores as $store ) {

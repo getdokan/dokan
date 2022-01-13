@@ -85,6 +85,53 @@
                     <template v-if="index !== (actions.length - 1)"> | </template>
                 </span>
                 </template>
+                <template slot="filters">
+                    <span class="form-group">
+                        <date-range-picker
+                            ref="picker"
+                            :locale-data="{ firstDay: 1, format: 'dd-mm-yyyy' }"
+                            :singleDatePicker="false"
+                            :timePicker="false"
+                            :timePicker24Hour="false"
+                            :showWeekNumbers="false"
+                            :showDropdowns="true"
+                            :autoApply="false"
+                            v-model="dateRange"
+                            :linkedCalendars="true"
+                            @update="dateRangeFilterUpdated"
+                        >
+                            <template v-slot:input="picker">
+                                <span v-if="dateRange.startDate">{{ dateRange.startDate | date }} - {{ dateRange.endDate | date }}</span>
+                                <span class="date-range-placeholder" v-if="! dateRange.startDate">{{ __( 'Filter by date', 'dokan' ) }}</span>
+                            </template>
+
+                            <!--    footer slot-->
+                            <div slot="footer" slot-scope="data" class="drp-buttons">
+                                <span class="drp-selected">{{ data.rangeText }}</span>
+                                <button @click="data.clickApply" v-if="!data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan' ) }}</button>
+                            </div>
+                        </date-range-picker>
+                    </span>
+                    <span class="form-group">
+                        <select class="dokan-input" id="vendor-search-category">
+                            <option :value="''">Select category</option>
+                            <option :value="'1'">One</option>
+                            <option :value="'2'">Two</option>
+                        </select>
+                    </span>
+                    <span class="form-group">
+                        <select class="dokan-input" id="vendor-search-varification">
+                            <option value="">{{ __( 'Select verification', 'dokan-lite' ) }}</option>
+                            <option value="id_verified">{{ __( 'ID Verified', 'dokan-lite' ) }}</option>
+                            <option value="address_verified">{{ __( 'Address Verified', 'dokan-lite' ) }}</option>
+                            <option value="social_verified">{{ __( 'Social Verified', 'dokan-lite' ) }}</option>
+                            <option value="company_verified">{{ __( 'Company Verified', 'dokan-lite' ) }}</option>
+                        </select>
+                    </span>
+
+                    <button class="button">{{ __( 'Filter', 'dokan-lite' ) }}</button>
+                    <button class="button">{{ __( 'Clear', 'dokan-lite' ) }}</button>
+                </template>
             </list-table>
 
             <add-vendor :vendor-id="vendorId" v-if="loadAddVendor" />
@@ -101,6 +148,7 @@ let ListTable   = dokan_get_lib('ListTable');
 let Switches    = dokan_get_lib('Switches');
 let Search      = dokan_get_lib('Search');
 let AdminNotice = dokan_get_lib('AdminNotice');
+let DateRangePicker = dokan_get_lib('DateRangePicker');
 
 export default {
 
@@ -113,9 +161,13 @@ export default {
         AddVendor,
         UpgradeBanner,
         AdminNotice,
+        DateRangePicker,
     },
 
     data () {
+        const startDate = '';
+        const endDate = '';
+
         return {
             showCb: true,
             hasPro: dokan.hasPro,
@@ -146,7 +198,7 @@ export default {
                     sortable: true
                 },
                 'enabled': {
-                    label: this.__( 'Status', 'dokan-lite' )
+                    label: this.__( 'Active', 'dokan-lite' )
                 }
             },
             actionColumn: 'title',
@@ -177,8 +229,34 @@ export default {
             vendors: [],
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
-            isVendorSwitchingEnabled: false
+            isVendorSwitchingEnabled: false,
+            dateRange: {
+                startDate,
+                endDate,
+            },
         }
+    },
+
+    filters: {
+        dateCell (value) {
+        let dt = new Date(value)
+
+        return dt.getDate()
+        },
+        date (val) {
+        return val ? moment(val.toLocaleString()).format('MMM D, YYYY') : ''
+        }
+    },
+
+    mounted() {
+        const self = this;
+
+        jQuery('#vendor-search-category').selectWoo({
+            multiple: false
+        });
+        jQuery('#vendor-search-varification').selectWoo({
+            multiple: false
+        });
     },
 
     watch: {
@@ -283,6 +361,20 @@ export default {
             this.counts.pending  = parseInt( xhr.getResponseHeader('X-Status-Pending') );
             this.counts.approved = parseInt( xhr.getResponseHeader('X-Status-Approved') );
             this.counts.all      = parseInt( xhr.getResponseHeader('X-Status-All') );
+
+            this.updateVendorMenuPendingBadge();
+        },
+
+        updateVendorMenuPendingBadge() {
+            const badge      = jQuery( '.pending-vendors-count-in-list' );
+            const badgeCount = jQuery( '.pending-vendors-count-badge-in-list' );
+
+            if ( this.counts.pending > 0 ) {
+                badgeCount.html(this.counts.pending);
+                badge.removeClass('dokan-hide');
+            } else {
+                badge.addClass('dokan-hide');
+            }
         },
 
         updatePagination(xhr) {
@@ -396,7 +488,20 @@ export default {
 
         switchToUrl(row) {
             return row.switch_url;
-        }
+        },
+
+        dateRangeFilterUpdated() {
+            let start_date = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.dateRange.startDate));
+            let end_date   = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.dateRange.endDate));
+
+            console.log(start_date,end_date);
+        },
+
+
+        dateRangeCancelled() {
+            this.dateRange.startDate = '';
+            this.dateRange.endDate   = '';
+        },
     }
 };
 </script>

@@ -39,6 +39,11 @@ class Menu {
             $withdraw_text = sprintf( __( 'Withdraw %s', 'dokan-lite' ), '<span class="awaiting-mod count-1"><span class="pending-count">' . $withdraw['pending'] . '</span></span>' );
         }
 
+        $counts                = dokan_get_seller_status_count();
+        $pending_vendors_count = (int) $counts['inactive'];
+        $show_pending_badge    = $pending_vendors_count < 1 ? 'dokan-hide': '';
+        $vendors_text          = sprintf( __( 'Vendors %s', 'dokan' ), '<span class="awaiting-mod count-1 pending-vendors-count-in-list ' . $show_pending_badge . '"><span class="pending-count pending-vendors-count-badge-in-list">' . $pending_vendors_count . '</span></span>' );
+
         $dashboard = add_menu_page( __( 'Dokan', 'dokan-lite' ), __( 'Dokan', 'dokan-lite' ), $capability, $slug, [ $this, 'dashboard' ], 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><g fill="#9EA3A8" fill-rule="nonzero"><path d="M2.565 1.909s10.352-.665 10.352 7.231-2.735 9.481-5.134 9.994c0 0 9.974 2.125 9.974-8.995S5.035.624 2.565 1.91z"/><path d="M10.982 15.353s-.999 3.07-4.018 3.461c-3.02.39-3.582-1.062-5.688-.962 0 0-.171-1.441 1.529-1.644 1.7-.202 4.885.193 7.004-.991 0 0 1.253-.582 1.499-.862l-.326.998z"/><path d="M2.407 2.465V15.74a3.29 3.29 0 01.32-.056 18.803 18.803 0 011.794-.083c.624 0 1.306-.022 1.987-.078v-4.465c0-1.485-.107-3.001 0-4.484.116-.895.782-1.66 1.73-1.988.759-.25 1.602-.2 2.316.135-3.414-2.24-7.25-2.284-8.147-2.255z"/></g></svg>' ), $menu_position );
 
         if ( current_user_can( $capability ) ) {
@@ -47,7 +52,7 @@ class Menu {
 
             // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendor` sub-menu
             if ( ! dokan()->is_pro_exists() || version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '>' ) ) {
-                $submenu[ $slug ][] = [ __( 'Vendors', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/vendors' ];
+                $submenu[ $slug ][] = [ $vendors_text, $capability, 'admin.php?page=' . $slug . '#/vendors' ];
             }
 
             if ( ! dokan()->is_pro_exists() ) {
