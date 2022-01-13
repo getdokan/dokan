@@ -59,6 +59,8 @@ class Hooks {
         add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
 
+        // Prevent vendor from buying their own product
+        add_filter( 'woocommerce_add_to_cart_validation', [ $this, 'prevent_vendor_buy_own_product' ], 10, 2 );
         // Init Order Cache Class
         new OrderCache();
     }
@@ -510,5 +512,35 @@ class Hooks {
                 $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
             }
         }
+    }
+
+    /**
+     * Prevent vendor from buying their own product
+     *
+     * @since 3.3.7
+     *
+     * @return bool
+     */
+    public function prevent_vendor_buy_own_product( $passed, $product_id ) {
+        $seller_id = get_post_field( 'post_author', $product_id );
+        $user_id = get_current_user_id();
+
+        // check if customer and seller is same
+        if ( intval( $seller_id ) === $user_id ) {
+            $message = wp_kses(
+                sprintf(
+                // translators: 1) Product title
+                    __( '<strong>Error!</strong> Could not add product %1$s to cart, Vendor can\'t buy their own product.', 'dokan-lite' ),
+                    get_the_title( $product_id )
+                ),
+                [
+                    'strong' => [],
+                ]
+            );
+            wc_add_notice( $message, 'error' );
+            return false;
+        }
+
+        return $passed;
     }
 }
