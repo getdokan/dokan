@@ -149,13 +149,13 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     }
 
     // Update price if on sale
-    if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
+    if ( ! empty( $sale_price ) && empty( $date_to ) && empty( $date_from ) ) {
         $product->set_sale_price( $sale_price );
     } else {
         $product->set_sale_price( $regular_price );
     }
 
-    if ( '' !== $sale_price && $date_from && strtotime( $date_from ) < strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
+    if ( ! empty( $sale_price ) && $date_from && strtotime( $date_from ) < strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
         $product->set_sale_price( $sale_price );
     }
 
