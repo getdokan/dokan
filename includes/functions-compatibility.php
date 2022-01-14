@@ -129,10 +129,9 @@ function dokan_get_product_downloads( $product ) {
  * @param string $date_to
  */
 function dokan_save_product_price( $product_id, $regular_price, $sale_price = '', $date_from = '', $date_to = '' ) {
-    $product = wc_get_product( absint( $product_id ) );
-
+    $product       = wc_get_product( absint( $product_id ) );
     $regular_price = wc_format_decimal( $regular_price );
-    $sale_price    = '' === $sale_price ? '' : wc_format_decimal( $sale_price );
+    $sale_price    = '' === $sale_price ? '': wc_format_decimal( $sale_price );
     $date_from     = wc_clean( $date_from );
     $date_to       = wc_clean( $date_to );
 
