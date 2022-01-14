@@ -569,7 +569,7 @@ class Assets {
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
-        
+
         // Dokan date range picker localization
         $daterange_localize_data = [
             'apply_label' => __( 'Apply', 'dokan-lite' ),
