@@ -713,7 +713,9 @@ class Withdraw {
      * @return void
      */
     public function redirect_to_dashboard() {
-        if ( preg_match( '/\/withdraw(-requests)?\//i', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) ) {
+        $current_url =  strtok( home_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) , '?' );
+
+        if (  dokan_get_navigation_url('withdraw' ) === $current_url || dokan_get_navigation_url('withdraw-requests' ) === $current_url ) {
             wp_safe_redirect( dokan_get_navigation_url( '/' ) );
             exit;
         }
