@@ -715,7 +715,7 @@ class Withdraw {
     public function redirect_to_dashboard() {
         $current_url =  strtok( home_url( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) , '?' );
 
-        if (  dokan_get_navigation_url('withdraw' ) === $current_url || dokan_get_navigation_url('withdraw-requests' ) === $current_url ) {
+        if ( dokan_get_navigation_url( 'withdraw' ) === $current_url || dokan_get_navigation_url( 'withdraw-requests' ) === $current_url ) {
             wp_safe_redirect( dokan_get_navigation_url( '/' ) );
             exit;
         }
