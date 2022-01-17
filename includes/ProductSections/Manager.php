@@ -19,30 +19,11 @@ class Manager {
     use ChainableContainer;
 
     /**
-     * Products section appearance settings.
-     *
-     * @since 3.3.6
-     *
-     * @var array
-     */
-    protected $customizer_settings = [];
-
-    /**
-     * Store info.
-     *
-     * @since 3.3.6
-     *
-     * @var array
-     */
-    protected $store_settings = [];
-
-    /**
      * Class constructor
      *
      * @since 3.3.6
      */
     public function __construct() {
-        $this->customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
         $this->init_classes();
         $this->init_hooks();
     }
@@ -136,7 +117,7 @@ class Manager {
      */
     public function render_additional_product_sections( $store_user, $store_info, $vendor ) {
         $section_count        = 0;
-        $this->store_settings = isset( $store_info['product_sections'] ) ? $store_info['product_sections'] : [];
+        $store_settings = isset( $store_info['product_sections'] ) ? $store_info['product_sections'] : [];
 
         foreach ( $this->container as $section_object ) {
             // check if we've got AbstractProductSection class instance
@@ -145,7 +126,7 @@ class Manager {
             }
 
             // Check if desired products section visibility enabled by admin and vendor.
-            if ( ! $this->is_visible( $section_object ) ) {
+            if ( ! $this->is_visible( $section_object, $store_settings ) ) {
                 continue;
             }
 
@@ -280,16 +261,18 @@ class Manager {
      * @since 3.3.6
      *
      * @param AbstractProductSection $section_object
+     * @param array $store_settings
      *
      * @return bool
      */
-    protected function is_visible( $section_object ) {
+    protected function is_visible( $section_object, $store_settings ) {
+        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
         // Check if current products section enabled by admin.
         // for customizer settings default value is hide sections
         if ( $section_object->get_show_in_customizer() &&
             (
-                ! isset( $this->customizer_settings[ $section_object->get_section_id() ] ) ||
-                'on' === $this->customizer_settings[ $section_object->get_section_id() ]
+                ! isset( $customizer_settings[ $section_object->get_section_id() ] ) ||
+                'on' === $customizer_settings[ $section_object->get_section_id() ]
             )
         ) {
             return false;
@@ -299,8 +282,8 @@ class Manager {
         // for setting fields, default value is show
         if ( $section_object->get_show_in_settings() &&
             (
-                isset( $this->store_settings[ $section_object->get_section_id() ] ) &&
-                'yes' !== $this->store_settings[ $section_object->get_section_id() ]
+                isset( $store_settings[ $section_object->get_section_id() ] ) &&
+                'yes' !== $store_settings[ $section_object->get_section_id() ]
             )
         ) {
             return false;
@@ -319,11 +302,12 @@ class Manager {
      * @return bool
      */
     protected function is_enabled( $section_object ) {
+        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
         // for customizer settings default value is hide sections
         if ( $section_object->get_show_in_customizer() &&
             (
-                ! isset( $this->customizer_settings[ $section_object->get_section_id() ] ) ||
-                'on' === $this->customizer_settings[ $section_object->get_section_id() ]
+                ! isset( $customizer_settings[ $section_object->get_section_id() ] ) ||
+                'on' === $customizer_settings[ $section_object->get_section_id() ]
             )
         ) {
             return false;
