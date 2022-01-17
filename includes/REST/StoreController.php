@@ -289,18 +289,6 @@ class StoreController extends WP_REST_Controller {
             $args['date_query']['inclusive'] = true;
         }
 
-        if ( isset( $params['category'] ) && '' !== $params['category'] ) {
-            $category = sanitize_text_field( $params['category'] );
-
-            $args['meta_query'] = [
-                [
-                    'key'     => 'dokan_profile_settings',
-                    'value'   => 's:7:"term_id";i:'. $category .';',
-                    'compare' => 'LIKE',
-                ],
-            ];
-        }
-
         $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
 
         $stores       = dokan()->vendor->get_vendors( $args );
@@ -334,6 +322,53 @@ class StoreController extends WP_REST_Controller {
             ];
 
             $stores = dokan()->vendor->get_vendors( $args );
+        }
+
+        // Filtering by store category.
+        if ( isset( $params['category'] ) && '' !== $params['category']  ) {
+            $category_id = absint( $params['category'] );
+            $category_searched_result = [];
+
+            foreach ( $stores as $store ) {
+                $data['id'] = $store->id;
+                $store_categories = $this->get_store( $data )->data['categories'];
+                foreach ( $store_categories as $key => $value ) {
+                    array_search( $category_id, $value ) ? array_push( $category_searched_result, $store ) : '';
+                }
+            }
+
+            $stores = $category_searched_result;
+        }
+
+        // Filtering by store category.   dokan_verification
+        if ( isset( $params['verified'] ) && '' !== $params['verified'] && 'both' !== $params['verified']  ) {
+            $verified = sanitize_text_field( $params['verified'] );
+            $searched_result = [];
+
+            foreach ( $stores as $store ) {
+                $seller_profile = dokan_get_store_info( $store->id );
+
+                $all_verifications = [];
+
+                $all_verifications['id_status']       = isset( $seller_profile['dokan_verification']['info']['dokan_v_id_status'] ) && 'approved' === $seller_profile['dokan_verification']['info']['dokan_v_id_status']                 ? 'verified' : 'not_verified';
+                $all_verifications['address_status']  = isset( $seller_profile['dokan_verification']['info']['store_address']['v_status'] ) && 'approved' === $seller_profile['dokan_verification']['info']['store_address']['v_status'] ? 'verified' : 'not_verified';
+                $all_verifications['company_status']  = isset( $seller_profile['dokan_verification']['info']['company_v_status'] ) && 'approved' === $seller_profile['dokan_verification']['info']['company_v_status']                   ? 'verified' : 'not_verified';
+                $all_verifications['facebook_status'] = isset( $seller_profile['dokan_verification']['facebook'] ) && 'approved' === $seller_profile['dokan_verification']['facebook']                                                   ? 'verified' : 'not_verified';
+                $all_verifications['google_status']   = isset( $seller_profile['dokan_verification']['google'] ) && 'approved' === $seller_profile['dokan_verification']['google']                                                       ? 'verified' : 'not_verified';
+                $all_verifications['linkedin_status'] = isset( $seller_profile['dokan_verification']['linkedin'] ) && 'approved' === $seller_profile['dokan_verification']['linkedin']                                                   ? 'verified' : 'not_verified';
+                $all_verifications['twitter_status']  = isset( $seller_profile['dokan_verification']['twitter'] ) && 'approved' === $seller_profile['dokan_verification']['twitter']                                                     ? 'verified' : 'not_verified';
+
+                $result = array_search( 'verified', $all_verifications );
+                if ( 'verified' === $verified && $result ) {
+                    array_push( $searched_result, $store );
+                } else if( 'not_verified' === $verified && ! $result ) {
+                    array_push( $searched_result, $store );
+                }
+
+
+            }
+
+            $stores = $searched_result;
         }
 
         $data_objects = [];

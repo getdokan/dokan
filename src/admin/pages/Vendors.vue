@@ -550,6 +550,7 @@ export default {
             '' !== this.filterDateRange.startDate ? searchableArgs.startDate = moment(this.filterDateRange.startDate).format('MMM D, YYYY') : '';
             '' !== this.filterDateRange.endDate ? searchableArgs.endDate = moment(this.filterDateRange.endDate).format('MMM D, YYYY') : '';
             '' !== this.filterVendorCategory ? searchableArgs.category = this.filterVendorCategory : '';
+            '' !== this.filterVendorVerified ? searchableArgs.verified = this.filterVendorVerified : '';
 
             this.searchOrFilterVendors( searchableArgs );
         },
