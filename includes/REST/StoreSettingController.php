@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Vendor\Vendor;
 use WP_REST_Controller;
 use WP_REST_Server;
 use WP_Error;
@@ -48,6 +49,20 @@ class StoreSettingController extends WP_REST_Controller {
                 ],
 			]
         );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/payments', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_payment_methods' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_payment_methods' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -91,6 +106,42 @@ class StoreSettingController extends WP_REST_Controller {
     }
 
     /**
+     * Get a vendor's payment methods settings
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function get_payment_methods( $request ) {
+        $vendor     = $this->get_vendor();
+        $store_info = dokan_get_store_info( $vendor->get_id() );
+        $methods    = array_filter( dokan_withdraw_get_active_methods() );
+        $response   = [];
+
+        foreach ( $methods as $method ) {
+            $response[ $method ] = isset( $store_info['payment'][ $method ] ) ? $store_info['payment'][ $method ] : null;
+        }
+
+        return rest_ensure_response( $response );
+    }
+
+    /**
+     * Get a vendor's payment methods settings
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function update_payment_methods( $request ) {
+        $response = [];
+        $vendor   = $this->get_vendor();
+        $store_id = $vendor->get_id();
+        // TODO: update the store payment methods info.
+
+        return rest_ensure_response( $response )
+    }
+
+    /**
      * Permission callback for vendor settings
      *
      * @return bool|WP_Error
@@ -112,7 +163,7 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * Get vendor
      *
-     * @return WP_Error | $vendor
+     * @return Vendor|WP_Error
      */
     protected function get_vendor() {
         $current_user = dokan_get_current_user_id();
