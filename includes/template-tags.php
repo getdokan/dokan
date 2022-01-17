@@ -631,7 +631,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
         if ( $vendor instanceof Vendor ) {
             $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
             echo '<ul>';
-            $_chosen_attributes = get_chosen_taxonomy_attributes();
+            $_chosen_attributes = dokan_get_chosen_taxonomy_attributes();
             foreach ( $terms as $term ) {
                 $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
                 $option_is_set  = in_array( $term->slug, $current_values, true );
@@ -645,7 +645,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
                 // Add current filters to URL.
                 foreach ( $current_filter as $key => $value ) {
                     // Exclude query arg for current term archive term.
-                    if ( $value === get_current_term_slug() ) {
+                    if ( $value === dokan_get_current_term_slug() ) {
                         unset( $current_filter[ $key ] );
                     }
 
@@ -688,7 +688,7 @@ endif;
  *
  * @return int
  */
-function get_current_term_slug() {
+function dokan_get_current_term_slug() {
     return absint( is_tax() ? get_queried_object()->slug : 0 );
 }
 
@@ -699,7 +699,7 @@ function get_current_term_slug() {
  *
  * @return array
  */
-function get_chosen_taxonomy_attributes() {
+function dokan_get_chosen_taxonomy_attributes() {
     $attributes = [];
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
     if ( ! empty( $_GET ) ) {
