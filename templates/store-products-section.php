@@ -3,12 +3,17 @@
  * The template for display additional products section
  *
  * @since 3.3.6
+ *
+ * @var string $section_id
+ * @var string $section_title
+ * @var \WeDevs\Dokan\Vendor\Vendor $vendor
+ *
  */
 ?>
 
-<?php do_action( "dokan_store_before_{$products_type}_products_section", $store_user, $store_info ); ?>
+<?php do_action( "dokan_store_before_{$section_id}_product_section", $vendor ); ?>
 
-<div id="<?php echo esc_attr( $section_id ); ?>" class="dokan-products-display_section">
+<div id="dokan_store_section_<?php echo esc_attr( $section_id ); ?>" class="dokan-store-product-section">
     <h2 class="products-list-heading"><?php echo esc_html( $section_title ); ?></h2>
     <div class="seller-items">
 
@@ -27,4 +32,4 @@
     </div>
 </div>
 
-<?php do_action( "dokan_store_after_{$products_type}_products_section", $store_user, $store_info ); ?>
+<?php do_action( "dokan_store_after_{$section_id}_product_section", $vendor ); ?>
