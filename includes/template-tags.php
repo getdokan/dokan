@@ -617,7 +617,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
      *
      * @param  int $seller_id
      *
-     * @since 3.2.11 rewritten whole function
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -631,7 +631,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
         if ( $vendor instanceof Vendor ) {
             $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
             echo '<ul>';
-            $_chosen_attributes = get_layered_nav_chosen_attributes();
+            $_chosen_attributes = get_chosen_taxonomy_attributes();
             foreach ( $terms as $term ) {
                 $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
                 $option_is_set  = in_array( $term->slug, $current_values, true );
@@ -691,7 +691,7 @@ function get_current_term_slug() {
     return absint( is_tax() ? get_queried_object()->slug : 0 );
 }
 
-function get_layered_nav_chosen_attributes() {
+function get_chosen_taxonomy_attributes() {
     $attributes = [];
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
     if ( ! empty( $_GET ) ) {

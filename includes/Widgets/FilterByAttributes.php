@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Widgets;
 
-use WeDevs\Dokan\Vendor\Vendor;
 use WP_Widget;
 
 class FilterByAttributes extends WP_Widget {
