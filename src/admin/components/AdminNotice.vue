@@ -138,7 +138,7 @@ export default {
                 data: notice.ajax_data,
             } ).done( () => {
                 this.notices.splice( index, 1 );
-                this.current_notice = 1;
+                this.slideNotice( 1 );
             } );
         },
 
@@ -180,7 +180,7 @@ export default {
                     window.location.reload();
                 } else {
                     this.notices.splice( index, 1 );
-                    this.current_notice = 1;
+                    this.slideNotice( 1 );
                 }
             } );
         }
