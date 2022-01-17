@@ -179,7 +179,7 @@ class Manager {
             }
 
             // check if enabled from customizer
-            if ( ! $this->is_enabled( $section_object ) ) {
+            if ( ! $section_object->is_enabled() ) {
                 continue;
             }
 
@@ -242,7 +242,7 @@ class Manager {
             }
 
             // check if enabled from customizer
-            if ( ! $this->is_enabled( $section_object ) ) {
+            if ( ! $section_object->is_enabled() ) {
                 continue;
             }
 
