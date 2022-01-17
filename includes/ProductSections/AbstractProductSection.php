@@ -163,4 +163,27 @@ abstract class AbstractProductSection {
     public function get_show_in_settings() {
         return $this->show_in_settings;
     }
+
+    /**
+     * Check products block visibility settings by admin and vendor.
+     *
+     * @since 3.3.7
+     *
+     * @return bool
+     */
+    public function is_enabled() {
+        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
+        // Check if current products section enabled by admin.
+        // for customizer settings default value is hide sections
+        if ( $this->get_show_in_customizer() &&
+            (
+                ! isset( $customizer_settings[ $this->get_section_id() ] ) ||
+                'on' === $customizer_settings[ $this->get_section_id() ]
+            )
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }

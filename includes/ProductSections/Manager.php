@@ -116,7 +116,7 @@ class Manager {
      * @return void
      */
     public function render_additional_product_sections( $store_user, $store_info, $vendor ) {
-        $section_count        = 0;
+        $section_count  = 0;
         $store_settings = isset( $store_info['product_sections'] ) ? $store_info['product_sections'] : [];
 
         foreach ( $this->container as $section_object ) {
@@ -266,15 +266,8 @@ class Manager {
      * @return bool
      */
     protected function is_visible( $section_object, $store_settings ) {
-        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
         // Check if current products section enabled by admin.
-        // for customizer settings default value is hide sections
-        if ( $section_object->get_show_in_customizer() &&
-            (
-                ! isset( $customizer_settings[ $section_object->get_section_id() ] ) ||
-                'on' === $customizer_settings[ $section_object->get_section_id() ]
-            )
-        ) {
+        if ( ! $section_object->is_enabled() ) {
             return false;
         }
 
@@ -284,30 +277,6 @@ class Manager {
             (
                 isset( $store_settings[ $section_object->get_section_id() ] ) &&
                 'yes' !== $store_settings[ $section_object->get_section_id() ]
-            )
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check products block visibility settings by admin and vendor.
-     *
-     * @since 3.3.7
-     *
-     * @param AbstractProductSection $section_object
-     *
-     * @return bool
-     */
-    protected function is_enabled( $section_object ) {
-        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
-        // for customizer settings default value is hide sections
-        if ( $section_object->get_show_in_customizer() &&
-            (
-                ! isset( $customizer_settings[ $section_object->get_section_id() ] ) ||
-                'on' === $customizer_settings[ $section_object->get_section_id() ]
             )
         ) {
             return false;
