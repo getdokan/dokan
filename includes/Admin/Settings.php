@@ -490,6 +490,7 @@ class Settings {
                     'type'    => 'multicheck',
                     'default' => [ 'paypal' => 'paypal' ],
                     'options' => dokan_withdraw_get_methods(),
+                    'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                 ],
                 'withdraw_limit'      => [
                     'name'                       => 'withdraw_limit',
@@ -510,6 +511,7 @@ class Settings {
                         'wc-completed'  => 'wc-completed',
                     ),
                     'options' => $withdraw_order_status_options,
+                    'tooltip' => __( 'Select the order status that will allow vendors to make withdraw request. We prefer you select "completed", "processing".', 'dokan-lite' ),
                 ],
                 'exclude_cod_payment' => [
                     'name'    => 'exclude_cod_payment',
