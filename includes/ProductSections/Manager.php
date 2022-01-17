@@ -248,13 +248,13 @@ class Manager {
             return $dokan_settings;
         }
 
-        $dokan_settings['product_sections'] = [];
-
         foreach ( $this->container as $section_object ) {
             // check if we've got AbstractProductSection class instance
             if ( ! $section_object instanceof AbstractProductSection ) {
                 continue;
             }
+
+            $dokan_settings['product_sections'][ $section_object->get_section_id() ] = 'no';
 
             if ( ! $section_object->get_show_in_settings() ) {
                 continue;
@@ -299,7 +299,7 @@ class Manager {
         // for setting fields, default value is show
         if ( $section_object->get_show_in_settings() &&
             (
-                ! isset( $this->store_settings[ $section_object->get_section_id() ] ) ||
+                isset( $this->store_settings[ $section_object->get_section_id() ] ) &&
                 'yes' !== $this->store_settings[ $section_object->get_section_id() ]
             )
         ) {
