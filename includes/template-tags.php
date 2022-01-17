@@ -636,6 +636,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
                 $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
                 $option_is_set  = in_array( $term->slug, $current_values, true );
                 $filter_name = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
+                // phpcs:ignore
                 $current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array();
                 if ( ! in_array( $term->slug, $current_filter, true ) ) {
                     $current_filter[] = $term->slug;
@@ -691,6 +692,13 @@ function get_current_term_slug() {
     return absint( is_tax() ? get_queried_object()->slug : 0 );
 }
 
+/**
+ * Get chosen taxonomy attributes.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
 function get_chosen_taxonomy_attributes() {
     $attributes = [];
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
@@ -705,7 +713,8 @@ function get_chosen_taxonomy_attributes() {
                     continue;
                 }
 
-                $query_type                          = ! empty( $_GET[ 'query_type_' . $attribute ] ) && in_array( esc_url_raw( $_GET[ 'query_type_' . $attribute ] ), [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET[ 'query_type_' . $attribute ] ) ) : '';
+                // phpcs:ignore
+                $query_type                          = ! empty( $_GET['query_type_' . $attribute] ) && in_array( esc_url_raw( $_GET['query_type_' . $attribute] ), [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
                 $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
                 $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : apply_filters( 'woocommerce_layered_nav_default_query_type', 'and' );
             }

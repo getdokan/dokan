@@ -11,11 +11,11 @@ class FilterByAttributes extends WP_Widget {
      */
     public function __construct() {
         parent::__construct(
-            'dokan-filter-product', __( 'Dokan: Filter Products by Attribute Widget', 'dokan-lite' ), // Name
+            'dokan-filter-product', __( 'Dokan: Filter Products by Attribute Widget', 'dokan-lite' ),
             [
                 'description' => __( 'A Widget for displaying products by attribute for dokan', 'dokan-lite' ),
                 'classname'   => 'dokan-lite widget_products dokan-top-rated',
-            ]                                                                                         // Args
+            ]
         );
     }
 
@@ -31,16 +31,15 @@ class FilterByAttributes extends WP_Widget {
         if ( ! dokan_is_store_listing() && ! dokan_is_store_page() ) {
             return;
         }
-        extract( $args, EXTR_SKIP );
 
         $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $taxonomy     = $this->get_instance_taxonomy( $instance );
         $display_type = isset( $instance['display_type'] ) ? apply_filters( 'widget_display_type', $instance['display_type'] ) : '';
         $query_type   = isset( $instance['query_type'] ) ? apply_filters( 'widget_query_type', $instance['query_type'] ) : '';
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['before_widget'];
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_title'] . $title . $args['after_title'];
         }
 
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
@@ -51,7 +50,7 @@ class FilterByAttributes extends WP_Widget {
             dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
         }
 
-        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['after_widget'];
 
         wp_reset_postdata();
     }
@@ -150,7 +149,7 @@ class FilterByAttributes extends WP_Widget {
     }
 
     /**
-     * Get this widgets taxonomy.
+     * Get this widget taxonomy.
      *
      * @param array $instance Array of instance options.
      *
