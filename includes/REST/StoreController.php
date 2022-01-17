@@ -259,6 +259,48 @@ class StoreController extends WP_REST_Controller {
             $args['featured'] = sanitize_text_field( $params['featured'] );
         }
 
+        if ( isset( $params['startDate'] ) && '' !== $params['startDate'] ) {
+            $from_date = dokan_current_datetime()->modify( sanitize_text_field( $params['startDate'] ) );
+
+            $from_year  = $from_date->format( 'Y' );
+            $from_month = $from_date->format( 'm' );
+            $from_day   = $from_date->format( 'd' );
+
+            $args['date_query']['after'] = array(
+                'year'  => $from_year,
+                'month' => $from_month,
+                'day'   => $from_day,
+            );
+            $args['date_query']['inclusive'] = true;
+        }
+
+        if ( isset( $params['endDate'] ) && '' !== $params['endDate'] ) {
+            $from_date = dokan_current_datetime()->modify( sanitize_text_field( $params['endDate'] ) );
+
+            $from_year  = $from_date->format( 'Y' );
+            $from_month = $from_date->format( 'm' );
+            $from_day   = $from_date->format( 'd' );
+
+            $args['date_query']['before'] = array(
+                'year'  => $from_year,
+                'month' => $from_month,
+                'day'   => $from_day,
+            );
+            $args['date_query']['inclusive'] = true;
+        }
+
+        if ( isset( $params['category'] ) && '' !== $params['category'] ) {
+            $category = sanitize_text_field( $params['category'] );
+
+            $args['meta_query'] = [
+                [
+                    'key'     => 'dokan_profile_settings',
+                    'value'   => 's:7:"term_id";i:'. $category .';',
+                    'compare' => 'LIKE',
+                ],
+            ];
+        }
+
         $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
 
         $stores       = dokan()->vendor->get_vendors( $args );

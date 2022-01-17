@@ -599,3 +599,6 @@ td.combine-tips-style {
 .dokan-admin-notices a {
   text-decoration: none;
 }
+.dokan-hide {
+    display: none !important;
+}

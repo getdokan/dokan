@@ -86,6 +86,18 @@
                 </span>
                 </template>
                 <template slot="filters">
+                    <span class="form-group" :class="'none' === storeCategoryType ? 'dokan-hide' : ''">
+                        <select class="dokan-input" id="vendor-search-category" v-model="filterVendorCategory">
+                            <option value="">{{ __( 'Select category', 'dokan-lite' ) }}</option>
+                        </select>
+                    </span>
+                    <span class="form-group" v-if="hasPro">
+                        <select class="dokan-input" id="vendor-search-verified" v-model="filterVendorVerified">
+                            <option value="both">{{ __( 'Both', 'dokan-lite' ) }}</option>
+                            <option value="verified">{{ __( 'Verified', 'dokan-lite' ) }}</option>
+                            <option value="not_verified">{{ __( 'Not verified', 'dokan-lite' ) }}</option>
+                        </select>
+                    </span>
                     <span class="form-group">
                         <date-range-picker
                             ref="picker"
@@ -96,13 +108,13 @@
                             :showWeekNumbers="false"
                             :showDropdowns="true"
                             :autoApply="false"
-                            v-model="dateRange"
+                            v-model="filterDateRange"
                             :linkedCalendars="true"
                             @update="dateRangeFilterUpdated"
                         >
                             <template v-slot:input="picker">
-                                <span v-if="dateRange.startDate">{{ dateRange.startDate | date }} - {{ dateRange.endDate | date }}</span>
-                                <span class="date-range-placeholder" v-if="! dateRange.startDate">{{ __( 'Filter by date', 'dokan' ) }}</span>
+                                <span v-if="filterDateRange.startDate">{{ filterDateRange.startDate | date }} - {{ filterDateRange.endDate | date }}</span>
+                                <span class="date-range-placeholder" v-if="! filterDateRange.startDate">{{ __( 'Filter by date', 'dokan' ) }}</span>
                             </template>
 
                             <!--    footer slot-->
@@ -112,25 +124,8 @@
                             </div>
                         </date-range-picker>
                     </span>
-                    <span class="form-group">
-                        <select class="dokan-input" id="vendor-search-category">
-                            <option :value="''">Select category</option>
-                            <option :value="'1'">One</option>
-                            <option :value="'2'">Two</option>
-                        </select>
-                    </span>
-                    <span class="form-group">
-                        <select class="dokan-input" id="vendor-search-varification">
-                            <option value="">{{ __( 'Select verification', 'dokan-lite' ) }}</option>
-                            <option value="id_verified">{{ __( 'ID Verified', 'dokan-lite' ) }}</option>
-                            <option value="address_verified">{{ __( 'Address Verified', 'dokan-lite' ) }}</option>
-                            <option value="social_verified">{{ __( 'Social Verified', 'dokan-lite' ) }}</option>
-                            <option value="company_verified">{{ __( 'Company Verified', 'dokan-lite' ) }}</option>
-                        </select>
-                    </span>
-
-                    <button class="button">{{ __( 'Filter', 'dokan-lite' ) }}</button>
-                    <button class="button">{{ __( 'Clear', 'dokan-lite' ) }}</button>
+                    <button @click="filterVendorList();" class="button">{{ __( 'Filter', 'dokan-lite' ) }}</button>
+                    <button @click="clearVendorFilterDatas();" class="button">{{ __( 'Clear', 'dokan-lite' ) }}</button>
                 </template>
             </list-table>
 
@@ -230,10 +225,14 @@ export default {
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
             isVendorSwitchingEnabled: false,
-            dateRange: {
+            filterDateRange: {
                 startDate,
                 endDate,
             },
+            filterVendorCategory:'',
+            filterVendorVerified:'both',
+            allStoreCategories: [],
+            storeCategoryType: 'none',
         }
     },
 
@@ -252,10 +251,35 @@ export default {
         const self = this;
 
         jQuery('#vendor-search-category').selectWoo({
-            multiple: false
+            ajax: {
+                url: "".concat(dokan.rest.root, "dokan/v1/store-categories"),
+                dataType: 'json',
+                headers: {
+                    "X-WP-Nonce" : dokan.rest.nonce
+                },
+                data(params) {
+                    return {
+                        search: params.term,
+                        per_page: 20,
+                        orderby: 'name',
+                        order: 'asc'
+                    };
+                },
+                processResults(data) {
+                    return {
+                        results: data.map((category) => {
+                            return {
+                                id: category.id,
+                                text: category.name
+                            };
+                        })
+                    };
+                }
+            }
         });
-        jQuery('#vendor-search-varification').selectWoo({
-            multiple: false
+
+        jQuery('#vendor-search-category').on('select2:select', (e) => {
+            self.filterVendorCategory = e.params.data.id;
         });
     },
 
@@ -274,6 +298,12 @@ export default {
 
         '$route.query.order'() {
             this.fetchVendors();
+        },
+
+        'filterVendorCategory'(data) {
+            if ( '' === data ) {
+                jQuery('#vendor-search-category').val('').trigger('change');
+            }
         },
     },
 
@@ -321,6 +351,7 @@ export default {
             this.categories = payload.categories;
             this.isCategoryMultiple = payload.isCategoryMultiple;
             this.columns = payload.columns;
+            this.storeCategoryType = payload.storeCategoryType;
         });
 
         this.isVendorSwitchingEnabled = dokan.is_vendor_switching_enabled ? true : false;
@@ -339,15 +370,21 @@ export default {
         },
 
         doSearch(payload) {
-            let self     = this;
-            self.loading = true;
-
-            dokan.api.get(`/stores`, {
+            const searchableArgs = {
                 search: payload,
                 page: this.currentPage,
                 orderby: this.sortBy,
                 order: this.sortOrder
-            })
+            }
+
+            this.searchOrFilterVendors( searchableArgs );
+        },
+
+        searchOrFilterVendors(args = {}) {
+             let self     = this;
+            self.loading = true;
+
+            dokan.api.get(`/stores`, args)
             .done((response, status, xhr) => {
                 self.vendors = response;
                 self.loading = false;
@@ -369,12 +406,8 @@ export default {
             const badge      = jQuery( '.pending-vendors-count-in-list' );
             const badgeCount = jQuery( '.pending-vendors-count-badge-in-list' );
 
-            if ( this.counts.pending > 0 ) {
-                badgeCount.html(this.counts.pending);
-                badge.removeClass('dokan-hide');
-            } else {
-                badge.addClass('dokan-hide');
-            }
+            badgeCount.html(this.counts.pending);
+            this.counts.pending > 0 ? badge.removeClass('dokan-hide') : badge.addClass('dokan-hide');
         },
 
         updatePagination(xhr) {
@@ -491,16 +524,34 @@ export default {
         },
 
         dateRangeFilterUpdated() {
-            let start_date = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.dateRange.startDate));
-            let end_date   = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.dateRange.endDate));
+            let start_date = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.filterDateRange.startDate));
+            let end_date   = jQuery.datepicker.formatDate('yy-mm-dd', new Date(this.filterDateRange.endDate));
 
             console.log(start_date,end_date);
         },
 
+        clearVendorFilterDatas() {
+            this.filterDateRange.startDate = '';
+            this.filterDateRange.endDate   = '';
 
-        dateRangeCancelled() {
-            this.dateRange.startDate = '';
-            this.dateRange.endDate   = '';
+            this.filterVendorCategory = '';
+            this.filterVendorVerified = 'both';
+
+            this.fetchVendors();
+        },
+
+        filterVendorList() {
+            const searchableArgs = {
+                page: this.currentPage,
+                orderby: this.sortBy,
+                order: this.sortOrder
+            }
+
+            '' !== this.filterDateRange.startDate ? searchableArgs.startDate = moment(this.filterDateRange.startDate).format('MMM D, YYYY') : '';
+            '' !== this.filterDateRange.endDate ? searchableArgs.endDate = moment(this.filterDateRange.endDate).format('MMM D, YYYY') : '';
+            '' !== this.filterVendorCategory ? searchableArgs.category = this.filterVendorCategory : '';
+
+            this.searchOrFilterVendors( searchableArgs );
         },
     }
 };
