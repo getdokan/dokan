@@ -4190,49 +4190,40 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
 /**
  * Get additional products sections.
  *
- * @since 3.3.7
+ * @since 3.3.6
  *
  * @return array
  */
-function dokan_get_additional_products_sections() {
-    $products_sections = apply_filters(
-        'dokan_additional_products_sections', [
-            'featured'     => __( 'Featured Products', 'dokan-lite' ),
-            'latest'       => __( 'Latest Products', 'dokan-lite' ),
-            'best_selling' => __( 'Best Selling Products', 'dokan-lite' ),
-            'top_rated'    => __( 'Top Rated Products', 'dokan-lite' ),
-        ]
-    );
-
-    return $products_sections ? $products_sections : [];
+function dokan_get_additional_product_sections() {
+    return dokan()->product_sections->get_available_product_sections();
 }
 
 /**
-* Converts a 'on' or 'off' to boolean
-*
-* @since 3.3.7
-*
-* @param string $value
-*
-* @return bool
-*/
-function dokan_on_off_to_bool( $value ) {
-   return $value === 'on' ? true : false;
+ * Converts a 'on' or 'off' to boolean
+ *
+ * @since 3.3.6
+ *
+ * @param string $value
+ *
+ * @return bool
+ */
+function dokan_string_to_bool( $value ) {
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
 }
 
 /**
-* Converts a boolean value to a 'on' or 'off'.
-*
-* @since 3.3.7
-*
-* @param bool $bool
-*
-* @return string
-*/
+ * Converts a boolean value to a 'on' or 'off'.
+ *
+ * @since 3.3.7
+ *
+ * @param bool $bool
+ *
+ * @return string
+ */
 function dokan_bool_to_on_off( $bool ) {
-   if ( ! is_bool( $bool ) ) {
-       $bool = dokan_on_off_to_bool( $bool );
-   }
+    if ( ! is_bool( $bool ) ) {
+        $bool = dokan_string_to_bool( $bool );
+    }
 
-   return true === $bool ? 'on' : 'off';
+    return true === $bool ? 'on' : 'off';
 }

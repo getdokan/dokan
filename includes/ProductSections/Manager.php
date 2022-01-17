@@ -107,7 +107,7 @@ class Manager {
                     'type'                 => 'option',
                     'capability'           => 'manage_options',
                     'sanitize_callback'    => 'dokan_bool_to_on_off',
-                    'sanitize_js_callback' => 'dokan_on_off_to_bool',
+                    'sanitize_js_callback' => 'dokan_string_to_bool',
                 ]
             );
 
@@ -136,7 +136,7 @@ class Manager {
      */
     public function render_additional_product_sections( $store_user, $store_info, $vendor ) {
         $section_count        = 0;
-        $this->store_settings = $store_info['product_sections'];
+        $this->store_settings = isset( $store_info['product_sections'] ) ? $store_info['product_sections'] : [];
 
         foreach ( $this->container as $section_object ) {
             // check if we've got AbstractProductSection class instance
@@ -330,5 +330,29 @@ class Manager {
         }
 
         return true;
+    }
+
+    /**
+     * Get available product sections
+     *
+     * @since 3.3.6
+     *
+     * @return array
+     */
+    public function get_available_product_sections() {
+        $data = [];
+        foreach ( $this->container as $section_object ) {
+            // check if we've got AbstractProductSection class instance
+            if ( ! $section_object instanceof AbstractProductSection ) {
+                continue;
+            }
+
+            $data[] = [
+                'id'    => $section_object->get_section_id(),
+                'title' => $section_object->get_section_title(),
+            ];
+        }
+
+        return $data;
     }
 }
