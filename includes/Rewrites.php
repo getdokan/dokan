@@ -79,6 +79,7 @@ class Rewrites {
                 'new-product',
                 'orders',
                 'withdraw',
+                'withdraw-requests',
                 'settings',
                 'edit-account',
             ]

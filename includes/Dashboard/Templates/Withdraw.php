@@ -45,7 +45,6 @@ class Withdraw {
             return;
         }
 
-        add_filter( 'dokan_query_var_filter', [ $this, 'add_withdraw_list_query_var' ] );
         add_action( 'dokan_load_custom_template', [ $this, 'display_request_listing' ] );
         add_filter( 'dokan_dashboard_nav_active', [ $this, 'active_dashboard_nav_menu' ], 10, 3 );
         add_action( 'template_redirect', [ $this, 'handle_request' ] );
@@ -665,21 +664,6 @@ class Withdraw {
         dokan_get_template_part( 'withdraw/pending-request-listing-dashboard', '', array(
             'withdraw_requests' => $withdraw_requests,
         ) );
-    }
-
-    /**
-     * Add withdraw listing query var
-     *
-     * @since 3.3.1
-     *
-     * @param array $query_vars
-     *
-     * @return array
-     */
-    public function add_withdraw_list_query_var( $query_vars ) {
-        $query_vars[] = 'withdraw-requests';
-
-        return $query_vars;
     }
 
     /**
