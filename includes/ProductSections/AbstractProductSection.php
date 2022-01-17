@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * For displaying additional products sections to single store page.
  *
- * @since 3.3.6
+ * @since 3.3.7
  *
  * @package dokan
  */
@@ -19,7 +19,7 @@ abstract class AbstractProductSection {
     /**
      * Unique section id.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @var string
      */
@@ -28,7 +28,7 @@ abstract class AbstractProductSection {
     /**
      * Show this section under customizer.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @var bool
      */
@@ -37,7 +37,7 @@ abstract class AbstractProductSection {
     /**
      * Show this section under vendor settings.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @var bool
      */
@@ -46,7 +46,7 @@ abstract class AbstractProductSection {
     /**
      * Products to display in this sections.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @var int
      */
@@ -55,7 +55,7 @@ abstract class AbstractProductSection {
     /**
      * AbstractProductSection constructor.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -67,7 +67,7 @@ abstract class AbstractProductSection {
     /**
      * Set unique section id for the this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -76,7 +76,7 @@ abstract class AbstractProductSection {
     /**
      * Get customizer setting title of this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -85,7 +85,7 @@ abstract class AbstractProductSection {
     /**
      * Get single store page section title.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -94,7 +94,7 @@ abstract class AbstractProductSection {
     /**
      * Get vendor store settings page section label.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -103,7 +103,7 @@ abstract class AbstractProductSection {
     /**
      * Get products for this section
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return \WP_Query
      */
@@ -112,7 +112,7 @@ abstract class AbstractProductSection {
     /**
      * Get unique section id for this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -123,7 +123,7 @@ abstract class AbstractProductSection {
     /**
      * Set if need admin customizer settings for this section or not.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -134,7 +134,7 @@ abstract class AbstractProductSection {
     /**
      * Check if admin customizer settings is enabled for this section or not.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return bool
      */
@@ -145,7 +145,7 @@ abstract class AbstractProductSection {
     /**
      * Set if we need vendor settings for this section or not
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -156,7 +156,7 @@ abstract class AbstractProductSection {
     /**
      * Check if vendor settings is needed for this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return bool
      */

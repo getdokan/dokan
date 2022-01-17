@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * For displaying top rated products section to single store page.
  *
- * @since 3.3.6
+ * @since 3.3.7
  *
  * @package dokan
  */
@@ -19,7 +19,7 @@ class TopRated extends AbstractProductSection {
     /**
      * Set unique section id for the this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -30,7 +30,7 @@ class TopRated extends AbstractProductSection {
     /**
      * Get customizer setting title of this section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -41,7 +41,7 @@ class TopRated extends AbstractProductSection {
     /**
      * Get single store page section title.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -52,7 +52,7 @@ class TopRated extends AbstractProductSection {
     /**
      * Get vendor store settings page section label.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class TopRated extends AbstractProductSection {
     /**
      * Get section products.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return \WP_Query
      */

@@ -2,7 +2,7 @@
 /**
  * The template for display additional products section
  *
- * @since 3.3.6
+ * @since 3.3.7
  *
  * @var string $section_id
  * @var string $section_title

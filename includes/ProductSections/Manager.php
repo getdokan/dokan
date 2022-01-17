@@ -12,7 +12,7 @@ use WeDevs\Dokan\Vendor\Vendor;
 /**
  * Dokan store products section manager class
  *
- * @since 3.3.6
+ * @since 3.3.7
  */
 class Manager {
 
@@ -21,7 +21,7 @@ class Manager {
     /**
      * Class constructor
      *
-     * @since 3.3.6
+     * @since 3.3.7
      */
     public function __construct() {
         $this->init_classes();
@@ -31,7 +31,7 @@ class Manager {
     /**
      * Register all products section classes to chainable container
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
@@ -47,14 +47,14 @@ class Manager {
     /**
      * Init required hooks
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return void
      */
     public function init_hooks() {
         // customizer settings
         add_action( 'dokan_store_customizer_after_vendor_products', [ $this, 'render_customizer_settings_fields' ] );
-        // rander product sections on single store page
+        // render product sections on single store page
         add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_product_sections' ], 5, 3 );
         // vendor store settings section
         add_action( 'dokan_settings_after_store_more_products', [ $this, 'render_store_settings_form_fields' ], 10, 2 );
@@ -64,7 +64,7 @@ class Manager {
     /**
      * Render customizer settings fields.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param object $wp_customize
      *
@@ -107,7 +107,7 @@ class Manager {
     /**
      * Render additional products section.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param \WP_User $store_user Store user data
      * @param array  $store_info Store info data
@@ -159,7 +159,7 @@ class Manager {
     /**
      * Render store settings form fields.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param int   $vendor_id    Vendor id
      * @param array $profile_info Vendor profile info
@@ -217,7 +217,7 @@ class Manager {
     /**
      * Save store products section settings input data.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param array $dokan_settings Dokan settings data
      *
@@ -258,7 +258,7 @@ class Manager {
     /**
      * Check products block visibility settings by admin and vendor.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param AbstractProductSection $section_object
      * @param array $store_settings
@@ -295,7 +295,7 @@ class Manager {
     /**
      * Check products block visibility settings by admin and vendor.
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @param AbstractProductSection $section_object
      *
@@ -319,7 +319,7 @@ class Manager {
     /**
      * Get available product sections
      *
-     * @since 3.3.6
+     * @since 3.3.7
      *
      * @return array
      */
