@@ -365,28 +365,6 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
 }
 
 /**
- * Mask or hide part of email address.
- *
- * @since 3.3.1
- *
- * @param string $email Email address
- *
- * @return string
- */
-function dokan_mask_email_address( $email ) {
-    if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
-        return $email;
-    }
-
-    list( $first, $last ) = explode( '@', $email );
-    $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
-    $last        = explode( '.', $last );
-    $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
-
-    return $first . '@' . $last_domain . '.' . $last['1'];
-}
-
-/**
  * Get the default withdrawal method.
  *
  * @since 3.3.1
