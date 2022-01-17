@@ -255,8 +255,58 @@
     }
   }
 
-  .dokan-product-edit-form .dokan-new-product-featured-img {
-    height: auto !important;
+  .dokan-product-edit-form {
+    .dokan-new-product-featured-img {
+      height: auto !important;
+    }
+
+    .per-order-shipping {
+      display: flex;
+      align-items: center;
+    }
+
+    .per_product_shipping_rules {
+      .sort {
+        position: relative;
+        i {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(0%, -50%);
+        }
+      }
+
+      td {
+        input[type='text'] {
+          width: 118px;
+        }
+      }
+
+      tfoot {
+        .button {
+          position: relative;
+
+          input[type="file"] {
+            z-index: 1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            cursor: pointer;
+          }
+        }
+
+        .import,
+        .export,
+        .import-override {
+          float: right;
+          margin-left: 3px;
+        }
+      }
+    }
   }
 
   label {

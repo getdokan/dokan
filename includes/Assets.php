@@ -795,6 +795,16 @@ class Assets {
                 'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
+                'i18n_no_row_selected'                => __( 'No row selected', 'dokan-lite' ),
+                'i18n_product_id'                     => __( 'Product ID', 'dokan-lite' ),
+                'i18n_country_code'                   => __( 'Country Code', 'dokan-lite' ),
+                'i18n_state'                          => __( 'State/County Code', 'dokan-lite' ),
+                'i18n_postcode'                       => __( 'Zip/Postal Code', 'dokan-lite' ),
+                'i18n_cost'                           => __( 'Cost', 'dokan-lite' ),
+                'i18n_item_cost'                      => __( 'Item Cost', 'dokan-lite' ),
+                'csv_imported_msg'                    => __( 'Please upload a file with .csv extension.', 'dokan-lite' ),
+                'import_limitation_msg'               => __( 'You can import 200 data at a time.', 'dokan-lite' ),
+                'csv_not_valid_msg'                   => __( 'Please import your valid csv data with matching ruled headers.', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
