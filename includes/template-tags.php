@@ -716,7 +716,7 @@ function get_chosen_taxonomy_attributes() {
                 // phpcs:ignore
                 $query_type                          = ! empty( $_GET['query_type_' . $attribute] ) && in_array( esc_url_raw( $_GET['query_type_' . $attribute] ), [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
                 $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
-                $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : apply_filters( 'woocommerce_layered_nav_default_query_type', 'and' );
+                $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
             }
         }
     }

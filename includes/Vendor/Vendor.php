@@ -677,8 +677,8 @@ class Vendor {
         if ( empty( $products ) ) {
             return [];
         }
-        if ( false === ( $author_terms = false ) ) {
-//        if ( false === ( $author_terms = Cache::get_transient( $transient_key, $transient_group ) ) ) {
+
+        if ( false === ( $author_terms = Cache::get_transient( $transient_key, $transient_group ) ) ) {
 
             $author_terms = [];
             //loop over the posts and collect the terms
@@ -701,10 +701,10 @@ class Vendor {
                             'fields' => 'ids'
                         ];
 
-                        $post = get_posts( $args );
+                        $all_posts = get_posts( $args );
 
                         if ( ! in_array( $term->term_id, $category_index, true ) ) {
-                            $term->count  = count($post);
+                            $term->count  = count($all_posts);
                             $category_index[] = $term->term_id;
                             $author_terms[]   = $term;
                         }

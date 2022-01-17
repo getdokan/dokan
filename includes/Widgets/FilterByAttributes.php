@@ -34,7 +34,6 @@ class FilterByAttributes extends WP_Widget {
 
         $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $taxonomy     = $this->get_instance_taxonomy( $instance );
-        $display_type = isset( $instance['display_type'] ) ? apply_filters( 'widget_display_type', $instance['display_type'] ) : '';
         $query_type   = isset( $instance['query_type'] ) ? apply_filters( 'widget_query_type', $instance['query_type'] ) : '';
 
         echo $args['before_widget'];
@@ -44,11 +43,7 @@ class FilterByAttributes extends WP_Widget {
 
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
 
-        if ( 'dropdown' === $display_type ) {
-            dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
-        } else {
-            dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
-        }
+        dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
 
         echo $args['after_widget'];
 
@@ -81,13 +76,8 @@ class FilterByAttributes extends WP_Widget {
             }
             $std_attribute = current( $attribute_array );
         }
-        $attribute_value = isset( $instance['attribute'] ) ? $instance['attribute'] : $std_attribute;
-        $display_type    = [
-            'list'     => __( 'List', 'dokan-lite' ),
-            'dropdown' => __( 'Dropdown', 'dokan-lite' ),
-        ];
-        $display_value   = isset( $instance['display_type'] ) ? $instance['display_type'] : '';
 
+        $attribute_value = isset( $instance['attribute'] ) ? $instance['attribute'] : $std_attribute;
         $query_type  = [
             'and' => __( 'AND', 'dokan-lite' ),
             'or'  => __( 'OR', 'dokan-lite' ),
@@ -104,14 +94,6 @@ class FilterByAttributes extends WP_Widget {
             <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'attribute' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'attribute' ) ); ?>">
                 <?php foreach ( $attribute_array as $option_key => $option_value ) : ?>
                     <option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, $attribute_value ); ?>><?php echo esc_html( $option_value ); ?></option>
-                <?php endforeach; ?>
-            </select>
-        </p>
-        <p>
-            <label for="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>"><?php echo __( 'Display Type', 'dokan-lite' ); ?></label>
-            <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'display_type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'display_type' ) ); ?>">
-                <?php foreach ( $display_type as $option_key => $option_value ) : ?>
-                    <option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, $display_value ); ?>><?php echo esc_html( $option_value ); ?></option>
                 <?php endforeach; ?>
             </select>
         </p>
@@ -142,7 +124,6 @@ class FilterByAttributes extends WP_Widget {
         $instance                 = [];
         $instance['title']        = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
         $instance['attribute']    = ( ! empty( $new_instance['attribute'] ) ) ? wp_strip_all_tags( $new_instance['attribute'] ) : '';
-        $instance['display_type'] = ( ! empty( $new_instance['display_type'] ) ) ? wp_strip_all_tags( $new_instance['display_type'] ) : '';
         $instance['query_type']   = ( ! empty( $new_instance['query_type'] ) ) ? wp_strip_all_tags( $new_instance['query_type'] ) : '';
 
         return $instance;
