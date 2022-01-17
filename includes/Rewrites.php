@@ -298,6 +298,17 @@ class Rewrites {
             $tax_query                    = [];
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : [];
 
+            $attributes = get_layered_nav_chosen_attributes();
+            if ( ! empty( $attributes ) ) {
+                foreach ( $attributes as $key => $attribute ) {
+                    $tax_query[] = [
+                        'taxonomy' => $key,
+                        'field'    => 'name',
+                        'terms'    => $attribute['terms'],
+                    ];
+                }
+            }
+
             if ( $query->query['term_section'] ) {
                 array_push(
                     $tax_query, [
