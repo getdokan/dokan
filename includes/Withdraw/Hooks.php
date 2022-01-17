@@ -32,8 +32,8 @@ class Hooks {
      * @return void
      */
     private function ajax() {
-        add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'handle_withdraw_request' ] );
-        add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'handle_make_default_method' ] );
+        add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'ajax_handle_withdraw_request' ] );
+        add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'ajax_handle_make_default_method' ] );
     }
 
     /**
@@ -96,7 +96,7 @@ class Hooks {
      *
      * @return void
      */
-    public function handle_withdraw_request() {
+    public function ajax_handle_withdraw_request() {
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw' ) ) {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
@@ -119,7 +119,7 @@ class Hooks {
             wp_send_json_error( esc_html__( 'Withdraw amount is required', 'dokan-lite' ) );
         }
 
-        $amount = (float) wc_format_decimal( wp_unslash( $_POST['amount'] ) );
+        $amount = (float) wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['amount'] ) ) );
         $method = sanitize_text_field( wp_unslash( $_POST['method'] ) );
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
@@ -169,7 +169,7 @@ class Hooks {
      *
      * @return void
      */
-    public function handle_make_default_method() {
+    public function ajax_handle_make_default_method() {
         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw_make_default' ) ) {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
