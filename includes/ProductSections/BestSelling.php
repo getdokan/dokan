@@ -57,7 +57,7 @@ class BestSelling extends AbstractProductSection {
      * @return string
      */
     public function get_setting_label() {
-        return __( 'Show best sell products section', 'dokan-lite' );
+        return __( 'Show best selling products section', 'dokan-lite' );
     }
 
     /**

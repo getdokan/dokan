@@ -36,10 +36,10 @@ class Manager {
      * @return void
      */
     public function init_classes() {
-        $this->container['featured_products']     = new Featured();
-        $this->container['latest_products']       = new Latest();
-        $this->container['best_selling']          = new BestSelling();
-        $this->container['top_rated_products']    = new TopRated();
+        $this->container['featured']     = new Featured();
+        $this->container['latest']       = new Latest();
+        $this->container['best_selling'] = new BestSelling();
+        $this->container['top_rated']    = new TopRated();
 
         $this->container = apply_filters( 'dokan_product_sections_container', $this->container );
     }
