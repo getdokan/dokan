@@ -70,9 +70,7 @@ class Storefront {
             $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
         }
 
-        if ( is_cart() ) {
-            $style .= '.woocommerce-noreviews::before, .woocommerce-info::before {font-weight: 900;}';
-        }
+        $style .= '.woocommerce-noreviews::before, .woocommerce-info::before, .woocommerce-error::before {font-weight: 900;}';
 
         wp_add_inline_style( 'dokan-style', $style );
     }
