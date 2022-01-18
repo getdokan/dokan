@@ -330,10 +330,13 @@ class StoreController extends WP_REST_Controller {
             $category_searched_result = [];
 
             foreach ( $stores as $store ) {
-                $data['id'] = $store->id;
-                $store_categories = $this->get_store( $data )->data['categories'];
-                foreach ( $store_categories as $key => $value ) {
-                    array_search( $category_id, $value ) ? array_push( $category_searched_result, $store ) : '';
+                foreach (dokan_get_store_info($store->id)['categories'] as $key => $value) {
+                    $in_array_data = (Array) $value;
+
+                    if ( $category_id === $in_array_data['term_id'] ) {
+                        array_push( $category_searched_result, $store );
+                        break;
+                    }
                 }
             }
 
@@ -364,7 +367,6 @@ class StoreController extends WP_REST_Controller {
                 } else if( 'not_verified' === $verified && ! $result ) {
                     array_push( $searched_result, $store );
                 }
-
 
             }
 
