@@ -59,7 +59,7 @@ class Storefront {
         $style = '';
 
         if ( is_cart() ) {
-            $style .= '.woocommerce-info::before {font-weight: 900;}';
+            $style .= '.woocommerce-noreviews::before, .woocommerce-info::before {font-weight: 900;}';
         }
 
         if ( dokan_is_store_listing() ) {
