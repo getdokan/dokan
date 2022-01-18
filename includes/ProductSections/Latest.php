@@ -35,7 +35,7 @@ class Latest extends AbstractProductSection {
      * @return string
      */
     public function get_customizer_title() {
-        return __( 'Hide Latest Products', 'dokan-lite' );
+        return __( 'Hide latest products', 'dokan-lite' );
     }
 
     /**
