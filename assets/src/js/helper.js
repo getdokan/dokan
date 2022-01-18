@@ -112,9 +112,13 @@ function dokan_get_daterange_picker_format( dateTime = dokan_helper.i18n_date_fo
     cancelButtonColor :'#dc3545',
   };
 
-  const args    = { ...defaults, ...options };
+  const args   = { ...defaults, ...options };
+  const action = args.action;
 
-  switch( args.action ) {
+  // Unset action property form args
+  delete args.action;
+
+  switch( action ) {
     case 'confirm':
     case 'prompt' :
       return await Swal.fire( args );
