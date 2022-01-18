@@ -865,6 +865,8 @@ class StoreController extends WP_REST_Controller {
             $user = dokan()->vendor->get( $store_id )->make_inactive();
         }
 
+        do_action( 'dokan_vendor_status_updated', $store_id );
+
         $response = rest_ensure_response( $user );
         $response->add_links( $this->prepare_links( $user, $request ) );
 
