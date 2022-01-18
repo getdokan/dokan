@@ -805,6 +805,7 @@ class Assets {
                 'csv_imported_msg'                    => __( 'Please upload a file with .csv extension.', 'dokan-lite' ),
                 'import_limitation_msg'               => __( 'You can import 200 data at a time.', 'dokan-lite' ),
                 'csv_not_valid_msg'                   => __( 'Please import your valid csv data with matching ruled headers.', 'dokan-lite' ),
+                'empty_product_shipping_rules'        => __( 'Can\'t export empty shipping rules.', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
