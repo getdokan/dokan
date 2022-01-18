@@ -298,7 +298,7 @@ class Rewrites {
             $tax_query                    = [];
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : [];
 
-            $attributes = get_chosen_taxonomy_attributes();
+            $attributes = dokan_get_chosen_taxonomy_attributes();
             if ( ! empty( $attributes ) ) {
                 foreach ( $attributes as $key => $attribute ) {
                     $tax_query[] = [
