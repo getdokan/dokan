@@ -56,12 +56,16 @@ class Storefront {
      * @return void
      */
     public function reset_style() {
-        if ( ! dokan_is_store_listing() ) {
-            return;
+        $style = '';
+
+        if ( is_cart() ) {
+            $style .= '.woocommerce-info::before {font-weight: 900;}';
         }
 
-        $style = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
-        $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
+        if ( dokan_is_store_listing() ) {
+            $style  = '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 a {text-decoration: none}';
+            $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
+        }
 
         wp_add_inline_style( 'dokan-style', $style );
     }
