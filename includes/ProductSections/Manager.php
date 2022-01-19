@@ -95,6 +95,7 @@ class Manager {
             $wp_customize->add_control(
                 $section_object->get_section_id(),
                 [
+                    /* translators: %s: product section name. */
                     'label'    => sprintf( __( 'Hide %s section', 'dokan-lite' ), $section_object->get_section_label() ),
                     'section'  => 'dokan_store',
                     'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . ']',
@@ -116,6 +117,7 @@ class Manager {
             $wp_customize->add_control(
                 $section_object->get_section_id() . '_title',
                 [
+                    /* translators: %s: product section name. */
                     'label'    => sprintf( __( 'Section title for %s', 'dokan-lite' ), $section_object->get_section_label() ),
                     'section'  => 'dokan_store',
                     'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . '_title]',
@@ -221,7 +223,8 @@ class Manager {
                             <input
                                 type="checkbox"
                                 name="product_sections[<?php echo sanitize_key( $section_object->get_section_id() ); ?>]"
-                                value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php esc_html_e( sprintf( __( 'Show %s section', 'dokan-lite' ), $section_object->get_section_label() ) ); ?>
+                                <?php /* translators: %s: product section name. */ ?>
+                                value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php echo esc_html( sprintf( __( 'Show %s section', 'dokan-lite' ), $section_object->get_section_label() ) ); ?>
                         </label>
                     </div>
             <?php
