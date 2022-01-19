@@ -74,15 +74,6 @@ abstract class AbstractProductSection {
     abstract protected function set_section_id();
 
     /**
-     * Get customizer setting title of this section.
-     *
-     * @since 3.3.7
-     *
-     * @return string
-     */
-    abstract public function get_customizer_title();
-
-    /**
      * Get single store page section title.
      *
      * @since 3.3.7
@@ -92,13 +83,13 @@ abstract class AbstractProductSection {
     abstract public function get_section_title();
 
     /**
-     * Get vendor store settings page section label.
+     * Get label for this section.
      *
      * @since 3.3.7
      *
      * @return string
      */
-    abstract public function get_setting_label();
+    abstract public function get_section_label();
 
     /**
      * Get products for this section

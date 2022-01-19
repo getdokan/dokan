@@ -95,10 +95,31 @@ class Manager {
             $wp_customize->add_control(
                 $section_object->get_section_id(),
                 [
-                    'label'    => $section_object->get_customizer_title(),
+                    'label'    => sprintf( __( 'Hide %s section'), $section_object->get_section_label() ),
                     'section'  => 'dokan_store',
                     'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . ']',
                     'type'     => 'checkbox',
+                ]
+            );
+
+            $wp_customize->add_setting(
+                'dokan_appearance[product_sections][' . $section_object->get_section_id() . '_title]',
+                [
+                    'default'              => $section_object->get_section_title(),
+                    'type'                 => 'option',
+                    'capability'           => 'manage_options',
+                    'sanitize_callback'    => 'sanitize_text_field',
+                    'sanitize_js_callback' => 'sanitize_text_field',
+                ]
+            );
+
+            $wp_customize->add_control(
+                $section_object->get_section_id() . '_title',
+                [
+                    'label'    => sprintf( __( 'Section title for %s'), $section_object->get_section_label() ),
+                    'section'  => 'dokan_store',
+                    'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . '_title]',
+                    'type'     => 'text',
                 ]
             );
         }
@@ -200,7 +221,7 @@ class Manager {
                             <input
                                 type="checkbox"
                                 name="product_sections[<?php echo sanitize_key( $section_object->get_section_id() ); ?>]"
-                                value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php echo esc_html( $section_object->get_setting_label() ); ?>
+                                value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php esc_html_e( sprintf( __( 'Show %s section', 'dokan-lite' ), $section_object->get_section_label() ) ); ?>
                         </label>
                     </div>
             <?php

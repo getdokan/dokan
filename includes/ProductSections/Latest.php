@@ -28,17 +28,6 @@ class Latest extends AbstractProductSection {
     }
 
     /**
-     * Get customizer setting title of this section.
-     *
-     * @since 3.3.7
-     *
-     * @return string
-     */
-    public function get_customizer_title() {
-        return __( 'Hide latest products', 'dokan-lite' );
-    }
-
-    /**
      * Get single store page section title.
      *
      * @since 3.3.7
@@ -46,18 +35,21 @@ class Latest extends AbstractProductSection {
      * @return string
      */
     public function get_section_title() {
-        return apply_filters( "dokan_{$this->get_section_id()}_product_section_title", __( 'Latest Products', 'dokan-lite' ) );
+        $sections_appearance = dokan_get_option( 'product_sections', 'dokan_appearance' );
+        $section_title       = isset( $sections_appearance[ $this->get_section_id() . '_title' ] ) ? $sections_appearance[ $this->get_section_id() . '_title'] : __( 'Latest Products' , 'dokan-lite' );
+
+        return apply_filters( "dokan_{$this->get_section_id()}_product_section_title", $section_title );
     }
 
     /**
-     * Get vendor store settings page section label.
+     * Get label for this section.
      *
      * @since 3.3.7
      *
      * @return string
      */
-    public function get_setting_label() {
-        return __( 'Show latest products section', 'dokan-lite' );
+    public function get_section_label() {
+        return __( 'latest products', 'dokan-lite' );
     }
 
     /**
