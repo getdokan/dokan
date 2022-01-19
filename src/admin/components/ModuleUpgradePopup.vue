@@ -1,6 +1,6 @@
 <template>
     <div id="dokan-upgrade-to-pro-wrapper">
-        <div v-if="showPopup && ! hasPro" id="dokan-upgrade-popup" @click.self="closePopup">
+        <div v-if="showPopup" id="dokan-upgrade-popup" @click.self="closePopup">
             <div class="modal-content">
                 <div class="body">
                     <svg width="128" height="109" viewBox="0 0 128 109" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,10 +34,7 @@
                     <p class="unlock">{{ __( 'Unlock', 'dokan-lite' ) }}</p>
                     <h1>{{ __( '20+ Modules', 'dokan-lite' ) }}</h1>
                     <p class="text-brand">{{ __( 'with Dokan Premium Plans', 'dokan-lite' ) }}</p>
-                    <p class="upgrade-text">
-                        {{ __( 'We’re sorry', 'dokan-lite' ) }}, <br>
-                        {{ __( "Dokan Modules are not available on Dokan Lite. Please upgrade to a PRO plan to unlock the modules of your choice.", 'dokan-lite' ) }}
-                    </p>
+                    <p class="upgrade-text" v-html="sprintf( __( 'We’re sorry %s Dokan Modules are not available on %s. Please upgrade to a PRO plan to unlock the modules of your choice.', 'dokan-lite' ), '<br>', '<strong>Dokan Lite</strong>' )"></p>
 
                     <a class="upgrade-button" target="_blank" rel="noopener noreferrer" :href="upgradeURL">{{ __( 'Upgrade to Pro', 'dokan-lite' ) }}</a>
 
@@ -111,7 +108,6 @@ export default {
     data() {
         return {
             upgradeURL: dokan.urls.upgradeToPro,
-            hasPro: dokan.hasPro ? true : false,
         }
     },
     methods: {
@@ -205,6 +201,10 @@ export default {
                     font-size: .813rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
+
+                    strong {
+                        color: #ff5722;
+                    }
                 }
 
                 .upgrade-button {
