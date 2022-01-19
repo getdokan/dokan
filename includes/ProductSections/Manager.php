@@ -95,7 +95,7 @@ class Manager {
             $wp_customize->add_control(
                 $section_object->get_section_id(),
                 [
-                    'label'    => sprintf( __( 'Hide %s section'), $section_object->get_section_label() ),
+                    'label'    => sprintf( __( 'Hide %s section', 'dokan-lite' ), $section_object->get_section_label() ),
                     'section'  => 'dokan_store',
                     'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . ']',
                     'type'     => 'checkbox',
@@ -116,7 +116,7 @@ class Manager {
             $wp_customize->add_control(
                 $section_object->get_section_id() . '_title',
                 [
-                    'label'    => sprintf( __( 'Section title for %s'), $section_object->get_section_label() ),
+                    'label'    => sprintf( __( 'Section title for %s', 'dokan-lite' ), $section_object->get_section_label() ),
                     'section'  => 'dokan_store',
                     'settings' => 'dokan_appearance[product_sections][' . $section_object->get_section_id() . '_title]',
                     'type'     => 'text',

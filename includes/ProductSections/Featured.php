@@ -36,7 +36,7 @@ class Featured extends AbstractProductSection {
      */
     public function get_section_title() {
         $sections_appearance = dokan_get_option( 'product_sections', 'dokan_appearance' );
-        $section_title       = isset( $sections_appearance[ $this->get_section_id() . '_title' ] ) ? $sections_appearance[ $this->get_section_id() . '_title'] : __( 'Featured Products' , 'dokan-lite' );
+        $section_title       = isset( $sections_appearance[ $this->get_section_id() . '_title' ] ) ? $sections_appearance[ $this->get_section_id() . '_title' ] : __( 'Featured Products', 'dokan-lite' );
 
         return apply_filters( "dokan_{$this->get_section_id()}_product_section_title", $section_title );
     }
