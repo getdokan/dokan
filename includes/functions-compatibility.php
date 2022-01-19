@@ -143,28 +143,25 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     $product->set_date_on_sale_to( $date_to );
 
     if ( $date_to && ! $date_from ) {
-        $date_from = strtotime( 'NOW', dokan_current_datetime()->getTimestamp() );
-        $product->set_date_on_sale_from( $date_from );
+        $product->set_date_on_sale_from( dokan_current_datetime()->modify( $date_from )->getTimestamp() );
     }
 
     // Update price if on sale
-    if ( ! empty( $sale_price ) && empty( $date_to ) && empty( $date_from ) ) {
+    if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
         $product->set_sale_price( $sale_price );
     } else {
         $product->set_sale_price( $regular_price );
     }
 
-    if ( ! empty( $sale_price ) && $date_from && strtotime( $date_from ) < strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
+    if ( '' !== $sale_price && $date_from && dokan_current_datetime()->modify( $date_from )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
         $product->set_sale_price( $sale_price );
     }
 
-    if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
+    if ( $date_to && dokan_current_datetime()->modify( $date_to )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
         $product->set_sale_price( $regular_price );
         $product->set_date_on_sale_from();
         $product->set_date_on_sale_to();
     }
-
-    $product->set_stock_status();
 
     $product->save();
 }
