@@ -129,7 +129,12 @@ function dokan_get_product_downloads( $product ) {
  * @param string $date_to
  */
 function dokan_save_product_price( $product_id, $regular_price, $sale_price = '', $date_from = '', $date_to = '' ) {
-    $product       = wc_get_product( absint( $product_id ) );
+    $product = wc_get_product( absint( $product_id ) );
+
+    if ( ! $product instanceof WC_Product ) {
+        return;
+    }
+
     $regular_price = wc_format_decimal( $regular_price );
     $sale_price    = '' === $sale_price ? '' : wc_format_decimal( $sale_price );
     $date_from     = wc_clean( $date_from );
@@ -143,22 +148,22 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     $product->set_date_on_sale_to( $date_to );
 
     if ( $date_to && ! $date_from ) {
-        $product->set_date_on_sale_from( dokan_current_datetime()->modify( $date_from )->getTimestamp() );
+        $product->set_date_on_sale_from( dokan_current_datetime()->getTimestamp() );
     }
 
     // Update price if on sale
     if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
-        $product->set_sale_price( $sale_price );
+        $product->set_price( $sale_price );
     } else {
-        $product->set_sale_price( $regular_price );
+        $product->set_price( $regular_price );
     }
 
     if ( '' !== $sale_price && $date_from && dokan_current_datetime()->modify( $date_from )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
-        $product->set_sale_price( $sale_price );
+        $product->set_price( $sale_price );
     }
 
     if ( $date_to && dokan_current_datetime()->modify( $date_to )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
-        $product->set_sale_price( $regular_price );
+        $product->set_price( $regular_price );
         $product->set_date_on_sale_from();
         $product->set_date_on_sale_to();
     }
