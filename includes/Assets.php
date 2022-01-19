@@ -591,17 +591,7 @@ class Assets {
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
 
-            if (
-                isset( $wp->query_vars['products'] ) ||
-                isset( $wp->query_vars['orders'] ) ||
-                isset( $wp->query_vars['coupons'] ) ||
-                isset( $wp->query_vars['reports'] ) ||
-                isset( $wp->query_vars['return-request'] ) ||
-                isset( $wp->query_vars['support'] ) ||
-                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping', 'regular-shipping', 'seo' ], true ) )
-            ) {
-                wp_enqueue_script( 'dokan-tooltip' );
-            }
+            wp_enqueue_script( 'dokan-tooltip' );
 
             wp_enqueue_script( 'dokan-form-validate' );
 
