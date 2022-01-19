@@ -63,10 +63,13 @@ class StoreListsFilter {
      * @return void
      */
     public function filter_area( $stores ) {
+        $sort_by = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
+
         dokan_get_template_part( 'store-lists-filter', '', [
             'stores'          => $stores,
             'number_of_store' => $stores['count'],
-            'sort_filters'    => $this->sort_by_options()
+            'sort_filters'    => $this->sort_by_options(),
+            'sort_by'         => $sort_by,
         ] );
     }
 
@@ -77,7 +80,7 @@ class StoreListsFilter {
      *
      * @return array
      */
-    public function sort_by_options() {
+    public static function sort_by_options() {
         return apply_filters( 'dokan_store_lists_sort_by_options', [
             'most_recent'   => __( 'Most Recent', 'dokan-lite' ),
             'total_orders'  => __( 'Most Popular', 'dokan-lite' ),
@@ -96,11 +99,14 @@ class StoreListsFilter {
      */
     public function filter_pre_user_query( $args, $request ) {
         if ( ! empty( $request['stores_orderby'] ) ) {
-            $orderby = wc_clean( $request['stores_orderby'] );
+            $orderby         = wc_clean( $request['stores_orderby'] );
             $args['orderby'] = $orderby;
-
-            add_action( 'pre_user_query', array( $this, 'filter_user_query' ), 9 );
+        } else {
+            $sort_by         = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
+            $args['orderby'] = ( ! dokan()->is_pro_exists() && ! in_array( $sort_by, [ 'most_recent', 'total_orders' ] ) ) ? 'most_recent': $sort_by;
         }
+
+        add_action( 'pre_user_query', array( $this, 'filter_user_query' ), 9 );
 
         return $args;
     }
