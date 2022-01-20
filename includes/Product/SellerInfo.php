@@ -9,12 +9,14 @@ class SellerInfo {
     public function __construct() {
         $position = dokan_get_option( 'seller_info', 'dokan_appearance' );
 
-        if ( 'below_add_to_cart_btn' === $position ) {
-            add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'add_seller_info_on_product_single_page' ] );
-        } elseif ( 'below_category' === $position ) {
-            add_action( 'woocommerce_product_meta_end', [ $this, 'add_seller_info_on_product_single_page' ] );
-        } else {
-            add_action( 'woocommerce_simple_add_to_cart', [ $this, 'add_seller_info_on_product_single_page' ] );
+        if ( 'do_not_show' !== $position ) {
+            if ( 'below_add_to_cart_btn' === $position ) {
+                add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'add_seller_info_on_product_single_page' ] );
+            } elseif ( 'below_category' === $position ) {
+                add_action( 'woocommerce_product_meta_end', [ $this, 'add_seller_info_on_product_single_page' ] );
+            } else {
+                add_action( 'woocommerce_simple_add_to_cart', [ $this, 'add_seller_info_on_product_single_page' ] );
+            }
         }
 
         add_filter( 'dokan_settings_fields', array( $this, 'seller_info_admin_settings' ), 10, 2 );
@@ -48,11 +50,12 @@ class SellerInfo {
                 'desc'              => __( 'Show vendor information on product single page', 'dokan' ),
                 'type'              => 'select',
                 'options'           => [
+                    'do_not_show'           => 'Don\'t show',
                     'below_price'           => 'Below product price',
-                    'below_add_to_cart_btn' => 'Below Add to cart button',
+                    'below_add_to_cart_btn' => 'Below add to cart button',
                     'below_category'        => 'Below product category',
                 ],
-                'default'           => 'below_price',
+                'default'           => 'do_not_show',
                 'class'             => 'seller_info',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
