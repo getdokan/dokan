@@ -12,12 +12,12 @@ class VendorInfo {
      * @since 3.3.7
      */
     public function __construct() {
-        $position = dokan_get_option( 'vendor_info', 'dokan_appearance' );
+        $show_vendor_info = dokan_get_option( 'show_vendor_info', 'dokan_appearance', 'do_not_show' );
 
-        if ( 'do_not_show' !== $position ) {
-            if ( 'below_add_to_cart_btn' === $position ) {
+        if ( 'do_not_show' !== $show_vendor_info ) {
+            if ( 'below_add_to_cart_btn' === $show_vendor_info ) {
                 add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'add_vendor_info_on_product_single_page' ] );
-            } elseif ( 'below_category' === $position ) {
+            } elseif ( 'below_category' === $show_vendor_info ) {
                 add_action( 'woocommerce_product_meta_end', [ $this, 'add_vendor_info_on_product_single_page' ] );
             } else {
                 add_action( 'woocommerce_simple_add_to_cart', [ $this, 'add_vendor_info_on_product_single_page' ] );
@@ -49,8 +49,8 @@ class VendorInfo {
      */
     public function admin_settings_for_vendor_info( $settings_fields, $dokan_settings ) {
         $vendor_info = [
-            'vendor_info' => [
-                'name'              => 'vendor_info',
+            'show_vendor_info' => [
+                'name'              => 'show_vendor_info',
                 'label'             => __( 'Show Vendor Info', 'dokan-lite' ),
                 'desc'              => __( 'Show vendor information on product single page', 'dokan' ),
                 'type'              => 'select',
@@ -61,7 +61,7 @@ class VendorInfo {
                     'below_category'        => 'Below product category',
                 ],
                 'default'           => 'do_not_show',
-                'class'             => 'vendor_info',
+                'class'             => 'show_vendor_info',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
         ];
