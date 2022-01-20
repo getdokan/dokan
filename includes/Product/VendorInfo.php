@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Product;
 /**
  * Vendor information handler class
  */
-class SellerInfo {
+class VendorInfo {
     public function __construct() {
         $position = dokan_get_option( 'seller_info', 'dokan_appearance' );
 
