@@ -139,6 +139,7 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     $sale_price    = '' === $sale_price ? '' : wc_format_decimal( $sale_price );
     $date_from     = wc_clean( $date_from );
     $date_to       = wc_clean( $date_to );
+    $now           = dokan_current_datetime();
 
     $product->set_regular_price( $regular_price );
     $product->set_sale_price( $sale_price );
@@ -148,7 +149,7 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     $product->set_date_on_sale_to( $date_to );
 
     if ( $date_to && ! $date_from ) {
-        $product->set_date_on_sale_from( dokan_current_datetime()->getTimestamp() );
+        $product->set_date_on_sale_from( $now->getTimestamp() );
     }
 
     // Update price if on sale
@@ -158,11 +159,11 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
         $product->set_price( $regular_price );
     }
 
-    if ( '' !== $sale_price && $date_from && dokan_current_datetime()->modify( $date_from )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
+    if ( '' !== $sale_price && $date_from && $now->modify( $date_from )->getTimestamp() < $now->getTimestamp() ) {
         $product->set_price( $sale_price );
     }
 
-    if ( $date_to && dokan_current_datetime()->modify( $date_to )->getTimestamp() < dokan_current_datetime()->getTimestamp() ) {
+    if ( $date_to && $now->modify( $date_to )->getTimestamp() < $now->getTimestamp() ) {
         $product->set_price( $regular_price );
         $product->set_date_on_sale_from();
         $product->set_date_on_sale_to();
