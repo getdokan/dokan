@@ -19,7 +19,7 @@ $store_rating = $vendor->get_rating();
     </div>
     <div class="dokan-vendor-info">
         <div class="dokan-vendor-name">
-            <h5><?php echo esc_html( $store_info['store_name'] ); ?></h5>
+            <a href="<?php echo esc_attr( $vendor->get_shop_url() ); ?>"><h5><?php echo esc_html( $store_info['store_name'] ); ?></h5></a>
             <?php apply_filters( 'dokan_vendor_verified_badge', $vendor ); ?>
         </div>
         <div class="dokan-vendor-rating">
