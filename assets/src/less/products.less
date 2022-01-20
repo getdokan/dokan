@@ -1555,3 +1555,68 @@
 .select2-container--open .select2-dropdown--below {
   margin-top: 5px !important;
 }
+
+// style for seller info on product details page
+.dokan-seller-info-wrap {
+  border: 1px dashed #E7E7E7;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+
+  h5, p {
+    margin: 0;
+  }
+
+  .dokan-seller-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 13px;
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  .dokan-seller-info {
+    .dokan-seller-name {
+      display: flex;
+      align-items: center;
+
+      h5 {
+        font-size: 16px;
+        font-weight: 500;
+        color: #000;
+        margin-right: 10px;
+      }
+    }
+
+    .dokan-seller-rating {
+      display: flex;
+      align-items: center;
+
+      p {
+        color: #C1C1C1;
+        font-size: 14px;
+        font-weight: 500;
+        margin-right: 6px;
+      }
+
+      .dashicons-star-empty {
+        color: #e0e0e0;
+        font-size: 16px;
+      }
+
+      .dashicons-star-filled,
+      .dashicons-star-half {
+        color: #ffc239;
+        font-size: 16px;
+      }
+    }
+
+    .dokan-ratings-count {
+      color: #C1C1C1;
+      font-size: 11px;
+      font-weight: normal;
+    }
+  }
+}
