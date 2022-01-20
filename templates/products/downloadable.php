@@ -1,9 +1,9 @@
 <div class="dokan-download-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_download_options">
-        <h2><i class="fa fa-download" aria-hidden="true"></i> <?php esc_html_e( 'Downloadable Options', 'dokan-lite' ); ?></h2>
+        <h2><i class="fas fa-download" aria-hidden="true"></i> <?php esc_html_e( 'Downloadable Options', 'dokan-lite' ); ?></h2>
         <p><?php esc_html_e( 'Configure your downloadable product settings', 'dokan-lite' ); ?></p>
         <a href="#" class="dokan-section-toggle">
-            <i class="fa fa-sort-desc fa-flip-vertical" aria-hidden="true"></i>
+            <i class="fas fa-sort-down fa-flip-vertical" aria-hidden="true"></i>
         </a>
         <div class="dokan-clearfix"></div>
     </div>

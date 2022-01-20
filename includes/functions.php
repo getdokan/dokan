@@ -2439,7 +2439,7 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Pinterest', 'dokan-lite' ),
         ],
         'linkedin' => [
-            'icon'  => 'linkedin-square',
+            'icon'  => 'linkedin',
             'title' => __( 'LinkedIn', 'dokan-lite' ),
         ],
         'youtube' => [
