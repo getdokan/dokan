@@ -20,7 +20,7 @@ $store_rating = $vendor->get_rating();
     <div class="dokan-vendor-info">
         <div class="dokan-vendor-name">
             <h5><?php echo esc_html( $store_info['store_name'] ); ?></h5>
-            <?php apply_filters( 'dokan_vendor_verified_icon', $vendor ); ?>
+            <?php apply_filters( 'dokan_vendor_verified_badge', $vendor ); ?>
         </div>
         <div class="dokan-vendor-rating">
             <?php if ( $store_rating['count'] ) : ?>

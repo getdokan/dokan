@@ -24,7 +24,7 @@ class VendorInfo {
             }
         }
 
-        add_filter( 'dokan_settings_fields', array( $this, 'vendor_info_admin_settings' ), 10, 2 );
+        add_filter( 'dokan_settings_fields', array( $this, 'admin_settings_for_vendor_info' ), 10, 2 );
     }
 
     /**
@@ -47,7 +47,7 @@ class VendorInfo {
      *
      * @return array
      */
-    public function vendor_info_admin_settings( $settings_fields, $dokan_settings ) {
+    public function admin_settings_for_vendor_info( $settings_fields, $dokan_settings ) {
         $vendor_info = [
             'vendor_info' => [
                 'name'              => 'vendor_info',
