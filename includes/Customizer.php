@@ -386,6 +386,16 @@ class Customizer {
             ]
         );
 
+        // ( Customizing->Dokan->Store List ) section
+        $wp_customize->add_section(
+            'dokan_store_list',
+            [
+                'title'    => __( 'Store List', 'dokan-lite' ),
+                'priority' => 9,
+                'panel'    => 'dokan',
+            ]
+        );
+
         $wp_customize->add_setting(
             'dokan_appearance[store_list_sort_by]',
             [
@@ -401,7 +411,7 @@ class Customizer {
             'store_list_sort_by',
             [
                 'type'        => 'select',
-                'section'     => 'dokan_store',
+                'section'     => 'dokan_store_list',
                 'settings'    => 'dokan_appearance[store_list_sort_by]',
                 'label'       => __( 'Store List Sorting', 'dokan-lite' ),
                 'description' => __( 'How should stores be sorted by default?', 'dokan-lite' ),
