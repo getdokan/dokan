@@ -35,7 +35,7 @@ class VendorInfo {
      * @return void
      */
     public function add_seller_info_on_product_single_page() {
-        dokan_get_template_part( 'seller-info' );
+        dokan_get_template_part( 'vendor-info' );
     }
 
     /**
