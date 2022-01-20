@@ -6,6 +6,11 @@ namespace WeDevs\Dokan\Product;
  * Vendor information handler class
  */
 class VendorInfo {
+    /**
+     * Class constructor
+     *
+     * @since 3.3.7
+     */
     public function __construct() {
         $position = dokan_get_option( 'seller_info', 'dokan_appearance' );
 
@@ -23,7 +28,7 @@ class VendorInfo {
     }
 
     /**
-     * Display seller info on product details page
+     * Display seller info on product single page
      *
      * @since 3.3.7
      *
@@ -34,7 +39,7 @@ class VendorInfo {
     }
 
     /**
-     * Add fields for seller information
+     * Add setting fields for seller information
      *
      * @param array $settings_fields
      *
