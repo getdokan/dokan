@@ -55,7 +55,7 @@ class Manager {
         // customizer settings
         add_action( 'dokan_store_customizer_after_vendor_products', [ $this, 'render_customizer_settings_fields' ] );
         // render product sections on single store page
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_product_sections' ], 5, 3 );
+        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_product_sections' ], 5, 1 );
         // vendor store settings section
         add_action( 'dokan_settings_after_store_more_products', [ $this, 'render_store_settings_form_fields' ], 10, 2 );
         add_filter( 'dokan_store_profile_settings_args', [ $this, 'process_store_settings_form_fields' ] );
@@ -138,7 +138,10 @@ class Manager {
      *
      * @return void
      */
-    public function render_additional_product_sections( $store_user, $store_info, $vendor ) {
+    public function render_additional_product_sections( $store_user ) {
+        $vendor     = dokan()->vendor->get( $store_user->ID );
+        $store_info = $vendor->get_shop_info();
+
         $section_count  = 0;
         $store_settings = isset( $store_info['product_sections'] ) ? $store_info['product_sections'] : [];
 

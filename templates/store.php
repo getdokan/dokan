@@ -32,12 +32,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                 <?php dokan_get_template_part( 'store-header' ); ?>
 
-                <?php
-                /***
-                 * @since 3.3.6 added $store_user args
-                 */
-                do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info, $store_user );
-                ?>
+                <?php do_action( 'dokan_store_profile_frame_after', $store_user->data, $store_info ); ?>
 
                 <?php if ( have_posts() ) { ?>
 
