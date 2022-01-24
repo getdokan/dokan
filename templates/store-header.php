@@ -57,7 +57,7 @@ if ( 'layout3' === $profile_layout ) {
                                 size="150">
                         </div>
                         <?php if ( ! empty( $store_user->get_shop_name() ) && 'default' === $profile_layout ) { ?>
-                            <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?> <?php apply_filters( 'dokan_vendor_verified_badge', $store_user ); ?></h1>
+                            <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?> <?php apply_filters( 'dokan_store_header_after_store_name', $store_user ); ?></h1>
                         <?php } ?>
                     </div>
 

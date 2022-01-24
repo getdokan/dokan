@@ -24,7 +24,7 @@ class Hooks {
         add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
 
         // Init Product Cache Class
-        new VendorInfo();
+        new VendorStoreInfo();
         new ProductCache();
     }
 

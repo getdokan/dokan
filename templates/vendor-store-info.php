@@ -4,13 +4,12 @@
  *
  * @since 3.3.7
  *
+ * @param Object $vendor
+ * @param Array $store_info
+ * @param Array $store_rating
+ *
  * @package dokan
  */
-global $product;
-
-$vendor       = dokan_get_vendor_by_product( $product );
-$store_info   = $vendor->get_shop_info();
-$store_rating = $vendor->get_rating();
 ?>
 
 <div class="dokan-vendor-info-wrap">
@@ -20,7 +19,7 @@ $store_rating = $vendor->get_rating();
     <div class="dokan-vendor-info">
         <div class="dokan-vendor-name">
             <a href="<?php echo esc_attr( $vendor->get_shop_url() ); ?>"><h5><?php echo esc_html( $store_info['store_name'] ); ?></h5></a>
-            <?php apply_filters( 'dokan_vendor_verified_badge', $vendor ); ?>
+            <?php apply_filters( 'dokan_product_single_after_store_name', $vendor ); ?>
         </div>
         <div class="dokan-vendor-rating">
             <?php if ( $store_rating['count'] ) : ?>
