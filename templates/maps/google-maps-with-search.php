@@ -50,6 +50,11 @@
                 updatePositionInput(event.latLng );
             } );
 
+            window.google.maps.event.addListener( marker, 'drag', dokan_debounce_delay(
+                ( event ) => reverseGeocode( event.latLng ),
+                1000
+            ) );
+
         } catch( e ) {
             console.log( 'Google API not found.' );
         }
@@ -119,6 +124,40 @@
                     }, 1500);
                 }
             });
+        }
+
+        function reverseGeocode( latLng ) {
+            let data = {
+                location: {
+                    lat: latLng.lat(),
+                    lng: latLng.lng(),
+                }
+            };
+
+            geocoder.geocode( data )
+                .then( function ( { results: addresses } ) {
+                    let address = addresses[0].address_components
+                        .filter( component => ! component.types.includes( 'plus_code' ) )
+                        .map( component => component.long_name )
+                        .join( ', ' );
+                    $input_add.val( address );
+                })
+                .catch( e => console.log( e ) );
+        }
+
+        function dokan_debounce_delay( callback, ms ) {
+            var timer = 0;
+
+            return function() {
+                var context = this,
+                    args    = arguments;
+
+                clearTimeout( timer );
+
+                timer = setTimeout( function () {
+                    callback.apply( context, args );
+                }, ms || 0);
+            };
         }
     });
 </script>
