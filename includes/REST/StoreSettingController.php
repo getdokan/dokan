@@ -138,7 +138,7 @@ class StoreSettingController extends WP_REST_Controller {
         $store_id = $vendor->get_id();
         // TODO: update the store payment methods info.
 
-        return rest_ensure_response( $response )
+        return rest_ensure_response( $response );
     }
 
     /**
