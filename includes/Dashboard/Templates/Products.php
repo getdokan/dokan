@@ -268,13 +268,16 @@ class Products {
             self::$errors = apply_filters( 'dokan_can_add_product', $errors );
 
             if ( ! self::$errors ) {
+                $timestamp      = time();
                 $product_status = dokan_get_new_post_status();
-                $post_data = apply_filters( 'dokan_insert_product_post_data', array(
-                    'post_type'    => 'product',
-                    'post_status'  => $product_status,
-                    'post_title'   => $post_title,
-                    'post_content' => $post_content,
-                    'post_excerpt' => $post_excerpt,
+                $post_data      = apply_filters( 'dokan_insert_product_post_data', array(
+                    'post_type'         => 'product',
+                    'post_status'       => $product_status,
+                    'post_title'        => $post_title,
+                    'post_content'      => $post_content,
+                    'post_excerpt'      => $post_excerpt,
+                    'post_date_gmt'     => date( 'Y-m-d H:i:s', $timestamp ),
+                    'post_modified_gmt' => date( 'Y-m-d H:i:s', $timestamp ),
                 ) );
 
                 $product_id = wp_insert_post( $post_data );
