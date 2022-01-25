@@ -260,14 +260,13 @@ class Commission {
             $product = wc_get_product( $product );
         }
 
-        if ( ! $product ) {
-            return new \WP_Error( __( 'Product not found', 'dokan-lite' ), 404 );
-        }
-
-        $product_price = is_null( $price ) ? (float) $product->get_price() : (float) $price;
+        $product_price = is_null( $price ) && ! empty( $product ) ? (float) $product->get_price() : (float) $price;
         $vendor        = dokan_get_vendor_by_product( $product );
 
-        $earning = $this->calculate_commission( $product->get_id(), $product_price, $vendor->get_id() );
+        $vendor_id = ! empty( $vendor ) ? $vendor->get_id() : 0;
+        $product_id = ! empty( $product ) ? $product->get_id() : 0;
+
+        $earning = $this->calculate_commission( $product_id, $product_price, $vendor_id );
         $earning = 'admin' === $context ? $product_price - $earning : $earning;
 
         return apply_filters( 'dokan_get_earning_by_product', $earning, $product, $context );
@@ -668,84 +667,79 @@ class Commission {
     public function prepare_for_calculation( $callable, $product_id, $product_price, $vendor_id ) {
         do_action( 'dokan_before_prepare_for_calculation', $callable, $product_id, $product_price, $this );
 
-        $func_rate = str_replace( 'earning', 'rate', $callable );
-        $func_type = str_replace( 'earning', 'type', $callable );
-        $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
+        // If an order has been purchased previously, calculate the earning with the previously stated commission rate.
+        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
+        $flat_rate       = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', true ): '';
+        $commission_type = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', true ): '';
+        $percentage_fee  = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', true ) : '';
 
-        $commission_rate = null;
+        // If the commission is not saved in the order item meta means this is a new order and we have to
+        // find the commission from the setting of dokan. ( product / category / vendor / global )
+        if ( empty( $flat_rate ) || empty( $commission_type ) || empty( $percentage_fee ) ) {
 
-        /**
-         * We have to pass vendor id when we will have to get vendor specific set commission,
-         * otherwise we will send product id for product/category/global commission.
-         */
-        $get_type_by = 'get_vendor_wise_type' === $func_type ? $vendor_id : $product_id;
+            if ( empty( $product_id ) ) {
+                return null;
+            }
 
-        // get[product,category,vendor,global]_wise_type
-        if ( is_callable( [ $this, $func_type ] ) ) {
-            $commission_type = $this->$func_type( $get_type_by );
+            $func_rate = str_replace( 'earning', 'rate', $callable );
+            $func_type = str_replace( 'earning', 'type', $callable );
+            $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
+
+            $commission_rate = null;
+
+            /**
+             * We have to pass vendor id when we will have to get vendor specific set commission,
+             * otherwise we will send product id for product/category/global commission.
+             */
+            $get_type_by = 'get_vendor_wise_type' === $func_type ? $vendor_id : $product_id;
+
+            // get[product,category,vendor,global]_wise_type
+            if ( is_callable( [ $this, $func_type ] ) ) {
+                $commission_type = $this->$func_type( $get_type_by );
+            }
+
+            // If commission is not set return null early.
+            if ( empty( $commission_type ) ) {
+                return null;
+            }
+
+            /**
+             * If dokan pro doesn't exists but combine commission is found in database due to it was active before
+             * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
+             * But in option field, looks like flat commission is selected.
+             *
+             * @since 3.0.0
+             */
+            if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ], true ) ) {
+                $commission_type = 'flat';
+            }
+
+            // get[product,category,vendor,global]_wise_rate
+            if ( is_callable( [ $this, $func_rate ] ) ) {
+                $commission_rate = $this->$func_rate( $product_id, $product_price, $vendor_id, $commission_type, $func_fee );
+            }
+
+            if (
+                is_null( $commission_rate )
+                || empty( $commission_rate['type'] )
+                || ( 'combine' !== $commission_rate['type'] && empty( $commission_rate[ $commission_rate['type'] ] ) )
+                || ( 'combine' === $commission_rate['type'] && empty( $commission_rate['flat'] ) && empty( $commission_rate['percentage'] ) )
+            ) {
+                return null;
+            }
+
+            $commission_type = $commission_rate['type'];
+            $flat_rate       = $commission_rate['flat'];
+            $percentage_fee  = $commission_rate['percentage'];
+
+            // Saving applied commission rates and types for current order item in order item meta.
+            wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', $flat_rate );
+            wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', $commission_type );
+            wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', $percentage_fee );
+
         }
-
-        // If commission is not set return null early.
-        if ( empty( $commission_type ) ) {
-            return null;
-        }
-
-        /**
-         * If dokan pro doesn't exists but combine commission is found in database due to it was active before
-         * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
-         * But in option field, looks like flat commission is selected.
-         *
-         * @since 3.0.0
-         */
-        if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ], true ) ) {
-            $commission_type = 'flat';
-        }
-
-        // get[product,category,vendor,global]_wise_rate
-        if ( is_callable( [ $this, $func_rate ] ) ) {
-            $commission_rate = $this->$func_rate( $product_id, $product_price, $vendor_id, $commission_type, $func_fee );
-        }
-
-        if (
-            is_null( $commission_rate )
-            || empty( $commission_rate['type'] )
-            || ( 'combine' !== $commission_rate['type'] && empty( $commission_rate[ $commission_rate['type'] ] ) )
-            || ( 'combine' === $commission_rate['type'] && empty( $commission_rate['flat'] ) && empty( $commission_rate['percentage'] ) )
-        ) {
-            return null;
-        }
-
-        $commission_type = $commission_rate['type'];
-        $flat_rate       = $commission_rate['flat'];
-        $percentage_fee  = $commission_rate['percentage'];
 
         $earning = null;
-
-        // If an order has been purchased previously, calculate the earning with the previously stated commisson rate.
-        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
-        if ( $this->get_order_id() ) {
-            $saved_commission_rate = wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', true );
-            $saved_commission_type = wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', true );
-            $saved_additional_fee  = wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', true );
-
-            if ( $saved_commission_rate ) {
-                $flat_rate = $saved_commission_rate;
-            } else {
-                wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', $flat_rate );
-            }
-
-            if ( $saved_commission_type ) {
-                $commission_type = $saved_commission_type;
-            } else {
-                wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', $commission_type );
-            }
-
-            if ( $saved_additional_fee ) {
-                $percentage_fee = $saved_additional_fee;
-            } else {
-                wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', $percentage_fee );
-            }
-        }
 
         if ( 'flat' === $commission_type ) {
             if ( $this->get_order_qunatity() ) {
