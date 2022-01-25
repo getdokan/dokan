@@ -2440,7 +2440,7 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Pinterest', 'dokan-lite' ),
         ],
         'linkedin' => [
-            'icon'  => 'linkedin-square',
+            'icon'  => 'linkedin',
             'title' => __( 'LinkedIn', 'dokan-lite' ),
         ],
         'youtube' => [
@@ -4186,4 +4186,47 @@ function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
     }
 
     return $recaptcha_keys;
+}
+
+/**
+ * Handle google reCaptcha validation request.
+ *
+ * @since 3.3.6
+ *
+ * @param string $action
+ * @param string $token
+ * @param string $secretkey
+ *
+ * @return boolean
+ */
+function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
+    // Check if action, token and secret key exist.
+    if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
+        return false;
+    }
+
+    // Response data.
+    $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
+    $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
+    $response_body = wp_remote_retrieve_body( $response );
+    $response_data = json_decode( $response_body, true );
+
+    // Check if the response data is not empty.
+    if ( empty( $response_data['success'] ) ) {
+        return false;
+    }
+
+    // Validate reCaptcha action.
+    if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
+        return false;
+    }
+
+    // Validate reCaptcha score.
+    $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5, $action );
+    if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
+        return false;
+    }
+
+    // Return success status after passing checks.
+    return $response_data['success'];
 }
