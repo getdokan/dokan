@@ -141,7 +141,7 @@
                         .map( component => component.long_name )
                         .join( ', ' );
                     $input_add.val( address );
-                })
+                } )
                 .catch( e => console.log( e ) );
         }
 
