@@ -1,9 +1,9 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="withdraw-requests">
             <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
+            <AdminNotice></AdminNotice>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <modal
                 :title="__( 'Update Note', 'dokan-lite' )"
@@ -109,9 +109,10 @@
 </template>
 
 <script>
-let ListTable = dokan_get_lib('ListTable');
-let Modal     = dokan_get_lib('Modal');
-let Currency  = dokan_get_lib('Currency');
+let ListTable    = dokan_get_lib('ListTable');
+let Modal        = dokan_get_lib('Modal');
+let Currency     = dokan_get_lib('Currency');
+let AdminNotice  = dokan_get_lib('AdminNotice');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
@@ -126,6 +127,7 @@ export default {
         Modal,
         Currency,
         UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
@@ -337,12 +339,18 @@ export default {
 
         fetchRequests() {
             this.loading = true;
-            let url = '/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus;
+            var user_id = '';
             if (parseInt(this.filter.user_id) > 0) {
-                url += '&user_id=' + this.filter.user_id;
+                user_id = this.filter.user_id;
             }
 
-            dokan.api.get(url)
+            const data = {
+                per_page: this.perPage,
+                page: this.currentPage,
+                status: this.currentStatus,
+                user_id: user_id,
+            };
+            dokan.api.get('/withdraw', data)
             .done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;

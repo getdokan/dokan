@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
 
                     <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                     <p class="help-block">
@@ -106,7 +106,7 @@
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
                 <div class="gravatar-button-area<?php echo esc_attr( $gravatar_id ) ? ' dokan-hide' : ''; ?>">
-                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
+                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fas fa-cloud-upload-alt"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>" name="dokan_store_ppp" placeholder="10" class="dokan-form-control" type="number">
+                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
             </div>
         </div>
          <!--address-->
@@ -155,7 +155,8 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-
+        
+        <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left">
@@ -167,6 +168,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'More products', 'dokan-lite' ); ?></label>

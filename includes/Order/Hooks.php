@@ -54,6 +54,52 @@ class Hooks {
 
         // remove customer info from order export based on setting
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
+
+        // Change order meta key and value.
+        add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
+        add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
+
+        // Init Order Cache Class
+        new OrderCache();
+    }
+
+    /**
+     * Change order item display meta key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $display_key
+     *
+     * @return void
+     */
+    public function change_order_item_display_meta_key( $display_key ) {
+        if ( 'seller_id' === $display_key ) {
+            return __( 'Vendor', 'dokan-lite' );
+        }
+        return $display_key;
+    }
+
+    /**
+     * Change order item display meta value.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $display_value
+     * @param $meta
+     *
+     * @return mixed
+     */
+    public function change_order_item_display_meta_value( $display_value, $meta ) {
+        if ( 'seller_id' === $meta->key ) {
+            $vendor = dokan()->vendor->get( $display_value );
+            $url    = get_edit_user_link( $display_value );
+            if ( function_exists( 'dokan_pro' ) ) {
+                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            }
+
+            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
+        }
+        return $display_value;
     }
 
     /**

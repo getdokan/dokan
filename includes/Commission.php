@@ -99,11 +99,12 @@ class Commission {
             $tmp_order->save_meta_data();
 
             //remove cache for seller earning
-            $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'seller';
-            wp_cache_delete( $cache_key );
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
+            Cache::delete( $cache_key );
+
             // remove cache for seller earning
-            $cache_key = 'dokan_get_earning_from_order_table' . $tmp_order->get_id() . 'admin';
-            wp_cache_delete( $cache_key );
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_admin";
+            Cache::delete( $cache_key );
         }
     }
 
@@ -116,17 +117,16 @@ class Commission {
      *
      * @return array
      */
-    public function hide_extra_data( $formated_meta ) {
-        $meta_to_hide   = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
-        $meta_to_return = [];
+    public function hide_extra_data( $formatted_meta ) {
+        $meta_to_hide = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
 
-        foreach ( $formated_meta as $key => $meta ) {
-            if ( ! in_array( $meta->key, $meta_to_hide, true ) ) {
-                array_push( $meta_to_return, $meta );
+        foreach ( $formatted_meta as $key => $meta ) {
+            if ( in_array( $meta->key, $meta_to_hide, true ) ) {
+                unset( $formatted_meta[ $key ] );
             }
         }
 
-        return $meta_to_return;
+        return $formatted_meta;
     }
 
     /**
@@ -690,8 +690,8 @@ class Commission {
     public function get_earning_from_order_table( $order_id, $context = 'seller' ) {
         global $wpdb;
 
-        $cache_key = 'dokan_get_earning_from_order_table' . $order_id . $context;
-        $earning = wp_cache_get( $cache_key );
+        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}";
+        $earning   = Cache::get( $cache_key );
 
         if ( false !== $earning ) {
             return $earning;
@@ -709,7 +709,7 @@ class Commission {
         }
 
         $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        wp_cache_set( $cache_key, $earning );
+        Cache::set( $cache_key, $earning );
 
         return $earning;
     }
