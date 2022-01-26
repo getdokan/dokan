@@ -72,7 +72,7 @@
 
                                         <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
                                             <p class="store-phone">
-                                                <i class="fa fa-phone" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
+                                                <i class="fas fa-phone-alt" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
                                             </p>
                                         <?php } ?>
 

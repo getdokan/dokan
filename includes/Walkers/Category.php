@@ -37,11 +37,11 @@ class Category extends Walker {
         $indent = str_repeat( "\t\r", $depth );
 
         if ( $depth === 0 ) {
-            $caret      = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
+            $caret      = $args['has_children'] ? ' <span class="caret-icon"><i class="fas fa-angle-right" aria-hidden="true"></i></span>' : '';
             $class_name = $args['has_children'] ? ' class="has-children parent-cat-wrap"' : ' class="parent-cat-wrap"';
             $output .= $indent . '<li' . $class_name . '><a href="' . get_term_link( $category ) . '">' . $category->name . $caret . '</a>' . "\n";
         } else {
-            $caret      = $args['has_children'] ? ' <span class="caret-icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>' : '';
+            $caret      = $args['has_children'] ? ' <span class="caret-icon"><i class="fas fa-angle-right" aria-hidden="true"></i></span>' : '';
             $class_name = $args['has_children'] ? ' class="has-children"' : '';
             $output .= $indent . '<li' . $class_name . '><a href="' . get_term_link( $category ) . '">' . $category->name . $caret . '</a>';
         }
