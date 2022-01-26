@@ -22,6 +22,8 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Front-end display of widget.
      *
+     * @since DOKAN_PRO_SINCE
+     *
      * @param array $args     Widget arguments.
      * @param array $instance Saved values from database.
      *
@@ -52,6 +54,8 @@ class FilterByAttributes extends WP_Widget {
 
     /**
      * Back-end widget form.
+     *
+     * @since DOKAN_PRO_SINCE
      *
      * @param array $instance Previously saved values from database.
      *
@@ -111,6 +115,8 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Sanitize widget form values as they are saved.
      *
+     * @since DOKAN_PRO_SINCE
+     *
      * @param array $new_instance Values just sent to be saved.
      * @param array $old_instance Previously saved values from database.
      *
@@ -121,16 +127,18 @@ class FilterByAttributes extends WP_Widget {
      * @return array Updated safe values to be saved.
      */
     public function update( $new_instance, $old_instance ) {
-        $instance                 = [];
-        $instance['title']        = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
-        $instance['attribute']    = ( ! empty( $new_instance['attribute'] ) ) ? wp_strip_all_tags( $new_instance['attribute'] ) : '';
-        $instance['query_type']   = ( ! empty( $new_instance['query_type'] ) ) ? wp_strip_all_tags( $new_instance['query_type'] ) : '';
+        $instance               = [];
+        $instance['title']      = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['attribute']  = ( ! empty( $new_instance['attribute'] ) ) ? wp_strip_all_tags( $new_instance['attribute'] ) : '';
+        $instance['query_type'] = ( ! empty( $new_instance['query_type'] ) ) ? wp_strip_all_tags( $new_instance['query_type'] ) : '';
 
         return $instance;
     }
 
     /**
      * Get this widget taxonomy.
+     *
+     * @since DOKAN_PRO_SINCE
      *
      * @param array $instance Array of instance options.
      *

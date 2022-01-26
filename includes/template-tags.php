@@ -628,19 +628,23 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
         $store_url = dokan_get_store_url( $seller_id );
+
         if ( $vendor instanceof Vendor ) {
             $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
+
             echo '<ul>';
             $_chosen_attributes = dokan_get_chosen_taxonomy_attributes();
             foreach ( $terms as $term ) {
-                $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : array();
+                $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : [];
                 $option_is_set  = in_array( $term->slug, $current_values, true );
-                $filter_name = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
+                $filter_name    = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
                 // phpcs:ignore
                 $current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array();
+
                 if ( ! in_array( $term->slug, $current_filter, true ) ) {
                     $current_filter[] = $term->slug;
                 }
+
                 $link = remove_query_arg( $filter_name, $store_url );
                 // Add current filters to URL.
                 foreach ( $current_filter as $key => $value ) {
@@ -670,6 +674,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
                 if ( $option_is_set ) {
                     $checked = 'checked';
                 }
+
                 echo '
                 <li class="parent-cat-wrap">
                     <a href=' . esc_url( $link ) . '> <input style="pointer-events: none;" type="checkbox" ' . $checked . '> &nbsp;' . $term->name . ' <span style="float: right" class="count">(' . $term->count . ')</span> </a>
@@ -702,22 +707,24 @@ function dokan_get_current_term_slug() {
 function dokan_get_chosen_taxonomy_attributes() {
     $attributes = [];
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
-    if ( ! empty( $_GET ) ) {
-        foreach ( $_GET as $key => $value ) {
-            if ( 0 === strpos( $key, 'filter_' ) ) {
-                $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
-                $taxonomy     = wc_attribute_taxonomy_name( $attribute );
-                $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
+    if ( empty( $_GET ) ) {
+        return $attributes;
+    }
 
-                if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
-                    continue;
-                }
+    foreach ( $_GET as $key => $value ) {
+        if ( 0 === strpos( $key, 'filter_' ) ) {
+            $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
+            $taxonomy     = wc_attribute_taxonomy_name( $attribute );
+            $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
 
-                // phpcs:ignore
-                $query_type                          = ! empty( $_GET['query_type_' . $attribute] ) && in_array( esc_url_raw( $_GET['query_type_' . $attribute] ), [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
-                $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
-                $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
+            if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
+                continue;
             }
+
+            // phpcs:ignore
+            $query_type                            = ! empty( $_GET['query_type_' . $attribute] ) && in_array(  $_GET['query_type_' . $attribute], [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
+            $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
+            $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
         }
     }
     // phpcs:enable WordPress.Security.NonceVerification.Recommended

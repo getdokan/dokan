@@ -678,42 +678,45 @@ class Vendor {
             return [];
         }
 
-        if ( false === ( $author_terms = Cache::get_transient( $transient_key, $transient_group ) ) ) {
+        $author_terms = Cache::get_transient( $transient_key, $transient_group );
 
-            $author_terms = [];
-            //loop over the posts and collect the terms
-            $category_index = [];
-            foreach ( $products as $product ) {
-                $terms = get_the_terms( $product, $taxonomy );
-                if ( $terms && ! is_wp_error( $terms ) ) {
-                    foreach ( $terms as $term ) {
-                        $args = [
-                            'nopaging' => true,
-                            'post_type' => 'product',
-                            'author' => $vendor_id,
-                            'tax_query' => [
-                                [
-                                    'taxonomy' => $taxonomy,
-                                    'field' => 'slug',
-                                    'terms' => $term
-                                ],
+        if ( false !== $author_terms ) {
+            return $author_terms;
+        }
+
+        $author_terms = [];
+        //loop over the posts and collect the terms
+        $category_index = [];
+        foreach ( $products as $product ) {
+            $terms = get_the_terms( $product, $taxonomy );
+            if ( $terms && ! is_wp_error( $terms ) ) {
+                foreach ( $terms as $term ) {
+                    $args = [
+                        'nopaging' => true,
+                        'post_type' => 'product',
+                        'author' => $vendor_id,
+                        'tax_query' => [
+                            [
+                                'taxonomy' => $taxonomy,
+                                'field' => 'slug',
+                                'terms' => $term
                             ],
-                            'fields' => 'ids'
-                        ];
+                        ],
+                        'fields' => 'ids'
+                    ];
 
-                        $all_posts = get_posts( $args );
+                    $all_posts = get_posts( $args );
 
-                        if ( ! in_array( $term->term_id, $category_index, true ) ) {
-                            $term->count  = count($all_posts);
-                            $category_index[] = $term->term_id;
-                            $author_terms[]   = $term;
-                        }
+                    if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                        $term->count  = count( $all_posts );
+                        $category_index[] = $term->term_id;
+                        $author_terms[]   = $term;
                     }
                 }
             }
-
-            Cache::set_transient( $transient_key, $author_terms, $transient_group );
         }
+
+        Cache::set_transient( $transient_key, $author_terms, $transient_group );
 
         return $author_terms;
     }
