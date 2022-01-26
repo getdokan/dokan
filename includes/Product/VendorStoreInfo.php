@@ -12,19 +12,10 @@ class VendorStoreInfo {
      * @since 3.3.7
      */
     public function __construct() {
-        $show_vendor_info = dokan_get_option( 'show_vendor_info', 'dokan_appearance', 'do_not_show' );
+        $show_vendor_info = dokan_get_option( 'show_vendor_info', 'dokan_appearance', 'off' );
 
-        if ( 'do_not_show' !== $show_vendor_info ) {
-            switch ( $show_vendor_info ) {
-                case 'woocommerce_after_add_to_cart_form':
-                    add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'add_vendor_info_on_product_single_page' ] );
-                    break;
-                case 'woocommerce_product_meta_end':
-                    add_action( 'woocommerce_product_meta_end', [ $this, 'add_vendor_info_on_product_single_page' ] );
-                    break;
-                default:
-                    add_action( 'woocommerce_simple_add_to_cart', [ $this, 'add_vendor_info_on_product_single_page' ] );
-            }
+        if ( 'on' === $show_vendor_info ) {
+            add_action( 'woocommerce_product_meta_end', [ $this, 'add_vendor_info_on_product_single_page' ] );
         }
 
         add_filter( 'dokan_settings_fields', array( $this, 'admin_settings_for_vendor_info' ), 10, 2 );
@@ -70,14 +61,8 @@ class VendorStoreInfo {
                 'name'              => 'show_vendor_info',
                 'label'             => __( 'Show Vendor Info', 'dokan-lite' ),
                 'desc'              => __( 'Show vendor information on product single page', 'dokan-lite' ),
-                'type'              => 'select',
-                'options'           => [
-                    'do_not_show'                        => __( 'Don\'t show', 'dokan-lite' ),
-                    'woocommerce_simple_add_to_cart'     => __( 'Below product price', 'dokan-lite' ),
-                    'woocommerce_after_add_to_cart_form' => __( 'Below add to cart button', 'dokan-lite' ),
-                    'woocommerce_product_meta_end'       => __( 'Below product category', 'dokan-lite' ),
-                ],
-                'default'           => 'do_not_show',
+                'type'              => 'checkbox',
+                'default'           => 'off',
                 'class'             => 'show_vendor_info',
                 'sanitize_callback' => 'sanitize_text_field',
             ],
@@ -86,7 +71,7 @@ class VendorStoreInfo {
         return $dokan_settings->add_settings_after(
             $settings_fields,
             'dokan_appearance',
-            'hide_vendor_info',
+            'enable_theme_store_sidebar',
             $vendor_info
         );
     }
