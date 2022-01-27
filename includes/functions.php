@@ -938,7 +938,8 @@ function dokan_get_template_part( $slug, $name = '', $args = [] ) {
     $template = '';
 
     // Look in yourtheme/dokan/slug-name.php and yourtheme/dokan/slug.php
-    $template = locate_template( [ dokan()->template_path() . "{$slug}-{$name}.php", dokan()->template_path() . "{$slug}.php" ] );
+    $template_path = ! empty( $name ) ? "{$slug}-{$name}.php" : "{$slug}.php";
+    $template = locate_template( [ dokan()->template_path() . $template_path ] );
 
     /**
      * Change template directory path filter
