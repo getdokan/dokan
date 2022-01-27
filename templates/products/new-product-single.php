@@ -163,8 +163,8 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                         <label for="post_title" class="form-label"><?php esc_html_e( 'Title', 'dokan-lite' ); ?></label>
                                         <?php dokan_post_input_box( $post_id, 'post_title', array( 'placeholder' => __( 'Product name..', 'dokan-lite' ), 'value' => $post_title ) ); ?>
-                                        <div class="dokan-product-title-alert dokan-hide">
-                                            <?php esc_html_e( 'Please enter product title!', 'dokan-lite' ); ?>
+                                        <div class="dokan-product-title-alert dokan-hide dokan-required-alert">
+                                            <?php esc_html_e( 'Product title is required!', 'dokan-lite' ); ?>
                                         </div>
 
                                         <div id="edit-slug-box" class="hide-if-no-js"></div>
@@ -211,6 +211,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
                                                     <?php dokan_post_input_box( $post_id, '_regular_price', array( 'class' => 'dokan-product-regular-price', 'placeholder' => __( '0.00', 'dokan-lite' ) ), 'price' ); ?>
                                                 </div>
+                                                <div class="dokan-product-price-alert dokan-hide dokan-required-alert">
+                                                    <?php esc_html_e( 'Product price is required!', 'dokan-lite' ); ?>
+                                                </div>
                                             </div>
 
                                             <div class="content-half-part sale-price">
@@ -228,7 +231,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         </div>
 
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
-                                            <div class="dokan-product-less-price-alert dokan-hide">
+                                            <div class="dokan-product-less-price-alert dokan-hide dokan-required-alert">
                                                 <?php esc_html_e('Product price can\'t be less than the vendor fee!', 'dokan-lite' ); ?>
                                             </div>
                                         </div>
@@ -282,8 +285,8 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                             wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
                                         ?>
-                                            <div class="dokan-product-cat-alert dokan-hide">
-                                                <?php esc_html_e('Please choose a category!', 'dokan-lite' ); ?>
+                                            <div class="dokan-product-cat-alert dokan-hide dokan-required-alert">
+                                                <?php esc_html_e('Product category is required!', 'dokan-lite' ); ?>
                                             </div>
                                         </div>
                                     <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
@@ -369,6 +372,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             <?php } ?>
                                         </div>
                                     </div><!-- .dokan-feat-image-upload -->
+                                    <div class="dokan-product-image-alert dokan-hide dokan-required-alert">
+                                        <?php esc_html_e( 'Product featured image is required!', 'dokan-lite' ); ?>
+                                    </div>
 
                                         <div class="dokan-product-gallery">
                                             <div class="dokan-side-body" id="dokan-product-images">
@@ -412,11 +418,17 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                             <div class="dokan-product-short-description">
                                 <label for="post_excerpt" class="form-label"><?php esc_html_e( 'Short Description', 'dokan-lite' ); ?></label>
                                 <?php wp_editor( $post_excerpt , 'post_excerpt', apply_filters( 'dokan_product_short_description', array( 'editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_excerpt' ) ) ); ?>
+                                <div class="dokan-product-short-desc-alert dokan-hide dokan-required-alert">
+                                    <?php esc_html_e( 'Product short description is required!', 'dokan-lite' ); ?>
+                                </div>
                             </div>
 
                             <div class="dokan-product-description">
                                 <label for="post_content" class="form-label"><?php esc_html_e( 'Description', 'dokan-lite' ); ?></label>
                                 <?php wp_editor( $post_content , 'post_content', apply_filters( 'dokan_product_description', array( 'editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content' ) ) ); ?>
+                            </div>
+                            <div class="dokan-product-long-desc-alert dokan-hide dokan-required-alert">
+                                <?php esc_html_e( 'Product long description is required!', 'dokan-lite' ); ?>
                             </div>
 
                             <?php do_action( 'dokan_new_product_form', $post, $post_id ); ?>

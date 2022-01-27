@@ -481,6 +481,10 @@
                 color: #00aeff;
             }
 
+            &.dashicons-superhero {
+                color: #663399;
+            }
+
             &.dashicons-money {
                 color: #d35400;
             }

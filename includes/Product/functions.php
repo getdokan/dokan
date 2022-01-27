@@ -27,18 +27,36 @@ function dokan_save_product( $args ) {
 
     $data = wp_parse_args( $args, $defaults );
 
-    if ( empty( $data['post_title'] ) ) {
-        return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan-lite' ) );
+    $title_validation      = dokan_get_option( 'product_title', 'dokan_product_validation', 'off' );
+    $price_validation      = dokan_get_option( 'product_price', 'dokan_product_validation', 'off' );
+    $image_validation      = dokan_get_option( 'product_image', 'dokan_product_validation', 'off' );
+    $category_validation   = dokan_get_option( 'product_category', 'dokan_product_validation', 'off' );
+    $short_desc_validation = dokan_get_option( 'product_short_desc', 'dokan_product_validation', 'off' );
+
+    if ( empty( $data['post_title'] ) && 'on' === $title_validation ) {
+        return new WP_Error( 'no-title', __( 'Product title is required', 'dokan-lite' ) );
+    }
+
+    if ( empty( $data['_regular_price'] ) && 'on' === $price_validation ) {
+        return new WP_Error( 'no-price', __( 'Product price is required', 'dokan-lite' ) );
+    }
+
+    if ( empty( $data['feat_image_id'] ) && 'on' === $image_validation ) {
+        return new WP_Error( 'no-image', __( 'Product featured image is required', 'dokan-lite' ) );
     }
 
     if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
-        if ( absint( $data['product_cat'] ) < 0 ) {
-            return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
+        if ( intval( $data['product_cat'] ) < 0 && 'on' === $category_validation ) {
+            return new WP_Error( 'no-category', __( 'Product category is required.', 'dokan-lite' ) );
         }
     } else {
-        if ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
+        if ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) && 'on' === $category_validation ) {
             return new WP_Error( 'no-category', __( 'Please select AT LEAST ONE category', 'dokan-lite' ) );
         }
+    }
+
+    if ( empty( $data['post_excerpt'] ) && 'on' === $short_desc_validation ) {
+        return new WP_Error( 'no-excerpt', __( 'Product short description is required', 'dokan-lite' ) );
     }
 
     $error = apply_filters( 'dokan_new_product_popup_args', '', $data );

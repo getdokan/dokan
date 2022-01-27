@@ -278,6 +278,11 @@ class Settings {
                 'icon'  => 'dashicons-cart',
             ],
             [
+                'id'    => 'dokan_product_validation',
+                'title' => __( 'Dokan Product Validation', 'dokan-lite' ),
+                'icon'  => 'dashicons-superhero',
+            ],
+            [
                 'id'    => 'dokan_withdraw',
                 'title' => __( 'Withdraw Options', 'dokan-lite' ),
                 'icon'  => 'dashicons-money',
@@ -473,6 +478,91 @@ class Settings {
             ]
         );
 
+        $dokan_product_general_validation = apply_filters(
+            'dokan_product_general_validation', [
+                'dokan_product_validation' => [
+                    'name'  => 'dokan_products',
+                    'label' => __( 'Product Validation', 'dokan-lite' ),
+                    'type'  => 'sub_section',
+                ],
+                'product_title' => [
+                    'name'    => 'product_title',
+                    'label'   => __( 'Product Title', 'dokan-lite' ),
+                    'desc'    => __( 'Required product title field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_price' => [
+                    'name'    => 'product_price',
+                    'label'   => __( 'Product Price', 'dokan-lite' ),
+                    'desc'    => __( 'Required product price field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_image' => [
+                    'name'    => 'product_image',
+                    'label'   => __( 'Product Image', 'dokan-lite' ),
+                    'desc'    => __( 'Required product image field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_category' => [
+                    'name'    => 'product_category',
+                    'label'   => __( 'Product Category', 'dokan-lite' ),
+                    'desc'    => __( 'Required product category field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_short_desc' => [
+                    'name'    => 'product_short_desc',
+                    'label'   => __( 'Product Short Description', 'dokan-lite' ),
+                    'desc'    => __( 'Required product short description field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_long_desc' => [
+                    'name'    => 'product_long_desc',
+                    'label'   => __( 'Product Long Description', 'dokan-lite' ),
+                    'desc'    => __( 'Required product long description field for product.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+            ]
+        );
+
+        // @codingStandardsIgnoreLine
+        $dokan_product_sections_validation = apply_filters(
+            'dokan_product_sections_validation', [
+                'product_sections' => [
+                    'name'  => 'product_sections',
+                    'label' => __( 'Product Sections', 'dokan-lite' ),
+                    'type'  => 'sub_section',
+                ],
+                'product_inventory_section' => [
+                    'name'    => 'product_inventory_section',
+                    'label'   => __( 'Inventory Section', 'dokan-lite' ),
+                    'desc'    => __( 'Hide product inventory section in product edit page.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'product_downloadable_section' => [
+                    'name'    => 'product_downloadable_section',
+                    'label'   => __( 'Downloadable Options Section', 'dokan-lite' ),
+                    'desc'    => __( 'Hide product downloadable options section in product edit page.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+                'other_options_section' => [
+                    'name'    => 'other_options_section',
+                    'label'   => __( 'Other Options Section', 'dokan-lite' ),
+                    'desc'    => __( 'Hide product other options section in product edit page.', 'dokan-lite' ),
+                    'type'    => 'checkbox',
+                    'default' => 'off',
+                ],
+            ]
+        );
+        // @codingStandardsIgnoreEnd
+
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
@@ -481,6 +571,13 @@ class Settings {
             'dokan_selling'    => array_merge(
                 $selling_option_commission,
                 $selling_option_vendor_capability
+            ),
+            'dokan_product_validation' => apply_filters(
+                'dokan_product_validation',
+                array_merge(
+                    $dokan_product_general_validation,
+                    $dokan_product_sections_validation
+                )
             ),
             'dokan_withdraw'   => [
                 'withdraw_methods'    => [
