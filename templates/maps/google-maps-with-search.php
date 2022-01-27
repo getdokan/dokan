@@ -127,7 +127,7 @@
         }
 
         function reverseGeocode( latLng ) {
-            let data = {
+            const data = {
                 location: {
                     lat: latLng.lat(),
                     lng: latLng.lng(),
@@ -136,21 +136,32 @@
 
             geocoder.geocode( data )
                 .then( function ( { results: addresses } ) {
+                    if ( addresses.length === 0 ) {
+                        return;
+                    }
+
                     let address = addresses[0].address_components
-                        .filter( component => ! component.types.includes( 'plus_code' ) )
+                        .filter( component => !component.types.includes( 'plus_code' ) )
                         .map( component => component.long_name )
                         .join( ', ' );
+
+                    if ( address.length === 0 ) {
+                        address = addresses[0].address_components
+                            .map( component => component.long_name )
+                            .join( ', ' );
+                    }
+
                     $input_add.val( address );
                 } )
                 .catch( e => console.log( e ) );
         }
 
         function dokan_debounce_delay( callback, ms ) {
-            var timer = 0;
+            let timer = 0;
 
             return function() {
-                var context = this,
-                    args    = arguments;
+                const context = this;
+                const args    = arguments;
 
                 clearTimeout( timer );
 
