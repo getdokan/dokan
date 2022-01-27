@@ -141,7 +141,7 @@
                     }
 
                     let address = addresses[0].address_components
-                        .filter( component => !component.types.includes( 'plus_code' ) )
+                        .filter( component => ! component.types.includes( 'plus_code' ) )
                         .map( component => component.long_name )
                         .join( ', ' );
 
@@ -160,8 +160,8 @@
             let timer = 0;
 
             return function() {
-                const context = this;
-                const args    = arguments;
+                const context = this,
+                    args = arguments;
 
                 clearTimeout( timer );
 
