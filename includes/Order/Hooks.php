@@ -293,17 +293,16 @@ class Hooks {
         $available_vendors  = [];
         $available_products = [];
 
-        if (WC()->cart) {
+        if ( WC()->cart ) {
             foreach ( WC()->cart->get_cart() as $item ) {
-                $product_id = $item['data']->get_id();
+                $product_id           = $item['data']->get_id();
                 $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
                 $available_products[] = $product_id;
             }
         } else {
-            foreach ($discount->get_items() as $item_id => $item) {
-                $product_id = $item_id;
-                $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
-                $available_products[] = $product_id;
+            foreach ( $discount->get_items() as $item_id => $item ) {
+                $available_vendors[]  = (int) get_post_field( 'post_author', $item_id );
+                $available_products[] = $item_id;
             }
         }
 
