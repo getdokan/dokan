@@ -4,6 +4,84 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.7',
+        'released' => '2022-01-27',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Featured, latest, best selling, top-rated product sections added to the store page',
+                    'description' => '',
+                ],
+            ],
+            'New' => [
+                [
+                    'title'       => 'Added dokan_get_date_range_picker_date_format() function to the helper.js file',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added dokan_handle_recaptcha_validation() function to the global functions.php file',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added custom withdraw method option',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Localization support to date range picker button labels',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Upgrade font-awesome library from V4.7 to version V5.15.4',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Upgrade to PRO popup new design',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Compatibility with the latest release of Rank Math SEO',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added per_page and page param support on store products rest API',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Make Hello text translatable on product published mail',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'DB error while paying using Dokan Stripe connect',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Handle store not found exception',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product status becomes out of stock on variation product',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix chart.js conflict and promo banner responsive issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevent recursion while loading template if $name param is not empty',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Variation virtual product auto-checked fixed',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.6',
         'released' => '2022-01-10',
         'changes'  => [
