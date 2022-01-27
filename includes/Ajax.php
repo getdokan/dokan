@@ -56,6 +56,8 @@ class Ajax {
         add_action( 'wp_ajax_get_vendor_earning', [ $this, 'get_vendor_earning' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
+
+        add_action( 'wp_ajax_dokan_json_get_add_product_categories', [ $this, 'dokan_json_get_add_product_categories' ] );
     }
 
     /**
@@ -1044,5 +1046,33 @@ class Ajax {
         update_option( 'dokan_hide_pro_nag', 'hide' );
 
         wp_send_json_success();
+    }
+
+    public function dokan_json_get_add_product_categories() {
+        $term_id    = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] )  : 0;
+        $level      = isset( $_REQUEST['level'] ) ? absint( $_REQUEST['level'] )      : 0;
+        $selected   = isset( $_REQUEST['selected'] ) ? absint( $_REQUEST['selected'] ): 0;
+        $categories = get_terms( 'product_cat', array(
+            'parent'    => $term_id,
+            'hide_empty' => false
+        ) );
+
+        foreach ($categories as $key => $term) {
+            $children = get_terms( $term->taxonomy, array(
+                'parent'    => $term->term_id,
+                'hide_empty' => false
+            ) );
+
+            $children ? $categories[$key]->has_child = true : $categories[$key]->has_child = false;
+        }
+
+        $response_to_send = [
+            'term_id' => $term_id,
+            'categories' => $categories,
+            'selected' => $selected,
+            'level' => $level + 1,
+        ];
+
+        wp_send_json_success( $response_to_send );
     }
 }

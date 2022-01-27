@@ -258,6 +258,10 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
+            'dokan-single-category-ui-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-single-category-ui.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-single-category-ui.css' ),
+            ],
         ];
 
         return $styles;
@@ -431,6 +435,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
+            'dokan-single-category-ui-js' => [
+                'src'     => $asset_url . '/js/dokan-single-category-ui.js',
+                'deps'    => [ 'jquery' ],
+                'version' => filemtime( $asset_path . 'js/dokan-single-category-ui.js' ),
+            ],
         ];
 
         return $scripts;
@@ -448,6 +457,7 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-fontawesome' );
+            wp_enqueue_style( 'dokan-single-category-ui-css' );
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
@@ -551,6 +561,7 @@ class Assets {
         }
 
         wp_enqueue_script( 'dokan-login-form-popup' );
+        wp_enqueue_script( 'dokan-single-category-ui-js' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
