@@ -263,16 +263,13 @@ class Manager {
         switch ( $status ) {
             case 'pending':
                 return 0;
-                break;
 
             case 'completed':
             case 'approved':
                 return 1;
-                break;
 
             case 'cancelled':
                 return 2;
-                break;
         }
 
         return null;
@@ -284,9 +281,18 @@ class Manager {
      * @param  string $method
      * @param  int    $user_id
      *
-     * @return integer
+     * @return array
      */
     public function get_formatted_details( $method, $user_id ) {
+        if ( 'dokan_custom' === $method ) {
+            $store_settings = dokan_get_store_info( $user_id );
+
+            return [
+                'value' => $store_settings['payment']['dokan_custom']['value'],
+                'method' => dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' ),
+            ];
+        }
+
         $vendor = dokan()->vendor->get( $user_id );
 
         return isset( $vendor->get_payment_profiles()[ $method ] ) ? (array) $vendor->get_payment_profiles()[ $method ] : [];
@@ -305,15 +311,12 @@ class Manager {
         switch ( absint( $code ) ) {
             case 0:
                 return 'pending';
-                break;
 
             case 1:
                 return 'approved';
-                break;
 
             case 2:
                 return 'cancelled';
-                break;
         }
 
         return null;

@@ -104,14 +104,23 @@ function dokan_withdraw_get_method( $method_key ) {
  *
  * @return string
  */
-function dokan_withdraw_get_method_title( $method_key ) {
+function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     $registered = dokan_withdraw_register_methods();
+
+    if ( 'dokan_custom' === $method_key ) {
+        $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' );
+        if ( null !== $request ) {
+            $details = maybe_unserialize( $request->details );
+            if ( isset( $details['value'] ) ) {
+                $title .= ' - ' . $details['value'];
+            }
+        }
+        return $title;
+    }
 
     if ( isset( $registered[ $method_key ] ) ) {
         return $registered[ $method_key ]['title'];
     }
-
-    return '';
 }
 
 /**
