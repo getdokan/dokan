@@ -286,12 +286,96 @@
 
                         .dokan-store-info {
                             list-style: none;
+                            position: relative;
+                            cursor: pointer;
 
                             .dokan-store-phone,
                             .dokan-store-email {
                                 a {
                                     text-decoration: none;
                                     color: inherit;
+                                }
+                            }
+
+                            span.fa-angle-down {
+                                margin-left: 10px;
+                            }
+
+                            #vendor-store-times {
+                                position: absolute;
+                                left: -36.5%;
+                                top: 100%;
+                                display: none;
+                                z-index: 1;
+                                background: #fff;
+                                border-radius: 6px;
+                                color: #3E474F;
+                                padding: 1.5em 1.4em;
+                                width: 340px;
+                                max-height: 500px;
+                                overflow: auto;
+                                box-shadow: 0 10px 15px -3px #00000040, 0 4px 6px -4px #00000010;
+
+                                span {
+                                    margin-left: 10px;
+                                }
+
+                                .store-time-tags {
+                                    display: flex;
+                                    margin-bottom: 12px;
+
+                                    .store-days {
+                                        width: 43%;
+                                    }
+
+                                    .store-times {
+                                        width: 57%;
+
+                                        .tag-on {
+                                            text-decoration: none;
+                                            background-color: #f05025;
+                                            color: #FFFFFF;
+                                            padding: 2px 15px 3.5px;
+                                            border-radius: 0.375rem;
+                                            cursor: pointer;
+                                            transition: 0.5s ease;
+                                            list-style: none;
+                                            margin-bottom: 5.5px;
+                                            display: inline-block;
+                                            text-align: center;
+                                            font-size: 14px;
+                                            width: 160px;
+
+                                            &:hover {
+                                                background-color: #dd3b0f;
+                                            }
+                                        }
+                                    }
+
+                                    &:last-child {
+                                        margin-bottom: 0;
+                                    }
+                                }
+                            }
+
+                            .dokan-store-open-close {
+                                &:hover {
+                                    #vendor-store-times {
+                                        display: block;
+                                    }
+
+                                    &:after {
+                                        position: relative;
+                                        content: "";
+                                        width: 0;
+                                        height: 0;
+                                        border-left: 15px solid transparent;
+                                        border-right: 15px solid transparent;
+                                        border-bottom: 18px solid #fff;
+                                        top: 0px;
+                                        right: 38%;
+                                        z-index: 1;
+                                    }
                                 }
                             }
                         }
@@ -1084,6 +1168,14 @@
 
                                     i {
                                         display: none;
+                                    }
+
+                                    span.fa-angle-down {
+                                        display: none;
+                                    }
+
+                                    .dokan-times {
+                                        margin-left: 5px;
                                     }
                                 }
                             }
