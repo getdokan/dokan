@@ -29,7 +29,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php esc_html_e( 'Vendor Dashboard', 'dokan-lite' ); ?> <b class="caret"></b></a>
 
                 <ul class="dropdown-menu">
-                    <li><a href="<?php echo esc_url( dokan_get_store_url( $user_id ) ); ?>" target="_blank"><?php esc_html_e( 'Visit your store', 'dokan-lite' ); ?> <i class="fa fa-external-link"></i></a></li>
+                    <li><a href="<?php echo esc_url( dokan_get_store_url( $user_id ) ); ?>" target="_blank"><?php esc_html_e( 'Visit your store', 'dokan-lite' ); ?> <i class="fas fa-external-link-alt"></i></a></li>
                     <li class="divider"></li>
                     <?php
                     foreach ( $nav_urls as $key => $item ) {

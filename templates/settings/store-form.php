@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
 
                     <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                     <p class="help-block">
@@ -106,7 +106,7 @@
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
                 <div class="gravatar-button-area<?php echo esc_attr( $gravatar_id ) ? ' dokan-hide' : ''; ?>">
-                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
+                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fas fa-cloud-upload-alt"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>
         </div>
@@ -181,6 +181,10 @@
                 </div>
             </div>
         </div>
+
+        <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_map', $current_user, $profile_info ); ?>
 
         <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">

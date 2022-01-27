@@ -50,7 +50,7 @@ function dokan_get_i18n_date_format( format = true ) {
  *
  * @return {string} Return a specific time format
  */
-function dokan_get_i18n_time_format( format = true ) {
+ function dokan_get_i18n_time_format( format = true ) {
   if ( ! format ) {
     return dokan_helper.i18n_time_format;
   }
@@ -153,6 +153,59 @@ function dokan_get_formatted_time( time, format ) {
 }
 
 /**
+ * Get date range picker supported date format
+ *
+ * @since 3.3.6
+ *
+ * @param {string} dateTime The date time to convert
+ *
+ * @return {string} Date range picker supported date format
+ */
+function dokan_get_daterange_picker_format( dateTime = dokan_helper.i18n_date_format ) {
+  let formatMap = {
+    // Day
+    d: 'D',
+    D: 'DD',
+    j: 'D',
+    l: 'DD',
+    // Month
+    F: 'MMMM',
+    m: 'MM',
+    M: 'MM',
+    n: 'M',
+    // Year
+    o: 'YYYY', // not exactly same. see php date doc for details
+    Y: 'YYYY',
+    y: 'YY',
+    // Hour
+    g: 'h',
+    G: 'H',
+    h: 'hh',
+    H: 'HH',
+    // Minute
+    i: 'mm',
+    // Second
+    s: 'ss'
+  }
+
+  let i = 0;
+  let char = '';
+  let dateRangePickerFormat = '';
+
+  for ( i = 0; i < dateTime.length; i++ ) {
+    char = dateTime[i];
+
+    if ( char in formatMap ) {
+      dateRangePickerFormat += formatMap[char];
+    } else {
+      dateRangePickerFormat += char;
+    }
+  }
+
+  return dateRangePickerFormat;
+}
+
+/**
  * Dokan Sweet Alert
  *
  * @since 3.2.13
@@ -170,9 +223,13 @@ function dokan_get_formatted_time( time, format ) {
     cancelButtonColor :'#dc3545',
   };
 
-  const args    = { ...defaults, ...options };
+  const args   = { ...defaults, ...options };
+  const action = args.action;
 
-  switch( args.action ) {
+  // Unset action property form args
+  delete args.action;
+
+  switch( action ) {
     case 'confirm':
     case 'prompt' :
       return await Swal.fire( args );
