@@ -4230,3 +4230,44 @@ function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
     // Return success status after passing checks.
     return $response_data['success'];
 }
+
+/**
+ * Get additional products sections.
+ *
+ * @since 3.3.6
+ *
+ * @return array
+ */
+function dokan_get_additional_product_sections() {
+    return dokan()->product_sections->get_available_product_sections();
+}
+
+/**
+ * Converts a 'on' or 'off' to boolean
+ *
+ * @since 3.3.6
+ *
+ * @param string $value
+ *
+ * @return bool
+ */
+function dokan_string_to_bool( $value ) {
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
+}
+
+/**
+ * Converts a boolean value to a 'on' or 'off'.
+ *
+ * @since 3.3.7
+ *
+ * @param bool $bool
+ *
+ * @return string
+ */
+function dokan_bool_to_on_off( $bool ) {
+    if ( ! is_bool( $bool ) ) {
+        $bool = dokan_string_to_bool( $bool );
+    }
+
+    return true === $bool ? 'on' : 'off';
+}

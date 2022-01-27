@@ -182,6 +182,10 @@
             </div>
         </div>
 
+        <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_map', $current_user, $profile_info ); ?>
+
         <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label" for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label>
