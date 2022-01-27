@@ -49,10 +49,11 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @param int $limit
  * @param int $offset
  * @param int $customer_id
+ * @param string $search
  *
  * @return array
  */
-function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null ) {
+function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null, $search = null ) {
     // get all function arguments as key => value pairs
     $args = get_defined_vars();
 
@@ -62,6 +63,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
     $cache_group = "seller_order_data_{$seller_id}";
     $cache_key   = 'get_seller_orders_' . md5( wp_json_encode( array_merge( $args, [ 'page' => $pagenum ] ) ) );
     $orders      = Cache::get( $cache_key, $cache_group );
+    $search      = $search ? wc_clean($search) : null;
 
     if ( false === $orders ) {
         $getdata     = wp_unslash( $_GET );
@@ -79,6 +81,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
 
         $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
         $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
+        $search_query = ( $search ) ? $wpdb->prepare( ' AND p.ID LIKE %s ', $search ) : '';
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
@@ -93,6 +96,7 @@ function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = nul
                 {$date_query}
                 {$status_where}
                 {$exclude}
+                {$search_query}
             GROUP BY do.order_id
             ORDER BY {$order_by} {$order}
             LIMIT %d, %d", $seller_id, $offset, $limit

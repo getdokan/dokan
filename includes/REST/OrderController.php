@@ -421,7 +421,15 @@ class OrderController extends DokanRESTController {
         $paged        = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
         $offset       = ( $paged - 1 ) * $limit;
 
-        $orders = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
+        $orders = dokan_get_seller_orders(
+            $request['seller_id'],
+            $request['status'],
+            $request['order_date'],
+            $limit,
+            $offset,
+            $request['customer_id'],
+            $request['search']
+        );
 
         $data_objects = array();
         $total_orders = 0;
