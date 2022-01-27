@@ -164,7 +164,7 @@ class Manager {
             'status'  => $args['status'],
             'method'  => $args['method'],
             'note'    => $args['notes'],
-            'details' => $args['details'],
+            'details' => ! empty( $args['details'] ) ? $args['details'] : null,
             'ip'      => $args['ip'],
         );
 
