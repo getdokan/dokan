@@ -248,81 +248,20 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                     <div class="dokan-category-search-container">
                                                         <div class="dokan-cat-search-box">
                                                             <span class="dokan-cat-search-icon"><i class="fas fa-search"></i></span>
-                                                            <input class="dokan-cat-search-input" type="text" name="" id="" placeholder="<?php esc_attr_e( 'Search category', 'dokan-lite' ) ?>">
-                                                            <span class="dokan-cat-search-text-limit">100/100</span>
+                                                            <input maxlength="100" id="dokan-single-cat-search-input" class="dokan-cat-search-input" type="text" placeholder="<?php esc_attr_e( 'Search category', 'dokan-lite' ) ?>">
+                                                            <span class="dokan-cat-search-text-limit"><span id="dokan-cat-search-text-limit">0</span>/100</span>
                                                         </div>
-                                                        <div class="dokan-cat-search-res dokan-hide">
-                                                            <ul class="dokan-cat-search-res-ul">
-                                                                <li class="dokan-cat-search-res-li">
-                                                                    <div class="dokan-cat-search-res-item">
-                                                                        Fashion
-                                                                    </div>
-                                                                    <div class="dokan-cat-search-res-history">
-                                                                        <span class="dokan-cat-search-res-suggestion">Clothing</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Men fashion</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Cap</span>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="dokan-cat-search-res-li">
-                                                                    <div class="dokan-cat-search-res-item">
-                                                                        Fashion
-                                                                    </div>
-                                                                    <div class="dokan-cat-search-res-history">
-                                                                        <span class="dokan-cat-search-res-suggestion">Clothing</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Men fashion</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Cap</span>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="dokan-cat-search-res-li">
-                                                                    <div class="dokan-cat-search-res-item">
-                                                                        Fashion
-                                                                    </div>
-                                                                    <div class="dokan-cat-search-res-history">
-                                                                        <span class="dokan-cat-search-res-suggestion">Clothing</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Men fashion</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Cap</span>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="dokan-cat-search-res-li">
-                                                                    <div class="dokan-cat-search-res-item">
-                                                                        Fashion
-                                                                    </div>
-                                                                    <div class="dokan-cat-search-res-history">
-                                                                        <span class="dokan-cat-search-res-suggestion">Clothing</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Men fashion</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Cap</span>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="dokan-cat-search-res-li">
-                                                                    <div class="dokan-cat-search-res-item">
-                                                                        Fashion
-                                                                    </div>
-                                                                    <div class="dokan-cat-search-res-history">
-                                                                        <span class="dokan-cat-search-res-suggestion">Clothing</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Men fashion</span>
-                                                                        <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>
-                                                                        <span class="dokan-cat-search-res-suggestion">Cap</span>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
+                                                        <div id="dokan-cat-search-res" class="dokan-cat-search-res dokan-hide">
+                                                            <ul id="dokan-cat-search-res-ul" class="dokan-cat-search-res-ul"></ul>
                                                         </div>
                                                     </div>
                                                     <div class="dokan-single-categories-container">
-                                                        <span id="dokan-single-categories-left" class="dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-right"></i></span></span>
+                                                        <span id="dokan-single-categories-left" class="dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-left"></i></span></span>
                                                         <div class="dokan-single-categories" id="dokan-single-categories"></div>
                                                         <div id="dokan-single-categories-loader" class="dokan-single-categories-loader dokan-hide">
                                                             <img src="" alt="" class="dokan-cat-loader">
                                                         </div>
-                                                        <span id="dokan-single-categories-right" class="dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-left"></i></span></span>
+                                                        <span id="dokan-single-categories-right" class="dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-right"></i></span></span>
                                                     </div>
 
                                                 </div>

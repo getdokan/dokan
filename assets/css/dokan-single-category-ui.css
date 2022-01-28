@@ -150,7 +150,7 @@
 }
 .dokan-single-category-modal-body .dokan-single-categories-container .dokan-single-categories .dokan-single-category-ul {
     margin: 0 10px 0 0;
-    width: 250px;
+    width: 300px;
     font-size: 1rem;
     font-weight: bold;
     color: black;
@@ -281,6 +281,11 @@
 .dokan-cat-search-res .dokan-cat-search-res-ul .dokan-cat-search-res-li .dokan-cat-search-res-history {
     color: #ACACAC;
 }
+.dokan-cat-search-res .dokan-cat-search-res-ul .dokan-cat-search-res-li .dokan-cat-search-res-history .dokan-cat-search-res-suggestion-selected span {
+    color: #000;
+    margin: 0;
+}
+
 .dokan-cat-search-res .dokan-cat-search-res-ul .dokan-cat-search-res-li .dokan-cat-search-res-history span {
     margin-right: 5px;
 }
@@ -334,3 +339,7 @@
     from {opacity: 0}
     to {opacity: 1}
 }
+
+.dokan-cat-highlight {
+    background-color: yellow;
+  }

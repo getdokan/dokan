@@ -58,6 +58,8 @@ class Ajax {
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
 
         add_action( 'wp_ajax_dokan_json_get_add_product_categories', [ $this, 'dokan_json_get_add_product_categories' ] );
+        add_action( 'wp_ajax_dokan_json_search_product_categories', [ $this, 'dokan_json_search_product_categories' ] );
+        add_action( 'wp_ajax_dokan_json_load_selected_categories', [ $this, 'dokan_json_load_selected_categories' ] );
     }
 
     /**
@@ -1052,6 +1054,7 @@ class Ajax {
         $term_id    = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] )  : 0;
         $level      = isset( $_REQUEST['level'] ) ? absint( $_REQUEST['level'] )      : 0;
         $selected   = isset( $_REQUEST['selected'] ) ? absint( $_REQUEST['selected'] ): 0;
+
         $categories = get_terms( 'product_cat', array(
             'parent'    => $term_id,
             'hide_empty' => false
@@ -1074,5 +1077,73 @@ class Ajax {
         ];
 
         wp_send_json_success( $response_to_send );
+    }
+
+    public function dokan_json_search_product_categories() {
+        $text = isset( $_REQUEST['text'] ) ? sanitize_text_field( $_REQUEST['text'] )  : '';
+        $term_args = array(
+            'search'        => $text,
+            'taxonomy'      => 'product_cat',
+            'hide_empty'    => false
+        );
+        $term_results = new \WP_Term_Query( $term_args );
+        $searched_categories = $term_results->terms ? $term_results->terms : [];
+
+        if ( ! empty( $searched_categories ) ) {
+            foreach ( $searched_categories as $key => $value ) {
+                $parents =  get_ancestors( $value->term_id, 'product_cat' );
+                $parents_array = [];
+                foreach ( $parents as $parent ) {
+                    array_push( $parents_array, get_term( $parent, 'product_cat' ) );
+                }
+
+                $array_reverse = array_reverse( $parents_array );
+                $searched_categories[$key]->parents = $array_reverse;
+            }
+        }
+        wp_send_json_success( $searched_categories );
+    }
+
+    public function dokan_json_load_selected_categories() {
+        $parents = isset( $_REQUEST['parents'] ) ? sanitize_text_field( $_REQUEST['parents'] ) : '';
+        $taxonomy = isset( $_REQUEST['taxonomy'] ) ? sanitize_text_field( $_REQUEST['taxonomy'] ) : '';
+        $term_id = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] ) : '';
+
+        $parents = explode( '|', $parents );
+
+        $findable = wp_parse_args( [$term_id], $parents );
+        $loopable = wp_parse_args( $parents, [0] );
+
+        $category_storege = [];
+        $sctoll_to_lavel = 0;
+
+        foreach ( $loopable as $key => $value ) {
+            $categories = get_terms( 'product_cat', array(
+                'parent'    => $value,
+                'hide_empty' => false
+            ) );
+
+            foreach ( $categories as $index => $category ) {
+                if ( absint( $findable[$key] ) === absint($category->term_id) ) {
+                    $categories[$index]->uiActivaion = 'dokan-single-category-li-active';
+                    break;
+                }
+            }
+            $ul = [
+                'categories' => $categories,
+                'level'      => $key + 1,
+                'selected'   => $findable[$key],
+                'term_id'    => $value,
+            ];
+            array_push( $category_storege, $ul );
+            $sctoll_to_lavel =$key + 1;
+        }
+
+        $response = [
+            'scroll_to' => $sctoll_to_lavel,
+            'categories' =>$category_storege,
+        ];
+
+        wp_send_json_success( $response );
     }
 }
