@@ -8,9 +8,9 @@ $social_fields            = dokan_get_social_profile_fields();
 $dokan_store_times        = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 $current_time             = dokan_current_datetime();
 $today                    = strtolower( $current_time->format( 'l' ) );
-$schedule                 = ! empty( $dokan_store_times[ $today ] ) ? $dokan_store_times[ $today ] : '';
-$open_time                = ! empty( $schedule['opening_time'] ) ? (array) $schedule['opening_time'] : '';
-$close_time               = ! empty( $schedule['closing_time'] ) ? (array) $schedule['closing_time'] : '';
+$schedule                 = ! empty( $dokan_store_times[ $today ] ) ? $dokan_store_times[ $today ] : [];
+$open_time                = ! empty( $schedule['opening_time'] ) ? (array) $schedule['opening_time'] : [];
+$close_time               = ! empty( $schedule['closing_time'] ) ? (array) $schedule['closing_time'] : [];
 
 $dokan_appearance         = get_option( 'dokan_appearance' );
 $profile_layout           = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
@@ -153,7 +153,7 @@ if ( 'layout3' === $profile_layout ) {
                                                             $opening_times = ! empty( $dokan_store_times[ $day_key ]['opening_time'] ) ? $dokan_store_times[ $day_key ]['opening_time'] : [];
                                                         }
 
-                                                        $times_length  = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
+                                                        $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
                                                         
                                                         // Get formatted times.
                                                         for ( $index = 0; $index < $times_length; $index++ ) :
