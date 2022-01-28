@@ -1,5 +1,5 @@
 <template>
-    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shoudShow">
+    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <th colspan="3" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
@@ -95,24 +95,24 @@
                 {{ '%' }}
             </td>
 
-                <td class="fixed_fee">
-                    {{ '+' }}
-                    <input type="text" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
-                </td>
+            <td class="fixed_fee">
+                {{ '+' }}
+                <input type="text" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+            </td>
 
-                <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
-                    {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
-                </p>
+            <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
+                {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
+            </p>
 
-                <p v-else-if="hasError( fieldData.fields.percent_fee.name )" class="dokan-error combine-commission">
-                    {{ getError( fieldData.fields.percent_fee.label ) }}
-                </p>
+            <p v-else-if="hasError( fieldData.fields.percent_fee.name )" class="dokan-error combine-commission">
+                {{ getError( fieldData.fields.percent_fee.label ) }}
+            </p>
 
-                <p v-else-if="hasError( fieldData.fields.fixed_fee.name )" class="dokan-error combine-commission">
-                    {{ getError( fieldData.fields.fixed_fee.label ) }}
-                </p>
+            <p v-else-if="hasError( fieldData.fields.fixed_fee.name )" class="dokan-error combine-commission">
+                {{ getError( fieldData.fields.fixed_fee.label ) }}
+            </p>
 
-                <p class="description" v-html="fieldData.desc"></p>
+            <p class="description" v-html="fieldData.desc"></p>
         </template>
 
         <template v-if="'textarea' == fieldData.type">
@@ -132,7 +132,7 @@
                     {{ getError( fieldData.label ) }}
                 </p>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
+                    {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -157,7 +157,7 @@
                     </label>
                 </fieldset>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
+                    {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
             </td>
         </template>
@@ -497,7 +497,7 @@
                 />
 
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
+                    {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
 
                 <p class="description" v-html="fieldData.desc"></p>
@@ -727,187 +727,193 @@
             this.setDisbursementBiweeklySettings();
         },
 
-        computed: {
-            shoudShow() {
-                let shoudShow = true;
+    computed: {
+        shouldShow() {
+            let shouldShow = true;
 
-                if ( this.fieldData.show_if ) {
-                    const conditions = this.fieldData.show_if;
-                    const dependencies = Object.keys( conditions );
+            if ( this.fieldData.show_if ) {
+                const conditions = this.fieldData.show_if;
+                const dependencies = Object.keys( conditions );
 
-                    let i = 0;
+                let i = 0;
 
-                    for ( i = 0; i < dependencies.length; i++ ) {
-                        const dependency = dependencies[i];
-                        const [ optionId, sectionId = this.sectionId ] = dependency.split( '.' ).reverse();
-                        const dependencyValue = this.allSettingsValues[ sectionId ][ optionId ];
-                        const [ operator, value ] = _.chain( conditions[ dependency ] ).pairs().first().value();
+                for ( i = 0; i < dependencies.length; i++ ) {
+                    const dependency = dependencies[i];
+                    const [ optionId, sectionId = this.sectionId ] = dependency.split( '.' ).reverse();
+                    const dependencyValue = this.allSettingsValues[ sectionId ][ optionId ];
+                    const [ operator, value ] = _.chain( conditions[ dependency ] ).pairs().first().value();
 
-                        switch ( operator ) {
-                            case 'greater_than':
-                                if ( ! (dependencyValue > value ) ) {
-                                    shoudShow = false;
-                                }
-                                break;
-
-                            case 'greater_than_equal':
-                                if ( ! (dependencyValue >= value ) ) {
-                                    shoudShow = false;
-                                }
-                                break;
-
-                            case 'less_than':
-                                if ( ! (dependencyValue < value ) ) {
-                                    shoudShow = false;
-                                }
-                                break;
-
-                            case 'less_than':
-                                if ( ! (dependencyValue <= value ) ) {
-                                    shoudShow = false;
-                                }
-                                break;
-
-                            case 'equal':
-                            default:
-                                if ( dependencyValue != value ) {
-                                    shoudShow = false;
-                                }
-                                break;
-                        }
-
-                        if ( ! shoudShow ) {
+                    switch ( operator ) {
+                        case 'greater_than':
+                            if ( ! (dependencyValue > value ) ) {
+                                shouldShow = false;
+                            }
                             break;
-                        }
+
+                        case 'greater_than_equal':
+                            if ( ! (dependencyValue >= value ) ) {
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'less_than':
+                            if ( ! (dependencyValue < value ) ) {
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'less_than':
+                            if ( ! (dependencyValue <= value ) ) {
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'contains':
+                            if ( ! Object.values(dependencyValue).includes( value ) ) {
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'equal':
+                        default:
+                            if ( dependencyValue != value ) {
+                                shouldShow = false;
+                            }
+                            break;
+                    }
+
+                    if ( ! shouldShow ) {
+                        break;
                     }
                 }
-
-                return shoudShow;
-            },
-
-            mapApiSource() {
-                return this.allSettingsValues?.dokan_appearance?.map_api_source;
-            },
-
-            mapLocation() {
-                let location = {
-                    ...{
-                        latitude: 23.709921,
-                        longitude: 90.40714300000002,
-                        address: 'Dhaka',
-                        zoom: 10
-                    },
-
-                    ...this.fieldValue[ this.fieldData.name ],
-                };
-
-                location = {
-                    latitude: parseFloat( location.latitude ),
-                    longitude: parseFloat( location.longitude ),
-                    address: `${location.address}`,
-                    zoom: parseInt( location.zoom ),
-                };
-
-                return location;
-            },
-
-            googleMapApiKey() {
-                return this.allSettingsValues?.dokan_appearance?.gmap_api_key;
-            },
-
-            mapboxAccessToken() {
-                return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
             }
+
+            return shouldShow;
         },
 
-        beforeMount() {
-            if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
-                this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
-            }
+        mapApiSource() {
+            return this.allSettingsValues?.dokan_appearance?.map_api_source;
         },
 
-        methods: {
-            containCommonFields( type ) {
-                return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
-            },
+        mapLocation() {
+            let location = {
+                ...{
+                    latitude: 23.709921,
+                    longitude: 90.40714300000002,
+                    address: 'Dhaka',
+                    zoom: 10
+                },
 
-            addItem( type, name ) {
-                this.fieldValue[name] = this.fieldValue[name] || [];
+                ...this.fieldValue[ this.fieldData.name ],
+            };
 
-                if ( typeof this.repeatableItem[name] == 'undefined' || ! this.repeatableItem[name] )  {
-                    return;
+            location = {
+                latitude: parseFloat( location.latitude ),
+                longitude: parseFloat( location.longitude ),
+                address: `${location.address}`,
+                zoom: parseInt( location.zoom ),
+            };
+
+            return location;
+        },
+
+        googleMapApiKey() {
+            return this.allSettingsValues?.dokan_appearance?.gmap_api_key;
+        },
+
+        mapboxAccessToken() {
+            return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
+        }
+    },
+
+    beforeMount() {
+        if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
+            this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
+        }
+    },
+
+    methods: {
+        containCommonFields( type ) {
+            return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
+        },
+
+        addItem( type, name ) {
+            this.fieldValue[name] = this.fieldValue[name] || [];
+
+            if ( typeof this.repeatableItem[name] == 'undefined' || ! this.repeatableItem[name] )  {
+                return;
+            }
+
+            this.fieldValue[name].push( {
+                    id : this.repeatableItem[name].trim().replace(/\s+/g, '_').toLowerCase(),
+                    value : this.repeatableItem[name]
                 }
+            );
+            this.repeatableItem[name] = '';
+        },
 
-                this.fieldValue[name].push( {
-                        id : this.repeatableItem[name].trim().replace(/\s+/g, '_').toLowerCase(),
-                        value : this.repeatableItem[name]
-                    }
-                );
-                this.repeatableItem[name] = '';
-            },
+        removeItem( optionVal, name ) {
+            this.fieldValue[name].splice( optionVal, 1 );
+        },
 
-            removeItem( optionVal, name ) {
-                this.fieldValue[name].splice( optionVal, 1 );
-            },
+        haveCondition( fieldData ) {
+            return fieldData.hasOwnProperty( 'condition' );
+        },
 
-            haveCondition( fieldData ) {
-                return fieldData.hasOwnProperty( 'condition' );
-            },
+        checkConditionLogic( fieldData, fieldValue ) {
+            var logic = fieldData.condition.logic;
+            var isValid = false;
 
-            checkConditionLogic( fieldData, fieldValue ) {
-                var logic = fieldData.condition.logic;
-                var isValid = false;
-
-                _.each( logic, function( value, key ) {
-                    if ( _.contains( value, fieldValue[key] ) ) {
-                        isValid = true;
-                    }
-                } );
-
-                return isValid;
-            },
-
-            onHideMap( hideMap ) {
-                this.hideMap = hideMap;
-            },
-
-            onUpdateMap( payload ) {
-                this.fieldValue[this.fieldData.name] = { ...this.mapLocation, ...payload };
-            },
-
-            hasError( key ) {
-                let errors = this.errors;
-
-                if ( ! errors || typeof errors === 'undefined' ) {
-                    return false;
+            _.each( logic, function( value, key ) {
+                if ( _.contains( value, fieldValue[key] ) ) {
+                    isValid = true;
                 }
+            } );
 
-                if ( errors.length < 1 ) {
-                    return false;
-                }
+            return isValid;
+        },
 
-                if ( errors.includes( key ) ) {
-                    return key;
-                }
-            },
+        onHideMap( hideMap ) {
+            this.hideMap = hideMap;
+        },
 
-            getError( label ) {
-                return label + ' ' + this.__( 'is required.', 'dokan-lite' )
-            },
+        onUpdateMap( payload ) {
+            this.fieldValue[this.fieldData.name] = { ...this.mapLocation, ...payload };
+        },
 
-            hasValidationError( key ) {
-              if ( this.validationErrors.filter( e => e.name === key ).length > 0 ) {
+        hasError( key ) {
+            let errors = this.errors;
+
+            if ( ! errors || typeof errors === 'undefined' ) {
+                return false;
+            }
+
+            if ( errors.length < 1 ) {
+                return false;
+            }
+
+            if ( errors.includes( key ) ) {
                 return key;
-              }
-            },
+            }
+        },
 
-            getValidationErrorMessage( key ) {
-              let errorMessage = '';
-              this.validationErrors.forEach( obj => {
+        getError( label ) {
+            return label + ' ' + this.__( 'is required.', 'dokan-lite' )
+        },
+
+        hasValidationError( key ) {
+            if ( this.validationErrors.filter( e => e.name === key ).length > 0 ) {
+                return key;
+            }
+        },
+
+        getValidationErrorMessage( key ) {
+            let errorMessage = '';
+            this.validationErrors.forEach( obj => {
                 if ( obj.name === key ) {
-                  errorMessage = obj.error;
+                    errorMessage = obj.error;
                 }
-              } );
+            } );
 
               return errorMessage;
             },

@@ -938,7 +938,8 @@ function dokan_get_template_part( $slug, $name = '', $args = [] ) {
     $template = '';
 
     // Look in yourtheme/dokan/slug-name.php and yourtheme/dokan/slug.php
-    $template = locate_template( [ dokan()->template_path() . "{$slug}-{$name}.php", dokan()->template_path() . "{$slug}.php" ] );
+    $template_path = ! empty( $name ) ? "{$slug}-{$name}.php" : "{$slug}.php";
+    $template = locate_template( [ dokan()->template_path() . $template_path ] );
 
     /**
      * Change template directory path filter
@@ -2439,7 +2440,7 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Pinterest', 'dokan-lite' ),
         ],
         'linkedin' => [
-            'icon'  => 'linkedin-square',
+            'icon'  => 'linkedin',
             'title' => __( 'LinkedIn', 'dokan-lite' ),
         ],
         'youtube' => [
@@ -4181,4 +4182,114 @@ function dokan_get_vendor_store_banner_height() {
     $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
 
     return ( $height !== 0 ) ? $height : 300;
+}
+
+/**
+ * Get google recaptcha site key and secret key
+ *
+ * @param bool $bool
+ *
+ * @since 3.3.3
+ *
+ * @return array|bool
+ */
+function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
+    $recaptcha_keys = [
+        'site_key'   => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+        'secret_key' => dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ),
+    ];
+
+    if ( $bool ) {
+        if ( empty( $recaptcha_keys['site_key'] ) || empty( $recaptcha_keys['secret_key'] ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    return $recaptcha_keys;
+}
+
+/**
+ * Handle google reCaptcha validation request.
+ *
+ * @since 3.3.6
+ *
+ * @param string $action
+ * @param string $token
+ * @param string $secretkey
+ *
+ * @return boolean
+ */
+function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
+    // Check if action, token and secret key exist.
+    if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
+        return false;
+    }
+
+    // Response data.
+    $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
+    $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
+    $response_body = wp_remote_retrieve_body( $response );
+    $response_data = json_decode( $response_body, true );
+
+    // Check if the response data is not empty.
+    if ( empty( $response_data['success'] ) ) {
+        return false;
+    }
+
+    // Validate reCaptcha action.
+    if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
+        return false;
+    }
+
+    // Validate reCaptcha score.
+    $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5, $action );
+    if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
+        return false;
+    }
+
+    // Return success status after passing checks.
+    return $response_data['success'];
+}
+
+/**
+ * Get additional products sections.
+ *
+ * @since 3.3.6
+ *
+ * @return array
+ */
+function dokan_get_additional_product_sections() {
+    return dokan()->product_sections->get_available_product_sections();
+}
+
+/**
+ * Converts a 'on' or 'off' to boolean
+ *
+ * @since 3.3.6
+ *
+ * @param string $value
+ *
+ * @return bool
+ */
+function dokan_string_to_bool( $value ) {
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
+}
+
+/**
+ * Converts a boolean value to a 'on' or 'off'.
+ *
+ * @since 3.3.7
+ *
+ * @param bool $bool
+ *
+ * @return string
+ */
+function dokan_bool_to_on_off( $bool ) {
+    if ( ! is_bool( $bool ) ) {
+        $bool = dokan_string_to_bool( $bool );
+    }
+
+    return true === $bool ? 'on' : 'off';
 }

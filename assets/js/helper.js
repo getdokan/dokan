@@ -54,11 +54,11 @@ function dokan_get_i18n_date_format( format = true ) {
  async function dokan_sweetalert( message = '' , options = {} ) {
   const defaults = {
     text              : message,
-    showCancelButton  : true, 
+    showCancelButton  : true,
     confirmButtonColor:'#28a745',
     cancelButtonColor :'#dc3545',
   };
-  
+
   const args    = { ...defaults, ...options };
 
   switch( args.action ) {
@@ -73,4 +73,39 @@ function dokan_get_i18n_date_format( format = true ) {
       Swal.fire( args );
       break;
   }
+}
+
+/**
+ * Execute recaptcha token request
+ *
+ * @since 3.3.3
+ *
+ * @param {string} inputFieldSelector The input field for recaptcha token
+ * @param {string} action The action for recaptcha
+ *
+ * @return {Promise} Return Promise
+ */
+function dokan_execute_recaptcha(inputFieldSelector, action) {
+  return new Promise( function(resolve) {
+    // Check if dokan_google_recaptcha object exists
+    if ( 'undefined' === typeof dokan_google_recaptcha ) {
+      resolve();
+    }
+
+    const recaptchaSiteKey    = dokan_google_recaptcha.recaptcha_sitekey;
+    const recaptchaTokenField = document.querySelector(inputFieldSelector);
+
+    // Check if the recaptcha site key exists
+    if ( '' === recaptchaSiteKey ) {
+      resolve();
+    }
+
+    // Execute recaptcha after passing checks
+    grecaptcha.ready(function() {
+      grecaptcha.execute(recaptchaSiteKey, { action: action }).then(function(token) {
+        recaptchaTokenField.value = token;
+        resolve();
+      });
+    });
+  });
 }
