@@ -304,3 +304,139 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 
     return $status;
 }
+
+/**
+ * Get withdraw method formatted icon.
+ *
+ * @since 3.3.1
+ *
+ * @param string $method_key Withdraw Method key
+ *
+ * @return string
+ */
+function dokan_withdraw_get_method_icon( $method_key ) {
+    $asset_path = DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/';
+    switch ( $method_key ) {
+        case 'paypal':
+            $method_icon = $asset_path . 'paypal.svg';
+            break;
+        case 'stripe':
+            $method_icon = $asset_path . 'stripe.svg';
+            break;
+        case 'mangopay':
+            $method_icon = $asset_path . 'mangopay.svg';
+            break;
+        case 'razorpay':
+            $method_icon = $asset_path . 'razorpay.svg';
+            break;
+        case 'bank':
+            $method_icon = $asset_path . 'bank.svg';
+            break;
+        case 'skrill':
+            $method_icon = $asset_path . 'skrill.svg';
+            break;
+        case 'dokan-moip-connect':
+            $method_icon = $asset_path . 'wirecard.svg';
+            break;
+        default:
+            $method_icon = $asset_path . 'bank.svg';
+    }
+    return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
+}
+
+/**
+ * Get withdraw method additional info.
+ *
+ * @since 3.3.1
+ *
+ * @param string $method_key Withdraw Method key
+ *
+ * @return string
+ */
+function dokan_withdraw_get_method_additional_info( $method_key ) {
+    $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' )[0]['payment'];
+    $no_information  = __( 'No information found.', 'dokan-lite' );
+
+    switch ( $method_key ) {
+        case 'paypal':
+        case 'skrill':
+            // translators: 1: Email address for withdraw method.
+            $method_info = empty( $payment_methods[ $method_key ]['email'] ) ? $no_information : sprintf( __( '( %1$s )', 'dokan-lite' ), dokan_mask_email_address( $payment_methods[ $method_key ]['email'] ) );
+            break;
+        case 'bank':
+            // translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
+            $method_info = empty( $payment_methods[ $method_key ]['ac_number'] ) ? $no_information : sprintf( __( '- %1$s - %2$s - ****%3$s', 'dokan-lite' ), $payment_methods[ $method_key ]['ac_name'], $payment_methods[ $method_key ]['bank_name'], substr( $payment_methods[ $method_key ]['ac_number'], -4 ) );
+            break;
+        default:
+            $method_info = '';
+    }
+    return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key );
+}
+
+/**
+ * Get the default withdrawal method.
+ *
+ * @since 3.3.1
+ *
+ * @param int $vendor_id
+ *
+ * @return string
+ */
+function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
+    $vendor_id      = $vendor_id ? $vendor_id : dokan_get_current_user_id();
+    $active_methods = dokan_get_seller_active_withdraw_methods( $vendor_id );
+    $method         = get_user_meta( $vendor_id, 'dokan_withdraw_default_method', true );
+
+    if ( ! empty( $method ) ) {
+        return $method;
+    }
+
+    if ( ! empty( $active_methods ) ) {
+        return $active_methods[0];
+    }
+
+    return 'paypal';
+}
+
+/**
+ * Check if manual withdraw request sending enabled.
+ *
+ * @since 3.3.1
+ *
+ * @return bool
+ */
+function dokan_withdraw_is_manual_request_enabled() {
+    return apply_filters( 'dokan_withdraw_manual_request_enable', true );
+}
+
+/**
+ * Check if `Hide Withdraw Option` is enabled and hide withdraw dashboard.
+ *
+ * @since 3.3.1
+ *
+ * @return bool
+ */
+function dokan_withdraw_is_disabled() {
+    return apply_filters( 'dokan_withdraw_disable', false );
+}
+
+/**
+ * Get the payment methods that are eligable for manual/schedule withdraw.
+ *
+ * @since 3.3.1
+ *
+ * @return array
+ */
+function dokan_withdraw_get_withdrawable_active_methods() {
+    return array_diff(
+        array_filter( dokan_withdraw_get_active_methods() ),
+        apply_filters(
+            'dokan_withdraw_split_payment_supported_methods',
+            [
+                'dokan-stripe-connect',
+                'dokan-paypal-marketplace',
+                'dokan-moip-connect',
+            ]
+        )
+    );
+}

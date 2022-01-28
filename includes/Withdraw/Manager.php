@@ -44,7 +44,7 @@ class Manager {
 
         if ( $amount < $limit ) {
             // translators: %s: withdraw limit amount
-            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %s', 'dokan-lite' ), wc_price( $limit ) ) );
+            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than or equal to %s', 'dokan-lite' ), wc_price( $limit ) ) );
         }
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
@@ -243,7 +243,7 @@ class Manager {
             if ( empty( $user_id ) ) {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
             } else {
-                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
             Cache::set( $cache_key, $result, $cache_group );
