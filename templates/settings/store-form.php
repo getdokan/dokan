@@ -63,7 +63,7 @@
     ];
 
     /**
-     * @since 3.3.3
+     * @since 3.3.7
      */
     $location = apply_filters( 'dokan_store_time_template', 'settings/store-time' );
     $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );

@@ -3194,7 +3194,7 @@ function dokan_get_translated_days( $day = '' ) {
 /**
  * Collect store times here.
  *
- * @since 3.2.16
+ * @since 3.3.7
  *
  * @param string $current_day
  * @param string $times_type  eg: opening_time or closing_time
@@ -3203,23 +3203,23 @@ function dokan_get_translated_days( $day = '' ) {
  * @return mixed|string
  */
 function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
-    $store_info         = dokan_get_store_info( dokan_get_current_user_id() );
-    $dokan_store_time   = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
-    $dokan_closing_time = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
+    $store_info        = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $dokan_store_times = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
 
-    if ( empty( $dokan_closing_time ) ) {
+    if ( empty( $dokan_store_times ) ) {
         return '';
     }
 
-    if ( ! is_array( $dokan_closing_time ) ) {
-        return $dokan_closing_time;
+    if ( ! is_array( $dokan_store_times ) ) {
+        return $dokan_store_times;
     }
 
-    if ( isset( $dokan_closing_time[ $index ] ) ) {
-        return $dokan_closing_time[ $index ];
+    if ( isset( $dokan_store_times[ $index ] ) ) {
+        return $dokan_store_times[ $index ];
     }
 
-    return $dokan_closing_time[0]; // return the 1st index
+    return $dokan_store_times[0]; // return the 1st index
 }
 
 /**
