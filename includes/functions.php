@@ -3146,42 +3146,81 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
 /**
  * Dokan get translated days
  *
- * @param  string day
+ * @param  string|null days
  *
  * @since  2.8.2
  *
- * @return string
+ * @return string|array
  */
-function dokan_get_translated_days( $day ) {
-    switch ( $day ) {
-        case 'saturday':
-            return __( 'Saturday', 'dokan-lite' );
+function dokan_get_translated_days( $day = '' ) {
+    $all_days = [
+        'sunday'    => __( 'Sunday', 'dokan-lite' ),
+        'monday'    => __( 'Monday', 'dokan-lite' ),
+        'tuesday'   => __( 'Tuesday', 'dokan-lite' ),
+        'wednesday' => __( 'Wednesday', 'dokan-lite' ),
+        'thursday'  => __( 'Thursday', 'dokan-lite' ),
+        'friday'    => __( 'Friday', 'dokan-lite' ),
+        'saturday'  => __( 'Saturday', 'dokan-lite' ),
+    ];
 
-        case 'sunday':
-            return __( 'Sunday', 'dokan-lite' );
+    $week_starts_on = get_option( 'start_of_week', 0 );
+    $day_keys       = array_keys( $all_days );
 
-        case 'monday':
-            return __( 'Monday', 'dokan-lite' );
+    // Make our start day of the week using by week starts settings.
+    for ( $i = 0; $i < $week_starts_on; $i++ ) {
+        $shifted_key   = $day_keys[ $i ];
+        $shifted_value = $all_days[ $shifted_key ];
 
-        case 'tuesday':
-            return __( 'Tuesday', 'dokan-lite' );
-
-        case 'wednesday':
-            return __( 'Wednesday', 'dokan-lite' );
-
-        case 'thursday':
-            return __( 'Thursday', 'dokan-lite' );
-
-        case 'friday':
-            return __( 'Friday', 'dokan-lite' );
-
-        case 'close':
-            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
-
-        default:
-            return apply_filters( 'dokan_get_translated_days', '', $day );
-            break;
+        // Unset days and sets in the last.
+        unset( $all_days[ $shifted_key ] );
+        $all_days[ $shifted_key ] = $shifted_value;
     }
+
+    // Get days array if our $days is true.
+    if ( empty( $day ) ) {
+        return $all_days;
+    }
+
+    if ( isset( $all_days[ $day ] ) ) {
+        return $all_days[ $day ];
+    }
+
+    if ( 'close' === $day ) {
+        return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
+    }
+
+    return apply_filters( 'dokan_get_translated_days', '', $day );
+}
+
+/**
+ * Collect store times here.
+ *
+ * @since 3.3.7
+ *
+ * @param string $current_day
+ * @param string $times_type  eg: opening_time or closing_time
+ * @param int    $index
+ *
+ * @return mixed|string
+ */
+function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
+    $store_info        = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $dokan_store_times = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
+
+    if ( empty( $dokan_store_times ) ) {
+        return '';
+    }
+
+    if ( ! is_array( $dokan_store_times ) ) {
+        return $dokan_store_times;
+    }
+
+    if ( isset( $dokan_store_times[ $index ] ) ) {
+        return $dokan_store_times[ $index ];
+    }
+
+    return $dokan_store_times[0]; // return the 1st index
 }
 
 /**
@@ -3199,30 +3238,35 @@ function dokan_is_store_open( $user_id ) {
     $store_info = $store_user->get_shop_info();
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 
-    $current_time = dokan_current_datetime();
-    $today        = strtolower( $current_time->format( 'l' ) );
+    $current_time           = dokan_current_datetime();
+    $formatted_current_time = dokan_current_datetime()->format( 'g:i a' );
+    $today                  = strtolower( $current_time->format( 'l' ) );
+    $store_open             = false;
+    $status                 = '';
+    $schedule               = [];
 
-    if ( ! isset( $open_days[ $today ] ) ) {
-        return false;
+    // Check if isset current day open, close time.
+    if ( isset( $open_days[ $today ] ) ) {
+        $schedule = $open_days[ $today ];
+        $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
     }
 
-    $schedule = $open_days[ $today ];
-    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
+    // Check if our store is open then check store opening, closing time for throw store open status.
+    if ( isset( $status ) && 'open' === $status ) {
+        $open_time  = ! empty( $schedule['opening_time'] ) ? ( is_array( $schedule['opening_time'] ) ? $schedule['opening_time'][0] : $schedule['opening_time'] ) : '';
+        $close_time = ! empty( $schedule['closing_time'] ) ? ( is_array( $schedule['closing_time'] ) ? $schedule['closing_time'][0] : $schedule['closing_time'] ) : '';
 
-    if ( 'open' === $status ) {
-        if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
-            return true;
+        if ( empty( $open_time ) || empty( $close_time ) ) {
+            $store_open = true;
         }
 
-        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-
-        if ( $open <= $current_time && $close >= $current_time ) {
-            return true;
+        // Check vendor picked time and current time for show store open.
+        if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
+            $store_open = true;
         }
     }
 
-    return false;
+    return apply_filters( 'dokan_is_store_open', $store_open, $status, $schedule, $store_user->get_shop_info() );
 }
 
 /**
