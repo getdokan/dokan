@@ -44,6 +44,7 @@
             window.google.maps.event.addListener( gmap, 'click', function ( event ) {
                 marker.setPosition( event.latLng );
                 updatePositionInput( event.latLng );
+                reverseGeocode( event.latLng );
             } );
 
             window.google.maps.event.addListener( marker, 'drag', function ( event ) {
