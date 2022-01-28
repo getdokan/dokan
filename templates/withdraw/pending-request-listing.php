@@ -12,6 +12,7 @@ if ( $withdraw_requests ) {
     <table class="dokan-table dokan-table-striped">
         <tr>
             <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
+            <?php apply_filters( 'dokan_pending_withdraw_list_heading_after_withdraw_amount', $withdraw_requests ); ?>
             <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>
             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
             <th><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></th>
@@ -21,9 +22,10 @@ if ( $withdraw_requests ) {
         <?php foreach ( $withdraw_requests as $request ) { ?>
 
             <tr>
-                <td><?php echo wp_kses_post( wc_price( $request->amount ) ); ?></td>
+                <td><?php echo wp_kses_post( wc_price( apply_filters( 'dokan_inside_pending_withdraw_list_loop_withdraw_amount', $request->amount, $request ) ) ); ?></td>
+                <?php apply_filters( 'dokan_inside_pending_withdraw_list_loop_after_withdraw_amount', $request ); ?>
                 <td><?php echo esc_html( dokan_withdraw_get_method_title( $request->method, $request ) ); ?></td>
-                <td><?php echo esc_html( dokan_format_time( $request->date ) ); ?></td>
+                <td><?php echo esc_html( dokan_format_datetime( $request->date ) ); ?></td>
                 <td>
                     <?php
                     $url = add_query_arg( array(

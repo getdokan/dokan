@@ -55,7 +55,11 @@
                 </template>
 
                 <template slot="amount" slot-scope="data">
-                    <currency :amount="data.row.amount"></currency>
+                    <currency :amount="getAmount(data.row.amount, data.row)"></currency>
+                </template>
+
+                <template v-if="hasPro" slot="charge" slot-scope="data">
+                    <currency :amount="data.row.charge"></currency>
                 </template>
 
                 <template slot="status" slot-scope="data">
@@ -141,8 +145,8 @@ export default {
                 id: null,
                 note: null
             },
-
             totalPages: 1,
+
             perPage: 10,
             totalItems: 0,
             filter: {
@@ -160,6 +164,7 @@ export default {
             columns: {
                 'seller': { label: this.__( 'Vendor', 'dokan-lite' ) },
                 'amount': { label: this.__( 'Amount', 'dokan-lite' ) },
+                'charge': { label: this.__( 'Charge', 'dokan-lite' ) },
                 'status': { label: this.__( 'Status', 'dokan-lite' ) },
                 'method_title': { label: this.__( 'Method', 'dokan-lite' ) },
                 'method_details': { label: this.__( 'Details', 'dokan-lite' ) },
@@ -169,7 +174,7 @@ export default {
             },
             requests: [],
             actionColumn: 'seller',
-            hasPro: dokan.hasPro ? true : false
+            hasPro: dokan.hasPro ? true : false,
         };
     },
 
@@ -285,6 +290,10 @@ export default {
 
     created() {
         this.fetchRequests();
+
+        if ( ! this.hasPro ) {
+            delete this.columns.charge;
+        }
     },
 
     mounted() {
@@ -321,6 +330,13 @@ export default {
     },
 
     methods: {
+        getAmount( amount, item ) {
+            if ( this.hasPro && item.charge ) {
+                return ( amount - item.charge );
+            }
+
+            return amount;
+        },
 
         updatedCounts(xhr) {
             this.counts.pending   = parseInt( xhr.getResponseHeader('X-Status-Pending') );

@@ -12,6 +12,7 @@
     <thead>
         <tr>
             <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
+            <?php apply_filters( 'dokan_canceled_withdraw_list_heading_after_withdraw_amount', $requests ); ?>
             <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>
             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
             <th><?php esc_html_e( 'Note', 'dokan-lite' ); ?></th>
@@ -21,9 +22,10 @@
 
     <?php foreach ( $requests as $row ) { ?>
         <tr>
-            <td><?php echo wp_kses_post( wc_price( $row->amount ) ); ?></td>
+            <td><?php echo wp_kses_post( wc_price( apply_filters( 'dokan_inside_canceled_withdraw_list_loop_withdraw_amount', $row->amount, $row ) ) ); ?></td>
+            <?php apply_filters( 'dokan_inside_canceled_withdraw_list_loop_after_withdraw_amount', $row ); ?>
             <td><?php echo esc_html( dokan_withdraw_get_method_title( $row->method, $row ) ); ?></td>
-            <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->date ) ) ); ?></td>
+            <td><?php echo esc_html( dokan_format_datetime( $row->date ) ); ?></td>
             <td><?php echo wp_kses_post( $row->note ); ?></td>
         </tr>
     <?php } ?>

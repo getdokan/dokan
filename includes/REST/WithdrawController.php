@@ -606,6 +606,7 @@ class WithdrawController extends WP_REST_Controller {
             'id'           => absint( $withdraw->get_id() ),
             'user'         => $vendor,
             'amount'       => floatval( $withdraw->get_amount() ),
+            'charge'       => floatval( $withdraw->get_charge() ),
             'created'      => mysql_to_rfc3339( $withdraw->get_date() ),
             'status'       => dokan()->withdraw->get_status_name( $withdraw->get_status() ),
             'method'       => $withdraw->get_method(),

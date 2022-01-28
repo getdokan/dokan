@@ -25,6 +25,7 @@ class Withdraw {
             'id'      => 0,
             'user_id' => 0,
             'amount'  => 0,
+            'charge'  => 0,
             'date'    => current_time( 'mysql' ),
             'status'  => dokan()->withdraw->get_status_code( 'pending' ),
             'method'  => 'paypal',
@@ -39,6 +40,7 @@ class Withdraw {
             'id'      => absint( $data['id'] ),
             'user_id' => absint( $data['user_id'] ),
             'amount'  => wc_format_decimal( $data['amount'] ),
+            'charge'  => wc_format_decimal( $data['charge'] ),
             'date'    => $data['date'],
             'status'  => absint( $data['status'] ),
             'method'  => $data['method'],
@@ -90,6 +92,17 @@ class Withdraw {
      */
     public function get_amount() {
         return $this->data['amount'];
+    }
+
+    /**
+     * Get Charge
+     *
+     * @since 3.3.7
+     *
+     * @return int
+     */
+    public function get_charge() {
+        return $this->data['charge'];
     }
 
     /**
@@ -183,6 +196,20 @@ class Withdraw {
      */
     public function set_amount( $amount ) {
         $this->data['amount'] = wc_format_decimal( $amount );
+        return $this;
+    }
+
+    /**
+     * Set Withdraw Charge
+     *
+     * @since 3.3.7
+     *
+     * @param int $charge
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
+    public function set_charge( $charge ) {
+        $this->data['charge'] = $charge;
         return $this;
     }
 
@@ -340,6 +367,7 @@ class Withdraw {
             [
                 'user_id' => $this->get_user_id(),
                 'amount'  => $this->get_amount(),
+                'charge'  => $this->get_charge(),
                 'date'    => $this->get_date(),
                 'status'  => $this->get_status(),
                 'method'  => $this->get_method(),
@@ -347,7 +375,7 @@ class Withdraw {
                 'ip'      => $this->get_ip(),
             ],
             [ 'id' => $this->get_id() ],
-            [ '%d', '%s', '%s', '%d', '%s', '%s', '%s' ],
+            [ '%d', '%s', '%s', '%s', '%d', '%s', '%s', '%s' ],
             [ '%d' ]
         );
 
