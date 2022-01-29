@@ -42,6 +42,117 @@ function dokan_get_i18n_date_format( format = true ) {
 }
 
 /**
+ * Get i18n time format.
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @param {string|boolean} format Time format.
+ *
+ * @return {string} Return a specific time format
+ */
+ function dokan_get_i18n_time_format( format = true ) {
+  if ( ! format ) {
+    return dokan_helper.i18n_time_format;
+  }
+
+  let replacements = {
+    N: 'E',
+    S: 'o',
+    w: 'e',
+    z: 'DDD',
+    W: 'W',
+    F: 'MMMM',
+    m: 'MM',
+    M: 'MMM',
+    n: 'M',
+    o: 'YYYY',
+    Y: 'YYYY',
+    y: 'YY',
+    a: 'a',
+    A: 'A',
+    g: 'h',
+    G: 'H',
+    h: 'hh',
+    H: 'HH',
+    i: 'mm',
+    s: 'ss',
+    u: 'SSS',
+    e: 'zz',
+    U: 'X',
+  }
+
+  let i        = 0,
+    char       = '',
+    timeFormat = '';
+
+  for ( i = 0; i < dokan_helper.i18n_time_format.length; i++ ) {
+    char = dokan_helper.i18n_time_format[ i ];
+
+    if ( char in replacements ) {
+      timeFormat += replacements[ char ];
+    } else {
+      timeFormat += char;
+    }
+  }
+
+  return timeFormat;
+}
+
+/**
+ * Get formatted time.
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @param {string} time   Time.
+ * @param {string} format Time format type.
+ *
+ * @return {string} Return formatted time.
+ */
+function dokan_get_formatted_time( time, format ) {
+  const times   = new Date( Date.parse( `Jan 1 ${time}` ) ), // We used this dummy date for getting time info.
+    add0        = function( t ) { return t < 10 ? '0' + t : t; },
+    hours       = times.getHours(),
+    minutes     = times.getMinutes(),
+    seconds     = times.getSeconds(),
+    sampm       = hours >= 12 ? 'pm' : 'am',
+    campm       = hours >= 12 ? 'PM' : 'AM',
+    convertTime = ( time ) => {
+      // Check correct time format and split into components
+      time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+      if ( time.length > 1 ) {
+        time    = time.slice (1);
+        time[0] = +time[0] % 12 || 12;
+      }
+
+      return time[0];
+    },
+    hour12 = convertTime (`${add0( hours )}:${add0( minutes )}`),
+    replaceMent = {
+      'hh' : add0( hour12 ),
+      'h'  : hour12,
+      'HH' : add0( hours ),
+      'H'  : hours,
+      'g'  : hour12,
+      'MM' : add0( minutes ),
+      'M'  : minutes,
+      'mm' : add0( minutes ),
+      'm'  : minutes,
+      'i'  : add0( minutes ),
+      'ss' : add0( seconds ),
+      's'  : seconds,
+      'A'  : campm,
+      'a'  : sampm,
+    };
+
+  for ( let key in replaceMent ) {
+    format = format.replace( key, replaceMent[ key ] );
+  }
+
+  return format;
+}
+
+/**
  * Get date range picker supported date format
  *
  * @since 3.3.6
