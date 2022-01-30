@@ -29,7 +29,7 @@ $changelog = [
     ],
     [
         'version'  => 'Version 3.3.5',
-        'released' => '2021-12-15',
+        'released' => '2021-12-23',
         'changes'  => [
             'Fix'         => [
                 [
