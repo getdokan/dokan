@@ -484,7 +484,7 @@ class SetupWizard {
                                     <div class="wc-wizard-service-description">
                                         <?php
                                         // translators: %s: withdraw method name
-                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), $method['title'] );
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), dokan_withdraw_get_method_title( $key ) );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
