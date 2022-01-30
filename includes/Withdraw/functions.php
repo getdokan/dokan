@@ -48,7 +48,7 @@ function dokan_withdraw_get_methods() {
 function dokan_withdraw_get_active_methods() {
     $methods = dokan_get_option( 'withdraw_methods', 'dokan_withdraw', [ 'paypal' ] );
 
-    return $methods;
+    return apply_filters( 'dokan_get_active_withdraw_methods', $methods );
 }
 
 /**
@@ -101,25 +101,17 @@ function dokan_withdraw_get_method( $method_key ) {
  * Get title from a withdraw method
  *
  * @param string $method_key
+ * @param object|null $request //@since 3.3.7
  *
  * @return string
  */
 function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     $registered = dokan_withdraw_register_methods();
-
-    if ( 'dokan_custom' === $method_key ) {
-        $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' );
-        if ( null !== $request ) {
-            $details = maybe_unserialize( $request->details );
-            if ( isset( $details['value'] ) ) {
-                $title .= ' - ' . $details['value'];
-            }
-        }
-        return $title;
-    }
-
     if ( isset( $registered[ $method_key ] ) ) {
-        return $registered[ $method_key ]['title'];
+        /**
+         * @since 3.3.7 added filter dokan_get_withdraw_method_title
+         */
+        return apply_filters( 'dokan_get_withdraw_method_title', $registered[ $method_key ]['title'], $method_key, $request );
     }
 }
 
@@ -308,7 +300,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @param string $method_key Withdraw Method key
  *
@@ -347,7 +339,7 @@ function dokan_withdraw_get_method_icon( $method_key ) {
 /**
  * Get withdraw method additional info.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @param string $method_key Withdraw Method key
  *
@@ -376,7 +368,7 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
 /**
  * Get the default withdrawal method.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @param int $vendor_id
  *
@@ -401,7 +393,7 @@ function dokan_withdraw_get_default_method( $vendor_id = 0 ) {
 /**
  * Check if manual withdraw request sending enabled.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @return bool
  */
@@ -412,7 +404,7 @@ function dokan_withdraw_is_manual_request_enabled() {
 /**
  * Check if `Hide Withdraw Option` is enabled and hide withdraw dashboard.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @return bool
  */
@@ -423,7 +415,7 @@ function dokan_withdraw_is_disabled() {
 /**
  * Get the payment methods that are eligable for manual/schedule withdraw.
  *
- * @since 3.3.1
+ * @since 3.3.7
  *
  * @return array
  */

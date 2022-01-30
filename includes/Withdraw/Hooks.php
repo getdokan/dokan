@@ -15,25 +15,40 @@ class Hooks {
      */
     public function __construct() {
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
+        // change custom withdraw method title
+        add_filter( 'dokan_get_withdraw_method_title', [ $this, 'dokan_withdraw_dokan_custom_method_title' ], 10, 3 );
 
         // Init Withdraw Cache Class
         new WithdrawCache();
 
         if ( wp_doing_ajax() ) {
-            $this->ajax();
+            add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'ajax_handle_withdraw_request' ] );
+            add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'ajax_handle_make_default_method' ] );
         }
     }
 
     /**
-     * All the withdrawal related ajax hooks.
+     * Dokan Custom Withdraw Method Title
      *
-     * @since 3.3.1
+     * @since 3.3.7
      *
-     * @return void
+     * @param string $title
+     * @param string $method_key
+     * @param object|null $request
+     *
+     * @return string
      */
-    private function ajax() {
-        add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'ajax_handle_withdraw_request' ] );
-        add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'ajax_handle_make_default_method' ] );
+    public function dokan_withdraw_dokan_custom_method_title( $title, $method_key, $request ) {
+        if ( 'dokan_custom' === $method_key ) {
+            $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' );
+            if ( null !== $request ) {
+                $details = maybe_unserialize( $request->details );
+                if ( isset( $details['value'] ) ) {
+                    $title .= ' - ' . $details['value'];
+                }
+            }
+        }
+        return $title;
     }
 
     /**
@@ -92,7 +107,7 @@ class Hooks {
     /**
      * Handle withdraw request ajax.
      *
-     * @since 3.3.1
+     * @since 3.3.7
      *
      * @return void
      */
@@ -165,7 +180,7 @@ class Hooks {
     /**
      * Handle default with method change.
      *
-     * @since 3.3.1
+     * @since 3.3.7
      *
      * @return void
      */
