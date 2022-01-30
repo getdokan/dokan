@@ -479,7 +479,7 @@ class SetupWizard {
                             <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
-                                        <p><?php echo $method['title']; ?></p>
+                                        <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
                                         <?php
