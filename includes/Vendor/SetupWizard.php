@@ -118,7 +118,7 @@ class SetupWizard extends DokanSetupWizard {
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_attr_e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
+            <?php wp_print_styles(); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
         <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
