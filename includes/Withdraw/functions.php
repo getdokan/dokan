@@ -315,10 +315,10 @@ function dokan_withdraw_get_method_icon( $method_key ) {
         case 'stripe':
             $method_icon = $asset_path . 'stripe.svg';
             break;
-        case 'mangopay':
+        case 'dokan_mangopay':
             $method_icon = $asset_path . 'mangopay.svg';
             break;
-        case 'razorpay':
+        case 'dokan_razorpay':
             $method_icon = $asset_path . 'razorpay.svg';
             break;
         case 'bank':
@@ -428,6 +428,8 @@ function dokan_withdraw_get_withdrawable_active_methods() {
                 'dokan-stripe-connect',
                 'dokan-paypal-marketplace',
                 'dokan-moip-connect',
+                'dokan_razorpay',
+                'dokan_mangopay',
             ]
         )
     );
