@@ -312,8 +312,8 @@ function dokan_withdraw_get_method_icon( $method_key ) {
         case 'paypal':
             $method_icon = $asset_path . 'paypal.svg';
             break;
-        case 'stripe':
-            $method_icon = $asset_path . 'stripe.svg';
+        case 'skrill':
+            $method_icon = $asset_path . 'skrill.svg';
             break;
         case 'bank':
         default:
