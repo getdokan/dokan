@@ -49,7 +49,7 @@
                 <div id="dokan-single-categories-loader" class="dokan-single-categories-loader dokan-hide">
                     <img src="" alt="" class="dokan-cat-loader">
                 </div>
-                <span class=" dokan-single-categories-right dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-right"></i></span></span>
+                <span class="dokan-single-categories-right dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-right"></i></span></span>
             </div>
 
         </div>
@@ -61,7 +61,7 @@
                 </span>
             </div>
             <div class="dokan-single-category-button-container">
-                <button id="dokan-single-cat-select-btn" type='button'><?php esc_html_e( 'Done', 'dokan-lite' ); ?></button>
+                <button class="dokan-single-cat-select-btn" id="dokan-single-cat-select-btn" type='button'><?php esc_html_e( 'Done', 'dokan-lite' ); ?></button>
             </div>
         </div>
     </div>

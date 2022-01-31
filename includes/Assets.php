@@ -435,11 +435,6 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
-            'dokan-single-category-ui-js' => [
-                'src'     => $asset_url . '/js/dokan-single-category-ui.js',
-                'deps'    => [ 'jquery' ],
-                'version' => filemtime( $asset_path . 'js/dokan-single-category-ui.js' ),
-            ],
         ];
 
         return $scripts;
@@ -561,7 +556,6 @@ class Assets {
         }
 
         wp_enqueue_script( 'dokan-login-form-popup' );
-        wp_enqueue_script( 'dokan-single-category-ui-js' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
