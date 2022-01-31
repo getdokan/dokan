@@ -5,6 +5,13 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
     $get_data  = wp_unslash( $_GET ); // WPCS: CSRF ok.
     $post_data = wp_unslash( $_POST ); // WPCS: CSRF ok.
 
+    $product_title_required      = dokan_get_option( 'product_title', 'dokan_product_validation', 'off' );
+    $product_price_required      = dokan_get_option( 'product_price', 'dokan_product_validation', 'off' );
+    $product_image_required      = dokan_get_option( 'product_image', 'dokan_product_validation', 'off' );
+    $product_category_required   = dokan_get_option( 'product_category', 'dokan_product_validation', 'off' );
+    $product_long_desc_required  = dokan_get_option( 'product_long_desc', 'dokan_product_validation', 'off' );
+    $product_short_desc_required = dokan_get_option( 'product_short_desc', 'dokan_product_validation', 'off' );
+
     /**
      *  dokan_new_product_wrap_before hook
      *
@@ -99,7 +106,10 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                             <div class="instruction-inside <?php echo esc_attr( $hide_instruction ); ?>">
                                                 <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $posted_img ); ?>">
                                                 <i class="fa fa-cloud-upload"></i>
-                                                <a href="#" class="dokan-feat-image-btn dokan-btn"><?php esc_html_e( 'Upload Product Image', 'dokan-lite' ); ?></a>
+                                                <a href="#" class="dokan-feat-image-btn dokan-btn">
+                                                    <?php esc_html_e( 'Upload Product Image', 'dokan-lite' ); ?>
+                                                    <span class="<?php echo 'off' === $product_image_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                                </a>
                                             </div>
 
                                             <div class="image-wrap <?php echo esc_attr( $hide_img_wrap ); ?>">
@@ -148,13 +158,20 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
                                 <div class="content-half-part dokan-product-meta">
                                     <div class="dokan-form-group">
+                                        <label for="post-title" class="dokan-form-label">
+                                            <?php esc_html_e( 'Name', 'dokan-lite' ); ?>
+                                            <span class="<?php echo 'off' === $product_title_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                        </label>
                                         <input class="dokan-form-control" name="post_title" id="post-title" type="text" placeholder="<?php esc_attr_e( 'Product name..', 'dokan-lite' ); ?>" value="<?php echo esc_attr( dokan_posted_input( 'post_title' ) ); ?>">
                                     </div>
 
                                     <div class="dokan-form-group">
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
                                             <div class="content-half-part">
-                                                <label for="_regular_price" class="dokan-form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
+                                                <label for="_regular_price" class="dokan-form-label">
+                                                    <?php esc_html_e( 'Price', 'dokan-lite' ); ?>
+                                                    <span class="<?php echo 'off' === $product_price_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                                </label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_attr__( get_woocommerce_currency_symbol() ); ?></span>
                                                     <input type="text" class="dokan-form-control wc_input_price dokan-product-regular-price" name="_regular_price" placeholder="0.00" id="_regular_price" value="<?php echo esc_attr( dokan_posted_input( '_regular_price' ) ) ?>">
@@ -193,11 +210,19 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                     </div>
 
                                     <div class="dokan-form-group">
+                                        <label for="post-excerpt" class="dokan-form-label">
+                                            <?php esc_html_e( 'Short Description', 'dokan-lite' ); ?>
+                                            <span class="<?php echo 'off' === $product_short_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                        </label>
                                         <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo esc_attr( dokan_posted_textarea( 'post_excerpt' ) ); ?></textarea>
                                     </div>
 
                                     <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
                                         <div class="dokan-form-group">
+                                            <label for="product_cat" class="dokan-form-label">
+                                                <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
+                                                <span class="<?php echo 'off' === $product_category_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                            </label>
 
                                             <?php
                                             $selected_cat  = dokan_posted_input( 'product_cat' );
@@ -221,6 +246,11 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                         </div>
                                     <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
                                         <div class="dokan-form-group">
+                                            <label for="product_cat" class="dokan-form-label">
+                                                <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
+                                                <span class="<?php echo 'off' === $product_category_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                            </label>
+
                                             <?php
 
                                             include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
@@ -271,7 +301,11 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                             </div>
 
                             <div class="dokan-form-group">
-                                <label for="post_content" class="control-label"><?php esc_html_e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
+                                <label for="post_content" class="control-label">
+                                    <?php esc_html_e( 'Description', 'dokan-lite' ) ?>
+                                    <span class="<?php echo 'off' === $product_long_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                    <i class="fa fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i>
+                                </label>
                                 <?php wp_editor( htmlspecialchars_decode( $post_content, ENT_QUOTES ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                             </div>
 

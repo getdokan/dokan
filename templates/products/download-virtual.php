@@ -1,5 +1,5 @@
 <div class="dokan-form-group dokan-product-type-container <?php echo esc_attr( $class ); ?>">
-        <div class="content-half-part downloadable-checkbox">
+    <div class="content-half-part downloadable-checkbox <?php echo 'on' === $hide_downloadable ? 'dokan-hide' : ''; ?>">
             <label>
                 <input type="checkbox" <?php checked( $is_downloadable, true ); ?> class="_is_downloadable" name="_downloadable" id="_downloadable"> <?php esc_html_e( 'Downloadable', 'dokan-lite' ); ?> <i class="fa fa-question-circle tips" aria-hidden="true" data-title="<?php esc_attr_e( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ); ?>"></i>
             </label>

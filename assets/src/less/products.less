@@ -158,6 +158,12 @@
   .featured-image {
     width: 25%;
   }
+
+  .dokan-required-alert {
+    color: #f05025;
+    font-style: italic;
+    margin-top: 5px;
+  }
 }
 
 .dokan-product-edit-area {
@@ -719,6 +725,10 @@
                     margin-bottom: 0px;
                   }
                 }
+
+                .var-downloadable-hide {
+                  display: none;
+                }
               }
             }
 
@@ -811,10 +821,11 @@
   }
 
   .dokan-required-alert {
-    color: #f05025;
+    color: #f05025 !important;
     font-style: italic;
     margin-top: 5px;
   }
+
   .dokan-product-less-price-alert {
     color: #f05025;
     font-style: italic;
@@ -1507,15 +1518,23 @@
     }
   }
 
-  .dokan-product-field-content {
-    width: 62.5%;
-
-    label {
-      font-weight: normal;
+  .product-form-container {
+    .dokan-product-field-content {
+      width: 62.5%;
+  
+      label {
+        font-weight: normal;
+      }
+  
+      input[type='checkbox'] {
+        margin-right: 4px;
+      }
     }
 
-    input[type='checkbox'] {
-      margin-right: 4px;
+    .dokan-required-alert {
+      color: #f05025;
+      font-style: italic;
+      margin-top: 5px;
     }
   }
 

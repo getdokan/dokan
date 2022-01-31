@@ -64,6 +64,13 @@ if ( ! empty( $_GET['errors'] ) ) {
     dokan()->dashboard->templates->products->set_errors( array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) ) );
 }
 
+$product_title_required      = dokan_get_option( 'product_title', 'dokan_product_validation', 'off' );
+$product_price_required      = dokan_get_option( 'product_price', 'dokan_product_validation', 'off' );
+$product_image_required      = dokan_get_option( 'product_image', 'dokan_product_validation', 'off' );
+$product_category_required   = dokan_get_option( 'product_category', 'dokan_product_validation', 'off' );
+$product_long_desc_required  = dokan_get_option( 'product_long_desc', 'dokan_product_validation', 'off' );
+$product_short_desc_required = dokan_get_option( 'product_short_desc', 'dokan_product_validation', 'off' );
+
 /**
  *  dokan_dashboard_wrap_before hook
  *
@@ -161,7 +168,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <div id="dokan-product-title-area" class="dokan-form-group">
                                         <input type="hidden" name="dokan_product_id" id="dokan-edit-product-id" value="<?php echo esc_attr( $post_id ); ?>"/>
 
-                                        <label for="post_title" class="form-label"><?php esc_html_e( 'Title', 'dokan-lite' ); ?></label>
+                                        <label for="post_title" class="form-label">
+                                            <?php esc_html_e( 'Title', 'dokan-lite' ); ?>
+                                            <span class="<?php echo 'off' === $product_title_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                        </label>
                                         <?php dokan_post_input_box( $post_id, 'post_title', array( 'placeholder' => __( 'Product name..', 'dokan-lite' ), 'value' => $post_title ) ); ?>
                                         <div class="dokan-product-title-alert dokan-hide dokan-required-alert">
                                             <?php esc_html_e( 'Product title is required!', 'dokan-lite' ); ?>
@@ -195,7 +205,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
                                             <div class="content-half-part regular-price">
-                                                <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?>
+                                                <label for="_regular_price" class="form-label">
+                                                    <?php esc_html_e( 'Price', 'dokan-lite' ); ?>
+                                                    <span class="<?php echo 'off' === $product_price_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
                                                     <span
                                                         class="vendor-earning simple-product"
                                                         data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
@@ -257,7 +269,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
                                         <div class="dokan-form-group">
-                                            <label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
+                                            <label for="product_cat" class="form-label">
+                                                <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
+                                                <span class="<?php echo 'off' === $product_category_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                            </label>
                                             <?php
                                             $product_cat = -1;
                                             $term = array();
@@ -291,7 +306,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         </div>
                                     <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
                                         <div class="dokan-form-group">
-                                            <label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
+                                            <label for="product_cat" class="form-label">
+                                                <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
+                                                <span class="<?php echo 'off' === $product_category_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                            </label>
                                             <?php
                                             $term = array();
                                             $term = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids') );
@@ -360,7 +378,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $feat_image_id ); ?>">
 
                                             <i class="fa fa-cloud-upload"></i>
-                                            <a href="#" class="dokan-feat-image-btn btn btn-sm"><?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?></a>
+                                            <a href="#" class="dokan-feat-image-btn btn btn-sm">
+                                                <?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?>
+                                                <span class="<?php echo 'off' === $product_image_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                            </a>
                                         </div>
 
                                         <div class="image-wrap<?php echo esc_attr( $wrap_class ); ?>">
@@ -416,7 +437,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                             </div><!-- .dokan-form-top-area -->
 
                             <div class="dokan-product-short-description">
-                                <label for="post_excerpt" class="form-label"><?php esc_html_e( 'Short Description', 'dokan-lite' ); ?></label>
+                                <label for="post_excerpt" class="form-label">
+                                    <?php esc_html_e( 'Short Description', 'dokan-lite' ); ?>
+                                    <span class="<?php echo 'off' === $product_long_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                </label>
                                 <?php wp_editor( $post_excerpt , 'post_excerpt', apply_filters( 'dokan_product_short_description', array( 'editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_excerpt' ) ) ); ?>
                                 <div class="dokan-product-short-desc-alert dokan-hide dokan-required-alert">
                                     <?php esc_html_e( 'Product short description is required!', 'dokan-lite' ); ?>
@@ -424,7 +448,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                             </div>
 
                             <div class="dokan-product-description">
-                                <label for="post_content" class="form-label"><?php esc_html_e( 'Description', 'dokan-lite' ); ?></label>
+                                <label for="post_content" class="form-label">
+                                    <?php esc_html_e( 'Description', 'dokan-lite' ); ?>
+                                    <span class="<?php echo 'off' === $product_long_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                </label>
                                 <?php wp_editor( $post_content , 'post_content', apply_filters( 'dokan_product_description', array( 'editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content' ) ) ); ?>
                             </div>
                             <div class="dokan-product-long-desc-alert dokan-hide dokan-required-alert">

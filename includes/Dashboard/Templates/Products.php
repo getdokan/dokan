@@ -80,23 +80,25 @@ class Products {
      * @return void
      */
     public static function load_download_virtual_template( $post, $post_id ) {
-        $_downloadable   = get_post_meta( $post_id, '_downloadable', true );
-        $_virtual        = get_post_meta( $post_id, '_virtual', true );
-        $is_downloadable = ( 'yes' == $_downloadable ) ? true : false;
-        $is_virtual      = ( 'yes' == $_virtual ) ? true : false;
-        $digital_mode    = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
+        $_virtual             = get_post_meta( $post_id, '_virtual', true );
+        $is_virtual           = ( 'yes' == $_virtual ) ? true : false;
+        $digital_mode         = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
+        $_downloadable        = get_post_meta( $post_id, '_downloadable', true );
+        $is_downloadable      = ( 'yes' == $_downloadable ) ? true : false;
+        $is_downloadable_hide = dokan_get_option( 'product_downloadable_section', 'dokan_product_validation', 'off' );
 
         if ( 'sell_physical' === $digital_mode ) {
             return;
         }
 
         dokan_get_template_part( 'products/download-virtual', '', array(
-            'post_id'         => $post_id,
-            'post'            => $post,
-            'is_downloadable' => $is_downloadable,
-            'is_virtual'      => $is_virtual,
-            'digital_mode'    => $digital_mode,
-            'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
+            'post'              => $post,
+            'class'             => 'show_if_subscription show_if_variable-subscription show_if_simple',
+            'post_id'           => $post_id,
+            'is_virtual'        => $is_virtual,
+            'digital_mode'      => $digital_mode,
+            'is_downloadable'   => $is_downloadable,
+            'hide_downloadable' => $is_downloadable_hide,
         ) );
     }
 
