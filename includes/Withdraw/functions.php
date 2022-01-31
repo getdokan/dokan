@@ -312,24 +312,10 @@ function dokan_withdraw_get_method_icon( $method_key ) {
         case 'paypal':
             $method_icon = $asset_path . 'paypal.svg';
             break;
-        case 'stripe':
-            $method_icon = $asset_path . 'stripe.svg';
-            break;
-        case 'mangopay':
-            $method_icon = $asset_path . 'mangopay.svg';
-            break;
-        case 'razorpay':
-            $method_icon = $asset_path . 'razorpay.svg';
-            break;
-        case 'bank':
-            $method_icon = $asset_path . 'bank.svg';
-            break;
         case 'skrill':
             $method_icon = $asset_path . 'skrill.svg';
             break;
-        case 'dokan-moip-connect':
-            $method_icon = $asset_path . 'wirecard.svg';
-            break;
+        case 'bank':
         default:
             $method_icon = $asset_path . 'bank.svg';
     }
@@ -420,14 +406,15 @@ function dokan_withdraw_is_disabled() {
  * @return array
  */
 function dokan_withdraw_get_withdrawable_active_methods() {
-    return array_diff(
+    return array_intersect(
         array_filter( dokan_withdraw_get_active_methods() ),
         apply_filters(
-            'dokan_withdraw_split_payment_supported_methods',
+            'dokan_withdraw_withdrawable_payment_methods',
             [
-                'dokan-stripe-connect',
-                'dokan-paypal-marketplace',
-                'dokan-moip-connect',
+                'paypal',
+                'dokan_custom',
+                'bank',
+                'skrill',
             ]
         )
     );
