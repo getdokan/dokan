@@ -95,27 +95,18 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 <div class="dokan-clearfix"></div>
                 <div class="product-full-container">
                     <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
-                        <div class="dokan-form-group">
-                            <?php
-                            $product_cat = -1;
-                            $category_args =  array(
-                                'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
-                                'hierarchical'     => 1,
-                                'hide_empty'       => 0,
-                                'name'             => 'product_cat',
-                                'id'               => 'product_cat',
-                                'taxonomy'         => 'product_cat',
-                                'orderby'          => 'name',
-                                'title_li'         => '',
-                                'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => '',
-                                'selected'         => $product_cat,
-                                'walker'           => new TaxonomyDropdown()
-                            );
 
-                            wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
-                        ?>
+                    <input type="hidden" name="product_cat" class="dokan_product_cat" id="dokan_product_cat" value="">
+                    <!-- Trigger/Open The Modal -->
+                    <div class="dokan-form-group dokan-select-single-category" id="dokan-category-open-modal">
+                        <span id="dokan_product_cat_res" class="dokan-select-single-category-title"><?php esc_attr_e( '- Select a category -', 'dokan-lite' ); ?></span>
+                        <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
+
+                        <div class="dokan-product-cat-alert dokan-hide">
+                            <?php esc_html_e('Please choose a category!', 'dokan-lite' ); ?>
                         </div>
+                    </div>
+
                     <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
                         <div class="dokan-form-group">
                             <?php

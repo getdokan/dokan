@@ -1050,6 +1050,13 @@ class Ajax {
         wp_send_json_success();
     }
 
+    /**
+     * Returns categories by parent id.
+     *
+     * @since 3.3.8
+     *
+     * @return array
+     */
     public function dokan_json_get_add_product_categories() {
         $term_id    = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] )  : 0;
         $level      = isset( $_REQUEST['level'] ) ? absint( $_REQUEST['level'] )      : 0;
@@ -1079,6 +1086,13 @@ class Ajax {
         wp_send_json_success( $response_to_send );
     }
 
+    /**
+     * Returns searched categories.
+     *
+     * @since 3.3.8
+     *
+     * @return array
+     */
     public function dokan_json_search_product_categories() {
         $text = isset( $_REQUEST['text'] ) ? sanitize_text_field( $_REQUEST['text'] )  : '';
         $term_args = array(
@@ -1104,6 +1118,13 @@ class Ajax {
         wp_send_json_success( $searched_categories );
     }
 
+    /**
+     * Returns selected category and its parents.
+     *
+     * @since 3.3.8
+     *
+     * @return array
+     */
     public function dokan_json_load_selected_categories() {
         $parents = isset( $_REQUEST['parents'] ) ? sanitize_text_field( $_REQUEST['parents'] ) : '';
         $taxonomy = isset( $_REQUEST['taxonomy'] ) ? sanitize_text_field( $_REQUEST['taxonomy'] ) : '';

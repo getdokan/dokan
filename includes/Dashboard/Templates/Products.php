@@ -31,6 +31,7 @@ class Products {
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
         add_action( 'dokan_render_product_edit_template', array( $this, 'load_product_edit_template' ), 11 );
         add_action( 'dokan_after_listing_product', array( $this, 'load_add_new_product_popup' ), 10 );
+        add_action( 'dokan_after_listing_product', array( $this, 'load_single_category_ui_on_popup' ), 10 );
         add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
@@ -515,6 +516,15 @@ class Products {
 
     public function load_add_new_product_popup() {
         dokan_get_template_part( 'products/tmpl-add-product-popup' );
+    }
+
+    /**
+     * Returns new single category select ui html elements.
+     *
+     * @return html
+     */
+    public function load_single_category_ui_on_popup() {
+        dokan_get_template_part('products/dokan-single-category', '', array( 'pop_up' => true ) );
     }
 
     /**
