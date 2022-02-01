@@ -7,7 +7,7 @@
  * @package dokan
  */
 
-if ( $withdraw_requests ) {
+if ( $withdraw_requests ) :
 ?>
     <table class="dokan-table dokan-table-striped">
         <tr>
@@ -19,7 +19,7 @@ if ( $withdraw_requests ) {
             <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
         </tr>
 
-        <?php foreach ( $withdraw_requests as $request ) { ?>
+        <?php foreach ( $withdraw_requests as $request ) : ?>
 
             <tr>
                 <td><?php echo wp_kses_post( wc_price( apply_filters( 'dokan_inside_pending_withdraw_list_loop_withdraw_amount', $request->amount, $request ) ) ); ?></td>
@@ -31,7 +31,7 @@ if ( $withdraw_requests ) {
                     $url = add_query_arg( array(
                         'dokan_handle_withdraw_request' => 'cancel',
                         'id'     => $request->id
-                    ), dokan_get_navigation_url( 'withdraw' ) );
+                    ), dokan_get_navigation_url( 'withdraw-requests' ) );
                     ?>
                     <a href="<?php echo esc_url( wp_nonce_url( $url, 'dokan_cancel_withdraw' ) ); ?>">
                         <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
@@ -48,10 +48,25 @@ if ( $withdraw_requests ) {
                 </td>
             </tr>
 
-        <?php } ?>
+        <?php endforeach; ?>
 
     </table>
-<?php
-}
+
+<?php else: ?>
+    <table class="dokan-table dokan-table-striped">
+        <tr>
+            <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
+            <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>
+            <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
+            <th><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></th>
+            <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
+        </tr>
+
+        <tr>
+            <td colspan="5"><?php esc_html_e( 'No pending withdraw request', 'dokan-lite' ); ?></td>
+        </tr>
+    </table>
+    <?php
+endif;
 
 

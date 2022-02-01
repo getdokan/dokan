@@ -374,7 +374,7 @@ class SetupWizard extends DokanSetupWizard {
 					if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
                         ?>
                         <tr>
-                            <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
+                            <th scope="row"><label><?php echo esc_html( dokan_withdraw_get_method_title( $method_key ) ); ?></label></th>
                             <td>
         						<?php call_user_func( $method['callback'], $store_info ); ?>
                             </td>

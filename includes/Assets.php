@@ -573,6 +573,7 @@ class Assets {
 
         $localize_data = [
             'i18n_date_format' => wc_date_format(),
+            'i18n_time_format' => wc_time_format(),
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );

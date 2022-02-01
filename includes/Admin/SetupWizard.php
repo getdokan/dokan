@@ -479,12 +479,12 @@ class SetupWizard {
                             <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
-                                        <p><?php echo $method['title']; ?></p>
+                                        <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
                                         <?php
                                         // translators: %s: withdraw method name
-                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), $method['title'] );
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), dokan_withdraw_get_method_title( $key ) );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">

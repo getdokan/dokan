@@ -159,7 +159,7 @@ class Manager {
             // get products
             $products = $section_object->get_products( $vendor->get_id() );
             // Check if there is any products.
-            if ( ! $products->have_posts() ) {
+            if ( ! $products instanceof \WP_Query || ! $products->have_posts() ) {
                 continue;
             }
 
