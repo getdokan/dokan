@@ -93,7 +93,7 @@ class SetupWizard {
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', array( 'wc-setup' ), DOKAN_PLUGIN_VERSION );
 
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
-        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip' ), WC_VERSION );
+        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ), WC_VERSION );
 
         wp_localize_script(
             'wc-setup',
@@ -479,12 +479,12 @@ class SetupWizard {
                             <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
-                                        <p><?php echo $method['title']; ?></p>
+                                        <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
                                         <?php
                                         // translators: %s: withdraw method name
-                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), $method['title'] );
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), dokan_withdraw_get_method_title( $key ) );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">

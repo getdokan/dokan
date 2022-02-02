@@ -129,40 +129,47 @@ function dokan_get_product_downloads( $product ) {
  * @param string $date_to
  */
 function dokan_save_product_price( $product_id, $regular_price, $sale_price = '', $date_from = '', $date_to = '' ) {
-    $product_id    = absint( $product_id );
+    $product = wc_get_product( absint( $product_id ) );
+
+    if ( ! $product instanceof WC_Product ) {
+        return;
+    }
+
     $regular_price = wc_format_decimal( $regular_price );
     $sale_price    = '' === $sale_price ? '' : wc_format_decimal( $sale_price );
     $date_from     = wc_clean( $date_from );
     $date_to       = wc_clean( $date_to );
+    $now           = dokan_current_datetime();
 
-    update_post_meta( $product_id, '_regular_price', $regular_price );
-    update_post_meta( $product_id, '_sale_price', $sale_price );
+    $product->set_regular_price( $regular_price );
+    $product->set_sale_price( $sale_price );
 
     // Save Dates
-    update_post_meta( $product_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-    update_post_meta( $product_id, '_sale_price_dates_to', $date_to ? strtotime( $date_to ) : '' );
+    $product->set_date_on_sale_from( $date_from );
+    $product->set_date_on_sale_to( $date_to );
 
     if ( $date_to && ! $date_from ) {
-        $date_from = strtotime( 'NOW', current_time( 'timestamp' ) );
-        update_post_meta( $product_id, '_sale_price_dates_from', $date_from );
+        $product->set_date_on_sale_from( $now->getTimestamp() );
     }
 
     // Update price if on sale
     if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
-        update_post_meta( $product_id, '_price', $sale_price );
+        $product->set_price( $sale_price );
     } else {
-        update_post_meta( $product_id, '_price', $regular_price );
+        $product->set_price( $regular_price );
     }
 
-    if ( '' !== $sale_price && $date_from && strtotime( $date_from ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-        update_post_meta( $product_id, '_price', $sale_price );
+    if ( '' !== $sale_price && $date_from && $now->modify( $date_from )->getTimestamp() < $now->getTimestamp() ) {
+        $product->set_price( $sale_price );
     }
 
-    if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
-        update_post_meta( $product_id, '_price', $regular_price );
-        update_post_meta( $product_id, '_sale_price_dates_from', '' );
-        update_post_meta( $product_id, '_sale_price_dates_to', '' );
+    if ( $date_to && $now->modify( $date_to )->getTimestamp() < $now->getTimestamp() ) {
+        $product->set_price( $regular_price );
+        $product->set_date_on_sale_from();
+        $product->set_date_on_sale_to();
     }
+
+    $product->save();
 }
 
 /**
