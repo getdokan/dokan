@@ -439,7 +439,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                             <div class="dokan-product-short-description">
                                 <label for="post_excerpt" class="form-label">
                                     <?php esc_html_e( 'Short Description', 'dokan-lite' ); ?>
-                                    <span class="<?php echo 'off' === $product_long_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
+                                    <span class="<?php echo 'off' === $product_short_desc_required ? 'dokan-hide' : ''; ?> dokan-required-alert">*</span>
                                 </label>
                                 <?php wp_editor( $post_excerpt , 'post_excerpt', apply_filters( 'dokan_product_short_description', array( 'editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_excerpt' ) ) ); ?>
                                 <div class="dokan-product-short-desc-alert dokan-hide dokan-required-alert">
