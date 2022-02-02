@@ -1145,7 +1145,14 @@ class Ajax {
             ) );
 
             foreach ( $categories as $index => $category ) {
-                if ( absint( $findable[$key] ) === absint($category->term_id) ) {
+                if ( absint( $findable[$key] ) === absint( $category->term_id ) ) {
+                    $children = get_terms( $category->taxonomy, array(
+                        'parent'    => $category->term_id,
+                        'hide_empty' => false
+                    ) );
+
+                    $children ? $categories[$index]->has_child = true : $categories[$index]->has_child = false;
+
                     $categories[$index]->uiActivaion = 'dokan-single-category-li-active';
                     break;
                 }

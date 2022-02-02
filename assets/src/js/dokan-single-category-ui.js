@@ -137,7 +137,7 @@
       ( scrolled > 5 ) ? element.removeClass('dokan-hide') : element.addClass('dokan-hide');
     },
     showCategoryModal: () => {
-      modal.css('display','block');
+      modal.css('display','flex');
       categoriesState = [];
       SingleCategory.loadAllParentCategories();
     },
@@ -271,7 +271,7 @@
       let html = '';
 
       element.forEach( ( category, index ) => {
-        html += `<li data-name="${category.name}" data-catLevel="${level}" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${category.has_child ? 'has-children' : ''}" data-term-id="${category.term_id}" data-taxonomy="product_cat">
+        html += `<li data-name="${category.name}" data-catLevel="${level}" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${category.has_child ? 'dokan-cat-has-child' : ''}" data-term-id="${category.term_id}" data-taxonomy="product_cat">
               <span class="dokan-single-category">${category.name}</span>
               <span class="dokan-single-category-icon"><i class="fas fa-chevron-right"></i></span>
           </li>`;
@@ -319,8 +319,8 @@
   });
 })(jQuery);
 
-window.onclick = function(event) {
-  if (event.target == document.getElementById("dokan-single-category-modal")) {
-    document.getElementById("dokan-single-category-modal").style.display = "none";
-  }
-}
+// window.onclick = function(event) {
+//   if (event.target == document.getElementById("dokan-single-category-modal")) {
+//     document.getElementById("dokan-single-category-modal").style.display = "flex";
+//   }
+// }
