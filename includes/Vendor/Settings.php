@@ -3,8 +3,19 @@
 namespace WeDevs\Dokan\Vendor;
 
 class Settings {
+
+    /**
+     * @var Vendor
+     */
     protected $vendor;
 
+    /**
+     * Constructor.
+     *
+     * @param $vendor
+     *
+     * @return void
+     */
     public function __construct( $vendor = 0 ) {
         if ( empty( $vendor ) ) {
             $vendor = dokan()->vendor->get( get_current_user_id() );
@@ -15,11 +26,16 @@ class Settings {
         $this->vendor = $vendor;
     }
 
-    public function payment_settings() {
+    /**
+     * Vendors payment settings.
+     *
+     * @return array
+     */
+    public function payments() {
         $payments = [
             'payments' => [
                 'id' => 'payments_settings',
-                'type' => 'tab',
+                'type' => 'group',
                 'title' => __( 'Payment Settings', 'dokan-lite' ),
                 'desc' => __( 'Configure your payment settings', 'dokan-lite' ),
                 'icon' => 'dashicons-money',
@@ -36,6 +52,13 @@ class Settings {
         );
     }
 
+    /**
+     * Populate value and active state for every payment fields.
+     *
+     * @param array $payment Single payment gateway.
+     *
+     * @return array
+     */
     public function populate_value_and_active_state( $payment ) {
         $methods        = array_filter( dokan_withdraw_get_active_methods() );
         $payment_values = $this->vendor->get_payment_profiles();

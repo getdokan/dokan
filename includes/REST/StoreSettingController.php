@@ -118,7 +118,7 @@ class StoreSettingController extends WP_REST_Controller {
      */
     public function get_payment_methods( $request ) {
         $vendor_settings = new Settings( dokan_get_current_user_id() );
-        $response = $vendor_settings->payment_settings();
+        $response = $vendor_settings->payments();
         return rest_ensure_response( $response );
     }
 
