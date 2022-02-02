@@ -2,8 +2,12 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Vendor\Settings;
 use WeDevs\Dokan\Vendor\Vendor;
+use WP_HTTP_Response;
 use WP_REST_Controller;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 use WP_Error;
 
@@ -68,11 +72,11 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * Update Store
      *
-     * @param \WP_REST_Request $request
-     *
      * @since DOKAN_LITE_SINCE
      *
-     * @return WP_Error|\WP_REST_Response
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
      */
     public function update_settings( $request ) {
         $vendor   = $this->get_vendor();
@@ -96,7 +100,7 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * @param $request
      *
-     * @return mixed|WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_settings( $request ) {
         $vendor   = $this->get_vendor();
@@ -108,29 +112,22 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * Get a vendor's payment methods settings
      *
-     * @param \WP_REST_Request $request
+     * @param WP_REST_Request $request
      *
-     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_payment_methods( $request ) {
-        $vendor     = $this->get_vendor();
-        $store_info = dokan_get_store_info( $vendor->get_id() );
-        $methods    = array_filter( dokan_withdraw_get_active_methods() );
-        $response   = [];
-
-        foreach ( $methods as $method ) {
-            $response[ $method ] = isset( $store_info['payment'][ $method ] ) ? $store_info['payment'][ $method ] : null;
-        }
-
+        $vendor_settings = new Settings( dokan_get_current_user_id() );
+        $response = $vendor_settings->payment_settings();
         return rest_ensure_response( $response );
     }
 
     /**
      * Get a vendor's payment methods settings
      *
-     * @param \WP_REST_Request $request
+     * @param WP_REST_Request $request
      *
-     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function update_payment_methods( $request ) {
         $response = [];
@@ -182,7 +179,7 @@ class StoreSettingController extends WP_REST_Controller {
      * Prepare links for the request.
      *
      * @param \WC_Data $object Object data.
-     * @param \WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request Request object.
      *
      * @return array Links for the given post.
      */
@@ -203,10 +200,10 @@ class StoreSettingController extends WP_REST_Controller {
      * Prepare a single item output for response
      *
      * @param $store
-     * @param \WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
-     * @return \WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
         $data     = $store->to_array();
