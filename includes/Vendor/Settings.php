@@ -217,12 +217,12 @@ class Settings {
                 'description' => __( 'Location', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'banner'                   => [
+            'banner_id'                => [
                 'type'        => 'integer',
                 'description' => __( 'Store Banner Image ID', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'gravatar'                 => [
+            'gravatar_id'              => [
                 'type'        => 'integer',
                 'description' => __( 'Store Profile Image ID', 'dokan-lite' ),
                 'required'    => false,
@@ -241,9 +241,9 @@ class Settings {
             ],
             'enable_tnc'               => [
                 'type'        => 'string',
-                'description' => __( 'Enable TnC', 'dokan-lite' ),
+                'description' => __( 'Enable Store Terms & Condition', 'dokan-lite' ),
                 'required'    => false,
-                'enum'        => [ 'yes', 'no' ],
+                'enum'        => [ 'off', 'on' ],
             ],
             'dokan_store_time_enabled' => [
                 'type'        => 'string',
