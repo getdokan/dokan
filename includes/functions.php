@@ -938,7 +938,8 @@ function dokan_get_template_part( $slug, $name = '', $args = [] ) {
     $template = '';
 
     // Look in yourtheme/dokan/slug-name.php and yourtheme/dokan/slug.php
-    $template = locate_template( [ dokan()->template_path() . "{$slug}-{$name}.php", dokan()->template_path() . "{$slug}.php" ] );
+    $template_path = ! empty( $name ) ? "{$slug}-{$name}.php" : "{$slug}.php";
+    $template = locate_template( [ dokan()->template_path() . $template_path ] );
 
     /**
      * Change template directory path filter
@@ -3145,42 +3146,81 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
 /**
  * Dokan get translated days
  *
- * @param  string day
+ * @param  string|null days
  *
  * @since  2.8.2
  *
- * @return string
+ * @return string|array
  */
-function dokan_get_translated_days( $day ) {
-    switch ( $day ) {
-        case 'saturday':
-            return __( 'Saturday', 'dokan-lite' );
+function dokan_get_translated_days( $day = '' ) {
+    $all_days = [
+        'sunday'    => __( 'Sunday', 'dokan-lite' ),
+        'monday'    => __( 'Monday', 'dokan-lite' ),
+        'tuesday'   => __( 'Tuesday', 'dokan-lite' ),
+        'wednesday' => __( 'Wednesday', 'dokan-lite' ),
+        'thursday'  => __( 'Thursday', 'dokan-lite' ),
+        'friday'    => __( 'Friday', 'dokan-lite' ),
+        'saturday'  => __( 'Saturday', 'dokan-lite' ),
+    ];
 
-        case 'sunday':
-            return __( 'Sunday', 'dokan-lite' );
+    $week_starts_on = get_option( 'start_of_week', 0 );
+    $day_keys       = array_keys( $all_days );
 
-        case 'monday':
-            return __( 'Monday', 'dokan-lite' );
+    // Make our start day of the week using by week starts settings.
+    for ( $i = 0; $i < $week_starts_on; $i++ ) {
+        $shifted_key   = $day_keys[ $i ];
+        $shifted_value = $all_days[ $shifted_key ];
 
-        case 'tuesday':
-            return __( 'Tuesday', 'dokan-lite' );
-
-        case 'wednesday':
-            return __( 'Wednesday', 'dokan-lite' );
-
-        case 'thursday':
-            return __( 'Thursday', 'dokan-lite' );
-
-        case 'friday':
-            return __( 'Friday', 'dokan-lite' );
-
-        case 'close':
-            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
-
-        default:
-            return apply_filters( 'dokan_get_translated_days', '', $day );
-            break;
+        // Unset days and sets in the last.
+        unset( $all_days[ $shifted_key ] );
+        $all_days[ $shifted_key ] = $shifted_value;
     }
+
+    // Get days array if our $days is true.
+    if ( empty( $day ) ) {
+        return $all_days;
+    }
+
+    if ( isset( $all_days[ $day ] ) ) {
+        return $all_days[ $day ];
+    }
+
+    if ( 'close' === $day ) {
+        return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
+    }
+
+    return apply_filters( 'dokan_get_translated_days', '', $day );
+}
+
+/**
+ * Collect store times here.
+ *
+ * @since 3.3.7
+ *
+ * @param string $current_day
+ * @param string $times_type  eg: opening_time or closing_time
+ * @param int    $index
+ *
+ * @return mixed|string
+ */
+function dokan_get_store_times( $current_day, $times_type, $index = 0 ) {
+    $store_info        = dokan_get_store_info( dokan_get_current_user_id() );
+    $dokan_store_time  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $dokan_store_times = isset( $dokan_store_time[ $current_day ][ $times_type ] ) ? $dokan_store_time[ $current_day ][ $times_type ] : '';
+
+    if ( empty( $dokan_store_times ) ) {
+        return '';
+    }
+
+    if ( ! is_array( $dokan_store_times ) ) {
+        return $dokan_store_times;
+    }
+
+    if ( isset( $dokan_store_times[ $index ] ) ) {
+        return $dokan_store_times[ $index ];
+    }
+
+    return $dokan_store_times[0]; // return the 1st index
 }
 
 /**
@@ -3198,30 +3238,35 @@ function dokan_is_store_open( $user_id ) {
     $store_info = $store_user->get_shop_info();
     $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 
-    $current_time = dokan_current_datetime();
-    $today        = strtolower( $current_time->format( 'l' ) );
+    $current_time           = dokan_current_datetime();
+    $formatted_current_time = dokan_current_datetime()->format( 'g:i a' );
+    $today                  = strtolower( $current_time->format( 'l' ) );
+    $store_open             = false;
+    $status                 = '';
+    $schedule               = [];
 
-    if ( ! isset( $open_days[ $today ] ) ) {
-        return false;
+    // Check if isset current day open, close time.
+    if ( isset( $open_days[ $today ] ) ) {
+        $schedule = $open_days[ $today ];
+        $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
     }
 
-    $schedule = $open_days[ $today ];
-    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
+    // Check if our store is open then check store opening, closing time for throw store open status.
+    if ( isset( $status ) && 'open' === $status ) {
+        $open_time  = ! empty( $schedule['opening_time'] ) ? ( is_array( $schedule['opening_time'] ) ? $schedule['opening_time'][0] : $schedule['opening_time'] ) : '';
+        $close_time = ! empty( $schedule['closing_time'] ) ? ( is_array( $schedule['closing_time'] ) ? $schedule['closing_time'][0] : $schedule['closing_time'] ) : '';
 
-    if ( 'open' === $status ) {
-        if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
-            return true;
+        if ( empty( $open_time ) || empty( $close_time ) ) {
+            $store_open = true;
         }
 
-        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-
-        if ( $open <= $current_time && $close >= $current_time ) {
-            return true;
+        // Check vendor picked time and current time for show store open.
+        if ( $open_time <= $formatted_current_time && $close_time >= $formatted_current_time ) {
+            $store_open = true;
         }
     }
 
-    return false;
+    return apply_filters( 'dokan_is_store_open', $store_open, $status, $schedule, $store_user->get_shop_info() );
 }
 
 /**
@@ -4089,6 +4134,28 @@ function dokan_get_withdraw_threshold( $user_id ) {
 }
 
 /**
+ * Mask or hide part of email address.
+ *
+ * @since 3.3.1
+ *
+ * @param string $email Email address
+ *
+ * @return string
+ */
+function dokan_mask_email_address( $email ) {
+    if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+        return $email;
+    }
+
+    list( $first, $last ) = explode( '@', $email );
+    $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
+    $last        = explode( '.', $last );
+    $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
+
+    return "{$first}@{$last_domain}.{$last['1']}";
+}
+
+/**
  * Insert a value or key/value pair (assoc array) after a specific key in an array.  If key doesn't exist, value is appended
  * to the end of the array.
  *
@@ -4228,4 +4295,45 @@ function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
 
     // Return success status after passing checks.
     return $response_data['success'];
+}
+
+/**
+ * Get additional products sections.
+ *
+ * @since 3.3.6
+ *
+ * @return array
+ */
+function dokan_get_additional_product_sections() {
+    return dokan()->product_sections->get_available_product_sections();
+}
+
+/**
+ * Converts a 'on' or 'off' to boolean
+ *
+ * @since 3.3.6
+ *
+ * @param string $value
+ *
+ * @return bool
+ */
+function dokan_string_to_bool( $value ) {
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
+}
+
+/**
+ * Converts a boolean value to a 'on' or 'off'.
+ *
+ * @since 3.3.7
+ *
+ * @param bool $bool
+ *
+ * @return string
+ */
+function dokan_bool_to_on_off( $bool ) {
+    if ( ! is_bool( $bool ) ) {
+        $bool = dokan_string_to_bool( $bool );
+    }
+
+    return true === $bool ? 'on' : 'off';
 }
