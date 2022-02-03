@@ -71,4 +71,82 @@ class Settings {
 
         return $payment;
     }
+
+    /**
+     * Save payments settings value.
+     *
+     * @param $requests
+     *
+     * @return array
+     */
+    public function save_payments( $requests ) {
+        foreach ( $requests as $method => $fields ) {
+            foreach ( $fields as $field => $value ) {
+                $this->vendor->set_payment_field( $method, $field, $value );
+            }
+        }
+        $this->vendor->save();
+        do_action( 'dokan_update_vendor', $this->vendor->get_id() );
+        $this->vendor->popluate_store_data();
+        return $this->payments();
+    }
+
+    /**
+     * Save payment settings validation args schema.
+     * for example, see this link
+     * https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/
+     *
+     * @return array
+     */
+    public function args_schema_for_save_payments() {
+        $schema = [
+            'paypal' => [
+                'type'        => 'object',
+                'description' => __( 'PayPal Settings', 'dokan-lite' ),
+                'properties'  => [
+                    'email' => [
+                        'type'     => 'string',
+                        'format'   => 'email',
+                        'required' => true,
+                    ],
+                ],
+            ],
+            'bank' => [
+                'type'        => 'object',
+                'description' => __( 'Bank Settings', 'dokan-lite' ),
+                'properties'  => [
+                    'ac_name' => [
+                        'type'     => 'string',
+                        'required' => true,
+                    ],
+                    'ac_number' => [
+                        'type'     => 'string',
+                        'required' => true,
+                    ],
+                    'bank_name' => [
+                        'type'     => 'string',
+                        'required' => true,
+                    ],
+                    'bank_addr' => [
+                        'type'     => 'string',
+                        'required' => false,
+                    ],
+                    'routing_number' => [
+                        'type'     => 'string',
+                        'required' => false,
+                    ],
+                    'iban' => [
+                        'type'     => 'string',
+                        'required' => false,
+                    ],
+                    'swift' => [
+                        'type'     => 'string',
+                        'required' => false,
+                    ],
+                ],
+            ],
+        ];
+
+        return apply_filters( 'dokan_vendor_rest_payment_settings_args', $schema );
+    }
 }

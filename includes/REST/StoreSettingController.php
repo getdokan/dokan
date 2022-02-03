@@ -62,6 +62,7 @@ class StoreSettingController extends WP_REST_Controller {
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
+                    'args'                => $this->update_payment_methods_args(),
                     'callback'            => [ $this, 'update_payment_methods' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
@@ -130,11 +131,8 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function update_payment_methods( $request ) {
-        $response = [];
-        $vendor   = $this->get_vendor();
-        $store_id = $vendor->get_id();
-        // TODO: update the store payment methods info.
-
+        $vendor_settings = new Settings( dokan_get_current_user_id() );
+        $response = $vendor_settings->save_payments( $request->get_params() );
         return rest_ensure_response( $response );
     }
 
@@ -212,5 +210,14 @@ class StoreSettingController extends WP_REST_Controller {
         $response->add_links( $this->prepare_links( $data, $request ) );
 
         return apply_filters( 'dokan_rest_prepare_store_settings_item_for_response', $response );
+    }
+
+    /**
+     * Args for updating payment methods.
+     *
+     * @return array
+     */
+    public function update_payment_methods_args() {
+        return ( new Settings )->args_schema_for_save_payments();
     }
 }
