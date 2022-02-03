@@ -34,6 +34,20 @@ class StoreSettingController extends WP_REST_Controller {
     protected $rest_base = 'settings';
 
     /**
+     * @var Settings
+     */
+    protected $vendor_settings;
+
+    /**
+     * Constructor.
+     *
+     * @return void
+     */
+    public function __construct() {
+        $this->vendor_settings = new Settings();
+    }
+
+    /**
      * Register all routes related to settings
      *
      * @return void
@@ -48,6 +62,7 @@ class StoreSettingController extends WP_REST_Controller {
 				],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
+                    'args'                => $this->update_settings_args(),
                     'callback'            => [ $this, 'update_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
@@ -118,9 +133,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_payment_methods( $request ) {
-        $vendor_settings = new Settings( dokan_get_current_user_id() );
-        $response = $vendor_settings->payments();
-        return rest_ensure_response( $response );
+        return rest_ensure_response( $this->vendor_settings->payments() );
     }
 
     /**
@@ -131,9 +144,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function update_payment_methods( $request ) {
-        $vendor_settings = new Settings( dokan_get_current_user_id() );
-        $response = $vendor_settings->save_payments( $request->get_params() );
-        return rest_ensure_response( $response );
+        return rest_ensure_response( $this->vendor_settings->save_payments( $request->get_params() ) );
     }
 
     /**
@@ -217,7 +228,11 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @return array
      */
-    public function update_payment_methods_args() {
-        return ( new Settings )->args_schema_for_save_payments();
+    private function update_payment_methods_args() {
+        return $this->vendor_settings->args_schema_for_save_payments();
+    }
+
+    private function update_settings_args() {
+        return $this->vendor_settings->args_schema_for_save_settings();
     }
 }
