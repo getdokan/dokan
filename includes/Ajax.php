@@ -1058,19 +1058,19 @@ class Ajax {
      * @return array
      */
     public function dokan_json_get_add_product_categories() {
-        $term_id  = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] )  : 0;
-        $level    = isset( $_REQUEST['level'] ) ? absint( $_REQUEST['level'] )      : 0;
-        $selected = isset( $_REQUEST['selected'] ) ? absint( $_REQUEST['selected'] ): 0;
+        $term_id  = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] ) : 0;
+        $level    = isset( $_REQUEST['level'] ) ? absint( $_REQUEST['level'] ) : 0;
+        $selected = isset( $_REQUEST['selected'] ) ? absint( $_REQUEST['selected'] ) : 0;
 
         $categories = get_terms( 'product_cat', array(
             'parent'     => $term_id,
-            'hide_empty' => false
+            'hide_empty' => false,
         ) );
 
         foreach ( $categories as $key => $term ) {
             $children = get_terms( $term->taxonomy, array(
                 'parent'     => $term->term_id,
-                'hide_empty' => false
+                'hide_empty' => false,
             ) );
 
             $children ? $categories[ $key ]->has_child = true : $categories[ $key ]->has_child = false;
@@ -1098,7 +1098,7 @@ class Ajax {
         $term_args = array(
             'search'     => $text,
             'taxonomy'   => 'product_cat',
-            'hide_empty' => false
+            'hide_empty' => false,
         );
         $term_results        = new \WP_Term_Query( $term_args );
         $searched_categories = $term_results->terms ? $term_results->terms : [];
@@ -1126,9 +1126,9 @@ class Ajax {
      * @return array
      */
     public function dokan_json_load_selected_categories() {
-        $parents  = isset( $_REQUEST['parents'] ) ? sanitize_text_field( $_REQUEST['parents'] )   : '';
+        $parents  = isset( $_REQUEST['parents'] ) ? sanitize_text_field( $_REQUEST['parents'] ) : '';
         $taxonomy = isset( $_REQUEST['taxonomy'] ) ? sanitize_text_field( $_REQUEST['taxonomy'] ) : '';
-        $term_id  = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] )                : '';
+        $term_id  = isset( $_REQUEST['term_id'] ) ? absint( $_REQUEST['term_id'] ) : '';
 
         $parents = explode( '|', $parents );
 
@@ -1141,14 +1141,14 @@ class Ajax {
         foreach ( $loopable as $key => $value ) {
             $categories = get_terms( 'product_cat', array(
                 'parent'     => $value,
-                'hide_empty' => false
+                'hide_empty' => false,
             ) );
 
             foreach ( $categories as $index => $category ) {
                 if ( absint( $findable[ $key ] ) === absint( $category->term_id ) ) {
                     $children = get_terms( $category->taxonomy, array(
                         'parent'     => $category->term_id,
-                        'hide_empty' => false
+                        'hide_empty' => false,
                     ) );
 
                     $children ? $categories[ $index ]->has_child = true : $categories[ $index ]->has_child = false;
