@@ -1,13 +1,13 @@
 ;(function($){
-  let modal     = $('#dokan-single-category-modal');
-  let loader    = $('#dokan-single-categories-loader');
-  let searchRes = $('#dokan-cat-search-res');
-  let searchResUl = $('#dokan-cat-search-res-ul');
+  let modal          = $('#dokan-single-category-modal');
+  let loader         = $('#dokan-single-categories-loader');
+  let searchRes      = $('#dokan-cat-search-res');
+  let searchResUl    = $('#dokan-cat-search-res-ul');
   let rightIndicator = $('.dokan-single-categories-right');
-  let leftIndicator = $('.dokan-single-categories-left');
-  var progress = null;
+  let leftIndicator  = $('.dokan-single-categories-left');
+  var progress       = null;
 
-  let categoriesState = [];
+  let categoriesState   = [];
   let searchResultState = [];
 
   var SingleCategory = {
@@ -79,7 +79,7 @@
           SingleCategory.hideSearchRes(false);
           SingleCategory.doSearchCates(inputText);
         } else {
-          SingleCategory.hideSearchRes()
+          SingleCategory.hideSearchRes();
         }
       })
       $( "#dokan-single-categories" ).scroll(function() {
