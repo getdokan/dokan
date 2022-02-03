@@ -159,29 +159,29 @@ class Settings {
      */
     public function args_schema_for_save_settings() {
         $schema = [
-            'store_name' => [
+            'store_name'               => [
                 'type'        => 'string',
                 'description' => __( 'Store Name', 'dokan-lite' ),
                 'required'    => true,
             ],
-            'social' => [
+            'social'                   => [
                 'type'        => 'object',
                 'description' => __( 'Social Settings', 'dokan-lite' ),
                 'properties'  => [
                 ],
             ],
-            'phone' => [
+            'phone'                    => [
                 'type'        => 'string',
                 'description' => __( 'Phone Number', 'dokan-lite' ),
                 'required'    => true,
             ],
-            'show_email' => [
+            'show_email'               => [
                 'type'        => 'string',
                 'description' => __( 'Show Email', 'dokan-lite' ),
                 'required'    => true,
                 'enum'        => [ 'yes', 'no' ],
             ],
-            'address' => [
+            'address'                  => [
                 'type'        => 'object',
                 'description' => __( 'Address', 'dokan-lite' ),
                 'required'    => false,
@@ -194,52 +194,52 @@ class Settings {
                         'type'     => 'string',
                         'required' => false,
                     ],
-                    'city' => [
+                    'city'     => [
                         'type'     => 'string',
                         'required' => true,
                     ],
-                    'zip' => [
+                    'zip'      => [
                         'type'     => 'string',
                         'required' => true,
                     ],
-                    'country' => [
+                    'country'  => [
                         'type'     => 'string',
                         'required' => true,
                     ],
-                    'state' => [
+                    'state'    => [
                         'type'     => 'string',
                         'required' => true,
                     ],
                 ],
             ],
-            'location' => [
+            'location'                 => [
                 'type'        => 'string',
                 'description' => __( 'Location', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'banner' => [
+            'banner'                   => [
                 'type'        => 'integer',
                 'description' => __( 'Store Banner Image ID', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'gravatar' => [
+            'gravatar'                 => [
                 'type'        => 'integer',
                 'description' => __( 'Store Profile Image ID', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'store_ppp' => [
+            'store_ppp'                => [
                 'type'        => 'integer',
                 'description' => __( 'Store Product Per Page', 'dokan-lite' ),
                 'required'    => false,
                 'default'     => 20,
             ],
-            'show_more_ptab' => [
+            'show_more_ptab'           => [
                 'type'        => 'string',
                 'description' => __( 'Show More Product tab', 'dokan-lite' ),
                 'required'    => false,
                 'enum'        => [ 'yes', 'no' ],
             ],
-            'enable_tnc' => [
+            'enable_tnc'               => [
                 'type'        => 'string',
                 'description' => __( 'Enable TnC', 'dokan-lite' ),
                 'required'    => false,
@@ -251,7 +251,7 @@ class Settings {
                 'required'    => false,
                 'enum'        => [ 'yes', 'no' ],
             ],
-            'dokan_store_open_notice' => [
+            'dokan_store_open_notice'  => [
                 'type'        => 'string',
                 'description' => __( 'Store Open Notice', 'dokan-lite' ),
                 'required'    => false,
@@ -261,21 +261,21 @@ class Settings {
                 'description' => __( 'Store Close Notice', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'find_address' => [
+            'find_address'             => [
                 'type'        => 'string',
                 'description' => __( 'Find Address', 'dokan-lite' ),
                 'required'    => false,
             ],
-            'dokan_store_time' => [
+            'dokan_store_time'         => [
                 'type'        => 'object',
                 'description' => __( 'Store Time', 'dokan-lite' ),
                 'required'    => false,
                 'properties'  => [
-                    'monday' => [
+                    'monday'    => [
                         'type'     => 'object',
                         'required' => true,
                     ],
-                    'tuesday' => [
+                    'tuesday'   => [
                         'type'     => 'object',
                         'required' => true,
                     ],
@@ -283,25 +283,24 @@ class Settings {
                         'type'     => 'object',
                         'required' => true,
                     ],
-                    'thursday' => [
+                    'thursday'  => [
                         'type'     => 'object',
                         'required' => true,
                     ],
-                    'friday' => [
+                    'friday'    => [
                         'type'     => 'object',
                         'required' => true,
                     ],
-                    'saturday' => [
+                    'saturday'  => [
                         'type'     => 'object',
                         'required' => true,
                     ],
-                    'sunday' => [
+                    'sunday'    => [
                         'type'     => 'object',
                         'required' => true,
                     ],
                 ],
             ],
-
         ];
 
         return apply_filters( 'dokan_vendor_rest_settings_args', $schema );
