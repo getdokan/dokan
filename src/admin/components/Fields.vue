@@ -1,7 +1,7 @@
 <template>
-    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shoudShow">
+    <tr :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
-            <th colspan="2" class="dokan-settings-sub-section-title">
+            <th colspan="3" class="dokan-settings-sub-section-title">
                 <label>{{ fieldData.label }}</label>
             </th>
             <td class="tooltips-data"></td>
@@ -32,7 +32,7 @@
                     {{ getError( fieldData.label ) }}
                 </p>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                    {{ getValidationErrorMessage( fieldData.name ) }}
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -58,7 +58,7 @@
                     {{ getError( fieldData.label ) }}
                 </p>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                    {{ getValidationErrorMessage( fieldData.name ) }}
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
@@ -77,16 +77,16 @@
                     {{ getError( fieldData.label ) }}
                 </p>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                    {{ getValidationErrorMessage( fieldData.name ) }}
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
 
         <template v-if="'combine' == fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
+                <th scope="row">
+                    <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+                </th>
 
             <td class="tooltips-data combine-tips-style"></td>
 
@@ -184,8 +184,284 @@
                     </template>
                 </fieldset>
                 <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </td>
+        </template>
+
+        <template v-if="'disbursement_sub_section' === fieldData.type && ! hideWithdrawOption()">
+            <th colspan="3" class="dokan-settings-sub-section-title">
+                <label>{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data"></td>
+        </template>
+
+        <template v-if="'disbursement_method' === fieldData.type && ! hideWithdrawOption()">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <fieldset>
+                    <template v-for="(optionVal, optionKey) in fieldData.options">
+                        <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
+                            {{ optionVal }}
+                        </label>
+                        <br>
+                    </template>
+                </fieldset>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
                     {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
+            </td>
+        </template>
+
+        <template v-if="'disbursement_type' === fieldData.type && showDisbursementType( 'schedule') && ! hideWithdrawOption()">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <fieldset>
+                    <template v-for="(optionVal, optionKey) in fieldData.options">
+                        <label :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
+                            {{ optionVal }}
+                        </label>
+                        <br>
+                    </template>
+                </fieldset>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </td>
+        </template>
+
+        <template v-if="'schedule_quarterly' === fieldData.type && showSettingsField(  'quarterly' )">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][month]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['month']" v-on:change="setDisbursementQuarterlySettings">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.first" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Second Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.second">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.second" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Third Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.third">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.third" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Fourth Quarter', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.fourth">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.fourth" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dokan-schedule-week-day-container">
+                    <div class="col-3">
+                        <div class="dokan-input-group">
+                            <span class="dokan-input-group-addon">{{ __( 'Week', 'dokan-lite' ) }}</span>
+                            <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']">
+                                <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.week" :value="optionKey" v-html="optionVal"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="dokan-input-group">
+                            <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
+                            <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
+                                <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                                <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'schedule_monthly' === fieldData.type && showSettingsField(  'monthly' )">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <div class="dokan-schedule-week-day-container">
+                    <div class="col-3">
+                        <div class="dokan-input-group">
+                            <span class="dokan-input-group-addon">{{ __( 'Week', 'dokan-lite' ) }}</span>
+                            <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']">
+                                <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.week" :value="optionKey" v-html="optionVal"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="dokan-input-group">
+                            <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
+                            <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
+                                <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                                <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'schedule_biweekly' === fieldData.type && showSettingsField( 'biweekly')">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']" v-on:change="setDisbursementBiweeklySettings">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.first" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Second', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.biweekly.second">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.second" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="dokan-input-group">
+                        <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
+                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
+                            <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
+            </td>
+        </template>
+
+        <template v-if="'schedule_weekly' === fieldData.type && showSettingsField( 'weekly' )">
+            <th scope="row">
+                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
+            </th>
+            <td class="tooltips-data">
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </td>
+            <td>
+                <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
+                    <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                </select>
+
+                <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                    <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
+                    <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
+                        <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
+                    </optgroup>
+                </select>
+
+                <RefreshSettingOptions
+                    v-if="fieldData.refresh_options"
+                    :section="sectionId"
+                    :field="fieldData"
+                    :toggle-loading-state="toggleLoadingState"
+                />
+
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+
+                <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
 
@@ -410,35 +686,50 @@
 </template>
 
 <script>
-import colorPicker from "admin/components/ColorPicker.vue";
-let TextEditor = dokan_get_lib('TextEditor');
-let GoogleMaps = dokan_get_lib('GoogleMaps');
-let Mapbox = dokan_get_lib('Mapbox');
-let RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
+    import colorPicker from "admin/components/ColorPicker.vue";
+    let TextEditor = dokan_get_lib('TextEditor');
+    let GoogleMaps = dokan_get_lib('GoogleMaps');
+    let Mapbox = dokan_get_lib('Mapbox');
+    let RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 
-export default {
-    name: 'Fields',
+    export default {
+        name: 'Fields',
 
-    components: {
-        colorPicker,
-        TextEditor,
-        GoogleMaps,
-        Mapbox,
-        RefreshSettingOptions,
-    },
+        components: {
+            colorPicker,
+            TextEditor,
+            GoogleMaps,
+            Mapbox,
+            RefreshSettingOptions,
+        },
 
-    props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
 
-    data() {
-        return {
-            repeatableItem: {},
-            hideMap: false,
-        }
-    },
+        data() {
+            return {
+                repeatableItem: {},
+                hideMap: false,
+                disbursementSettings: {
+                    quarterly: {
+                        second: '',
+                        third: '',
+                        fourth: '',
+                    },
+                    biweekly: {
+                        second: '',
+                    },
+                    visible: [],
+                },
+            }
+        },
+        mounted() {
+            this.setDisbursementQuarterlySettings();
+            this.setDisbursementBiweeklySettings();
+        },
 
     computed: {
-        shoudShow() {
-            let shoudShow = true;
+        shouldShow() {
+            let shouldShow = true;
 
             if ( this.fieldData.show_if ) {
                 const conditions = this.fieldData.show_if;
@@ -455,43 +746,49 @@ export default {
                     switch ( operator ) {
                         case 'greater_than':
                             if ( ! (dependencyValue > value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'greater_than_equal':
                             if ( ! (dependencyValue >= value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
                             if ( ! (dependencyValue < value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
                             if ( ! (dependencyValue <= value ) ) {
-                                shoudShow = false;
+                                shouldShow = false;
+                            }
+                            break;
+
+                        case 'contains':
+                            if ( ! Object.values(dependencyValue).includes( value ) ) {
+                                shouldShow = false;
                             }
                             break;
 
                         case 'equal':
                         default:
                             if ( dependencyValue != value ) {
-                                shoudShow = false;
+                                shouldShow = false;
                             }
                             break;
                     }
 
-                    if ( ! shoudShow ) {
+                    if ( ! shouldShow ) {
                         break;
                     }
                 }
             }
 
-            return shoudShow;
+            return shouldShow;
         },
 
         mapApiSource() {
@@ -618,84 +915,136 @@ export default {
                 }
             } );
 
-            return errorMessage;
-        }
-    }
+              return errorMessage;
+            },
 
-};
+            setDisbursementQuarterlySettings() {
+                if (  ! ( 'quarterly_schedule' in this.fieldValue ) ) {
+                    return;
+                }
+                if ( this.fieldValue['quarterly_schedule']['month'] === 'january' ) {
+                    this.disbursementSettings.quarterly.second = 'april';
+                    this.disbursementSettings.quarterly.third = 'july';
+                    this.disbursementSettings.quarterly.fourth = 'october';
+                } else if ( this.fieldValue['quarterly_schedule']['month'] === 'february' ) {
+                    this.disbursementSettings.quarterly.second = 'may';
+                    this.disbursementSettings.quarterly.third = 'august';
+                    this.disbursementSettings.quarterly.fourth = 'november';
+                } else if ( this.fieldValue['quarterly_schedule']['month'] === 'march' ) {
+                    this.disbursementSettings.quarterly.second = 'june';
+                    this.disbursementSettings.quarterly.third = 'september';
+                    this.disbursementSettings.quarterly.fourth = 'december';
+                }
+            },
+
+            setDisbursementBiweeklySettings() {
+                if (  ! ( 'biweekly_schedule' in this.fieldValue ) ) {
+                    return;
+                }
+                if ( this.fieldValue['biweekly_schedule']['week'] === '1' ) {
+                    this.disbursementSettings.biweekly.second = '3';
+                } else if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {
+                    this.disbursementSettings.biweekly.second = '4';
+                }
+            },
+
+            showSettingsField( fieldKey ) {
+                return ! this.hideWithdrawOption() && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
+            },
+
+            showDisbursementType( fieldKey ) {
+                return this.fieldValue['disbursement'][fieldKey] !== '';
+            },
+
+            hideWithdrawOption( ) {
+                return ( 'hide_withdraw_option' in this.fieldValue ) && this.fieldValue['hide_withdraw_option'] === 'on';
+            },
+        }
+    };
 </script>
 
 <style lang="less">
-span.repeatable-item-description {
-    color: #999;
-    font-size: 11px;
-    font-style: italic;
-}
-ul.dokan-settings-repeatable-list {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-ul.dokan-settings-repeatable-list li span.remove-item{
-    padding-top: 0px;
-    cursor: pointer;
-}
-.dokan-repetable-add-item-btn {
-    font-size: 16px !important;
-    font-weight: bold !important;
-    height: 25px !important;
-    line-height: 22px !important;
-}
-
-td.percent_fee, td.fixed_fee {
-    display: inline-block;
-}
-td.percent_fee input, td.fixed_fee input {
-    width: 60px;
-}
-tr.additional_fee .description {
-    margin-left: 10px;
-    margin-top: -10px;
-}
-.dokan-error {
-    color: red;
-    margin-top: -10px;
-    font-style: italic;
-}
-
-.dokan-input-validation-error {
-    border-color: red !important;
-}
-
-.dokan-error.combine-commission {
-    margin-left: 10px;
-}
-th.dokan-setting-warning {
-    padding: 10px 10px 10px 0;
-
-    .dokan-setting-warning-label {
-        color: #d63638;
-        font-weight: bold;
+    span.repeatable-item-description {
+        color: #999;
+        font-size: 11px;
+        font-style: italic;
+    }
+    ul.dokan-settings-repeatable-list {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+    ul.dokan-settings-repeatable-list li span.remove-item{
+        padding-top: 0px;
+        cursor: pointer;
+    }
+    .dokan-repetable-add-item-btn {
+        font-size: 16px !important;
+        font-weight: bold !important;
+        height: 25px !important;
+        line-height: 22px !important;
     }
 
-    .dashicons {
-        margin: 0px;
-        padding: 0px;
+    td.percent_fee, td.fixed_fee {
+        display: inline-block;
+    }
+    td.percent_fee input, td.fixed_fee input {
+        width: 60px;
+    }
+    tr.additional_fee .description {
+        margin-left: 10px;
+        margin-top: -10px;
+    }
+    .dokan-error {
+        color: red;
+        margin-top: -10px;
+        font-style: italic;
     }
 
-    .dokan-setting-warning-msg {
-        font-weight: 300;
+    .dokan-input-validation-error {
+      border-color: red !important;
     }
-}
-.dokan-settings-field-type-radio {
 
-    fieldset {
-        & > label:not(:last-child) {
-            margin-right: 12px !important;
+    .dokan-error.combine-commission {
+        margin-left: 10px;
+    }
+    th.dokan-setting-warning {
+        padding: 10px 10px 10px 0;
 
-            & > input[type="radio"] {
-                margin-right: 2px;
+        .dokan-setting-warning-label {
+            color: #d63638;
+            font-weight: bold;
+        }
+
+        .dashicons {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .dokan-setting-warning-msg {
+            font-weight: 300;
+        }
+    }
+    .dokan-settings-field-type-radio {
+
+        fieldset {
+            & > label:not(:last-child) {
+                margin-right: 12px !important;
+
+                & > input[type="radio"] {
+                    margin-right: 2px;
+                }
             }
         }
     }
-}
+    .col-3 {
+        width: 24.5%;
+        display: inline-block;
+
+        select {
+            width: 100%;
+        }
+    }
+    .dokan-schedule-week-day-container {
+        padding: 15px 0;
+    }
 </style>
