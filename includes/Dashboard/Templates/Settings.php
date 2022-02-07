@@ -28,8 +28,9 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_load_progressbar' ), 20 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_store_errors' ), 25 );
         add_action( 'dokan_settings_content', array( $this, 'render_settings_content' ), 10 );
-        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_paypal_settings' ), 10 );
-        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_bank_settings' ), 10 );
+        add_filter( 'dokan_vendor_rest_settings', array( $this, 'add_vendor_store_settings' ), 10 );
+        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_paypal_payment_settings' ), 10 );
+        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_bank_payment_settings' ), 10 );
     }
 
     /**
@@ -638,13 +639,128 @@ class Settings {
     }
 
     /**
+     * Add Store Settings for Dokan Seller
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_vendor_store_settings( $settings ) {
+        $settings['store_name'] = array(
+            'id'     => 'store_name',
+            'title'  => __( 'Store Name', 'dokan-lite' ),
+            'desc'   => __( 'The name of your store.', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'text',
+            'parent' => 'store_settings',
+        );
+        $settings['phone']      = array(
+            'id'     => 'phone',
+            'title'  => __( 'Phone', 'dokan-lite' ),
+            'desc'   => __( 'Enter your store phone', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-mobile"></i>',
+            'type'   => 'text',
+            'parent' => 'store_settings',
+        );
+        $settings['show_email'] = array(
+            'id'      => 'show_email',
+            'title'   => __( 'Show Email', 'dokan-lite' ),
+            'desc'    => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-envelope-o"></i>',
+            'type'    => 'checkbox',
+            'default' => 'no',
+            'options' => array(
+                'yes' => __( 'Yes', 'dokan-lite' ),
+                'no'  => __( 'No', 'dokan-lite' ),
+            ),
+            'parent'  => 'store_settings',
+        );
+        $settings['address']    = array(
+            'id'     => 'address',
+            'title'  => __( 'Address', 'dokan-lite' ),
+            'desc'   => __( 'Your store address', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-map-marker"></i>',
+            'type'   => 'section',
+            'parent' => 'store_settings',
+        );
+        $settings['street_1']   = array(
+            'id'     => 'street_1',
+            'title'  => __( 'Street', 'dokan-lite' ),
+            'desc'   => __( 'Street address', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent' => 'address',
+        );
+        $settings['street_2']   = array(
+            'id'     => 'street_2',
+            'title'  => __( 'Street Line 2', 'dokan-lite' ),
+            'desc'   => __( 'Street address continued', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent' => 'address',
+        );
+        $settings['city']       = array(
+            'id'     => 'city',
+            'title'  => __( 'City', 'dokan-lite' ),
+            'desc'   => __( 'City name', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent' => 'address',
+        );
+        $settings['zip']        = array(
+            'id'     => 'zip',
+            'title'  => __( 'Zip Code', 'dokan-lite' ),
+            'desc'   => __( 'Zip code', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent' => 'address',
+        );
+        $settings['country']    = array(
+            'id'      => 'country',
+            'title'   => __( 'Country', 'dokan-lite' ),
+            'desc'    => __( 'Select your country', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'select',
+            'options' => array( '' => __( 'Select a country&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_countries(),
+            'parent'  => 'address',
+        );
+        $settings['state']      = array(
+            'id'      => 'state',
+            'title'   => __( 'State', 'dokan-lite' ),
+            'desc'    => __( 'State or state code', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'select', // TODO: Add correct dropdown options for states
+            'options' => array( '' => __( 'Select a state&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_country_states(),
+            'parent'  => 'address',
+        );
+        $settings['store_banner'] = array(
+            'id'      => 'banner',
+            'title'   => __( 'Store Banner', 'dokan-lite' ),
+            'desc'    => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent'  => 'store_settings',
+        );
+        $settings['gravatar']   = array(
+            'id'      => 'gravatar',
+            'title'   => __( 'Store Gravatar', 'dokan-lite' ),
+            'desc'    => __( 'Upload a profile image for your store', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent'  => 'store_settings',
+        );
+
+        return $settings;
+    }
+
+    /**
      * Add paypal Settings for Dokan Seller
      *
      * @param array $settings
      *
      * @return array
      */
-    public function add_paypal_settings( $settings ) {
+    public function add_paypal_payment_settings( $settings ) {
         $settings['paypal'] = array(
             'id' => 'paypal',
             'title' => __( 'PayPal', 'dokan-lite' ),
@@ -673,75 +789,75 @@ class Settings {
      *
      * @return array
      */
-    public function add_bank_settings( $settings ) {
-        $settings['bank'] = array(
-            'id' => 'bank',
-            'title' => __( 'Bank', 'dokan-lite' ),
-            'desc' => __( 'Bank settings', 'dokan-lite' ),
-            'icon'  => '<i class="fa fa-bank"></i>',
-            'type' => 'section',
+    public function add_bank_payment_settings( $settings ) {
+        $settings['bank']                = array(
+            'id'     => 'bank',
+            'title'  => __( 'Bank', 'dokan-lite' ),
+            'desc'   => __( 'Bank settings', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-bank"></i>',
+            'type'   => 'section',
             'parent' => 'payments_settings',
         );
-        $settings['bank_ac_name'] = array(
-            'id' => 'ac_name',
-            'title' => __( 'Account Name', 'dokan-lite' ),
-            'desc' => __( 'Enter your bank account name.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+        $settings['bank_ac_name']        = array(
+            'id'     => 'ac_name',
+            'title'  => __( 'Account Name', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank account name.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );
-        $settings['bank_ac_number'] = array(
-            'id' => 'ac_number',
-            'title' => __( 'Account Number', 'dokan-lite' ),
-            'desc' => __( 'Enter your bank account number.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+        $settings['bank_ac_number']      = array(
+            'id'     => 'ac_number',
+            'title'  => __( 'Account Number', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank account number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );
-        $settings['bank_name'] = array(
-            'id' => 'bank_name',
-            'title' => __( 'Bank Name', 'dokan-lite' ),
-            'desc' => __( 'Enter your bank name.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+        $settings['bank_name']           = array(
+            'id'     => 'bank_name',
+            'title'  => __( 'Bank Name', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank name.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );
-        $settings['bank_addr'] = array(
-            'id' => 'bank_addr',
-            'title' => __( 'Bank Address', 'dokan-lite' ),
-            'desc' => __( 'Enter your bank address.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'textarea',
+        $settings['bank_addr']           = array(
+            'id'     => 'bank_addr',
+            'title'  => __( 'Bank Address', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank address.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'textarea',
             'parent' => 'bank',
             'active' => null,
         );
         $settings['bank_routing_number'] = array(
-            'id' => 'routing_number',
-            'title' => __( 'Routing Number', 'dokan-lite' ),
-            'desc' => __( 'Enter your bank routing number.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+            'id'     => 'routing_number',
+            'title'  => __( 'Routing Number', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank routing number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );
-        $settings['bank_iban'] = array(
-            'id' => 'iban',
-            'title' => __( 'IBAN', 'dokan-lite' ),
-            'desc' => __( 'Enter your IBAN number.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+        $settings['bank_iban']           = array(
+            'id'     => 'iban',
+            'title'  => __( 'IBAN', 'dokan-lite' ),
+            'desc'   => __( 'Enter your IBAN number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );
-        $settings['bank_swift'] = array(
-            'id' => 'swift',
-            'title' => __( 'Swift Code', 'dokan-lite' ),
-            'desc' => __( 'Enter your banks Swift Code.', 'dokan-lite' ),
-            'icon'  => '',
-            'type' => 'text',
+        $settings['bank_swift']          = array(
+            'id'     => 'swift',
+            'title'  => __( 'Swift Code', 'dokan-lite' ),
+            'desc'   => __( 'Enter your banks Swift Code.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
             'parent' => 'bank',
             'active' => null,
         );

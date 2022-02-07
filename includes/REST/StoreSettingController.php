@@ -119,10 +119,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_settings( $request ) {
-        $vendor   = $this->get_vendor();
-        $response = dokan_get_store_info( $vendor->id );
-
-        return rest_ensure_response( $response );
+        return rest_ensure_response( $this->vendor_settings->settings() );
     }
 
     /**

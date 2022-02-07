@@ -27,6 +27,32 @@ class Settings {
     }
 
     /**
+     * Vendors settings.
+     *
+     * @return array
+     */
+    public function settings() {
+        $settings = [
+            'store' => [
+                'id' => 'store_settings',
+                'type' => 'group',
+                'title' => __( 'Store Settings', 'dokan-lite' ),
+                'desc' => __( 'Configure your store settings', 'dokan-lite' ),
+                'icon' => '<i class="fa fa-cog"></i>',
+                'parent' => null,
+                'active' => null,
+                'options' => [],
+                'value' => '',
+            ],
+        ];
+
+        return array_map(
+            [ $this, 'populate_settings_value' ],
+            apply_filters( 'dokan_vendor_rest_settings', $settings )
+        );
+    }
+
+    /**
      * Vendors payment settings.
      *
      * @return array
@@ -52,6 +78,33 @@ class Settings {
         );
     }
 
+    /**
+     * Populate value and active state for every payment fields.
+     *
+     * @param array $settings Single settings field.
+     *
+     * @return array
+     */
+    public function populate_settings_value( $settings ) {
+        $settings_values = $this->vendor->get_shop_info();
+
+        if (
+            isset( $settings_values[ $settings['id'] ] )
+            && $settings['type'] !== 'section'
+        ) {
+            $settings['value'] = $settings_values[ $settings['id'] ];
+        } elseif ( isset( $settings_values[ $settings['parent'] ] ) ) {
+            $settings['value'] = $settings_values[ $settings['parent'] ][ $settings['id'] ];
+        } else {
+            $settings['value'] = null;
+        }
+
+        if ( $settings['type'] === 'image' ) {
+            $settings['url'] = ! empty( $settings['value'] ) ? wp_get_attachment_url( $settings['value'] ) : false;
+        }
+
+        return $settings;
+    }
     /**
      * Populate value and active state for every payment fields.
      *
