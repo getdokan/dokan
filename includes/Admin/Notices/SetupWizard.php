@@ -46,7 +46,7 @@ class SetupWizard {
         $notices[] = [
             'type'              => 'success',
             'description'       => __( '<strong>Welcome to Dokan</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'dokan-lite' ),
-            'priority'          => 1,
+            'priority'          => 2,
             'show_close_button' => true,
             'ajax_data'         => [
                 'dismiss_dokan_admin_setup_wizard_notice' => true,

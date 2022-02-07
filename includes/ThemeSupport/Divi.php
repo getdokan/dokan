@@ -41,14 +41,30 @@ class Divi {
      * @return void
      */
     public function style_reset() {
-        if ( ! dokan_is_store_page() && ! dokan_is_seller_dashboard() ) {
-            return;
+        global $wp;
+        $style = '';
+
+        // Add delivery time styles for checkout page.
+        if ( is_checkout() ) {
+            $style .= '#dokan-delivery-time-box .delivery-time-body input { padding: .9em;}';
+            $style .= '#dokan-delivery-time-box .delivery-time-body select { padding: .9em !important; margin-top: 12px !important;}';
+            $style .= '#dokan-delivery-time-box .delivery-time-body .delivery-group .vendor-info { margin-top: 12px !important;}';
         }
 
-        $style = '#left-area ul { padding: 0 !important;}';
-        $style .= '.media-button-select { font-size: 15px !important; padding-top: 0 !important}';
+        if ( ! dokan_is_store_page() && ! dokan_is_seller_dashboard() ) {
+            $style .= '#left-area ul { padding: 0 !important;}';
+            $style .= '.media-button-select { font-size: 15px !important; padding-top: 0 !important}';
+        }
 
-        wp_add_inline_style( 'woocommerce-layout', $style );
+        // Add delivery time styles for dokan seller order page.
+        if ( dokan_is_seller_dashboard() && isset( $wp->query_vars['orders'] ) && isset( $_GET['order_id'] ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $style .= '.delivery-time-date-picker { padding: .8em !important;}';
+        }
+
+        // If not empty our styles then add our line styles.
+        if ( ! empty( $style ) ) {
+            wp_add_inline_style( 'woocommerce-layout', $style );
+        }
     }
 
     /**
