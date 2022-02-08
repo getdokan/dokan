@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use WP_Error;
+
 class Settings {
 
     /**
@@ -93,8 +95,8 @@ class Settings {
             && $settings['type'] !== 'section'
         ) {
             $settings['value'] = $settings_values[ $settings['id'] ];
-        } elseif ( isset( $settings_values[ $settings['parent'] ] ) ) {
-            $settings['value'] = $settings_values[ $settings['parent'] ][ $settings['id'] ];
+        } elseif ( isset( $settings_values[ $settings['parent_id'] ] ) ) {
+            $settings['value'] = $settings_values[ $settings['parent_id'] ][ $settings['id'] ];
         } else {
             $settings['value'] = null;
         }
@@ -116,11 +118,11 @@ class Settings {
         $methods        = array_filter( dokan_withdraw_get_active_methods() );
         $payment_values = $this->vendor->get_payment_profiles();
 
-        if ( $payment['parent'] === 'payments_settings' ) {
+        if ( $payment['parent_id'] === 'payments_settings' ) {
             $payment['active'] = in_array( $payment['id'], $methods, true );
         }
 
-        $payment['value'] = isset( $payment_values[ $payment['parent'] ] ) ? $payment_values[ $payment['parent'] ] [ $payment['id'] ] : null;
+        $payment['value'] = isset( $payment_values[ $payment['parent_id'] ] ) ? $payment_values[ $payment['parent_id'] ] [ $payment['id'] ] : null;
 
         return $payment;
     }
@@ -142,6 +144,30 @@ class Settings {
         do_action( 'dokan_update_vendor', $this->vendor->get_id() );
         $this->vendor->popluate_store_data();
         return $this->payments();
+    }
+
+
+    /**
+     * Save payments settings value.
+     *
+     * @param \WP_REST_Request $requests
+     *
+     * @return array|WP_Error
+     */
+    public function save_settings( $requests ) {
+
+        $updated = dokan()->vendor->update( $this->vendor->get_id(), $requests->get_params() );
+
+        if ( is_wp_error( $updated ) ) {
+            return new WP_Error( $updated->get_error_code(), $updated->get_error_message() );
+        }
+
+        $this->vendor->popluate_store_data();
+
+        do_action( 'dokan_rest_store_settings_after_update', $this->vendor, $requests );
+
+        do_action( 'dokan_update_vendor', $this->vendor->get_id() );
+        return $this->settings();
     }
 
     /**

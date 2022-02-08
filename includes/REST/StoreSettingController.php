@@ -95,22 +95,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_settings( $request ) {
-        $vendor   = $this->get_vendor();
-        $params   = $request->get_params();
-        $store_id = dokan()->vendor->update( $vendor->get_id(), $params );
-
-        if ( is_wp_error( $store_id ) ) {
-            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
-        }
-
-        $store = dokan()->vendor->get( $store_id );
-
-        do_action( 'dokan_rest_store_settings_after_update', $store, $request );
-
-        $stores_data = $this->prepare_item_for_response( $store, $request );
-        $response    = rest_ensure_response( $stores_data );
-
-        return $response;
+        return rest_ensure_response( $this->vendor_settings->save_settings( $request ) );
     }
 
     /**

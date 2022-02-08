@@ -665,7 +665,7 @@ class Settings {
             'desc'   => __( 'The name of your store.', 'dokan-lite' ),
             'icon'   => '<i class="fa fa-shopping-cart"></i>',
             'type'   => 'text',
-            'parent' => 'store_settings',
+            'parent_id' => 'store_settings',
         );
         $settings['phone']      = array(
             'id'     => 'phone',
@@ -673,7 +673,7 @@ class Settings {
             'desc'   => __( 'Enter your store phone', 'dokan-lite' ),
             'icon'   => '<i class="fa fa-mobile"></i>',
             'type'   => 'text',
-            'parent' => 'store_settings',
+            'parent_id' => 'store_settings',
         );
         $settings['show_email'] = array(
             'id'      => 'show_email',
@@ -686,7 +686,7 @@ class Settings {
                 'yes' => __( 'Yes', 'dokan-lite' ),
                 'no'  => __( 'No', 'dokan-lite' ),
             ),
-            'parent'  => 'store_settings',
+            'parent_id'  => 'store_settings',
         );
         $settings['address']    = array(
             'id'     => 'address',
@@ -694,7 +694,7 @@ class Settings {
             'desc'   => __( 'Your store address', 'dokan-lite' ),
             'icon'   => '<i class="fa fa-map-marker"></i>',
             'type'   => 'section',
-            'parent' => 'store_settings',
+            'parent_id' => 'store_settings',
         );
         $settings['street_1']   = array(
             'id'     => 'street_1',
@@ -702,7 +702,7 @@ class Settings {
             'desc'   => __( 'Street address', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'address',
+            'parent_id' => 'address',
         );
         $settings['street_2']   = array(
             'id'     => 'street_2',
@@ -710,7 +710,7 @@ class Settings {
             'desc'   => __( 'Street address continued', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'address',
+            'parent_id' => 'address',
         );
         $settings['city']       = array(
             'id'     => 'city',
@@ -718,7 +718,7 @@ class Settings {
             'desc'   => __( 'City name', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'address',
+            'parent_id' => 'address',
         );
         $settings['zip']        = array(
             'id'     => 'zip',
@@ -726,7 +726,7 @@ class Settings {
             'desc'   => __( 'Zip code', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'address',
+            'parent_id' => 'address',
         );
         $settings['country']    = array(
             'id'      => 'country',
@@ -735,7 +735,7 @@ class Settings {
             'icon'    => '',
             'type'    => 'select',
             'options' => array( '' => __( 'Select a country&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_countries(),
-            'parent'  => 'address',
+            'parent_id'  => 'address',
         );
         $settings['state']      = array(
             'id'      => 'state',
@@ -744,7 +744,7 @@ class Settings {
             'icon'    => '',
             'type'    => 'select', // TODO: Add correct dropdown options for states
             'options' => array( '' => __( 'Select a state&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_country_states(),
-            'parent'  => 'address',
+            'parent_id'  => 'address',
         );
         $settings['store_banner'] = array(
             'id'      => 'banner',
@@ -752,7 +752,7 @@ class Settings {
             'desc'    => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
             'icon'    => '<i class="fa fa-picture-o"></i>',
             'type'    => 'image',
-            'parent'  => 'store_settings',
+            'parent_id'  => 'store_settings',
         );
         $settings['gravatar']   = array(
             'id'      => 'gravatar',
@@ -760,7 +760,23 @@ class Settings {
             'desc'    => __( 'Upload a profile image for your store', 'dokan-lite' ),
             'icon'    => '<i class="fa fa-picture-o"></i>',
             'type'    => 'image',
-            'parent'  => 'store_settings',
+            'parent_id'  => 'store_settings',
+        );
+        $settings['location']      = array(
+            'id'      => 'location',
+            'title'   => __( 'Store Location', 'dokan-lite' ),
+            'desc'    => __( 'Store Location GPS coordinate.', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-map-marked"></i>',
+            'type'    => 'text',
+            'parent_id'  => 'store_settings',
+        );
+        $settings['find_address']         = array(
+            'id'      => 'find_address',
+            'title'   => __( 'Store Address', 'dokan-lite' ),
+            'desc'    => __( 'Store Address', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-map"></i>',
+            'type'    => 'text',
+            'parent_id'  => 'store_settings',
         );
 
         return $settings;
@@ -780,7 +796,7 @@ class Settings {
             'desc' => __( 'Paypal settings', 'dokan-lite' ),
             'icon'  => '<i class="fa fa-paypal"></i>',
             'type' => 'section',
-            'parent' => 'payments_settings',
+            'parent_id' => 'payments_settings',
         );
         $settings['paypal_email'] = array(
             'id' => 'email',
@@ -788,7 +804,7 @@ class Settings {
             'desc' => __( 'Enter your paypal email address', 'dokan-lite' ),
             'icon'  => '<i class="fa fa-email"></i>',
             'type' => 'email',
-            'parent' => 'paypal',
+            'parent_id' => 'paypal',
             'active' => null,
         );
 
@@ -809,7 +825,7 @@ class Settings {
             'desc'   => __( 'Bank settings', 'dokan-lite' ),
             'icon'   => '<i class="fa fa-bank"></i>',
             'type'   => 'section',
-            'parent' => 'payments_settings',
+            'parent_id' => 'payments_settings',
         );
         $settings['bank_ac_name']        = array(
             'id'     => 'ac_name',
@@ -817,7 +833,7 @@ class Settings {
             'desc'   => __( 'Enter your bank account name.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_ac_number']      = array(
@@ -826,7 +842,7 @@ class Settings {
             'desc'   => __( 'Enter your bank account number.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_name']           = array(
@@ -835,7 +851,7 @@ class Settings {
             'desc'   => __( 'Enter your bank name.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_addr']           = array(
@@ -844,7 +860,7 @@ class Settings {
             'desc'   => __( 'Enter your bank address.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'textarea',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_routing_number'] = array(
@@ -853,7 +869,7 @@ class Settings {
             'desc'   => __( 'Enter your bank routing number.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_iban']           = array(
@@ -862,7 +878,7 @@ class Settings {
             'desc'   => __( 'Enter your IBAN number.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
         $settings['bank_swift']          = array(
@@ -871,7 +887,7 @@ class Settings {
             'desc'   => __( 'Enter your banks Swift Code.', 'dokan-lite' ),
             'icon'   => '',
             'type'   => 'text',
-            'parent' => 'bank',
+            'parent_id' => 'bank',
             'active' => null,
         );
 
