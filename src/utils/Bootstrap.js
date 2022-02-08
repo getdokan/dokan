@@ -10,6 +10,7 @@ import Mixin from './Mixin'
 import Debounce from 'debounce'
 import VersionCompare from '@/utils/VersionCompare'
 import AdminNotice from "../admin/components/AdminNotice.vue";
+import KnowledgeBase from "../admin/components/KnowledgeBase.vue";
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -119,6 +120,7 @@ window.dokan.libs['VendorSocialFields']  = VendorSocialFields;
 window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 window.dokan.libs['AdminNotice'] = AdminNotice;
+window.dokan.libs['KnowledgeBase'] = KnowledgeBase;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

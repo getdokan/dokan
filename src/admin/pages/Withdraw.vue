@@ -109,14 +109,16 @@
                 </template>
             </list-table>
         </div>
+        <KnowledgeBase></KnowledgeBase>
     </div>
 </template>
 
 <script>
-let ListTable    = dokan_get_lib('ListTable');
-let Modal        = dokan_get_lib('Modal');
-let Currency     = dokan_get_lib('Currency');
-let AdminNotice  = dokan_get_lib('AdminNotice');
+let ListTable     = dokan_get_lib('ListTable');
+let Modal         = dokan_get_lib('Modal');
+let Currency      = dokan_get_lib('Currency');
+let AdminNotice   = dokan_get_lib('AdminNotice');
+let KnowledgeBase = dokan_get_lib('KnowledgeBase');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
@@ -132,6 +134,7 @@ export default {
         Currency,
         UpgradeBanner,
         AdminNotice,
+        KnowledgeBase
     },
 
     data () {
