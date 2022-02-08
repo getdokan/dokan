@@ -25,7 +25,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         ?>
             <fieldset class="payment-field-<?php echo esc_attr( $method_key ); ?>">
                 <div class="dokan-form-group">
-                    <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( $method['title'] ) ?></label>
+                    <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) ); ?></label>
                     <div class="dokan-w6">
                         <?php call_user_func( $method['callback'], $profile_info ); ?>
                     </div> <!-- .dokan-w6 -->

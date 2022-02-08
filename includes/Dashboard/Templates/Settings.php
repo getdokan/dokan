@@ -28,6 +28,9 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_load_progressbar' ), 20 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_store_errors' ), 25 );
         add_action( 'dokan_settings_content', array( $this, 'render_settings_content' ), 10 );
+        add_filter( 'dokan_vendor_rest_settings', array( $this, 'add_vendor_store_settings' ), 10 );
+        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_paypal_payment_settings' ), 10 );
+        add_filter( 'dokan_vendor_rest_payment_settings', array( $this, 'add_bank_payment_settings' ), 10 );
     }
 
     /**
@@ -475,7 +478,7 @@ class Settings {
     function insert_settings_info() {
         $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
-        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
+        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : [];
         $post_data               = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['_wpnonce'] ) ) {
@@ -487,7 +490,7 @@ class Settings {
             // update profile settings info
             $social         = $post_data['settings']['social'];
             $social_fields  = dokan_get_social_profile_fields();
-            $dokan_settings = array( 'social' => array() );
+            $dokan_settings = [ 'social' => [] ];
 
             if ( is_array( $social ) ) {
                 foreach ( $social as $key => $value ) {
@@ -502,19 +505,68 @@ class Settings {
             $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
 
             if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
-                $default_locations = array(
+                $default_locations = [
                     'latitude'  => '',
                     'longitude' => '',
                     'address'   => '',
-                );
+                ];
             }
 
-            $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
-            $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+            $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
+            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+            $location         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
+            $dokan_days       = dokan_get_translated_days();
+            $dokan_store_time = [];
 
-            // update store setttings info
-            $dokan_settings = array(
+            // Get & set 7 days opening & closing time for update dokan store time.
+            foreach ( $dokan_days as $day_key => $day ) {
+                $opening_time = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
+                $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
+                $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+
+                // If open or closing time is array then return from here.
+                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
+                    continue;
+                }
+
+                // Check & make 12 hours format data for save.
+                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
+                $opening_time      = $opening_time ? $opening_time->format( 'g:i a' ) : '';
+
+                // Check & make 12 hours format data for save.
+                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $closing_timestamp = $closing_time ? $closing_time->getTimestamp() : $closing_time;
+                $closing_time      = $closing_time ? $closing_time->format( 'g:i a' ) : '';
+
+                // If our opening time is less than closing time.
+                if ( $opening_timestamp > $closing_timestamp ) {
+                    $user_data    = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings', true );
+                    $opening_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['opening_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['opening_time'] : '';
+                    $closing_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['closing_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['closing_time'] : '';
+                }
+
+                // If pass null value or our store is not open then our store will be close.
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
+                    $dokan_store_time[ $day_key ] = [
+                        'status'       => 'close',
+                        'opening_time' => '',
+                        'closing_time' => '',
+                    ];
+
+                    continue;
+                }
+
+                // Get and set current day's data for update dokan store time. Make dokan store time data here.
+                $dokan_store_time[ $day_key ] = [
+                    'status'       => $store_status,
+                    'opening_time' => $opening_time,
+                    'closing_time' => $closing_time,
+                ];
+            }
+
+            // Update store settings info.
+            $dokan_settings = [
                 'store_name'               => sanitize_text_field( $post_data['dokan_store_name'] ),
                 'store_ppp'                => absint( $post_data['dokan_store_ppp'] ),
                 'address'                  => isset( $post_data['dokan_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_address'] ) : $prev_dokan_settings['address'],
@@ -527,61 +579,25 @@ class Settings {
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
-                'dokan_store_time'         => array(
-                    'sunday'               => array(
-                        'status'           => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? sanitize_text_field( $post_data['sunday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? sanitize_text_field( $post_data['sunday_closing_time'] ) : '',
-                    ),
-                    'monday'               => array(
-                        'status'           => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? sanitize_text_field( $post_data['monday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? sanitize_text_field( $post_data['monday_closing_time'] ) : '',
-                    ),
-                    'tuesday'              => array(
-                        'status'           => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? sanitize_text_field( $post_data['tuesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? sanitize_text_field( $post_data['tuesday_closing_time'] ) : '',
-                    ),
-                    'wednesday'            => array(
-                        'status'           => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? sanitize_text_field( $post_data['wednesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? sanitize_text_field( $post_data['wednesday_closing_time'] ) : '',
-                    ),
-                    'thursday'             => array(
-                        'status'           => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? sanitize_text_field( $post_data['thursday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? sanitize_text_field( $post_data['thursday_closing_time'] ) : '',
-                    ),
-                    'friday'               => array(
-                        'status'           => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? sanitize_text_field( $post_data['friday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? sanitize_text_field( $post_data['friday_closing_time'] ) : '',
-                    ),
-                    'saturday'             => array(
-                        'status'           => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? sanitize_text_field( $post_data['saturday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
-                    ),
-                ),
+                'dokan_store_time'         => apply_filters( 'dokan_store_time', $dokan_store_time ),
                 'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
                 'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
-            );
+            ];
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
         } elseif ( wp_verify_nonce( sanitize_key( $post_data['_wpnonce'] ), 'dokan_payment_settings_nonce' ) ) {
 
             //update payment settings info
-            $dokan_settings = array(
-                'payment' => array(),
-            );
+            $dokan_settings = [
+                'payment' => [],
+            ];
 
             if ( isset( $post_data['settings']['bank'] ) ) {
                 $bank = $post_data['settings']['bank'];
 
-                $dokan_settings['payment']['bank'] = array(
+                $dokan_settings['payment']['bank'] = [
                     'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
                     'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
                     'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
@@ -589,19 +605,19 @@ class Settings {
                     'routing_number' => sanitize_text_field( $bank['routing_number'] ),
                     'iban'           => sanitize_text_field( $bank['iban'] ),
                     'swift'          => sanitize_text_field( $bank['swift'] ),
-                );
+                ];
             }
 
             if ( isset( $post_data['settings']['paypal'] ) ) {
-                $dokan_settings['payment']['paypal'] = array(
+                $dokan_settings['payment']['paypal'] = [
                     'email' => sanitize_email( $post_data['settings']['paypal']['email'] ),
-                );
+                ];
             }
 
             if ( isset( $post_data['settings']['skrill'] ) ) {
-                $dokan_settings['payment']['skrill'] = array(
+                $dokan_settings['payment']['skrill'] = [
                     'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
-                );
+                ];
             }
         }
 
@@ -633,5 +649,248 @@ class Settings {
         );
 
         return apply_filters( 'dokan_category', $dokan_category );
+    }
+
+    /**
+     * Add Store Settings for Dokan Seller
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_vendor_store_settings( $settings ) {
+        $settings['store_name'] = array(
+            'id'     => 'store_name',
+            'title'  => __( 'Store Name', 'dokan-lite' ),
+            'desc'   => __( 'The name of your store.', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'text',
+            'parent_id' => 'store_settings',
+        );
+        $settings['phone']      = array(
+            'id'     => 'phone',
+            'title'  => __( 'Phone', 'dokan-lite' ),
+            'desc'   => __( 'Enter your store phone', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-mobile"></i>',
+            'type'   => 'text',
+            'parent_id' => 'store_settings',
+        );
+        $settings['show_email'] = array(
+            'id'      => 'show_email',
+            'title'   => __( 'Show Email', 'dokan-lite' ),
+            'desc'    => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-envelope-o"></i>',
+            'type'    => 'checkbox',
+            'default' => 'no',
+            'options' => array(
+                'yes' => __( 'Yes', 'dokan-lite' ),
+                'no'  => __( 'No', 'dokan-lite' ),
+            ),
+            'parent_id'  => 'store_settings',
+        );
+        $settings['address']    = array(
+            'id'     => 'address',
+            'title'  => __( 'Address', 'dokan-lite' ),
+            'desc'   => __( 'Your store address', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-map-marker"></i>',
+            'type'   => 'section',
+            'parent_id' => 'store_settings',
+        );
+        $settings['street_1']   = array(
+            'id'     => 'street_1',
+            'title'  => __( 'Street', 'dokan-lite' ),
+            'desc'   => __( 'Street address', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'address',
+        );
+        $settings['street_2']   = array(
+            'id'     => 'street_2',
+            'title'  => __( 'Street Line 2', 'dokan-lite' ),
+            'desc'   => __( 'Street address continued', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'address',
+        );
+        $settings['city']       = array(
+            'id'     => 'city',
+            'title'  => __( 'City', 'dokan-lite' ),
+            'desc'   => __( 'City name', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'address',
+        );
+        $settings['zip']        = array(
+            'id'     => 'zip',
+            'title'  => __( 'Zip Code', 'dokan-lite' ),
+            'desc'   => __( 'Zip code', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'address',
+        );
+        $settings['country']    = array(
+            'id'      => 'country',
+            'title'   => __( 'Country', 'dokan-lite' ),
+            'desc'    => __( 'Select your country', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'select',
+            'options' => array( '' => __( 'Select a country&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_countries(),
+            'parent_id'  => 'address',
+        );
+        $settings['state']      = array(
+            'id'      => 'state',
+            'title'   => __( 'State', 'dokan-lite' ),
+            'desc'    => __( 'State or state code', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'select', // TODO: Add correct dropdown options for states
+            'options' => array( '' => __( 'Select a state&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_country_states(),
+            'parent_id'  => 'address',
+        );
+        $settings['store_banner'] = array(
+            'id'      => 'banner',
+            'title'   => __( 'Store Banner', 'dokan-lite' ),
+            'desc'    => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent_id'  => 'store_settings',
+        );
+        $settings['gravatar']   = array(
+            'id'      => 'gravatar',
+            'title'   => __( 'Store Gravatar', 'dokan-lite' ),
+            'desc'    => __( 'Upload a profile image for your store', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent_id'  => 'store_settings',
+        );
+        $settings['location']      = array(
+            'id'      => 'location',
+            'title'   => __( 'Store Location', 'dokan-lite' ),
+            'desc'    => __( 'Store Location GPS coordinate.', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-map-marked"></i>',
+            'type'    => 'text',
+            'parent_id'  => 'store_settings',
+        );
+        $settings['find_address']         = array(
+            'id'      => 'find_address',
+            'title'   => __( 'Store Address', 'dokan-lite' ),
+            'desc'    => __( 'Store Address', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-map"></i>',
+            'type'    => 'text',
+            'parent_id'  => 'store_settings',
+        );
+
+        return $settings;
+    }
+
+    /**
+     * Add paypal Settings for Dokan Seller
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_paypal_payment_settings( $settings ) {
+        $settings['paypal'] = array(
+            'id' => 'paypal',
+            'title' => __( 'PayPal', 'dokan-lite' ),
+            'desc' => __( 'Paypal settings', 'dokan-lite' ),
+            'icon'  => '<i class="fa fa-paypal"></i>',
+            'type' => 'section',
+            'parent_id' => 'payments_settings',
+        );
+        $settings['paypal_email'] = array(
+            'id' => 'email',
+            'title' => __( 'Email', 'dokan-lite' ),
+            'desc' => __( 'Enter your paypal email address', 'dokan-lite' ),
+            'icon'  => '<i class="fa fa-email"></i>',
+            'type' => 'email',
+            'parent_id' => 'paypal',
+            'active' => null,
+        );
+
+        return $settings;
+    }
+
+    /**
+     * Add bank Settings for Dokan Seller
+     *
+     * @param array $settings
+     *
+     * @return array
+     */
+    public function add_bank_payment_settings( $settings ) {
+        $settings['bank']                = array(
+            'id'     => 'bank',
+            'title'  => __( 'Bank', 'dokan-lite' ),
+            'desc'   => __( 'Bank settings', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-bank"></i>',
+            'type'   => 'section',
+            'parent_id' => 'payments_settings',
+        );
+        $settings['bank_ac_name']        = array(
+            'id'     => 'ac_name',
+            'title'  => __( 'Account Name', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank account name.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_ac_number']      = array(
+            'id'     => 'ac_number',
+            'title'  => __( 'Account Number', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank account number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_name']           = array(
+            'id'     => 'bank_name',
+            'title'  => __( 'Bank Name', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank name.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_addr']           = array(
+            'id'     => 'bank_addr',
+            'title'  => __( 'Bank Address', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank address.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'textarea',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_routing_number'] = array(
+            'id'     => 'routing_number',
+            'title'  => __( 'Routing Number', 'dokan-lite' ),
+            'desc'   => __( 'Enter your bank routing number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_iban']           = array(
+            'id'     => 'iban',
+            'title'  => __( 'IBAN', 'dokan-lite' ),
+            'desc'   => __( 'Enter your IBAN number.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+        $settings['bank_swift']          = array(
+            'id'     => 'swift',
+            'title'  => __( 'Swift Code', 'dokan-lite' ),
+            'desc'   => __( 'Enter your banks Swift Code.', 'dokan-lite' ),
+            'icon'   => '',
+            'type'   => 'text',
+            'parent_id' => 'bank',
+            'active' => null,
+        );
+
+        return $settings;
     }
 }

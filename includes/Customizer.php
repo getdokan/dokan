@@ -305,6 +305,8 @@ class Customizer {
             ]
         );
 
+        do_action( 'dokan_store_customizer_after_vendor_products', $wp_customize );
+
         $wp_customize->add_control(
             new Customizer\HeadingControl(
                 $wp_customize,
