@@ -70,6 +70,11 @@ class Storefront {
             $style .= '#dokan-seller-listing-wrap .store-content .store-data-container .store-data h2 {font-size: 24px; margin: 20px 0 10px 0}';
         }
 
+        // Check if the current page is dokan single store page and dokan pro elementor module activated.
+        if ( dokan_is_store_page() && dokan_pro()->module->is_active( 'elementor' ) ) {
+            $style .= '.elementor-widget-container .dokan-store-product-section li.product.type-product.status-publish { width: 30.4347826087%; float: left; margin-right: 4.347826087%; }';
+        }
+
         $style .= '.woocommerce-noreviews::before, .woocommerce-info::before, .woocommerce-error::before {font-weight: 900;}';
 
         wp_add_inline_style( 'dokan-style', $style );
