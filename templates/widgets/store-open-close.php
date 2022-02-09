@@ -8,9 +8,9 @@
  */
 ?>
 <div class="dokan-store-open-close">
-    <?php foreach( $dokan_store_time as $day => $value ) : ?>
+    <?php foreach( $dokan_days as $day => $value ) : ?>
     	<?php
-            $status  = isset( $value['open'] ) ? $value['open'] : $value['status'];
+            $status  = isset( $dokan_store_time[ $day ]['open'] ) ? $dokan_store_time[ $day ]['open'] : $dokan_store_time[ $day ]['status'];
             $to      = ! empty( dokan_get_translated_days( $status ) ) ? dokan_get_translated_days( $status ) : '-';
             $is_open =  $status == 'open' ? true : false;
 
@@ -19,7 +19,7 @@
 
             // If dokan pro exists then show multiple times.
             if ( dokan()->is_pro_exists() ) {
-                $opening_times = ! empty( $value['opening_time'] ) ? $value['opening_time'] : [];
+                $opening_times = ! empty( $dokan_store_time[ $day ]['opening_time'] ) ? $dokan_store_time[ $day ]['opening_time'] : [];
             }
 
             $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
@@ -29,8 +29,8 @@
             <?php
             // Get formatted store times.
             for ( $index = 0; $index < $times_length; $index++ ) :
-                $formatted_opening_time = dokan_current_datetime()->modify( $value['opening_time'][ $index ] )->format( wc_time_format() );
-                $formatted_closing_time = dokan_current_datetime()->modify( $value['closing_time'][ $index ] )->format( wc_time_format() );
+                $formatted_opening_time = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['opening_time'][ $index ] )->format( wc_time_format() );
+                $formatted_closing_time = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['closing_time'][ $index ] )->format( wc_time_format() );
 
                 echo sprintf(
                     __( '<label for="">%s</label> :<span> %s %s %s </span>', 'dokan-lite' ),
