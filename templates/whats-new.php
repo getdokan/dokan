@@ -4,6 +4,66 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.7',
+        'released' => '2022-02-03',
+        'changes'  => [
+            'New Feature'         => [
+                [
+                    'title'       => 'Added Featured, Latest, Best Selling and Top Rated Product sections under single store page',
+                    'description' => 'Now admin/vendor will be able to add multiple product sections under single store page. Kindly visit <a href="https://wedevs.com/docs/dokan/tutorials/how-to-create-product-sections-in-single-store-page" target="_blank">documentation</a> page to learn more about this feature.',
+                ],
+            ],
+            'Improvement'         => [
+                [
+                    'title'       => 'Updated UI for Withdraw menu',
+                    'description' => 'Withdraw page design has been updated.',
+                ],
+                [
+                    'title'       => 'Added Dokan upgrader to change dokan_withdraw table details column null',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added per_page and page param support on store products rest api',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated design for Upgrade to PRO popup',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated FontAwesome library from V4.7 to V5.15',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated chartjs library',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'fixed a css issue under Select2 library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Make Hello text translatable under product published email template',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a warning under single store page if store slug was invalid',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'prevent recursion while loading template if $name param is not empty',
+                    'description' => 'It was causing template to load multiple times if only store.php file was copied to theme folder, now has been fixed',
+                ],
+                [
+                    'title'       => 'When setting bulk regular prices from the vendor dashboard in a variable product the product stock status becomes out of stock. This issue has been fixed now.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.6',
         'released' => '2022-01-10',
         'changes'  => [

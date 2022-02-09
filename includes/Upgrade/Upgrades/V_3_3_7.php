@@ -27,4 +27,15 @@ class V_3_3_7 extends DokanUpgrader {
             }
         }
     }
+
+    /**
+     * Flush rewrite rules so that new menu is visible without permalink reset
+     *
+     * @since 3..3.7
+     *
+     * @return void
+     */
+    public static function flush_rewrite_rules() {
+        do_action( 'woocommerce_flush_rewrite_rules' );
+    }
 }
