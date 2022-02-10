@@ -72,7 +72,7 @@ class Storefront {
 
         // Check if the current page is dokan single store page and dokan pro elementor module activated.
         if ( dokan_is_store_page() && dokan_pro()->module->is_active( 'elementor' ) ) {
-            $style .= '.elementor-widget-container .dokan-store-product-section li.product.type-product.status-publish { width: 30.4347826087%; float: left; margin-right: 4.347826087%; }';
+            $style .= '@media(min-width: 768px) { .elementor-widget-container .dokan-store-product-section li.product.type-product.status-publish { width: 30.3%; float: left; margin-right: 4.3%; } }';
         }
 
         $style .= '.woocommerce-noreviews::before, .woocommerce-info::before, .woocommerce-error::before {font-weight: 900;}';
