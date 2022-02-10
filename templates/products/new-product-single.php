@@ -253,19 +253,14 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
 
                                         <?php
-                                            // $product_cat = -1;
-                                            // $term = array();
-                                            // $term = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids') );
-
-                                            // if ( $term ) {
-                                            //     $product_cat = reset( $term );
-                                            // }
-
-                                            // dokan_get_template_part('products/dokan-single-category', '', array( 'term' => get_term( $product_cat ) ) );
-
-                                            $product_cat = -1;
+                                            $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ? true : false;
                                             $terms = array();
                                             $terms = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'all') );
+
+                                            if ( $is_single ) {
+                                                $terms = [ end( $terms ) ];
+                                            }
+
                                             dokan_get_template_part('products/dokan-single-category', '', array( 'terms' => $terms ) );
                                         ?>
 

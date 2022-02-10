@@ -42,6 +42,7 @@
 <script>
     const dokan_all_product_categories = <?php echo json_encode( $all_categories ) ?>;
     const dokan_all_saved_product_categories = <?php echo json_encode( $term_ids ) ?>;
+    const dokan_is_single_category = <?php echo json_encode( $is_single ) ?>;
 </script>
 
 
@@ -71,7 +72,7 @@
 </span>
 <?php if ( ! $is_single ) : ?>
     <div class="dokan-form-group dokan-add-more-single-cat-container">
-        <div class="dokan-single-cat-add-btn" data-issingle="<?php echo $is_single; ?>">
+        <div class="dokan-single-cat-add-btn">
             <span><i class="fas fa-plus"></i></span>
         </div>
     </div>

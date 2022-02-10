@@ -15,6 +15,7 @@
 
     init: function() {
       boxCounter  = $('.dokan-add-new-cat-box').children().length + 1;
+      boxCounter <= 1 ? SingleCategory.addANewCatBox() : '';
       $('#dokan-single-categories-loader img').attr("src", dokan.ajax_loader);
       $('body').on('click', '.dokan-single-category-li', function() {
         let {catlevel,termId,name} = $(this).data();
@@ -363,17 +364,18 @@
         return element.cat_ID == id;
       } );
 
-      ui += category[0].parents.map( (element, index) => {
-        return `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${element.cat_ID}"></input>`;
-      } ).join('');
+      if ( ! dokan_is_single_category ) {
+        ui += category[0].parents.map( (element, index) => {
+          return `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${element.cat_ID}"></input>`;
+        } ).join('');
+      }
 
-      // $( '.dokan_product_cat' ).val(id);
       $( `.dokan-cih-level-${inputHolder}` ).html( ui );
     },
     setCatName: (name) => {
       $( `.dokan-ssct-level-${inputHolder}` ).html(name);
     },
-    addANewCatBox: ( issingle = true ) => {
+    addANewCatBox: () => {
       boxCounter++;
       let html = `
       <div class="dokan-select-single-category-container">
@@ -381,7 +383,7 @@
             <span id="dokan_product_cat_res" class="dokan-select-single-category-title dokan-ssct-level-${boxCounter}">- Select a category -</span>
             <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
         </div>
-            ${ ! issingle ? `
+            ${ ! dokan_is_single_category ? `
             <div class="dokan-select-single-category-remove-container">
                 <span class="dokan-select-single-category-remove"><i class="fas fa-times"></i></span>
             </div>`
@@ -407,7 +409,7 @@
       SingleCategory.hideCategoryModal();
     });
     $('body').on('click', '.dokan-single-cat-add-btn', function(){
-      SingleCategory.addANewCatBox($(this).data('issingle'));
+      SingleCategory.addANewCatBox();
     });
     $('body').on('click', '.dokan-select-single-category-remove-container', function(){
       $(this).closest( ".dokan-select-single-category-container" )[0].remove();
