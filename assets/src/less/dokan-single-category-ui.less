@@ -1,12 +1,44 @@
 .dokan-hide {
     display: none !important;
 }
-.dokan-select-single-category {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-    border: 1px solid #EDEDED;
+.dokan-select-single-category-container {
+  display: flex;
+
+  .dokan-select-single-category {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border: 1px solid #EDEDED;
+      cursor: pointer;
+      width: 100%;
+  }
+  .dokan-select-single-category-remove-container {
+    margin-top: 5px;
+    .dokan-select-single-category-remove {
+      padding: 7px 10px;
+      cursor: pointer;
+      margin-left: 5px;
+      border: 1px solid #EDEDED;
+      &:hover {
+        background-color: #fa4242;
+        color: #FFF
+      }
+    }
+  }
+}
+
+.dokan-add-more-single-cat-container {
+  display: flex;
+  flex-direction: row-reverse;
+  .dokan-single-cat-add-btn {
+    background-color: #EDEDED;
+    padding: 5px 25px;
     cursor: pointer;
+    &:hover {
+      background-color: #b3b0b0;
+      color: #FFF
+    }
+  }
 }
 
 /* The Modal (background) */

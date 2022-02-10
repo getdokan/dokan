@@ -1135,6 +1135,9 @@ class Ajax {
         $findable = ! empty( $_REQUEST['parents'] ) ? wp_parse_args( [$term_id], $parents ) : [$term_id];
         $loopable = ! empty( $_REQUEST['parents'] ) ? wp_parse_args( $parents, [0] ) : [0];
 
+        error_log( print_r( $findable, true ) );
+        error_log( print_r( $loopable, true ) );
+
         $category_storege = [];
         $sctoll_to_lavel  = 0;
 

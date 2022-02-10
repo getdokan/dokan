@@ -1,21 +1,81 @@
 <?php
-    $term_id = isset( $term ) && isset( $term->term_id ) ? $term->term_id : '';
-    $term_name = isset( $term ) && isset( $term->name ) ? $term->name : __( '- Select a category -', 'dokan-lite' );
-    $pop_up = isset( $pop_up ) ? true : false;
+    $term_ids  = isset( $terms ) ? $terms : [];
+    $term_name = __( '- Select a category -', 'dokan-lite' );
+    $pop_up    = isset( $pop_up ) ? true : false;
+    $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false;
+
+    $args = array(
+           'taxonomy'     => 'product_cat',
+           'orderby'      => 'name',
+           'show_count'   => 1,      // 1 for yes, 0 for no
+           'pad_counts'   => 1,      // 1 for yes, 0 for no
+           'hierarchical' => 1,      // 1 for yes, 0 for no
+           'title_li'     => '',
+           'hide_empty'   => 0,    );
+   $all_categories = get_categories( $args );
+
+   foreach ( $all_categories as $key => $value ) {
+        $children = get_terms( 'product_cat', array(
+            'parent'    => $value->term_id,
+            'hide_empty' => false
+        ) );
+
+        $children ? $all_categories[$key]->has_child = true : $all_categories[$key]->has_child = false;
+        $parents = [];
+        $parents = dokan_get_single_cat_parents( $parents, $all_categories, $value, $key );
+        $all_categories[$key]->parents = array_reverse( $parents );
+   }
+
+   function dokan_get_single_cat_parents ( $parents, $all_categories, $value, $key ) {
+        foreach ( $all_categories as $category ) {
+            if ( $category->term_id === $value->category_parent && $value->category_parent !== 0 ) {
+                array_push( $parents, $category );
+                $parents = dokan_get_single_cat_parents( $parents, $all_categories, $category, $key );
+            }
+        }
+
+        return $parents;
+   }
+
 ?>
+
+<script>
+    const dokan_all_product_categories = <?php echo json_encode( $all_categories ) ?>;
+    const dokan_all_saved_product_categories = <?php echo json_encode( $term_ids ) ?>;
+</script>
 
 
 <?php if ( ! $pop_up ) : ?>
-<input type="hidden" name="product_cat" class="dokan_product_cat" id="dokan_product_cat" value="<?php echo esc_attr( $term_id ); ?>">
 <!-- Trigger/Open The Modal -->
-<div class="dokan-form-group dokan-select-single-category" id="dokan-category-open-modal">
-    <span id="dokan_product_cat_res" class="dokan-select-single-category-title"><?php echo $term_name; ?></span>
-    <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
-
-    <div class="dokan-product-cat-alert dokan-hide">
-        <?php esc_html_e('Please choose a category!', 'dokan-lite' ); ?>
-    </div>
+<div class="dokan-form-group">
+<label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
 </div>
+<span class="dokan-add-new-cat-box">
+    <?php foreach ( $term_ids as $key => $term ) : ?>
+        <div class="dokan-select-single-category-container">
+            <div class="dokan-form-group dokan-select-single-category" data-dokansclevel="<?php echo $key; ?>" id="dokan-category-open-modal">
+                <span id="dokan_product_cat_res" class="dokan-select-single-category-title dokan-ssct-level-<?php echo $key; ?>"><?php echo get_term_field( 'name', $term, 'product_cat' ) ?></span>
+                <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
+
+            </div>
+            <?php if ( ! $is_single ) : ?>
+                <div class="dokan-select-single-category-remove-container">
+                    <span class="dokan-select-single-category-remove"><i class="fas fa-times"></i></span>
+                </div>
+            <?php endif; ?>
+            <span class="dokan-cat-inputs-holder dokan-cih-level-<?php echo $key; ?>" >
+                <input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat">
+            </span>
+        </div>
+    <?php endforeach; ?>
+</span>
+<?php if ( ! $is_single ) : ?>
+    <div class="dokan-form-group dokan-add-more-single-cat-container">
+        <div class="dokan-single-cat-add-btn" data-issingle="<?php echo $is_single; ?>">
+            <span><i class="fas fa-plus"></i></span>
+        </div>
+    </div>
+<?php endif; ?>
 <?php endif; ?>
 
 <!-- The Modal -->
