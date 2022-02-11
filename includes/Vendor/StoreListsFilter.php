@@ -68,7 +68,7 @@ class StoreListsFilter {
         dokan_get_template_part( 'store-lists-filter', '', [
             'stores'          => $stores,
             'number_of_store' => $stores['count'],
-            'sort_filters'    => $this->sort_by_options(),
+            'sort_filters'    => self::sort_by_options(),
             'sort_by'         => $sort_by,
         ] );
     }
@@ -99,8 +99,7 @@ class StoreListsFilter {
      */
     public function filter_pre_user_query( $args, $request ) {
         if ( ! empty( $request['stores_orderby'] ) ) {
-            $orderby         = wc_clean( $request['stores_orderby'] );
-            $args['orderby'] = $orderby;
+            $args['orderby'] = wc_clean( $request['stores_orderby'] );
         } else {
             $sort_by         = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
             $args['orderby'] = ( ! dokan()->is_pro_exists() && ! in_array( $sort_by, [ 'most_recent', 'total_orders' ] ) ) ? 'most_recent': $sort_by;
