@@ -258,10 +258,11 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             $terms = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'all') );
 
                                             if ( $is_single ) {
-                                                $terms = [ end( $terms ) ];
+                                                $terms = [ reset( $terms ) ];
                                             }
 
-                                            dokan_get_template_part('products/dokan-single-category', '', array( 'terms' => $terms ) );
+                                            dokan_get_template_part('products/dokan-category-header-ui', '', array( 'terms' => $terms ) );
+                                            dokan_get_template_part('products/dokan-category-ui', '', array( ) );
                                         ?>
 
                                     <div class="dokan-form-group">

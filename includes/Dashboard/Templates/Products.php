@@ -519,12 +519,12 @@ class Products {
     }
 
     /**
-     * Returns new single category select ui html elements.
+     * Returns new category select ui html elements.
      *
      * @return html
      */
     public function load_single_category_ui_on_popup() {
-        dokan_get_template_part('products/dokan-single-category', '', array( 'pop_up' => true ) );
+        dokan_get_template_part('products/dokan-category-ui', '', array() );
     }
 
     /**

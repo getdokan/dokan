@@ -94,44 +94,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 </div>
                 <div class="dokan-clearfix"></div>
                 <div class="product-full-container">
-                    <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
 
-                    <input type="hidden" name="product_cat" class="dokan_product_cat" id="dokan_product_cat" value="">
-                    <!-- Trigger/Open The Modal -->
-                    <div class="dokan-form-group dokan-select-single-category" id="dokan-category-open-modal">
-                        <span id="dokan_product_cat_res" class="dokan-select-single-category-title"><?php esc_attr_e( '- Select a category -', 'dokan-lite' ); ?></span>
-                        <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
-
-                        <div class="dokan-product-cat-alert dokan-hide">
-                            <?php esc_html_e('Please choose a category!', 'dokan-lite' ); ?>
-                        </div>
-                    </div>
-
-                    <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
-                        <div class="dokan-form-group">
-                            <?php
-                            $term = array();
-                            include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                            $drop_down_category = wp_dropdown_categories(  apply_filters( 'dokan_product_cat_dropdown_args', array(
-                                'show_option_none' => __( '', 'dokan-lite' ),
-                                'hierarchical'     => 1,
-                                'hide_empty'       => 0,
-                                'name'             => 'product_cat[]',
-                                'id'               => 'product_cat',
-                                'taxonomy'         => 'product_cat',
-                                'orderby'          => 'name',
-                                'title_li'         => '',
-                                'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => '',
-                                'selected'         => $term,
-                                'echo'             => 0,
-                                'walker'           => new TaxonomyDropdown()
-                            ) ) );
-
-                            echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-                            ?>
-                        </div>
-                    <?php endif; ?>
+                    <?php dokan_get_template_part('products/dokan-category-header-ui', '', array() ); ?>
 
                     <div class="dokan-form-group">
                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>

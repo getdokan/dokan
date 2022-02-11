@@ -14,8 +14,6 @@
   var SingleCategory = {
 
     init: function() {
-      boxCounter  = $('.dokan-add-new-cat-box').children().length + 1;
-      boxCounter <= 1 ? SingleCategory.addANewCatBox() : '';
       $('#dokan-single-categories-loader img').attr("src", dokan.ajax_loader);
       $('body').on('click', '.dokan-single-category-li', function() {
         let {catlevel,termId,name} = $(this).data();
@@ -24,15 +22,6 @@
         SingleCategory.setCatName( name );
         SingleCategory.removeAfterClickedUls( catlevel, termId );
 
-        // var data = {
-        //   action: 'dokan_json_get_add_product_categories',
-        //   level: catlevel,
-        //   term_id: termId,
-        //   selected: 0,
-        //   taxonomy: 'product_cat',
-        //   _wpnonce : dokan.nonce
-        // };
-        // SingleCategory.loadChildCategories( data, catlevel );
         SingleCategory.loadChildCategories( catlevel,termId,name );
       });
       $('body').on('click', '.dokan-cat-search-res-li', function() {
@@ -64,32 +53,6 @@
 
         SingleCategory.hideSearchRes();
         SingleCategory.scrollTo(UL.length);
-
-        // SingleCategory.loadingCategories();
-        // var data = {
-        //     action: 'dokan_json_load_selected_categories',
-        //     term_id: termid,
-        //     parents: allParents,
-        //     taxonomy: 'product_cat',
-        //     _wpnonce : dokan.nonce
-        // };
-        // $.post( dokan.ajaxurl, data, function( resp ) {
-        //   if ( resp.success ) {
-        //     SingleCategory.loadingCategories( false );
-
-        //     if ( ! resp.data.categories || resp.data.categories.length < 1) {
-        //       return;
-        //     }
-
-        //     categoriesState = resp.data.categories;
-        //     SingleCategory.updateCategoryUi();
-
-        //     SingleCategory.hideSearchRes();
-        //     SingleCategory.scrollTo(resp.data.scroll_to - 1);
-        //   } else {
-        //     SingleCategory.loadingCategories( false );
-        //   }
-        // });
       });
       $('body').on('keyup', '#dokan-single-cat-search-input', function() {
         let inputText = $(this).val();
@@ -123,35 +86,6 @@
     },
 
     doSearchCates: async ( text ) => {
-      // var data = {
-      //   action: 'dokan_json_search_product_categories',
-      //   text: text,
-      //   taxonomy: 'product_cat',
-      //   _wpnonce : dokan.nonce
-      // };
-
-      // progress = $.ajax({
-      //   type: 'POST',
-      //   data: data,
-      //   url: dokan.ajaxurl,
-      //   beforeSend : function() {
-      //     //checking progress status and aborting pending request if any
-      //     progress != null ? progress.abort() : '';
-      //   },
-      //   success: function(response) {
-      //     if ( response.success ) {
-      //       searchResultState = response.data;
-      //       SingleCategory.updateSearchResultUi();
-      //       SingleCategory.loadingCategories(false);
-      //       console.log(response.data);
-      //     }
-      //   },
-      //   complete: function(){
-      //     // after ajax xomplets progress set to null
-      //     progress = null;
-      //   }
-      // });
-
       let allCategories = [...dokan_all_product_categories];
       let searchResult = await allCategories.filter( ( category, index ) => {
         let fullText = category.cat_name;
@@ -184,31 +118,6 @@
     },
     loadAllParentCategories: () => {
       SingleCategory.loadingCategories();
-      // var data = {
-      //     action: 'dokan_json_get_add_product_categories',
-      //     level: 0,
-      //     term_id: 0,
-      //     selected: 0,
-      //     taxonomy: 'product_cat',
-      //     _wpnonce : dokan.nonce
-      // };
-      // $.post( dokan.ajaxurl, data, function( resp ) {
-      //   if ( resp.success ) {
-      //     SingleCategory.loadingCategories( false );
-
-      //     if ( ! resp.data.categories || resp.data.categories.length < 1) {
-      //       return;
-      //     }
-
-      //     categoriesState.push( resp.data );
-
-
-      //     SingleCategory.updateCategoryUi();
-      //   } else {
-      //     SingleCategory.loadingCategories( false );
-      //   }
-      // });
-
       categoriesState.push( SingleCategory.getCategoriesWithParentId() );
       SingleCategory.updateCategoryUi();
       SingleCategory.loadingCategories( false );
@@ -221,7 +130,7 @@
           return true;
         }
       });
-// console.log(parentId,categories,selectedId);
+
       return {
         categories: categories,
         level: level,
@@ -230,23 +139,6 @@
     },
     loadChildCategories: ( catlevel,termId,name ) => {
       SingleCategory.loadingCategories();
-
-      // $.post( dokan.ajaxurl, data, function( resp ) {
-      //   if ( resp.success ) {
-      //     SingleCategory.loadingCategories( false );
-
-      //     if ( ! resp.data.categories || resp.data.categories.length < 1) {
-      //       return;
-      //     }
-
-      //     categoriesState.push( resp.data );
-
-      //     SingleCategory.updateCategoryUi();
-      //     SingleCategory.scrollTo(catlevel - 1);
-      //   } else {
-      //     SingleCategory.loadingCategories( false );
-      //   }
-      // });
 
       let categories = SingleCategory.getCategoriesWithParentId( termId, catlevel+1 );
       categoriesState.push( categories );
@@ -272,7 +164,6 @@
     },
     getSearchedParentHistory: ( parents, searched ) => {
       let html = "";
-      // let allParentsLength =parents.length;
 
       html = parents.map( (element , index) => {
         return `<span class="dokan-cat-search-res-suggestion">${element.name}</span>
@@ -359,7 +250,7 @@
     },
 
     setCatId: (id) => {
-      let ui = `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${id}"></input>`;
+      let ui = `<input type="hidden" name="${ dokan_is_single_category ? 'product_cat' : 'product_cat[]' }" class="dokan_product_cat" id="dokan_product_cat" value="${id}"></input>`;
       let category = dokan_all_product_categories.filter( (element, index) => {
         return element.cat_ID == id;
       } );
