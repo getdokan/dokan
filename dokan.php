@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.2.15
+ * Version: 3.3.7
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
  * WC requires at least: 3.0
- * WC tested up to: 5.8.0
+ * WC tested up to: 6.1.1
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.2.15';
+    public $version = '3.3.7';
 
     /**
      * Instance of self
@@ -106,8 +106,9 @@ final class WeDevs_Dokan {
 
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
-        add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
-        add_action( 'admin_notices', [ $this, 'render_run_admin_setup_wizard_notice' ] );
+
+        // Register admin notices to container and load notices
+        $this->container['admin_notices'] = new \WeDevs\Dokan\Admin\Notices\Manager();
 
         $this->init_appsero_tracker();
 
@@ -340,8 +341,10 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Withdraw\Hooks();
         new \WeDevs\Dokan\Order\Hooks();
         new \WeDevs\Dokan\Product\Hooks();
+        new \WeDevs\Dokan\Vendor\Hooks();
         new \WeDevs\Dokan\Upgrade\Hooks();
         new \WeDevs\Dokan\Vendor\UserSwitch();
+        new \WeDevs\Dokan\CacheInvalidate();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
@@ -351,29 +354,28 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\Settings();
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
-            new \WeDevs\Dokan\Admin\Promotion();
-            new \WeDevs\Dokan\Admin\LimitedTimePromotion();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
-        $this->container['pageview']      = new \WeDevs\Dokan\PageViews();
-        $this->container['seller_wizard'] = new \WeDevs\Dokan\Vendor\SetupWizard();
-        $this->container['core']          = new \WeDevs\Dokan\Core();
-        $this->container['scripts']       = new \WeDevs\Dokan\Assets();
-        $this->container['email']         = new \WeDevs\Dokan\Emails\Manager();
-        $this->container['vendor']        = new \WeDevs\Dokan\Vendor\Manager();
-        $this->container['product']       = new \WeDevs\Dokan\Product\Manager();
-        $this->container['shortcodes']    = new \WeDevs\Dokan\Shortcodes\Shortcodes();
-        $this->container['registration']  = new \WeDevs\Dokan\Registration();
-        $this->container['order']         = new \WeDevs\Dokan\Order\Manager();
-        $this->container['api']           = new \WeDevs\Dokan\REST\Manager();
-        $this->container['withdraw']      = new \WeDevs\Dokan\Withdraw\Manager();
-        $this->container['dashboard']     = new \WeDevs\Dokan\Dashboard\Manager();
-        $this->container['commission']    = new \WeDevs\Dokan\Commission();
-        $this->container['customizer']    = new \WeDevs\Dokan\Customizer();
-        $this->container['upgrades']      = new \WeDevs\Dokan\Upgrade\Manager();
+        $this->container['pageview']         = new \WeDevs\Dokan\PageViews();
+        $this->container['seller_wizard']    = new \WeDevs\Dokan\Vendor\SetupWizard();
+        $this->container['core']             = new \WeDevs\Dokan\Core();
+        $this->container['scripts']          = new \WeDevs\Dokan\Assets();
+        $this->container['email']            = new \WeDevs\Dokan\Emails\Manager();
+        $this->container['vendor']           = new \WeDevs\Dokan\Vendor\Manager();
+        $this->container['product']          = new \WeDevs\Dokan\Product\Manager();
+        $this->container['shortcodes']       = new \WeDevs\Dokan\Shortcodes\Shortcodes();
+        $this->container['registration']     = new \WeDevs\Dokan\Registration();
+        $this->container['order']            = new \WeDevs\Dokan\Order\Manager();
+        $this->container['api']              = new \WeDevs\Dokan\REST\Manager();
+        $this->container['withdraw']         = new \WeDevs\Dokan\Withdraw\Manager();
+        $this->container['dashboard']        = new \WeDevs\Dokan\Dashboard\Manager();
+        $this->container['commission']       = new \WeDevs\Dokan\Commission();
+        $this->container['customizer']       = new \WeDevs\Dokan\Customizer();
+        $this->container['upgrades']         = new \WeDevs\Dokan\Upgrade\Manager();
+        $this->container['product_sections'] = new \WeDevs\Dokan\ProductSections\Manager();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
@@ -466,7 +468,7 @@ final class WeDevs_Dokan {
         }
 
         $links[] = '<a href="' . admin_url( 'admin.php?page=dokan#/settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
-        $links[] = '<a href="https://docs.wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
+        $links[] = '<a href="https://wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
     }
@@ -478,57 +480,6 @@ final class WeDevs_Dokan {
      */
     public function init_appsero_tracker() {
         $this->container['tracker'] = new \WeDevs\Dokan\Tracker();
-    }
-
-    /**
-     * Missing woocomerce notice
-     *
-     * @since 2.9.16
-     *
-     * @return void
-     */
-    public function render_missing_woocommerce_notice() {
-        // check wooCommerce is available and active
-        $has_woocommerce = $this->has_woocommerce();
-
-        // check if woocommerce installed
-        $woocommerce_installed = $this->is_woocommerce_installed();
-
-        if ( ( ! $has_woocommerce || ! $woocommerce_installed ) && current_user_can( 'activate_plugins' ) ) {
-            dokan_get_template(
-                'admin-notice-dependencies.php', [
-					'has_woocommerce' => $has_woocommerce,
-					'woocommerce_installed' => $woocommerce_installed,
-				]
-            );
-        }
-    }
-
-    /**
-     * Render run admin setup wizard notice
-     *
-     * @since 2.9.27
-     *
-     * @return void
-     */
-    public function render_run_admin_setup_wizard_notice() {
-        $ran_wizard = get_option( 'dokan_admin_setup_wizard_ready', false );
-
-        if ( $ran_wizard ) {
-            return;
-        }
-
-        // If vendor found, don't show the setup wizard as admin already ran the `setup wizard`
-        // without the `dokan_admin_setup_wizard_ready` option.
-        $vendor_count = dokan_get_seller_status_count();
-
-        if ( ! empty( $vendor_count['active'] ) ) {
-            return update_option( 'dokan_admin_setup_wizard_ready', true );
-        }
-
-        require_once DOKAN_INC_DIR . '/functions.php';
-
-        dokan_get_template( 'admin-setup-wizard/run-wizard-notice.php' );
     }
 
     /**

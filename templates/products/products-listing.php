@@ -53,7 +53,7 @@
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                            <i class="fa fa-briefcase">&nbsp;</i>
+                                            <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
                                     <?php endif ?>
@@ -104,13 +104,14 @@
                                             <th><?php esc_html_e( 'SKU', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Stock', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
-                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?><?php echo '<span class="tips earning-info" title="' . esc_html__( 'Earning could be grater then or less then the calculated value based on different criteria like tax and shipping fee receiver', 'dokan-lite' ) . '"></span>';?></th>
+                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?><?php echo '<span class="tips earning-info" title="' . esc_html__( 'Earning could be greater than or less than the calculated value based on different criteria like tax and shipping fee receiver', 'dokan-lite' ) . '"></span>';?></th>
                                             <th><?php esc_html_e( 'Type', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Views', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <?php do_action( 'dokan_product_list_before_table_body_start' ); ?>
                                         <?php
                                         $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
@@ -248,7 +249,7 @@
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                            <i class="fa fa-briefcase">&nbsp;</i>
+                                            <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
                                     <?php endif ?>

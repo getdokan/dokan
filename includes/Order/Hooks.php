@@ -54,6 +54,52 @@ class Hooks {
 
         // remove customer info from order export based on setting
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
+
+        // Change order meta key and value.
+        add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
+        add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
+
+        // Init Order Cache Class
+        new OrderCache();
+    }
+
+    /**
+     * Change order item display meta key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $display_key
+     *
+     * @return void
+     */
+    public function change_order_item_display_meta_key( $display_key ) {
+        if ( 'seller_id' === $display_key ) {
+            return __( 'Vendor', 'dokan-lite' );
+        }
+        return $display_key;
+    }
+
+    /**
+     * Change order item display meta value.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $display_value
+     * @param $meta
+     *
+     * @return mixed
+     */
+    public function change_order_item_display_meta_value( $display_value, $meta ) {
+        if ( 'seller_id' === $meta->key ) {
+            $vendor = dokan()->vendor->get( $display_value );
+            $url    = get_edit_user_link( $display_value );
+            if ( function_exists( 'dokan_pro' ) ) {
+                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            }
+
+            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
+        }
+        return $display_value;
     }
 
     /**
@@ -286,24 +332,38 @@ class Hooks {
      * @throws Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon ) {
-        $coupon_id         = $coupon->get_id();
-        $vendor_id         = get_post_field( 'post_author', $coupon_id );
-        $available_vendors = [];
+        $available_vendors  = [];
+        $available_products = [];
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            $product_id = $item['data']->get_id();
+
+            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
+            $available_products[] = $product_id;
+        }
+
+        $available_vendors = array_unique( $available_vendors );
+
+        if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
+            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
+        }
+
+        // Make sure applied coupon created by admin
+        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $valid, $coupon, $available_vendors, $available_products ) ) {
+            return true;
+        }
 
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
         }
 
-        // a coupon must be bound with a product
+        // A coupon must be bound with a product
         if ( count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[] = get_post_field( 'post_author', $product_id );
-        }
+        $coupon_id = $coupon->get_id();
+        $vendor_id = intval( get_post_field( 'post_author', $coupon_id ) );
 
         if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
             return false;

@@ -44,11 +44,17 @@
             window.google.maps.event.addListener( gmap, 'click', function ( event ) {
                 marker.setPosition( event.latLng );
                 updatePositionInput( event.latLng );
+                reverseGeocode( event.latLng );
             } );
 
             window.google.maps.event.addListener( marker, 'drag', function ( event ) {
                 updatePositionInput(event.latLng );
             } );
+
+            window.google.maps.event.addListener( marker, 'drag', dokan_debounce_delay(
+                ( event ) => reverseGeocode( event.latLng ),
+                1000
+            ) );
 
         } catch( e ) {
             console.log( 'Google API not found.' );
@@ -119,6 +125,51 @@
                     }, 1500);
                 }
             });
+        }
+
+        function reverseGeocode( latLng ) {
+            const data = {
+                location: {
+                    lat: latLng.lat(),
+                    lng: latLng.lng(),
+                }
+            };
+
+            geocoder.geocode( data )
+                .then( function ( { results: addresses } ) {
+                    if ( addresses.length === 0 ) {
+                        return;
+                    }
+
+                    let address = addresses[0].address_components
+                        .filter( component => ! component.types.includes( 'plus_code' ) )
+                        .map( component => component.long_name )
+                        .join( ', ' );
+
+                    if ( address.length === 0 ) {
+                        address = addresses[0].address_components
+                            .map( component => component.long_name )
+                            .join( ', ' );
+                    }
+
+                    $input_add.val( address );
+                } )
+                .catch( e => console.log( e ) );
+        }
+
+        function dokan_debounce_delay( callback, ms ) {
+            let timer = 0;
+
+            return function() {
+                const context = this,
+                    args = arguments;
+
+                clearTimeout( timer );
+
+                timer = setTimeout( function () {
+                    callback.apply( context, args );
+                }, ms || 0);
+            };
         }
     });
 </script>

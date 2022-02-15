@@ -40,6 +40,9 @@ class VendorNewOrder extends WC_Email {
         add_action( 'woocommerce_order_status_failed_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
         add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_processing_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_completed_notification', array( $this, 'trigger' ), 10, 2 );
+        add_action( 'woocommerce_order_status_cancelled_to_on-hold_notification', array( $this, 'trigger' ), 10, 2 );
 		//Prevent admin email for sub-order
         add_filter( 'woocommerce_email_enabled_new_order', [ $this, 'prevent_sub_order_admin_email' ], 10, 2 );
         // Call parent constructor.
@@ -127,7 +130,7 @@ class VendorNewOrder extends WC_Email {
                 'plain_text'    => false,
                 'email'         => $this,
                 'order_info'    => $this->order_info,
-            ), 'dokan', $this->template_base
+            ), 'dokan/', $this->template_base
         );
     }
 

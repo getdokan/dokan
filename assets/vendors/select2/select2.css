@@ -8,7 +8,7 @@
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    height: 33;
+    height: 33px;
     user-select: none;
     -webkit-user-select: none; }
     .select2-container .select2-selection--single .select2-selection__rendered {

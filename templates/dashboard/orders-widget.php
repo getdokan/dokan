@@ -12,7 +12,7 @@
 ?>
 
 <div class="dashboard-widget orders">
-    <div class="widget-title"><i class="fa fa-shopping-cart"></i> <?php esc_attr_e( 'Orders', 'dokan-lite' ); ?></div>
+    <div class="widget-title"><i class="fas fa-shopping-cart"></i> <?php esc_attr_e( 'Orders', 'dokan-lite' ); ?></div>
 
     <div class="content-half-part">
         <ul class="list-unstyled list-count">
@@ -75,8 +75,8 @@
                 labels: labels,
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: false
                 }
             }
         });
