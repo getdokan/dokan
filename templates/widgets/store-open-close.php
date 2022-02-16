@@ -2,56 +2,73 @@
 /**
  * Dokan Store Open Close Time Widget
  *
- * @since 2.7.3
+ * @since 3.3.8
  *
  * @package dokan
  */
 ?>
 <div class="dokan-store-open-close">
     <?php foreach( $dokan_days as $day => $value ) : ?>
-    	<?php
-            $status  = isset( $dokan_store_time[ $day ]['open'] ) ? $dokan_store_time[ $day ]['open'] : $dokan_store_time[ $day ]['status'];
-            $to      = ! empty( dokan_get_translated_days( $status ) ) ? dokan_get_translated_days( $status ) : '-';
-            $is_open =  $status == 'open' ? true : false;
+        <?php
+        if ( ! isset( $dokan_store_time[ $day ] ) || ( isset( $dokan_store_time[ $day ]['status'] ) && 'close' === $dokan_store_time[ $day ]['status'] ) ) {
+            echo sprintf(
+                '<div class="open-close-day %1$s-time"><label for="">%2$s</label> :<span class="store-time"> %3$s </span></div>',
+                esc_attr( $day ),
+                esc_html( ucfirst( dokan_get_translated_days( $day ) ) ),
+                __( 'Off Day', 'dokan-lite' )
+                );
+            continue;
+        }
 
+        // get store opening time
+        $opening_times = ! empty( $dokan_store_time[ $day ]['opening_time'] ) ? $dokan_store_time[ $day ]['opening_time'] : [];
+
+        // If dokan pro doesn't exists then show single item.
+        if ( ! dokan()->is_pro_exists() ) {
             // Get single time.
-            $opening_times = dokan_get_store_times( $day, 'opening_time' );
+            $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : [];
+        }
 
-            // If dokan pro exists then show multiple times.
-            if ( dokan()->is_pro_exists() ) {
-                $opening_times = ! empty( $dokan_store_time[ $day ]['opening_time'] ) ? $dokan_store_time[ $day ]['opening_time'] : [];
-            }
-
-            $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
+        $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
+        // return if opening time length is zero
+        if ( empty( $times_length ) ) {
+            continue;
+        }
         ?>
 
         <div class="open-close-day <?php echo esc_attr( $day ) . '-time' ?>">
             <?php
             // Get formatted store times.
             for ( $index = 0; $index < $times_length; $index++ ) :
-                $formatted_opening_time = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['opening_time'][ $index ] )->format( wc_time_format() );
-                $formatted_closing_time = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['closing_time'][ $index ] )->format( wc_time_format() );
+                $opening_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['opening_time'][ $index ] )->getTimestamp();
+                $closing_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['closing_time'][ $index ] )->getTimestamp();
+                $formatted_opening_time = dokan_format_date( $opening_timestamps, wc_time_format() );
+                $formatted_closing_time = dokan_format_date( $closing_timestamps, wc_time_format() );
 
                 echo sprintf(
-                    __( '<label for="">%s</label> :<span> %s %s %s </span>', 'dokan-lite' ),
+                    '<label for="">%1$s</label> :<span class="store-time"> %2$s </span> <span class="separator">-</span> %3$s</span>',
                     $index === 0 ? esc_html( ucfirst( dokan_get_translated_days( $day ) ) ) : '',
-                    $is_open ? esc_html( $formatted_opening_time ) : '',
-                    $to,
-                    $is_open ? esc_html( $formatted_closing_time ) : '',
+                    esc_html( $formatted_opening_time ),
+                    esc_html( $formatted_closing_time )
                 );
             endfor;
             ?>
         </div>
     <?php endforeach; ?>
 </div>
+
 <style>
 	.dokan-store-open-close label {
-	    width: 100px;
+        width: 100px;
         display: inline-block;
 	}
-	.dokan-store-open-close span {
+	.dokan-store-open-close .store-time {
+        display: inline-block;
 	    padding-left: 10px;
 	}
+    .doakn-store-open-close .separator {
+        padding: 0 5px;
+    }
     .dokan-store-open-close .open-close-day {
         padding-top: 10px;
     }
