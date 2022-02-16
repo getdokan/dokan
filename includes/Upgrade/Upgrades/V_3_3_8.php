@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_3_8_VendorStoreTimes;
 
 class V_3_3_8 extends DokanUpgrader {
 
@@ -11,32 +12,31 @@ class V_3_3_8 extends DokanUpgrader {
      * store time gets single data in usermeta. Now, we
      * are setting data as array for multiple store times.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.3.8
      *
      * @return void
      */
     public static function update_withdraw_table_column() {
-        $current_user_id = dokan_get_current_user_id();
-        $user_store_info = dokan_get_store_info( $current_user_id );
+        $i         = 0;
+        $vendors   = [];
+        $processor = new V_3_3_8_VendorStoreTimes();
 
-        foreach ( dokan_get_translated_days() as $day => $value ) {
-            if ( empty( $user_store_info['dokan_store_time'][ $day ] ) ) {
-                $user_store_info['dokan_store_time'][ $day ] = [
-                    'status'       => 'close',
-                    'opening_time' => [],
-                    'closing_time' => [],
-                ];
+        while ( null !== $vendors ) {
+            $args = [
+                'offset' => $i++,
+                'number' => 10,
+                'fields' => 'ID',
+            ];
 
-                continue;
-            }
+            $vendors = dokan()->vendor->all( $args );
 
-            // Sets store open & close time as array value.
-            if ( ! is_array( $user_store_info['dokan_store_time'][ $day ]['opening_time'] ) || ! is_array( $user_store_info['dokan_store_time'][ $day ]['closing_time'] ) ) {
-                $user_store_info['dokan_store_time'][ $day ]['opening_time'] = (array) $user_store_info['dokan_store_time'][ $day ]['opening_time'];
-                $user_store_info['dokan_store_time'][ $day ]['closing_time'] = (array) $user_store_info['dokan_store_time'][ $day ]['closing_time'];
+            if ( ! empty( $vendors ) ) {
+                $processor->push_to_queue( $vendors );
+            } else {
+                $vendors = null;
             }
         }
 
-        update_user_meta( $current_user_id, 'dokan_profile_settings', $user_store_info );
+        $processor->dispatch_process();
     }
 }
