@@ -3231,9 +3231,9 @@ function dokan_get_store_times( $day, $return_type, $index = null, $store_id = n
  * @return bool
  */
 function dokan_is_store_open( $user_id ) {
-    $store_user         = dokan()->vendor->get( $user_id );
-    $store_info         = $store_user->get_shop_info();
-    $dokan_store_times  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $store_user        = dokan()->vendor->get( $user_id );
+    $store_info        = $store_user->get_shop_info();
+    $dokan_store_times = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 
     $current_time = dokan_current_datetime();
     $today        = strtolower( $current_time->format( 'l' ) );

@@ -2,7 +2,7 @@
 /**
  * Dokan Store Open Close Time Widget
  *
- * @since 3.3.8
+ * @since 2.7.3
  *
  * @package dokan
  */
@@ -20,7 +20,7 @@
             continue;
         }
 
-        // get store opening time
+        // Get store opening time.
         $opening_times = ! empty( $dokan_store_time[ $day ]['opening_time'] ) ? $dokan_store_time[ $day ]['opening_time'] : [];
 
         // If dokan pro doesn't exists then show single item.
@@ -30,7 +30,8 @@
         }
 
         $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
-        // return if opening time length is zero
+
+        // Return if opening time length is zero.
         if ( empty( $times_length ) ) {
             continue;
         }
