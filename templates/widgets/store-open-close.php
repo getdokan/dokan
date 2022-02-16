@@ -46,7 +46,7 @@
                 $formatted_closing_time = dokan_format_date( $closing_timestamps, wc_time_format() );
 
                 echo sprintf(
-                    '<label for="">%1$s</label> :<span class="store-time"> %2$s </span> <span class="separator">-</span> %3$s</span>',
+                    '<label for="">%1$s</label> :<span class="store-time">%2$s <span class="separator">-</span> %3$s</span>',
                     $index === 0 ? esc_html( ucfirst( dokan_get_translated_days( $day ) ) ) : '',
                     esc_html( $formatted_opening_time ),
                     esc_html( $formatted_closing_time )
@@ -66,10 +66,10 @@
         display: inline-block;
 	    padding-left: 10px;
 	}
-    .doakn-store-open-close .separator {
-        padding: 0 5px;
-    }
     .dokan-store-open-close .open-close-day {
         padding-top: 10px;
+    }
+    .dokan-store-open-close .store-time .separator {
+        padding: 0 5px;
     }
 </style>
