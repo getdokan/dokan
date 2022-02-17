@@ -72,6 +72,7 @@
         display: flex;
         flex-direction: column;
         padding-left: 10px;
+        white-space: nowrap;
     }
     .dokan-store-open-close .open-close-day {
         padding-top: 10px;
