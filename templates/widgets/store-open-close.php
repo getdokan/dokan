@@ -67,7 +67,6 @@
     }
 	.dokan-store-open-close .working-day {
         width: 100px;
-        display: inline-block;
 	}
     .dokan-store-open-close .store-times {
         display: flex;
