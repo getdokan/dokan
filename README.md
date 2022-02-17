@@ -5,9 +5,9 @@
 **Requires at least:** 4.4  
 **Tested up to:** 5.9  
 **WC requires at least:** 3.0  
-**WC tested up to:** 6.1.1  
+**WC tested up to:** 6.2.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.3.7  
+**Stable tag:** 3.3.8  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -305,6 +305,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.3.8 ( Feb 17, 2022 ) ###
+
+- **fix:** Store open close time widget wasn't working
 
 ### v3.3.7 ( Feb 03, 2022 ) ###
 
