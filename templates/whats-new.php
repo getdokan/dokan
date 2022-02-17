@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.8',
+        'released' => '2022-02-17',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Store open close time widget wasn\'t working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.7',
         'released' => '2022-02-03',
         'changes'  => [
