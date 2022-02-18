@@ -274,7 +274,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         $chosen_child[$term_id] = $first_parent;
                                                     }
 
-                                                    $chosen_cat = array_keys( array_unique( $chosen_child ) );
+                                                    $chosen_cat = array_keys( array_unique( array_filter( $chosen_child ) ) );
                                                 }
                                             }
 
