@@ -253,15 +253,32 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
 
                                         <?php
-                                            $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ? true : false;
-                                            $terms = array();
-                                            $terms = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'all') );
+                                            $is_single  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ? true : false;
+                                            $terms      = array();
+                                            $terms      = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' =>  'all') );
+                                            $chosen_cat = get_post_meta( $post_id, 'chosen_product_cat', true );
 
-                                            if ( $is_single ) {
-                                                $terms = [ reset( $terms ) ];
+                                            if ( ! $chosen_cat || ! is_array( $chosen_cat ) || sizeof( $chosen_cat ) < 1 ) {
+                                                if ( sizeof( $terms ) <= 1 ) {
+                                                    $chosen_cat = [ reset( $terms ) ];
+                                                } else {
+                                                    $chosen_cat   = $terms;
+                                                    $chosen_child = array_map( function( $cat ) {
+                                                        $term_id      = ! empty( $cat->term_id ) ? $cat->term_id: $cat;
+                                                        $all_children = get_term_children( $term_id, 'product_cat' );
+                                                        $last_child   = end( $all_children );
+                                                        return $last_child;
+                                                    }, $chosen_cat );
+                                                    $chosen_cat = array_filter( array_unique( $chosen_child ) );
+                                                }
                                             }
 
-                                            dokan_get_template_part('products/dokan-category-header-ui', '', array( 'terms' => $terms ) );
+                                            if ( $is_single ) {
+                                                $terms      = [ reset( $terms ) ];
+                                                $chosen_cat = [ reset( $chosen_cat ) ];
+                                            }
+
+                                            dokan_get_template_part('products/dokan-category-header-ui', '', array( 'terms' => $terms, 'chosen_cat' => $chosen_cat ) );
                                             dokan_get_template_part('products/dokan-category-ui', '', array( ) );
                                         ?>
 
