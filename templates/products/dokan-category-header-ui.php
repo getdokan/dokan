@@ -4,7 +4,7 @@
     $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false;
 
     if ( count( $chosen_cat ) < 1 ) {
-        array_push( $chosen_cat, get_term( get_option('default_product_cat') ) );
+        array_push( $chosen_cat, get_term( get_option('default_product_cat') )->term_id );
     }
 ?>
 

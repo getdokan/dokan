@@ -260,16 +260,21 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                             if ( ! $chosen_cat || ! is_array( $chosen_cat ) || sizeof( $chosen_cat ) < 1 ) {
                                                 if ( sizeof( $terms ) <= 1 ) {
-                                                    $chosen_cat = [ reset( $terms ) ];
+                                                    $chosen_cat = [ reset( $terms )->term_id ];
                                                 } else {
                                                     $chosen_cat   = $terms;
-                                                    $chosen_child = array_map( function( $cat ) {
+                                                    $all_parents  = [];
+                                                    $chosen_child = [];
+
+                                                    foreach ( $chosen_cat as $key => $cat ) {
                                                         $term_id      = ! empty( $cat->term_id ) ? $cat->term_id: $cat;
-                                                        $all_children = get_term_children( $term_id, 'product_cat' );
-                                                        $last_child   = end( $all_children );
-                                                        return $last_child;
-                                                    }, $chosen_cat );
-                                                    $chosen_cat = array_filter( array_unique( $chosen_child ) );
+                                                        $all_ancestors = get_ancestors( $term_id, 'product_cat' );
+                                                        $first_parent   = end( $all_ancestors );
+                                                        array_push( $all_parents, $first_parent );
+                                                        $chosen_child[$term_id] = $first_parent;
+                                                    }
+
+                                                    $chosen_cat = array_keys( array_unique( $chosen_child ) );
                                                 }
                                             }
 

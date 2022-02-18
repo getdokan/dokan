@@ -504,7 +504,6 @@ class Products {
                 }
             }
 
-            error_log( print_r( array_map( 'absint', (array) $postdata['chosen_product_cat'] ), 1 ) );
             update_post_meta( $post_id, 'chosen_product_cat', array_map( 'absint', (array) $postdata['chosen_product_cat'] ) );
 
             //set prodcuct type default is simple
