@@ -301,9 +301,8 @@ class Products {
                         $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                         $all_categories = wp_parse_args( $all_categories, $category );
 
-                        $product = wc_get_product( $product_id );
-                        $product->set_category_ids( $all_categories );
-                        $product->save();
+                        $cat_ids = array_map( 'absint', (array) $all_categories );
+                        wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
                     } else {
                         if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
                             $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
@@ -494,9 +493,8 @@ class Products {
                 $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                 $all_categories = wp_parse_args( $all_categories, $category );
 
-                $product = wc_get_product( $post_id );
-                $product->set_category_ids( $all_categories );
-                $product->save();
+                $cat_ids = array_map( 'absint', (array) $all_categories );
+                wp_set_object_terms( $post_id, $cat_ids, 'product_cat' );
             } else {
                 if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
                     $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
