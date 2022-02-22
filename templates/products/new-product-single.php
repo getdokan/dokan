@@ -267,17 +267,29 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 } else {
                                                     $chosen_cat   = $terms;
                                                     $all_parents  = [];
-                                                    $chosen_child = [];
+                                                    // $chosen_child = [];
 
                                                     foreach ( $chosen_cat as $key => $cat ) {
-                                                        $term_id      = ! empty( $cat->term_id ) ? $cat->term_id: $cat;
+                                                        $term_id       = ! empty( $cat->term_id ) ? $cat->term_id: $cat;
                                                         $all_ancestors = get_ancestors( $term_id, 'product_cat' );
-                                                        $first_parent   = end( $all_ancestors );
-                                                        array_push( $all_parents, $first_parent );
-                                                        $chosen_child[$term_id] = $first_parent;
+                                                        $old_parent  = end( $all_ancestors );
+                                                        empty( $old_parent ) ? $old_parent = $term_id : '';
+                                                        if( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < sizeof( $all_ancestors ) ) {
+                                                            $all_parents[ $old_parent ]['size'] = sizeof( $all_ancestors );
+                                                            $all_parents[ $old_parent ]['parent'] = $old_parent;
+                                                            $all_parents[ $old_parent ]['child'] = $term_id;
+                                                        }
+                                                        // array_push( $all_parents, $old_parent );
+                                                        // $chosen_child[$term_id] = $old_parent;
                                                     }
 
-                                                    $chosen_cat = array_keys( array_unique( array_filter( $chosen_child ) ) );
+                                                    $chosen_cat = array_map( function( $value ) {
+                                                        return $value['child'];
+                                                    }, $all_parents );
+
+                                                    $chosen_cat = array_values($chosen_cat);
+
+                                                    // $chosen_cat = array_keys( array_unique( array_filter( $chosen_child ) ) );
                                                 }
                                             }
 
