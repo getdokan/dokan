@@ -70,10 +70,11 @@ class StoreOpenClose extends WP_Widget {
             }
 
             dokan_get_template_part(
-                'widgets/store-open-close', '', array(
-					'seller_id' => $seller_id,
+                'widgets/store-open-close', '', [
+					'seller_id'        => $seller_id,
 					'dokan_store_time' => $dokan_store_time,
-                )
+                    'dokan_days'       => dokan_get_translated_days(),
+                ]
             );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
