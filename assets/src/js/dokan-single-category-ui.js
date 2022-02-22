@@ -10,49 +10,25 @@
   let searchResultState = [];
   let inputHolder       = '';
   let boxCounter        = 1;
+  let selectedCatId     = '';
 
   var SingleCategory = {
 
     init: function() {
       $('#dokan-single-categories-loader img').attr("src", dokan.ajax_loader);
       $('body').on('click', '.dokan-single-category-li', function() {
-        let {catlevel,termId,name} = $(this).data();
+        let { catlevel, termId, name, haschild } = $(this).data();
 
-        SingleCategory.setCatId( termId );
+        // SingleCategory.setCatId( termId );
         // SingleCategory.setCatName( name );
+        selectedCatId = termId;
         SingleCategory.removeAfterClickedUls( catlevel, termId );
 
-        SingleCategory.loadChildCategories( catlevel,termId,name );
+        SingleCategory.loadChildCategories( catlevel, termId, name, haschild );
       });
       $('body').on('click', '.dokan-cat-search-res-li', function() {
         let {termid,index,name} = $(this).data();
-
-        SingleCategory.setCatId( termid );
-        // SingleCategory.setCatName( name );
-
-        let allParents = [];
-        if ( searchResultState[index].parents ) {
-          allParents = searchResultState[index].parents.map( parent => {
-            return parent.term_id;
-          } );
-        }
-
-        let allUl = [...allParents];
-        let selectedInUls = [...allParents];
-
-        allUl.unshift( 0 );
-        selectedInUls.push(termid);
-
-
-        let UL = allUl.map( (id, index) => {
-          return SingleCategory.getCategoriesWithParentId( id, index+1, selectedInUls[index] );
-        } );
-
-        categoriesState = UL;
-        SingleCategory.updateCategoryUi();
-
-        SingleCategory.hideSearchRes();
-        SingleCategory.scrollTo(UL.length);
+        SingleCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[index] );
       });
       $('body').on('keyup', '#dokan-single-cat-search-input', function() {
         let inputText = $(this).val();
@@ -82,8 +58,37 @@
       });
       $('body').on('click', '.dokan-single-cat-select-btn', function() {
         SingleCategory.setCatName( SingleCategory.getSelectedLabel() );
+        SingleCategory.setCatId( selectedCatId );
         SingleCategory.hideCategoryModal();
       });
+    },
+
+    setCatUiBasedOnOneCat: function( catId, catIndex, category ) {
+        SingleCategory.disableDoneBtn( category.has_child );
+
+        selectedCatId = catId;
+        let allParents = [];
+        if ( category.parents ) {
+          allParents = category.parents.map( parent => {
+            return parent.term_id;
+          } );
+        }
+
+        let allUl = [...allParents];
+        let selectedInUls = [...allParents];
+
+        allUl.unshift( 0 );
+        selectedInUls.push( Number(catId) );
+
+        let UL = allUl.map( (id, index) => {
+          return SingleCategory.getCategoriesWithParentId( id, index+1, selectedInUls[index] );
+        } );
+
+        categoriesState = UL;
+        SingleCategory.updateCategoryUi();
+
+        SingleCategory.hideSearchRes();
+        SingleCategory.scrollTo(UL.length);
     },
 
     doSearchCates: async ( text ) => {
@@ -107,9 +112,14 @@
       ( scrolled > 5 ) ? element.removeClass('dokan-hide') : element.addClass('dokan-hide');
     },
     showCategoryModal: () => {
+      selectedCatId = '';
+      SingleCategory.disableDoneBtn();
       modal.css('display','flex');
       categoriesState = [];
       SingleCategory.loadAllParentCategories();
+    },
+    disableDoneBtn: ( disable = true ) => {
+      $('.dokan-single-cat-select-btn').prop('disabled', disable);
     },
     hideCategoryModal: () => {
       modal.css('display','none');
@@ -138,14 +148,16 @@
         term_id: parentId,
       };
     },
-    loadChildCategories: ( catlevel,termId,name ) => {
-      SingleCategory.loadingCategories();
-
+    loadChildCategories: ( catlevel, termId, name, haschild ) => {
+      if ( ! haschild ) {
+        SingleCategory.disableDoneBtn( false );
+        return;
+      }
+      SingleCategory.disableDoneBtn();
       let categories = SingleCategory.getCategoriesWithParentId( termId, catlevel+1 );
       categoriesState.push( categories );
       SingleCategory.updateCategoryUi();
       SingleCategory.scrollTo(catlevel - 1);
-      SingleCategory.loadingCategories( false );
     },
     updateSearchResultUi: () => {
       let html = '';
@@ -229,7 +241,7 @@
       let html = '';
 
       element.forEach( ( category, index ) => {
-        html += `<li data-name="${category.name}" data-catLevel="${level}" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${category.has_child ? 'dokan-cat-has-child' : ''}" data-term-id="${category.term_id}" data-taxonomy="product_cat">
+        html += `<li data-haschild="${category.has_child}" data-name="${category.name}" data-catLevel="${level}" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${category.has_child ? 'dokan-cat-has-child' : ''}" data-term-id="${category.term_id}" data-taxonomy="product_cat">
               <span class="dokan-single-category">${category.name}</span>
               <span class="dokan-single-category-icon"><i class="fas fa-chevron-right"></i></span>
           </li>`;
@@ -256,7 +268,7 @@
 
     setCatId: (id) => {
       let ui = `<input type="hidden" name="${ dokan_is_single_category ? 'product_cat' : 'product_cat[]' }" class="dokan_product_cat" id="dokan_product_cat" value="${id}"></input>`;
-      ui += `<input type="hidden" name="chosen_product_cat[]" value="${id}"></input>`;
+      ui += `<input type="hidden" class="dokan_chosen_product_cat" name="chosen_product_cat[]" value="${id}"></input>`;
       let category = dokan_all_product_categories.filter( (element, index) => {
         return element.cat_ID == id;
       } );
@@ -292,6 +304,14 @@
       $('.dokan-add-new-cat-box').append(html)
     },
 
+    findCategory: (id) => {
+      let allCategories = [...dokan_all_product_categories];
+
+      return allCategories.findIndex( ( category, index ) => {
+        return id == category.cat_ID;
+      } );
+    }
+
   };
 
   // On DOM ready.
@@ -300,7 +320,15 @@
 
     $('body').on('click', '#dokan-category-open-modal', function(){
       inputHolder = $(this).data('dokansclevel');
+      let chosenCat = $(this).siblings(".dokan-cat-inputs-holder").find(".dokan_chosen_product_cat");
       SingleCategory.showCategoryModal();
+
+      if ( chosenCat.length > 0 ) {
+        let catId = chosenCat.val();
+        let catIndex = SingleCategory.findCategory(catId);
+        let category = dokan_all_product_categories[catIndex];
+        SingleCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
+      }
     });
     $('body').on('click', '#dokan-category-close-modal', function(){
       SingleCategory.hideCategoryModal();
