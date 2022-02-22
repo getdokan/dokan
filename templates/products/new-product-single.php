@@ -258,7 +258,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             $terms      = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' =>  'all') );
                                             $chosen_cat = get_post_meta( $post_id, 'chosen_product_cat', true );
 
+                                            // If no chosen category found.
                                             if ( ! $chosen_cat || ! is_array( $chosen_cat ) || sizeof( $chosen_cat ) < 1 ) {
+                                                // If product has only one category, choose it as the chosen category.
+                                                // Or if multiple category is selected, choose the common parents child as chosen category.
                                                 if ( sizeof( $terms ) <= 1 ) {
                                                     $chosen_cat = [ reset( $terms )->term_id ];
                                                 } else {
