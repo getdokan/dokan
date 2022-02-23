@@ -303,18 +303,43 @@
 
                             #vendor-store-times {
                                 position: absolute;
-                                left: -36.5%;
+                                left: -20%;
                                 top: 100%;
                                 display: none;
                                 z-index: 1;
                                 background: #fff;
                                 border-radius: 6px;
                                 color: #3E474F;
-                                padding: 1.5em 1.4em;
-                                width: 340px;
-                                max-height: 500px;
+                                padding: 1.5em 2em;
+                                width: 300px;
+                                max-height: 435px;
                                 overflow: auto;
                                 box-shadow: 0 10px 15px -3px #00000040, 0 4px 6px -4px #00000010;
+
+                                .store-times-heading {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    margin: 10px 0 25px;
+
+                                    i.fa-calendar-day {
+                                        width: 30px;
+                                        height: 30px;
+                                        border: 1px solid #CBD9DC;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        color: #2471A9;
+                                        margin: 0 10px 0 -10px;
+                                    }
+
+                                    h4 {
+                                        font-weight: 700;
+                                        font-size: 20px;
+                                        margin-bottom: 0;
+                                    }
+                                }
 
                                 span {
                                     margin-left: 10px;
@@ -323,48 +348,37 @@
                                 .store-time-tags {
                                     display: flex;
                                     margin-bottom: 12px;
+                                    font-size: 15px;
 
                                     .store-days {
-                                        width: 43%;
+                                        width: 42%;
+                                    }
+
+                                    .current_day,
+                                    .current_time {
+                                        font-weight: 700;
                                     }
 
                                     .store-times {
-                                        width: 57%;
+                                        width: 58%;
         
                                         .store-open,
                                         .store-close {
                                             text-decoration: none;
-                                            border: 2px solid;
-                                            color: #000;
-                                            padding: 2px 15px 3.5px;
+                                            padding: 2px 3px 3.5px;
                                             border-radius: 0.375rem;
                                             cursor: pointer;
                                             transition: 0.5s ease;
                                             list-style: none;
                                             margin-bottom: 5.5px;
                                             display: inline-block;
-                                            text-align: center;
-                                            font-size: 14px;
-                                            width: 160px;
-                                            font-weight: 600;
-                                        }
-    
-                                        .store-open {
-                                            border-color: #65a30d;
-    
-                                            &:hover {
-                                                background-color: #65a30d;
-                                                color: #fff;
-                                            }
                                         }
     
                                         .store-close {
-                                            border-color: #ef4444;
-    
-                                            &:hover {
-                                                background-color: #ef4444;
-                                                color: #fff;
-                                            }
+                                            background-color: #F8E8E7;
+                                            color: #D07272;
+                                            padding: 1px 12px;
+                                            border-radius: 16px;
                                         }
                                     }
 
@@ -372,25 +386,52 @@
                                         margin-bottom: 0;
                                     }
                                 }
+
+                                /* width */
+                                &::-webkit-scrollbar {
+                                    width: 10px;
+                                }
+                                
+                                /* Handle */
+                                &::-webkit-scrollbar-thumb {
+                                    background: #8d9399;
+                                    border-radius: 5px;
+                                }
+                                
+                                /* Handle on hover */
+                                &::-webkit-scrollbar-thumb:hover {
+                                    background: #555;
+                                }
                             }
 
                             .dokan-store-open-close {
+                                .store-open-close-notice {
+                                    display: flex;
+                                    align-items: center;
+
+                                    .store-notice {
+                                        min-width: 96px;
+                                    }
+                                }
+
                                 &:hover {
                                     #vendor-store-times {
                                         display: block;
                                     }
 
-                                    &:after {
-                                        position: relative;
-                                        content: "";
-                                        width: 0;
-                                        height: 0;
-                                        border-left: 15px solid transparent;
-                                        border-right: 15px solid transparent;
-                                        border-bottom: 18px solid #fff;
-                                        top: 0px;
-                                        right: 38%;
-                                        z-index: 1;
+                                    span.fa-angle-down {
+                                        &:after {
+                                            position: absolute;
+                                            content: "";
+                                            width: 25px;
+                                            height: 40px;
+                                            z-index: 1;
+                                            background-color: #fff;
+                                            right: 44.5%;
+                                            transform: rotate(45deg);
+                                            top: 92%;
+                                            border-radius: 5px;
+                                        }
                                     }
                                 }
                             }
@@ -1192,6 +1233,10 @@
 
                                     .dokan-times {
                                         margin-left: 5px;
+                                    }
+
+                                    .store-open-close-notice {
+                                        justify-content: center;
                                     }
                                 }
                             }
