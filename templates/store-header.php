@@ -5,8 +5,7 @@ $social_info              = $store_user->get_social_profiles();
 $store_tabs               = dokan_get_store_tabs( $store_user->get_id() );
 $social_fields            = dokan_get_social_profile_fields();
 
-$dokan_store_info         = dokan_get_store_info( $store_user->get_id() );
-$dokan_store_times        = ! empty( $dokan_store_info['dokan_store_time'] ) ? $dokan_store_info['dokan_store_time'] : [];
+$dokan_store_times        = ! empty( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : [];
 $current_time             = dokan_current_datetime();
 $today                    = strtolower( $current_time->format( 'l' ) );
 
