@@ -112,27 +112,26 @@ if ( 'layout3' === $profile_layout ) {
                                     <div id="vendor-store-times">
                                         <div class="store-times-heading">
                                             <i class="fas fa-calendar-day"></i>
-                                            <h4><?php esc_html_e( 'Weekly Store Timing', 'dokan' ); ?></h4>
+                                            <h4><?php esc_html_e( 'Weekly Store Timing', 'dokan-lite' ); ?></h4>
                                         </div>
                                         <?php
                                         foreach ( dokan_get_translated_days() as $day_key => $day ) :
-                                            // Get store opening time.
-                                            $store_info    = ! empty( $dokan_store_times[ $day_key ] ) ? $dokan_store_times[ $day_key ] : [];
-                                            $store_status  = ! empty( $store_info['status'] ) ? $store_info['status'] : 'close';
+                                            $store_info   = ! empty( $dokan_store_times[ $day_key ] ) ? $dokan_store_times[ $day_key ] : [];
+                                            $store_status = ! empty( $store_info['status'] ) ? $store_info['status'] : 'close';
                                             ?>
                                             <div class="store-time-tags">
                                                 <div class="store-days <?php echo $today === $day_key ? 'current_day' : ''; ?>"><?php echo esc_html( $day ); ?></div>
                                                 <div class="store-times">
                                                     <?php if ( $store_status === 'close' ) : ?>
-                                                        <span class="store-close" href="#"><?php esc_html_e( 'CLOSED', 'dokan-lite' ); ?></span>
+                                                        <span class="store-close"><?php esc_html_e( 'CLOSED', 'dokan-lite' ); ?></span>
                                                     <?php endif; ?>
 
                                                     <?php
+                                                    // Get store times.
                                                     $opening_times = ! empty( $store_info['opening_time'] ) ? $store_info['opening_time'] : [];
 
-                                                    // If dokan pro doesn't exists then show single item.
+                                                    // If dokan pro doesn't exists then get single item.
                                                     if ( ! dokan()->is_pro_exists() ) {
-                                                        // Get single time.
                                                         $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : [];
                                                     }
 
@@ -149,7 +148,6 @@ if ( 'layout3' === $profile_layout ) {
                                                         }
                                                         ?>
                                                         <span class="store-open <?php echo $exact_time; ?>" href="#"><?php echo esc_html( $formatted_opening_time->format( wc_time_format() ) . ' - ' . $formatted_closing_time->format( wc_time_format() ) ); ?></span>
-                                                        <!-- <span class="store-open <?php echo $exact_time; ?>" href="#"><?php echo esc_html( $formatted_opening_time->format( wc_time_format() ) . ' - ' . $formatted_closing_time->format( wc_time_format() ) ); ?></span> -->
                                                     <?php endfor; ?>
                                                 </div>
                                             </div>

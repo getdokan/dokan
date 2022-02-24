@@ -285,9 +285,9 @@
                         padding: 0 30px;
 
                         .dokan-store-info {
-                            list-style: none;
-                            position: relative;
                             cursor: pointer;
+                            position: relative;
+                            list-style: none;
 
                             .dokan-store-phone,
                             .dokan-store-email {
@@ -302,41 +302,41 @@
                             }
 
                             #vendor-store-times {
-                                position: absolute;
-                                left: -20%;
                                 top: 100%;
-                                display: none;
-                                z-index: 1;
-                                background: #fff;
-                                border-radius: 6px;
+                                left: -20%;
                                 color: #3E474F;
-                                padding: 1.5em 2em;
                                 width: 300px;
-                                max-height: 435px;
+                                z-index: 1;
+                                display: none;
+                                padding: 1.5em 2em;
                                 overflow: auto;
+                                position: absolute;
+                                max-height: 435px;
+                                background: #fff;
                                 box-shadow: 0 10px 15px -3px #00000040, 0 4px 6px -4px #00000010;
+                                border-radius: 6px;
 
                                 .store-times-heading {
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
                                     margin: 10px 0 25px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
 
                                     i.fa-calendar-day {
+                                        color: #2471A9;
                                         width: 30px;
+                                        margin: 0 10px 0 -10px;
                                         height: 30px;
                                         border: 1px solid #CBD9DC;
-                                        border-radius: 50%;
                                         display: flex;
-                                        justify-content: center;
                                         align-items: center;
-                                        color: #2471A9;
-                                        margin: 0 10px 0 -10px;
+                                        border-radius: 50%;
+                                        justify-content: center;
                                     }
 
                                     h4 {
-                                        font-weight: 700;
                                         font-size: 20px;
+                                        font-weight: 700;
                                         margin-bottom: 0;
                                     }
                                 }
@@ -347,8 +347,8 @@
 
                                 .store-time-tags {
                                     display: flex;
-                                    margin-bottom: 12px;
                                     font-size: 15px;
+                                    margin-bottom: 12px;
 
                                     .store-days {
                                         width: 42%;
@@ -364,21 +364,21 @@
         
                                         .store-open,
                                         .store-close {
-                                            text-decoration: none;
-                                            padding: 2px 3px 3.5px;
-                                            border-radius: 0.375rem;
                                             cursor: pointer;
+                                            display: inline-block;
+                                            padding: 2px 3px 3.5px;
                                             transition: 0.5s ease;
                                             list-style: none;
                                             margin-bottom: 5.5px;
-                                            display: inline-block;
+                                            border-radius: 0.375rem;
+                                            text-decoration: none;
                                         }
     
                                         .store-close {
-                                            background-color: #F8E8E7;
                                             color: #D07272;
                                             padding: 1px 12px;
                                             border-radius: 16px;
+                                            background-color: #F8E8E7;
                                         }
                                     }
 
@@ -387,18 +387,15 @@
                                     }
                                 }
 
-                                /* width */
                                 &::-webkit-scrollbar {
                                     width: 10px;
                                 }
                                 
-                                /* Handle */
                                 &::-webkit-scrollbar-thumb {
                                     background: #8d9399;
                                     border-radius: 5px;
                                 }
                                 
-                                /* Handle on hover */
                                 &::-webkit-scrollbar-thumb:hover {
                                     background: #555;
                                 }
@@ -421,16 +418,16 @@
 
                                     span.fa-angle-down {
                                         &:after {
-                                            position: absolute;
                                             content: "";
+                                            top: 92%;
+                                            right: 44.5%;
                                             width: 25px;
                                             height: 40px;
                                             z-index: 1;
-                                            background-color: #fff;
-                                            right: 44.5%;
+                                            position: absolute;
                                             transform: rotate(45deg);
-                                            top: 92%;
                                             border-radius: 5px;
+                                            background-color: #fff;
                                         }
                                     }
                                 }
