@@ -24,7 +24,7 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @var string
      */
-    protected $namespace = 'dokan/v1';
+    protected $namespace = 'dokan/v2';
 
     /**
      * Route name
@@ -55,6 +55,21 @@ class StoreSettingController extends WP_REST_Controller {
     public function register_routes() {
         register_rest_route(
             $this->namespace, '/' . $this->rest_base, [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_settings_list' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                ],
+            ]
+        );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\w-]+)', [
+                'args'   => [
+                    'group' => [
+                        'description' => __( 'Settings group ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                ],
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_settings' ],
@@ -69,16 +84,16 @@ class StoreSettingController extends WP_REST_Controller {
 			]
         );
         register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/payments', [
+            $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_payment_methods' ],
+                    'callback'            => [ $this, 'get_settings_child' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
-                    'args'                => $this->update_payment_methods_args(),
-                    'callback'            => [ $this, 'update_payment_methods' ],
+                    'args'                => $this->update_settings_child_args(),
+                    'callback'            => [ $this, 'update_settings_child' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
             ]
@@ -99,12 +114,46 @@ class StoreSettingController extends WP_REST_Controller {
     }
 
     /**
+     * Update Store
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function update_settings_child( $request ) {
+        return rest_ensure_response( $this->vendor_settings->save_settings_child( $request ) );
+    }
+
+    /**
+     * @param $request
+     *
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_settings_list( $request ) {
+        return rest_ensure_response( $this->vendor_settings->list_settings() );
+    }
+
+    /**
      * @param $request
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_settings( $request ) {
-        return rest_ensure_response( $this->vendor_settings->settings() );
+        $group_id = $request->get_param( 'group_id' );
+        return rest_ensure_response( $this->vendor_settings->settings( $group_id ) );
+    }
+
+    /**
+     * @param $request
+     *
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_settings_child( $request ) {
+        $group_id = $request->get_param( 'group_id' );
+        $id       = $request->get_param( 'id' );
+        return rest_ensure_response( $this->vendor_settings->settings_child( $group_id, $id ) );
     }
 
     /**
@@ -210,8 +259,8 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @return array
      */
-    private function update_payment_methods_args() {
-        return $this->vendor_settings->args_schema_for_save_payments();
+    private function update_settings_child_args() {
+        return $this->vendor_settings->args_schema_for_save_settings_child();
     }
 
     private function update_settings_args() {
