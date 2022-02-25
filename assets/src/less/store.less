@@ -379,6 +379,8 @@
                                             padding: 1px 12px;
                                             border-radius: 16px;
                                             background-color: #F8E8E7;
+                                            max-width: 75px;
+                                            text-align: center;
                                         }
                                     }
 
@@ -409,28 +411,49 @@
                                     .store-notice {
                                         min-width: 96px;
                                     }
-                                }
 
-                                &:hover {
-                                    #vendor-store-times {
-                                        display: block;
-                                    }
-
-                                    span.fa-angle-down {
-                                        &:after {
-                                            content: "";
-                                            top: 92%;
-                                            right: 44.5%;
-                                            width: 25px;
-                                            height: 40px;
-                                            z-index: 1;
-                                            position: absolute;
-                                            transform: rotate(45deg);
-                                            border-radius: 5px;
-                                            background-color: #fff;
+                                    &:hover {
+                                        + #vendor-store-times {
+                                            display: block;
+                                        }
+    
+                                        span.fa-angle-down {
+                                            &:after {
+                                                content: "";
+                                                top: 92%;
+                                                right: 44.5%;
+                                                width: 25px;
+                                                height: 40px;
+                                                z-index: 1;
+                                                position: absolute;
+                                                transform: rotate(45deg);
+                                                border-radius: 5px;
+                                                background-color: #fff;
+                                            }
                                         }
                                     }
                                 }
+
+                                // &:hover {
+                                //     #vendor-store-times {
+                                //         display: block;
+                                //     }
+
+                                //     span.fa-angle-down {
+                                //         &:after {
+                                //             content: "";
+                                //             top: 92%;
+                                //             right: 44.5%;
+                                //             width: 25px;
+                                //             height: 40px;
+                                //             z-index: 1;
+                                //             position: absolute;
+                                //             transform: rotate(45deg);
+                                //             border-radius: 5px;
+                                //             background-color: #fff;
+                                //         }
+                                //     }
+                                // }
                             }
                         }
 

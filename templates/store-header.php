@@ -142,7 +142,7 @@ if ( 'layout3' === $profile_layout ) {
                                                         $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
                                                         $exact_time = '';
 
-                                                        if ( $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
+                                                        if ( $today === $day_key && $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
                                                             $exact_time = 'current_time';
                                                         }
                                                         ?>
