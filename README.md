@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.9  
+**Tested up to:** 5.9.1  
 **WC requires at least:** 3.0  
-**WC tested up to:** 6.2.0  
+**WC tested up to:** 6.2.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.3.8  
+**Stable tag:** 3.3.9  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -305,6 +305,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.3.9 ( Feb 28, 2022 ) ###
+
+- **update:** Added theme customizer settings to set default order by filter for store listing page #1505
+- **update:** Added seller information under single product page, also added an admin setting entry to enable/disable this feature #1506
+- **update:** Display store open/close time list  on hover under single store page. #1517
+- **fix:**  Added post_date_gmt and post_modified_gmt fields data when creating a product from frontend dashboard #1514
+- **fix:**  Create order API with coupon lines data giving fatal error, thanks to James Bechet for this fix #1441
 
 ### v3.3.8 ( Feb 17, 2022 ) ###
 
