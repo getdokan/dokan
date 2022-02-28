@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.8.3
+Tested up to: 5.9
 WC requires at least: 3.0
-WC tested up to: 6.0.0
+WC tested up to: 6.2.0
 Requires PHP: 5.6
-Stable tag: 3.3.6
+Stable tag: 3.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,7 +90,7 @@ You can have unlimited vendors and vendors can create unlimited products. Create
 * Bookable products through the [Dokan WC Bookings Integration](https://wedevs.com/dokan/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 * Auction products through the [Dokan Simple Auction Integration](https://wedevs.com/dokan/modules/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
-You can choose which marketplace to create with freedom of imagination. Customize your store with [Elementor Integration](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and its simple drag and drop attribute. 
+You can choose which marketplace to create with freedom of imagination. Customize your store with [Elementor Integration](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and its simple drag and drop attribute.
 
 
 = EARN IN MULTIPLE WAYS =
@@ -122,13 +122,13 @@ Admin can extend flexibility to individual vendors to have control over their sh
 
 Dokan is compatible with more than 70+ plugins so that you don’t have to worry about anything when it comes to compatibility.
 
-From Shipping plugins, Payment plugins to Wallets, you have the complete peace of mind when building Dokan for a global audience. 
+From Shipping plugins, Payment plugins to Wallets, you have the complete peace of mind when building Dokan for a global audience.
 
 👉 [CLICK HERE TO LEARN MORE](https://wedevs.com/dokan/compatible-plugins/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)👈
 
 = More Freedom To Customize The Store =
 
-Now never get bored with the old fashioned appearance of your store. Have full control over your store customization with the 
+Now never get bored with the old fashioned appearance of your store. Have full control over your store customization with the
 Module for Dokan. Simply get the customizer to be able to customize the global outlook of the vendor store pages. Drag & drop more than 12 incredible store widgets made exclusively for Dokan and place it anywhere you want it. Save as many customized templates as you want to use it whenever you need it
 
 ➡️ [Learn More](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⬅️
@@ -305,6 +305,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.3.8 ( Feb 17, 2022 ) =
+
+- **fix:** Store open close time widget wasn't working
+
+= v3.3.7 ( Feb 03, 2022 ) =
+
+- **feat:** Added Featured, Latest, Best Selling, Top Rated Product sections under single store page
+- **update:** Updated UI for Withdraw menu
+- **update:** Updated design for Upgrade to PRO popup
+- **update:** Added Dokan upgrader to change dokan_withdraw table details column null
+- **update:** Added per_page and page param support on store products rest api
+- **update:** Updated FontAwesome library from V4.7 to V5.15
+- **update:** Updated chartjs library, this was causing conflict issue with various js files
+- **fix:** Fixed a css issue under Select2 library
+- **fix:** Make Hello text translatable under product published email template
+- **fix:** Fixed a warning under single store page if store slug was invalid
+- **fix:** prevent recursion while loading template if $name param is not empty
+- **fix:** When setting bulk regular prices from the vendor dashboard in a variable product the product stock status becomes out of stock. This issue has been fixed now.
 
 = v3.3.6 ( Jan 10, 2022 ) =
 
