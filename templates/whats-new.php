@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.3.9',
+        'released' => '2022-02-28',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'Added new theme customizer settings to set default order by filter for store listing page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added seller information under single product page, also added an admin setting entry to enable/disable this feature',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display store open/close time list on hover under single store page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Added post_date_gmt and post_modified_gmt fields data when creating a product from frontend dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Create order API with coupon lines data giving fatal error',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.8',
         'released' => '2022-02-17',
         'changes'  => [

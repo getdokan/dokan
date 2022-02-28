@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit; ?>
     <?php do_action( 'dokan_before_store_lists_filter_left', $stores ); ?>
     <div class="left">
         <p class="item store-count">
-            <?php 
+            <?php
             printf( _n( 'Total store showing: %d', 'Total stores showing: %d', $number_of_store, 'dokan-lite' ), number_format_i18n( $number_of_store ) );
             ?>
         </p>
@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit; ?>
             <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>">
                 <?php
                     foreach ( $sort_filters as $key => $filter ) {
-                        $optoins = "<option value='${key}'>${filter}</option>";
+                        $optoins = "<option value='${key}'" . selected( $sort_by, $key, false ) . ">${filter}</option>";
                         printf( $optoins );
                     }
                 ?>

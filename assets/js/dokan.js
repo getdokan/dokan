@@ -2250,6 +2250,10 @@ jQuery(function($) {
           );
 
           $('.dokan-ajax-response').append(resp.data.progress);
+
+          if ( dokan && dokan.storeProgressBar ) {
+            dokan.storeProgressBar.init();
+          }
         } else {
           $('.dokan-ajax-response').html(
             $('<div/>', {
