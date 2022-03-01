@@ -84,6 +84,7 @@ class StoreListsFilter {
         return apply_filters( 'dokan_store_lists_sort_by_options', [
             'most_recent'   => __( 'Most Recent', 'dokan-lite' ),
             'total_orders'  => __( 'Most Popular', 'dokan-lite' ),
+            'random'        => __( 'Random', 'dokan-lite' ),
         ] );
     }
 
