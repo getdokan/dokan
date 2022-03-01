@@ -1764,7 +1764,8 @@ table.dokan-table .toggle-row {
 }
 table.dokan-table .toggle-row::before {
   content: '\f0d7';
-  font-family: fontawesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   font: normal normal normal 14px/1 FontAwesome;
   display: inline-block;
   font-size: inherit;
@@ -2309,10 +2310,7 @@ div.media-sidebar a.edit-attachment {
   float: left;
 }
 .dokan-dashboard .dokan-dashboard-content article.dashboard-content-area .dashboard-widget.orders #order-stats {
-  width: 250px !important;
-  height: 100% !important;
-  margin-top: 15px;
-  margin-left: -10px;
+  padding: 20px;
 }
 .dokan-dashboard .dokan-dashboard-content article.dashboard-content-area .dashboard-widget.products .pull-right a {
   -moz-border-radius: 0;
@@ -2570,37 +2568,43 @@ div.media-sidebar a.edit-attachment {
   float: right;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f133';
   display: block;
   text-align: center;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type.downloadable:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f019';
   display: block;
   text-align: center;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type.variable:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f02d';
   display: block;
   text-align: center;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type.simple:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f0c9';
   display: block;
   text-align: center;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.product-type.virtual:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f0c2';
   display: block;
   text-align: center;
 }
 .dokan-product-listing .dokan-product-listing-area table.product-listing-table span.earning-info:before {
-  font-family: FontAwesome;
+  font-family: "Font Awesome\ 5 Free";
+  font-weight: 900;
   content: '\f05a';
   display: inline;
   margin-left: 5px;
@@ -3759,6 +3763,9 @@ div.media-sidebar a.edit-attachment {
   float: left;
   display: block;
 }
+.select2-container--open .select2-dropdown--below {
+  margin-top: 5px !important;
+}
 .dokan-settings-content .dokan-settings-area {
   position: relative;
 }
@@ -4821,6 +4828,62 @@ div.media-sidebar a.edit-attachment {
   display: inline-block;
   padding: 0px 5px;
 }
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container {
+  position: relative;
+  border-bottom: 1px solid #EDEDED;
+  padding: 15px 0;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container:last-child {
+  border-bottom: none;
+  margin-bottom: -15px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container:first-child {
+  margin-top: -15px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container p {
+  margin-bottom: 5px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w8 .dokan-withdraw-method-logo {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(10px, -50%);
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 button,
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 a.dokan-btn {
+  float: right;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 #dokan-withdraw-display-requests-button {
+  float: right;
+  text-decoration: none;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-withdraw-status-filter-container {
+  margin-bottom: 15px;
+}
+.dokan-withdraw-popup h2 {
+  font-size: 17px;
+  padding: 15px 20px 10px;
+  margin: 0px;
+  border-bottom: 1px solid #eee;
+}
+.dokan-withdraw-popup .withdraw-schedule-select-container,
+.dokan-withdraw-popup .dokan-form-horizontal .withdraw {
+  padding: 15px 30px 0;
+}
+.dokan-withdraw-popup .withdraw {
+  margin-top: 15px;
+}
+.dokan-withdraw-popup .footer {
+  width: 100%;
+  padding: 10px 20px;
+  text-align: right;
+  border-top: 1px solid #eee;
+}
 .dokan-login-form-popup-wrapper {
   width: 430px !important;
   padding: 16px !important;
@@ -5306,7 +5369,7 @@ p.vendor-customer-registration .radio:hover {
   font-size: 15px;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-content .store-data-container .store-data .store-address:before {
-  content: "\f230";
+  content: "\f082";
   font-family: dashicons;
   color: #0bb90b;
   font-size: 22px;

@@ -236,7 +236,7 @@ function dokan_product_output_variations() {
                 <div class="dokan-variation-default-toolbar content-half-part">
 
                     <div class="dokan-variations-defaults">
-                        <span class="dokan-variation-default-label dokan-left float-none"><i class="fa fa-question-circle tips" title="<?php esc_attr_e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan-lite' ); ?>" aria-hidden="true"></i></span>
+                        <span class="dokan-variation-default-label dokan-left float-none"><i class="fas fa-question-circle tips" title="<?php esc_attr_e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan-lite' ); ?>" aria-hidden="true"></i></span>
 
                         <?php
                             $default_attributes = maybe_unserialize( get_post_meta( $post->ID, '_default_attributes', true ) );
