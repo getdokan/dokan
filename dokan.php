@@ -422,11 +422,18 @@ final class WeDevs_Dokan {
         $processes = get_option( 'dokan_background_processes', [] );
 
         if ( ! empty( $processes ) ) {
+            $update = false;
             foreach ( $processes as $processor => $file ) {
                 if ( file_exists( $file ) ) {
                     include_once $file;
                     new $processor();
+                } else {
+                    $update = true;
+                    unset( $processes[ $processor ] );
                 }
+            }
+            if ( $update ) {
+                update_option( 'dokan_background_processes', $processes );
             }
         }
     }
