@@ -678,9 +678,9 @@ class Assets {
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
 
-            //if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
+            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
                 wp_enqueue_script( 'dokan-popup' );
-            //}
+            }
 
             wp_enqueue_script( 'wc-password-strength-meter' );
             wp_enqueue_script( 'dokan-script' );
