@@ -97,7 +97,7 @@ class StoreListsFilter {
      * @return array
      */
     public function filter_pre_user_query( $args, $request ) {
-        if ( ! empty( $request['stores_orderby'] ) && $args['orderby'] !== $request['stores_orderby'] ) {
+        if ( ! empty( $request['stores_orderby'] ) ) {
             $args['orderby'] = wc_clean( $request['stores_orderby'] );
         } elseif ( empty( $args['orderby'] ) ) {
             $sort_by         = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
