@@ -67,7 +67,7 @@ class Settings {
      *
      * @return array|WP_Error
      */
-    public function settings( $group_id ) {
+    public function settings_group( $group_id ) {
 
         $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
@@ -95,7 +95,7 @@ class Settings {
      *
      * @return array|WP_Error
      */
-    public function settings_child( $group_id, $id ) {
+    public function single_settings( $group_id, $id ) {
         $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
@@ -103,7 +103,7 @@ class Settings {
         }
 
 
-        $settings = $this->settings( $group_id );
+        $settings = $this->settings_group( $group_id );
 
         $found_id = array_search( $id, array_column( $settings, 'id' ), true );
 
@@ -112,6 +112,38 @@ class Settings {
         }
 
         return $settings[ $found_id ];
+    }
+
+    /**
+     * Vendors settings by group and id.
+     *
+     * @param string $group_id
+     * @param string $id
+     *
+     * @return array|WP_Error
+     */
+    public function single_settings_field( $group_id, $parent_id, $id ) {
+        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+
+        if ( false === $found ) {
+            return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $settings = $this->settings_group( $group_id );
+
+        $child_found_id = array_search( $parent_id, array_column( $settings, 'id' ), true );
+
+        if ( false === $child_found_id ) {
+            return new WP_Error( 'dokan_rest_setting_option_not_found', __( 'Setting Option not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $grandchild_found_id = array_search( $id, array_column( $settings[ $child_found_id ]['fields'], 'id' ), true );
+
+        if ( false === $grandchild_found_id ) {
+            return new WP_Error( 'dokan_rest_setting_option_not_found', __( 'Setting Option not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        return $settings[ $child_found_id ]['fields'][ $grandchild_found_id ];
     }
 
     /**
@@ -161,7 +193,7 @@ class Settings {
      *
      * @return array
      */
-    public function populate_settings_child_links_value( $settings ) {
+    public function populate_single_settings_links_value( $settings ) {
         $rest_base = 'settings';
         $namespace = 'dokan/v2';
         $settings['_links'] = [
@@ -172,6 +204,22 @@ class Settings {
                 'href' => rest_url( sprintf( '%s/%s/%s', $namespace, $rest_base, $settings['parent_id'] ) ),
             ],
         ];
+        if ( 'section' === $settings['type'] ) {
+            $settings['_links']['options'] = [
+                'href' => rest_url( sprintf( '%s/%s/%s/%s', $namespace, $rest_base, $settings['parent_id'], $settings['id'] ) ),
+            ];
+
+            foreach ( $settings['fields'] as $key => $field ) {
+                $settings['fields'][ $key ]['_links'] = [
+                    'self' => [
+                        'href' => rest_url( sprintf( '%s/%s/%s/%s/%s', $namespace, $rest_base, $settings['parent_id'], $settings['id'], $field['id'] ) ),
+                    ],
+                    'collection' => [
+                        'href' => rest_url( sprintf( '%s/%s/%s/%s', $namespace, $rest_base, $settings['parent_id'], $settings['id'] ) ),
+                    ],
+                ];
+            }
+        }
 
         return $settings;
     }
@@ -187,13 +235,20 @@ class Settings {
     public function populate_settings_value( $settings ) {
         $settings_values = $this->vendor->get_shop_info();
 
-        if (
-            isset( $settings_values[ $settings['id'] ] )
-            && $settings['type'] !== 'section'
-        ) {
+        if ( isset( $settings_values[ $settings['id'] ] ) ) {
             $settings['value'] = $settings_values[ $settings['id'] ];
-        } elseif ( isset( $settings_values[ $settings['parent_id'] ] ) ) {
-            $settings['value'] = $settings_values[ $settings['parent_id'] ][ $settings['id'] ];
+
+            if ( 'section' === $settings['type'] ) {
+                foreach ( $settings['fields'] as $key => $field ) {
+                    $field_value = $settings['value'][ $field['id'] ];
+                    $settings['fields'][ $key ]['value'] = $field_value;
+
+                    if ( $field['type'] === 'image' ) {
+                        $settings['fields'][ $key ]['url'] = ! empty( $field_value ) ? wp_get_attachment_url( $field_value ) : false;
+                    }
+                    unset( $field_value );
+                }
+            }
         } else {
             $settings['value'] = null;
         }
@@ -202,7 +257,7 @@ class Settings {
             $settings['url'] = ! empty( $settings['value'] ) ? wp_get_attachment_url( $settings['value'] ) : false;
         }
 
-        $settings = $this->populate_settings_child_links_value( $settings );
+        $settings = $this->populate_single_settings_links_value( $settings );
         return $settings;
     }
 
@@ -221,7 +276,19 @@ class Settings {
             $payment['active'] = in_array( $payment['id'], $methods, true );
         }
 
-        $payment['value'] = isset( $payment_values[ $payment['parent_id'] ] ) ? $payment_values[ $payment['parent_id'] ] [ $payment['id'] ] : null;
+        $payment['value'] = isset( $payment_values[ $payment['id'] ] ) ? $payment_values[ $payment['id'] ] : null;
+
+        foreach ( $payment['fields'] as $key => $field ) {
+            $field_value = $payment['value'][ $field['id'] ];
+            $payment['fields'][ $key ]['value'] = $field_value;
+
+            if ( $field['type'] === 'image' ) {
+                $payment['fields'][ $key ]['url'] = ! empty( $field_value ) ? wp_get_attachment_url( $field_value ) : false;
+            }
+            unset( $field_value );
+        }
+
+        $payment = $this->populate_single_settings_links_value( $payment );
 
         return $payment;
     }
@@ -233,11 +300,10 @@ class Settings {
      *
      * @return array
      */
-    public function save_payments( $requests ) {
+    public function save_payment_method( $requests ) {
         foreach ( $requests as $param ) {
             $parameters[ $param['id'] ] = $param['value'];
         }
-
 
         foreach ( $parameters as $method => $fields ) {
             foreach ( $fields as $field => $value ) {
@@ -247,7 +313,7 @@ class Settings {
         $this->vendor->save();
 //        do_action( 'dokan_update_vendor', $this->vendor->get_id() );
         $this->vendor->popluate_store_data();
-        return $this->settings( 'payment' );
+        return $this->settings_group( 'payment' );
     }
 
 
@@ -268,7 +334,7 @@ class Settings {
         }
 
         if ( $group_id === 'payment' ) {
-            return $this->save_payments( $requests->get_params() );
+            return $this->save_payment_method( $requests->get_params() );
         }
 
         $parameters = [];
@@ -290,7 +356,7 @@ class Settings {
 
         do_action( 'dokan_rest_store_settings_after_update', $this->vendor, $requests );
 
-        return $this->settings( $group_id );
+        return $this->settings_group( $group_id );
     }
 
     /**
@@ -300,7 +366,7 @@ class Settings {
      *
      * @return array|WP_Error
      */
-    public function save_settings_child( $request ) {
+    public function save_single_settings( $request ) {
         $group_id = $request->get_param( 'group_id' );
         $id       = $request->get_param( 'id' );
 
@@ -309,10 +375,11 @@ class Settings {
         if ( false === $found ) {
             return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
+        $parameters = [];
         $parameters[ $id ] = $request->get_param( 'value' );
 
         if ( $group_id === 'payment' ) {
-            $payment =  $this->save_payments( [
+            $payment =  $this->save_payment_method( [
                 [
                     'id' => $id,
                     'value' => $request->get_param( 'value' )
@@ -321,7 +388,7 @@ class Settings {
             if ( is_wp_error( $payment ) ) {
                 return new WP_Error( $payment->get_error_code(), $payment->get_error_message() );
             }
-            return $this->settings_child( $group_id, $id );
+            return $this->single_settings( $group_id, $id );
         }
 
 
@@ -333,7 +400,59 @@ class Settings {
         }
 
         $this->vendor->popluate_store_data();
-        return $this->settings_child( $group_id, $id );
+        return $this->single_settings( $group_id, $id );
+    }
+
+    /**
+     * Save settings child value.
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return array|WP_Error
+     */
+    public function save_single_settings_field( $request ) {
+        $group_id = $request->get_param( 'group_id' );
+        $parent_id = $request->get_param( 'parent_id' );
+        $id       = $request->get_param( 'id' );
+
+        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+
+        if ( false === $found ) {
+            return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $parameters = [];
+        $previous_single_settings = $this->single_settings( $group_id, $parent_id );
+        $previous_single_settings_value = $previous_single_settings['value'];
+        $parameters[ $parent_id ] = $previous_single_settings_value;
+        $parameters[ $parent_id ][ $id ] = $request->get_param( 'value' );
+
+        $previous_single_settings_value[ $id ] = $request->get_param( 'value' );
+
+
+
+        if ( $group_id === 'payment' ) {
+            $payment =  $this->save_payment_method( [
+                [
+                    'id' => $parent_id,
+                    'value' => $previous_single_settings_value,
+                ]
+            ] );
+            if ( is_wp_error( $payment ) ) {
+                return new WP_Error( $payment->get_error_code(), $payment->get_error_message() );
+            }
+            return $this->single_settings_field( $group_id, $parent_id, $id );
+        }
+
+        $updated = dokan()->vendor->update( $this->vendor->get_id(), $parameters );
+
+
+        if ( is_wp_error( $updated ) ) {
+            return new WP_Error( $updated->get_error_code(), $updated->get_error_message() );
+        }
+
+        $this->vendor->popluate_store_data();
+        return $this->single_settings_field( $group_id, $parent_id, $id );
     }
 
     /**
@@ -402,151 +521,7 @@ class Settings {
      *
      * @return array
      */
-    public function args_schema_for_save_settings() {
-//        $schema = [
-//            'store_name'               => [
-//                'type'        => 'string',
-//                'description' => __( 'Store Name', 'dokan-lite' ),
-//                'required'    => true,
-//            ],
-//            'social'                   => [
-//                'type'        => 'object',
-//                'description' => __( 'Social Settings', 'dokan-lite' ),
-//                'properties'  => [
-//                ],
-//            ],
-//            'phone'                    => [
-//                'type'        => 'string',
-//                'description' => __( 'Phone Number', 'dokan-lite' ),
-//                'required'    => true,
-//            ],
-//            'show_email'               => [
-//                'type'        => 'string',
-//                'description' => __( 'Show Email', 'dokan-lite' ),
-//                'required'    => true,
-//                'enum'        => [ 'yes', 'no' ],
-//            ],
-//            'address'                  => [
-//                'type'        => 'object',
-//                'description' => __( 'Address', 'dokan-lite' ),
-//                'required'    => false,
-//                'properties'  => [
-//                    'street_1' => [
-//                        'type'     => 'string',
-//                        'required' => true,
-//                    ],
-//                    'street_2' => [
-//                        'type'     => 'string',
-//                        'required' => false,
-//                    ],
-//                    'city'     => [
-//                        'type'     => 'string',
-//                        'required' => true,
-//                    ],
-//                    'zip'      => [
-//                        'type'     => 'string',
-//                        'required' => true,
-//                    ],
-//                    'country'  => [
-//                        'type'     => 'string',
-//                        'required' => true,
-//                    ],
-//                    'state'    => [
-//                        'type'     => 'string',
-//                        'required' => true,
-//                    ],
-//                ],
-//            ],
-//            'location'                 => [
-//                'type'        => 'string',
-//                'description' => __( 'Location', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'banner_id'                => [
-//                'type'        => 'integer',
-//                'description' => __( 'Store Banner Image ID', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'gravatar_id'              => [
-//                'type'        => 'integer',
-//                'description' => __( 'Store Profile Image ID', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'store_ppp'                => [
-//                'type'        => 'integer',
-//                'description' => __( 'Store Product Per Page', 'dokan-lite' ),
-//                'required'    => false,
-//                'default'     => 20,
-//            ],
-//            'show_more_ptab'           => [
-//                'type'        => 'string',
-//                'description' => __( 'Show More Product tab', 'dokan-lite' ),
-//                'required'    => false,
-//                'enum'        => [ 'yes', 'no' ],
-//            ],
-//            'enable_tnc'               => [
-//                'type'        => 'string',
-//                'description' => __( 'Enable Store Terms & Condition', 'dokan-lite' ),
-//                'required'    => false,
-//                'enum'        => [ 'off', 'on' ],
-//            ],
-//            'dokan_store_time_enabled' => [
-//                'type'        => 'string',
-//                'description' => __( 'Enable Store Time', 'dokan-lite' ),
-//                'required'    => false,
-//                'enum'        => [ 'yes', 'no' ],
-//            ],
-//            'dokan_store_open_notice'  => [
-//                'type'        => 'string',
-//                'description' => __( 'Store Open Notice', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'dokan_store_close_notice' => [
-//                'type'        => 'string',
-//                'description' => __( 'Store Close Notice', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'find_address'             => [
-//                'type'        => 'string',
-//                'description' => __( 'Find Address', 'dokan-lite' ),
-//                'required'    => false,
-//            ],
-//            'dokan_store_time'         => [
-//                'type'        => 'object',
-//                'description' => __( 'Store Time', 'dokan-lite' ),
-//                'required'    => false,
-//                'properties'  => [
-//                    'monday'    => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'tuesday'   => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'wednesday' => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'thursday'  => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'friday'    => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'saturday'  => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                    'sunday'    => [
-//                        'type'     => 'object',
-//                        'required' => true,
-//                    ],
-//                ],
-//            ],
-//        ];
+    public function args_schema_for_save_settings_group() {
         $schema = [
             'type'  => 'array',
             'items' => [
@@ -575,7 +550,7 @@ class Settings {
      *
      * @return array
      */
-    public function args_schema_for_save_settings_child() {
+    public function args_schema_for_save_single_settings() {
         $schema = [
             'type'   => 'object',
             'properties' => [

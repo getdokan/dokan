@@ -72,12 +72,12 @@ class StoreSettingController extends WP_REST_Controller {
                 ],
 				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_settings' ],
+					'callback'            => [ $this, 'get_settings_group' ],
 					'permission_callback' => [ $this, 'get_settings_permission_callback' ],
 				],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
-                    'args'                => $this->update_settings_args(),
+                    'args'                => $this->update_settings_group_args(),
                     'callback'            => [ $this, 'update_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
@@ -85,15 +85,54 @@ class StoreSettingController extends WP_REST_Controller {
         );
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)', [
+                'args'   => [
+                    'group' => [
+                        'description' => __( 'Settings group ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                    'id' => [
+                        'description' => __( 'Settings ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                ],
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_settings_child' ],
+                    'callback'            => [ $this, 'get_single_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
-                    'args'                => $this->update_settings_child_args(),
-                    'callback'            => [ $this, 'update_settings_child' ],
+                    'args'                => $this->update_single_settings_args(),
+                    'callback'            => [ $this, 'update_single_settings' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                ],
+            ]
+        );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/(?P<group_id>[\w-]+)/(?P<parent_id>[\w-]+)/(?P<id>[\w-]+)', [
+                'args'   => [
+                    'group' => [
+                        'description' => __( 'Settings group ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                    'parent' => [
+                        'description' => __( 'Settings parent ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                    'id' => [
+                        'description' => __( 'Settings ID.', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_single_settings_field' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'args'                => $this->update_single_settings_args(),
+                    'callback'            => [ $this, 'update_single_settings_field' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
             ]
@@ -122,8 +161,21 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-    public function update_settings_child( $request ) {
-        return rest_ensure_response( $this->vendor_settings->save_settings_child( $request ) );
+    public function update_single_settings( $request ) {
+        return rest_ensure_response( $this->vendor_settings->save_single_settings( $request ) );
+    }
+
+    /**
+     * Update Store single settings field
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function update_single_settings_field( $request ) {
+        return rest_ensure_response( $this->vendor_settings->save_single_settings_field( $request ) );
     }
 
     /**
@@ -140,9 +192,9 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_settings( $request ) {
+    public function get_settings_group( $request ) {
         $group_id = $request->get_param( 'group_id' );
-        return rest_ensure_response( $this->vendor_settings->settings( $group_id ) );
+        return rest_ensure_response( $this->vendor_settings->settings_group( $group_id ) );
     }
 
     /**
@@ -150,32 +202,22 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_settings_child( $request ) {
+    public function get_single_settings( $request ) {
         $group_id = $request->get_param( 'group_id' );
         $id       = $request->get_param( 'id' );
-        return rest_ensure_response( $this->vendor_settings->settings_child( $group_id, $id ) );
+        return rest_ensure_response( $this->vendor_settings->single_settings( $group_id, $id ) );
     }
 
     /**
-     * Get a vendor's payment methods settings
-     *
-     * @param WP_REST_Request $request
+     * @param $request
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_payment_methods( $request ) {
-        return rest_ensure_response( $this->vendor_settings->payments() );
-    }
-
-    /**
-     * Get a vendor's payment methods settings
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
-     */
-    public function update_payment_methods( $request ) {
-        return rest_ensure_response( $this->vendor_settings->save_payments( $request->get_params() ) );
+    public function get_single_settings_field( $request ) {
+        $group_id = $request->get_param( 'group_id' );
+        $parent_id = $request->get_param( 'parent_id' );
+        $id       = $request->get_param( 'id' );
+        return rest_ensure_response( $this->vendor_settings->single_settings_field( $group_id, $parent_id, $id ) );
     }
 
     /**
@@ -255,15 +297,20 @@ class StoreSettingController extends WP_REST_Controller {
     }
 
     /**
-     * Args for updating payment methods.
+     * Args for updating a single setting.
      *
      * @return array
      */
-    private function update_settings_child_args() {
-        return $this->vendor_settings->args_schema_for_save_settings_child();
+    private function update_single_settings_args() {
+        return $this->vendor_settings->args_schema_for_save_single_settings();
     }
 
-    private function update_settings_args() {
-        return $this->vendor_settings->args_schema_for_save_settings();
+    /**
+     * Args for updating a single setting.
+     *
+     * @return array
+     */
+    private function update_settings_group_args() {
+        return $this->vendor_settings->args_schema_for_save_settings_group();
     }
 }
