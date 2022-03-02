@@ -524,6 +524,7 @@ class Settings {
     public function args_schema_for_save_settings_group() {
         $schema = [
             'type'  => 'array',
+            'required' => true,
             'items' => [
                 'type'   => 'object',
                 'properties' => [
@@ -553,6 +554,7 @@ class Settings {
     public function args_schema_for_save_single_settings() {
         $schema = [
             'type'   => 'object',
+            'required' => true,
             'properties' => [
                 'value' => [
                     'type'        => [ 'string', 'object' ],
