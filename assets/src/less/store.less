@@ -628,9 +628,7 @@
                         background-color: #fff;
                         width: 100%;
                         padding: 10px;
-                        overflow: hidden;
                         border: 1px solid @borderColor;
-
 
                         .profile-info-head {
                             width: 150px;
@@ -662,6 +660,16 @@
 
                             .dokan-store-info {
                                 padding-left: 25px;
+
+                                .store-open-close-notice {
+                                    &:hover {
+                                        span.fa-angle-down {
+                                            &:after {
+                                                right: -2.5px;
+                                            }
+                                        }
+                                    }
+                                }
 
                                 li {
                                     float: left;
@@ -1137,8 +1145,17 @@
                                     width: 100%;
                                     margin: 0;
                                     display: block;
-                                    overflow: hidden;
                                     text-align: center;
+
+                                    .store-open-close-notice {
+                                        &:hover {
+                                            span.fa-angle-down {
+                                                &:after {
+                                                    right: -2.5px;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     li {
                                         text-align: left;
