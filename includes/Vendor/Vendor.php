@@ -236,7 +236,7 @@ class Vendor {
     public function get_shop_info() {
 
         // return if already populated
-        if ( $this->shop_data ) {
+        if ( ! empty( $this->shop_data ) ) {
             return $this->shop_data;
         }
 
@@ -255,7 +255,7 @@ class Vendor {
     public function get_info_part( $item ) {
         $info = $this->get_shop_info();
 
-        if ( array_key_exists( $item, $info ) ) {
+        if ( is_array( $info ) && array_key_exists( $item, $info ) ) {
             return $info[ $item ];
         }
     }

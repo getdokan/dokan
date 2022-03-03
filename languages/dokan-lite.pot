@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.3.8\n"
+"Project-Id-Version: Dokan 3.3.9\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-02-17 09:16:15+00:00\n"
+"POT-Creation-Date: 2022-02-28 10:20:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1440,7 +1440,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: includes/Ajax.php:532 includes/Product/Hooks.php:39
+#: includes/Ajax.php:532 includes/Product/Hooks.php:40
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -1798,7 +1798,7 @@ msgstr ""
 #: src/admin/components/AdminNotice.vue:153 src/admin/pages/Settings.vue:474
 #: templates/my-orders.php:83 templates/orders/details.php:204
 #: templates/products/new-product-single.php:220
-#: templates/products/new-product.php:168
+#: templates/products/new-product.php:169
 #: templates/products/tmpl-add-product-popup.php:68
 #: templates/store-lists-filter.php:83
 #: templates/withdraw/pending-request-listing-dashboard.php:20
@@ -1920,6 +1920,18 @@ msgstr ""
 msgid "Show store opening/closing Time"
 msgstr ""
 
+#: includes/Customizer.php:395 includes/Install/Installer.php:178
+msgid "Store List"
+msgstr ""
+
+#: includes/Customizer.php:418
+msgid "Store List Sorting"
+msgstr ""
+
+#: includes/Customizer.php:419
+msgid "How should stores be sorted by default?"
+msgstr ""
+
 #: includes/Dashboard/Templates/Dashboard.php:106
 #: src/admin/pages/Vendors.vue:22 src/admin/pages/Withdraw.vue:23
 #: templates/dashboard/orders-widget.php:31
@@ -1967,32 +1979,32 @@ msgid "Details of your product ..."
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:252
-#: includes/Dashboard/Templates/Products.php:403
+#: includes/Dashboard/Templates/Products.php:406
 #: includes/Product/functions.php:31
 msgid "Please enter product title"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:259
-#: includes/Dashboard/Templates/Products.php:410
+#: includes/Dashboard/Templates/Products.php:413
 #: includes/Product/functions.php:36
 msgid "Please select a category"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:264
-#: includes/Dashboard/Templates/Products.php:415
+#: includes/Dashboard/Templates/Products.php:418
 #: includes/Product/functions.php:40
 msgid "Please select AT LEAST ONE category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:422
+#: includes/Dashboard/Templates/Products.php:425
 msgid "No product found!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:426
+#: includes/Dashboard/Templates/Products.php:429
 msgid "I swear this is not your product!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:441
+#: includes/Dashboard/Templates/Products.php:444
 #: includes/Product/functions.php:113
 #. translators: %s: maximum tag length
 msgid "You can only select %s tags"
@@ -2463,28 +2475,24 @@ msgstr ""
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
-#: includes/Install/Installer.php:178
-msgid "Store List"
-msgstr ""
-
 #: includes/Order/Hooks.php:300
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:348
+#: includes/Order/Hooks.php:356
 msgid "This coupon is invalid for multiple vendors."
 msgstr ""
 
-#: includes/Order/Hooks.php:362
+#: includes/Order/Hooks.php:370
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
-#: includes/Order/Hooks.php:414
+#: includes/Order/Hooks.php:422
 #. translators: %s item name.
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
-#: includes/Order/Hooks.php:491 includes/Order/Hooks.php:510
+#: includes/Order/Hooks.php:499 includes/Order/Hooks.php:518
 msgid "Stock levels reduced:"
 msgstr ""
 
@@ -2962,29 +2970,37 @@ msgstr ""
 msgid "Vendor %s data is removed."
 msgstr ""
 
-#: includes/Product/Hooks.php:46
+#: includes/Product/Hooks.php:47
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:134
+#: includes/Product/Hooks.php:135
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:171
+#: includes/Product/Hooks.php:172
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:173 includes/Product/functions.php:350
+#: includes/Product/Hooks.php:174 includes/Product/functions.php:350
 #: templates/products/listing-filter.php:69
 msgid "Search"
 msgstr ""
 
-#: includes/Product/Hooks.php:176
+#: includes/Product/Hooks.php:177
 msgid "Shop order"
 msgstr ""
 
 #: includes/Product/Manager.php:465
 msgid "No product ID found for updating"
+msgstr ""
+
+#: includes/Product/VendorStoreInfo.php:62
+msgid "Show Vendor Info"
+msgstr ""
+
+#: includes/Product/VendorStoreInfo.php:63
+msgid "Show vendor information on product single page"
 msgstr ""
 
 #: includes/Product/functions.php:64
@@ -4523,11 +4539,11 @@ msgstr ""
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
-#: includes/Vendor/StoreListsFilter.php:82
+#: includes/Vendor/StoreListsFilter.php:85
 msgid "Most Recent"
 msgstr ""
 
-#: includes/Vendor/StoreListsFilter.php:83
+#: includes/Vendor/StoreListsFilter.php:86
 msgid "Most Popular"
 msgstr ""
 
@@ -5218,11 +5234,11 @@ msgid "Sales"
 msgstr ""
 
 #: includes/template-tags.php:119 includes/template-tags.php:123
-#: templates/store-lists-loop.php:118
+#: templates/store-lists-loop.php:116
 msgid "&larr; Previous"
 msgstr ""
 
-#: includes/template-tags.php:135 templates/store-lists-loop.php:119
+#: includes/template-tags.php:135 templates/store-lists-loop.php:117
 msgid "Next &rarr;"
 msgstr ""
 
@@ -5276,7 +5292,7 @@ msgid "Back to Dashboard"
 msgstr ""
 
 #: includes/template-tags.php:564 templates/settings/header.php:14
-#: templates/store-lists-loop.php:94
+#: templates/store-lists-loop.php:92
 msgid "Visit Store"
 msgstr ""
 
@@ -6918,7 +6934,7 @@ msgstr ""
 #: templates/emails/vendor-completed-order.php:48
 #: templates/emails/vendor-new-order.php:48
 #: templates/products/new-product-single.php:198
-#: templates/products/new-product.php:157
+#: templates/products/new-product.php:158
 #: templates/products/products-listing-row.php:82
 #: templates/products/products-listing.php:106
 #: templates/products/tmpl-add-product-popup.php:57
@@ -7021,7 +7037,7 @@ msgstr ""
 
 #: templates/global/seller-warning.php:11
 #: templates/products/new-product-single.php:130
-#: templates/products/new-product.php:61
+#: templates/products/new-product.php:62
 msgid "Error!"
 msgstr ""
 
@@ -7480,7 +7496,7 @@ msgstr ""
 
 #: templates/products/listing-filter.php:26
 #: templates/products/new-product-single.php:269
-#: templates/products/new-product.php:205
+#: templates/products/new-product.php:206
 #: templates/products/tmpl-add-product-popup.php:102
 msgid "- Select a category -"
 msgstr ""
@@ -7518,7 +7534,7 @@ msgid "View Product"
 msgstr ""
 
 #: templates/products/new-product-single.php:138
-#: templates/products/new-product.php:70
+#: templates/products/new-product.php:71
 msgid "Success!"
 msgstr ""
 
@@ -7535,7 +7551,7 @@ msgid "Title"
 msgstr ""
 
 #: templates/products/new-product-single.php:165
-#: templates/products/new-product.php:151
+#: templates/products/new-product.php:152
 #: templates/products/tmpl-add-product-popup.php:51
 msgid "Product name.."
 msgstr ""
@@ -7564,13 +7580,13 @@ msgid "0.00"
 msgstr ""
 
 #: templates/products/new-product-single.php:218
-#: templates/products/new-product.php:166
+#: templates/products/new-product.php:167
 #: templates/products/tmpl-add-product-popup.php:66
 msgid "Discounted Price"
 msgstr ""
 
 #: templates/products/new-product-single.php:219
-#: templates/products/new-product.php:167
+#: templates/products/new-product.php:168
 #: templates/products/tmpl-add-product-popup.php:67
 msgid "Schedule"
 msgstr ""
@@ -7580,22 +7596,22 @@ msgid "Product price can't be less than the vendor fee!"
 msgstr ""
 
 #: templates/products/new-product-single.php:239
-#: templates/products/new-product.php:181
+#: templates/products/new-product.php:182
 #: templates/products/tmpl-add-product-popup.php:81
 msgid "From"
 msgstr ""
 
 #: templates/products/new-product-single.php:240
 #: templates/products/new-product-single.php:247
-#: templates/products/new-product.php:182
-#: templates/products/new-product.php:189
+#: templates/products/new-product.php:183
+#: templates/products/new-product.php:190
 #: templates/products/tmpl-add-product-popup.php:82
 #: templates/products/tmpl-add-product-popup.php:89
 msgid "YYYY-MM-DD"
 msgstr ""
 
 #: templates/products/new-product-single.php:246
-#: templates/products/new-product.php:188
+#: templates/products/new-product.php:189
 #: templates/products/tmpl-add-product-popup.php:88
 msgid "To"
 msgstr ""
@@ -7610,25 +7626,25 @@ msgid "Please choose a category!"
 msgstr ""
 
 #: templates/products/new-product-single.php:312
-#: templates/products/new-product.php:247
+#: templates/products/new-product.php:248
 #: templates/products/tmpl-add-product-popup.php:140
 msgid "Select product category"
 msgstr ""
 
 #: templates/products/new-product-single.php:318
-#: templates/products/new-product.php:253
+#: templates/products/new-product.php:254
 #: templates/products/tmpl-add-product-popup.php:146
 msgid "Tags"
 msgstr ""
 
 #: templates/products/new-product-single.php:323
-#: templates/products/new-product.php:257
+#: templates/products/new-product.php:258
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select tags/Add tags"
 msgstr ""
 
 #: templates/products/new-product-single.php:323
-#: templates/products/new-product.php:257
+#: templates/products/new-product.php:258
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select product tags"
 msgstr ""
@@ -7639,12 +7655,12 @@ msgid "Upload a product cover image"
 msgstr ""
 
 #: templates/products/new-product-single.php:391
-#: templates/products/new-product.php:131
+#: templates/products/new-product.php:132
 msgid "Delete image"
 msgstr ""
 
 #: templates/products/new-product-single.php:397
-#: templates/products/new-product.php:138
+#: templates/products/new-product.php:139
 #: templates/products/tmpl-add-product-popup.php:39
 msgid "Add gallery image"
 msgstr ""
@@ -7654,7 +7670,7 @@ msgid "Short Description"
 msgstr ""
 
 #: templates/products/new-product-single.php:418
-#: templates/products/new-product.php:274
+#: templates/products/new-product.php:275
 msgid "Description"
 msgstr ""
 
@@ -7668,27 +7684,27 @@ msgstr ""
 msgid "Add New Product"
 msgstr ""
 
-#: templates/products/new-product.php:71
+#: templates/products/new-product.php:72
 msgid "You have successfully created <a href=\"%s\"><strong>%s</strong></a> product"
 msgstr ""
 
-#: templates/products/new-product.php:102
+#: templates/products/new-product.php:103
 msgid "Upload Product Image"
 msgstr ""
 
-#: templates/products/new-product.php:196
+#: templates/products/new-product.php:197
 msgid "Short description of the product..."
 msgstr ""
 
-#: templates/products/new-product.php:274
+#: templates/products/new-product.php:275
 msgid "Add your product description"
 msgstr ""
 
-#: templates/products/new-product.php:293
+#: templates/products/new-product.php:294
 msgid "Create & Add New"
 msgstr ""
 
-#: templates/products/new-product.php:295
+#: templates/products/new-product.php:296
 msgid "Create Product"
 msgstr ""
 
@@ -7855,7 +7871,7 @@ msgstr ""
 msgid "No withdraw method is available. Please contact site admin."
 msgstr ""
 
-#: templates/settings/store-form.php:56 templates/store-lists-loop.php:45
+#: templates/settings/store-form.php:56 templates/store-lists-loop.php:43
 msgid "Open"
 msgstr ""
 
@@ -7923,12 +7939,20 @@ msgstr ""
 msgid "Store Close Notice"
 msgstr ""
 
-#: templates/store-header.php:13
+#: templates/store-header.php:17
 msgid "Store Open"
 msgstr ""
 
-#: templates/store-header.php:14
+#: templates/store-header.php:18
 msgid "Store Closed"
+msgstr ""
+
+#: templates/store-header.php:113
+msgid "Weekly Store Timing"
+msgstr ""
+
+#: templates/store-header.php:124
+msgid "CLOSED"
 msgstr ""
 
 #: templates/store-lists-filter.php:27
@@ -7941,31 +7965,31 @@ msgstr[1] ""
 msgid "Sort by"
 msgstr ""
 
-#: templates/store-lists-loop.php:37
+#: templates/store-lists-loop.php:36
 msgid "Featured"
 msgstr ""
 
-#: templates/store-lists-loop.php:45
+#: templates/store-lists-loop.php:43
 msgid "Store is Open"
 msgstr ""
 
-#: templates/store-lists-loop.php:47
+#: templates/store-lists-loop.php:45
 msgid "Store is Closed"
 msgstr ""
 
-#: templates/store-lists-loop.php:47
+#: templates/store-lists-loop.php:45
 msgid "Closed"
 msgstr ""
 
-#: templates/store-lists-loop.php:55
+#: templates/store-lists-loop.php:53
 msgid "Rated %s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:58
+#: templates/store-lists-loop.php:56
 msgid "%s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:145
+#: templates/store-lists-loop.php:143
 msgid "No vendor found!"
 msgstr ""
 
@@ -7987,6 +8011,13 @@ msgid ""
 "into multiple vendor orders.\n"
 "    Each order will be handled by their respective vendor independently."
 msgstr ""
+
+#: templates/vendor-store-info.php:32
+#. translators: %d reviews count
+msgid "%d Review"
+msgid_plural "%d Reviews"
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/widgets/store-contact-form.php:18
 msgid "you@example.com"
