@@ -578,16 +578,13 @@ class Assets {
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
 
-        // Get week starts day number.
-        $week_starts_on = get_option( 'start_of_week', 0 );
-
         // Dokan date range picker localization
         $daterange_localize_data = [
             'apply_label' => __( 'Apply', 'dokan-lite' ),
             'clear_label' => __( 'Clear', 'dokan-lite' ),
             'locale'      => [
                 'toLabel'          => __( 'To', 'dokan-lite' ),
-                'firstDay'         => intval( $week_starts_on ),
+                'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
                 'fromLabel'        => __( 'From', 'dokan-lite' ),
                 'separator'        => __( ' - ', 'dokan-lite' ),
                 'weekLabel'        => __( 'W', 'dokan-lite' ),
