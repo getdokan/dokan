@@ -17,7 +17,7 @@ jobs:
     e2e-test:
         name: e2e-test - ${{ matrix.part }}
         runs-on: ubuntu-latest
-        if: ${{ github.repository == 'weDevsOfficial/dokan-pro' || github.event_name == 'pull_request' }}
+        if: ${{ github.repository == 'xaviranik/dokan-pro' || github.event_name == 'pull_request' }}
         strategy:
             fail-fast: false
             matrix:
