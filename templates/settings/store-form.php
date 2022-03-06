@@ -9,7 +9,7 @@
     $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
     $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
-    $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
+    $store_ppp      = ! empty( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
     $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
     $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
     $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
@@ -142,7 +142,7 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
+                <input id="dokan_store_ppp" value="<?php echo ! empty( $store_ppp ) ? absint( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
             </div>
         </div>
          <!--address-->
@@ -172,7 +172,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-        
+
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
