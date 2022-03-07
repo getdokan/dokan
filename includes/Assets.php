@@ -580,8 +580,6 @@ class Assets {
 
         // Dokan date range picker localization
         $daterange_localize_data = [
-            'apply_label' => __( 'Apply', 'dokan-lite' ),
-            'clear_label' => __( 'Clear', 'dokan-lite' ),
             'locale'      => [
                 'toLabel'          => __( 'To', 'dokan-lite' ),
                 'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
@@ -589,7 +587,7 @@ class Assets {
                 'separator'        => __( ' - ', 'dokan-lite' ),
                 'weekLabel'        => __( 'W', 'dokan-lite' ),
                 'applyLabel'       => __( 'Apply', 'dokan-lite' ),
-                'cancelLabel'      => __( 'Cancel', 'dokan-lite' ),
+                'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
                 'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
                 'daysOfWeek'       => [
                     __( 'Su', 'dokan-lite' ),
