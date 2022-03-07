@@ -2,10 +2,9 @@
     <div class="dokan-knowledge-base">
         <div class="dokan-kb-header">
             <h3 class="dokan-kb-header-title">{{ __( 'Dokan Knowledge Base', 'dokan-lite' ) }}</h3>
-            <p class="dokan-kb-header-info">{{ __( 'Learn the ins and outs of Module page at Dokan', 'dokan-lite' ) }}</p>
+            <p class="dokan-kb-header-info">{{ sprintf( __( 'Learn the ins and outs of %s page on Dokan', 'dokan-lite' ), getPageContent() ) }}</p>
         </div>
 
-<!--        <div v-if="loading" class="dokan-kb-content lds-hourglass"></div>-->
         <div v-if="loading" class="dokan-kb-content lds-ripple"><div></div><div></div></div>
         <div v-else class="dokan-kb-content">
             <div class="dokan-kb-article-list">
@@ -20,10 +19,14 @@
                         </div>
                         <h4 class="dokan-kb-article-header-title">{{ __( 'Dokan Blog', 'dokan-lite' ) }}</h4>
                     </div>
-                    <div class="dokan-kb-article-header-nav">
+                    <div class="dokan-kb-article-header-nav" v-if="!loading && articles.length">
                         <span v-on:click="navigateArticle('back')" class="dashicons dashicons-arrow-left-alt2 dokan-kb-article-header-nav-item"></span>
                         <span v-on:click="navigateArticle('next')" class="dashicons dashicons-arrow-right-alt2 dokan-kb-article-header-nav-item"></span>
                     </div>
+                </div>
+                <div class="dokan-kb-article-404" v-if="!loading && !articles.length">
+                    <h3>Oops, our posts aren't loading right now</h3>
+                    <p>Read the <a href="https://wedevs.com/category/dokan" target="_blank">{{ __( 'Dokan Blogs', 'dokan-lite' ) }}</a> for more tips on marketing your store</p>
                 </div>
                 <div class="dokan-kb-article-item" v-for="article in articles.slice( articlePosition, 2 + articlePosition )" :key="article.id">
                     <a :href="article.link" target="_blank">
@@ -32,7 +35,7 @@
                         </div>
                         <div class="dokan-kb-article-content">
                             <h5 class="dokan-kb-article-title">{{ article.title.rendered }}</h5>
-                            <span v-for="category in article.categories" class="dokan-kb-article-category">{{ category.name }}</span>
+                            <span v-for="category in article.categories" class="dokan-kb-article-category" :class="getCategoryColorClass()">{{ category.name }}</span>
                         </div>
                     </a>
                 </div>
@@ -49,6 +52,10 @@
                         <h4 class="dokan-kb-docs-header-title">{{ __( 'Basic Doc', 'dokan-lite' ) }}</h4>
                     </div>
                 </div>
+                <div class="dokan-kb-docs-404" v-if="!loading && !docs.length">
+                    <h3>Oops, our docs aren't loading right now</h3>
+                    <p>Read the <a href="https://wedevs.com/docs/dokan/" target="_blank">{{ __( 'Dokan Docs', 'dokan-lite' ) }}</a> for more tips on managing your store</p>
+                </div>
                 <ol class="dokan-kb-docs-ordered-list">
                     <div class="dokan-kb-doc-item" v-for="doc in docs.slice(0,4)">
                         <li class="dokan-kb-doc-title">
@@ -56,7 +63,7 @@
                         </li>
                     </div>
                 </ol>
-                <div class="dokan-kb-docs-more-link">
+                <div class="dokan-kb-docs-more-link" v-if="docs.length > 4">
                     <a href="https://wedevs.com/docs/dokan/" target="_blank">{{ __( 'View All', 'dokan-lite' ) }}</a>
                 </div>
 
@@ -76,7 +83,10 @@ export default {
             articlePosition: 0,
             loading: true,
             articles: [],
-            docs: []
+            docs: [],
+            params: {
+
+            }
         };
     },
     created() {
@@ -96,12 +106,13 @@ export default {
             this.loading = true;
             this.articlePosition = 0;
 
-            axios.get( this.base + '/posts',{ params: { per_page: 2 } } )
+            axios.get( this.base + '/posts',{ params: { categories: [1292] } } )
                 .then( response => {
                     this.articles = response.data;
                     this.loading = false;
                 } )
                 .catch( error => {
+                    this.loading = false;
                     console.log( error );
                 } );
 
@@ -111,6 +122,7 @@ export default {
                     this.loading = false;
                 } )
                 .catch( error => {
+                    this.loading = false;
                     console.log( error );
                 } );
 
@@ -126,6 +138,19 @@ export default {
                 this.articlePosition = this.articles.length - 2;
             } else if (this.articlePosition >= this.articles.length) {
                 this.articlePosition = 0;
+            }
+        },
+        getCategoryColorClass(){
+            let number = Math.floor((Math.random() * 10) + 1);
+            return 'color-scheme-' + number;
+        },
+        getPageContent() {
+            let currentPage = this.getCurrentPage();
+            switch (currentPage) {
+                case 'Dashboard':
+                    return 'Every';
+                default:
+                    return currentPage;
             }
         },
     },
@@ -168,6 +193,7 @@ export default {
             flex-wrap: wrap;
             justify-content: space-between;
             padding: 30px 25px;
+            transition: height 1s ease-in-out;
 
             .dokan-kb-article-list {
                 width: calc(50% - 31px);
@@ -274,9 +300,59 @@ export default {
                                 border-radius: 10px;
                                 background: #dfe2ff;
                             }
+                            .color-scheme-1 {
+                                color: rgba(44,117,169, 1);
+                                background: rgba(44,117,169, .1);
+                            }
+                            .color-scheme-2 {
+                                color: rgba(14, 24, 95, 1);
+                                background: rgba(14, 24, 95, .1);
+                            }
+                            .color-scheme-3 {
+                                color: rgba(21, 29, 59, 1);
+                                background: rgba(21, 29, 59, .1);
+                            }
+                            .color-scheme-4 {
+                                color: rgba(216, 33, 72, 1);
+                                background: rgba(216, 33, 72, .1);
+                            }
+                            .color-scheme-5 {
+                                color: rgba(110, 191, 139, 1);
+                                background: rgba(110, 191, 139, .1);
+                            }
+                            .color-scheme-6 {
+                                color: rgba(83, 62, 133, 1);
+                                background: rgba(83, 62, 133, .1);
+                            }
+                            .color-scheme-7 {
+                                color: rgba(15, 14, 14, 1);
+                                background: rgba(15, 14, 14, .1);
+                            }
+                            .color-scheme-8 {
+                                color: rgba(84, 18, 18, 1);
+                                background: rgba(84, 18, 18, .1);
+                            }
+                            .color-scheme-9 {
+                                color: rgba(84, 99, 255, 1);
+                                background: rgba(84, 99, 255, .1);
+                            }
+                            .color-scheme-10 {
+                                color: rgba(255, 24, 24, 1);
+                                background: rgba(255, 24, 24, .1);
+                            }
                         }
                     }
 
+                }
+                .dokan-kb-article-404 {
+                    text-align: left;
+
+                    h3 {
+                        margin: 0;
+                    }
+                    p {
+                        margin: 0;
+                    }
                 }
             }
             .dokan-kb-docs-list {
@@ -345,6 +421,16 @@ export default {
                                 font-weight: 500;
                             }
                         }
+                    }
+                }
+                .dokan-kb-docs-404 {
+                    text-align: left;
+
+                    h3 {
+                        margin: 0;
+                    }
+                    p {
+                        margin: 0;
                     }
                 }
                 .dokan-kb-docs-more-link {
