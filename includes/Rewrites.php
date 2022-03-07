@@ -37,7 +37,7 @@ class Rewrites {
      *
      * @since 2.4.7
      *
-     * @return array $crumbs
+     * @return void | array $crumbs
      */
     public function store_page_breadcrumb( $crumbs ) {
         if ( ! dokan_is_store_page() ) {
@@ -52,6 +52,11 @@ class Rewrites {
 
         $author      = get_query_var( $this->custom_store_url );
         $seller_info = get_user_by( 'slug', $author );
+
+        if ( ! $seller_info ) {
+            return;
+        }
+
         $crumbs[1]   = [ ucwords( $this->custom_store_url ), site_url() . '/' . $this->custom_store_url ];
         $crumbs[2]   = [ $author, dokan_get_store_url( $seller_info->data->ID ) ];
 
@@ -79,6 +84,7 @@ class Rewrites {
                 'new-product',
                 'orders',
                 'withdraw',
+                'withdraw-requests',
                 'settings',
                 'edit-account',
             ]

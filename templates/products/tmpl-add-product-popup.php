@@ -5,8 +5,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 ?>
 <script type="text/html" id="tmpl-dokan-add-new-product">
     <div id="dokan-add-new-product-popup" class="white-popup dokan-add-new-product-popup">
-        <h2><i class="fa fa-briefcase">&nbsp;</i>&nbsp;<?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?></h2>
-
+        <h2><i class="fas fa-briefcase">&nbsp;</i>&nbsp;<?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?></h2>
+        <?php do_action( 'dokan_new_product_before_product_area' ); ?>
         <form action="" method="post" id="dokan-add-new-product-form">
             <div class="product-form-container">
                 <div class="content-half-part dokan-feat-image-content">
@@ -21,7 +21,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                         <div class="instruction-inside<?php echo esc_attr( $instruction_class ); ?>">
                             <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $feat_image_id ); ?>">
 
-                            <i class="fa fa-cloud-upload"></i>
+                            <i class="fas fa-cloud-upload-alt"></i>
                             <a href="#" class="dokan-feat-image-btn btn btn-sm"><?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?></a>
                         </div>
 
@@ -37,7 +37,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                     <ul class="product_images dokan-clearfix">
 
                                         <li class="add-image add-product-images tips" data-title="<?php esc_attr_e( 'Add gallery image', 'dokan-lite' ); ?>">
-                                            <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                            <a href="#" class="add-product-images"><i class="fas fa-plus" aria-hidden="true"></i></a>
                                         </li>
                                     </ul>
                                     <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="">

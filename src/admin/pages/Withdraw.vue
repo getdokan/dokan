@@ -66,6 +66,10 @@
                     {{ moment(data.row.created).format('MMM D, YYYY') }}
                 </template>
 
+                <template slot="method_title" slot-scope="data">
+                    <div class="method_title_inner" v-html="getPaymentTitle(data.row.method, data.row)"></div>
+                </template>
+
                 <template slot="method_details" slot-scope="data">
                     <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.details)"></div>
                 </template>
@@ -421,6 +425,16 @@ export default {
             }
         },
 
+        getPaymentTitle(method, data) {
+            let title = data.method_title;
+
+            if ( data.details[method] !== undefined && 'dokan_custom' === method  ) {
+                title = data.details[method].method ?? '';
+            }
+
+            return dokan.hooks.applyFilters( 'dokan_get_payment_title', title, method, data );
+        },
+
         getPaymentDetails(method, data) {
             let details = '—';
 
@@ -452,6 +466,8 @@ export default {
                     if ( data.bank.hasOwnProperty('swift') ) {
                         details += '<p>' + this.sprintf( this.__( 'Swift Code: %s', 'dokan-lite' ), data.bank.swift ) + '</p>';
                     }
+                } else if ( 'dokan_custom' === method ) {
+                    details = data[method].value ?? '';
                 }
             }
 

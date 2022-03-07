@@ -117,17 +117,16 @@ class Commission {
      *
      * @return array
      */
-    public function hide_extra_data( $formated_meta ) {
-        $meta_to_hide   = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
-        $meta_to_return = [];
+    public function hide_extra_data( $formatted_meta ) {
+        $meta_to_hide = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
 
-        foreach ( $formated_meta as $key => $meta ) {
-            if ( ! in_array( $meta->key, $meta_to_hide, true ) ) {
-                array_push( $meta_to_return, $meta );
+        foreach ( $formatted_meta as $key => $meta ) {
+            if ( in_array( $meta->key, $meta_to_hide, true ) ) {
+                unset( $formatted_meta[ $key ] );
             }
         }
 
-        return $meta_to_return;
+        return $formatted_meta;
     }
 
     /**

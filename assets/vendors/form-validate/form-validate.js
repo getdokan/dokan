@@ -468,7 +468,7 @@ $.extend($.validator, {
 			// select all valid inputs inside the form (no submit or reset buttons)
 			return $(this.currentForm)
 			.find("input, select, textarea")
-			.not(":submit, :reset, :image, [disabled]")
+			.not(":submit, :reset, :image, [disabled], .select2-search__field")
 			.not( this.settings.ignore )
 			.filter(function() {
 				if ( !this.name ) {

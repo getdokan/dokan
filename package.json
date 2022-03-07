@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.3.5",
+  "version": "3.3.9",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -26,7 +26,7 @@
     "vue2-daterange-picker": "^0.6.8"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.16.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.16.7",
     "@wordpress/babel-preset-default": "^4.20.0",
     "assets-webpack-plugin": "^3.9.12",
     "babel-loader": "^8.2.3",
