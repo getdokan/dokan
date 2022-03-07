@@ -312,7 +312,6 @@
                                     display: flex;
                                     align-items: center;
                                     position: relative;
-                                    z-index: 1;
 
                                     .store-notice {
                                         min-width: 96px;
@@ -368,7 +367,7 @@
                                             margin-bottom: 12px;
 
                                             .store-days {
-                                                flex: 2.3;
+                                                flex: 2.4;
                                             }
 
                                             .current_day,
@@ -485,7 +484,11 @@
                                     color: #55acee;
                                 }
 
-                                &.fa-linkedin-square {
+                                &.fa-pinterest-square {
+                                    color: #bd081c;
+                                }
+
+                                &.fa-linkedin {
                                     color: #007bb5;
                                 }
 
@@ -584,7 +587,9 @@
                         background-color: #fff;
                         width: 100%;
                         padding: 10px;
+                        overflow: hidden;
                         border: 1px solid @borderColor;
+
 
                         .profile-info-head {
                             width: 150px;
@@ -616,20 +621,6 @@
 
                             .dokan-store-info {
                                 padding-left: 25px;
-
-                                .store-open-close-notice {
-                                    #vendor-store-times {
-                                        left: -30%;
-                                    }
-
-                                    &:hover {
-                                        span.fa-angle-down {
-                                            &:after {
-                                                right: -2.5px;
-                                            }
-                                        }
-                                    }
-                                }
 
                                 li {
                                     float: left;
@@ -671,7 +662,6 @@
                                 position: relative;
 
                                 .store-social {
-                                    display: flex;
                                     padding-left: 0;
 
                                     li {
@@ -1091,8 +1081,8 @@
                             }
 
                             .profile-info {
-                                position: absolute;
-                                top: 15%;
+                                position: relative;
+                                top: -75px;
 
                                 .store-name {
                                     color: inherit;
@@ -1106,19 +1096,8 @@
                                     width: 100%;
                                     margin: 0;
                                     display: block;
+                                    overflow: hidden;
                                     text-align: center;
-
-                                    .store-open-close-notice {
-                                        display: inline-block;
-
-                                        &:hover {
-                                            span.fa-angle-down {
-                                                &:after {
-                                                    right: -2.5px;
-                                                }
-                                            }
-                                        }
-                                    }
 
                                     li {
                                         text-align: left;
