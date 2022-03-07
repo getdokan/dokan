@@ -10,6 +10,7 @@ import Mixin from './Mixin'
 import Debounce from 'debounce'
 import VersionCompare from '@/utils/VersionCompare'
 import AdminNotice from "../admin/components/AdminNotice.vue";
+import { __ } from '@/utils/i18n'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
