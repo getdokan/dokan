@@ -580,8 +580,39 @@ class Assets {
 
         // Dokan date range picker localization
         $daterange_localize_data = [
-            'apply_label' => __( 'Apply', 'dokan-lite' ),
-            'clear_label' => __( 'Clear', 'dokan-lite' ),
+            'locale'      => [
+                'toLabel'          => __( 'To', 'dokan-lite' ),
+                'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
+                'fromLabel'        => __( 'From', 'dokan-lite' ),
+                'separator'        => __( ' - ', 'dokan-lite' ),
+                'weekLabel'        => __( 'W', 'dokan-lite' ),
+                'applyLabel'       => __( 'Apply', 'dokan-lite' ),
+                'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
+                'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
+                'daysOfWeek'       => [
+                    __( 'Su', 'dokan-lite' ),
+                    __( 'Mo', 'dokan-lite' ),
+                    __( 'Tu', 'dokan-lite' ),
+                    __( 'We', 'dokan-lite' ),
+                    __( 'Th', 'dokan-lite' ),
+                    __( 'Fr', 'dokan-lite' ),
+                    __( 'Sa', 'dokan-lite' ),
+                ],
+                'monthNames'       => [
+                    __( 'January', 'dokan-lite' ),
+                    __( 'February', 'dokan-lite' ),
+                    __( 'March', 'dokan-lite' ),
+                    __( 'April', 'dokan-lite' ),
+                    __( 'May', 'dokan-lite' ),
+                    __( 'June', 'dokan-lite' ),
+                    __( 'July', 'dokan-lite' ),
+                    __( 'August', 'dokan-lite' ),
+                    __( 'September', 'dokan-lite' ),
+                    __( 'October', 'dokan-lite' ),
+                    __( 'November', 'dokan-lite' ),
+                    __( 'December', 'dokan-lite' ),
+                ],
+            ],
         ];
 
         wp_localize_script( 'dokan-date-range-picker', 'dokan_daterange_i18n', $daterange_localize_data );
@@ -742,12 +773,12 @@ class Assets {
      */
     public function conditional_localized_args( $default_args ) {
         if ( dokan_is_seller_dashboard()
-             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
-             || dokan_is_store_page()
-             || is_account_page()
-             || is_product()
-             || dokan_is_store_listing()
-             || apply_filters( 'dokan_force_load_extra_args', false )
+            || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
+            || dokan_is_store_page()
+            || is_account_page()
+            || is_product()
+            || dokan_is_store_listing()
+            || apply_filters( 'dokan_force_load_extra_args', false )
         ) {
             $general_settings = get_option( 'dokan_general', [] );
 
