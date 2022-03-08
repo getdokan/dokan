@@ -19,12 +19,17 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 👉 Official Free Demo Link: [Official Demo](https://dokan.wedevsdemos.com/)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
+👉 Check out [Dokan Mobile App](https://wedevs.com/dokan/dokan-mobile-app)
 
 = POWERED BY WooCommerce =
 
 [Dokan](https://wedevs.com/dokan/) is the best front end multi-vendor marketplace on WordPress, powered by WooCommerce. It helps you to build your own marketplace similar to Amazon, Shopify, eBay, Magento like marketplaces in under 30 minutes.
 
 Dokan is the fastest way to start eCommerce and earn through commissions with products ranging from digital, physical to variable products.
+
+Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan.
+
+[youtube https://www.youtube.com/watch?v=nDAxNypVxdw]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
