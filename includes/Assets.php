@@ -14,12 +14,12 @@ class Assets {
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
 
         if ( is_admin() ) {
-            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_admin_notices_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_admin_notices_scripts' ], 8 );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
         }
     }
 
@@ -31,9 +31,20 @@ class Assets {
      * @return void
      */
     public function load_dokan_admin_notices_scripts() {
-        wp_enqueue_script( 'dokan-admin-notice-js' );
         wp_enqueue_script( 'dokan-promo-notice-js' );
-        wp_localize_script( 'dokan-vue-vendor', 'dokan', $this->get_admin_localized_scripts() );
+        $vue_localize_script = apply_filters(
+            'dokan_promo_notice_localize_script', [
+                'rest' => [
+                    'root'    => esc_url_raw( get_rest_url() ),
+                    'nonce'   => wp_create_nonce( 'wp_rest' ),
+                    'version' => 'dokan/v1',
+                ],
+                'urls'            => [
+                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                ],
+            ]
+        );
+        wp_localize_script( 'dokan-promo-notice-js', 'dokan_promo', $vue_localize_script );
     }
 
     /**
@@ -428,14 +439,9 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-admin-notice-js' => [
-                'src'     => $asset_url . '/js/dokan-admin-notice.js',
-                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
-            ],
             'dokan-promo-notice-js' => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
-                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
         ];
