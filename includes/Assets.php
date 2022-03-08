@@ -34,6 +34,7 @@ class Assets {
         wp_enqueue_script( 'dokan-promo-notice-js' );
         $vue_localize_script = apply_filters(
             'dokan_promo_notice_localize_script', [
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'rest' => [
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
