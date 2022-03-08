@@ -7,7 +7,7 @@ Tested up to: 5.9.1
 WC requires at least: 3.0
 WC tested up to: 6.2.1
 Requires PHP: 5.6
-Stable tag: 3.3.9
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -313,6 +313,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.4.0 ( Mar 08, 2022 ) =
+
+- **update:** Stop loading unnecessary style and script files on every page #1450
+- **update:** Added random as store list orderby parameter
+- **update:** Dokan store shortcode orderby parameter now reflect store filter.
+- **fix:** Store open/close time hover feature wasn’t working for specific single store page templates #1549
+- **fix:** Variable products stock status wasn’t updating by quick edit from vendor dashboard, now has been fixed #1553
+- **fix:** Fixed Dokan conflict with WP Project Manager #1546
+- **fix:** Store product per page value wasn’t saving, now has been fixed #1548
+- **fix:** Fixed fatal error while getting store open close time under single store page
+- **fix:** Remove background process files from database if file doesn’t exists on server due to server migration
 
 = v3.3.9 ( Feb 28, 2022 ) =
 
