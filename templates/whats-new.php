@@ -4,6 +4,52 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.4.0',
+        'released' => '2022-03-08',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'Stop loading unnecessary style and script files on every page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added random as store list orderby parameter',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan store shortcode orderby parameter now reflect store filter',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Store open/close time hover feature wasn’t working for specific single store page templates',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Variable products stock status wasn’t updating by quick edit from vendor dashboard, now has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed Dokan conflict with WP Project Manager',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store product per page value wasn’t saving, now has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed fatal error while getting store open close time under single store page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove background process files from database if file doesn’t exists on server due to server migration',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.3.9',
         'released' => '2022-02-28',
         'changes'  => [
