@@ -214,6 +214,7 @@ final class WeDevs_Dokan {
     public function flush_rewrite_rules() {
         // fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
+            require_once DOKAN_INC_DIR . '/functions.php';
             $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
         }
         $this->container['rewrite']->register_rule();
