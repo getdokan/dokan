@@ -484,17 +484,23 @@
             dokan_address_select.init();
 
             $('#setting_phone').on( 'keydown', function(e) {
+                let cKey     = 67,
+                    vKey     = 86,
+                    cmdKey   = 91,
+                    ctrlKey  = 17,
+                    ctrlDown = false;
+
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
-                     // Allow: Ctrl+A
+                    // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     //Allow Ctrl+v
                     (e.keyCode === vKey && ctrlDown) ||
                     // Allow: Ctrl+c
                     (e.keyCode === cKey && ctrlDown) ||
-                     // Allow: home, end, left, right
+                    // Allow: home, end, left, right
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
-                         // let it happen, don't do anything
+                    // let it happen, don't do anything
                     return;
                 }
 
