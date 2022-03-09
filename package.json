@@ -10,7 +10,10 @@
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
-    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md"
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "wp-env": "wp-env",
+    "test:e2e": "wp-scripts test-e2e",
+    "test:unit": "wp-scripts test-unit-js"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
@@ -27,6 +30,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.16.7",
     "@wordpress/babel-preset-default": "^4.20.0",
+    "@wordpress/e2e-test-utils": "^6.0.2",
+    "@wordpress/env": "^4.2.2",
+    "@wordpress/scripts": "^22.0.1",
     "assets-webpack-plugin": "^3.9.12",
     "babel-loader": "^8.2.3",
     "browser-sync": "^2.27.7",
