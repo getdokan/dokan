@@ -45,7 +45,7 @@ jobs:
                   npm run env:start
 
             - name: Running the phpunit tests
-                run: |
+              run: |
                   npm run test:phpunit
 
             - name: Running the e2e tests
