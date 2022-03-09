@@ -15,7 +15,7 @@
     "env:start": "wp-env start",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
-    "test:phpunit": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/dokan/phpunit.xml /var/www/html/wp-content/plugins/dokan/tests/phpunit/'"
+    "test:phpunit": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/dokan/phpunit.xml'"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
