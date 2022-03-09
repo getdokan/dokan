@@ -10,7 +10,7 @@ require_once dirname( dirname( dirname( __FILE__ ) ) ) . '/vendor/autoload.php';
 $_tests_dir = getenv( 'WP_TESTS_DIR' ) ?: getenv( 'WP_PHPUNIT__DIR' );
 
 
-if ( !file_exists( $_tests_dir . '/includes/functions.php' ) ) {
+if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
     echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     exit( 1 );
 }
@@ -21,10 +21,6 @@ require_once $_tests_dir . '/includes/functions.php';
 define( 'TEST_DOKAN_DIR', dirname( dirname( __DIR__ ) ) );
 
 function _manually_load_plugin() {
-//    define( 'WC_TAX_ROUNDING_MODE', 'auto' );
-//    define( 'WC_USE_TRANSACTIONS', false );
-
-//    require TEST_WC_DIR . '/woocommerce.php';
     require TEST_DOKAN_DIR . '/dokan.php';
 }
 
