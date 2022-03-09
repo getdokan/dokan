@@ -19,6 +19,7 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 require_once $_tests_dir . '/includes/functions.php';
 
 define( 'TEST_DOKAN_DIR', dirname( dirname( __DIR__ ) ) );
+require __DIR__ . '/helpers/helper.php';
 
 function _manually_load_plugin() {
     require TEST_DOKAN_DIR . '/dokan.php';
@@ -26,7 +27,6 @@ function _manually_load_plugin() {
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
-require __DIR__ . '/helpers/helper.php';
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
