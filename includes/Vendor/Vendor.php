@@ -200,7 +200,7 @@ class Vendor {
             'icon'                    => 0,
             'gravatar'                => 0,
             'show_more_ptab'          => 'yes',
-            'store_ppp'               => 10,
+            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',

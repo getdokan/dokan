@@ -38,15 +38,7 @@ class AdminNoticeController extends DokanRESTAdminController {
                 ],
             ]
         );
-        register_rest_route(
-            $this->namespace, '/' . $this->base . '/global', [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'dokan_get_global_admin_notices' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
-                ],
-            ]
-        );
+
         register_rest_route(
             $this->namespace, '/' . $this->base . '/promo', [
                 [
@@ -65,17 +57,6 @@ class AdminNoticeController extends DokanRESTAdminController {
      */
     public function dokan_get_admin_notices() {
         $notices = Helper::dokan_get_admin_notices();
-
-        return rest_ensure_response( $notices );
-    }
-
-    /**
-     * Get dokan global notices
-     *
-     * @return WP_REST_Response
-     */
-    public function dokan_get_global_admin_notices() {
-        $notices = Helper::dokan_get_global_admin_notices();
 
         return rest_ensure_response( $notices );
     }
