@@ -1,10 +1,14 @@
 <?php
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
-
-if ( !$_tests_dir ) {
-    $_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
+if ( PHP_MAJOR_VERSION >= 8 ) {
+    echo "The scaffolded tests cannot currently be run on PHP 8.0+. See https://github.com/wp-cli/scaffold-command/issues/285" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    exit( 1 );
 }
+
+// Composer autoloader must be loaded before WP_PHPUNIT__DIR will be available
+require_once dirname( dirname( dirname( __FILE__ ) ) ) . '/vendor/autoload.php';
+$_tests_dir = getenv( 'WP_TESTS_DIR' ) ?: getenv( 'WP_PHPUNIT__DIR' );
+
 
 if ( !file_exists( $_tests_dir . '/includes/functions.php' ) ) {
     echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -14,8 +18,8 @@ if ( !file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 
-define( 'TEST_WC_DIR', __DIR__ . '/../../woocommerce' );
-define( 'TEST_DOKAN_DIR', dirname( __DIR__ ) );
+define( 'TEST_WC_DIR', __DIR__ . '/../../../woocommerce' );
+define( 'TEST_DOKAN_DIR', dirname( dirname( __DIR__ ) ) );
 
 function _manually_load_plugin() {
     define( 'WC_TAX_ROUNDING_MODE', 'auto' );

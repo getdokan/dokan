@@ -1,10 +1,11 @@
-name: End-to-End Tests
+name: PHPUnit and End-to-End Tests
 
 on:
     pull_request:
     push:
         branches:
             - ci/e2e-test
+            - ci/automated-testing
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -14,14 +15,11 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    e2e-test:
-        name: e2e-test - ${{ matrix.part }}
+    test:
+        name: phpunit and e2e tests
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
-            matrix:
-                part: [1, 2, 3, 4]
-                node: ['14']
 
         steps:
             - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
@@ -29,7 +27,7 @@ jobs:
             - name: Use desired version of NodeJS
               uses: actions/setup-node@38d90ce44d5275ad62cc48384b3d8a58c500bb5f # v2.2.2
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 14
                   cache: npm
 
             - name: Npm install and build
@@ -42,13 +40,21 @@ jobs:
               run: |
                   composer install
 
-            - name: Install WordPress
+            - name: Setup WordPress
               run: |
-                  npm run wp-env start
+                  npm run env:start
 
-            - name: Running the tests
-              run: |
-                  $( npm bin )/wp-scripts test-e2e
+            - name: Running the phpunit tests
+                run: |
+                  npm run phpunit
+
+            - name: Running the e2e tests
+              uses: nick-fields/retry@v2
+              with:
+                timeout_seconds: 15
+                max_attempts: 3
+                retry_on: error
+                command: npm run test:e2e
 
             - name: Archive debug artifacts (screenshots, HTML snapshots)
               uses: actions/upload-artifact@e448a9b857ee2131e752b06002bf0e093c65e571 # v2.2.2
