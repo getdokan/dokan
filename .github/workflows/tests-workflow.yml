@@ -45,7 +45,8 @@ jobs:
                   npm run env:start
 
             - name: Running the phpunit tests
-              run: npm run test:phpunit
+              run: |
+                  npm run test:phpunit
 
             - name: Running the e2e tests
               uses: nick-fields/retry@v2
