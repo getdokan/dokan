@@ -12,8 +12,10 @@
     "makepot": "wpvuei18n makepot",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "wp-env": "wp-env",
+    "env:start": "wp-env start",
     "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js"
+    "test:unit": "wp-scripts test-unit-js",
+    "test:phpunit": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/dokan/phpunit.xml /var/www/html/wp-content/plugins/dokan/tests/phpunit/'"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",

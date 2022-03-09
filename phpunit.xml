@@ -1,14 +1,15 @@
 <phpunit
-	bootstrap="tests/bootstrap.php"
+	bootstrap="tests/phpunit/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
+    <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/phpunit/wp-config.php" />
 	<testsuites>
 		<testsuite name="Dokan Test Suite">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+			<directory prefix="test-" suffix=".php">./tests/phpunit/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
