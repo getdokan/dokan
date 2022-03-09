@@ -39,6 +39,8 @@ jobs:
             - name: Composer install and build
               run: |
                   composer install
+                  composer update
+                  composer dump-autoload -o
 
             - name: Setup WordPress
               run: |
