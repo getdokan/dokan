@@ -312,6 +312,7 @@
                                     display: flex;
                                     align-items: center;
                                     position: relative;
+                                    z-index: 1;
 
                                     .store-notice {
                                         min-width: 96px;
@@ -367,7 +368,7 @@
                                             margin-bottom: 12px;
 
                                             .store-days {
-                                                flex: 2.4;
+                                                flex: 2.3;
                                             }
 
                                             .current_day,
@@ -484,7 +485,11 @@
                                     color: #55acee;
                                 }
 
-                                &.fa-linkedin-square {
+                                &.fa-pinterest-square {
+                                    color: #bd081c;
+                                }
+
+                                &.fa-linkedin {
                                     color: #007bb5;
                                 }
 
@@ -514,19 +519,17 @@
 
                 .profile-info-summery-wrapper {
                     position: relative;
-                    height: 135px;
                     background-color: #fff;
                     color: inherit;
                     border: 1px solid @borderColor;
                     padding: 0 15px;
 
                     .profile-info-summery {
+                        top: -55px;
+                        color: #444;
                         width: 100%;
                         padding: 0;
-                        position: absolute;
-                        top: -55px;
-                        height: 140px;
-                        color: #444;
+                        position: relative;
                         background: none;
 
                         .profile-info-head {
@@ -577,15 +580,13 @@
                 }
 
                 .profile-info-summery-wrapper {
+                    border: 1px solid @borderColor;
                     position: relative;
 
                     .profile-info-summery {
                         background-color: #fff;
                         width: 100%;
                         padding: 10px;
-                        overflow: hidden;
-                        border: 1px solid @borderColor;
-
 
                         .profile-info-head {
                             width: 150px;
@@ -616,7 +617,23 @@
                             }
 
                             .dokan-store-info {
+                                margin: 0;
                                 padding-left: 25px;
+                                clear: both;
+
+                                .store-open-close-notice {
+                                    #vendor-store-times {
+                                        left: -30%;
+                                    }
+
+                                    &:hover {
+                                        span.fa-angle-down {
+                                            &:after {
+                                                right: -2.5px;
+                                            }
+                                        }
+                                    }
+                                }
 
                                 li {
                                     float: left;
@@ -655,9 +672,11 @@
                             }
 
                             .store-social-wrapper {
+                                clear:  both;
                                 position: relative;
 
                                 .store-social {
+                                    display: flex;
                                     padding-left: 0;
 
                                     li {
@@ -1077,8 +1096,8 @@
                             }
 
                             .profile-info {
-                                position: relative;
-                                top: -75px;
+                                position: absolute;
+                                top: 15%;
 
                                 .store-name {
                                     color: inherit;
@@ -1092,8 +1111,19 @@
                                     width: 100%;
                                     margin: 0;
                                     display: block;
-                                    overflow: hidden;
                                     text-align: center;
+
+                                    .store-open-close-notice {
+                                        display: inline-block;
+
+                                        &:hover {
+                                            span.fa-angle-down {
+                                                &:after {
+                                                    right: -2.5px;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     li {
                                         text-align: left;

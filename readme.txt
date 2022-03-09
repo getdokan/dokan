@@ -7,7 +7,7 @@ Tested up to: 5.9.1
 WC requires at least: 3.0
 WC tested up to: 6.2.1
 Requires PHP: 5.6
-Stable tag: 3.3.9
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,12 +19,17 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 👉 Official Free Demo Link: [Official Demo](https://dokan.wedevsdemos.com/)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
+👉 Check out [Dokan Mobile App](https://wedevs.com/dokan/dokan-mobile-app)
 
 = POWERED BY WooCommerce =
 
 [Dokan](https://wedevs.com/dokan/) is the best front end multi-vendor marketplace on WordPress, powered by WooCommerce. It helps you to build your own marketplace similar to Amazon, Shopify, eBay, Magento like marketplaces in under 30 minutes.
 
 Dokan is the fastest way to start eCommerce and earn through commissions with products ranging from digital, physical to variable products.
+
+Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan.
+
+[youtube https://www.youtube.com/watch?v=nDAxNypVxdw]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -308,6 +313,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.4.0 ( Mar 08, 2022 ) =
+
+- **update:** Stop loading unnecessary style and script files on every page #1450
+- **update:** Added random as store list orderby parameter
+- **update:** Dokan store shortcode orderby parameter now reflect store filter.
+- **fix:** Store open/close time hover feature wasn’t working for specific single store page templates #1549
+- **fix:** Variable products stock status wasn’t updating by quick edit from vendor dashboard, now has been fixed #1553
+- **fix:** Fixed Dokan conflict with WP Project Manager #1546
+- **fix:** Store product per page value wasn’t saving, now has been fixed #1548
+- **fix:** Fixed fatal error while getting store open close time under single store page
+- **fix:** Remove background process files from database if file doesn’t exists on server due to server migration
 
 = v3.3.9 ( Feb 28, 2022 ) =
 
