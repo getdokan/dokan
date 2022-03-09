@@ -286,7 +286,7 @@ export default {
                                 font-size: 16px;
                                 line-height: 1.3;
                                 margin: 0;
-                                padding: 0 0 13px 0;
+                                padding: 0;
                                 color: #000;
                                 font-weight: 500;
                                 letter-spacing: 0.145455px;
@@ -297,6 +297,7 @@ export default {
                                 font-size: 11px;
                                 line-height: 1.1;
                                 margin-right: 10px;
+                                margin-top: 10px;
                                 border-radius: 10px;
                                 background: #dfe2ff;
                             }
