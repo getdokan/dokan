@@ -486,8 +486,6 @@
             $('#setting_phone').on( 'keydown', function(e) {
                 let cKey     = 67,
                     vKey     = 86,
-                    cmdKey   = 91,
-                    ctrlKey  = 17,
                     ctrlDown = false;
 
                 // Allow: backspace, delete, tab, escape, enter and .
@@ -498,9 +496,9 @@
                     (e.keyCode === vKey && ctrlDown) ||
                     // Allow: Ctrl+c
                     (e.keyCode === cKey && ctrlDown) ||
-                    // Allow: home, end, left, right
+                    // Allow: home, end, left, right.
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
-                    // let it happen, don't do anything
+                    // Let it happen, don't do anything.
                     return;
                 }
 
