@@ -22,6 +22,7 @@ define( 'TEST_DOKAN_DIR', dirname( dirname( __DIR__ ) ) );
 require __DIR__ . '/helpers/helper.php';
 
 function _manually_load_plugin() {
+    require dirname(TEST_DOKAN_DIR ) . '/woocommerce/woocommerce.php';
     require TEST_DOKAN_DIR . '/dokan.php';
 }
 
