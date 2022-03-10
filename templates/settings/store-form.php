@@ -486,7 +486,13 @@
             $('#setting_phone').on( 'keydown', function(e) {
                 let cKey     = 67,
                     vKey     = 86,
+                    cmdKey   = 91,
+                    ctrlKey  = 17,
                     ctrlDown = false;
+
+                if (e.keyCode === ctrlKey || e.keyCode === cmdKey) {
+                    ctrlDown = true;
+                }
 
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
