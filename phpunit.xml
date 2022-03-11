@@ -5,6 +5,7 @@
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
+    testdox="true"
 	>
     <php>
         <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/phpunit/wp-config.php" />
