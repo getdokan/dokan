@@ -43,6 +43,9 @@
                 <?php
                 // Get formatted store times.
                 for ( $index = 0; $index < $times_length; $index++ ) :
+                    if ( empty( $dokan_store_time[ $day ]['opening_time'][ $index ] ) ) {
+                        continue;
+                    }
                     $opening_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['opening_time'][ $index ] )->getTimestamp();
                     $closing_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['closing_time'][ $index ] )->getTimestamp();
                     $formatted_opening_time = dokan_format_date( $opening_timestamps, wc_time_format() );
