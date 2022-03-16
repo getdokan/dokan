@@ -10,8 +10,8 @@
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
-    "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
-    "version-replace": "node bin/version-replace"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
+    "version": "node bin/version-replace"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",

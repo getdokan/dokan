@@ -270,9 +270,9 @@ module.exports = function(grunt) {
         cmd: 'npm',
         args: ['run', 'build']
       },
-      versionReplace: {
+      version: {
         cmd: 'npm',
-        args: ['run', 'version-replace']
+        args: ['run', 'version']
       },
 
       devBuild: {
@@ -317,11 +317,11 @@ module.exports = function(grunt) {
   // grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
   grunt.registerTask('i18n', ['makepot']);
   grunt.registerTask('readme', ['wp_readme_to_markdown']);
-  grunt.registerTask('version-replace', ['run:versionReplace']);
+  grunt.registerTask('version', ['run:version']);
 
   grunt.registerTask('release', [
     'readme',
-    "run:versionReplace",
+    "run:version",
     'less',
     'concat',
     'run:devBuild',
