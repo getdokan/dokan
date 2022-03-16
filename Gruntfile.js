@@ -270,6 +270,10 @@ module.exports = function(grunt) {
         cmd: 'npm',
         args: ['run', 'build']
       },
+      since: {
+        cmd: 'npm',
+        args: ['run', 'since']
+      },
 
       devBuild: {
         cmd: 'npm',
@@ -313,11 +317,13 @@ module.exports = function(grunt) {
   // grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
   grunt.registerTask('i18n', ['makepot']);
   grunt.registerTask('readme', ['wp_readme_to_markdown']);
+  grunt.registerTask('since', ['run:since']);
 
   grunt.registerTask('release', [
     'readme',
     'less',
     'concat',
+    "run:since",
     'run:devBuild',
     'run:build',
     'i18n',
