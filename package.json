@@ -11,7 +11,7 @@
     "build": "WEBPACK_ENV=production webpack",
     "makepot": "wpvuei18n makepot",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
-    "since": "node bin/version-replace"
+    "version-replace": "node bin/version-replace"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
