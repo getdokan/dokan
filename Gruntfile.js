@@ -321,9 +321,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('release', [
     'readme',
+    "run:since",
     'less',
     'concat',
-    "run:since",
     'run:devBuild',
     'run:build',
     'i18n',

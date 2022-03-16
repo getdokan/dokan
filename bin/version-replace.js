@@ -2,7 +2,7 @@ const fs = require( 'fs-extra' );
 const replace = require( 'replace-in-file' );
 
 const pluginFiles = [
-    'assets/**/*',
+    'assets/src/**/*',
     'deprecated/**/*',
     'includes/**/*',
     'templates/**/*',
