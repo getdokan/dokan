@@ -670,7 +670,11 @@ class Assets {
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
 
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
                 wp_enqueue_style( 'dokan-magnific-popup' );
             }
 
@@ -717,7 +721,11 @@ class Assets {
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
 
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
                 wp_enqueue_script( 'dokan-popup' );
             }
 
