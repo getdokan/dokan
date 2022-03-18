@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.4.1',
+        'released' => '2022-03-18',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Introduced two new filter hooks dokan_shipping_fee_recipient and dokan_tax_fee_recipient',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Remove unnecessary error_log codes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Promotional notice cache expiration date is set to one day',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error on store closet time widget if store open/close time wasn’t set',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated jQuery form validate library from v1.11.0 to v1.19.3',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed popup not appearing after clicking withdraw button under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product table css fix for error class',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.4.0',
         'released' => '2022-03-08',
         'changes'  => [
