@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.9.1
+Tested up to: 5.9.2
 WC requires at least: 3.0
-WC tested up to: 6.2.1
+WC tested up to: 6.3.1
 Requires PHP: 5.6
-Stable tag: 3.4.0
+Stable tag: 3.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -313,6 +313,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.4.1 ( Mar 18, 2022 ) =
+
+- **new:** Introduced two new filter hooks dokan_shipping_fee_recipient and dokan_tax_fee_recipient
+- **fix:**  Remove unnecessary error_log codes #1570
+- **fix:** Promotional notice cache expiration date is set to one day
+- **fix:** Fatal error on store closet time widget if store open/close time wasn’t set
+- **fix:** Updated jQuery form validate library from v1.11.0 to v1.19.3
+- **fix:** Fixed popup not appearing after clicking withdraw button under vendor dashboard
+- **fix:** Product table css fix for error class
 
 = v3.4.0 ( Mar 08, 2022 ) =
 
