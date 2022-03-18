@@ -3241,27 +3241,25 @@ function dokan_is_store_open( $user_id ) {
 
     // check if status is closed
     if ( empty( $dokan_store_times[ $today ] ) || ( isset( $dokan_store_times[ $today ]['status'] ) && 'close' === $dokan_store_times[ $today ]['status'] ) ) {
-        $store_open = false;
-        return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
     // Get store opening time.
-    $opening_times = ! empty( $dokan_store_times[ $today ]['opening_time'] ) ? $dokan_store_times[ $today ]['opening_time'] : [];
+    $opening_times = ! empty( $dokan_store_times[ $today ]['opening_time'] ) ? $dokan_store_times[ $today ]['opening_time'] : '';
     // Get single time.
     $opening_time = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : $opening_times;
     // Convert to timestamp.
-    $opening_time = $current_time->modify( $opening_time );
+    $opening_time = ! empty( $opening_time ) ? $current_time->modify( $opening_time ) : false;
 
     // Get closing time.
-    $closing_times = ! empty( $dokan_store_times[ $today ]['closing_time'] ) ? $dokan_store_times[ $today ]['closing_time'] : [];
+    $closing_times = ! empty( $dokan_store_times[ $today ]['closing_time'] ) ? $dokan_store_times[ $today ]['closing_time'] : '';
     // Get single time.
     $closing_time = ! empty( $closing_times ) && is_array( $closing_times ) ? $closing_times[0] : $closing_times;
     // Convert to timestamp.
-    $closing_time = $current_time->modify( $closing_time );
+    $closing_time = ! empty( $closing_time ) ? $current_time->modify( $closing_time ) : false;
 
     if ( empty( $opening_time ) || empty( $closing_time ) ) {
-        $store_open = false;
-        return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
     // Check vendor picked time and current time for show store open.
