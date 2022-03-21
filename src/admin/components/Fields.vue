@@ -521,20 +521,73 @@
             </td>
         </template>
 
-        <template v-if="'color' == fieldData.type">
-            <th scope="row">
-                <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
-            </th>
+        <template v-if="'color_palette' == fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <div class="field_data">
+                        <h3 class="field_heading" scope="row">
+                            {{ fieldData.label }}
+                        </h3>
+                        <p class="field_desc" v-html="fieldData.desc"></p>
+                    </div>
+                </fieldset>
+                <div class="field color-palette-container">
+                     <template v-for="( values, name ) in fieldData.options">
+                        <label class="color-palette-image" :class="{ 'active' : fieldValue[fieldData.name]['value'] === values.value, 'not-active' : fieldValue[fieldData.name]['value'] !== values.value }">
+                            <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="values">
+                            <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> {{ __( 'Active', 'dokan-lite' ) }}</span>
+                            <img :src="values.image">
+                            <span class="active-option">
+                                <button class="button button-primary button-hero" type="button" @click.prevent="fieldValue[fieldData.name] = values">
+                                    {{ __( 'Select', 'dokan-lite' ) }}
+                                </button>
+                            </span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+        </template>
 
-            <td class="tooltips-data"></td>
-
-            <td v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
-                    {{ getError( fieldData.label ) }}
-                </p>
-                <p class="description" v-html="fieldData.desc"></p>
-            </td>
+        <template v-if="'color_palette2' == fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <div class="field_data">
+                        <h3 class="field_heading" scope="row">
+                            {{ fieldData.label }}
+                        </h3>
+                        <p class="field_desc" v-html="fieldData.desc"></p>
+                    </div>
+                </fieldset>
+                <div class="field color-palette-container">
+                     <template v-for="( values, name ) in fieldData.options">
+                        <div
+                            class="color-palette-contents"
+                            v-bind:class="fieldValue[fieldData.name]['value'] === values.value ? 'active-palette' : ''"
+                            @click.stop="fieldValue[fieldData.name] = values"
+                        >
+                            <div class="palette-btn">
+                                <input
+                                    :id="values.value"
+                                    type="radio"
+                                    :name="fieldData.name"
+                                    :value="values"
+                                    v-model="fieldValue[fieldData.name]"
+                                    :checked="fieldValue[fieldData.name]['value'] === values.value ? 'checked' : ''"
+                                >
+                                <label :for="values.value">{{ values.value }}</label>
+                            </div>
+                            <div class="colors">
+                                <div
+                                    v-if='values.color_options'
+                                    v-for='( optionVal, optionKey ) in values.color_options'
+                                    :class="optionKey"
+                                    :style="'background-color: ' + optionVal"
+                                ></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
         </template>
 
         <template v-if="'html' == fieldData.type">
