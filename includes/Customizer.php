@@ -388,6 +388,39 @@ class Customizer {
             ]
         );
 
+        // ( Customizing->Dokan->Store List ) section
+        $wp_customize->add_section(
+            'dokan_store_list',
+            [
+                'title'    => __( 'Store List', 'dokan-lite' ),
+                'priority' => 9,
+                'panel'    => 'dokan',
+            ]
+        );
+
+        $wp_customize->add_setting(
+            'dokan_appearance[store_list_sort_by]',
+            [
+                'default'              => 'most_recent',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => 'sanitize_text_field',
+                'sanitize_js_callback' => 'sanitize_text_field',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'store_list_sort_by',
+            [
+                'type'        => 'select',
+                'section'     => 'dokan_store_list',
+                'settings'    => 'dokan_appearance[store_list_sort_by]',
+                'label'       => __( 'Store List Sorting', 'dokan-lite' ),
+                'description' => __( 'How should stores be sorted by default?', 'dokan-lite' ),
+                'choices'     => \WeDevs\Dokan\Vendor\StoreListsFilter::sort_by_options(),
+            ]
+        );
+
         /*
          * Do selective refresh based on the jQuery selectors
          */

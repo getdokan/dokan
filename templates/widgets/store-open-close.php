@@ -43,11 +43,12 @@
                 <?php
                 // Get formatted store times.
                 for ( $index = 0; $index < $times_length; $index++ ) :
-                    error_log( print_r( $dokan_store_time, 1 ) ); 
-                    $opening_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['opening_time'][ $index ] )->getTimestamp();
-                    $closing_timestamps     = dokan_current_datetime()->modify( $dokan_store_time[ $day ]['closing_time'][ $index ] )->getTimestamp();
-                    $formatted_opening_time = dokan_format_date( $opening_timestamps, wc_time_format() );
-                    $formatted_closing_time = dokan_format_date( $closing_timestamps, wc_time_format() );
+                    if ( empty( $dokan_store_time[ $day ]['opening_time'][ $index ] ) ) {
+                        continue;
+                    }
+
+                    $formatted_opening_time = dokan_format_date( $dokan_store_time[ $day ]['opening_time'][ $index ], wc_time_format() );
+                    $formatted_closing_time = dokan_format_date( $dokan_store_time[ $day ]['closing_time'][ $index ], wc_time_format() );
 
                     echo sprintf(
                         '<div class="store-time">%1$s <span class="separator">-</span> %2$s</div>',
