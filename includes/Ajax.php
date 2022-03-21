@@ -971,6 +971,35 @@ class Ajax {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Get vendor earning
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function get_vendor_earning() {
+        check_ajax_referer( 'dokan_reviews' );
+
+        $product_id    = ! empty( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
+        $product_price = ! empty( $_GET['product_price'] ) ? (float) $_GET['product_price'] : 0;
+
+        $vendor = dokan_get_vendor_by_product( $product_id );
+
+        if ( ! $vendor ) {
+            return;
+        }
+
+        $vendor_id = $vendor->get_id();
+
+        $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
+
+        wp_send_json( wc_format_localized_price( $vendor_earning ) );
+    }
+
+    /**
+>>>>>>> origin/develop
      * Export witdraw requests
      *
      * @since 3.0.0

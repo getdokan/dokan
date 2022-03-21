@@ -82,11 +82,16 @@ export default {
 
     methods: {
         fetch() {
-            dokan.api.get( `/admin/notices/${this.endpoint}` )
-                .done( response => {
-                    this.notices = response.filter( notice => notice.description || notice.title );
-                    this.startAutoSlide();
-                });
+            $.ajax( {
+                url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}`,
+                method: 'get',
+                beforeSend: function ( xhr ) {
+                    xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
+                },
+            } ).done( response => {
+                this.notices = response.filter( notice => notice.description || notice.title );
+                this.startAutoSlide();
+            });
         },
 
         slideNotice( n ) {
@@ -132,7 +137,7 @@ export default {
 
         hideNotice( notice, index ) {
             $.ajax( {
-                url: dokan.ajaxurl,
+                url: dokan_promo.ajaxurl,
                 method: 'post',
                 dataType: 'json',
                 data: notice.ajax_data,
@@ -166,7 +171,7 @@ export default {
             this.button_text = action.loading_text ? action.loading_text : this.__( 'Loading...', 'dokan-lite' );
 
             $.ajax( {
-                url: dokan.ajaxurl,
+                url: dokan_promo.ajaxurl,
                 method: 'post',
                 dataType: 'json',
                 data: action.ajax_data,

@@ -870,6 +870,7 @@ class Commission {
      * Get shipping fee recipient
      *
      * @since  2.9.21
+     * @since 3.4.1 introduced the shipping fee recipient hook
      *
      * @param  int $order_id
      *
@@ -881,7 +882,7 @@ class Commission {
         if ( $saved_shipping_recipient ) {
             $shipping_recipient = $saved_shipping_recipient;
         } else {
-            $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' ), $order_id );
             update_post_meta( $order_id, 'shipping_fee_recipient', $shipping_recipient );
         }
 
@@ -892,6 +893,7 @@ class Commission {
      * Get tax fee recipient
      *
      * @since  2.9.21
+     * @since 3.4.1 introduced the tax fee recipient hook
      *
      * @param  int $order_id
      *
@@ -903,7 +905,7 @@ class Commission {
         if ( $saved_tax_recipient ) {
             $tax_recipient = $saved_tax_recipient;
         } else {
-            $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' ), $order_id );
             update_post_meta( $order_id, 'tax_fee_recipient', $tax_recipient );
         }
 
