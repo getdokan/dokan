@@ -591,10 +591,8 @@
             background: #fff;
         }
 
-        .radio-image-container,
-        .color-palette-container {
-            .radio-image,
-            .color-palette-image {
+        .radio-image-container {
+            .radio-image {
                 display: block;
                 width: 50%;
                 background: #fff;
