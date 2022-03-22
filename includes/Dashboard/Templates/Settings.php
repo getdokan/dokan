@@ -203,7 +203,7 @@ class Settings {
          * This filter is only used if the Payment method has different key than the key used in meta value of
          * meta key 'dokan_profile_settings' for that Payment method
          *
-         * @since DOKAN_LITE_SINCE
+         * @since DOKAN_SINCE
          */
         $mis_match_map = apply_filters( 'dokan_payment_method_storage_key', [] );
 
@@ -766,7 +766,7 @@ class Settings {
     /**
      * Get proper heading for payments of vendor dashboard payment settings
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param string $slug
      * @param string $heading
@@ -789,7 +789,7 @@ class Settings {
         /**
          * To allow new payment extension give their own heading
          *
-         * @since DOKAN_LITE_SINCE
+         * @since DOKAN_SINCE
          *
          * @param string $heading previous heading
          */
