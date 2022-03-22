@@ -517,7 +517,9 @@
                             let labels = $( 'div.dokan-product-attribute-wrapper label.show_if_variable' );
 
                             for( let label of labels ) {
-                                if ( label.textContent.includes( "Used for variations" ) ) {
+                                let checkBox = $( label ).find('input[type="checkbox"]');
+
+                                if ( checkBox.length > 0 && checkBox[0].getAttribute('name')?.startsWith('attribute_variation[') ) {
                                     $( label ).hide();
                                 }
                             }
