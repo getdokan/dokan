@@ -595,7 +595,7 @@ class Settings {
     function insert_settings_info() {
         $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
-        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
+        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : [];
         $post_data               = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['_wpnonce'] ) ) {
@@ -607,7 +607,7 @@ class Settings {
             // update profile settings info
             $social         = $post_data['settings']['social'];
             $social_fields  = dokan_get_social_profile_fields();
-            $dokan_settings = array( 'social' => array() );
+            $dokan_settings = [ 'social' => [] ];
 
             if ( is_array( $social ) ) {
                 foreach ( $social as $key => $value ) {
@@ -622,19 +622,68 @@ class Settings {
             $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
 
             if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
-                $default_locations = array(
+                $default_locations = [
                     'latitude'  => '',
                     'longitude' => '',
                     'address'   => '',
-                );
+                ];
             }
 
-            $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
-            $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+            $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
+            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+            $location         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
+            $dokan_days       = dokan_get_translated_days();
+            $dokan_store_time = [];
 
-            // update store setttings info
-            $dokan_settings = array(
+            // Get & set 7 days opening & closing time for update dokan store time.
+            foreach ( $dokan_days as $day_key => $day ) {
+                $opening_time = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
+                $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
+                $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+
+                // If open or closing time is array then return from here.
+                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
+                    continue;
+                }
+
+                // Check & make 12 hours format data for save.
+                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
+                $opening_time      = $opening_time ? $opening_time->format( 'g:i a' ) : '';
+
+                // Check & make 12 hours format data for save.
+                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $closing_timestamp = $closing_time ? $closing_time->getTimestamp() : $closing_time;
+                $closing_time      = $closing_time ? $closing_time->format( 'g:i a' ) : '';
+
+                // If our opening time is less than closing time.
+                if ( $opening_timestamp > $closing_timestamp ) {
+                    $user_data    = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings', true );
+                    $opening_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['opening_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['opening_time'] : '';
+                    $closing_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['closing_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['closing_time'] : '';
+                }
+
+                // If pass null value or our store is not open then our store will be close.
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
+                    $dokan_store_time[ $day_key ] = [
+                        'status'       => 'close',
+                        'opening_time' => [],
+                        'closing_time' => [],
+                    ];
+
+                    continue;
+                }
+
+                // Get and set current day's data for update dokan store time. Make dokan store time data here.
+                $dokan_store_time[ $day_key ] = [
+                    'status'       => $store_status,
+                    'opening_time' => ( array ) $opening_time,
+                    'closing_time' => ( array ) $closing_time,
+                ];
+            }
+
+            // Update store settings info.
+            $dokan_settings = [
                 'store_name'               => sanitize_text_field( $post_data['dokan_store_name'] ),
                 'store_ppp'                => absint( $post_data['dokan_store_ppp'] ),
                 'address'                  => isset( $post_data['dokan_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_address'] ) : $prev_dokan_settings['address'],
@@ -647,47 +696,11 @@ class Settings {
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
-                'dokan_store_time'         => array(
-                    'sunday'               => array(
-                        'status'           => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? sanitize_text_field( $post_data['sunday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? sanitize_text_field( $post_data['sunday_closing_time'] ) : '',
-                    ),
-                    'monday'               => array(
-                        'status'           => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? sanitize_text_field( $post_data['monday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? sanitize_text_field( $post_data['monday_closing_time'] ) : '',
-                    ),
-                    'tuesday'              => array(
-                        'status'           => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? sanitize_text_field( $post_data['tuesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? sanitize_text_field( $post_data['tuesday_closing_time'] ) : '',
-                    ),
-                    'wednesday'            => array(
-                        'status'           => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? sanitize_text_field( $post_data['wednesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? sanitize_text_field( $post_data['wednesday_closing_time'] ) : '',
-                    ),
-                    'thursday'             => array(
-                        'status'           => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? sanitize_text_field( $post_data['thursday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? sanitize_text_field( $post_data['thursday_closing_time'] ) : '',
-                    ),
-                    'friday'               => array(
-                        'status'           => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? sanitize_text_field( $post_data['friday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? sanitize_text_field( $post_data['friday_closing_time'] ) : '',
-                    ),
-                    'saturday'             => array(
-                        'status'           => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? sanitize_text_field( $post_data['saturday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
-                    ),
-                ),
+                'dokan_store_time'         => apply_filters( 'dokan_store_time', $dokan_store_time ),
                 'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
                 'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
-            );
+            ];
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
@@ -697,11 +710,10 @@ class Settings {
             $dokan_settings = array(
                 'payment' => $prev_dokan_settings['payment'],
             );
-
             if ( isset( $post_data['settings']['bank'] ) ) {
                 $bank = $post_data['settings']['bank'];
 
-                $dokan_settings['payment']['bank'] = array(
+                $dokan_settings['payment']['bank'] = [
                     'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
                     'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
                     'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
@@ -711,13 +723,13 @@ class Settings {
                     'swift'          => sanitize_text_field( $bank['swift'] ),
                     'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
                     'declaration'    => sanitize_text_field( $bank['declaration'] ),
-                );
+                ];
             }
 
             if ( isset( $post_data['settings']['paypal'] ) ) {
-                $dokan_settings['payment']['paypal'] = array(
+                $dokan_settings['payment']['paypal'] = [
                     'email' => sanitize_email( $post_data['settings']['paypal']['email'] ),
-                );
+                ];
             }
         }
 

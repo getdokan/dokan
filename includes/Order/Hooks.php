@@ -37,7 +37,7 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 2 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 3 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
@@ -55,8 +55,51 @@ class Hooks {
         // remove customer info from order export based on setting
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
 
+        // Change order meta key and value.
+        add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
+        add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
+
         // Init Order Cache Class
         new OrderCache();
+    }
+
+    /**
+     * Change order item display meta key.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param $display_key
+     *
+     * @return void
+     */
+    public function change_order_item_display_meta_key( $display_key ) {
+        if ( 'seller_id' === $display_key ) {
+            return __( 'Vendor', 'dokan-lite' );
+        }
+        return $display_key;
+    }
+
+    /**
+     * Change order item display meta value.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @param $display_value
+     * @param $meta
+     *
+     * @return mixed
+     */
+    public function change_order_item_display_meta_value( $display_value, $meta ) {
+        if ( 'seller_id' === $meta->key ) {
+            $vendor = dokan()->vendor->get( $display_value );
+            $url    = get_edit_user_link( $display_value );
+            if ( function_exists( 'dokan_pro' ) ) {
+                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            }
+
+            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
+        }
+        return $display_value;
     }
 
     /**
@@ -284,20 +327,28 @@ class Hooks {
      *
      * @param boolean $valid
      * @param \WC_Coupon $coupon
+     * @param \WC_Discounts $discount
      *
-     * @return boolean|Execption
+     * @return boolean|Exception
      * @throws Exception
      */
-    public function ensure_vendor_coupon( $valid, $coupon ) {
+    public function ensure_vendor_coupon( $valid, $coupon, $discount ) {
         $available_vendors  = [];
         $available_products = [];
 
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
-            $available_products[] = $product_id;
+        if ( WC()->cart ) {
+            foreach ( WC()->cart->get_cart() as $item ) {
+                $product_id           = $item['data']->get_id();
+                $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
+                $available_products[] = $product_id;
+            }
+        } else {
+            foreach ( $discount->get_items() as $item_id => $item ) {
+                $available_vendors[]  = (int) get_post_field( 'post_author', $item_id );
+                $available_products[] = $item_id;
+            }
         }
+
 
         $available_vendors = array_unique( $available_vendors );
 

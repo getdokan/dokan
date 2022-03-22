@@ -20,7 +20,7 @@ var entryPoint = {
     'vue-bootstrap': './src/utils/Bootstrap.js',
     'vue-vendor': vueVendor,
     'dokan-wp': './src/wp-packages/index.js',
-    'dokan-upgrade': './src/upgrade/main.js',
+    'dokan-promo-notice': './src/promo-notice/main.js',
     // style: './less/style.less',
 };
 

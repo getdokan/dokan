@@ -27,7 +27,6 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
-        add_action( 'pre_user_query', [ $this, 'random_store_query' ] );
     }
 
     /**
@@ -37,7 +36,7 @@ class Rewrites {
      *
      * @since 2.4.7
      *
-     * @return array $crumbs
+     * @return void | array $crumbs
      */
     public function store_page_breadcrumb( $crumbs ) {
         if ( ! dokan_is_store_page() ) {
@@ -52,6 +51,11 @@ class Rewrites {
 
         $author      = get_query_var( $this->custom_store_url );
         $seller_info = get_user_by( 'slug', $author );
+
+        if ( ! $seller_info ) {
+            return;
+        }
+
         $crumbs[1]   = [ ucwords( $this->custom_store_url ), site_url() . '/' . $this->custom_store_url ];
         $crumbs[2]   = [ $author, dokan_get_store_url( $seller_info->data->ID ) ];
 
@@ -79,6 +83,7 @@ class Rewrites {
                 'new-product',
                 'orders',
                 'withdraw',
+                'withdraw-requests',
                 'settings',
                 'edit-account',
             ]
@@ -504,42 +509,5 @@ class Rewrites {
             $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
         }
         return $sql;
-    }
-
-    /**
-     * Store listing page make order by random
-     *
-     * @since DOKAN_PRO_SINCE
-     *
-     * @param WP_User_Query
-     *
-     * @return WP_User_Query
-     */
-    public function random_store_query( $query ) {
-        if ( ! dokan_is_store_listing() ) {
-            return $query;
-        }
-
-        if ( 'random' === $query->query_vars['orderby'] ) {
-            $order_by = [
-                'ID',
-                'user_login, ID',
-                'user_email',
-                'user_registered, ID',
-                'user_nicename, ID',
-            ];
-
-            $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' );
-
-            if ( false === $selected_orderby ) {
-                $selected_orderby = $order_by[ array_rand( $order_by, 1 ) ];
-
-                set_transient( 'dokan_store_listing_random_orderby', $selected_orderby, MINUTE_IN_SECONDS * 10 );
-            }
-
-            $query->query_orderby = "ORDER BY $selected_orderby";
-        }
-
-        return $query;
     }
 }

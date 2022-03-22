@@ -1,9 +1,9 @@
 <div class="dokan-product-inventory dokan-edit-row <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_product_inventory">
-        <h2><i class="fa fa-cubes" aria-hidden="true"></i> <?php esc_html_e( 'Inventory', 'dokan-lite' ); ?></h2>
+        <h2><i class="fas fa-cubes" aria-hidden="true"></i> <?php esc_html_e( 'Inventory', 'dokan-lite' ); ?></h2>
         <p><?php esc_html_e( 'Manage inventory for this product.', 'dokan-lite' ); ?></p>
         <a href="#" class="dokan-section-toggle">
-            <i class="fa fa-sort-desc fa-flip-vertical" aria-hidden="true"></i>
+            <i class="fas fa-sort-down fa-flip-vertical" aria-hidden="true"></i>
         </a>
         <div class="dokan-clearfix"></div>
     </div>

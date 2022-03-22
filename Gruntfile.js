@@ -32,6 +32,7 @@ module.exports = function(grunt) {
       admin: {
         files: {
           '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less'],
+          '<%= dirs.css %>/global-admin.css': ['<%= dirs.devLessSrc %>/global-admin.less'],
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],
           '<%= dirs.css %>/setup-no-wc.css': [
             '<%= dirs.devLessSrc %>/setup-no-wc.less'
@@ -269,6 +270,10 @@ module.exports = function(grunt) {
         cmd: 'npm',
         args: ['run', 'build']
       },
+      version: {
+        cmd: 'npm',
+        args: ['run', 'version']
+      },
 
       devBuild: {
         cmd: 'npm',
@@ -312,9 +317,11 @@ module.exports = function(grunt) {
   // grunt.registerTask('i18n', ['addtextdomain', 'makepot']);
   grunt.registerTask('i18n', ['makepot']);
   grunt.registerTask('readme', ['wp_readme_to_markdown']);
+  grunt.registerTask('version', ['run:version']);
 
   grunt.registerTask('release', [
     'readme',
+    "run:version",
     'less',
     'concat',
     'run:devBuild',

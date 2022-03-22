@@ -23,7 +23,11 @@ class VendorCache {
         add_action( 'dokan_vendor_enabled', [ $this, 'clear_cache_group' ], 10 );
         add_action( 'dokan_vendor_disabled', [ $this, 'clear_cache_group' ], 10 );
         add_action( 'dokan_store_profile_saved', [ $this, 'after_update_vendor_profile' ], 10, 2 );
-        add_action( 'user_register', [ $this, 'after_created_new_wp_user' ], 10, 2 );
+
+        /* Clear wp-user related caches */
+        add_action( 'user_register', [ $this, 'after_created_new_wp_user' ], 10 );
+        add_action( 'profile_update', [ $this, 'after_updated_wp_user' ], 10, 2 );
+        add_action( 'delete_user', [ $this, 'before_deleting_wp_user' ], 10, 2 );
     }
 
     /**
@@ -71,19 +75,67 @@ class VendorCache {
     }
 
     /**
+     * Clear Vendor Cache Group after changing wp_user.
+     *
+     * @since 3.3.5
+     *
+     * @param int  $user_id
+     * @param bool $is_user_delete; if user deletes, pass it to true. default - false
+     *
+     * @return void
+     */
+    private function clear_wp_user_cache( $user_id, $is_user_delete = false ) {
+        // check user has dokandar capability
+        if ( ! user_can( $user_id, 'dokandar' ) ) {
+            return;
+        }
+
+        self::delete();
+
+        // On delete user, clear product caches of that vendor too.
+        if ( $is_user_delete ) {
+            ProductCache::delete( $user_id );
+        }
+    }
+
+    /**
      * Clear Vendor Cache Group after new user added to wp user.
      *
      * @since 3.3.2
      *
-     * @param int   $user_id
-     * @param array $userdata
+     * @param int $user_id
      *
      * @return void
      */
-    public function after_created_new_wp_user( $user_id, $userdata ) {
-        // If a user is created with seller role, then delete vendor cache.
-        if ( ! empty( $userdata['role'] && 'seller' === $userdata['role'] ) ) {
-            self::delete();
-        }
+    public function after_created_new_wp_user( $user_id ) {
+        $this->clear_wp_user_cache( $user_id );
+    }
+
+    /**
+     * Clear Vendor Cache Group after updated wp user.
+     *
+     * @since 3.3.5
+     *
+     * @param int   $user_id
+     * @param array $old_user_data
+     *
+     * @return void
+     */
+    public function after_updated_wp_user( $user_id, $old_user_data ) {
+        $this->clear_wp_user_cache( $user_id );
+    }
+
+    /**
+     * Clear Vendor Cache Group before deleting wp user.
+     *
+     * @since 3.3.5
+     *
+     * @param int   $user_id
+     * @param array $reassign
+     *
+     * @return void
+     */
+    public function before_deleting_wp_user( $user_id, $reassign ) {
+        $this->clear_wp_user_cache( $user_id, true );
     }
 }
