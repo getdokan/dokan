@@ -141,13 +141,13 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                 </select>
             <?php } ?>
             </div>
+        <?php } ?>
+
         <?php
-        }
-        
         /**
          * Add vendor address verification templates.
          * 
-         * @since 3.3.6
+         * @since DOKAN_SINCE
          * 
          * @param array $address               Vendor address info.
          * @param array $seller_address_fields Vendor required addresses.
