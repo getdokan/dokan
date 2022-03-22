@@ -59,7 +59,7 @@ class Settings {
             $heading          = __( 'Settings', 'dokan-lite' );
             $is_store_setting = true;
         } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
-            $heading = __( 'Withdraw Payment Method', 'dokan-lite' );
+            $heading = __( 'Payment Method', 'dokan-lite' );
             $slug    = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
             $heading = $this->get_payment_heading( $slug, $heading );
         } else {
@@ -205,10 +205,10 @@ class Settings {
          *
          * @since DOKAN_LITE_SINCE
          */
-        $mis_match_map = apply_filters( 'payment_method_key_for_store_payment_settings', [] );
+        $mis_match_map = apply_filters( 'dokan_payment_method_storage_key', [] );
 
-        $unused_methods       = dokan_get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
-        $unused_methods_assoc = array_reduce(
+        $unused_methods = $this->dokan_get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
+        $unused_methods = array_reduce(
             $unused_methods,
             function ( $in_dropdown, $method_key ) {
                 $cur_method = dokan_withdraw_get_method( $method_key );
@@ -225,7 +225,7 @@ class Settings {
         $methods = array_reduce(
             $methods,
             function ( $previous_array, $method_key ) use ( $mis_match_map, $profile_info ) {
-                if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) {
+                if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! ( isset( $mis_match_map[ $method_key] ) && isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) ) {
                     return $previous_array;
                 }
 
@@ -258,8 +258,8 @@ class Settings {
             $args = array_merge(
                 $args,
                 [
-                    'methods'           => $methods,
-                    'unused_methods'    => $unused_methods_assoc,
+                    'methods'        => $methods,
+                    'unused_methods' => $unused_methods,
                 ]
             );
 
@@ -765,7 +765,7 @@ class Settings {
         switch ( $slug ) {
             case 'bank':
             case 'bank/edit':
-                $heading = __( 'Add Bank Account', 'dokan-lite' );
+                $heading = __( 'Bank Account Settings', 'dokan-lite' );
                 break;
 
             case 'paypal':
@@ -784,5 +784,41 @@ class Settings {
         $heading = apply_filters( "dokan_withdraw_method_settings_title", $heading, $slug );
 
         return $heading;
+    }
+
+    /**
+     * Get unused payment methods
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $methods           All methods
+     * @param array $profile_methods   Used Methods
+     * @param array $mis_match_methods The list of methods which has different key and name but the name is substring of key
+     *
+     * @return array
+     */
+    private function dokan_get_unused_payment_methods( $methods, $profile_methods, $mis_match_methods ) {
+        $profile_methods = array_keys( $profile_methods );
+        $unused_methods  = array_diff( $methods, $profile_methods );
+
+        $mis_match_methods = array_filter(
+            $mis_match_methods,
+            function ( $key ) use ( $profile_methods ) {
+                return in_array( $key, $profile_methods, true );
+            }
+        );
+
+        return array_filter(
+            $unused_methods,
+            function ( $key ) use ( $mis_match_methods ) {
+                $found = false;
+
+                foreach ( $mis_match_methods as $mis_match_method ) {
+                    $found = $found || ( false !== stripos( $key, $mis_match_method ) );
+                }
+
+                return ! $found;
+            }
+        );
     }
 }

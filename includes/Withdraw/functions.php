@@ -262,7 +262,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since 3.3.1
+ * @since DOKAN_SINCE
  *
  * @param string $method_key Withdraw Method key
  *
@@ -280,40 +280,4 @@ function dokan_withdraw_get_method_icon( $method_key ) {
     }
 
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
-}
-
-/**
- * Get unused payment methods
- *
- * @since DOKAN_LITE_SINCE
- *
- * @param array $methods           All methods
- * @param array $profile_methods   Used Methods
- * @param array $mis_match_methods The list of methods which has different key and name but the name is substring of key
- *
- * @return array
- */
-function dokan_get_unused_payment_methods( $methods, $profile_methods, $mis_match_methods ) {
-    $profile_methods = array_keys( $profile_methods );
-    $unused_methods  = array_diff( $methods, $profile_methods );
-
-    $mis_match_methods = array_filter(
-        $mis_match_methods,
-        function ( $key ) use ( $profile_methods ) {
-            return in_array( $key, $profile_methods, true );
-        }
-    );
-
-    return array_filter(
-        $unused_methods,
-        function ( $key ) use ( $mis_match_methods ) {
-            $found = false;
-
-            foreach ( $mis_match_methods as $mis_match_method ) {
-                $found = $found || ( false !== stripos( $key, $mis_match_method ) );
-            }
-
-            return ! $found;
-        }
-    );
 }

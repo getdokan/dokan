@@ -27,7 +27,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                                     <span>
                                         <?php
                                         //translators: %s: payment method title
-                                        echo sprintf( __( 'Direct to %s', 'dokan-lite' ), esc_html__( $method['title'], 'dokan-lite' ) );
+                                        printf( esc_html__( 'Direct to %s', 'dokan-lite' ), $method['title'] );
                                         ?>
                                     </span>
                                 </div>
