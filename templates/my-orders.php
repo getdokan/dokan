@@ -19,7 +19,17 @@
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
     $statuses        = wc_get_order_statuses();
-    $customer_orders = dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $vendor_id, $sort_order, $limit, $page );
+    $customer_orders = dokan_get_filtered_orders( [
+        'start_date' => $start_date,
+        'end_date'   => $end_date,
+        'min_price'  => $min_price,
+        'max_price'  => $max_price,
+        'vendor_id'  => $vendor_id,
+        'sort_order' => $sort_order,
+        'limit'      => $limit,
+        'page'       => $page,
+    ] );
+
     $customer_orders = dokan_filter_orders_by_status( $customer_orders, $status );
     $vendors         = dokan()->vendor->get_vendors( [ 'number' => -1 ] );
     ?>
@@ -43,8 +53,8 @@
             <select name="vendor" class="dokan-form-control dokan-my-order-select2">
                 <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
                 <?php foreach ( $vendors as $vendor ) :
-                    $sellershop = dokan_get_store_info( $vendor->id );?>
-                    <option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor->id, $vendor_id ); ?>><?php echo esc_html( $sellershop['store_name'] ); ?></option>
+                    $shop_info = dokan_get_store_info( $vendor->id );?>
+                    <option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor->id, $vendor_id ); ?>><?php echo esc_html( $shop_info['store_name'] ); ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -104,8 +114,8 @@
                             <?php
                                 $seller_id = dokan_get_seller_id_by_order( dokan_get_prop( $order, 'id' ) );
                                 if ( !is_array( $seller_id ) && $seller_id != 0 ) {
-                                    $sellershop = dokan_get_store_info( $seller_id );
-                                    echo '<a href="'. esc_url( dokan_get_store_url( $seller_id ) ) .'">'. esc_html( $sellershop['store_name'] ) .'</a>';
+                                    $shop_info = dokan_get_store_info( $seller_id );
+                                    echo '<a href="'. esc_url( dokan_get_store_url( $seller_id ) ) .'">'. esc_html( $shop_info['store_name'] ) .'</a>';
                                 } else {
                                     esc_html_e( 'Multiple Vendor', 'dokan-lite' );
                                 }
@@ -147,7 +157,13 @@
         </table>
 
     <?php
-        $customer_orders_count = count( dokan_get_filtered_orders( $start_date, $end_date, $min_price, $max_price, $vendor_id ) );
+        $customer_orders_count = count( dokan_get_filtered_orders( [
+            'start_date' => $start_date,
+            'end_date'   => $end_date,
+            'min_price'  => $min_price,
+            'max_price'  => $max_price,
+            'vendor_id'  => $vendor_id,
+        ] ) );
 
         $num_of_pages = ceil( $customer_orders_count / $limit );
 

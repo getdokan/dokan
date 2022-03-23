@@ -106,7 +106,13 @@ class Orders {
             header( 'Content-Type: application/csv; charset=' . get_option( 'blog_charset' ) );
             header( "Content-Disposition: attachment; filename=$filename.csv" );
 
-            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), 'all', null, 10000000, 0 );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), [
+                'status'     => 'all',
+                'order_date' => null,
+                'limit'      => 10000000,
+                'offset'     => 0,
+            ] );
+
             dokan_order_csv_export( $user_orders );
             exit();
         }
@@ -124,7 +130,18 @@ class Orders {
             $total_high       = ! empty( $_POST['total_high'] ) ? absint( wp_unslash( $_POST['total_high'] ) ) : '';
             $total_low        = ! empty( $_POST['total_low'] ) ? absint( wp_unslash( $_POST['total_low'] ) ) : '';
 
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $order_status, null, 10000000, 0, $customer_id, $total_high, $total_low, $order_date_start, $order_date_end );
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), [
+                'status'      => $order_status,
+                'order_date'  => null,
+                'limit'       => 10000000,
+                'offset'      => 0,
+                'customer_id' => $customer_id,
+                'total_high'  => $total_high,
+                'total_low'   => $total_low,
+                'start_date'  => $order_date_start,
+                'end_date'    => $order_date_end,
+            ] );
+
             dokan_order_csv_export( $user_orders );
             exit();
         }
