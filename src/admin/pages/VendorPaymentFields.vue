@@ -77,20 +77,14 @@
                     <div class="column" v-else-if="newCommissions.includes( selectedCommissionType.name )">
                         <label>{{ __( 'Admin Commission', 'dokan-lite' )  }}</label>
                         <SinglePriceQuantityVendorSale
-                            v-for="( commission, index ) in get_vendor_commission_array( vendorInfo.admin_commission )"
-                            :key="index"
-                            :commission="commission"
+                            class="new-commission-container"
                             :allCommission="vendorInfo.admin_commission"
                             :selectedCommissionName="selectedCommissionType.name"
                             :selectedCommissionLabel="selectedCommissionType.label"
-                            :index="index"
                             v-on:updateCommissionState="updateCommissionState"
                             v-on:removeCommissionFromList="removeCommissionFromList"
-                            class="new-commission-container"
+                            v-on:generateNextRow="generateNextRow"
                         />
-                        <fieldset>
-                            <button class="add_new_commission_set" @click.prevent="addNewCommissionData" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
-                        </fieldset>
                     </div>
 
                     <div class="column" v-else>
@@ -192,7 +186,8 @@ export default {
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
             newCommissions: [ 'vendor_sale', 'product_price', 'product_quantity' ],
             newCommissionData: {
-                rule: 'upto',
+                from: 0,
+                to: '',
                 commission_type: 'flat',
                 flat: 10,
                 percentage: 10
@@ -263,13 +258,15 @@ export default {
             }
 
             this.vendorInfo.admin_commission_type = name;
-            this.$emit('setAdminCommissoinArray', this.getAndCheckCommissionType( true ) );
+            
+            this.vendorInfo.admin_commission = this.getAndCheckCommissionType(true);
         },
 
-        getAndCheckCommissionType( begin = false ) {
+        getAndCheckCommissionType( begin = false, value = '' ) {
             let selectedCommissionName = this.selectedCommissionType.name;
             let commissionData = {...this.newCommissionData};
-            commissionData[selectedCommissionName] = 10;
+
+            value ? commissionData.from = value : '';
 
             if ( this.newCommissions.includes( selectedCommissionName ) ) {
                 return begin ? [commissionData] : commissionData;
@@ -278,33 +275,41 @@ export default {
             }
         },
 
-        addNewCommissionData() {
-            let oldCommissions = [...this.vendorInfo.admin_commission];
+        async addNewCommissionData(value = '') {
+            let oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
 
-            if ( 'string' === typeof this.vendorInfo.admin_commission ) {
+            if ( 'string' == typeof oldCommissions ) {
                 oldCommissions = [];
             }
 
-            oldCommissions.push( this.getAndCheckCommissionType() );
+            await oldCommissions.push( this.getAndCheckCommissionType(false, value) );
 
-            this.$emit('setAdminCommissoinArray', oldCommissions);
+            await this.$emit('updateCommissionState', oldCommissions);
         },
 
-        updateCommissionState( obj ) {
-            let { value, field, index, type  } = obj
+        async updateCommissionState( obj ) {
+            let { value, field, index, type  } = obj;
 
-            const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission))
+            let oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
             oldCommissions[index][field] = value;
-            this.$emit('setAdminCommissoinArray', oldCommissions);
+            
+            if ( 'to' == field && oldCommissions[index+1] ) {
+                oldCommissions[index+1].from = Number( value ) + 1;
+                oldCommissions[index+1].to = '';
+            }
+
+            await this.$emit('updateCommissionState', oldCommissions);
         },
 
-        removeCommissionFromList( obj ) {
-            let { field, index, type  } = obj;
+        removeCommissionFromList( index ) {
 
-            let oldCommissions = [...this.vendorInfo.admin_commission];
+            let oldCommissions  = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+            if ( oldCommissions [index+1] ) {
+                oldCommissions [index+1].from = oldCommissions [index].from;
+                // oldCommissions [index+1].to = oldCommissions [index+1].to;
+            }
             oldCommissions.splice( index, 1 );
-
-            this.$emit('setAdminCommissoinArray', oldCommissions);
+            this.$emit('updateCommissionState', oldCommissions);
         },
 
         get_vendor_commission_array( commissions ) {
@@ -312,7 +317,22 @@ export default {
             all_commissions = 'string' === typeof commissions ? [] : commissions;
 
             return all_commissions;
-        }
+        },
+
+        async generateNextRow( data ) {
+            let { value, index } = data;
+
+            const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+            await oldCommissions.splice(index+1, 9e9);
+
+            if ( value && 0 != value ) {
+                // const newData = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+                await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
+            } else {
+                await this.removeCommissionFromList(index);
+            }
+            await this.$emit('updateCommissionState', oldCommissions);
+        },
     },
 };
 </script>

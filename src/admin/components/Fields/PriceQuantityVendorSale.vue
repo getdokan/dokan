@@ -2,20 +2,14 @@
     <td class="new-commission-holder">
         <template v-if="'' !== fieldValue[fieldData.name]">
             <SinglePriceQuantityVendorSale
-                v-for="( commission, key ) in fieldValue[fieldData.name]" v-bind:key="key"
-                :commission="commission"
                 :allCommission="fieldValue[fieldData.name]"
-                :selectedCommissionName="fieldData.fields[id].name"
-                :selectedCommissionLabel="fieldData.fields[id].label"
-                :index="key"
+                :selectedCommissionName="fieldData.commission_title"
+                :selectedCommissionLabel="fieldData.type"
                 v-on:updateCommissionState="updateCommissionState"
                 v-on:removeCommissionFromList="removeCommissionFromList"
+                v-on:generateNextRow="generateNextRow"
             />
         </template>
-
-        <div>
-            <button class="add_new_commission_set" @click.prevent="addNewCommission" type="button">{{ __( 'Add', 'dokan-lite' ) }}</button>
-        </div>
     </td>
 </template>
 
@@ -30,8 +24,8 @@ export default {
     props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
     methods: {
 
-            addNewCommission() {
-                const dummyData = this.getDummyData();
+            addNewCommission( value ) {
+                const dummyData = this.getDummyData( value );
 
                 const commissions = '' === this.fieldValue[this.id] ? [] : this.fieldValue[this.id];
 
@@ -39,7 +33,7 @@ export default {
                 this.fieldValue[this.id] = commissions;
             },
 
-            getDummyData() {
+            getDummyData( value ) {
                 const allFields = this.fieldData.fields;
 
                 if ( undefined === allFields ) {
@@ -52,7 +46,8 @@ export default {
                         dummyData.flat = allFields[element].options.flat.default;
                         dummyData.percentage = allFields[element].options.percentage.default;
                     } else {
-                        dummyData[element] = allFields[element].default;
+                        // dummyData[element] = allFields[element].default;
+                        'from' == element ? dummyData[element] = Number(value)+1 : dummyData[element] = allFields[element].default;
                     }
                 });
 
@@ -62,15 +57,44 @@ export default {
             updateCommissionState( obj ) {
                 let { value, field, index, type  } = obj;
                 this.fieldValue[this.fieldData.name][index][field] = type === 'number' ? Number( value ) : String( value );
+
+                if ( 'to' == field && this.fieldValue[this.fieldData.name][index+1] ) {
+                    this.fieldValue[this.fieldData.name][index+1].from = Number( value ) + 1;
+                    this.fieldValue[this.fieldData.name][index+1].to = 0;
+                }
             },
 
-            removeCommissionFromList( obj ) {
-                let { field, index, type  } = obj;
-                let all_commissions = [...this.fieldValue[this.id]];
-                all_commissions.splice( index, 1 )
-                this.fieldValue[this.id] = all_commissions;
+            removeCommissionFromList( index ) {
+                let all_commissions = JSON.stringify([...this.fieldValue[this.fieldData.name]]);
+                all_commissions = JSON.parse(all_commissions);
+                if ( all_commissions[index+1] ) {
+                    all_commissions[index+1].from = all_commissions[index].from;
+                    // all_commissions[index+1].to = all_commissions[index+1].to;
+                }
+                all_commissions.splice( index, 1 );
+                this.fieldValue[this.fieldData.name] = all_commissions;
+            },
+
+            generateNextRow( data ) {
+                let { value, index } = data;
+
+                let newData = [ ...this.fieldValue[this.fieldData.name] ];
+                newData.splice(index+1, 9e9);
+                this.fieldValue[this.fieldData.name] = newData;
+
+                if ( value && 0 != value ) {
+                    ! this.fieldValue[this.fieldData.name][index] ? this.addNewCommission( value ) : '';
+                } else {
+                    this.removeCommissionFromList(index);
+                }
             },
     },
+
+    computed: {
+        get_currency_symbol() {
+            return undefined !== dokan.currency.symbol ? dokan.currency.symbol : '';
+        },
+    }
 }
 </script>
 

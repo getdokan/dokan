@@ -949,9 +949,9 @@ export default {
             if ( '' === this.fieldValue[event.target.value] ) {
                 this.fieldValue[event.target.value] = [
                     {
-                        [event.target.value]: 10,
-                        rule: 'upto',
-                        commission_type: 'percentage',
+                        from: 0,
+                        to: '',
+                        commission_type: 'flat',
                         flat: 10,
                         percentage: 10
                     }
