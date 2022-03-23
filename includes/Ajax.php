@@ -347,10 +347,10 @@ class Ajax {
         // Validate recaptcha if site key and secret key exist
         if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
             $recaptcha_keys     = dokan_get_recaptcha_site_and_secret_keys();
-            $recaptcha_validate = $this->recaptcha_validation_handler( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
+            $recaptcha_validate = dokan_handle_recaptcha_validation( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
 
             if ( empty( $recaptcha_validate ) ) {
-                $message = sprintf( $error_template, __( 'Google reCaptcha varification failed!', 'dokan-lite' ) );
+                $message = sprintf( $error_template, __( 'reCAPTCHA verification failed!', 'dokan-lite' ) );
                 wp_send_json_error( $message );
             }
         }
@@ -974,7 +974,7 @@ class Ajax {
     /**
      * Get vendor earning
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @return void
      */
@@ -1044,46 +1044,5 @@ class Ajax {
         update_option( 'dokan_hide_pro_nag', 'hide' );
 
         wp_send_json_success();
-    }
-
-    /**
-     * Handler for reCaptcha validation request.
-     *
-     * @since 3.3.3
-     *
-     * @param string $action
-     * @param string $token
-     * @param string $secretkey
-     *
-     * @return boolean
-     */
-    public function recaptcha_validation_handler( $action, $token, $secretkey ) {
-        if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
-            return false;
-        }
-
-        $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
-        $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
-        $response_body = wp_remote_retrieve_body( $response );
-        $response_data = json_decode( $response_body, true );
-
-        // Check if the response data is not empty
-        if ( empty( $response_data['success'] ) ) {
-            return false;
-        }
-
-        // Validate reCaptcha action
-        if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
-            return false;
-        }
-
-        // Validate reCaptcha score
-        $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5 );
-        if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
-            return false;
-        }
-
-        // Return success after passing checks
-        return $response_data['success'];
     }
 }

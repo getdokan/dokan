@@ -14,12 +14,38 @@ class Assets {
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
 
         if ( is_admin() ) {
-            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
-            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_admin_notices_scripts' ], 8 );
+            add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
         }
+    }
+
+    /**
+     * Load global admin and promo notices scripts
+     *
+     * @since 3.3.6
+     *
+     * @return void
+     */
+    public function load_dokan_admin_notices_scripts() {
+        wp_enqueue_script( 'dokan-promo-notice-js' );
+        $vue_localize_script = apply_filters(
+            'dokan_promo_notice_localize_script', [
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'rest' => [
+                    'root'    => esc_url_raw( get_rest_url() ),
+                    'nonce'   => wp_create_nonce( 'wp_rest' ),
+                    'version' => 'dokan/v1',
+                ],
+                'urls'            => [
+                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                ],
+            ]
+        );
+        wp_localize_script( 'dokan-promo-notice-js', 'dokan_promo', $vue_localize_script );
     }
 
     /**
@@ -32,9 +58,6 @@ class Assets {
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' === $hook ) {
             $localize_script = $this->get_admin_localized_scripts();
-
-            // Load dokan global admin styles
-            wp_enqueue_style( 'dokan-global-admin-css' );
 
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
@@ -254,10 +277,6 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
             ],
-            'dokan-global-admin-css' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
-            ],
         ];
 
         return $styles;
@@ -377,7 +396,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment' ],
                 'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
@@ -421,14 +440,9 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-admin-notice-js' => [
-                'src'     => $asset_url . '/js/dokan-admin-notice.js',
-                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
-            ],
             'dokan-promo-notice-js' => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
-                'deps'    => [ 'jquery', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
         ];
@@ -566,9 +580,50 @@ class Assets {
 
         $localize_data = [
             'i18n_date_format' => wc_date_format(),
+            'i18n_time_format' => wc_time_format(),
+            'week_starts_day'  => intval( get_option( 'start_of_week', 0 ) ),
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
+
+        // Dokan date range picker localization
+        $daterange_localize_data = [
+            'locale'      => [
+                'toLabel'          => __( 'To', 'dokan-lite' ),
+                'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
+                'fromLabel'        => __( 'From', 'dokan-lite' ),
+                'separator'        => __( ' - ', 'dokan-lite' ),
+                'weekLabel'        => __( 'W', 'dokan-lite' ),
+                'applyLabel'       => __( 'Apply', 'dokan-lite' ),
+                'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
+                'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
+                'daysOfWeek'       => [
+                    __( 'Su', 'dokan-lite' ),
+                    __( 'Mo', 'dokan-lite' ),
+                    __( 'Tu', 'dokan-lite' ),
+                    __( 'We', 'dokan-lite' ),
+                    __( 'Th', 'dokan-lite' ),
+                    __( 'Fr', 'dokan-lite' ),
+                    __( 'Sa', 'dokan-lite' ),
+                ],
+                'monthNames'       => [
+                    __( 'January', 'dokan-lite' ),
+                    __( 'February', 'dokan-lite' ),
+                    __( 'March', 'dokan-lite' ),
+                    __( 'April', 'dokan-lite' ),
+                    __( 'May', 'dokan-lite' ),
+                    __( 'June', 'dokan-lite' ),
+                    __( 'July', 'dokan-lite' ),
+                    __( 'August', 'dokan-lite' ),
+                    __( 'September', 'dokan-lite' ),
+                    __( 'October', 'dokan-lite' ),
+                    __( 'November', 'dokan-lite' ),
+                    __( 'December', 'dokan-lite' ),
+                ],
+            ],
+        ];
+
+        wp_localize_script( 'dokan-date-range-picker', 'dokan_daterange_i18n', $daterange_localize_data );
     }
 
     /**
@@ -612,10 +667,26 @@ class Assets {
 
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'jquery-ui' );
-            wp_enqueue_style( 'dokan-magnific-popup' );
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
-            wp_enqueue_style( 'dokan-timepicker' );
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
+                wp_enqueue_style( 'dokan-magnific-popup' );
+            }
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['orders'] ) ||
+                isset( $wp->query_vars['coupons'] ) ||
+                isset( $wp->query_vars['reports'] ) ||
+                ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
+            ) {
+                wp_enqueue_style( 'dokan-timepicker' );
+            }
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
@@ -628,16 +699,36 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
+
             wp_enqueue_script( 'dokan-tooltip' );
+
             wp_enqueue_script( 'dokan-form-validate' );
-            wp_enqueue_script( 'dokan-tabs' );
-            wp_enqueue_script( 'dokan-chart' );
-            wp_enqueue_script( 'dokan-flot' );
+
+            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['tools'] ) ) {
+                wp_enqueue_script( 'dokan-tabs' );
+            }
+
+            if (
+                isset( $wp->query_vars['page'] ) ||
+                isset( $wp->query_vars['reports'] )
+            ) {
+                wp_enqueue_script( 'dokan-chart' );
+                wp_enqueue_script( 'dokan-flot' );
+            }
+
             wp_enqueue_script( 'dokan-select2-js' );
             wp_enqueue_media();
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
-            wp_enqueue_script( 'dokan-popup' );
+
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
+                wp_enqueue_script( 'dokan-popup' );
+            }
+
             wp_enqueue_script( 'wc-password-strength-meter' );
             wp_enqueue_script( 'dokan-script' );
         }

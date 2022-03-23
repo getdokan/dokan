@@ -118,7 +118,7 @@ class SetupWizard extends DokanSetupWizard {
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_attr_e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
+            <?php wp_print_styles(); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
         <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
@@ -165,7 +165,7 @@ class SetupWizard extends DokanSetupWizard {
     public function dokan_setup_store() {
         $store_info      = $this->store_info;
 
-        $store_ppp       = isset( $store_info['store_ppp'] ) ? esc_attr( $store_info['store_ppp'] ) : 10;
+        $store_ppp       = isset( $store_info['store_ppp'] ) ? absint( $store_info['store_ppp'] ) : (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
         $show_email      = isset( $store_info['show_email'] ) ? esc_attr( $store_info['show_email'] ) : 'no';
         $address_street1 = isset( $store_info['address']['street_1'] ) ? $store_info['address']['street_1'] : '';
         $address_street2 = isset( $store_info['address']['street_2'] ) ? $store_info['address']['street_2'] : '';
@@ -374,7 +374,7 @@ class SetupWizard extends DokanSetupWizard {
 					if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
                         ?>
                         <tr>
-                            <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
+                            <th scope="row"><label><?php echo esc_html( dokan_withdraw_get_method_title( $method_key ) ); ?></label></th>
                             <td>
         						<?php call_user_func( $method['callback'], $store_info ); ?>
                             </td>

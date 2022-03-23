@@ -44,7 +44,7 @@ class Manager {
 
         if ( $amount < $limit ) {
             // translators: %s: withdraw limit amount
-            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than %s', 'dokan-lite' ), wc_price( $limit ) ) );
+            return new WP_Error( 'dokan_withdraw_amount', sprintf( __( 'Withdraw amount must be greater than or equal to %s', 'dokan-lite' ), wc_price( $limit ) ) );
         }
 
         if ( ! in_array( $method, dokan_get_seller_active_withdraw_methods( $user_id ), true ) ) {
@@ -164,7 +164,7 @@ class Manager {
             'status'  => $args['status'],
             'method'  => $args['method'],
             'note'    => $args['notes'],
-            'details' => $args['details'],
+            'details' => ! empty( $args['details'] ) ? $args['details'] : '',
             'ip'      => $args['ip'],
         );
 
@@ -243,7 +243,7 @@ class Manager {
             if ( empty( $user_id ) ) {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
             } else {
-                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+                $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
             Cache::set( $cache_key, $result, $cache_group );
@@ -263,16 +263,13 @@ class Manager {
         switch ( $status ) {
             case 'pending':
                 return 0;
-                break;
 
             case 'completed':
             case 'approved':
                 return 1;
-                break;
 
             case 'cancelled':
                 return 2;
-                break;
         }
 
         return null;
@@ -284,9 +281,18 @@ class Manager {
      * @param  string $method
      * @param  int    $user_id
      *
-     * @return integer
+     * @return array
      */
     public function get_formatted_details( $method, $user_id ) {
+        if ( 'dokan_custom' === $method ) {
+            $store_settings = dokan_get_store_info( $user_id );
+
+            return [
+                'value' => $store_settings['payment']['dokan_custom']['value'],
+                'method' => dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' ),
+            ];
+        }
+
         $vendor = dokan()->vendor->get( $user_id );
 
         return isset( $vendor->get_payment_profiles()[ $method ] ) ? (array) $vendor->get_payment_profiles()[ $method ] : [];
@@ -305,15 +311,12 @@ class Manager {
         switch ( absint( $code ) ) {
             case 0:
                 return 'pending';
-                break;
 
             case 1:
                 return 'approved';
-                break;
 
             case 2:
                 return 'cancelled';
-                break;
         }
 
         return null;

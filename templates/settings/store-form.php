@@ -9,7 +9,7 @@
     $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
     $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
     $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
-    $store_ppp      = isset( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
+    $store_ppp      = ! empty( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
     $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
     $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
     $show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
@@ -45,11 +45,28 @@
 
     $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
-    $dokan_days               = [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ];
+    $dokan_days               = dokan_get_translated_days();
     $all_times                = isset( $profile_info['dokan_store_time'] ) ? $profile_info['dokan_store_time'] : '';
     $dokan_store_time_enabled = isset( $profile_info['dokan_store_time_enabled'] ) ? $profile_info['dokan_store_time_enabled'] : '';
     $dokan_store_open_notice  = isset( $profile_info['dokan_store_open_notice'] ) ? $profile_info['dokan_store_open_notice'] : '';
     $dokan_store_close_notice = isset( $profile_info['dokan_store_close_notice'] ) ? $profile_info['dokan_store_close_notice'] : '';
+
+    $store_status = [
+        'close' => __( 'Close', 'dokan-lite' ),
+        'open'  => __( 'Open', 'dokan-lite' ),
+    ];
+
+    $args = [
+        'dokan_days'   => $dokan_days,
+        'store_info'   => $all_times,
+        'dokan_status' => $store_status,
+    ];
+
+    /**
+     * @since 3.3.7
+     */
+    $location = apply_filters( 'dokan_store_time_template', 'settings/store-time' );
+    $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -68,7 +85,7 @@
                 </div>
 
                 <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
-                    <i class="fa fa-cloud-upload"></i>
+                    <i class="fas fa-cloud-upload-alt"></i>
 
                     <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                     <p class="help-block">
@@ -106,7 +123,7 @@
                     <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
                 </div>
                 <div class="gravatar-button-area<?php echo esc_attr( $gravatar_id ) ? ' dokan-hide' : ''; ?>">
-                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fa fa-cloud-upload"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
+                    <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fas fa-cloud-upload-alt"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
                 </div>
             </div>
         </div>
@@ -125,7 +142,7 @@
             <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
 
             <div class="dokan-w5 dokan-text-left">
-                <input id="dokan_store_ppp" value="<?php ! empty( $store_ppp ) ? esc_attr( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
+                <input id="dokan_store_ppp" value="<?php echo ! empty( $store_ppp ) ? absint( $store_ppp ) : ''; ?>" name="dokan_store_ppp" placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
             </div>
         </div>
          <!--address-->
@@ -155,7 +172,7 @@
         <?php do_action( 'dokan_settings_after_store_phone', $current_user, $profile_info ); ?>
 
         <?php do_action( 'dokan_settings_before_store_email', $current_user, $profile_info ); ?>
-        
+
         <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) ) : ?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label>
@@ -181,6 +198,10 @@
                 </div>
             </div>
         </div>
+
+        <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
+
+        <?php do_action( 'dokan_settings_before_store_map', $current_user, $profile_info ); ?>
 
         <?php if ( dokan_has_map_api_key() ) { ?>
         <div class="dokan-form-group">
@@ -248,36 +269,10 @@
         </div>
 
         <div class="dokan-form-group store-open-close">
-            <label class="dokan-w3 control-label"></label>
-            <div class="dokan-w6" style="width: auto">
-                <?php foreach ( $dokan_days as $key => $day ) { ?>
-                    <?php
-                        $status = isset( $all_times[$day]['status'] ) ? $all_times[$day]['status'] : '';
-                        $status = isset( $all_times[$day]['open'] ) ? $all_times[$day]['open'] : $status;
-                    ?>
-                    <div class="dokan-form-group">
-                        <label class="day control-label" for="<?php echo esc_attr( $day ); ?>-opening-time">
-                            <?php echo esc_html( dokan_get_translated_days( $day ) ); ?>
-                        </label>
-                        <label for="">
-                            <select name="<?php echo esc_attr( $day ); ?>_on_off" class="dokan-on-off dokan-form-control">
-                                <option value="close" <?php ! empty( $status ) ? selected( $status, 'close' ) : ''; ?> >
-                                    <?php esc_html_e( 'Close', 'dokan-lite' ); ?>
-                                </option>
-                                <option value="open" <?php ! empty( $status ) ? selected( $status, 'open' ) : ''; ?> >
-                                    <?php esc_html_e( 'Open', 'dokan-lite' ); ?>
-                                </option>
-                            </select>
-                        </label>
-                        <label for="opening-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( strtolower( $day ) ); ?>_opening_time" id="<?php echo esc_attr( $day ); ?>-opening-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['opening_time'] ) ? esc_attr( $all_times[$day]['opening_time'] ) : ''; ?>" >
-                        </label>
-                        <label for="closing-time" class="time" style="visibility: <?php echo isset( $status ) && $status == 'open' ? 'visible' : 'hidden'; ?>" >
-                            <input type="text" class="dokan-form-control" name="<?php echo esc_attr( $day ); ?>_closing_time" id="<?php echo esc_attr( $day ); ?>-closing-time" placeholder="<?php echo esc_attr( date_i18n( get_option( 'time_format', 'g:i a' ), current_time( 'timestamp' ) ) ); ?>" value="<?php echo isset( $all_times[$day]['closing_time'] ) ? esc_attr( $all_times[$day]['closing_time'] ) : ''; ?>">
-                        </label>
-                    </div>
-                <?php } ?>
-            </div>
+
+            <!-- Load store time templates here. -->
+            <?php dokan_get_template_part( $location, '', $args ); ?>
+
         </div>
 
         <div class="dokan-form-group store-open-close">
@@ -340,13 +335,12 @@
 
         $('#dokan-store-time-enable').trigger('change');
 
+        // Show & hide our opening, closing time fields by using this change event.
         $( '.dokan-on-off' ).on( 'change', function() {
-            var self = $(this);
+            const self = $( this );
 
             if ( self.val() == 'open' ) {
                 self.closest('.dokan-form-group').find('.time').css({'visibility': 'visible'});
-                self.closest('.store-open-close').find('.dokan-w6').addClass('dokan-text-left');
-                self.closest('.store-open-close').find('.dokan-w6').css({'width': '50%'});
             } else {
                 self.closest('.dokan-form-group').find('.time').css({'visibility': 'hidden'});
                 self.closest('.store-open-close').find('.dokan-w6').removeClass('dokan-text-left');
@@ -354,12 +348,55 @@
             }
 
         } );
-        $( '.time .dokan-form-control' ).timepicker({
-            scrollDefault: 'now',
-            timeFormat: '<?php echo addcslashes( esc_attr( get_option( 'time_format' ) ), '\\' ); ?>',
-            step: <?php echo 'h' === strtolower( get_option( 'time_format' ) ) ? '60' : '30'; ?>
+
+        // Set timepicker jquery here.
+        $( '.dokan-store-times .time .opening-time' ).timepicker({
+            scrollDefault : 'now',
+            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm' ?>',
+            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
         });
-        // dokan store open close scripts end //
+
+        $( '.dokan-store-times .time .closing-time' ).timepicker({
+            scrollDefault : 'now',
+            minTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '00:59' : '00:29 am' ?>',
+            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:59' : '11:59 pm' ?>',
+            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
+        });
+
+        // Add validation for store time when changed.
+        $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
+            const self              = $( this ),
+                openValue           = self.find( '.opening-time' ).val(),
+                closeValue          = self.find( '.closing-time' ).val(),
+                formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
+                formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
+
+            if ( formattedOpenValue > formattedCloseValue ) {
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+            } else {
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+            }
+        });
+
+        $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
+            $( '.dokan-store-times' ).each( function () {
+                const self              = $( this ),
+                    openValue           = self.find( '.opening-time' ).val(),
+                    closeValue          = self.find( '.closing-time' ).val(),
+                    formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
+                    formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
+
+                if ( formattedOpenValue > formattedCloseValue ) {
+                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                    e.preventDefault();
+                    return false;
+                }
+
+                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+            });
+        });
 
         var dokan_address_wrapper = $( '.dokan-address-fields' );
         var dokan_address_select = {

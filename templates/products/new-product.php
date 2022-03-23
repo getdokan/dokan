@@ -50,6 +50,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 </h1>
             </header><!-- .entry-header -->
 
+            <?php do_action( 'dokan_new_product_before_product_area' ); ?>
 
             <div class="dokan-new-product-area">
                 <?php if ( dokan()->dashboard->templates->products->has_errors() ) { ?>
@@ -98,7 +99,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                         <div class="dokan-feat-image-upload">
                                             <div class="instruction-inside <?php echo esc_attr( $hide_instruction ); ?>">
                                                 <input type="hidden" name="feat_image_id" class="dokan-feat-image-id" value="<?php echo esc_attr( $posted_img ); ?>">
-                                                <i class="fa fa-cloud-upload"></i>
+                                                <i class="fas fa-cloud-upload-alt"></i>
                                                 <a href="#" class="dokan-feat-image-btn dokan-btn"><?php esc_html_e( 'Upload Product Image', 'dokan-lite' ); ?></a>
                                             </div>
 
@@ -136,7 +137,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                                         }
                                                         ?>
                                                     <li class="add-image add-product-images tips" data-title="<?php esc_attr_e( 'Add gallery image', 'dokan-lite' ); ?>">
-                                                        <a href="#" class="add-product-images"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                                        <a href="#" class="add-product-images"><i class="fas fa-plus" aria-hidden="true"></i></a>
                                                     </li>
                                                 </ul>
                                                 <input type="hidden" id="product_image_gallery" name="product_image_gallery" value="">
@@ -271,7 +272,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                             </div>
 
                             <div class="dokan-form-group">
-                                <label for="post_content" class="control-label"><?php esc_html_e( 'Description', 'dokan-lite' ) ?> <i class="fa fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
+                                <label for="post_content" class="control-label"><?php esc_html_e( 'Description', 'dokan-lite' ) ?> <i class="fas fa-question-circle tips" data-title="<?php esc_attr_e( 'Add your product description', 'dokan-lite' ) ?>" aria-hidden="true"></i></label>
                                 <?php wp_editor( htmlspecialchars_decode( $post_content, ENT_QUOTES ), 'post_content', array('editor_height' => 50, 'quicktags' => false, 'media_buttons' => false, 'teeny' => true, 'editor_class' => 'post_content') ); ?>
                             </div>
 

@@ -4,7 +4,7 @@
             <transition-group :name="transitionName" tag="div" class="dokan-notice-slides">
                 <template v-for="(notice, index) in notices">
                     <div class="dokan-admin-notice" :key="index" v-show="(index + 1) === current_notice" :class="`dokan-${notice.type}`" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
-                        <div class="notice-content" :style="! notice.title || ! notice.actions || ! notice.description ? 'align-items: center' : ''">
+                        <div class="notice-content" :style="! notice.title || ! notice.actions || ! notice.description ? 'align-items: center' : 'align-items: start'">
                             <div class="logo-wrap">
                                 <div class="dokan-logo"></div>
                                 <span class="dokan-icon" :class="`dokan-icon-${notice.type}`"></span>
@@ -82,11 +82,16 @@ export default {
 
     methods: {
         fetch() {
-            dokan.api.get( `/admin/notices/${this.endpoint}` )
-                .done( response => {
-                    this.notices = response.filter( notice => notice.description || notice.title );
-                    this.startAutoSlide();
-                });
+            $.ajax( {
+                url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}`,
+                method: 'get',
+                beforeSend: function ( xhr ) {
+                    xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
+                },
+            } ).done( response => {
+                this.notices = response.filter( notice => notice.description || notice.title );
+                this.startAutoSlide();
+            });
         },
 
         slideNotice( n ) {
@@ -132,13 +137,13 @@ export default {
 
         hideNotice( notice, index ) {
             $.ajax( {
-                url: dokan.ajaxurl,
+                url: dokan_promo.ajaxurl,
                 method: 'post',
                 dataType: 'json',
                 data: notice.ajax_data,
             } ).done( () => {
                 this.notices.splice( index, 1 );
-                this.current_notice = 1;
+                this.slideNotice( 1 );
             } );
         },
 
@@ -166,7 +171,7 @@ export default {
             this.button_text = action.loading_text ? action.loading_text : this.__( 'Loading...', 'dokan-lite' );
 
             $.ajax( {
-                url: dokan.ajaxurl,
+                url: dokan_promo.ajaxurl,
                 method: 'post',
                 dataType: 'json',
                 data: action.ajax_data,
@@ -180,7 +185,7 @@ export default {
                     window.location.reload();
                 } else {
                     this.notices.splice( index, 1 );
-                    this.current_notice = 1;
+                    this.slideNotice( 1 );
                 }
             } );
         }

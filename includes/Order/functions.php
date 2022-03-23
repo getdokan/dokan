@@ -15,8 +15,8 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
     $order_shipping     = $order->get_total_shipping();
     $order_tax          = $order->get_total_tax();
-    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' );
-    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' );
+    $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
+    $tax_recipient      = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
 
     if ( $get_array ) {
         $amount = array(

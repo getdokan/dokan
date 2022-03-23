@@ -158,7 +158,7 @@ if ( $user_orders ) {
                                             'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . dokan_get_prop( $order, 'id' ) ), 'dokan-mark-order-processing' ),
                                             'name'   => __( 'Processing', 'dokan-lite' ),
                                             'action' => 'processing',
-                                            'icon'   => '<i class="fa fa-clock-o">&nbsp;</i>',
+                                            'icon'   => '<i class="far fa-clock">&nbsp;</i>',
                                         ];
                                     }
 
@@ -167,7 +167,7 @@ if ( $user_orders ) {
                                             'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . dokan_get_prop( $order, 'id' ) ), 'dokan-mark-order-complete' ),
                                             'name'   => __( 'Complete', 'dokan-lite' ),
                                             'action' => 'complete',
-                                            'icon'   => '<i class="fa fa-check">&nbsp;</i>',
+                                            'icon'   => '<i class="fas fa-check">&nbsp;</i>',
                                         ];
                                     }
                                 }
@@ -176,7 +176,7 @@ if ( $user_orders ) {
                                     'url'    => wp_nonce_url( add_query_arg( [ 'order_id' => dokan_get_prop( $order, 'id' ) ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
                                     'name'   => __( 'View', 'dokan-lite' ),
                                     'action' => 'view',
-                                    'icon'   => '<i class="fa fa-eye">&nbsp;</i>',
+                                    'icon'   => '<i class="far fa-eye">&nbsp;</i>',
                                 ];
 
                                 $actions = apply_filters( 'woocommerce_admin_order_actions', $actions, $order );
