@@ -207,7 +207,7 @@ class Settings {
          */
         $mis_match_map = apply_filters( 'dokan_payment_method_storage_key', [] );
 
-        $unused_methods = $this->dokan_get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
+        $unused_methods = $this->get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
         $unused_methods = array_reduce(
             $unused_methods,
             function ( $in_dropdown, $method_key ) {
@@ -803,30 +803,31 @@ class Settings {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $methods           All methods
-     * @param array $profile_methods   Used Methods
-     * @param array $mis_match_methods The list of methods which has different key and name but the name is substring of key
+     * @param array $all_methods          All methods
+     * @param array $used_methods         Used Methods
+     * @param array $method_key_mismatchs The list of methods which has different key and name but the name is substring of key
      *
      * @return array
      */
-    private function dokan_get_unused_payment_methods( $methods, $profile_methods, $mis_match_methods ) {
-        $profile_methods = array_keys( $profile_methods );
-        $unused_methods  = array_diff( $methods, $profile_methods );
+    private function get_unused_payment_methods($all_methods, $used_methods, $method_key_mismatchs ) {
+        $used_methods    = array_keys( $used_methods);
+        $unused_methods  = array_diff( $all_methods, $used_methods); //these unused methods also include some used method if the keys doesn't match
 
-        $mis_match_methods = array_filter(
-            $mis_match_methods,
-            function ( $key ) use ( $profile_methods ) {
-                return in_array( $key, $profile_methods, true );
+        $used_method_key_mismatchs = array_filter(
+            $method_key_mismatchs,
+            function ( $key ) use ( $used_methods ) {
+                return in_array( $key, $used_methods, true );
             }
         );
 
+        //filter out the used methods which have mismatchied keys
         return array_filter(
             $unused_methods,
-            function ( $key ) use ( $mis_match_methods ) {
+            function ( $key ) use ( $used_method_key_mismatchs ) {
                 $found = false;
 
-                foreach ( $mis_match_methods as $mis_match_method ) {
-                    $found = $found || ( false !== stripos( $key, $mis_match_method ) );
+                foreach ($used_method_key_mismatchs as $method_key ) {
+                    $found = $found || ( false !== stripos( $key, $method_key ) );
                 }
 
                 return ! $found;
