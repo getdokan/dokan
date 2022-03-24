@@ -1,10 +1,10 @@
 <template>
     <fieldset class="dokan-new-commission-wraper">
         <div class="dokan-new-commission-header dokan-new-commission-row">
-            <div class="dokan-new-commission-col-from">{{ __( 'From', 'dokan-lite' ) }}</div>
-            <div class="dokan-new-commission-col-to">{{ __( 'To', 'dokan-lite' ) }}</div>
-            <div class="dokan-new-commission-col-ct">{{ __( 'Type', 'dokan-lite' ) }}</div>
-            <div class="dokan-new-commission-col-commission">{{ __( 'Commission', 'dokan-lite' ) }}</div>
+            <div class="dokan-new-commission-col-from">{{ __( 'From', 'dokan' ) }}</div>
+            <div class="dokan-new-commission-col-to">{{ __( 'To', 'dokan' ) }}</div>
+            <div class="dokan-new-commission-col-ct">{{ __( 'Type', 'dokan' ) }}</div>
+            <div class="dokan-new-commission-col-commission">{{ __( 'Commission', 'dokan' ) }}</div>
             <div class="dokan-new-commission-col-action"></div>
         </div>
         <div class="dokan-new-commission-content dokan-new-commission-row" v-for="(commission,index) in allCommission" :key="index">
@@ -17,9 +17,9 @@
             </div>
             <div class="dokan-new-commission-col-ct">
                 <select @change="updateCommissionValue( $event.target.value, 'commission_type', index, 'string' )" :value="commission.commission_type" :name="'commission_type' + index" :id="'commission_type' + index">
-                    <option value="flat">{{ __( 'Flat', 'dokan-lite') }}</option>
-                    <option value="percentage">{{ __( 'Percentage', 'dokan-lite') }}</option>
-                    <option value="combine">{{ __( 'Combined', 'dokan-lite') }}</option>
+                    <option value="flat">{{ __( 'Flat', 'dokan') }}</option>
+                    <option value="percentage">{{ __( 'Percentage', 'dokan') }}</option>
+                    <option value="combine">{{ __( 'Combined', 'dokan') }}</option>
                 </select>
             </div>
             <div class="dokan-new-commission-col-commission">
