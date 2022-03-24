@@ -809,9 +809,9 @@ class Settings {
             unset( $used_method_keys[ $index ] );
         }
 
-        $unused_methods = array_diff( $all_method_keys, $used_method_keys );
+        $unused_method_keys = array_diff( $all_method_keys, $used_method_keys );
 
-        return [ $used_method_keys, $unused_methods ];
+        return [ $used_method_keys, $unused_method_keys ];
     }
 
     /**
