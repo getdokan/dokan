@@ -627,7 +627,9 @@
         },
 
         showManageStock: function(e) {
-            if ( $(this).is(':checked') ) {
+            const product_type = $( '#product_type' ).val();
+
+            if ( $(this).is(':checked') && 'external' !== product_type ) {
                 $('.show_if_stock').slideDown('fast');
             } else {
                 $('.show_if_stock').slideUp('fast');
