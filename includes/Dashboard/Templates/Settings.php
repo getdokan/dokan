@@ -205,40 +205,12 @@ class Settings {
          *
          * @since DOKAN_SINCE
          */
-        $mis_match_map = apply_filters( 'dokan_payment_method_storage_key', [] );
+        $method_key_to_storage_key = apply_filters( 'dokan_payment_method_storage_key', [] );
 
-        $unused_methods = $this->get_unused_payment_methods( $methods, $profile_info['payment'], array_values( $mis_match_map ) );
-        $unused_methods = array_reduce(
-            $unused_methods,
-            function ( $in_dropdown, $method_key ) {
-                $cur_method = dokan_withdraw_get_method( $method_key );
+        list( $used_method_keys, $unused_method_keys ) = $this->get_used_and_unused_payment_method_keys( $methods, $profile_info['payment'], $method_key_to_storage_key );
 
-                if ( ! empty( $cur_method ) ) {
-                    $in_dropdown[ $method_key ] = $cur_method;
-                }
-
-                return $in_dropdown;
-            },
-            []
-        );
-
-        $methods = array_reduce(
-            $methods,
-            function ( $previous_array, $method_key ) use ( $mis_match_map, $profile_info ) {
-                if ( ! isset( $profile_info['payment'][ $method_key ] ) && ! ( isset( $mis_match_map[ $method_key] ) && isset( $profile_info['payment'][ $mis_match_map[ $method_key ] ] ) ) ) {
-                    return $previous_array;
-                }
-
-                $cur_method = dokan_withdraw_get_method( $method_key );
-
-                if ( ! empty( $cur_method ) ) {
-                    $previous_array[ $method_key ] = $cur_method;
-                }
-
-                return $previous_array;
-            },
-            []
-        );
+        $unused_methods = $this->get_payment_methods( $unused_method_keys );
+        $used_methods   = $this->get_payment_methods( $used_method_keys );
 
         if ( stripos( $method_key, '/edit' ) !== false ) {
             $is_edit_mode = true;
@@ -258,7 +230,7 @@ class Settings {
             $args = array_merge(
                 $args,
                 [
-                    'methods'        => $methods,
+                    'methods'        => $used_methods,
                     'unused_methods' => $unused_methods,
                 ]
             );
@@ -269,7 +241,7 @@ class Settings {
             }
         } else {
             $method = dokan_withdraw_get_method( $method_key );
-            $args = array_merge(
+            $args   = array_merge(
                 $args,
                 [
                     'method'     => $method,
@@ -710,6 +682,7 @@ class Settings {
             $dokan_settings = array(
                 'payment' => $prev_dokan_settings['payment'],
             );
+
             if ( isset( $post_data['settings']['bank'] ) ) {
                 $bank = $post_data['settings']['bank'];
 
@@ -726,7 +699,7 @@ class Settings {
                 ];
             }
 
-            if ( isset( $post_data['settings']['paypal'] ) ) {
+            if ( isset( $post_data['settings']['paypal']['email'] ) ) {
                 $dokan_settings['payment']['paypal'] = [
                     'email' => sanitize_email( $post_data['settings']['paypal']['email'] ),
                 ];
@@ -809,29 +782,56 @@ class Settings {
      *
      * @return array
      */
-    private function get_unused_payment_methods($all_methods, $used_methods, $method_key_mismatchs ) {
-        $used_methods    = array_keys( $used_methods);
-        $unused_methods  = array_diff( $all_methods, $used_methods); //these unused methods also include some used method if the keys doesn't match
+    private function get_used_and_unused_payment_method_keys($all_methods, $used_methods, $method_key_mismatchs ) {
+        $used_method_keys = [];
 
-        $used_method_key_mismatchs = array_filter(
-            $method_key_mismatchs,
-            function ( $key ) use ( $used_methods ) {
-                return in_array( $key, $used_methods, true );
+        foreach ( $used_methods as $method_key => $method ) {
+            if ( ! empty( $method ) ) {
+                $used_method_keys[] = $method_key;
             }
-        );
+        }
 
-        //filter out the used methods which have mismatchied keys
-        return array_filter(
-            $unused_methods,
-            function ( $key ) use ( $used_method_key_mismatchs ) {
-                $found = false;
+        $all_method_keys = array_keys( $all_methods );
 
-                foreach ($used_method_key_mismatchs as $method_key ) {
-                    $found = $found || ( false !== stripos( $key, $method_key ) );
-                }
-
-                return ! $found;
+        foreach ($all_method_keys as $method ) {
+            if ( isset( $method_key_mismatchs[ $method ] ) && in_array( $method_key_mismatchs[ $method ], $used_method_keys, true ) ) {
+                array_push( $used_method_keys, $method );
             }
-        );
+        }
+
+        foreach ( $method_key_mismatchs as $method_key => $storage_key ) {
+            $index = array_search( $storage_key, $used_method_keys, true );
+
+            if ( ! $index ) {
+                continue;
+            }
+
+            unset( $used_method_keys[ $index ] );
+        }
+
+        $unused_method_keys = array_diff( $all_method_keys, $used_method_keys );
+
+        return [ $used_method_keys, $unused_method_keys ];
+    }
+
+    /**
+     * @param $method_keys
+     *
+     * @return array
+     */
+    private function get_payment_methods( $method_keys ) {
+        $methods = [];
+
+        foreach ( $method_keys as $method_key ) {
+            $cur_method = dokan_withdraw_get_method( $method_key );
+
+            if ( empty( $cur_method ) ) {
+                continue;
+            }
+
+            $methods[ $method_key ] = $cur_method;
+        }
+
+        return $methods;
     }
 }
