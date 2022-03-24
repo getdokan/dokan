@@ -49,7 +49,7 @@ class Helper {
                 $promos = '[]';
             }
 
-            Cache::set_transient( 'promo_notices', $promos, DAY_IN_SECONDS );
+            Cache::set_transient( 'promo_notices', $promos, '', DAY_IN_SECONDS );
         }
 
         $promos  = json_decode( $promos, true );

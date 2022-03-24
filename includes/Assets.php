@@ -581,6 +581,7 @@ class Assets {
         $localize_data = [
             'i18n_date_format' => wc_date_format(),
             'i18n_time_format' => wc_time_format(),
+            'week_starts_day'  => intval( get_option( 'start_of_week', 0 ) ),
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
@@ -669,7 +670,11 @@ class Assets {
             wp_enqueue_style( 'woocommerce-general' );
             wp_enqueue_style( 'dokan-select2-css' );
 
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
                 wp_enqueue_style( 'dokan-magnific-popup' );
             }
 
@@ -716,7 +721,11 @@ class Assets {
             wp_enqueue_script( 'dokan-accounting' );
             wp_enqueue_script( 'serializejson' );
 
-            if ( isset( $wp->query_vars['products'] ) || isset( $wp->query_vars['withdraw'] ) ) {
+            if (
+                isset( $wp->query_vars['products'] ) ||
+                isset( $wp->query_vars['withdraw'] ) ||
+                isset( $wp->query_vars['withdraw-requests'] )
+            ) {
                 wp_enqueue_script( 'dokan-popup' );
             }
 

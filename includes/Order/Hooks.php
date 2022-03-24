@@ -66,7 +66,7 @@ class Hooks {
     /**
      * Change order item display meta key.
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @param $display_key
      *
@@ -82,7 +82,7 @@ class Hooks {
     /**
      * Change order item display meta value.
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @param $display_value
      * @param $meta
