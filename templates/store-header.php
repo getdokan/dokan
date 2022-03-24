@@ -106,7 +106,7 @@ if ( 'layout3' === $profile_layout ) {
                                             <span class='store-notice'><?php echo esc_attr( $store_closed_notice ); ?></span>
                                         <?php endif; ?>
 
-                                        <span class="fa fa-angle-down"></span>
+                                        <span class="fas fa-angle-down"></span>
                                         <?php
                                         // Vendor store times template shown here.
                                         dokan_get_template_part( 'store-header-times', '', [
