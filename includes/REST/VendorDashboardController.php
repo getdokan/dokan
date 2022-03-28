@@ -72,6 +72,13 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'required'    => true,
                             'default'     => dokan_current_datetime()->format( 'c' ),
                         ],
+                        'group_by'   => [
+                            'type'        => 'string',
+                            'description' => __( 'Group By', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => 'day',
+                            'enum'        => [ 'day', 'week', 'month', 'year' ],
+                        ],
                     ],
                     'permission_callback' => 'is_user_logged_in',
                 ],
@@ -153,6 +160,40 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_sales_reports( $request ) {
+        $from           = $request->get_param( 'from' );
+        $to             = $request->get_param( 'to' );
+        $group_by       = $request->get_param( 'group_by' );
+        $group_by_array = [];
+
+        switch ( $group_by ) {
+            case 'week':
+                $group_by_array = [
+                    'YEAR(post_date)',
+					'MONTH(post_date)',
+					'WEEK(post_date)',
+                ];
+                break;
+            case 'month':
+                $group_by_array = [
+                    'YEAR(post_date)',
+                    'MONTH(post_date)',
+                ];
+                break;
+            case 'year':
+                $group_by_array = [
+                    'YEAR(post_date)',
+                ];
+                break;
+            case 'day':
+            default:
+                $group_by_array = [
+                    'YEAR(post_date)',
+                    'MONTH(post_date)',
+                    'DAY(post_date)',
+                ];
+                break;
+        }
+
         return rest_ensure_response(
             dokan_get_order_report_data(
                 array(
@@ -174,14 +215,14 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'name'     => 'post_date',
                         ),
                     ),
-                    'group_by'     => 'YEAR(post_date), MONTH(post_date), DAY(post_date)',
+                    'group_by'     => implode( ', ', $group_by_array ),
                     'order_by'     => 'post_date ASC',
                     'query_type'   => 'get_results',
                     'filter_range' => true,
-                    'debug' => false,
+                    'debug'        => false,
                 ),
-                dokan_current_datetime()->modify( $request->get_param( 'from' ) )->format( 'Y-m-d' ),
-                dokan_current_datetime()->modify( $request->get_param( 'to' ) )->format( 'Y-m-d' )
+                dokan_current_datetime()->modify( $from )->format( 'Y-m-d' ),
+                dokan_current_datetime()->modify( $to )->format( 'Y-m-d' )
             )
         );
     }
