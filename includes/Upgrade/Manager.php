@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\Upgrade;
 
 class Manager {
 
-    private $is_upgrading_db_key = 'dokan_is_upgrading';
+    private $is_upgrading_db_key = 'dokan_is_upgrading_db';
 
     /**
      * Checks if update is required or not
