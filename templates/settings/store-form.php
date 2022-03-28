@@ -494,8 +494,9 @@
                     ctrlDown = true;
                 }
 
-                // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+                if (
+                    // Allow: backspace, delete, tab, escape, enter etc.
+                    $.inArray(e.keyCode, [46, 48, 57, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                     // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     //Allow Ctrl+v
@@ -503,7 +504,8 @@
                     // Allow: Ctrl+c
                     (e.keyCode === cKey && ctrlDown) ||
                     // Allow: home, end, left, right.
-                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                    (e.keyCode >= 35 && e.keyCode <= 39)
+                ) {
                     // Let it happen, don't do anything.
                     return;
                 }
