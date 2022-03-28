@@ -2,12 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WeDevs\Dokan\Vendor\Settings;
-use WeDevs\Dokan\Vendor\Vendor;
-use WP_HTTP_Response;
 use WP_REST_Controller;
-use WP_REST_Request;
-use WP_REST_Response;
 use WP_REST_Server;
 use WP_Error;
 
@@ -34,20 +29,6 @@ class StoreSettingController extends WP_REST_Controller {
     protected $rest_base = 'settings';
 
     /**
-     * @var Settings
-     */
-    protected $vendor_settings;
-
-    /**
-     * Constructor.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->vendor_settings = new Settings();
-    }
-
-    /**
      * Register all routes related to settings
      *
      * @return void
@@ -62,71 +43,51 @@ class StoreSettingController extends WP_REST_Controller {
 				],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
-                    'args'                => $this->update_settings_args(),
                     'callback'            => [ $this, 'update_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                 ],
 			]
-        );
-        register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/payments', [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_payment_methods' ],
-                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
-                ],
-                [
-                    'methods'             => WP_REST_Server::EDITABLE,
-                    'args'                => $this->update_payment_methods_args(),
-                    'callback'            => [ $this, 'update_payment_methods' ],
-                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
-                ],
-            ]
         );
     }
 
     /**
      * Update Store
      *
+     * @param \WP_REST_Request $request
+     *
      * @since DOKAN_LITE_SINCE
      *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_REST_Response
+     * @return WP_Error|\WP_REST_Response
      */
     public function update_settings( $request ) {
-        return rest_ensure_response( $this->vendor_settings->save_settings( $request ) );
+        $vendor   = $this->get_vendor();
+        $params   = $request->get_params();
+        $store_id = dokan()->vendor->update( $vendor->get_id(), $params );
+
+        if ( is_wp_error( $store_id ) ) {
+            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
+        }
+
+        $store = dokan()->vendor->get( $store_id );
+
+        do_action( 'dokan_rest_store_settings_after_update', $store, $request );
+
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
+
+        return $response;
     }
 
     /**
      * @param $request
      *
-     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     * @return mixed|WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function get_settings( $request ) {
-        return rest_ensure_response( $this->vendor_settings->settings() );
-    }
+        $vendor   = $this->get_vendor();
+        $response = dokan_get_store_info( $vendor->id );
 
-    /**
-     * Get a vendor's payment methods settings
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
-     */
-    public function get_payment_methods( $request ) {
-        return rest_ensure_response( $this->vendor_settings->payments() );
-    }
-
-    /**
-     * Get a vendor's payment methods settings
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
-     */
-    public function update_payment_methods( $request ) {
-        return rest_ensure_response( $this->vendor_settings->save_payments( $request->get_params() ) );
+        return rest_ensure_response( $response );
     }
 
     /**
@@ -151,7 +112,7 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * Get vendor
      *
-     * @return Vendor|WP_Error
+     * @return WP_Error | $vendor
      */
     protected function get_vendor() {
         $current_user = dokan_get_current_user_id();
@@ -170,7 +131,7 @@ class StoreSettingController extends WP_REST_Controller {
      * Prepare links for the request.
      *
      * @param \WC_Data $object Object data.
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      *
      * @return array Links for the given post.
      */
@@ -191,10 +152,10 @@ class StoreSettingController extends WP_REST_Controller {
      * Prepare a single item output for response
      *
      * @param $store
-     * @param WP_REST_Request $request Request object.
+     * @param \WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
-     * @return WP_REST_Response $response Response data.
+     * @return \WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
         $data     = $store->to_array();
@@ -203,18 +164,5 @@ class StoreSettingController extends WP_REST_Controller {
         $response->add_links( $this->prepare_links( $data, $request ) );
 
         return apply_filters( 'dokan_rest_prepare_store_settings_item_for_response', $response );
-    }
-
-    /**
-     * Args for updating payment methods.
-     *
-     * @return array
-     */
-    private function update_payment_methods_args() {
-        return $this->vendor_settings->args_schema_for_save_payments();
-    }
-
-    private function update_settings_args() {
-        return $this->vendor_settings->args_schema_for_save_settings();
     }
 }

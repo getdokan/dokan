@@ -200,7 +200,7 @@ class Vendor {
             'icon'                    => 0,
             'gravatar'                => 0,
             'show_more_ptab'          => 'yes',
-            'store_ppp'               => 10,
+            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
@@ -236,7 +236,7 @@ class Vendor {
     public function get_shop_info() {
 
         // return if already populated
-        if ( $this->shop_data ) {
+        if ( ! empty( $this->shop_data ) ) {
             return $this->shop_data;
         }
 
@@ -255,7 +255,7 @@ class Vendor {
     public function get_info_part( $item ) {
         $info = $this->get_shop_info();
 
-        if ( array_key_exists( $item, $info ) ) {
+        if ( is_array( $info ) && array_key_exists( $item, $info ) ) {
             return $info[ $item ];
         }
     }

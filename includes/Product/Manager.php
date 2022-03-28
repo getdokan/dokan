@@ -261,6 +261,9 @@ class Manager {
             $product->set_stock_status( $stock_status );
         }
 
+        // sync stock status
+        $product = $this->maybe_update_stock_status( $product, $stock_status );
+
         // Upsells.
         if ( isset( $args['upsell_ids'] ) ) {
             $upsells = array();
@@ -569,6 +572,38 @@ class Manager {
             $files[] = $download;
         }
         $product->set_downloads( $files );
+
+        return $product;
+    }
+
+    /**
+     * Sync stock stats for variable products.
+     *
+     * @since 3.4.0
+     *
+     * @param \WC_Product $product
+     * @param string $stock_status
+     * @return mixed
+     */
+    protected function maybe_update_stock_status( $product, $stock_status ) {
+        if ( $product->is_type( 'external' ) ) {
+            // External products are always in stock.
+            $product->set_stock_status( 'instock' );
+        } elseif ( isset( $stock_status ) ) {
+            if ( $product->is_type( 'variable' ) && ! $product->get_manage_stock() ) {
+                // Stock status is determined by children.
+                foreach ( $product->get_children() as $child_id ) {
+                    $child = wc_get_product( $child_id );
+                    if ( ! $product->get_manage_stock() ) {
+                        $child->set_stock_status( $stock_status );
+                        $child->save();
+                    }
+                }
+                $product = \WC_Product_Variable::sync( $product, false );
+            } else {
+                $product->set_stock_status( $stock_status );
+            }
+        }
 
         return $product;
     }
