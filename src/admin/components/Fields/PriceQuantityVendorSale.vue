@@ -46,7 +46,6 @@ export default {
                         dummyData.flat = allFields[element].options.flat.default;
                         dummyData.percentage = allFields[element].options.percentage.default;
                     } else {
-                        // dummyData[element] = allFields[element].default;
                         'from' == element ? dummyData[element] = Number(value)+1 : dummyData[element] = allFields[element].default;
                     }
                 });
@@ -79,6 +78,7 @@ export default {
                 let { value, index } = data;
 
                 let newData = [ ...this.fieldValue[this.fieldData.name] ];
+                '' === value ? index = index : index = index++;
                 newData.splice(index+1, 9e9);
                 this.fieldValue[this.fieldData.name] = newData;
 

@@ -294,7 +294,7 @@ class Commission {
             return;
         }
 
-        // Setting current order subtotal so that we calcalculate in the vendor sale commission type.
+        // Setting current order subtotal so that we calculate farther.
         $this->set_order_subtotal( $order->get_subtotal() );
 
         // If `_dokan_admin_fee` is found means, the commission has been calculated for this order without the `WeDevs\Dokan\Commission` class.
@@ -707,7 +707,7 @@ class Commission {
              * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
              * But in option field, looks like flat commission is selected.
              *
-             * @since 3.0.0
+             * @since DOKAN_LITE_SINCE
              */
             if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ], true ) ) {
                 $commission_type = 'flat';
@@ -1064,14 +1064,12 @@ class Commission {
 
         foreach ( $all_commissions as $key => $value ) {
             if (
-                ( isset( $value[ $commission_type ] )
-                && $value['rule'] === 'upto'
-                && $compare <= $value[ $commission_type ] )
-                ||
-                ( isset( $value[ $commission_type ] )
-                && $value['rule'] === 'more_than'
-                && $compare > $value[ $commission_type ] )
-
+                isset( $value[ 'commission_type' ] )  // Checking if commission type is set properly.
+                && 
+                (
+                    $compare <= $value[ 'to' ]  // Checking if the value satisfy the range.
+                    || empty( absint( $value[ 'to' ] ) ) // Checking if the range is infinity.
+                )
             ) {
                 $type       = $value['commission_type'];
                 $flat       = $value['flat'];

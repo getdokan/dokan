@@ -24,14 +24,14 @@
             </div>
             <div class="dokan-new-commission-col-commission">
                 <div class="commission-inner-type" v-if="'percentage' == commission.commission_type || 'combine' == commission.commission_type">
-                    <input @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"/> 
+                    <input :value="commission.percentage" @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"/> 
                     <span class="commisson-indecator">%</span>
                 </div> 
                 <div class="commission-inner-type-middle" v-if="'combine' == commission.commission_type">
                     <span class="commission-inner-type-middle-text">+</span>
                 </div> 
                 <div class="commission-inner-type" v-if="'flat' == commission.commission_type || 'combine' == commission.commission_type">
-                    <input @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"> 
+                    <input :value="commission.flat" @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"> 
                     <span class="commisson-indecator" v-html="get_currency_symbol"></span>
                 </div>
             </div>
@@ -91,10 +91,16 @@ export default {
         showFromErrorMessage( index, from, to ) {
             this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].innerText = `Must be more or equal ${from}`;
             this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].style.display = 'block';
+
+            jQuery('p.submit input#submit').prop('disabled', true);
+            jQuery('.dokan-vendor-setting-save-btn').prop('disabled', true);
         },
 
         hideFromErrorMessage( index ) {
             this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].style.display = 'none';
+
+            jQuery('p.submit input#submit').prop('disabled', false);
+            jQuery('.dokan-vendor-setting-save-btn').prop('disabled', false);
         }
     },
     computed: {
@@ -150,7 +156,6 @@ export default {
 
                 .dokan-commission-tooltiptext {
                     display: none;
-                    visibility: hidden;
                     width: 120px;
                     background-color: #d63638;
                     color: #fff;
@@ -173,10 +178,6 @@ export default {
                         border-style: solid;
                         border-color: transparent transparent #d63638 transparent;
                     }
-                }
-
-                &:hover .dokan-commission-tooltiptext {
-                    visibility: visible;
                 }
             }
 

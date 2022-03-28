@@ -338,11 +338,11 @@ class Manager {
 
                     foreach ( $admin_commission as $key => $value ) {
                         $single_commission_set = [
-                            $data['admin_commission_type'] => absint( $data['admin_commission_type'] ),
-                            'rule'                         => sanitize_text_field( $value['rule'] ),
-                            'commission_type'              => sanitize_text_field( $value['commission_type'] ),
-                            'percentage'                   => absint( $value['percentage'] ),
-                            'flat'                         => absint( $value['flat'] ),
+                            'from'            => absint( isset( $value['from'] ) ? sanitize_text_field( $value['from'] ) : 0 ),
+                            'to'              => absint( isset( $value['to'] ) ? sanitize_text_field( $value['to'] ) : 0 ),
+                            'commission_type' => sanitize_text_field( $value['commission_type'] ),
+                            'flat'            => (float) isset( $value['flat'] ) ? $value['flat'] : 0 ,
+                            'percentage'      => (float) isset( $value['percentage'] ) ? $value['percentage'] : 0 ,
                         ];
 
                         array_push( $all_commission_set, $single_commission_set );

@@ -301,15 +301,14 @@ export default {
             await this.$emit('updateCommissionState', oldCommissions);
         },
 
-        removeCommissionFromList( index ) {
+        async removeCommissionFromList( index ) {
 
             let oldCommissions  = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
             if ( oldCommissions [index+1] ) {
                 oldCommissions [index+1].from = oldCommissions [index].from;
-                // oldCommissions [index+1].to = oldCommissions [index+1].to;
             }
             oldCommissions.splice( index, 1 );
-            this.$emit('updateCommissionState', oldCommissions);
+            await this.$emit('updateCommissionState', oldCommissions);
         },
 
         get_vendor_commission_array( commissions ) {
@@ -323,14 +322,12 @@ export default {
             let { value, index } = data;
 
             const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
-            await oldCommissions.splice(index+1, 9e9);
+            '' === value ? index = index : index = index++;
+            await oldCommissions.splice(index, 9e9);
 
-            if ( value && 0 != value ) {
-                // const newData = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+            if ( value && 0 != value && '' !== value ) {
                 await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
-            } else {
-                await this.removeCommissionFromList(index);
-            }
+            } 
             await this.$emit('updateCommissionState', oldCommissions);
         },
     },
