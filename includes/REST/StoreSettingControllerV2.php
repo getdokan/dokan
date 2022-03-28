@@ -18,20 +18,13 @@ use WP_Error;
  *
  * @author weDevs <info@wedevs.com>
  */
-class StoreSettingControllerV2 extends WP_REST_Controller {
+class StoreSettingControllerV2 extends StoreSettingController {
     /**
      * Endpoint namespace
      *
      * @var string
      */
     protected $namespace = 'dokan/v2';
-
-    /**
-     * Route name
-     *
-     * @var string
-     */
-    protected $rest_base = 'settings';
 
     /**
      * @var Settings
@@ -218,82 +211,6 @@ class StoreSettingControllerV2 extends WP_REST_Controller {
         $parent_id = $request->get_param( 'parent_id' );
         $id       = $request->get_param( 'id' );
         return rest_ensure_response( $this->vendor_settings->single_settings_field( $group_id, $parent_id, $id ) );
-    }
-
-    /**
-     * Permission callback for vendor settings
-     *
-     * @return bool|WP_Error
-     */
-    public function get_settings_permission_callback() {
-        $vendor = $this->get_vendor();
-
-        if ( is_wp_error( $vendor ) ) {
-            return $vendor;
-        }
-
-        if ( empty( $vendor->get_id() ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
-
-        return true;
-    }
-
-    /**
-     * Get vendor
-     *
-     * @return Vendor|WP_Error
-     */
-    protected function get_vendor() {
-        $current_user = dokan_get_current_user_id();
-        if ( $current_user ) {
-            $vendor = dokan()->vendor->get( $current_user );
-        }
-
-        if ( ! $current_user ) {
-            return new WP_Error( 'Unauthorized', __( 'You are not logged in', 'dokan-lite' ), [ 'code' => 401 ] );
-        }
-
-        return $vendor;
-    }
-
-    /**
-     * Prepare links for the request.
-     *
-     * @param \WC_Data $object Object data.
-     * @param WP_REST_Request $request Request object.
-     *
-     * @return array Links for the given post.
-     */
-    protected function prepare_links( $object, $request ) {
-        $links = [
-            'self' => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object['id'] ) ),
-            ],
-            'collection' => [
-                'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-            ],
-        ];
-
-        return $links;
-    }
-
-    /**
-     * Prepare a single item output for response
-     *
-     * @param $store
-     * @param WP_REST_Request $request Request object.
-     * @param array $additional_fields (optional)
-     *
-     * @return WP_REST_Response $response Response data.
-     */
-    public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
-        $data     = $store->to_array();
-        $data     = array_merge( $data, apply_filters( 'dokan_rest_store_settings_additional_fields', $additional_fields, $store, $request ) );
-        $response = rest_ensure_response( $data );
-        $response->add_links( $this->prepare_links( $data, $request ) );
-
-        return apply_filters( 'dokan_rest_prepare_store_settings_item_for_response', $response );
     }
 
     /**
