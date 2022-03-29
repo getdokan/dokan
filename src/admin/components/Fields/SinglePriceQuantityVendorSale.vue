@@ -12,7 +12,7 @@
                 <input disabled type="text" placeholder="0" :value="commission.from">
             </div>
             <div class="dokan-new-commission-col-to">
-                <input :value="commission.to == 0 ? '' : commission.to" @input="handleTOInput($event.target.value, index, commission.to)" type="number" placeholder="∞" :ref="`dokan-to${index}`">
+                <input :value="commission.to == 0 ? '' : commission.to" @blur="generateNextRow( $event.target.value, index )" @input="handleTOInput( $event.target.value, index, commission.to )" type="number" placeholder="∞" :ref="`dokan-to${index}`">
                 <span :ref="`dokan-${selectedCommissionLabel}-from-msg${index}`" class="dokan-commission-tooltiptext">Tooltip text</span>
             </div>
             <div class="dokan-new-commission-col-ct">
@@ -85,7 +85,7 @@ export default {
             this.allCommission[index].from > Number(e) && '' != e ? this.showFromErrorMessage( index, this.allCommission[index].from, e ) : this.hideFromErrorMessage( index );
             
             await this.updateCommissionValue( e, 'to', index, 'number' );
-            await this.generateNextRow( e, index );
+            // await this.generateNextRow( e, index );
         },
 
         showFromErrorMessage( index, from, to ) {

@@ -295,7 +295,7 @@ export default {
             
             if ( 'to' == field && oldCommissions[index+1] ) {
                 oldCommissions[index+1].from = Number( value ) + 1;
-                oldCommissions[index+1].to = '';
+                // oldCommissions[index+1].to = '';
             }
 
             await this.$emit('updateCommissionState', oldCommissions);
@@ -322,6 +322,13 @@ export default {
             let { value, index } = data;
 
             const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+
+            if ( oldCommissions[index] && value !== '' && value <= oldCommissions[index].to - 2 ) {
+                console.log('returning...',oldCommissions[index]);
+                return;
+            }
+            oldCommissions[index].to = '';
+
             '' === value ? index = index : index = index++;
             await oldCommissions.splice(index, 9e9);
 

@@ -59,7 +59,7 @@ export default {
 
                 if ( 'to' == field && this.fieldValue[this.fieldData.name][index+1] ) {
                     this.fieldValue[this.fieldData.name][index+1].from = Number( value ) + 1;
-                    this.fieldValue[this.fieldData.name][index+1].to = 0;
+                    // this.fieldValue[this.fieldData.name][index+1].to = 0;
                 }
             },
 
@@ -78,7 +78,12 @@ export default {
                 let { value, index } = data;
 
                 let newData = [ ...this.fieldValue[this.fieldData.name] ];
-                '' === value ? index = index : index = index++;
+
+                if ( newData[index] && value !== '' && value <= newData[index].to - 2 ) {
+                    return;
+                }
+                newData[index].to = '';
+
                 newData.splice(index+1, 9e9);
                 this.fieldValue[this.fieldData.name] = newData;
 
