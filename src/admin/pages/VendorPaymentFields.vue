@@ -84,6 +84,7 @@
                             v-on:updateCommissionState="updateCommissionState"
                             v-on:removeCommissionFromList="removeCommissionFromList"
                             v-on:generateNextRow="generateNextRow"
+                            v-on:resetRows="resetRows"
                         />
                     </div>
 
@@ -318,23 +319,49 @@ export default {
             return all_commissions;
         },
 
+        // async generateNextRow( data ) {
+        //     let { value, index } = data;
+
+        //     const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+
+        //     if ( oldCommissions[index] && value !== '' && value <= oldCommissions[index].to - 2 ) {
+        //         console.log('returning...',oldCommissions[index]);
+        //         return;
+        //     }
+        //     oldCommissions[index].to = '';
+
+        //     '' === value ? index = index : index = index++;
+        //     await oldCommissions.splice(index, 9e9);
+
+        //     if ( value && 0 != value && '' !== value ) {
+        //         await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
+        //     } 
+        //     await this.$emit('updateCommissionState', oldCommissions);
+        // },
+
         async generateNextRow( data ) {
             let { value, index } = data;
 
             const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
 
-            if ( oldCommissions[index] && value !== '' && value <= oldCommissions[index].to - 2 ) {
-                console.log('returning...',oldCommissions[index]);
+            await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
+
+            await this.$emit('updateCommissionState', oldCommissions);
+        },
+
+        async resetRows( data ) {
+            let { value, index } = data;
+
+            const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
+
+            if ( oldCommissions[index] && value !== '' && ( '' === oldCommissions[index+1].to || value <= oldCommissions[index+1].to - 2 ) ) {
                 return;
             }
-            oldCommissions[index].to = '';
+            oldCommissions[index+1].to = '';
 
-            '' === value ? index = index : index = index++;
+            '' === value ? index = index+1 : index = index+2;
             await oldCommissions.splice(index, 9e9);
 
-            if ( value && 0 != value && '' !== value ) {
-                await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
-            } 
             await this.$emit('updateCommissionState', oldCommissions);
         },
     },

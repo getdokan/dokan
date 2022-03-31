@@ -8,6 +8,7 @@
                 v-on:updateCommissionState="updateCommissionState"
                 v-on:removeCommissionFromList="removeCommissionFromList"
                 v-on:generateNextRow="generateNextRow"
+                v-on:resetRows="resetRows"
             />
         </template>
     </td>
@@ -77,21 +78,21 @@ export default {
             generateNextRow( data ) {
                 let { value, index } = data;
 
+                ! this.fieldValue[this.fieldData.name][index] ? this.addNewCommission( value ) : '';
+            },
+
+            resetRows( data ) {
+                let { value, index } = data;
+
                 let newData = [ ...this.fieldValue[this.fieldData.name] ];
 
-                if ( newData[index] && value !== '' && value <= newData[index].to - 2 ) {
+                if ( newData[index] && value !== '' && ( '' === newData[index+1].to || value <= newData[index+1].to - 2 ) ) {
                     return;
                 }
-                newData[index].to = '';
+                newData[index + 1] ? newData[index + 1].to = '' : '';
 
-                newData.splice(index+1, 9e9);
+                newData.splice('' === value ? index+1 : index+2, 9e9);
                 this.fieldValue[this.fieldData.name] = newData;
-
-                if ( value && 0 != value ) {
-                    ! this.fieldValue[this.fieldData.name][index] ? this.addNewCommission( value ) : '';
-                } else {
-                    this.removeCommissionFromList(index);
-                }
             },
     },
 
