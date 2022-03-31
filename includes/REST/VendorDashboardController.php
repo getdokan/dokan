@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use DateInterval;
+use DatePeriod;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -163,6 +165,8 @@ class VendorDashboardController extends \WP_REST_Controller {
         $from           = $request->get_param( 'from' );
         $to             = $request->get_param( 'to' );
         $group_by       = $request->get_param( 'group_by' );
+        $from_date      = dokan_current_datetime()->modify( $from );
+        $to_date        = dokan_current_datetime()->modify( $to );
         $group_by_array = [];
 
         switch ( $group_by ) {
@@ -194,37 +198,49 @@ class VendorDashboardController extends \WP_REST_Controller {
                 break;
         }
 
-        return rest_ensure_response(
-            dokan_get_order_report_data(
-                array(
-                    'data' => array(
-                        '_order_total' => array(
-                            'type'     => 'meta',
-                            'function' => 'SUM',
-                            'name'     => 'total_sales',
-                        ),
-                        'ID' => array(
-                            'type'     => 'post_data',
-                            'function' => 'COUNT',
-                            'name'     => 'total_orders',
-                            'distinct' => true,
-                        ),
-                        'post_date' => array(
-                            'type'     => 'post_data',
-                            'function' => '',
-                            'name'     => 'post_date',
-                        ),
+        $order_report_data = dokan_get_order_report_data(
+            array(
+                'data' => array(
+                    '_order_total' => array(
+                        'type'     => 'meta',
+                        'function' => 'SUM',
+                        'name'     => 'total_sales',
                     ),
-                    'group_by'     => implode( ', ', $group_by_array ),
-                    'order_by'     => 'post_date ASC',
-                    'query_type'   => 'get_results',
-                    'filter_range' => true,
-                    'debug'        => false,
+                    'ID' => array(
+                        'type'     => 'post_data',
+                        'function' => 'COUNT',
+                        'name'     => 'total_orders',
+                        'distinct' => true,
+                    ),
+                    'post_date' => array(
+                        'type'     => 'post_data',
+                        'function' => '',
+                        'name'     => 'post_date',
+                    ),
                 ),
-                dokan_current_datetime()->modify( $from )->format( 'Y-m-d' ),
-                dokan_current_datetime()->modify( $to )->format( 'Y-m-d' )
-            )
+                'group_by'     => implode( ', ', $group_by_array ),
+                'order_by'     => 'post_date ASC',
+                'query_type'   => 'get_results',
+                'filter_range' => true,
+                'debug'        => false,
+            ),
+            $from_date->format( 'Y-m-d' ),
+            $to_date->format( 'Y-m-d' )
         );
+
+
+        $interval = DateInterval::createFromDateString( '1 ' . $group_by );
+        $daterange = new DatePeriod( $from_date, $interval, $to_date );
+
+        foreach ( $daterange as $date ) {
+            $key = $date->format( 'Y-m-d' );
+            $data[ $key ] = array(
+                'total_sales' => 0,
+                'total_orders' => 0,
+            );
+        }
+        // todo: add existing data
+        return rest_ensure_response( array($order_report_data, $data) );
     }
 
     /**
