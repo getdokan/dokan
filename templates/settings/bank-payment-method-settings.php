@@ -119,7 +119,7 @@
 
     <div class="bottom-actions">
         <button class="ajax_prev dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
-            <?php echo $save_or_add_btn_text; ?>
+            <?php echo esc_html( $save_or_add_btn_text ); ?>
         </button>
         <a href="<?php echo esc_url( home_url( '/dashboard/settings/payment/' ) ); ?>">
             <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>

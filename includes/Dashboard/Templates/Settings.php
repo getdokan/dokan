@@ -782,7 +782,7 @@ class Settings {
      *
      * @return array
      */
-    private function get_used_and_unused_payment_method_keys($all_methods, $used_methods, $method_key_mismatchs ) {
+    private function get_used_and_unused_payment_method_keys( $all_methods, $used_methods, $method_key_mismatchs ) {
         $used_method_keys = [];
 
         foreach ( $used_methods as $method_key => $method ) {
@@ -793,7 +793,7 @@ class Settings {
 
         $all_method_keys = array_keys( $all_methods );
 
-        foreach ($all_method_keys as $method ) {
+        foreach ( $all_method_keys as $method ) {
             if ( isset( $method_key_mismatchs[ $method ] ) && in_array( $method_key_mismatchs[ $method ], $used_method_keys, true ) ) {
                 array_push( $used_method_keys, $method );
             }
@@ -802,11 +802,9 @@ class Settings {
         foreach ( $method_key_mismatchs as $method_key => $storage_key ) {
             $index = array_search( $storage_key, $used_method_keys, true );
 
-            if ( ! $index ) {
-                continue;
+            if ( $index ) {
+                unset( $used_method_keys[ $index ] );
             }
-
-            unset( $used_method_keys[ $index ] );
         }
 
         $unused_method_keys = array_diff( $all_method_keys, $used_method_keys );
@@ -825,11 +823,9 @@ class Settings {
         foreach ( $method_keys as $method_key ) {
             $cur_method = dokan_withdraw_get_method( $method_key );
 
-            if ( empty( $cur_method ) ) {
-                continue;
+            if ( ! empty( $cur_method ) ) {
+                $methods[ $method_key ] = $cur_method;
             }
-
-            $methods[ $method_key ] = $cur_method;
         }
 
         return $methods;
