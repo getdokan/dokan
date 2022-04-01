@@ -32,6 +32,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/ProductAttributeController.php'      => '\WeDevs\Dokan\REST\ProductAttributeController',
                 DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php' => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
                 DOKAN_DIR . '/includes/REST/OrderController.php'                 => '\WeDevs\Dokan\REST\OrderController',
+                DOKAN_DIR . '/includes/REST/OrderControllerV2.php'               => '\WeDevs\Dokan\REST\OrderControllerV2',
                 DOKAN_DIR . '/includes/REST/WithdrawController.php'              => '\WeDevs\Dokan\REST\WithdrawController',
                 DOKAN_DIR . '/includes/REST/StoreSettingController.php'          => '\WeDevs\Dokan\REST\StoreSettingController',
                 DOKAN_DIR . '/includes/REST/StoreSettingControllerV2.php'        => '\WeDevs\Dokan\REST\StoreSettingControllerV2',
