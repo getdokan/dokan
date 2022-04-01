@@ -168,6 +168,7 @@ class VendorDashboardController extends \WP_REST_Controller {
         $from_date      = dokan_current_datetime()->modify( $from );
         $to_date        = dokan_current_datetime()->modify( $to );
         $group_by_array = [];
+        $date_time_format = 'Y-m-d';
 
         switch ( $group_by ) {
             case 'week':
@@ -176,12 +177,14 @@ class VendorDashboardController extends \WP_REST_Controller {
 					'MONTH(post_date)',
 					'WEEK(post_date)',
                 ];
+                $date_time_format = 'W, Y';
                 break;
             case 'month':
                 $group_by_array = [
                     'YEAR(post_date)',
                     'MONTH(post_date)',
                 ];
+                $date_time_format = 'F, Y';
                 break;
             case 'year':
                 $group_by_array = [
@@ -195,6 +198,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'MONTH(post_date)',
                     'DAY(post_date)',
                 ];
+                $date_time_format = 'F j, Y';
                 break;
         }
 
@@ -228,19 +232,31 @@ class VendorDashboardController extends \WP_REST_Controller {
             $to_date->format( 'Y-m-d' )
         );
 
+        array_walk(
+            $order_report_data, function( &$item ) use ( $date_time_format ) {
+				$item->post_date = dokan_current_datetime()->modify( $item->post_date )->format( $date_time_format );
+			}
+        );
 
         $interval = DateInterval::createFromDateString( '1 ' . $group_by );
         $daterange = new DatePeriod( $from_date, $interval, $to_date );
 
         foreach ( $daterange as $date ) {
-            $key = $date->format( 'Y-m-d' );
-            $data[ $key ] = array(
-                'total_sales' => 0,
-                'total_orders' => 0,
-            );
+            $post_date = $date->format( $date_time_format );
+            $key = array_search( $post_date, array_column( $order_report_data, 'post_date' ), true );
+
+            if ( false === $key ) {
+                $data[] = array(
+                    'post_date'    => $post_date,
+                    'total_sales'  => 0,
+                    'total_orders' => 0,
+                );
+            } else {
+                $data[] = $order_report_data[ $key ];
+            }
         }
         // todo: add existing data
-        return rest_ensure_response( array($order_report_data, $data) );
+        return rest_ensure_response( array( $data ) );
     }
 
     /**
