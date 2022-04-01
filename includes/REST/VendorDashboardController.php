@@ -256,7 +256,7 @@ class VendorDashboardController extends \WP_REST_Controller {
             }
         }
         // todo: add existing data
-        return rest_ensure_response( array( $data ) );
+        return rest_ensure_response( $data );
     }
 
     /**
