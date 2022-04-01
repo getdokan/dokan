@@ -167,6 +167,8 @@ class VendorDashboardController extends \WP_REST_Controller {
         $group_by       = $request->get_param( 'group_by' );
         $from_date      = dokan_current_datetime()->modify( $from );
         $to_date        = dokan_current_datetime()->modify( $to );
+        $interval       = DateInterval::createFromDateString( '1 ' . $group_by );
+        $to_date        = $to_date->add( $interval );
         $group_by_array = [];
         $date_time_format = 'Y-m-d';
 
@@ -190,6 +192,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 $group_by_array = [
                     'YEAR(post_date)',
                 ];
+                $date_time_format = 'Y';
                 break;
             case 'day':
             default:
@@ -238,10 +241,9 @@ class VendorDashboardController extends \WP_REST_Controller {
 			}
         );
 
-        $interval = DateInterval::createFromDateString( '1 ' . $group_by );
-        $daterange = new DatePeriod( $from_date, $interval, $to_date );
+        $date_range = new DatePeriod( $from_date, $interval, $to_date );
 
-        foreach ( $daterange as $date ) {
+        foreach ( $date_range as $date ) {
             $post_date = $date->format( $date_time_format );
             $key = array_search( $post_date, array_column( $order_report_data, 'post_date' ), true );
 
