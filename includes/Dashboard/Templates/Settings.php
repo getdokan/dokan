@@ -772,7 +772,7 @@ class Settings {
     }
 
     /**
-     * Get unused payment methods
+     * Separate the used and unused method keys
      *
      * @since DOKAN_SINCE
      *
@@ -782,7 +782,7 @@ class Settings {
      *
      * @return array
      */
-    private function get_used_and_unused_payment_method_keys( $all_methods, $used_methods, $method_key_mismatchs ) {
+    private function get_separated_method_keys( $all_methods, $used_methods, $method_key_mismatchs ) {
         $used_method_keys = [];
 
         foreach ( $used_methods as $method_key => $method ) {
