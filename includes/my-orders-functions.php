@@ -58,23 +58,18 @@ function dokan_get_filtered_orders( $args ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $start_date = $args['start_date'];
-    $end_date   = $args['end_date'];
-    $min_price  = $args['min_price'];
-    $max_price  = $args['max_price'];
-    $vendor_id  = $args['vendor_id'];
-    $sort_order = $args['sort_order'];
-    $limit      = $args['limit'];
-    $page       = $args['page'];
+    $min_price = empty( $args['min_price'] ) ? 0 : $args['min_price'];
+    $max_price = empty( $args['min_price'] ) ? 1000000000 : $args['max_price'];
 
     $date_query = [];
-    if ( ! empty( $start_date ) ) {
-        $date_query['after']     = $start_date;
+
+    if ( ! empty( $args['start_date'] ) ) {
+        $date_query['after']     = $args['start_date'];
         $date_query['inclusive'] = true;
     }
 
-    if ( ! empty( $end_date ) ) {
-        $date_query['before']    = $end_date;
+    if ( ! empty( $args['end_date'] ) ) {
+        $date_query['before']    = $args['end_date'];
         $date_query['inclusive'] = true;
     }
 
@@ -90,7 +85,7 @@ function dokan_get_filtered_orders( $args ) {
             ],
             [
                 'key'     => '_order_total',
-                'value'   => [ empty( $min_price ) ? 0 : $min_price, empty( $max_price ) ? 1000000000 : $max_price ],
+                'value'   => [ $min_price, $max_price ],
                 'type'    => 'numeric',
                 'compare' => 'BETWEEN',
             ],
@@ -98,23 +93,23 @@ function dokan_get_filtered_orders( $args ) {
         'date_query'  => [ $date_query ],
     ];
 
-    if ( ! empty( $limit ) && ! empty( $page ) ) {
-        $args['numberposts'] = $limit;
-        $args['offset']      = $limit * ( $page - 1 );
+    if ( ! empty( $args['limit'] ) && ! empty( $args['page'] ) ) {
+        $args['numberposts'] = $args['limit'];
+        $args['offset']      = $args['limit'] * ( $args['page'] - 1 );
     }
 
-    if ( ! empty( $sort_order ) && ! in_array( $sort_order, [ 'ASC', 'DESC' ], true ) ) {
-        $sort_order = 'DESC';
+    if ( ! empty( $args['sort_order'] ) && ! in_array( $args['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
+        $args['sort_order'] = 'DESC';
     }
 
     $args['orderby'] = 'ID';
-    $args['order']   = $sort_order;
+    $args['order']   = $args['sort_order'];
 
-    if ( ! empty( $vendor_id ) ) {
+    if ( ! empty( $args['vendor_id'] ) ) {
         $order_ids = $wpdb->get_col(
             $wpdb->prepare(
                 "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d",
-                $vendor_id
+                $args['vendor_id']
             )
         );
 
