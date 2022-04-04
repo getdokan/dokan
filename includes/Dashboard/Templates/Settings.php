@@ -207,7 +207,7 @@ class Settings {
          */
         $method_key_to_storage_key = apply_filters( 'dokan_payment_method_storage_key', [] );
 
-        list( $used_method_keys, $unused_method_keys ) = $this->get_used_and_unused_payment_method_keys( $methods, $profile_info['payment'], $method_key_to_storage_key );
+        list( $used_method_keys, $unused_method_keys ) = $this->get_separated_method_keys( $methods, $profile_info['payment'], $method_key_to_storage_key );
 
         $unused_methods = $this->get_payment_methods( $unused_method_keys );
         $used_methods   = $this->get_payment_methods( $used_method_keys );
@@ -799,7 +799,7 @@ class Settings {
             }
         }
 
-        foreach ( $method_key_mismatchs as $method_key => $storage_key ) {
+        foreach ( $method_key_mismatchs as $storage_key ) {
             $index = array_search( $storage_key, $used_method_keys, true );
 
             if ( $index ) {
@@ -813,6 +813,10 @@ class Settings {
     }
 
     /**
+     * Get payment method details from the method keys
+     *
+     * @since DOKAN_SINCE
+     *
      * @param $method_keys
      *
      * @return array
