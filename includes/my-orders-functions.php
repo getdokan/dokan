@@ -116,7 +116,7 @@ function dokan_get_filtered_orders( $args ) {
         );
 
         if ( empty( $order_ids ) ) {
-            return [];
+            $order_ids = [ 0 ];
         }
 
         $args['post__in'] = $order_ids;
