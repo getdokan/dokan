@@ -10,3 +10,8 @@
     margin-right: 10px;
     margin-bottom: 10px;
 }
+
+#dokan-my-orders-filter + div.dokan-form-group .dokan-btn {
+    margin-top: 10px;
+    margin-right: 10px;
+}
