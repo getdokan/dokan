@@ -220,7 +220,7 @@ class OrderControllerV2 extends OrderController {
         $data_store->delete_by_id( $permission_id );
 
         do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id, $permission_id );
-        rest_ensure_response( array( 'success' => true ) );
+        return rest_ensure_response( array( 'success' => true ) );
     }
 
 }
