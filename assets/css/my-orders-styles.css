@@ -9,6 +9,7 @@
     max-width: 200px;
     margin-right: 10px;
     margin-bottom: 10px;
+    height: 33px;
 }
 
 #dokan-my-orders-filter + div.dokan-form-group .dokan-btn {
