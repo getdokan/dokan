@@ -34,7 +34,7 @@ function dokan_filter_orders_by_status( $customer_orders, $status ) {
 }
 
 /**
- * Get WC orders after filteration
+ * Get WC orders after filtration
  *
  * @since DOKAN_SINCE
  *
@@ -98,7 +98,7 @@ function dokan_get_filtered_orders( $args ) {
         $args['offset']      = $args['limit'] * ( $args['page'] - 1 );
     }
 
-    if ( ! empty( $args['sort_order'] ) && ! in_array( $args['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
+    if ( empty( $args['sort_order'] ) || ! in_array( $args['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
         $args['sort_order'] = 'DESC';
     }
 
@@ -114,18 +114,16 @@ function dokan_get_filtered_orders( $args ) {
         );
 
         if ( empty( $order_ids ) ) {
-            $order_ids = [ 0 ];
+            return [];
         }
 
         $args['post__in'] = $order_ids;
     }
 
-    $customer_orders = get_posts(
+    return get_posts(
         apply_filters(
             'woocommerce_my_account_my_orders_query',
             $args
         )
     );
-
-    return $customer_orders;
 }
