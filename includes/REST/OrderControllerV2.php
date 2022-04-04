@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Data_Store;
 use WP_Error;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
@@ -59,6 +60,28 @@ class OrderControllerV2 extends OrderController {
                         ),
                     ),
 				),
+                array(
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => array( $this, 'revoke_order_downloads' ),
+                    'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
+                    'args'                => array(
+                        'download_id' => array(
+                            'type'        => 'string',
+                            'description' => __( 'Download ID.', 'dokan-lite' ),
+                            'required'    => false,
+                        ),
+                        'product_id' => array(
+                            'type'        => 'integer',
+                            'description' => __( 'Product ID.', 'dokan-lite' ),
+                            'required'    => false,
+                        ),
+                        'permission_id' => array(
+                            'type'        => 'integer',
+                            'description' => __( 'Permission ID.', 'dokan-lite' ),
+                            'required'    => true,
+                        ),
+                    ),
+                ),
             )
         );
     }
@@ -71,9 +94,11 @@ class OrderControllerV2 extends OrderController {
      */
     public function get_order_downloads( $requests ) {
         global $wpdb;
-        $user_id = dokan_get_current_user_id();
-        $data = [];
+
+        $user_id   = dokan_get_current_user_id();
+        $data      = [];
         $downloads = [];
+
         $download_permissions = $wpdb->get_results(
             $wpdb->prepare(
                 "
@@ -177,6 +202,25 @@ class OrderControllerV2 extends OrderController {
         }
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Revoke downloadable product access to the given order.
+     *
+     * @param $requests
+     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function revoke_order_downloads( $requests ) {
+        $download_id   = $requests->get_param( 'download_id' );
+        $product_id    = $requests->get_param( 'product_id' );
+        $order_id      = $requests->get_param( 'id' );
+        $permission_id = $requests->get_param( 'permission_id' );
+
+        $data_store = WC_Data_Store::load( 'customer-download' );
+        $data_store->delete_by_id( $permission_id );
+
+        do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id, $permission_id );
+        rest_ensure_response( array( 'success' => true ) );
     }
 
 }
