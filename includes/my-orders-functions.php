@@ -61,6 +61,8 @@ function dokan_get_filtered_orders( $args ) {
     $min_price = empty( $args['min_price'] ) ? 0 : $args['min_price'];
     $max_price = empty( $args['min_price'] ) ? 1000000000 : $args['max_price'];
 
+    $vendor_id = $args['vendor_id'];
+
     $date_query = [];
 
     if ( ! empty( $args['start_date'] ) ) {
@@ -105,11 +107,11 @@ function dokan_get_filtered_orders( $args ) {
     $args['orderby'] = 'ID';
     $args['order']   = $args['sort_order'];
 
-    if ( ! empty( $args['vendor_id'] ) ) {
+    if ( ! empty( $vendor_id ) ) {
         $order_ids = $wpdb->get_col(
             $wpdb->prepare(
                 "SELECT order_id FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d",
-                $args['vendor_id']
+                $vendor_id
             )
         );
 
