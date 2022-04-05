@@ -712,20 +712,22 @@ function dokan_get_chosen_taxonomy_attributes() {
     }
 
     foreach ( $_GET as $key => $value ) {
-        if ( 0 === strpos( $key, 'filter_' ) ) {
-            $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
-            $taxonomy     = wc_attribute_taxonomy_name( $attribute );
-            $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
-
-            if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
-                continue;
-            }
-
-            // phpcs:ignore
-            $query_type                            = ! empty( $_GET['query_type_' . $attribute] ) && in_array(  $_GET['query_type_' . $attribute], [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
-            $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
-            $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
+        if ( 0 !== strpos( $key, 'filter_' ) ) {
+            continue;
         }
+
+        $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
+        $taxonomy     = wc_attribute_taxonomy_name( $attribute );
+        $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
+
+        if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
+            continue;
+        }
+
+        // phpcs:ignore
+        $query_type                            = ! empty( $_GET['query_type_' . $attribute] ) && in_array(  $_GET['query_type_' . $attribute], [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
+        $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
+        $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
     }
     // phpcs:enable WordPress.Security.NonceVerification.Recommended
     return $attributes;

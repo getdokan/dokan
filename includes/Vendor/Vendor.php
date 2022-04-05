@@ -689,29 +689,31 @@ class Vendor {
         $category_index = [];
         foreach ( $products as $product ) {
             $terms = get_the_terms( $product, $taxonomy );
-            if ( $terms && ! is_wp_error( $terms ) ) {
-                foreach ( $terms as $term ) {
-                    $args = [
-                        'nopaging' => true,
-                        'post_type' => 'product',
-                        'author' => $vendor_id,
-                        'tax_query' => [
-                            [
-                                'taxonomy' => $taxonomy,
-                                'field' => 'slug',
-                                'terms' => $term
-                            ],
+            if ( ! $terms || is_wp_error( $terms ) ) {
+                continue;
+            }
+
+            foreach ( $terms as $term ) {
+                $args = [
+                    'nopaging' => true,
+                    'post_type' => 'product',
+                    'author' => $vendor_id,
+                    'tax_query' => [
+                        [
+                            'taxonomy' => $taxonomy,
+                            'field' => 'slug',
+                            'terms' => $term
                         ],
-                        'fields' => 'ids'
-                    ];
+                    ],
+                    'fields' => 'ids'
+                ];
 
-                    $all_posts = get_posts( $args );
+                $all_posts = get_posts( $args );
 
-                    if ( ! in_array( $term->term_id, $category_index, true ) ) {
-                        $term->count  = count( $all_posts );
-                        $category_index[] = $term->term_id;
-                        $author_terms[]   = $term;
-                    }
+                if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                    $term->count  = count( $all_posts );
+                    $category_index[] = $term->term_id;
+                    $author_terms[]   = $term;
                 }
             }
         }
