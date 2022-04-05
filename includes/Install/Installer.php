@@ -402,15 +402,16 @@ class Installer {
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_reverse_withdrawal` (
                     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                     `trn_id` bigint(20) UNSIGNED NOT NULL,
-                    `trn_type_id` tinyint(3) UNSIGNED NOT NULL,
+                    `trn_type` varchar(250) NOT NULL DEFAULT 'order_commission',
                     `vendor_id` bigint(20) UNSIGNED NOT NULL,
                     `note` mediumtext DEFAULT NULL,
                     `debit` decimal(19,4) NOT NULL DEFAULT '0.0000',
                     `credit` decimal(19,4) NOT NULL DEFAULT '0.0000',
                     `trn_date` int(13) UNSIGNED NOT NULL DEFAULT '0',
-                    `updated` int(13) UNSIGNED NOT NULL DEFAULT '0',
                     PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
+
+        //todo: create table indexes
 
         dbDelta( $sql );
     }

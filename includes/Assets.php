@@ -147,6 +147,16 @@ class Assets {
                 'component' => 'Withdraw',
             ],
             [
+                'path'      => '/reverse-withdrawal',
+                'name'      => 'ReverseWithdrawal',
+                'component' => 'ReverseWithdrawal',
+            ],
+            [
+                'path'      => '/reverse-withdrawal/store/:store_id',
+                'name'      => 'ReverseWithdrawalSingle',
+                'component' => 'ReverseWithdrawalSingle',
+            ],
+            [
                 'path'      => '/premium',
                 'name'      => 'Premium',
                 'component' => 'Premium',
@@ -579,51 +589,45 @@ class Assets {
         wp_enqueue_script( 'dokan-util-helper' );
 
         $localize_data = [
-            'i18n_date_format' => wc_date_format(),
-            'i18n_time_format' => wc_time_format(),
-            'week_starts_day'  => intval( get_option( 'start_of_week', 0 ) ),
+            'i18n_date_format'        => wc_date_format(),
+            'i18n_time_format'        => wc_time_format(),
+            'week_starts_day'         => intval( get_option( 'start_of_week', 0 ) ),
+            'daterange_picker_local'  => [
+				'toLabel'          => __( 'To', 'dokan-lite' ),
+				'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
+				'fromLabel'        => __( 'From', 'dokan-lite' ),
+				'separator'        => __( ' - ', 'dokan-lite' ),
+				'weekLabel'        => __( 'W', 'dokan-lite' ),
+				'applyLabel'       => __( 'Apply', 'dokan-lite' ),
+				'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
+				'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
+				'daysOfWeek'       => [
+					__( 'Su', 'dokan-lite' ),
+					__( 'Mo', 'dokan-lite' ),
+					__( 'Tu', 'dokan-lite' ),
+					__( 'We', 'dokan-lite' ),
+					__( 'Th', 'dokan-lite' ),
+					__( 'Fr', 'dokan-lite' ),
+					__( 'Sa', 'dokan-lite' ),
+				],
+				'monthNames'       => [
+					__( 'January', 'dokan-lite' ),
+					__( 'February', 'dokan-lite' ),
+					__( 'March', 'dokan-lite' ),
+					__( 'April', 'dokan-lite' ),
+					__( 'May', 'dokan-lite' ),
+					__( 'June', 'dokan-lite' ),
+					__( 'July', 'dokan-lite' ),
+					__( 'August', 'dokan-lite' ),
+					__( 'September', 'dokan-lite' ),
+					__( 'October', 'dokan-lite' ),
+					__( 'November', 'dokan-lite' ),
+					__( 'December', 'dokan-lite' ),
+				],
+			],
         ];
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
-
-        // Dokan date range picker localization
-        $daterange_localize_data = [
-            'locale'      => [
-                'toLabel'          => __( 'To', 'dokan-lite' ),
-                'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
-                'fromLabel'        => __( 'From', 'dokan-lite' ),
-                'separator'        => __( ' - ', 'dokan-lite' ),
-                'weekLabel'        => __( 'W', 'dokan-lite' ),
-                'applyLabel'       => __( 'Apply', 'dokan-lite' ),
-                'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
-                'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
-                'daysOfWeek'       => [
-                    __( 'Su', 'dokan-lite' ),
-                    __( 'Mo', 'dokan-lite' ),
-                    __( 'Tu', 'dokan-lite' ),
-                    __( 'We', 'dokan-lite' ),
-                    __( 'Th', 'dokan-lite' ),
-                    __( 'Fr', 'dokan-lite' ),
-                    __( 'Sa', 'dokan-lite' ),
-                ],
-                'monthNames'       => [
-                    __( 'January', 'dokan-lite' ),
-                    __( 'February', 'dokan-lite' ),
-                    __( 'March', 'dokan-lite' ),
-                    __( 'April', 'dokan-lite' ),
-                    __( 'May', 'dokan-lite' ),
-                    __( 'June', 'dokan-lite' ),
-                    __( 'July', 'dokan-lite' ),
-                    __( 'August', 'dokan-lite' ),
-                    __( 'September', 'dokan-lite' ),
-                    __( 'October', 'dokan-lite' ),
-                    __( 'November', 'dokan-lite' ),
-                    __( 'December', 'dokan-lite' ),
-                ],
-            ],
-        ];
-
-        wp_localize_script( 'dokan-date-range-picker', 'dokan_daterange_i18n', $daterange_localize_data );
     }
 
     /**

@@ -1,8 +1,7 @@
 <template>
-    <div class="dokan-reverse-withdrawal-single">
+    <div class="dokan-reverse-withdrawal">
         <h1 class="wp-heading-inline">
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
-            <a class="button" :href="this.reverseWithdrawalUrl()">&larr; {{ __( 'Go Back', 'dokan' ) }}</a>
         </h1>
         <AdminNotice />
         <hr class="wp-header-end">
@@ -11,9 +10,10 @@
             <CardFunFact :count="counts.credit" icon="fas fa-comments-dollar" is_currency :title="__('Total Collected', 'dokan-lite')" />
             <CardFunFact :count="counts.balance" icon="fas fa-coins" is_currency :title="__('Remaining Balance', 'dokan-lite')" />
             <CardFunFact :count="counts.total_transactions" icon="fas fa-info"  :title="__( 'Total Transactions', 'dokan-lite' )" />
+            <CardFunFact :count="counts.total_vendors" icon="fas fa-users" :title="__( 'Total Vendors', 'dokan-lite' )" />
         </div>
 
-        <div id="dokan_reverse_withdrawal_single_list_table">
+        <div id="dokan_reverse_withdrawal_list_table">
             <list-table
                 :columns="columns"
                 :loading="loading"
@@ -31,51 +31,54 @@
                 @sort="doSort"
                 @pagination="goToPage">
 
-                <template slot="trn_id" slot-scope="data" v-if="data.row.trn_id !== '--'">
-                    <a :href="data.row.trn_url" target="_blank">{{ data.row.trn_id }}</a>
-                </template>
-
-                <template slot="trn_date" slot-scope="data">
-                    {{ data.row.trn_date }}
-                </template>
-
-                <template slot="trn_type" slot-scope="data">
-                    {{ data.row.trn_type }}
-                </template>
-
-                <template slot="note" slot-scope="data">
-                    {{ data.row.note }}
-                </template>
-
-                <template slot="debit" slot-scope="data">
-                    <currency :amount="data.row.debit"></currency>
-                </template>
-
-                <template slot="credit" slot-scope="data">
-                    <currency :amount="data.row.credit"></currency>
+                <template slot="store_name" slot-scope="data">
+                    <strong><a :href="'?page=dokan#/reverse-withdrawal/store/' + data.row.vendor_id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan' ) }}</a></strong>
                 </template>
 
                 <template slot="balance" slot-scope="data">
                     <currency :amount="data.row.balance"></currency>
                 </template>
 
+                <template slot="last_payment_date" slot-scope="data">
+                    {{ data.row.last_payment_date }}
+                </template>
+
                 <template slot="filters">
+                    <span class="form-group">
+                    <multiselect
+                        @search-change="fetchStoreLists"
+                        v-model="filter.selected_store"
+                        :placeholder="this.__( 'Filter by store', 'dokan' )"
+                        :options="filter.stores"
+                        track-by="id"
+                        label="name"
+                        :internal-search="false"
+                        :clear-on-select="false"
+                        :allow-empty="false"
+                        :multiselect="false"
+                        :searchable="true"
+                        :showLabels="false" />
+                        <button
+                            v-if="filter.selected_store.id"
+                            type="button"
+                            class="button"
+                            @click="filter.selected_store = getDefaultStore()[0]"
+                            style="line-height: 0; padding: 0 5px; margin-right: 5px;"
+                        ><i class="dashicons dashicons-no"></i></button>
+                    </span>
+
                     <span class="form-group">
                         <date-range-picker
                             class="mr-5"
                             ref="picker"
                             :locale-data="this.dateTimePickerFormat"
-                            :singleDatePicker="false"
-                            :timePicker="false"
-                            :timePicker24Hour="false"
-                            :showWeekNumbers="false"
-                            :showDropdowns="true"
+                            :singleDatePicker="true"
+                            :showDropdowns="true",
                             :autoApply="false"
-                            v-model="filter.transaction_date"
-                            :linkedCalendars="true"
-                            opens="right">
+                            :ranges="false"
+                            v-model="filter.transaction_date">
                             <template v-slot:input="picker">
-                                <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }} - {{ filter.transaction_date.endDate | getFormattedDate }}</span>
+                                <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }}</span>
                                 <span class="date-range-placeholder" v-if="! filter.transaction_date.startDate">{{ __( 'Filter by expire date', 'dokan-lite' ) }}</span>
                             </template>
 
@@ -86,6 +89,13 @@
                                 <button @click="data.clickApply" v-if="! data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan-lite' ) }}</button>
                             </div>
                         </date-range-picker>
+                        <button
+                            v-if="filter.transaction_date.startDate !== getDefaultTransactionDate().startDate"
+                            type="button"
+                            class="button"
+                            @click="setDefaultTransactionDate()"
+                            style="line-height: 0; padding: 0 5px; margin-right: 5px;"
+                        ><i class="dashicons dashicons-no"></i></button>
                     </span>
                     <span class="form-group">
                         <button class="button action" v-on:click="this.clearFilters">{{ this.__( 'Clear', 'dokan-lite' ) }}</button>
@@ -107,6 +117,7 @@ const AdminNotice     = dokan_get_lib('AdminNotice');
 const Currency        = dokan_get_lib('Currency');
 const CardFunFact     = dokan_get_lib('CardFunFact');
 
+
 const swal = Swal.mixin({
     customClass: {
         confirmButton: 'button button-primary',
@@ -117,7 +128,7 @@ const swal = Swal.mixin({
 
 export default {
 
-    name: 'ReverseWithdrawalSingle',
+    name: 'ReverseWithdrawal',
 
     components: {
         Currency,
@@ -137,60 +148,49 @@ export default {
             counts: {
                 debit: 0,
                 credit: 0,
-                total_transaction: 0
+                balance: 0,
+                total_transactions: 0,
+                total_vendors: 0,
             },
             dateTimePickerFormat: {
                 format: dokan_get_daterange_picker_format().toLowerCase(),
                 ...dokan_helper.daterange_picker_local,
             },
             totalPages: 1,
-            perPage: 100,
+            perPage: 20,
             totalItems: 0,
             showCb: true,
             notFound: this.__( 'No transaction found.', 'dokan-lite' ),
             columns: {
-                'trn_id': {
-                    label: this.__( 'Transaction ID', 'dokan-lite' ),
-                    sortable: true,
-                },
-                'trn_date': {
-                    label: this.__( 'Date', 'dokan-lite' ),
-                },
-                'trn_type': {
-                    label: this.__( 'Transaction Type', 'dokan-lite' ),
-                    sortable: true,
-                },
-                'note': {
-                    label: this.__( 'Note', 'dokan-lite' )
-                },
-                'debit': {
-                    label: this.__( 'Debit', 'dokan-lite' ),
-                    sortable: true,
-                },
-                'credit': {
-                    label: this.__( 'Credit', 'dokan-lite' ),
+                'store_name': {
+                    label: this.__( 'Stores', 'dokan-lite' ),
                 },
                 'balance': {
                     label: this.__( 'Balance', 'dokan-lite' ),
+                    sortable: true,
+                },
+                'last_payment_date': {
+                    label: this.__( 'Last Payment Date', 'dokan-lite' ),
                 },
             },
             actions: [],
             filter: {
+                stores: this.getDefaultStore(),
+                selected_store: this.getDefaultStore()[0],
                 transaction_date: {
-                    startDate: '',
-                    endDate: '',
+                    startDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
+                    endDate: moment().endOf('month').format('YYYY-MM-DD 23:59:59'),
                 },
             },
         }
     },
 
     created() {
-        this.setDefaultTransactionDate();
-        this.fetchTransactions();
+        this.fetchStoreLists();
+        this.fetchBalances();
     },
 
     mounted() {
-        this.fetchBalance();
         this.mountToolTips();
     },
 
@@ -205,10 +205,6 @@ export default {
     },
 
     computed: {
-        ID() {
-            return this.$route.params.store_id;
-        },
-
         getCurrentPage() {
             return this.$route.query.page ? parseInt( this.$route.query.page ) : 1;
         },
@@ -221,12 +217,18 @@ export default {
             return this.$route.query.order ?? 'desc';
         },
 
+        filterStoreID() {
+            return this.filter.selected_store ?? 0;
+        },
+
         filterTransactionDate() {
-            let data = {};
+            let data = {
+                from: '',
+                to: '',
+            };
             if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
                 return data;
             }
-            data.from = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
             data.to = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
             return data;
         },
@@ -238,19 +240,23 @@ export default {
 
     watch: {
         '$route.query.page'() {
-            this.fetchTransactions();
+            this.fetchBalances();
         },
 
         '$route.query.orderby'() {
-            this.fetchTransactions();
+            this.fetchBalances();
         },
 
         '$route.query.order'() {
-            this.fetchTransactions();
+            this.fetchBalances();
+        },
+
+        'filter.selected_store'() {
+            this.fetchBalances();
         },
 
         'filter.transaction_date.startDate'() {
-            this.fetchTransactions();
+            this.fetchBalances();
         },
     },
 
@@ -260,6 +266,7 @@ export default {
             this.counts.credit = parseInt( xhr.getResponseHeader('X-Status-Credit') ?? 0 );
             this.counts.balance = parseInt( xhr.getResponseHeader('X-Status-Balance') ?? 0 );
             this.counts.total_transactions = parseInt( xhr.getResponseHeader('X-Status-Total-Transactions') ?? 0 );
+            this.counts.total_vendors = parseInt( xhr.getResponseHeader('X-Status-Total-Vendors') ?? 0 );
         },
 
         updatePagination(xhr) {
@@ -271,87 +278,70 @@ export default {
             this.counts.debit  = 0;
             this.counts.credit = 0;
             this.counts.balance = 0;
-            this.counts.total_transaction = 0;
-        },
-
-        resetPagination() {
+            this.counts.total_transactions = 0;
+            this.counts.total_vendors = 0;
             this.totalPages = 0;
             this.totalItems = 0;
         },
 
         // clear filter
         clearFilters() {
+            this.filter.selected_store = this.getDefaultStore()[0];
             this.setDefaultTransactionDate();
-            this.fetchTransactions();
+            this.fetchBalances();
         },
+
+        getDefaultStore() {
+            return [ { id: 0, name: this.__( 'All Stores', 'dokan' ) } ];
+        },
+
+        // filter by stores
+        fetchStoreLists: Debounce( function( search = '' ) {
+            let self = this;
+            dokan.api.get('/reverse-withdrawal/stores', {
+                paged: 1,
+                search: search
+            } ).done( ( response ) => {
+                self.filter.stores = self.getDefaultStore().concat( response );
+            } ).fail( ( jqXHR ) => {
+                self.filter.stores = self.getDefaultStore();
+            } );
+        }, 300 ),
 
         getDefaultTransactionDate() {
             return {
-                startDate: moment().subtract(29, 'days').format('YYYY-MM-DD 00:00:00'),
-                endDate: moment().format('YYYY-MM-DD 23:59:59'),
+                startDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
+                endDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
             }
         },
 
         setDefaultTransactionDate() {
-            let default_transaction_date = this.getDefaultTransactionDate();
-            this.filter.transaction_date.startDate = default_transaction_date.startDate;
-            this.filter.transaction_date.endDate   = default_transaction_date.endDate;
-            if ( this.$refs.picker ) {
-                this.$refs.picker.togglePicker(false);
-            }
+            let transaction_date = this.getDefaultTransactionDate();
+            this.filter.transaction_date.startDate = transaction_date.startDate;
+            this.filter.transaction_date.endDate   = transaction_date.endDate;
+            this.$refs.picker.togglePicker(false);
         },
 
-        goToPage(page) {
-            this.$router.push({
-                name: 'ReverseWithdrawalSingle',
-                query: {
-                    page: page,
-                }
-            });
-        },
-
-        fetchTransactions() {
+        fetchBalances() {
             this.loading = true;
             let self = this;
 
             let data = {
+                per_page: self.perPage,
+                page: self.getCurrentPage,
                 orderby: self.getSortBy,
                 order: self.getSortOrder,
-                vendor_id: self.ID,
                 trn_date: self.filterTransactionDate,
             };
 
-            dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data)
-            .done( ( response, status, xhr ) => {
+            dokan.api.get('/reverse-withdrawal/stores-balance', data).done( ( response, status, xhr ) => {
                 self.transactionData = response;
+                self.updatedCounts( xhr );
                 self.updatePagination( xhr );
             }).always( () => {
                 self.loading = false;
-            }).fail( ( jqXHR ) => {
-                self.transactionData = [];
-                self.resetPagination();
-                let message = self.renderApiError( jqXHR );
-                if ( message ) {
-                    self.showErrorAlert( message );
-                }
-            });
-        },
-
-        fetchBalance() {
-            let self = this;
-
-            let data = {
-                vendor_id: self.ID,
-                trn_date: {
-                    'to': moment().format('YYYY-MM-DD 23:59:59'),
-                },
-            };
-
-            dokan.api.get('/reverse-withdrawal/stores-balance', data).done( ( response, status, xhr ) => {
-                self.updatedCounts( xhr );
-            }).always( () => {
-
             } ).fail( ( jqXHR ) => {
+                self.transactionData = [];
                 self.resetCounts();
                 let message = self.renderApiError( jqXHR );
                 if ( message ) {
@@ -360,19 +350,24 @@ export default {
             } );
         },
 
+        goToPage(page) {
+            this.$router.push({
+                name: 'ReverseWithdrawal',
+                query: {
+                    page: page,
+                }
+            });
+        },
+
         doSort( column, order ) {
             this.$router.push({
-                name: 'ReverseWithdrawalSingle',
+                name: 'ReverseWithdrawal',
                 query: {
                     page: 1,
                     orderby: column,
                     order: order
                 }
             });
-        },
-
-        reverseWithdrawalUrl(id) {
-            return dokan.urls.adminRoot + 'admin.php?page=dokan#/reverse-withdrawal';
         },
 
         orderUrl(id) {
@@ -424,7 +419,7 @@ export default {
     margin-right: 10px !important;
 }
 
-.dokan-reverse-withdrawal-single {
+.dokan-reverse-withdrawal {
     .dokan-reverse-withdrawal-fact-card {
         margin: 0px -10px;
         display: flex;
@@ -432,9 +427,43 @@ export default {
     }
 }
 
-#dokan_reverse_withdrawal_single_list_table {
+#dokan_reverse_withdrawal_list_table {
     input.multiselect__input {
         border: none;
+    }
+
+    .label {
+        display: inline-block;
+        padding: 0px 6px;
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+
+    .expired {
+        background-color: #5cb85c;
+    }
+
+    .not_published {
+        background-color: #fb7369;
+    }
+
+    .search-by-product {
+        display: inline;
+        margin-left: 5px;
+
+        .search-box #post-search-input {
+            border-radius: 3px;
+            border: 1px solid #aaaaaa;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            padding-left: 8px !important;
+        }
+
+        .search-box #post-search-input::placeholder {
+            color: #999 !important;
+        }
     }
 
     div.actions {
