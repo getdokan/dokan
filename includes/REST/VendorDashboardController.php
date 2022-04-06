@@ -257,7 +257,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 $data[] = $order_report_data[ $key ];
             }
         }
-        // todo: add existing data
+
         return rest_ensure_response( $data );
     }
 
