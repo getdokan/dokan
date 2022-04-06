@@ -206,11 +206,17 @@ div.media-sidebar a.edit-attachment{
                         flex-grow: 1;
                     }
 
-                    > div {
+                    #vendor-dashboard-payment-settings-toggle-dropdown {
                         flex-grow: 2;
                         text-align: right;
 
+                        #vendor-payment-method-drop-down-wrapper {
+                            position: relative;
+                        }
+
                         #vendor-payment-method-drop-down {
+                            display: none;
+                            max-height: 200px;
                             border: 1px black solid;
                             position: absolute;
                             top: 0;
@@ -220,9 +226,13 @@ div.media-sidebar a.edit-attachment{
                             ul {
                                 list-style: none;
                                 margin: 0;
+                                max-height: 200px;
+                                overflow-y: scroll;
+                                overflow-x: hidden;
 
                                 li {
                                     div {
+                                        white-space: nowrap;
                                         display: flex;
                                         align-items: center;
                                         border-bottom: 1px #dddddd solid;
@@ -242,11 +252,18 @@ div.media-sidebar a.edit-attachment{
                                 }
                             }
                         }
+
+                        &:hover {
+                            #vendor-payment-method-drop-down {
+                                display: block;
+                            }
+                        }
                     }
                 }
 
                 > ul {
                     list-style: none;
+                    min-height: 200px;
 
                     li {
                         > div {
