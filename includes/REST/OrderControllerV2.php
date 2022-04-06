@@ -131,6 +131,12 @@ class OrderControllerV2 extends OrderController {
         }
 
         $data['downloads'] = $downloads;
+        $orders_items = wc_get_order( $requests->get_param( 'id' ) )->get_items();
+        $orders_items_ids = [];
+        foreach ( $orders_items as $item ) {
+            $orders_items_ids[] = $item->get_product_id();
+        }
+        $orders_items_ids = implode( ',', $orders_items_ids );
 
         $products = $wpdb->get_results(
             $wpdb->prepare(
@@ -141,6 +147,7 @@ class OrderControllerV2 extends OrderController {
                             AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
                             AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
                             AND $wpdb->posts.post_status = 'publish'
+                            AND $wpdb->posts.ID IN ( {$orders_items_ids} )
                         GROUP BY $wpdb->posts.ID
                         ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC", $user_id
             )
