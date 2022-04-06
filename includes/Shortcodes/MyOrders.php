@@ -21,7 +21,11 @@ class MyOrders extends DokanShortcode {
         require_once DOKAN_INC_DIR . '/my-orders-functions.php';
         wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], DOKAN_PLUGIN_VERSION );
         wp_enqueue_style( 'dokan-select2-css' );
+        wp_enqueue_style( 'dokan-timepicker' );
+        wp_enqueue_style( 'jquery-ui' );
         wp_enqueue_script( 'dokan-select2-js' );
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_script( 'dokan-timepicker' );
 
         ob_start();
 
