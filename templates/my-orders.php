@@ -195,9 +195,7 @@
 <script>
     (function($){
         $(document).ready(function(){
-            $('.dokan-my-order-select2').select2({
-                allowClear: true,
-            });
+            $('.dokan-my-order-select2').select2();
 
             $('.datepicker').datepicker({
                 dateFormat: 'yy-m-d'
