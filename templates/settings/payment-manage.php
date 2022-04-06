@@ -15,7 +15,7 @@
             <?php if ( 'bank' === $method_key ) :
                 call_user_func( $method['callback'], $profile_info );
             else : ?>
-                <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( $method['title'] ) ?></label>
+                <label class="dokan-w3 dokan-control-label" for="dokan_setting"><?php echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) ) ?></label>
                 <div class="dokan-w6">
                     <?php call_user_func( $method['callback'], $profile_info ); ?>
                 </div>
