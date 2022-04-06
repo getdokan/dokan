@@ -1453,6 +1453,21 @@
 
     #vendor-payment-method-drop-down {
         display: none;
+        max-height: 200px;
+
+        ul {
+            max-height: 200px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+
+            li {
+                a {
+                    div {
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
     }
 }
 
