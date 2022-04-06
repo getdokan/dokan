@@ -42,7 +42,7 @@ function dokan_filter_orders_by_status( $customer_orders, $status ) {
  *
  * @return array
  */
-function dokan_get_filtered_orders( $args ) {
+function dokan_get_filtered_orders( $args_parameter ) {
     global $wpdb;
 
     $defaults = [
@@ -56,21 +56,21 @@ function dokan_get_filtered_orders( $args ) {
         'page'       => '',
     ];
 
-    $args = wp_parse_args( $args, $defaults );
+    $args_parameter = wp_parse_args( $args_parameter, $defaults );
 
-    $min_price = empty( $args['min_price'] ) ? 0 : $args['min_price'];
-    $max_price = empty( $args['min_price'] ) ? 1000000000 : $args['max_price'];
+    $min_price = empty( $args['min_price'] ) ? 0 : $args_parameter['min_price'];
+    $max_price = empty( $args['min_price'] ) ? 1000000000 : $args_parameter['max_price'];
 
-    $vendor_id = $args['vendor_id'];
+    $vendor_id = $args_parameter['vendor_id'];
 
     $date_query = [];
 
-    if ( ! empty( $args['start_date'] ) ) {
+    if ( ! empty( $args_parameter['start_date'] ) ) {
         $date_query['after']     = $args['start_date'];
         $date_query['inclusive'] = true;
     }
 
-    if ( ! empty( $args['end_date'] ) ) {
+    if ( ! empty( $args_parameter['end_date'] ) ) {
         $date_query['before']    = $args['end_date'];
         $date_query['inclusive'] = true;
     }
@@ -83,7 +83,7 @@ function dokan_get_filtered_orders( $args ) {
             [
                 'key'     => '_customer_user',
                 'value'   => get_current_user_id(),
-                'compage' => '=',
+                'compare' => '=',
             ],
             [
                 'key'     => '_order_total',
@@ -95,17 +95,20 @@ function dokan_get_filtered_orders( $args ) {
         'date_query'  => [ $date_query ],
     ];
 
-    if ( ! empty( $args['limit'] ) && ! empty( $args['page'] ) ) {
-        $args['numberposts'] = $args['limit'];
-        $args['offset']      = $args['limit'] * ( $args['page'] - 1 );
+    if ( ! empty( $args_parameter['limit'] ) && ! empty( $args_parameter['page'] ) ) {
+        $args['numberposts'] = $args_parameter['limit'];
+        $args['offset']      = $args_parameter['limit'] * ( $args_parameter['page'] - 1 );
+    } else {
+        $args['numberposts'] = -1;
+        $args['offset']      = 0;
     }
 
-    if ( empty( $args['sort_order'] ) || ! in_array( $args['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
-        $args['sort_order'] = 'DESC';
+    if ( empty( $args_parameter['sort_order'] ) || ! in_array( $args_parameter['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
+        $args_parameter['sort_order'] = 'DESC';
     }
 
     $args['orderby'] = 'ID';
-    $args['order']   = $args['sort_order'];
+    $args['order']   = $args_parameter['sort_order'];
 
     if ( ! empty( $vendor_id ) ) {
         $order_ids = $wpdb->get_col(
