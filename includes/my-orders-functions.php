@@ -97,7 +97,8 @@ function dokan_get_filtered_orders( $args_parameter ) {
             ],
             [
                 'key'     => '_order_total',
-                'value'   => [ $min_price, $max_price + 0.01 ],
+                'value'   => [ $min_price, $max_price ],
+                'type'    => 'DECIMAL(10, 2)',
                 'compare' => 'BETWEEN',
             ],
         ],
