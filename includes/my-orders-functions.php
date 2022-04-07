@@ -58,20 +58,30 @@ function dokan_get_filtered_orders( $args_parameter ) {
 
     $args_parameter = wp_parse_args( $args_parameter, $defaults );
 
-    $min_price = empty( $args['min_price'] ) ? 0 : $args_parameter['min_price'];
-    $max_price = empty( $args['min_price'] ) ? 1000000000 : $args_parameter['max_price'];
+    $min_price = empty( $args_parameter['min_price'] ) ? 0 : $args_parameter['min_price'];
+    $max_price = empty( $args_parameter['max_price'] ) ? 1000000000 : $args_parameter['max_price'];
 
     $vendor_id = $args_parameter['vendor_id'];
 
     $date_query = [];
 
     if ( ! empty( $args_parameter['start_date'] ) ) {
-        $date_query['after']     = $args['start_date'];
+        $date_query['after']     = $args_parameter['start_date'];
         $date_query['inclusive'] = true;
     }
 
     if ( ! empty( $args_parameter['end_date'] ) ) {
-        $date_query['before']    = $args['end_date'];
+        $y_m_d = explode( '-', $args_parameter['end_date'] );
+
+        $date_query['before']    = [
+            'year'   => $y_m_d[0],
+            'month'  => $y_m_d[1],
+            'day'    => $y_m_d[2],
+            'hour'   => 23,
+            'minute' => 59,
+            'second' => 59,
+        ];
+
         $date_query['inclusive'] = true;
     }
 
