@@ -78,6 +78,8 @@ class Manager {
         // determine which fields to return
         if ( in_array( $args['return'], [ 'vendor_transaction' ], true ) ) {
             $fields = 'trn.*';
+        } elseif ( in_array( $args['return'], [ 'count' ], true ) ) {
+            $fields = 'COUNT(trn.id) AS count';
         } elseif ( in_array( $args['return'], [ 'balance_count', 'vendor_transaction_count' ], true ) ) {
             $fields = 'COUNT(trn.id) AS total_transactions, SUM(trn.debit) AS debit, SUM(trn.credit) AS credit';
             $fields .= 'balance_count' === $args['return'] ? ', COUNT( distinct vendor_id) AS total_vendors' : '';
@@ -205,7 +207,7 @@ class Manager {
             // @codingStandardsIgnoreStart
             $data = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT $fields FROM {$this->table} as trn $join WHERE %d=%d $where $orderby $limits",
+                    "SELECT $fields FROM {$this->table} AS trn $join WHERE %d=%d $where $orderby $limits",
                     $query_args
                 ),
                 ARRAY_A
@@ -223,11 +225,21 @@ class Manager {
             }
             // store on cache
             Cache::set( $cache_key, $data, $cache_group );
+        } elseif ( 'count' === $args['return'] && false === $data ) {
+            // @codingStandardsIgnoreStart
+            $data = (int) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT $fields FROM {$this->table} AS trn $join WHERE %d=%d $where",
+                    $query_args
+                )
+            );
+            // @codingStandardsIgnoreEnd
+            Cache::set( $cache_key, $data, $cache_group );
         } elseif ( in_array( $args['return'], [ 'balance_count', 'vendor_transaction_count' ], true ) && false === $data ) {
             // @codingStandardsIgnoreStart
             $row = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT $fields FROM {$this->table} as trn $join WHERE %d=%d $where",
+                    "SELECT $fields FROM {$this->table} AS trn $join WHERE %d=%d $where",
                     $query_args
                 )
             );
@@ -254,7 +266,7 @@ class Manager {
             // @codingStandardsIgnoreStart
             $data = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT $fields FROM {$this->table} as trn $join WHERE %d=%d $where $groupby $orderby $limits",
+                    "SELECT $fields FROM {$this->table} AS trn $join WHERE %d=%d $where $groupby $orderby $limits",
                     $query_args
                 ),
                 ARRAY_A
@@ -556,6 +568,26 @@ class Manager {
         do_action( 'dokan_after_reverse_withdrawal_created', $insert_id, $data, $args );
 
         return $insert_id;
+    }
+
+    /**
+     * Check if reverse withdrawal already inserted for an order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return bool
+     */
+    public function is_reverse_withdrawal_inserted( $order_id ) {
+        $args = [
+            'trn_id'   => $order_id,
+            'trn_type' => 'order_commission',
+            'return'   => 'count',
+        ];
+
+        $count = $this->all( $args );
+        return $count > 0;
     }
 
     /**
