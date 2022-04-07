@@ -196,7 +196,6 @@ class Settings {
         $methods      = dokan_withdraw_get_active_methods();
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
-        $method_key   = str_replace( '/manage-', '', $slug_suffix );
         $is_edit_mode = false;
 
         /**
@@ -207,10 +206,30 @@ class Settings {
          */
         $method_key_to_storage_key = apply_filters( 'dokan_payment_method_storage_key', [] );
 
-        list( $used_method_keys, $unused_method_keys ) = $this->get_separated_method_keys( $methods, $profile_info['payment'], $method_key_to_storage_key );
+        $used_methods = $profile_info['payment'];
+
+        foreach ( $methods as $method_key => $method ) {
+            if ( empty( $method ) ) {
+                unset( $methods[ $method_key ] );
+
+                if ( isset( $used_methods[ $method_key ] ) ) {
+                    unset( $used_methods[ $method_key ] );
+                } else if ( isset( $method_key_to_storage_key[ $method_key ] ) && isset( $used_methods[ $method_key_to_storage_key[ $method_key ] ] ) ) {
+                    unset( $used_methods[ $method_key_to_storage_key[ $method_key ] ] );
+                }
+
+                if ( isset( $method_key_to_storage_key[ $method_key ] ) ) {
+                    unset( $method_key_to_storage_key[ $method_key ] );
+                }
+            }
+        }
+
+        list( $used_method_keys, $unused_method_keys ) = $this->get_separated_method_keys( $methods, $used_methods, $method_key_to_storage_key );
 
         $unused_methods = $this->get_payment_methods( $unused_method_keys );
         $used_methods   = $this->get_payment_methods( $used_method_keys );
+
+        $method_key = str_replace( '/manage-', '', $slug_suffix );
 
         if ( stripos( $method_key, '/edit' ) !== false ) {
             $is_edit_mode = true;
