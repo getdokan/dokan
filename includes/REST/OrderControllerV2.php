@@ -5,7 +5,6 @@ namespace WeDevs\Dokan\REST;
 use WC_Data_Store;
 use WP_Error;
 use WP_REST_Server;
-use WeDevs\Dokan\Abstracts\DokanRESTController;
 
 /**
 * Dokan Order Controller Class
@@ -19,6 +18,8 @@ class OrderControllerV2 extends OrderController {
     /**
      * Endpoint namespace
      *
+     * @since DOKAN_SINCE
+     *
      * @var string
      */
     protected $namespace = 'dokan/v2';
@@ -26,6 +27,10 @@ class OrderControllerV2 extends OrderController {
 
     /**
      * Register the routes for orders.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
      */
     public function register_routes() {
         parent::register_routes();
@@ -89,7 +94,10 @@ class OrderControllerV2 extends OrderController {
     /**
      * Get Order Downloads.
      *
-     * @param $requests
+     * @since DOKAN_SINCE
+     *
+     * @param  \WP_REST_Request $requests Request object.
+     *
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function get_order_downloads( $requests ) {
@@ -154,7 +162,10 @@ class OrderControllerV2 extends OrderController {
     /**
      * Grant downloadable product access to the given order.
      *
-     * @param $requests
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_REST_Request $requests Request object.
+     *
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function grant_order_downloads( $requests ) {
@@ -200,7 +211,10 @@ class OrderControllerV2 extends OrderController {
     /**
      * Revoke downloadable product access to the given order.
      *
-     * @param $requests
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_REST_Request $requests Request object.
+     *
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function revoke_order_downloads( $requests ) {
