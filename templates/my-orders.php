@@ -12,8 +12,8 @@
     $limit      = 10;
     $start_date = empty( $_GET['start_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['start_date'] ) );
     $end_date   = empty( $_GET['end_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['end_date'] ) );
-    $max_price  = empty( $_GET['max_price'] ) ? '' : absint( wp_unslash( $_GET['max_price'] ) );
-    $min_price  = empty( $_GET['min_price'] ) ? '' : absint( wp_unslash( $_GET['min_price'] ) );
+    $max_price  = empty( $_GET['max_price'] ) ? '' : floatval( wp_unslash( $_GET['max_price'] ) );
+    $min_price  = empty( $_GET['min_price'] ) ? '' : floatval( wp_unslash( $_GET['min_price'] ) );
     $status     = empty( $_GET['status'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['status'] ) );
     $sort_order = empty( $_GET['sort_order'] ) ? 'DESC' : sanitize_text_field( wp_unslash( $_GET['sort_order'] ) );
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
@@ -44,8 +44,8 @@
                     <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
                 <?php endforeach; ?>
             </select>
-            <input type="number" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $min_price ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
-            <input type="number" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $max_price ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
+            <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $_GET['min_price'] ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
+            <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $_GET['max_price'] ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
