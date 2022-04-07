@@ -44,8 +44,8 @@
                     <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
                 <?php endforeach; ?>
             </select>
-            <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( $_GET['min_price'] ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
-            <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( $_GET['max_price'] ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
+            <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['min_price'] ) ? $_GET['min_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
+            <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['max_price'] ) ? $_GET['max_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
