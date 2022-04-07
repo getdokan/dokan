@@ -30,59 +30,59 @@ class OrderControllerV2 extends OrderController {
     public function register_routes() {
         parent::register_routes();
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/downloads', array(
-				'args' => array(
-					'id' => array(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/downloads', [
+				'args' => [
+					'id' => [
 						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
 						'type'        => 'integer',
-					),
-				),
-				array(
+                    ],
+                ],
+				[
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_order_downloads' ),
+					'callback'            => [ $this, 'get_order_downloads' ],
 					'args'                => $this->get_collection_params(),
-					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-				),
-				array(
+					'permission_callback' => [ $this, 'get_single_order_permissions_check' ],
+                ],
+				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'grant_order_downloads' ),
-					'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-					'args'                => array(
-                        'ids' => array(
+					'callback'            => [ $this, 'grant_order_downloads' ],
+					'permission_callback' => [ $this, 'get_single_order_permissions_check' ],
+					'args'                => [
+                        'ids' => [
                             'type'        => 'array',
                             'description' => __( 'Download IDs.', 'dokan-lite' ),
                             'required'    => true,
-                            'items' => array(
+                            'items' => [
                                 'type'     => 'integer',
                                 'description' => __( 'Download product IDs.', 'dokan-lite' ),
                                 'required' => true,
-                            ),
-                        ),
-                    ),
-				),
-                array(
+                            ],
+                        ],
+                    ],
+                ],
+                [
                     'methods'             => WP_REST_Server::DELETABLE,
-                    'callback'            => array( $this, 'revoke_order_downloads' ),
-                    'permission_callback' => array( $this, 'get_single_order_permissions_check' ),
-                    'args'                => array(
-                        'download_id' => array(
+                    'callback'            => [ $this, 'revoke_order_downloads' ],
+                    'permission_callback' => [ $this, 'get_single_order_permissions_check' ],
+                    'args'                => [
+                        'download_id' => [
                             'type'        => 'string',
                             'description' => __( 'Download ID.', 'dokan-lite' ),
                             'required'    => false,
-                        ),
-                        'product_id' => array(
+                        ],
+                        'product_id' => [
                             'type'        => 'integer',
                             'description' => __( 'Product ID.', 'dokan-lite' ),
                             'required'    => false,
-                        ),
-                        'permission_id' => array(
+                        ],
+                        'permission_id' => [
                             'type'        => 'integer',
                             'description' => __( 'Permission ID.', 'dokan-lite' ),
                             'required'    => true,
-                        ),
-                    ),
-                ),
-            )
+                        ],
+                    ],
+                ],
+            ]
         );
     }
 
@@ -103,39 +103,30 @@ class OrderControllerV2 extends OrderController {
             $wpdb->prepare(
                 "
                 SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
-                WHERE order_id = %d ORDER BY product_id
+                WHERE order_id = %d ORDER BY product_id ASC
             ", $requests->get_param( 'id' )
             )
         );
 
-        $product = null;
-        $loop    = 0;
+        foreach ( $download_permissions as $download ) {
+            $product = wc_get_product( absint( $download->product_id ) );
 
-        if ( $download_permissions && sizeof( $download_permissions ) > 0 ) {
-			foreach ( $download_permissions as $download ) {
-				if ( ! $product || dokan_get_prop( $product, 'id' ) != $download->product_id ) {
-					$product = wc_get_product( absint( $download->product_id ) );
-					$file_count = 0;
-				}
+            // don't show permissions to files that have since been removed
+            if ( ! $product || ! $product->exists() || ! $product->has_file( $download->download_id ) ) {
+                continue;
+            }
 
-				// don't show permissions to files that have since been removed
-				if ( ! $product || ! $product->exists() || ! $product->has_file( $download->download_id ) ) {
-					continue;
-				}
-
-				$downloads[] = $download;
-
-				$loop++;
-				$file_count++;
-			}
+            $downloads[] = $download;
         }
 
         $data['downloads'] = $downloads;
-        $orders_items = wc_get_order( $requests->get_param( 'id' ) )->get_items();
-        $orders_items_ids = [];
+        $orders_items      = wc_get_order( $requests->get_param( 'id' ) )->get_items();
+        $orders_items_ids  = [];
+
         foreach ( $orders_items as $item ) {
             $orders_items_ids[] = $item->get_product_id();
         }
+
         $orders_items_ids = implode( ',', $orders_items_ids );
 
         $products = $wpdb->get_results(
@@ -153,13 +144,8 @@ class OrderControllerV2 extends OrderController {
             )
         );
 
-        if ( $products ) {
-			foreach ( $products as $product ) {
-				$product_object = wc_get_product( $product->ID );
-				$product_name   = $product_object->get_formatted_name();
-
-				$data['products'][ $product->ID ] = esc_html( $product_name );
-			}
+        foreach ( $products as $product ) {
+            $data['products'][ $product->ID ] = esc_html( wc_get_product( $product->ID )->get_formatted_name() );
         }
 
         return rest_ensure_response( $data );
