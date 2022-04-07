@@ -39,8 +39,7 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
             <select name="customer_id" id="dokan-filter-customer" class="dokan-form-control dokan-w12"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
             </select>
-        </div>
-        <div class="dokan-form-group">
+
             <select name="order_status" class="dokan-form-control">
                 <option value="all" <?php selected( 'all', $order_status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
                 <?php
@@ -49,8 +48,7 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
                     <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $order_status ); ?>><?php esc_html_e( $status_name ); ?></option>
                 <?php endforeach; ?>
             </select>
-        </div>
-        <div class="dokan-form-group">
+
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?> ><?php esc_html_e( 'Newer Orders First', 'dokan-lite'); ?> </option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?> ><?php esc_html_e( 'Older Orders First', 'dokan-lite'); ?> </option>
@@ -58,14 +56,12 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
         </div>
         <div class="dokan-form-group">
             <input type="text" autocomplete="off" class="datepicker dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
-        </div>
-        <div class="dokan-form-group">
+
             <input type="text" autocomplete="off" class="datepicker dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
         </div>
         <div class="dokan-form-group">
             <input name="total_low" type="number" value="<?php echo esc_attr( $total_low ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Minimum Order Total', 'dokan-lite'); ?>">
-        </div>
-        <div class="dokan-form-group">
+
             <input name="total_high" type="number" value="<?php echo esc_attr( $total_high ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Maximum Order Total', 'dokan-lite' ); ?>">
         </div>
         <div class="dokan-form-group">

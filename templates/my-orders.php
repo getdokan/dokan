@@ -36,27 +36,33 @@
 
     <form method="GET" action="">
         <div id="dokan-my-orders-filter">
-            <input type="text" name="start_date" class="datepicker" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
-            <input type="text" name="end_date" class="datepicker" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
-            <select name="status" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Filter by order status', 'dokan-lite' ); ?>">
+            <div class="dokan-form-group">
+                <input type="text" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
+                <input type="text" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
+            </div>
+            <div class="dokan-form-group">
+                <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['min_price'] ) ? $_GET['min_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
+                <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['max_price'] ) ? $_GET['max_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
+            </div>
+            <div class="dokan-form-group">
+                <select name="status" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Filter by order status', 'dokan-lite' ); ?>">
                 <option value="" <?php selected( '', $status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
                 <?php foreach ( $statuses as $status_key => $status_text) : ?>
                     <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
                 <?php endforeach; ?>
-            </select>
-            <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['min_price'] ) ? $_GET['min_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
-            <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['max_price'] ) ? $_GET['max_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
-            <select name="sort_order" class="dokan-form-control">
-                <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
-                <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
-            </select>
-            <select name="vendor" class="dokan-form-control dokan-my-order-select2">
-                <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
-                <?php foreach ( $vendors as $vendor ) :
-                    $shop_info = dokan_get_store_info( $vendor->id );?>
-                    <option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor->id, $vendor_id ); ?>><?php echo esc_html( $shop_info['store_name'] ); ?></option>
-                <?php endforeach; ?>
-            </select>
+                </select>
+                <select name="sort_order" class="dokan-form-control">
+                    <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
+                    <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
+                </select>
+                <select name="vendor" class="dokan-form-control dokan-my-order-select2">
+                    <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
+                    <?php foreach ( $vendors as $vendor ) :
+                        $shop_info = dokan_get_store_info( $vendor->id );?>
+                        <option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor->id, $vendor_id ); ?>><?php echo esc_html( $shop_info['store_name'] ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
         <div class="dokan-form-group">
             <button type="submit" class="dokan-btn dokan-btn-info"><span class="fa fa-filter"></span> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>

@@ -18,6 +18,58 @@
 
         .dokan-order-filter-serach {
             padding:10px 7px;
+
+            .dokan-left {
+                width: 66%!important;
+
+                .dokan-form-group {
+                    display: flex;
+                    flex-wrap: wrap;
+
+                    button {
+                        margin-right: 5px;
+                    }
+
+                    select,
+                    .select2 {
+                        width: 30% !important;
+                        margin-right: 5px;
+                    }
+
+                    input {
+                        width: 45%;
+                        margin-right: 7.5px;
+                        height: 35px;
+                    }
+
+                    @media screen and ( max-width: 576px ) {
+                        select,
+                        .select2,
+                        input {
+                            width: 100% !important;
+                            margin-right: 0;
+
+                            &:not(:last-child){
+                                margin-bottom: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .dokan-right {
+                width: 33%!important;
+            };
+
+            @media screen and ( max-width: 768px ) {
+                .dokan-left {
+                    width: 100%!important;
+                }
+
+                .dokan-right {
+                    width: 100%!important;
+                }
+            }
         }
 
         td.thumb img {

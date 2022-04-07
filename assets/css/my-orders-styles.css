@@ -1,18 +1,40 @@
-#dokan-my-orders-filter {
+#dokan-my-orders-filter .dokan-form-group {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 }
 
 #dokan-my-orders-filter input,
-#dokan-my-orders-filter select {
-    max-width: 200px;
-    margin-right: 10px;
-    margin-bottom: 10px;
+#dokan-my-orders-filter select,
+#dokan-my-orders-filter .select2-container {
     height: 33px;
 }
 
-#dokan-my-orders-filter + div.dokan-form-group .dokan-btn {
-    margin-top: 10px;
+#dokan-my-orders-filter input {
+    width: 45%;
+}
+
+#dokan-my-orders-filter input:not(:last-child) {
     margin-right: 10px;
+}
+
+#dokan-my-orders-filter select,
+#dokan-my-orders-filter .select2 {
+    width: 30% !important;
+    margin-right: 5px;
+}
+
+@media screen and ( max-width: 576px ) {
+    #dokan-my-orders-filter input,
+    #dokan-my-orders-filter select,
+    #dokan-my-orders-filter .select2 {
+        width: 100% !important;
+        margin-right: 0!important;
+    }
+
+    #dokan-my-orders-filter input:not(:last-child),
+    #dokan-my-orders-filter select:not(:last-child),
+    #dokan-my-orders-filter .dokan-my-order-select2:not(:last-child) {
+        margin-bottom: 5px;
+    }
 }
