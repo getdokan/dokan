@@ -136,7 +136,7 @@ class OrderControllerV2 extends OrderController {
         }
 
         $orders_items_ids = implode( ',', $orders_items_ids );
-
+        // @codingStandardsIgnoreStart
         $products = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT $wpdb->posts.* FROM $wpdb->posts
@@ -151,6 +151,7 @@ class OrderControllerV2 extends OrderController {
                         ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC", $user_id
             )
         );
+        // @codingStandardsIgnoreEnd
 
         foreach ( $products as $product ) {
             $data['products'][ $product->ID ] = esc_html( wc_get_product( $product->ID )->get_formatted_name() );
@@ -171,7 +172,6 @@ class OrderControllerV2 extends OrderController {
     public function grant_order_downloads( $requests ) {
         $order_id     = intval( $requests->get_param( 'id' ) );
         $product_ids  = array_filter( array_map( 'absint', (array) wp_unslash( $requests->get_param( 'ids' ) ) ) );
-        $loop         = 0;
         $file_counter = 0;
         $order        = dokan()->order->get( $order_id );
         $data         = [];
@@ -180,27 +180,18 @@ class OrderControllerV2 extends OrderController {
             $product = dokan()->product->get( $product_id );
             $files   = $product->get_downloads();
 
-            if ( ! $order->get_billing_email() ) {
-                wp_die();
-            }
+            foreach ( $files as $download_id => $file ) {
+                $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
 
-            if ( $files ) {
-                foreach ( $files as $download_id => $file ) {
-                    $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
-
-                    if ( $inserted_id ) {
-                        $download = new \WC_Customer_Download( $inserted_id );
-                        $loop ++;
-                        $file_counter ++;
-
-                        if ( $file->get_name() ) {
-                            $file_count = $file->get_name();
-                        } else {
-                            /* translators: numeric number of files */
-                            $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
-                        }
-                        $data[ $inserted_id ] = $file_count;
+                if ( $inserted_id ) {
+                    $file_counter ++;
+                    if ( $file->get_name() ) {
+                        $file_count = $file->get_name();
+                    } else {
+                        /* translators: numeric number of files */
+                        $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
                     }
+                    $data[ $inserted_id ] = $file_count;
                 }
             }
         }
@@ -223,8 +214,12 @@ class OrderControllerV2 extends OrderController {
         $order_id      = $requests->get_param( 'id' );
         $permission_id = $requests->get_param( 'permission_id' );
 
-        $data_store = WC_Data_Store::load( 'customer-download' );
-        $data_store->delete_by_id( $permission_id );
+        try {
+            $data_store = WC_Data_Store::load( 'customer-download' );
+            $data_store->delete_by_id( $permission_id );
+        } catch ( \Exception $e ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', $e->getMessage(), [ 'status' => 500 ] );
+        }
 
         do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id, $permission_id );
         return rest_ensure_response( array( 'success' => true ) );
