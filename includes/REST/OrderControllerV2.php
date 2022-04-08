@@ -7,9 +7,9 @@ use WP_Error;
 use WP_REST_Server;
 
 /**
-* Dokan Order Controller Class
+* Dokan Order ControllerV2 Class
 *
-* @since 2.8.0
+* @since DOKAN_SINCE
 *
 * @package dokan
 */
