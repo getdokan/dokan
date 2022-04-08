@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use DateInterval;
+use DatePeriod;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -71,6 +73,13 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'description' => __( 'To Date', 'dokan-lite' ),
                             'required'    => true,
                             'default'     => dokan_current_datetime()->format( 'c' ),
+                        ],
+                        'group_by'   => [
+                            'type'        => 'string',
+                            'description' => __( 'Group By', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => 'day',
+                            'enum'        => [ 'day', 'week', 'month', 'year' ],
                         ],
                     ],
                     'permission_callback' => 'is_user_logged_in',
@@ -153,37 +162,103 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_sales_reports( $request ) {
-        return rest_ensure_response(
-            dokan_get_order_report_data(
-                array(
-                    'data' => array(
-                        '_order_total' => array(
-                            'type'     => 'meta',
-                            'function' => 'SUM',
-                            'name'     => 'total_sales',
-                        ),
-                        'ID' => array(
-                            'type'     => 'post_data',
-                            'function' => 'COUNT',
-                            'name'     => 'total_orders',
-                            'distinct' => true,
-                        ),
-                        'post_date' => array(
-                            'type'     => 'post_data',
-                            'function' => '',
-                            'name'     => 'post_date',
-                        ),
+        $from           = $request->get_param( 'from' );
+        $to             = $request->get_param( 'to' );
+        $group_by       = $request->get_param( 'group_by' );
+        $from_date      = dokan_current_datetime()->modify( $from );
+        $to_date        = dokan_current_datetime()->modify( $to );
+        $interval       = DateInterval::createFromDateString( '1 ' . $group_by );
+        $to_date        = $to_date->add( $interval );
+        $group_by_array = [];
+        $date_time_format = 'Y-m-d';
+
+        switch ( $group_by ) {
+            case 'week':
+                $group_by_array = [
+                    'YEAR(post_date)',
+					'MONTH(post_date)',
+					'WEEK(post_date)',
+                ];
+                $date_time_format = 'W, Y';
+                break;
+            case 'month':
+                $group_by_array = [
+                    'YEAR(post_date)',
+                    'MONTH(post_date)',
+                ];
+                $date_time_format = 'F, Y';
+                break;
+            case 'year':
+                $group_by_array = [
+                    'YEAR(post_date)',
+                ];
+                $date_time_format = 'Y';
+                break;
+            case 'day':
+            default:
+                $group_by_array = [
+                    'YEAR(post_date)',
+                    'MONTH(post_date)',
+                    'DAY(post_date)',
+                ];
+                $date_time_format = 'F j, Y';
+                break;
+        }
+
+        $order_report_data = dokan_get_order_report_data(
+            array(
+                'data' => array(
+                    '_order_total' => array(
+                        'type'     => 'meta',
+                        'function' => 'SUM',
+                        'name'     => 'total_sales',
                     ),
-                    'group_by'     => 'YEAR(post_date), MONTH(post_date), DAY(post_date)',
-                    'order_by'     => 'post_date ASC',
-                    'query_type'   => 'get_results',
-                    'filter_range' => true,
-                    'debug' => false,
+                    'ID' => array(
+                        'type'     => 'post_data',
+                        'function' => 'COUNT',
+                        'name'     => 'total_orders',
+                        'distinct' => true,
+                    ),
+                    'post_date' => array(
+                        'type'     => 'post_data',
+                        'function' => '',
+                        'name'     => 'post_date',
+                    ),
                 ),
-                dokan_current_datetime()->modify( $request->get_param( 'from' ) )->format( 'Y-m-d' ),
-                dokan_current_datetime()->modify( $request->get_param( 'to' ) )->format( 'Y-m-d' )
-            )
+                'group_by'     => implode( ', ', $group_by_array ),
+                'order_by'     => 'post_date ASC',
+                'query_type'   => 'get_results',
+                'filter_range' => true,
+                'debug'        => false,
+            ),
+            $from_date->format( 'Y-m-d' ),
+            $to_date->format( 'Y-m-d' )
         );
+
+        array_walk(
+            $order_report_data, function( &$item ) use ( $date_time_format ) {
+				$item->post_date = dokan_current_datetime()->modify( $item->post_date )->format( $date_time_format );
+			}
+        );
+
+        $date_range = new DatePeriod( $from_date, $interval, $to_date );
+
+        foreach ( $date_range as $date ) {
+            $post_date = $date->format( $date_time_format );
+            $key = array_search( $post_date, array_column( $order_report_data, 'post_date' ), true );
+
+            if ( false === $key ) {
+                $data[] = array(
+                    'post_date'    => $post_date,
+                    'total_sales'  => 0,
+                    'total_orders' => 0,
+                );
+            } else {
+                $data[] = $order_report_data[ $key ];
+            }
+        }
+
+        return rest_ensure_response( $data );
     }
 
     /**

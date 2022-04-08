@@ -219,7 +219,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 		$query_hash = md5( $query_type . $query );
 
 		if ( $debug ) {
-			error_log( '<pre>%s</pre>', print_r( $query, true ) );
+			error_log( sprintf( '<pre>%s</pre>', print_r( $query, true ) ) );
 		}
 
         $cache_group = "report_data_seller_{$current_user}";
