@@ -36,8 +36,8 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     <?php endforeach; ?>
                     </ul>
                     <?php if ( empty( $unused_methods ) ) : ?>
-                        <div>
-                            <?php esc_html_e( 'All payment methods are used.', 'dokan-lite' ); ?>
+                        <div class="no-content">
+                            <?php esc_html_e( 'There is no Payment method to add', 'dokan-lite' ); ?>
                         </div>
                     <?php endif; ?>
                 </div>
