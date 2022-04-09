@@ -62,6 +62,11 @@ class Hooks {
             return;
         }
 
+        // if order has suborder, return
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            return;
+        }
+
         $manager = new Manager();
 
         // check if reverse withdrawal is already inserted for this order

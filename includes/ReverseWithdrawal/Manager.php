@@ -107,6 +107,12 @@ class Manager {
         }
 
         // check if vendor id filter is applied
+        if ( ! $this->is_empty( $args['trn_id'] ) ) {
+            $trn_id = implode( "','", array_map( 'absint', (array) $args['trn_id'] ) );
+            $where .= " AND trn.trn_id IN ('$trn_id')";
+        }
+
+        // check if vendor id filter is applied
         if ( ! $this->is_empty( $args['vendor_id'] ) ) {
             $vendor_id = implode( "','", array_map( 'absint', (array) $args['vendor_id'] ) );
             $where .= " AND trn.vendor_id IN ('$vendor_id')";
@@ -181,7 +187,7 @@ class Manager {
         }
 
         // pagination param
-        if ( ! empty( $args['per_page'] ) && -1 !== intval( $args['per_page'] ) ) {
+        if ( ! empty( $args['per_page'] ) && -1 !== intval( $args['per_page'] ) && ! in_array( $args['return'], [ 'count', 'balance_count', 'vendor_transaction_count' ], true ) ) {
             $limit  = absint( $args['per_page'] );
             $page   = absint( $args['page'] );
             $page   = $page > 0 ? $page : 1;
