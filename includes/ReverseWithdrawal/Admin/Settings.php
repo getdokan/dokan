@@ -87,7 +87,7 @@ class Settings {
                 'desc'    => __( 'Check the payment gateways you want to enable reverse withdrawal for.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => Helper::get_reverse_withrawal_payment_gateways(),
-                'default' => [],
+                'default' => [ 'cod' => 'cod' ],
             ],
             'billing_type' => [
                 'name'    => 'billing_type',
@@ -99,7 +99,7 @@ class Settings {
             ],
             'reverse_balance_limit' => [
                 'name'    => 'reverse_balance_limit',
-                'label'   => __( 'Reverse Balance Limit', 'dokan-lite' ),
+                'label'   => sprintf( '%1$s (%2$s)', __( 'Reverse Balance Limit', 'dokan-lite' ), get_woocommerce_currency() ),
                 'desc'    => __( 'Set reverse withdrawal threshold limit.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 0,
@@ -129,7 +129,7 @@ class Settings {
             'due_period' => [
                 'name'    => 'due_period',
                 'label'   => __( 'Due Period', 'dokan-lite' ),
-                'desc'    => __( 'Maximum Payment Due period before selected action is taken. Enter 0 to take actions immediately.', 'dokan-lite' ),
+                'desc'    => __( 'Maximum Payment Due period in day(s) before selected action is taken. Enter 0 to take actions immediately.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => '0',
                 'max'     => '28',
@@ -142,6 +142,7 @@ class Settings {
                 'desc'    => __( 'Select one or more actions to perform after due period is over and vendors was unable to pay.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => Helper::get_failed_payment_actions(),
+                'default' => [ 'status_inactive' => 'status_inactive' ],
             ],
             'display_notice' => [
                 'name'    => 'display_notice',
