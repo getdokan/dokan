@@ -296,53 +296,7 @@ class Manager {
     }
 
     /**
-     * This method will get all the transactions for a vendor
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $args
-     *
-     * @return array|WP_Error
-     */
-    public function get_transactions( array $args = [] ) {
-        $query_params = [
-            'vendor_id' => isset( $args['vendor_id'] ) ? $args['vendor_id'] : 0,
-            'trn_date'  => isset( $args['trn_date'] ) ? $args['trn_date'] : '',
-            'trn_type'  => isset( $args['trn_type'] ) ? $args['trn_type'] : '',
-            'per_page'  => isset( $args['per_page'] ) ? $args['per_page'] : 10,
-            'page'      => isset( $args['page'] ) ? $args['page'] : 1,
-            'orderby'   => isset( $args['orderby'] ) ? $args['orderby'] : 'id',
-            'order'     => isset( $args['order'] ) ? $args['order'] : 'DESC',
-        ];
-
-        $items = [];
-        $manager = new static();
-        // get item count
-        $query_params['return'] = 'transaction_count';
-        $count = $manager->all( $query_params );
-        // check for errors
-        if ( is_wp_error( $count ) ) {
-            return $count;
-        }
-
-        // only run query if count value is greater than 0
-        if ( $count['total_transactions'] > 0 ) {
-            $query_params['return'] = 'transactions';
-            $items = $manager->all( $query_params );
-            // check for errors
-            if ( is_wp_error( $items ) ) {
-                return $items;
-            }
-        }
-
-        return [
-            'count' => $count,
-            'items' => $items,
-        ];
-    }
-
-    /**
-     * This method will get all the transactions for a vendor
+     * This method will get all/selected vendors balance
      *
      * @since DOKAN_SINCE
      *
@@ -585,7 +539,7 @@ class Manager {
      *
      * @return bool
      */
-    public function is_reverse_withdrawal_inserted( $order_id ) {
+    public function is_reverse_withdrawal_added( $order_id ) {
         $args = [
             'trn_id'   => $order_id,
             'trn_type' => 'order_commission',
@@ -594,6 +548,48 @@ class Manager {
 
         $count = $this->all( $args );
         return $count > 0;
+    }
+
+    /**
+     * This method will return all refunded amount for a specific order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return float
+     */
+    public function get_total_refunded_amount_by_order( $order_id ) {
+        global $wpdb;
+        //@codingStandardsIgnoreStart
+        return (float) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT SUM(credit) FROM {$this->get_table()} WHERE trn_id = %d AND trn_type = %s",
+                $order_id, 'order_refund'
+            )
+        );
+        //@codingStandardsIgnoreEnd
+    }
+
+    /**
+     * This method will return commission amount for a specific order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return float
+     */
+    public function get_commission_amount_by_order( $order_id ) {
+        global $wpdb;
+        //@codingStandardsIgnoreStart
+        return (float) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT debit FROM {$this->get_table()} WHERE trn_id = %d AND trn_type = %s",
+                $order_id, 'order_commission'
+            )
+        );
+        //@codingStandardsIgnoreEnd
     }
 
     /**

@@ -210,7 +210,7 @@ class Helper {
             'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
             'vendor_payment'            => esc_html__( 'Payment', 'dokan-lite' ),
             'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
-            'refund'                    => esc_html__( 'Refund', 'dokan-lite' ),
+            'order_refund'              => esc_html__( 'Refund', 'dokan-lite' ),
             'product_advertisement'     => esc_html__( 'Product Advertisement', 'dokan-lite' ),
             'manual_order_commission'   => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
         ];

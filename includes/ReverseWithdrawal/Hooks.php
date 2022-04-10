@@ -70,7 +70,7 @@ class Hooks {
         $manager = new Manager();
 
         // check if reverse withdrawal is already inserted for this order
-        if ( $manager->is_reverse_withdrawal_inserted( $order_id ) ) {
+        if ( $manager->is_reverse_withdrawal_added( $order_id ) ) {
             return;
         }
 

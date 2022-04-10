@@ -319,6 +319,7 @@ export default {
                 order: self.getSortOrder,
                 vendor_id: self.ID,
                 trn_date: self.filterTransactionDate,
+                per_page: -1,
             };
 
             dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data)
