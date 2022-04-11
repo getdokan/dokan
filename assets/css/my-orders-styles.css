@@ -33,3 +33,16 @@
         margin-bottom: 5px;
     }
 }
+
+div.entry-content > table > thead > tr > th.order-number {
+    cursor: pointer;
+}
+
+div.entry-content > table > thead > tr > th.order-number > span::after{
+    content: '^';
+    display: inline-block;
+}
+
+div.entry-content > table > thead > tr > th.order-number > span.rotated::after{
+    transform: rotateZ(180deg);
+}

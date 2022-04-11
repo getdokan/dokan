@@ -30,6 +30,7 @@
 
     <form method="GET" action="">
         <div id="dokan-my-orders-filter">
+            <input type="hidden" value="<?php echo esc_attr( $sort_order ); ?>" name="sort_order">
             <div class="dokan-form-group">
                 <select name="vendor" class="dokan-form-control dokan-my-order-select2">
                     <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
@@ -59,7 +60,7 @@
 
             <thead>
                 <tr>
-                    <th class="order-number"><span class="nobr"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
+                    <th class="order-number"><span class="nobr <?php echo $sort_order === 'ASC' ? esc_attr( 'rotated' ) : ''; ?>"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
                     <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
                     <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
                     <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
@@ -203,6 +204,37 @@
 
             $('a#dokan-my-order-filter-reset').click(function (){
                 window.location = window.location.href.split('?')[0];
+            });
+
+            $("div.entry-content > table").on('click', 'thead th.order-number', function (ev) {
+                const head = $(this);
+                const content = head.find('span');
+                const table = head.closest('table');
+                const sortOrder = $('#dokan-my-orders-filter input[name="sort_order"]');
+                const url = new URL(window.location.href);
+
+                if (sortOrder.val() === 'DESC') {
+                    sortOrder.val('ASC');
+                } else {
+                    sortOrder.val('DESC');
+                }
+
+                url.searchParams.set('sort_order', sortOrder.val());
+
+                $("div.entry-content > table").block({
+                    message: null,
+                    overlayCSS: {
+                        background: '#fff',
+                        opacity: 0.6
+                    }
+                });
+
+                $('div.entry-content > div > ul.pagination').load(url.toString() + ' div.entry-content > div > ul.pagination');
+                $('div.entry-content > table > tbody').load(url.toString() + ' div.entry-content > table > tbody > tr', null, function () {
+                    content.toggleClass('rotated');
+                    window.history.pushState(null, null, url.toString());
+                    $("div.entry-content > table").unblock();
+                });
             });
         });
     })(jQuery);
