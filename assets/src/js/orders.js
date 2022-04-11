@@ -613,3 +613,26 @@ jQuery(function($) {
 
 })(jQuery);
 
+;(function ($){
+  $(document).on( "ready", function(){
+    let localeData = {
+      format : dokan_get_daterange_picker_format(),
+      ...dokan_daterange_i18n.locale
+    };
+
+    $('#order_filter_date_range').daterangepicker({
+        autoUpdateInput : false,
+        locale          : localeData,
+      },
+      function(start, end, label) {
+        // Set the value for date range field to show frontend.
+        $( '#order_filter_date_range' ).on( 'apply.daterangepicker', function( ev, picker ) {
+          $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+        });
+
+        // Set the value for date range fields to send backend
+        $("#order_filter_start_date").val(start.format('YYYY-MM-DD'));
+        $("#order_filter_end_date").val(end.format('YYYY-MM-DD'));
+      });
+  });
+})(jQuery);

@@ -44,9 +44,9 @@ $sort_order        = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unsl
             </select>
         </div>
         <div class="dokan-form-group">
-            <input type="text" autocomplete="off" class="datepicker dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
-
-            <input type="text" autocomplete="off" class="datepicker dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
+            <input autocomplete="off" id="order_filter_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start && $filter_date_end ? dokan_format_date( $filter_date_start ) . ' - ' . dokan_format_date( $filter_date_end ) : null ); ?>">
+            <input id="order_filter_start_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
+            <input id="order_filter_end_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
         </div>
         <div class="dokan-form-group">
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>

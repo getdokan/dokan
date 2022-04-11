@@ -687,6 +687,10 @@ class Assets {
             ) {
                 wp_enqueue_style( 'dokan-timepicker' );
             }
+
+            if ( isset( $wp->query_vars['orders'] ) ) {
+                wp_enqueue_style( 'dokan-date-range-picker' );
+            }
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
@@ -731,6 +735,10 @@ class Assets {
 
             wp_enqueue_script( 'wc-password-strength-meter' );
             wp_enqueue_script( 'dokan-script' );
+
+            if ( isset( $wp->query_vars['orders'] ) ) {
+                wp_enqueue_script( 'dokan-date-range-picker' );
+            }
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
