@@ -1,39 +1,6 @@
 <?php
 
 /**
- * @Get orders that match an order status
- *
- * @since DOKAN_SINCE
- *
- * @param $customer_orders
- * @param $status
- *
- * @return array
- */
-function dokan_filter_orders_by_status( $customer_orders, $status ) {
-    $customer_orders_temp = [];
-
-    foreach ( $customer_orders as $customer_order ) {
-        $order = wc_get_order( $customer_order );
-
-        if ( ! ( $order instanceof WC_Order ) ) {
-            continue;
-        }
-
-        if ( empty( $status ) ) {
-            $customer_orders_temp[] = $order;
-            continue;
-        }
-
-        if ( 'wc-' . $order->get_status() === $status ) {
-            $customer_orders_temp[] = $order;
-        }
-    }
-
-    return $customer_orders_temp;
-}
-
-/**
  * Get WC orders after filtration
  *
  * @since DOKAN_SINCE

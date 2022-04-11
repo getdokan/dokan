@@ -14,7 +14,6 @@
     $end_date   = empty( $_GET['end_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['end_date'] ) );
     $max_price  = empty( $_GET['max_price'] ) ? '' : floatval( wp_unslash( $_GET['max_price'] ) );
     $min_price  = empty( $_GET['min_price'] ) ? '' : floatval( wp_unslash( $_GET['min_price'] ) );
-    $status     = empty( $_GET['status'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['status'] ) );
     $sort_order = empty( $_GET['sort_order'] ) ? 'DESC' : sanitize_text_field( wp_unslash( $_GET['sort_order'] ) );
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
@@ -30,8 +29,7 @@
         'page'       => $page,
     ] );
 
-    $customer_orders = dokan_filter_orders_by_status( $customer_orders, $status );
-    $vendors         = dokan()->vendor->get_vendors( [ 'number' => -1 ] );
+    $vendors = dokan()->vendor->get_vendors( [ 'number' => -1 ] );
     ?>
 
     <form method="GET" action="">
@@ -45,12 +43,6 @@
                 <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['max_price'] ) ? $_GET['max_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             </div>
             <div class="dokan-form-group">
-                <select name="status" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Filter by order status', 'dokan-lite' ); ?>">
-                <option value="" <?php selected( '', $status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
-                <?php foreach ( $statuses as $status_key => $status_text) : ?>
-                    <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $status ); ?>><?php echo esc_html( $status_text ); ?></option>
-                <?php endforeach; ?>
-                </select>
                 <select name="sort_order" class="dokan-form-control">
                     <option value="DESC" <?php selected( 'DESC', $sort_order ); ?>> <?php esc_html_e( 'Newer Orders First', 'dokan-lite' ); ?></option>
                     <option value="ASC" <?php selected( 'ASC', $sort_order ); ?>><?php esc_html_e( 'Older Orders First', 'dokan-lite' ); ?></option>
@@ -90,7 +82,8 @@
             </thead>
 
             <tbody><?php
-                foreach ( $customer_orders as $order ) {
+                foreach ( $customer_orders as $customer_order ) {
+                    $order      = wc_get_order( $customer_order );
                     $item_count = $order->get_item_count();
 
                     ?><tr class="order">
