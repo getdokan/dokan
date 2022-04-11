@@ -11,7 +11,7 @@
 }
 
 #dokan-my-orders-filter input {
-    width: 45%;
+    width: calc( 50% - 10px );
 }
 
 #dokan-my-orders-filter input:not(:last-child) {
@@ -20,7 +20,7 @@
 
 #dokan-my-orders-filter select,
 #dokan-my-orders-filter .select2 {
-    width: 45% !important;
+    width: calc( 50% - 5px ) !important;
     margin-right: 5px;
 }
 
