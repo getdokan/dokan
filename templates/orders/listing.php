@@ -10,9 +10,6 @@ $order_date_start    = isset( $_GET['order_date_start'] ) ? sanitize_key( $_GET[
 $order_date_end      = isset( $_GET['order_date_end'] ) ? sanitize_key( $_GET['order_date_end'] ) : null;
 $allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
 $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
-$sort_order          = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unslash( $_GET['sort_order'] ) ) : 'DESC';
-$total_high          = ! empty( $_GET['total_high'] ) ? absint( wp_unslash( $_GET['total_high'] ) ) : '';
-$total_low           = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['total_low'] ) ) : '';
 
 $order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
     '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
@@ -28,9 +25,6 @@ $user_orders  = dokan()->vendor->get( $seller_id )->get_orders( [
     'limit'       => $limit,
     'start_date'  => $order_date_start,
     'end_date'    => $order_date_end,
-    'sort_order'  => $sort_order,
-    'total_high'  => $total_high,
-    'total_low'   => $total_low,
 ] );
 
 if ( $user_orders ) {
@@ -208,8 +202,6 @@ if ( $user_orders ) {
         'customer_id' => $customer_id,
         'start_date'  => $order_date_start,
         'end_date'    => $order_date_end,
-        'total_high'  => $total_high,
-        'total_low'   => $total_low,
     ] );
 
     // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );
