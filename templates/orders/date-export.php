@@ -29,18 +29,12 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
 $filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( $_GET['order_date_start'] ) : '';
 $filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( $_GET['order_date_end'] ) : '';
 $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
-$sort_order        = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unslash( $_GET['sort_order'] ) ) : 'DESC';
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
         <div class="dokan-form-group">
             <select name="customer_id" id="dokan-filter-customer" class="dokan-form-control dokan-w12"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
-            </select>
-
-            <select name="sort_order" class="dokan-form-control">
-                <option value="DESC" <?php selected( 'DESC', $sort_order ); ?> ><?php esc_html_e( 'Newer Orders First', 'dokan-lite'); ?> </option>
-                <option value="ASC" <?php selected( 'ASC', $sort_order ); ?> ><?php esc_html_e( 'Older Orders First', 'dokan-lite'); ?> </option>
             </select>
         </div>
         <div class="dokan-form-group">
@@ -65,7 +59,6 @@ $sort_order        = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unsl
                 <input type="hidden" name="order_date_start" value="<?php echo esc_attr( $filter_date_start ); ?>">
                 <input type="hidden" name="order_date_end" value="<?php echo esc_attr( $filter_date_end ); ?>">
                 <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
-                <input type="hidden" name="order" value="<?php echo esc_attr( $sort_order ); ?>">
             </div>
         </form>
     <?php endif; ?>

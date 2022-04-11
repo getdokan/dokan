@@ -30,14 +30,9 @@ class Manager {
             'date'        => null,
             'start_date'  => null,
             'end_date'    => null,
-            'sort_order'  => 'DESC',
         ];
 
         $args = wp_parse_args( $args, $default );
-
-        if ( ! empty( $args['sort_order'] ) && ! in_array( $args['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
-            $args['sort_order'] = 'DESC';
-        }
 
         $offset      = ( $args['paged'] - 1 ) * $args['limit'];
         $cache_group = "seller_order_data_{$args['seller_id']}";
@@ -68,7 +63,7 @@ class Manager {
                     {$end_date_query}
                     {$status_where}
                 GROUP BY do.order_id
-                ORDER BY p.post_date {$args['sort_order']}
+                ORDER BY p.post_date DESC
                 LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
                 )
             );
