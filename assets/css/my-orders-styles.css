@@ -20,7 +20,7 @@
 
 #dokan-my-orders-filter select,
 #dokan-my-orders-filter .select2 {
-    width: 30% !important;
+    width: 45% !important;
     margin-right: 5px;
 }
 
@@ -30,11 +30,6 @@
     #dokan-my-orders-filter .select2 {
         width: 100% !important;
         margin-right: 0!important;
-    }
-
-    #dokan-my-orders-filter input:not(:last-child),
-    #dokan-my-orders-filter select:not(:last-child),
-    #dokan-my-orders-filter .dokan-my-order-select2:not(:last-child) {
         margin-bottom: 5px;
     }
 }
