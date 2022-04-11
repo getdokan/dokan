@@ -40,15 +40,6 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
             </select>
 
-            <select name="order_status" class="dokan-form-control">
-                <option value="all" <?php selected( 'all', $order_status ); ?>><?php esc_html_e( 'All Order Statuses', 'dokan-lite' ); ?></option>
-                <?php
-                foreach ( $orders_statuses as $status_key => $status_name ) :
-                    ?>
-                    <option value="<?php echo esc_attr( $status_key ); ?>" <?php selected( $status_key, $order_status ); ?>><?php esc_html_e( $status_name ); ?></option>
-                <?php endforeach; ?>
-            </select>
-
             <select name="sort_order" class="dokan-form-control">
                 <option value="DESC" <?php selected( 'DESC', $sort_order ); ?> ><?php esc_html_e( 'Newer Orders First', 'dokan-lite'); ?> </option>
                 <option value="ASC" <?php selected( 'ASC', $sort_order ); ?> ><?php esc_html_e( 'Older Orders First', 'dokan-lite'); ?> </option>
