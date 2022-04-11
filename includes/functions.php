@@ -2469,7 +2469,7 @@ function dokan_get_social_profile_fields() {
  *
  * @return void
  */
-function dokan_seller_address_fields( $verified = false, $required = false ) {
+function dokan_seller_address_fields( $verified = true, $required = false ) {
     $disabled = $verified ? 'disabled' : '';
 
     /**
