@@ -226,11 +226,9 @@ function dokan_get_seller_orders_number( $args = [] ) {
             $customer_where = $wpdb->prepare( " AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
         }
 
-        $date_where   = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
+        $date_where       = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
         $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
         $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
-        $total_low_query  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
-        $total_high_query = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
         $count = (int) $wpdb->get_var(
             $wpdb->prepare(
@@ -244,8 +242,6 @@ function dokan_get_seller_orders_number( $args = [] ) {
                     {$status_where}
                     {$start_date_query}
                     {$end_date_query}
-                    {$total_high_query}
-                    {$total_low_query}
                     {$customer_where}
                     {$date_where}", $seller_id
             )
