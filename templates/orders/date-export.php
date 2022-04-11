@@ -30,8 +30,6 @@ $filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( $_GET['o
 $filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( $_GET['order_date_end'] ) : '';
 $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
 $sort_order        = isset( $_GET['sort_order'] ) ? sanitize_text_field( wp_unslash( $_GET['sort_order'] ) ) : 'DESC';
-$total_high        = ! empty( $_GET['total_high'] ) ? absint( wp_unslash( $_GET['total_high'] ) ) : '';
-$total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['total_low'] ) ) : '';
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
@@ -51,11 +49,6 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
             <input type="text" autocomplete="off" class="datepicker dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
         </div>
         <div class="dokan-form-group">
-            <input name="total_low" type="number" value="<?php echo esc_attr( $total_low ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Minimum Order Total', 'dokan-lite'); ?>">
-
-            <input name="total_high" type="number" value="<?php echo esc_attr( $total_high ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Maximum Order Total', 'dokan-lite' ); ?>">
-        </div>
-        <div class="dokan-form-group">
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
             <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
         </div>
@@ -73,8 +66,6 @@ $total_low         = ! empty( $_GET['total_low'] ) ? absint( wp_unslash( $_GET['
                 <input type="hidden" name="order_date_end" value="<?php echo esc_attr( $filter_date_end ); ?>">
                 <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
                 <input type="hidden" name="order" value="<?php echo esc_attr( $sort_order ); ?>">
-                <input type="hidden" name="total_high" value="<?php echo esc_attr( $total_high); ?>" >
-                <input type="hidden" name="total_low" value="<?php echo esc_attr( $total_low); ?>" >
             </div>
         </form>
     <?php endif; ?>

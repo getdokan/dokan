@@ -57,8 +57,6 @@ function dokan_get_seller_orders( $seller_id, $args ) {
         'limit'       => 10,
         'offset'      => 0,
         'customer_id' => null,
-        'total_high'  => '',
-        'total_low'   => '',
         'start_date'  => '',
         'end_date'    => '',
     ];
@@ -90,8 +88,6 @@ function dokan_get_seller_orders( $seller_id, $args ) {
         $date_query       = ( $args['order_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['order_date'] ) : '';
         $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
         $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
-        $total_low_query  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
-        $total_high_query = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
@@ -105,8 +101,6 @@ function dokan_get_seller_orders( $seller_id, $args ) {
                 p.post_status != 'trash'
                 {$date_query}
                 {$status_where}
-                {$total_low_query}
-                {$total_high_query}
                 {$start_date_query}
                 {$end_date_query}
                 {$exclude}

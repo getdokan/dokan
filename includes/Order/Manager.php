@@ -31,8 +31,6 @@ class Manager {
             'start_date'  => null,
             'end_date'    => null,
             'sort_order'  => 'DESC',
-            'total_high'  => '',
-            'total_low'   => '',
         ];
 
         $args = wp_parse_args( $args, $default );
@@ -54,8 +52,6 @@ class Manager {
             $date_query       = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
             $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
             $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
-            $total_low_query  = empty( $args['total_low'] ) ? '' : $wpdb->prepare( ' AND do.order_total >= %d', $args['total_low'] );
-            $total_high_query = empty( $args['total_high'] ) ? '' : $wpdb->prepare( ' AND do.order_total <= %d', $args['total_high'] );
 
             $orders = $wpdb->get_results(
                 $wpdb->prepare(
@@ -71,8 +67,6 @@ class Manager {
                     {$start_date_query}
                     {$end_date_query}
                     {$status_where}
-                    {$total_low_query}
-                    {$total_high_query}
                 GROUP BY do.order_id
                 ORDER BY p.post_date {$args['sort_order']}
                 LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']

@@ -127,8 +127,6 @@ class Orders {
             $order_date_start = ( isset( $_POST['order_date_start'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_start'] ) ) : null;
             $order_date_end   = ( isset( $_POST['order_date_end'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_end'] ) ) : null;
             $order_status     = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
-            $total_high       = ! empty( $_POST['total_high'] ) ? absint( wp_unslash( $_POST['total_high'] ) ) : '';
-            $total_low        = ! empty( $_POST['total_low'] ) ? absint( wp_unslash( $_POST['total_low'] ) ) : '';
 
             $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), [
                 'status'      => $order_status,
@@ -136,8 +134,6 @@ class Orders {
                 'limit'       => 10000000,
                 'offset'      => 0,
                 'customer_id' => $customer_id,
-                'total_high'  => $total_high,
-                'total_low'   => $total_low,
                 'start_date'  => $order_date_start,
                 'end_date'    => $order_date_end,
             ] );
