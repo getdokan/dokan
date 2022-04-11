@@ -411,6 +411,14 @@ function dokan_get_dashboard_nav() {
             'pos'        => 70,
             'permission' => 'dokan_view_withdraw_menu',
         ),
+
+        'reverse-withdrawal' => array(
+            'title'      => __( 'Reverse Withdrawal', 'dokan-lite' ),
+            'icon'       => '<i class="fas fa-dollar-sign"></i>',
+            'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
+            'pos'        => 71,
+            'permission' => 'dokan_view_withdraw_menu',
+        ),
     );
 
     $settings = array(

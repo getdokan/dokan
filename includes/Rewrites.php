@@ -84,6 +84,7 @@ class Rewrites {
                 'orders',
                 'withdraw',
                 'withdraw-requests',
+                'reverse-withdrawal',
                 'settings',
                 'edit-account',
             ]
