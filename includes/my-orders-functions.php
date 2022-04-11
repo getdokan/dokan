@@ -15,8 +15,6 @@ function dokan_get_filtered_orders( $args_parameter ) {
     $defaults = [
         'start_date' => '',
         'end_date'   => '',
-        'min_price'  => '',
-        'max_price'  => '',
         'vendor_id'  => '',
         'sort_order' => '',
         'limit'      => '',
@@ -24,9 +22,6 @@ function dokan_get_filtered_orders( $args_parameter ) {
     ];
 
     $args_parameter = wp_parse_args( $args_parameter, $defaults );
-
-    $min_price = empty( $args_parameter['min_price'] ) ? 0 : $args_parameter['min_price'];
-    $max_price = empty( $args_parameter['max_price'] ) ? 1000000000 : $args_parameter['max_price'];
 
     $vendor_id = $args_parameter['vendor_id'];
 
@@ -61,12 +56,6 @@ function dokan_get_filtered_orders( $args_parameter ) {
                 'key'     => '_customer_user',
                 'value'   => get_current_user_id(),
                 'compare' => '=',
-            ],
-            [
-                'key'     => '_order_total',
-                'value'   => [ $min_price, $max_price ],
-                'type'    => 'DECIMAL(10, 2)',
-                'compare' => 'BETWEEN',
             ],
         ],
         'date_query'  => [ $date_query ],

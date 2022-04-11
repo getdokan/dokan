@@ -12,8 +12,6 @@
     $limit      = 10;
     $start_date = empty( $_GET['start_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['start_date'] ) );
     $end_date   = empty( $_GET['end_date'] ) ? null : sanitize_text_field( wp_unslash( $_GET['end_date'] ) );
-    $max_price  = empty( $_GET['max_price'] ) ? '' : floatval( wp_unslash( $_GET['max_price'] ) );
-    $min_price  = empty( $_GET['min_price'] ) ? '' : floatval( wp_unslash( $_GET['min_price'] ) );
     $sort_order = empty( $_GET['sort_order'] ) ? 'DESC' : sanitize_text_field( wp_unslash( $_GET['sort_order'] ) );
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
@@ -21,8 +19,6 @@
     $customer_orders = dokan_get_filtered_orders( [
         'start_date' => $start_date,
         'end_date'   => $end_date,
-        'min_price'  => $min_price,
-        'max_price'  => $max_price,
         'vendor_id'  => $vendor_id,
         'sort_order' => $sort_order,
         'limit'      => $limit,
@@ -37,10 +33,6 @@
             <div class="dokan-form-group">
                 <input type="text" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
                 <input type="text" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
-            </div>
-            <div class="dokan-form-group">
-                <input type="number" step="0.01" name="min_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['min_price'] ) ? $_GET['min_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Min Order Total', 'dokan-lite'); ?>">
-                <input type="number" step="0.01" name="max_price" class="dokan-form-control" value="<?php echo esc_attr( isset( $_GET['max_price'] ) ? $_GET['max_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Order Total', 'dokan-lite'); ?>">
             </div>
             <div class="dokan-form-group">
                 <select name="sort_order" class="dokan-form-control">
@@ -159,8 +151,6 @@
         $customer_orders_count = count( dokan_get_filtered_orders( [
             'start_date' => $start_date,
             'end_date'   => $end_date,
-            'min_price'  => $min_price,
-            'max_price'  => $max_price,
             'vendor_id'  => $vendor_id,
         ] ) );
 
