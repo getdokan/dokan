@@ -31,8 +31,9 @@
     <form method="GET" action="">
         <div id="dokan-my-orders-filter">
             <div class="dokan-form-group">
-                <input type="text" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>">
-                <input type="text" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>" autocomplete="off" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>">
+                <input autocomplete="off" id="my_order_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $start_date && $end_date ? dokan_format_date( $start_date ) . ' - ' . dokan_format_date( $end_date ) : null ); ?>">
+                <input type="hidden" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>">
+                <input type="hidden" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>">
             </div>
             <div class="dokan-form-group">
                 <select name="sort_order" class="dokan-form-control">
@@ -186,8 +187,23 @@
         $(document).ready(function(){
             $('.dokan-my-order-select2').select2();
 
-            $('.datepicker').datepicker({
-                dateFormat: 'yy-m-d'
+            let localeData = {
+                format : dokan_get_daterange_picker_format(),
+                ...dokan_daterange_i18n.locale
+            };
+
+            $('#my_order_date_range').daterangepicker({
+                autoUpdateInput : false,
+                locale          : localeData,
+            }, function(start, end, label) {
+                // Set the value for date range field to show frontend.
+                $( '#my_order_date_range' ).on( 'apply.daterangepicker', function( ev, picker ) {
+                    $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+                });
+
+                // Set the value for date range fields to send backend
+                $('input[name="start_date"]').val(start.format('YYYY-MM-DD'));
+                $('input[name="end_date"]').val(end.format('YYYY-MM-DD'));
             });
 
             $('a#dokan-my-order-filter-reset').click(function (){
