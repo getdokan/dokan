@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 WC requires at least: 3.0
-WC tested up to: 6.3.1
+WC tested up to: 6.4.0
 Requires PHP: 5.6
-Stable tag: 3.4.1
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -313,6 +313,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.4.2 ( Apr 13, 2022 ) =
+
+- **fix:** Fixed switching product type from variable to external doesn't remove product stock management options
+- **fix:** Fixed store order by latest inconsistency
 
 = v3.4.1 ( Mar 18, 2022 ) =
 
