@@ -147,7 +147,7 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
         /**
          * Add vendor address verification templates.
          * 
-         * @since DOKAN_SINCE
+         * @since 3.4.2
          * 
          * @param array $address               Vendor address info.
          * @param array $seller_address_fields Vendor required addresses.

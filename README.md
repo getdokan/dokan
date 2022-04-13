@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 4.4  
-**Tested up to:** 5.9.2  
+**Tested up to:** 5.9.3  
 **WC requires at least:** 3.0  
-**WC tested up to:** 6.3.1  
+**WC tested up to:** 6.4.0  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.4.1  
+**Stable tag:** 3.4.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -17,7 +17,7 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 
 ### DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS ###
 
-👉 Official Free Demo Link: [Official Demo](https://dokan.wedevsdemos.com/)
+👉 Official Free Demo Link: [Official Demo](https://wedevs.com/dokan/demo/)
 👉 Learn More About Dokan(PRO): [All The Features of Dokan](https://wedevs.com/dokan/features/)
 👉 Check out [Dokan Mobile App](https://wedevs.com/dokan/dokan-mobile-app)
 
@@ -43,9 +43,9 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 ### DOKAN WAS FEATURED IN CAPTERRA WITH  MULTIPLE POSITIVE REVIEWS ###
 
-🎉 “Great Platform to start and grow your business with. Provides the ability to grow our startup to a global level with a low financial burden”
+🎉 “Great Platform to start and grow your business with. Provides the ability to grow our startup to a global level with a low financial burden.”
 
-🎉 “Dokan is a product with a huge potential. And has evolved during the last years. We have implemented a stable marketplace environment serving hundreds of satisfied customers using this tool”
+🎉 “Dokan is a product with a huge potential. And has evolved during the last years. We have implemented a stable marketplace environment serving hundreds of satisfied customers using this tool.”
 
 🎉 “Best Multivendor Wordpress Plugin Available.”
 
@@ -60,7 +60,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👨 [“This is why we are proud to be using Dokan as with it we are able to give you all the tools to help manage and run a successful business.”](https://wedevs.com/143965/michael-delaneys-story-successful-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) – Michael Delaney, Owner of [ShoppeRegion](https://shopperregion.com/)
 
-👨 [“Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors”](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) - Bernd Payer, Founder [JOSHi](https://www.joshi.at)
+👨 [“Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors.”](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) - Bernd Payer, Founder [JOSHi](https://www.joshi.at)
 
 💁 [“Without Dokan I would not have a Marketplace option and I would be forced to hold stock. Dokan offers me the opportunity to have a drop shipping Marketing and offer Businesses that chance to scale and sell alongside like-minded businesses. It also offers me the opportunity to sell stock without packing and posting on my own.”](https://wedevs.com/blog/271341/dokan-success-story-of-leisa-papa-little-kids-business) - Leisa Papa, [Founder of Little Kids Business](https://www.littlekidsbusiness.com.au/)
 
@@ -100,7 +100,7 @@ You can choose which marketplace to create with freedom of imagination. Customiz
 
 ### EARN IN MULTIPLE WAYS ###
 
-Profit doesn’t only rely on sales. Multiple ways allow earning through vendor commissions or product based commissions. You can also create subscription packs that allow you to charge for product uploads, product limits and time.
+Profit doesn’t only rely on sales. Dokan allows multiple ways of earning – through vendor commissions or product-based commissions. You can also create subscription packs that allow you to charge for product uploads, product limits and time.
 
 ➡️ [Learn More](https://wedevs.com/dokan/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⬅️
 
@@ -134,7 +134,7 @@ From Shipping plugins, Payment plugins to Wallets, you have the complete peace o
 ### More Freedom To Customize The Store ###
 
 Now never get bored with the old fashioned appearance of your store. Have full control over your store customization with the
-Module for Dokan. Simply get the customizer to be able to customize the global outlook of the vendor store pages. Drag & drop more than 12 incredible store widgets made exclusively for Dokan and place it anywhere you want it. Save as many customized templates as you want to use it whenever you need it
+Elementor module for Dokan. Simply get the customizer to be able to customize the global outlook of the vendor store pages. Drag & drop more than 12 incredible store widgets made exclusively for Dokan and place it anywhere you want it. Save as many customized templates as you want to use it whenever you need it.
 
 ➡️ [Learn More](https://wedevs.com/dokan/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⬅️
 
@@ -147,12 +147,12 @@ Module for Dokan. Simply get the customizer to be able to customize the global o
 * Every seller gets their own store with a unique URL and branding.
 * Beautiful storefront styles with contact details and widgets
 * [Store location map on the store front](https://wedevs.com/dokan/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org). (Pro)
-* [Single product can be offered by different merchants](https://wedevs.com/dokan/modules/single-product-multivendor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Single product can be offered by different merchants](https://wedevs.com/dokan/modules/single-product-multivendor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org). (Pro)
 
 **Frontend Dashboard For Each Seller**
 
 * Vendors can manage products, control orders from customers, and make withdrawals right from the site frontend.
-* WordPress backend and administrative settings can only be accessed by admin
+* WordPress backend and administrative settings can only be accessed by admin.
 
 **Earn From Each Sale**
 
@@ -175,7 +175,7 @@ Module for Dokan. Simply get the customizer to be able to customize the global o
 * Let Vendors easily switch from another marketplace to your using [Export/Import feature](https://wedevs.com/dokan/modules/export-import/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org).(Pro)
 * Vendors will be able to create [coupons advanced management features](https://wedevs.com/dokan/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org). (Pro)
 
-**The vendors has the capability to manage and offer discounts for each product**
+**The vendors have the capability to manage and offer discounts for each product**
 
 * Set expiry and restriction for coupons.
 * The customer can leave [reviews for a product/vendor](https://wedevs.com/dokan/modules/dokan-vendor-review/) they are satisfied with. A review cannot be modified by the vendor. (Pro)
@@ -184,14 +184,14 @@ Module for Dokan. Simply get the customizer to be able to customize the global o
 
 **💁‍ ADMINS CONTROL EVERY ASPECT OF THE MARKETPLACE (PRO)**
 
-* Admin can view and manage vendor list
-* Admin can view him as well as every vendor’s earning reports individually
+* Admin can view and manage vendor list.
+* Admin can view him as well as every vendor’s earning reports individually.
 * Dokan Pro has update and support option for the customer.
 
 * Advanced settings for the admin -
      * General Settings
         * Admin can enable/disable the map on the store page.
-        * Admin can enable/disable the contact form on the store page
+        * Admin can enable/disable the contact form on the store page.
         * Admin can also enable/disable the store sidebar from theme.
 
      * Selling Options
@@ -313,6 +313,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.4.2 ( Apr 13, 2022 ) ###
+
+- **fix:** Fixed switching product type from variable to external doesn't remove product stock management options
+- **fix:** Fixed store order by latest inconsistency
 
 ### v3.4.1 ( Mar 18, 2022 ) ###
 
