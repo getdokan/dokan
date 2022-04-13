@@ -57,8 +57,10 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <?php
                         echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
 
-                        if ( isset( $profile_info['payment'][ $method_key ] ) && ! empty( $profile_info['payment'][ $method_key ]['email'] ) ) {
-                            echo " (" . $profile_info['payment'][ $method_key ]['email'] . ")";
+                        if ( isset( $profile_info['payment'][ $method_key ] ) && ! empty( dokan_withdraw_get_method_additional_info( $method_key ) ) ) {
+                            ?>
+                            <small><?php echo dokan_withdraw_get_method_additional_info( $method_key ); ?></small>
+                            <?php
                         }
                         ?>
                     </span>
