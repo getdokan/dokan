@@ -1,5 +1,5 @@
 <template>
-    <div class="dokan-reverse-withdrawal-single">
+    <div class="dokan-reverse-withdrawal-transactions">
         <h1 class="wp-heading-inline">
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
             <a class="button" :href="this.reverseWithdrawalUrl()">&larr; {{ __( 'Go Back', 'dokan' ) }}</a>
@@ -13,7 +13,7 @@
             <CardFunFact :count="counts.total_transactions" icon="fas fa-info"  :title="__( 'Total Transactions', 'dokan-lite' )" />
         </div>
 
-        <div id="dokan_reverse_withdrawal_single_list_table">
+        <div id="dokan_reverse_withdrawal_transactions_list_table">
             <list-table
                 :columns="columns"
                 :loading="loading"
@@ -117,7 +117,7 @@ const swal = Swal.mixin({
 
 export default {
 
-    name: 'ReverseWithdrawalSingle',
+    name: 'ReverseWithdrawalTransactions',
 
     components: {
         Currency,
@@ -303,7 +303,7 @@ export default {
 
         goToPage(page) {
             this.$router.push({
-                name: 'ReverseWithdrawalSingle',
+                name: 'ReverseWithdrawalTransactions',
                 query: {
                     page: page,
                 }
@@ -363,7 +363,7 @@ export default {
 
         doSort( column, order ) {
             this.$router.push({
-                name: 'ReverseWithdrawalSingle',
+                name: 'ReverseWithdrawalTransactions',
                 query: {
                     page: 1,
                     orderby: column,
@@ -425,7 +425,7 @@ export default {
     margin-right: 10px !important;
 }
 
-.dokan-reverse-withdrawal-single {
+.dokan-reverse-withdrawal-transactions {
     .dokan-reverse-withdrawal-fact-card {
         margin: 0px -10px;
         display: flex;
@@ -433,7 +433,7 @@ export default {
     }
 }
 
-#dokan_reverse_withdrawal_single_list_table {
+#dokan_reverse_withdrawal_transactions_list_table {
     input.multiselect__input {
         border: none;
     }

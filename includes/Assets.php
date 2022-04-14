@@ -153,8 +153,8 @@ class Assets {
             ],
             [
                 'path'      => '/reverse-withdrawal/store/:store_id',
-                'name'      => 'ReverseWithdrawalSingle',
-                'component' => 'ReverseWithdrawalSingle',
+                'name'      => 'ReverseWithdrawalTransactions',
+                'component' => 'ReverseWithdrawalTransactions',
             ],
             [
                 'path'      => '/premium',
