@@ -1,5 +1,5 @@
 <template>
-    <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
+    <div :class="[id, fieldData.common_class, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <div class="dokan-settings-sub-section">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
@@ -217,7 +217,7 @@
         </template>
 
         <template v-if="'disbursement_method' === fieldData.type && ! hideWithdrawOption()">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! showDisbursementType( 'schedule' ) ? 'field_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -242,7 +242,7 @@
         </template>
 
         <template v-if="'disbursement_type' === fieldData.type && showDisbursementType( 'schedule' ) && ! hideWithdrawOption()">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -267,7 +267,7 @@
         </template>
 
         <template v-if="'schedule_quarterly' === fieldData.type && showSettingsField( 'quarterly' )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -349,7 +349,7 @@
         </template>
 
         <template v-if="'schedule_monthly' === fieldData.type && showSettingsField(  'monthly' )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -393,7 +393,7 @@
         </template>
 
         <template v-if="'schedule_biweekly' === fieldData.type && showSettingsField( 'biweekly')">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -446,7 +446,7 @@
         </template>
 
         <template v-if="'schedule_weekly' === fieldData.type && showSettingsField( 'weekly' )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
@@ -601,8 +601,15 @@
                     <div class="field radio_fields">
                         <template v-for="( optionVal, optionKey ) in fieldData.options">
                             <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
-                                 <span class="dashicons dashicons-yes"></span>
-                                <input type="radio" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" class="radio" :name="optionKey" v-model="fieldValue[fieldData.name]" :value="optionKey">
+                                <span class="dashicons dashicons-yes"></span>
+                                <input
+                                    type="radio"
+                                    class="radio"
+                                    :name="optionKey"
+                                    :value="optionKey"
+                                    v-model="fieldValue[fieldData.name]"
+                                    :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'"
+                                >
                                 {{ optionVal }}
                             </label>
                         </template>
@@ -669,7 +676,10 @@
                      <template v-for="( image, name ) in fieldData.options">
                         <label class="radio-image" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
                             <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="name">
-                            <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> {{ __( 'Active', 'dokan-lite' ) }}</span>
+                            <span class="current-option-indicator">
+                                <span class="dashicons dashicons-yes"></span> 
+                                {{ __( 'Active', 'dokan-lite' ) }}
+                            </span>
                             <img :src="image">
                             <span class="active-option">
                                 <button class="button button-primary button-hero" type="button" @click.prevent="fieldValue[fieldData.name] = name">
@@ -851,6 +861,30 @@
                                         :name="sectionId + '[' + fieldData.app_secret.name + ']'"
                                         v-model="fieldValue[fieldData.app_secret.name]"
                                     ></textarea>
+                                </div>
+                            </div>
+                            <div class="social_text" v-if="fieldData.app_code_type" v-bind:class="[fieldData.app_code_type.content_class ? fieldData.app_code_type.content_class : '']">
+                                <div class="html_contents">
+                                    <h3 class="field_heading" scope="row">
+                                        {{ fieldData.app_code_type.label }}
+                                    </h3>
+                                    <p class="field_desc" v-html="fieldData.app_code_type.desc"></p>
+                                </div>
+                                <div class="fields radio_fields">
+                                    <template v-for="( optionVal, optionKey ) in fieldData.app_code_type.options">
+                                        <label :class="isSocialOptionChecked( optionKey, 'app_code_type' ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                                            <span class="dashicons dashicons-yes"></span>
+                                            <input
+                                                :type="fieldData.app_code_type.type"
+                                                :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'"
+                                                class="radio"
+                                                :name="optionKey"
+                                                v-model="fieldValue[fieldData.app_code_type.name]"
+                                                :value="optionKey"
+                                            >
+                                            {{ optionVal }}
+                                        </label>
+                                    </template>
                                 </div>
                             </div>
                         </template>
@@ -1185,6 +1219,10 @@
             return ! this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
         },
 
+        isSocialChecked() {
+            return ! this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
+        },
+
         isCurrentOptionChecked( optionKey ) {
             if (
                 'multicheck' === this.fieldData.type ||
@@ -1201,12 +1239,19 @@
             return false;
         },
 
+        isSocialOptionChecked( optionKey, fieldName ) {
+            if ( 'radio' === this.fieldData[fieldName].type ) {
+                return this.fieldValue[this.fieldData[fieldName].name] === optionKey ? true : false;
+            }
+
+            return false;
+        },
+
         expandSocial() {
             this.expandSocials = ! this.expandSocials;
         },
 
         getSocialValue( optionValue ) {
-            console.log( this.fieldValue );
             this.fieldValue[optionValue.name] = this.fieldValue[optionValue.name] ? this.fieldValue[optionValue.name] : '';
         },
 
@@ -1374,6 +1419,26 @@
         font-size: 11px;
         font-style: italic;
     }
+    //.dokan-settings-fields {
+        
+            // .withdraw_disbursement:first-child {
+                //&:first-child {
+                    // margin-top: 30px;
+                    // border-top: 1px solid #b0a7a7;
+                    // border-top-left-radius: 5px;
+                    // border-top-right-radius: 5px;
+                //}
+
+                //&:last-child {
+                    //margin-bottom: 35px;
+                    //border-bottom-left-radius: 5px;
+                    //border-bottom-right-radius: 5px;
+                //}
+            // }
+        //}
+
+        
+    //}
     ul.dokan-settings-repeatable-list {
         display: flex;
         padding: 20px 0 0 20px;
@@ -1729,6 +1794,11 @@
                         text-align: left;
                         align-self: center;
 
+                        img {
+                            width: 48px;
+                            height: 48px;
+                        }
+
                         span {
                             font-size: 50px;
                         }
@@ -1813,6 +1883,18 @@
                         flex: 2;
                         align-self: center;
                         text-align: right;
+
+                        .checked {
+                            color: rgba(3, 58, 163, 0.85);
+                            border: 1px solid rgba(3, 58, 163, 0.81);
+                            background: rgba(182, 206, 254, 0.38);
+                            box-sizing: border-box;
+                            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+                            .dashicons-yes {
+                                display: inline-block;
+                            }
+                        }
                     }
                 }
 
@@ -1909,7 +1991,7 @@
             }
 
             .field_data {
-                flex: 1.8;
+                flex: 1.6;
             }
     
             .field {
@@ -1921,7 +2003,7 @@
                     flex: 3;
         
                     .time-to {
-                        margin: 0 1.563rem 0 1.25rem !important;
+                        margin: 0 1rem;
                         align-self: baseline;
                         font-size: 18px;
                         color: #666;

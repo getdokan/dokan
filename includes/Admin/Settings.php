@@ -382,7 +382,6 @@ class Settings {
                     'desc'    => __( 'Disable welcome wizard for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'checkbox',
                     'default' => 'off',
-                    'tooltip' => __( 'If checked, vendors will not be prompted through a guided setup process but redirected straight to the vendor dashboard.', 'dokan-lite' ),
                 ],
             ]
         );
@@ -404,12 +403,12 @@ class Settings {
                     'content_class' => 'field_top_styles',
                 ],
                 'store_products_per_page' => [
-                    'name'    => 'store_products_per_page',
-                    'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
-                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
-                    'type'    => 'number',
-                    'default' => '12',
-                    'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
+                    'name'          => 'store_products_per_page',
+                    'label'         => __( 'Store Products Per Page', 'dokan-lite' ),
+                    'desc'          => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
+                    'type'          => 'number',
+                    'default'       => '12',
+                    'content_class' => ! dokan()->is_pro_exists() ? 'field_bottom_styles' : '',
                 ],
             ]
         );
@@ -454,15 +453,16 @@ class Settings {
                     'default' => 'seller',
                 ],
                 'tax_fee_recipient'      => [
-                    'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Tax Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Who will be receiving the Tax fees', 'dokan-lite' ),
-                    'type'    => 'radio',
-                    'options' => [
+                    'name'          => 'tax_fee_recipient',
+                    'label'         => __( 'Tax Fee Recipient', 'dokan-lite' ),
+                    'desc'          => __( 'Who will be receiving the Tax fees', 'dokan-lite' ),
+                    'type'          => 'radio',
+                    'options'       => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),
                         'admin'  => __( 'Admin', 'dokan-lite' ),
                     ],
-                    'default' => 'seller',
+                    'default'       => 'seller',
+                    'content_class' => ! dokan()->is_pro_exists() ? 'field_bottom_styles' : '',
                 ],
             ]
         );
@@ -491,11 +491,12 @@ class Settings {
                     'default' => 'off',
                 ],
                 'order_status_change'       => [
-                    'name'    => 'order_status_change',
-                    'label'   => __( 'Order Status Change', 'dokan-lite' ),
-                    'desc'    => __( 'Allow vendor to update order status', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'on',
+                    'name'          => 'order_status_change',
+                    'label'         => __( 'Order Status Change', 'dokan-lite' ),
+                    'desc'          => __( 'Allow vendor to update order status', 'dokan-lite' ),
+                    'type'          => 'checkbox',
+                    'default'       => 'on',
+                    'content_class' => ! dokan()->is_pro_exists() ? 'field_bottom_styles' : '',
                 ],
             ]
         );
@@ -540,11 +541,12 @@ class Settings {
                     'options' => $withdraw_order_status_options,
                 ],
                 'exclude_cod_payment' => [
-                    'name'    => 'exclude_cod_payment',
-                    'label'   => __( 'Exclude COD Payments', 'dokan-lite' ),
-                    'desc'    => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
-                    'type'    => 'checkbox',
-                    'default' => 'off',
+                    'name'          => 'exclude_cod_payment',
+                    'label'         => __( 'Exclude COD Payments', 'dokan-lite' ),
+                    'desc'          => __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
+                    'type'          => 'checkbox',
+                    'default'       => 'off',
+                    'content_class' => ! dokan()->is_pro_exists() ? 'field_bottom_styles' : '',
                 ],
             ],
             'dokan_pages'      => [
