@@ -67,7 +67,8 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/login-form-popup.js',
             '!<%= dirs.devJsSrc %>/dokan-maps-compat.js',
             '!<%= dirs.devJsSrc %>/setup-no-wc.js',
-            '!<%= dirs.devJsSrc %>/helper.js'
+            '!<%= dirs.devJsSrc %>/helper.js',
+            '!<%= dirs.devJsSrc %>/reverse-withdrawal.js'
           ],
           '<%= dirs.js %>/login-form-popup.js': [
             '<%= dirs.devJsSrc %>/login-form-popup.js'

@@ -316,19 +316,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function prepare_transaction_for_response( $item, $request, &$current_balance ) {
-        $current_balance = ( $current_balance + $item['debit'] ) - $item['credit'];
-        $data = [
-            'id'            => absint( $item['id'] ),
-            'trn_id'        => absint( $item['trn_id'] ),
-            'trn_url'       => Helper::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ) ),
-            'trn_date'      => dokan_format_date( $item['trn_date'] ),
-            'trn_type'      => Helper::get_transaction_types( $item['trn_type'] ),
-            'vendor_id'     => absint( $item['vendor_id'] ),
-            'note'          => esc_html( $item['note'] ),
-            'debit'         => $item['debit'],
-            'credit'        => $item['credit'],
-            'balance'       => $current_balance,
-        ];
+        $data = Helper::get_formated_transaction_data( $item, $current_balance );
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $item, $request ) );

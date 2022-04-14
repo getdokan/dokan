@@ -455,6 +455,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
+            'dokan-reverse-withdrawal' => [
+                'src'     => $asset_url . '/js/reverse-withdrawal.js',
+                'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
+                'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
+            ],
         ];
 
         return $scripts;

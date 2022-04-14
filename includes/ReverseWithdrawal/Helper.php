@@ -241,4 +241,31 @@ class Helper {
         return esc_url_raw( $url );
     }
 
+    /**
+     * This method will return formatted transaction data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $item
+     * @param float $current_balance
+     * @param string $context
+     *
+     * @return array
+     */
+    public static function get_formated_transaction_data( $item, &$current_balance, $context = 'admin' ) {
+        $current_balance = ( $current_balance + $item['debit'] ) - $item['credit'];
+        return [
+            'id'            => absint( $item['id'] ),
+            'trn_id'        => absint( $item['trn_id'] ),
+            'trn_url'       => self::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
+            'trn_date'      => dokan_format_date( $item['trn_date'] ),
+            'trn_type'      => self::get_transaction_types( $item['trn_type'] ),
+            'vendor_id'     => absint( $item['vendor_id'] ),
+            'note'          => esc_html( $item['note'] ),
+            'debit'         => $item['debit'],
+            'credit'        => $item['credit'],
+            'balance'       => $current_balance,
+        ];
+    }
+
 }
