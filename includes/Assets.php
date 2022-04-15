@@ -287,6 +287,10 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
             ],
+            'dokan-reverse-withdrawal' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
+            ],
         ];
 
         return $styles;

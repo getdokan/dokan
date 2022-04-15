@@ -36,7 +36,8 @@ module.exports = function(grunt) {
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],
           '<%= dirs.css %>/setup-no-wc.css': [
             '<%= dirs.devLessSrc %>/setup-no-wc.less'
-          ]
+          ],
+          '<%= dirs.css %>/reverse-withdrawal.css': ['<%= dirs.devLessSrc %>/reverse-withdrawal.less'],
         }
       }
     },

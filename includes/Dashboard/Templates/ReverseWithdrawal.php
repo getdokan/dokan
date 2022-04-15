@@ -24,8 +24,24 @@ class ReverseWithdrawal {
         add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 10, 1 );
 
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_filter_section' ], 10 );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_transactions_table' ], 10 );
+    }
+
+    /**
+     * Load payment section
+     *
+     * @since 2.8.0
+     *
+     * @return void
+     */
+    public function load_balance_section() {
+        $args = [
+            'user_id' => get_current_user_id(),
+            'status'  => 'all'
+        ];
+        dokan_get_template_part( 'reverse-withdrawal/reverse-balance', '', $args );
     }
 
     /**
@@ -88,6 +104,7 @@ class ReverseWithdrawal {
 
         // load frontend scripts
         wp_enqueue_script( 'dokan-reverse-withdrawal' );
+        wp_enqueue_style( 'dokan-reverse-withdrawal' );
         wp_enqueue_style( 'dokan-date-range-picker');
     }
 
