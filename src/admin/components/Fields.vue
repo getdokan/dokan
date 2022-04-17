@@ -893,7 +893,7 @@
             </div>
         </template>
 
-        <template v-if="'timer' === fieldData.type" >
+        <template v-if="'day_timer' === fieldData.type" >
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
