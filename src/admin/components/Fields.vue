@@ -934,7 +934,7 @@
                                             :name="sectionId + '[' + fieldData.name + '][' + fieldData.options['opening_time'] + ']'"
                                             :id="sectionId + '[' + fieldData.name + '][' + fieldData.options.opening_time + ']'"
                                             v-model="fieldValue[fieldData.name][fieldData.options['opening_time']]"
-                                            placeholder="Opens at"
+                                            :placeholder="__( 'Opens at', 'dokan-lite' )"
                                             @click="onTimerSwitch( fieldData.name, 'opening_time', $event )"
                                             @blur="onTimerBlur"
                                         >
@@ -956,7 +956,7 @@
                                             :name="sectionId + '[' + fieldData.name + '][' + fieldData.options['closing_time'] + ']'"
                                             :id="sectionId + '[' + fieldData.name + '][' + fieldData.options.closing_time + ']'"
                                             v-model="fieldValue[fieldData.name][fieldData.options['closing_time']]"
-                                            placeholder="Closed at"
+                                            :placeholder="__( 'Closed at', 'dokan-lite' )"
                                             @click="onTimerSwitch( fieldData.name, 'closing_time', $event )"
                                             @blur="onTimerBlur"
                                         >
@@ -1307,7 +1307,7 @@
                 if ( ! fieldKey ) {
                     self.fullDay = false;
                     self.fieldValue[fieldName]['opening_time'] = dokan_get_formatted_time( '12:00 am', dokan_get_i18n_time_format() );
-                    self.fieldValue[fieldName]['closing_time'] = dokan_get_formatted_time( '11:59 pm', dokan_get_i18n_time_format() );
+                    self.fieldValue[fieldName]['closing_time'] = dokan_get_formatted_time( '11:30 pm', dokan_get_i18n_time_format() );
                     root.val( '24 hours' );
                 }
             } );
@@ -1986,7 +1986,7 @@
             align-items: center;
 
             .working-status {
-                flex: 1;
+                flex: .6;
                 text-align: left;
             }
 
@@ -2071,18 +2071,15 @@
             }
         }
 
-        /* width */
         &::-webkit-scrollbar {
             width: 10px;
         }
         
-        /* Handle */
         &::-webkit-scrollbar-thumb {
             background: #8d9399;
             border-radius: 5px;
         }
         
-        /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
