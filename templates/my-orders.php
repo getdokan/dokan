@@ -91,11 +91,9 @@
                             <?php echo wp_kses_post( sprintf( _n( '%s for %s item', '%s for %s items', $item_count, 'dokan-lite' ), $order->get_formatted_order_total(), $item_count ) ); ?>
                         </td>
                         <td class="order-total">
-                            <?php
-                            foreach ( $order->get_items() as $id => $product ) {
-                                echo esc_html( sprintf( "%s x %d\n", $product->get_name(), $product->get_quantity() ) );
-                            }
-                            ?>
+                            <?php foreach ( $order->get_items() as $product ) : ?>
+                                <?php echo esc_html( sprintf( "%s x %d\n", $product->get_name(), $product->get_quantity() ) ); ?>
+                            <?php endforeach; ?>
                         </td>
 
                         <td class="order-total">
