@@ -4374,7 +4374,7 @@ function dokan_get_filtered_orders( $args_parameter ) {
     if ( ! empty( $args_parameter['end_date'] ) ) {
         $y_m_d = explode( '-', $args_parameter['end_date'] );
 
-        $date_query['before']    = [
+        $date_query['before'] = [
             'year'   => $y_m_d[0],
             'month'  => $y_m_d[1],
             'day'    => $y_m_d[2],
