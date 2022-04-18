@@ -205,12 +205,11 @@
                 window.location = window.location.href.split('?')[0];
             });
 
-            $("div.entry-content > table").on('click', 'thead th.order-number', function (ev) {
-                const head = $(this);
-                const content = head.find('span');
-                const table = head.closest('table');
+            $("div.entry-content > table").on('click', 'thead th.order-number', function () {
+                const head      = $(this);
+                const content   = head.find('span');
                 const sortOrder = $('#dokan-my-orders-filter input[name="sort_order"]');
-                const url = new URL(window.location.href);
+                const url       = new URL(window.location.href);
 
                 if (sortOrder.val() === 'DESC') {
                     sortOrder.val('ASC');
