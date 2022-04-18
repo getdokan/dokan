@@ -157,7 +157,7 @@
             </div>
         </template>
 
-        <template v-if="'checkbox' == fieldData.type">
+        <template v-if="'switcher' == fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
@@ -1419,26 +1419,6 @@
         font-size: 11px;
         font-style: italic;
     }
-    //.dokan-settings-fields {
-        
-            // .withdraw_disbursement:first-child {
-                //&:first-child {
-                    // margin-top: 30px;
-                    // border-top: 1px solid #b0a7a7;
-                    // border-top-left-radius: 5px;
-                    // border-top-right-radius: 5px;
-                //}
-
-                //&:last-child {
-                    //margin-bottom: 35px;
-                    //border-bottom-left-radius: 5px;
-                    //border-bottom-right-radius: 5px;
-                //}
-            // }
-        //}
-
-        
-    //}
     ul.dokan-settings-repeatable-list {
         display: flex;
         padding: 20px 0 0 20px;
@@ -1723,6 +1703,10 @@
             align-self: center;
             text-align: right;
 
+            .switch {
+                display: inline-block;
+            }
+
             input[type='radio'],
             input[type='checkbox'] {
                 display: none;
@@ -1981,7 +1965,7 @@
     .dokan-schedule-week-day-container {
         padding-top: 15px;
     }
-    .dokan-settings-field-type-timer {
+    .dokan-settings-field-type-day_timer {
         fieldset {
             align-items: center;
 
