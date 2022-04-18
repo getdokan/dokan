@@ -153,8 +153,7 @@
 
         $base_url  = get_permalink( $my_order_page_id = dokan_get_option( 'my_orders', 'dokan_pages' ) );
 
-        if ( $num_of_pages > 1 ) {
-            echo '<div class="pagination-wrap">';
+        if ( $num_of_pages > 1 ) :
             $page_links = paginate_links( [
                 'current'   => $page,
                 'total'     => $num_of_pages,
@@ -163,13 +162,15 @@
                 'add_args'  => false,
                 'type'      => 'array',
             ] );
-
-            echo "<ul class='pagination'>\n\t<li>";
-            echo join( "</li>\n\t<li>", $page_links );
-            echo "</li>\n</ul>\n";
-            echo '</div>';
-        }
-        ?>
+            ?>
+            <div class="pagination-wrap">
+                <ul class='pagination'>
+                    <li>
+                        <?php echo join( "</li>\n\t<li>", $page_links ); ?>
+                    </li>
+                </ul>
+            </div>
+        <?php endif; ?>
     <?php else: ?>
 
         <p class="dokan-info"><?php esc_html_e( 'No orders found!', 'dokan-lite' ); ?></p>
