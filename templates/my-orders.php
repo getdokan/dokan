@@ -187,18 +187,24 @@
                 ...dokan_daterange_i18n.locale
             };
 
-            $('#my_order_date_range').daterangepicker({
-                autoUpdateInput : false,
-                locale          : localeData,
-            }, function(start, end, label) {
-                // Set the value for date range field to show frontend.
-                $( '#my_order_date_range' ).on( 'apply.daterangepicker', function( ev, picker ) {
-                    $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
-                });
+            const my_order_date_range = $('#my_order_date_range');
+            my_order_date_range.daterangepicker({
+                autoUpdateInput: false,
+                locale         : localeData,
+            });
 
-                // Set the value for date range fields to send backend
-                $('input[name="start_date"]').val(start.format('YYYY-MM-DD'));
-                $('input[name="end_date"]').val(end.format('YYYY-MM-DD'));
+            my_order_date_range.on( 'apply.daterangepicker', function( ev, picker ) {
+                $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+
+                $('input[name="start_date"]').val(picker.startDate.format('YYYY-MM-DD'));
+                $('input[name="end_date"]').val(picker.endDate.format('YYYY-MM-DD'));
+            });
+
+            my_order_date_range.on( 'cancel.daterangepicker', function() {
+                $( this ).val('');
+
+                $('input[name="start_date"]').val('');
+                $('input[name="end_date"]').val('');
             });
 
             $('a#dokan-my-order-filter-reset').click(function (){

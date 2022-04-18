@@ -32,7 +32,7 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                dokan_sweetalert( response.data, { 
+                dokan_sweetalert( response.data, {
                     icon: 'success',
                 } );
             }
@@ -100,7 +100,7 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-                dokan_sweetalert( dokan.i18n_download_access , { 
+                dokan_sweetalert( dokan.i18n_download_access , {
                     icon: 'warning',
                 } );
 
@@ -116,8 +116,8 @@ jQuery(function($) {
 
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        const answer = await dokan_sweetalert( dokan.i18n_download_permission, { 
-            action : 'confirm', 
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, {
+            action : 'confirm',
             icon   : 'warning',
         } );
 
@@ -340,9 +340,9 @@ jQuery(function($) {
 
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
-                
-                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
-                    action : 'confirm', 
+
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, {
+                    action : 'confirm',
                     icon   : 'warning',
                 } );
 
@@ -395,7 +395,7 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? dokan_sweetalert( response.data.message, { 
+                        response.data.message ? dokan_sweetalert( response.data.message, {
                             icon: 'success',
                         } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
@@ -413,7 +413,7 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-                        
+
                         dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
@@ -614,25 +614,31 @@ jQuery(function($) {
 })(jQuery);
 
 ;(function ($){
-  $(document).on( "ready", function(){
-    let localeData = {
-      format : dokan_get_daterange_picker_format(),
-      ...dokan_daterange_i18n.locale
-    };
+    $(document).on( "ready", function(){
+        let localeData = {
+            format : dokan_get_daterange_picker_format(),
+            ...dokan_daterange_i18n.locale
+        };
 
-    $('#order_filter_date_range').daterangepicker({
-        autoUpdateInput : false,
-        locale          : localeData,
-      },
-      function(start, end, label) {
-        // Set the value for date range field to show frontend.
-        $( '#order_filter_date_range' ).on( 'apply.daterangepicker', function( ev, picker ) {
-          $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+        const order_filter_date_range = $('#order_filter_date_range');
+        order_filter_date_range.daterangepicker({
+            autoUpdateInput : false,
+            locale          : localeData,
         });
 
-        // Set the value for date range fields to send backend
-        $("#order_filter_start_date").val(start.format('YYYY-MM-DD'));
-        $("#order_filter_end_date").val(end.format('YYYY-MM-DD'));
-      });
-  });
+        order_filter_date_range.on( 'apply.daterangepicker', function( ev, picker ) {
+            $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+
+            // Set the value for date range fields to send backend
+            $("#order_filter_start_date").val(picker.startDate.format('YYYY-MM-DD'));
+            $("#order_filter_end_date").val(picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        order_filter_date_range.on( 'cancel.daterangepicker', function() {
+            $( this ).val('');
+
+            $("#order_filter_start_date").val('');
+            $("#order_filter_end_date").val('');
+        });
+    });
 })(jQuery);
