@@ -1,5 +1,5 @@
 <template>
-    <div :class="[id, fieldData.common_class, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
+    <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <div class="dokan-settings-sub-section">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
@@ -1015,12 +1015,12 @@
                 yourStringTimeValue: '',
                 disbursementSettings: {
                     quarterly: {
-                        second: '',
-                        third: '',
-                        fourth: '',
+                        second: 'june',
+                        third: 'september',
+                        fourth: 'december',
                     },
                     biweekly: {
-                        second: '',
+                        second: '3',
                     },
                     visible: [],
                 },
@@ -1029,6 +1029,18 @@
         mounted() {
             this.setDisbursementQuarterlySettings();
             this.setDisbursementBiweeklySettings();
+
+            $( document ).ready( function() {
+                let timeControl = $( 'body' ).find( 'input.dokan-clock-control' );
+
+                timeControl.each( function() {
+                    $( this ).timepicker({
+                        step          : 30,
+                        timeFormat    : dokan_helper.i18n_time_format,
+                        scrollDefault : 'now',
+                    });
+                });
+            });
         },
 
     computed: {
@@ -1136,21 +1148,6 @@
         }
     },
 
-    mounted() {
-        $( document ).ready( function() {
-            let timeControl = $( 'body' ).find( 'input.dokan-clock-control' );
-
-            timeControl.each( function() {
-                $( this ).timepicker( {
-                    step          : 30,
-                    timeFormat    : dokan_helper.i18n_time_format,
-                    scrollDefault : 'now',
-                });
-            });
-            
-        });
-    },
-
     methods: {
         containCommonFields( type ) {
             return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
@@ -1256,21 +1253,21 @@
         },
 
         checkFullDay() {
-            if ( ! this.fieldData?.current_day?.opening_time || ! this.fieldData?.current_day?.closing_time ) {
+            if ( ! this.fieldValue[this.fieldData.name].opening_time || ! this.fieldValue[this.fieldData.name].closing_time ) {
                 return false;
             }
 
             let opening_time = dokan_get_formatted_time( '12:00 am', 'h:i' ),
                 closing_time = dokan_get_formatted_time( '11:59 pm', 'h:i' );
 
-            let setted_opening_time = dokan_get_formatted_time( this.fieldData.current_day.opening_time, 'h:i' ),
-                setted_closing_time = dokan_get_formatted_time( this.fieldData.current_day.closing_time, 'h:i' );
+            let setted_opening_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name].opening_time, 'h:i' ),
+                setted_closing_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name].closing_time, 'h:i' );
 
             return setted_opening_time === opening_time && setted_closing_time === closing_time;
         },
 
         checkWorkingStatus() {
-            return this.fieldData?.current_day?.delivery_status && this.fieldData?.day && this.fieldData.current_day.delivery_status === this.fieldData.day;
+            return this.fieldValue[this.fieldData.name].delivery_status && this.fieldData?.day && this.fieldValue[this.fieldData.name].delivery_status === this.fieldData.day;
         },
 
         addFullDay() {
@@ -1418,6 +1415,17 @@
         color: #999;
         font-size: 11px;
         font-style: italic;
+    }
+    .dokan-settings-fields {
+        div {
+            &:last-child{
+                .disbursment_bottom_styles {
+                    margin-bottom: 35px;
+                    border-bottom-left-radius: 5px;
+                    border-bottom-right-radius: 5px;
+                }
+            }
+        }
     }
     ul.dokan-settings-repeatable-list {
         display: flex;
