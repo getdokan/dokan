@@ -26,9 +26,9 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
     );
 }
 
-$filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( $_GET['order_date_start'] ) : '';
-$filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( $_GET['order_date_end'] ) : '';
-$order_status      = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
+$filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( wp_unslash( $_GET['order_date_start'] ) ) : '';
+$filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( wp_unslash( $_GET['order_date_end'] ) ) : '';
+$order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( $_GET['order_status'] ) ) : 'all';
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
