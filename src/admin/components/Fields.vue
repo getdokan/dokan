@@ -1229,7 +1229,7 @@
                 'disbursement_method' === this.fieldData.type ||
                 'disbursement_type' === this.fieldData.type
             ) {
-                return ! this.fieldValue[this.fieldData.name][optionKey] ? false : true;
+                return this.fieldValue[this.fieldData.name][optionKey] === optionKey ? true : false;
             }
 
             if ( 'radio' === this.fieldData.type ) {
