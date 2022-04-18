@@ -545,10 +545,13 @@ class Assets {
                 wp_enqueue_script( 'dokan-tooltip' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
-                wp_enqueue_script( 'dokan-vendor-registration' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
             }
+        }
+
+        if ( is_account_page() && ! is_user_logged_in() ) {
+            wp_enqueue_script( 'dokan-vendor-registration' );
         }
 
         // Scripts for contact form widget google recaptcha
