@@ -3627,7 +3627,7 @@ function dokan_commission_types() {
 /**
  * Returns true if passed commission type is a new commission type.
  *
- * @since 3.3.6
+ * @since DOKAN_LITE_SINCE
  *
  * @param string $commission_type
  *
@@ -3640,7 +3640,7 @@ function dokan_is_new_commission_type( $commission_type ) {
 /**
  * Dokan new and old default commission types
  *
- * @since 3.3.6
+ * @since DOKAN_LITE_SINCE
  *
  * @return array
  */
