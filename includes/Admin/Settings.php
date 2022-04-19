@@ -300,7 +300,7 @@ class Settings {
                 'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/page.svg',
                 'description'          => __( 'Store Page Settings Manage', 'dokan-lite' ),
                 'document_link'        => '#',
-                'settings_title'       => __( 'Page Settings', 'dokan-lite' ),
+                'settings_title'       => __( 'Site and Store Page Settings', 'dokan-lite' ),
                 'settings_description' => __( 'You can configure your general site settings and store options for vendor from this settings menu. Dokan offers most flexibility when it comes to setting up your store with your custom choices.', 'dokan-lite' ),
             ],
             [
@@ -351,7 +351,7 @@ class Settings {
                 'site_options'           => [
                     'name'        => 'site_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Site Options', 'dokan-lite' ),
+                    'label'       => __( 'Site Settings', 'dokan-lite' ),
                     'description' => __( 'Configure your site settings and control access to your site.', 'dokan-lite' ),
                 ],
                 'admin_access'           => [
@@ -469,9 +469,9 @@ class Settings {
 
         $selling_option_vendor_capability = apply_filters(
             'dokan_settings_selling_option_vendor_capability', [
-                'vendor_capability'         => [
-                    'name'        => 'vendor_capability',
-                    'label'       => __( 'Vendor Capability', 'dokan-lite' ),
+                'selling_capabilities'      => [
+                    'name'        => 'selling_capabilities',
+                    'label'       => __( 'Selling Capabilities', 'dokan-lite' ),
                     'type'        => 'sub_section',
                     'description' => __( 'Configure your site settings and control access to your site.', 'dokan-lite' ),
                 ],
@@ -591,7 +591,7 @@ class Settings {
                 'appearance_options'         => [
                     'name'        => 'appearance_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Appearance', 'dokan-lite' ),
+                    'label'       => __( 'Store Appearance', 'dokan-lite' ),
                     'description' => __( 'Configure your site appearances.', 'dokan-lite' ),
                 ],
                 'store_map'                  => [
