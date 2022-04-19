@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.4.2',
+        'released' => '2022-04-13',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed switching product type from variable to external doesn\'t remove product stock management options',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed store order by latest inconsistency',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.4.1',
         'released' => '2022-03-18',
         'changes'  => [

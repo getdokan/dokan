@@ -401,12 +401,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "43c4c2ccea64f1532371ab1f72b1b71d35924c72"
+                "reference": "79966df2570451119bb6f44952044964f1c8c91b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/43c4c2ccea64f1532371ab1f72b1b71d35924c72",
-                "reference": "43c4c2ccea64f1532371ab1f72b1b71d35924c72",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/79966df2570451119bb6f44952044964f1c8c91b",
+                "reference": "79966df2570451119bb6f44952044964f1c8c91b",
                 "shasum": ""
             },
             "require": {
@@ -448,7 +448,7 @@
                 "issues": "https://github.com/PHPCompatibility/PHPCompatibilityWP/issues",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibilityWP"
             },
-            "time": "2022-03-05T16:47:56+00:00"
+            "time": "2022-03-19T08:19:46+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1663,12 +1663,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "1900302971fb7ebd7a15ff4b69e825fa59ed0ae4"
+                "reference": "2596a15760a1e652d64707d5ca21af0a31e5d2d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/1900302971fb7ebd7a15ff4b69e825fa59ed0ae4",
-                "reference": "1900302971fb7ebd7a15ff4b69e825fa59ed0ae4",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/2596a15760a1e652d64707d5ca21af0a31e5d2d8",
+                "reference": "2596a15760a1e652d64707d5ca21af0a31e5d2d8",
                 "shasum": ""
             },
             "require": {
@@ -1712,7 +1712,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-03-18T03:28:23+00:00"
+            "time": "2022-03-31T22:21:18+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
