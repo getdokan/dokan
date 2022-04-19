@@ -1253,21 +1253,21 @@
         },
 
         checkFullDay() {
-            if ( ! this.fieldValue[this.fieldData.name].opening_time || ! this.fieldValue[this.fieldData.name].closing_time ) {
+            if ( ! this.fieldValue[this.fieldData.name]?.opening_time || ! this.fieldValue[this.fieldData.name]?.closing_time ) {
                 return false;
             }
 
             let opening_time = dokan_get_formatted_time( '12:00 am', 'h:i' ),
                 closing_time = dokan_get_formatted_time( '11:59 pm', 'h:i' );
 
-            let setted_opening_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name].opening_time, 'h:i' ),
-                setted_closing_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name].closing_time, 'h:i' );
+            let setted_opening_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name]?.opening_time, 'h:i' ),
+                setted_closing_time = dokan_get_formatted_time( this.fieldValue[this.fieldData.name]?.closing_time, 'h:i' );
 
             return setted_opening_time === opening_time && setted_closing_time === closing_time;
         },
 
         checkWorkingStatus() {
-            return this.fieldValue[this.fieldData.name].delivery_status && this.fieldData?.day && this.fieldValue[this.fieldData.name].delivery_status === this.fieldData.day;
+            return this.fieldValue[this.fieldData.name]?.delivery_status && this.fieldData?.day && this.fieldValue[this.fieldData.name].delivery_status === this.fieldData.day;
         },
 
         addFullDay() {
