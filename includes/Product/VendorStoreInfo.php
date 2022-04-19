@@ -61,7 +61,7 @@ class VendorStoreInfo {
                 'name'              => 'show_vendor_info',
                 'label'             => __( 'Show Vendor Info', 'dokan-lite' ),
                 'desc'              => __( 'Show vendor information on product single page', 'dokan-lite' ),
-                'type'              => 'switcher',
+                'type'              => 'checkbox',
                 'default'           => 'off',
                 'class'             => 'show_vendor_info',
                 'sanitize_callback' => 'sanitize_text_field',

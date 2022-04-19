@@ -586,64 +586,9 @@
 
         .metabox-holder {
             flex: 3;
-            padding: 0 6px 0 3% !important;
-            position: relative;
-
-            .settings-header {
-                display: flex;
-                justify-content: space-between;
-
-                .settings-content {
-                    flex: 4;
-
-                    .settings-title {
-                        margin: 30px 0 20px 0;
-                        font-size: 22px;
-                        line-height: 26px;
-                        font-family: Roboto, sans-serif;
-                        margin-bottom: 12px;
-                    }
-    
-                    .settings-description {
-                        color: #000;
-                        margin: 0;
-                        font-size: 16px;
-                        font-weight: 300;
-                        line-height: 24px;
-                        font-family: Roboto, sans-serif;
-                    }
-                }
-
-                .settings-document-button {
-                    flex: 2.5;
-                    text-align: right;
-                    margin-top: 35px;
-
-                    a.doc-link {
-                        color: #033AA3D9;
-                        border: 0.82px solid #033AA3;
-                        padding: 10px 15px;
-                        font-size: 12px;
-                        background: #FFF;
-                        box-sizing: border-box;
-                        box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
-                        font-family: Roboto, sans-serif;
-                        line-height: 15px;
-                        border-radius: 6.56px;
-                        text-decoration: none;
-                    }
-                }
-            }
-
-            &:before {
-                top: 0;
-                left: 0;
-                width: 1px;
-                height: 100%;
-                content: "";
-                position: absolute;
-                background: #E5E5E5;
-            }
+            padding-left: 3%;
+            padding-right: 10px;
+            background: #fff;
         }
 
         .radio-image-container {
