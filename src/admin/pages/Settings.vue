@@ -53,7 +53,7 @@
                             <h2 class="settings-title">{{ section.settings_title }}</h2>
                             <p class="settings-description">{{ section.settings_description }}</p>
                         </div>
-                        <div class="settings-document-button">
+                        <div v-if="section.document_link" class="settings-document-button">
                             <a :href="section.document_link" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
                     </fieldset>
