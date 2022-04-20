@@ -578,6 +578,7 @@ jQuery(function($) {
         },
         submitHandler: async function(form, event) {
           event.preventDefault();
+
           $(form).block({
             message: null,
             overlayCSS: {
