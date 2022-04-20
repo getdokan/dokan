@@ -149,7 +149,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                 if ( $can_sell ) {
 
                     if ( dokan_is_seller_enabled( get_current_user_id() ) ) { ?>
-                        <form class="dokan-product-edit-form" role="form" method="post">
+                        <form class="dokan-product-edit-form" role="form" method="post" id="post">
 
                             <?php do_action( 'dokan_product_data_panel_tabs' ); ?>
                             <?php do_action( 'dokan_product_edit_before_main' ); ?>
