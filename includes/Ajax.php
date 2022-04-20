@@ -971,8 +971,6 @@ class Ajax {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Get vendor earning
      *
      * @since DOKAN_LITE_SINCE
@@ -999,7 +997,6 @@ class Ajax {
     }
 
     /**
->>>>>>> origin/develop
      * Export witdraw requests
      *
      * @since 3.0.0
