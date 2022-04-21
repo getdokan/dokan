@@ -611,9 +611,7 @@ jQuery(function($) {
         }
     });
 
-})(jQuery);
-
-;(function ($){
+    //vendor dashboard -> orders
     $(document).on( "ready", function(){
         let localeData = {
             format : dokan_get_daterange_picker_format(),
