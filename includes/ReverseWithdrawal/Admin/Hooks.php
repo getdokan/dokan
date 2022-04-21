@@ -12,23 +12,26 @@ class Hooks {
      * Admin constructor.
      */
     public function __construct() {
-        //enqueue required scripts
-        add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ], 10, 1 );
+        // fix admin report log list
+        add_filter( 'dokan_log_exclude_commission', [ $this, 'report_log_exclude_commission' ], 10, 2 );
     }
 
     /**
-     * Enqueue Admin Scripts
+     * Exclude commission from report log if order contains advertisement product
      *
-     * @param string $hook
+     * @since DOKAN_SINCE
      *
-     * @since 3.5.0
+     * @param bool $exclude
+     * @param object $order
      *
-     * @return void
+     * @return bool
      */
-    public function admin_enqueue_scripts( $hook ) {
-        if ( 'toplevel_page_dokan' !== $hook ) {
-            return;
+    public function report_log_exclude_commission( $exclude, $order ) {
+        if ( Helper::has_reverse_withdrawal_payment_in_order( $order->order_id ) ) {
+            return true;
         }
+
+        return $exclude;
     }
 
 }

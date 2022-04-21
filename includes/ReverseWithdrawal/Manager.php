@@ -97,7 +97,9 @@ class Manager {
             $groupby = 'GROUP BY trn.vendor_id';
 
             // reset trn_date from
-            $args['trn_date']['from'] = '';
+            if ( isset( $args['trn_date']['from'] ) ) {
+                $args['trn_date']['from'] = '';
+            }
         }
 
         // check if id filter is applied
@@ -315,10 +317,9 @@ class Manager {
         ];
 
         $items = [];
-        $manager = new static();
         // get item count
         $query_params['return'] = 'balance_count';
-        $count = $manager->all( $query_params );
+        $count = $this->all( $query_params );
         // check for errors
         if ( is_wp_error( $count ) ) {
             return $count;
@@ -327,7 +328,7 @@ class Manager {
         // only run query if count value is greater than 0
         if ( $count['total_transactions'] > 0 ) {
             $query_params['return'] = 'balance';
-            $items = $manager->all( $query_params );
+            $items = $this->all( $query_params );
             // check for errors
             if ( is_wp_error( $items ) ) {
                 return $items;
@@ -338,6 +339,34 @@ class Manager {
             'count' => $count,
             'items' => $items,
         ];
+    }
+
+    /**
+     * This method will return current balance of a vendor
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return float|WP_Error
+     */
+    public function get_store_balance( array $args = [] ) {
+        $query_params = [
+            'vendor_id' => isset( $args['vendor_id'] ) ? $args['vendor_id'] : 0,
+            'trn_date'  => isset( $args['trn_date'] ) && ! $this->is_empty( $args['trn_date'] ) ? $args['trn_date'] : '',
+            'per_page'  => 1,
+            'return'    => 'balance',
+        ];
+
+        if ( empty( $query_params['vendor_id'] ) || ! is_numeric( $query_params['vendor_id'] ) ) {
+            return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
+        }
+
+        $balance = $this->all( $query_params );
+        if ( is_wp_error( $balance ) ) {
+            return $balance;
+        }
+        return floatval( $balance['debit'] - $balance['credit'] );
     }
 
     /**
@@ -368,8 +397,7 @@ class Manager {
             return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
         }
 
-        $manager = new static();
-        $return  = [
+        $return = [
             'balance' => [],
             'count'   => [],
             'items'   => [],
@@ -390,7 +418,7 @@ class Manager {
             'per_page' => 1,
         ];
 
-        $balance = $manager->all( $balance_args );
+        $balance = $this->all( $balance_args );
 
         if ( is_wp_error( $balance ) ) {
             return $balance;
@@ -414,7 +442,7 @@ class Manager {
 
         // get item count
         $query_params['return'] = 'vendor_transaction_count';
-        $count = $manager->all( $query_params );
+        $count = $this->all( $query_params );
         // check for errors
         if ( is_wp_error( $count ) ) {
             return $count;
@@ -427,7 +455,7 @@ class Manager {
         }
 
         $query_params['return'] = 'vendor_transaction';
-        $items = $manager->all( $query_params );
+        $items = $this->all( $query_params );
         // check for errors
         if ( is_wp_error( $items ) ) {
             return $items;
@@ -548,6 +576,26 @@ class Manager {
         $args = [
             'trn_id'   => $order_id,
             'trn_type' => 'order_commission',
+            'return'   => 'count',
+        ];
+
+        $count = $this->all( $args );
+        return $count > 0;
+    }
+
+    /**
+     * Check if reverse withdrawal payment already inserted for an order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return bool
+     */
+    public function is_payment_inserted( $order_id ) {
+        $args = [
+            'trn_id'   => $order_id,
+            'trn_type' => 'vendor_payment',
             'return'   => 'count',
         ];
 

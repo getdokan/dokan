@@ -53,9 +53,11 @@ class ReverseWithdrawal {
         $this->container['settings']      = new Settings();
         $this->container['hooks']         = new Hooks();
         $this->container['admin_hooks']   = new Admin\Hooks();
+        $this->container['order_hooks']   = new Order();
+        $this->container['cart_hooks']    = new Cart();
 
         if ( wp_doing_ajax() ) {
-            //$this->container['ajax'] = new Ajax();
+            $this->container['ajax'] = new Ajax();
         }
 
         if ( ! is_admin() ) {

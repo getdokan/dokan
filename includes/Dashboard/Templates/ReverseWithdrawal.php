@@ -1,6 +1,7 @@
 <?php
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager as ReverseWithdrawalManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,6 +23,7 @@ class ReverseWithdrawal {
     public function __construct() {
         //enqueue required scripts
         add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 10, 1 );
+        add_filter( 'dokan_frontend_localize_script', [ $this, 'localized_scripts' ], 10, 1 );
 
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
@@ -32,14 +34,24 @@ class ReverseWithdrawal {
     /**
      * Load payment section
      *
-     * @since 2.8.0
+     * @since DOKAN_SINCE
      *
      * @return void
      */
     public function load_balance_section() {
+        $manager = new ReverseWithdrawalManager();
+        $balance = $manager->get_store_balance( [
+            'vendor_id' => dokan_get_current_user_id(),
+        ] );
+
+        if ( is_wp_error( $balance ) ) {
+            // print error message and return
+            return;
+        }
+
         $args = [
-            'user_id' => get_current_user_id(),
-            'status'  => 'all'
+            'balance'   => $balance,
+            'threshold' => Helper::get_reverse_balance_limit(),
         ];
         dokan_get_template_part( 'reverse-withdrawal/reverse-balance', '', $args );
     }
@@ -106,6 +118,27 @@ class ReverseWithdrawal {
         wp_enqueue_script( 'dokan-reverse-withdrawal' );
         wp_enqueue_style( 'dokan-reverse-withdrawal' );
         wp_enqueue_style( 'dokan-date-range-picker');
+    }
+
+    /**
+     * Localize Reverse Withdrawal Scripts
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $localize_script
+     *
+     * @return array
+     */
+    public function localized_scripts( $localize_script ) {
+        $localize_script['reverse_withdrawal'] = [
+            'reverse_pay_msg'  => esc_attr__( 'Are you sure you want to pay this amount?', 'dokan-lite' ),
+            'nonce'            => wp_create_nonce( 'dokan_reverse_withdrawal_payment' ),
+            'on_error_title'   => esc_html__( 'Something went wrong.', 'dokan-lite' ),
+            'on_success_title' => esc_html__( 'Success.', 'dokan-lite' ),
+            'checkout_url'     => wc_get_checkout_url(),
+        ];
+
+        return $localize_script;
     }
 
     /**

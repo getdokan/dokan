@@ -277,3 +277,24 @@ function dokan_execute_recaptcha(inputFieldSelector, action) {
     });
   });
 }
+
+/**
+ * This method will extract ajax error message from ajax response
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param jqXHR
+ *
+ * @returns {string}
+ */
+function dokan_handle_ajax_error( jqXHR ) {
+  let error_message = '';
+  if ( jqXHR.responseJSON && jqXHR.responseJSON.message ) {
+    error_message = jqXHR.responseJSON.message;
+  } else if ( jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message ) {
+    error_message = jqXHR.responseJSON.data.message;
+  } else if( jqXHR.responseText ) {
+    error_message = jqXHR.responseText;
+  }
+  return error_message;
+}

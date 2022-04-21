@@ -149,6 +149,99 @@ class Helper {
     }
 
     /**
+     * This method will return option key for reverse withdrawal base product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function get_base_product_option_key() {
+        return 'dokan_reverse_withdrawal_product_id';
+    }
+
+    /**
+     * This method will check if cart contain reverse withdrawal product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function has_reverse_withdrawal_payment_in_order( $order ) {
+        // check if we get order object or order id
+        if ( ! $order instanceof \WC_Abstract_Order && is_numeric( $order ) ) {
+            // get order object from order_id
+            $order = wc_get_order( $order );
+        }
+
+        if ( ! $order instanceof \WC_Abstract_Order ) {
+            return false;
+        }
+
+        foreach ( $order->get_items() as $item ) {
+            if ( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * This method will return reverse withdrawal payment amount
+     *
+     * @param \WC_Abstract_Order $order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float|bool false if meta key not found
+     */
+    public static function get_balance_from_order( \WC_Abstract_Order $order ) {
+        $balance = false;
+
+        foreach ( $order->get_items() as $item ) {
+            if ( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) {
+                $balance = floatval( wc_format_decimal( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) );
+                break;
+            }
+        }
+
+        return $balance;
+    }
+
+    /**
+     * Create advertisement product
+     *
+     * @since 3.5.0
+     *
+     * @return int
+     */
+    public static function get_reverse_withdrawal_base_product() {
+        // get advertisement product id from option table
+        return (int) get_option( static::get_base_product_option_key(), 0 );
+    }
+
+    /**
+     * This method will check if cart contain reverse withdrawal payment product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function has_reverse_withdrawal_payment_in_cart() {
+        if ( ! WC()->cart ) {
+            return false;
+        }
+
+        foreach ( WC()->cart->get_cart() as $item ) {
+            if ( isset( $item['dokan_reverse_withdrawal_balance'] ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get reverse withdrawal payment gateways
      *
      * @since DOKAN_SINCE

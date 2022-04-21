@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Install;
 
+use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\Rewrites;
 use WP_Roles;
 
@@ -18,6 +19,7 @@ class Installer {
         $this->setup_pages();
         $this->woocommerce_settings();
         $this->create_tables();
+        $this->create_reverse_withdrawal_base_product();
         $this->product_design();
 
         // does it needs any update?
@@ -414,6 +416,56 @@ class Installer {
         //todo: create table indexes
 
         dbDelta( $sql );
+    }
+
+    /**
+     * This method will create reverse withdrawal base product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    private function create_reverse_withdrawal_base_product() {
+
+        // get advertisement product id from option table
+        $product_id = (int) get_option( Helper::get_base_product_option_key(), false );
+        if ( $product_id ) {
+            return;
+        }
+
+        // create a new post
+        $post = [
+            'post_content' => 'This is Dokan reverse withdrawal payment product, do not delete.',
+            'post_status'  => 'publish',
+            'post_title'   => 'Reverse Withdrawal Payment',
+            'post_parent'  => '',
+            'post_type'    => 'product',
+        ];
+
+        /* Create post */
+        $post_id = wp_insert_post( $post );
+
+        if ( is_wp_error( $post_id ) ) {
+            return;
+        }
+
+        // try catch block used here just to get rid of phpcs errors
+        try {
+            // convert post into product
+            $product = new \WC_Product_Simple();
+            $product->set_id( $post_id );
+            $product->set_catalog_visibility( 'hidden' );
+            $product->set_virtual( true );
+            $product->set_price( 0 );
+            $product->set_regular_price( 0 );
+            $product->set_sale_price( 0 );
+            $product->set_manage_stock( false );
+            $product->save();
+
+            update_option( Helper::get_base_product_option_key(), $product->get_id() );
+        } catch ( \Exception $exception ) {
+            return;
+        }
     }
 
     /**
