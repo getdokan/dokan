@@ -3615,41 +3615,38 @@ function dokan_privacy_policy_text( $return = false ) {
  *
  * @return array
  */
-function dokan_commission_types() {
+function dokan_commission_types( $include_dynamic_commissions = false ) {
     return apply_filters(
         'dokan_commission_types', [
             'flat'       => __( 'Flat', 'dokan-lite' ),
             'percentage' => __( 'Percentage', 'dokan-lite' ),
-        ]
+        ],
+        $include_dynamic_commissions
     );
 }
 
 /**
  * Returns true if passed commission type is a new commission type.
  *
- * @since DOKAN_LITE_SINCE
+ * @since DOKAN_SINCE
  *
  * @param string $commission_type
  *
  * @return boolean
  */
-function dokan_is_new_commission_type( $commission_type ) {
-    return function_exists( 'dokan_new_commission_types' ) && in_array( $commission_type, array_keys( dokan_new_commission_types() ) ) ? true : false;
+function dokan_is_dynamic_commission_type( $commission_type ) {
+    return in_array( $commission_type, array_keys( dokan_dynamic_commission_types() ) ) ? true : false;
 }
 
 /**
- * Dokan new and old default commission types
+ * Dokan new commission types
  *
- * @since DOKAN_LITE_SINCE
+ * @since DOKAN_SINCE
  *
  * @return array
  */
-function dokan_new_and_old_commission_types() {
-    $new_commission_if_pro_exists = function_exists( 'dokan_new_commission_types' ) ? dokan_new_commission_types() : [];
-
-    return apply_filters(
-        'dokan_new_and_old_commission_types', array_merge( dokan_commission_types(), $new_commission_if_pro_exists )
-    );
+function dokan_dynamic_commission_types() {
+    return apply_filters( 'dokan_dynamic_commission_types', [] );
 }
 
 /**

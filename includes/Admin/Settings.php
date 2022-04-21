@@ -312,7 +312,7 @@ class Settings {
     public function get_settings_fields() {
         $pages_array = $this->get_post_type( 'page' );
 
-        $commission_types              = dokan_new_and_old_commission_types();
+        $commission_types              = dokan_commission_types(true);
         $withdraw_order_status_options = apply_filters(
             'dokan_settings_withdraw_order_status_options',
             array(

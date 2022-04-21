@@ -19,81 +19,80 @@ import SinglePriceQuantityVendorSale from './SinglePriceQuantityVendorSale.vue';
 
 export default {
     name : 'PriceQuantityVendorSale',
-    components  :{
+    components :{
         SinglePriceQuantityVendorSale
     },
     props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
     methods: {
+        addNewCommission( value ) {
+            const dummyData = this.getDummyData( value );
 
-            addNewCommission( value ) {
-                const dummyData = this.getDummyData( value );
+            const commissions = '' === this.fieldValue[this.id] ? [] : this.fieldValue[this.id];
 
-                const commissions = '' === this.fieldValue[this.id] ? [] : this.fieldValue[this.id];
+            commissions.push( dummyData );
+            this.fieldValue[this.id] = commissions;
+        },
 
-                commissions.push( dummyData );
-                this.fieldValue[this.id] = commissions;
-            },
+        getDummyData( value ) {
+            const allFields = this.fieldData.fields;
 
-            getDummyData( value ) {
-                const allFields = this.fieldData.fields;
+            if ( undefined === allFields ) {
+                return {};
+            }
 
-                if ( undefined === allFields ) {
-                    return {};
+            const dummyData = {};
+            Object.keys(allFields).forEach(element => {
+                if ( 'admin_commission' === element ) {
+                    dummyData.flat = allFields[element].options.flat.default;
+                    dummyData.percentage = allFields[element].options.percentage.default;
+                } else {
+                    'from' == element ? dummyData[element] = Number(value)+1 : dummyData[element] = allFields[element].default;
                 }
+            });
 
-                const dummyData = {};
-                Object.keys(allFields).forEach(element => {
-                    if ( 'admin_commission' === element ) {
-                        dummyData.flat = allFields[element].options.flat.default;
-                        dummyData.percentage = allFields[element].options.percentage.default;
-                    } else {
-                        'from' == element ? dummyData[element] = Number(value)+1 : dummyData[element] = allFields[element].default;
-                    }
-                });
+            return dummyData;
+        },
 
-                return dummyData;
-            },
+        updateCommissionState( obj ) {
+            let { value, field, index, type  } = obj;
+            this.fieldValue[this.fieldData.name][index][field] = type === 'number' ? Number( value ) : String( value );
 
-            updateCommissionState( obj ) {
-                let { value, field, index, type  } = obj;
-                this.fieldValue[this.fieldData.name][index][field] = type === 'number' ? Number( value ) : String( value );
+            if ( 'to' == field && this.fieldValue[this.fieldData.name][index+1] ) {
+                this.fieldValue[this.fieldData.name][index+1].from = Number( value ) + 1;
+                // this.fieldValue[this.fieldData.name][index+1].to = 0;
+            }
+        },
 
-                if ( 'to' == field && this.fieldValue[this.fieldData.name][index+1] ) {
-                    this.fieldValue[this.fieldData.name][index+1].from = Number( value ) + 1;
-                    // this.fieldValue[this.fieldData.name][index+1].to = 0;
-                }
-            },
+        removeCommissionFromList( index ) {
+            let all_commissions = JSON.stringify([...this.fieldValue[this.fieldData.name]]);
+            all_commissions = JSON.parse(all_commissions);
+            if ( all_commissions[index+1] ) {
+                all_commissions[index+1].from = all_commissions[index].from;
+                // all_commissions[index+1].to = all_commissions[index+1].to;
+            }
+            all_commissions.splice( index, 1 );
+            this.fieldValue[this.fieldData.name] = all_commissions;
+        },
 
-            removeCommissionFromList( index ) {
-                let all_commissions = JSON.stringify([...this.fieldValue[this.fieldData.name]]);
-                all_commissions = JSON.parse(all_commissions);
-                if ( all_commissions[index+1] ) {
-                    all_commissions[index+1].from = all_commissions[index].from;
-                    // all_commissions[index+1].to = all_commissions[index+1].to;
-                }
-                all_commissions.splice( index, 1 );
-                this.fieldValue[this.fieldData.name] = all_commissions;
-            },
+        generateNextRow( data ) {
+            let { value, index } = data;
 
-            generateNextRow( data ) {
-                let { value, index } = data;
+            ! this.fieldValue[this.fieldData.name][index] ? this.addNewCommission( value ) : '';
+        },
 
-                ! this.fieldValue[this.fieldData.name][index] ? this.addNewCommission( value ) : '';
-            },
+        resetRows( data ) {
+            let { value, index } = data;
 
-            resetRows( data ) {
-                let { value, index } = data;
+            let newData = [ ...this.fieldValue[this.fieldData.name] ];
 
-                let newData = [ ...this.fieldValue[this.fieldData.name] ];
+            if ( newData[index] && value !== '' && ( '' === newData[index+1].to || value <= newData[index+1].to - 2 ) ) {
+                return;
+            }
+            newData[index + 1] ? newData[index + 1].to = '' : '';
 
-                if ( newData[index] && value !== '' && ( '' === newData[index+1].to || value <= newData[index+1].to - 2 ) ) {
-                    return;
-                }
-                newData[index + 1] ? newData[index + 1].to = '' : '';
-
-                newData.splice('' === value ? index+1 : index+2, 9e9);
-                this.fieldValue[this.fieldData.name] = newData;
-            },
+            newData.splice('' === value ? index+1 : index+2, 9e9);
+            this.fieldValue[this.fieldData.name] = newData;
+        },
     },
 
     computed: {

@@ -259,7 +259,7 @@ export default {
             }
 
             this.vendorInfo.admin_commission_type = name;
-            
+
             this.vendorInfo.admin_commission = this.getAndCheckCommissionType(true);
         },
 
@@ -271,9 +271,9 @@ export default {
 
             if ( this.newCommissions.includes( selectedCommissionName ) ) {
                 return begin ? [commissionData] : commissionData;
-            } else {
-                return '';
             }
+
+            return '';
         },
 
         async addNewCommissionData(value = '') {
@@ -293,7 +293,7 @@ export default {
 
             let oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
             oldCommissions[index][field] = value;
-            
+
             if ( 'to' == field && oldCommissions[index+1] ) {
                 oldCommissions[index+1].from = Number( value ) + 1;
                 // oldCommissions[index+1].to = '';
@@ -318,26 +318,6 @@ export default {
 
             return all_commissions;
         },
-
-        // async generateNextRow( data ) {
-        //     let { value, index } = data;
-
-        //     const oldCommissions = JSON.parse(JSON.stringify(this.vendorInfo.admin_commission));
-
-        //     if ( oldCommissions[index] && value !== '' && value <= oldCommissions[index].to - 2 ) {
-        //         console.log('returning...',oldCommissions[index]);
-        //         return;
-        //     }
-        //     oldCommissions[index].to = '';
-
-        //     '' === value ? index = index : index = index++;
-        //     await oldCommissions.splice(index, 9e9);
-
-        //     if ( value && 0 != value && '' !== value ) {
-        //         await ! oldCommissions[index] ? oldCommissions.push( this.getAndCheckCommissionType(false, value) ) : '';
-        //     } 
-        //     await this.$emit('updateCommissionState', oldCommissions);
-        // },
 
         async generateNextRow( data ) {
             let { value, index } = data;

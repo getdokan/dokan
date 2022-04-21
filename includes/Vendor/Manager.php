@@ -338,23 +338,20 @@ class Manager {
 
                     foreach ( $admin_commission as $key => $value ) {
                         $single_commission_set = [
-                            'from'            => absint( isset( $value['from'] ) ? sanitize_text_field( $value['from'] ) : 0 ),
-                            'to'              => absint( isset( $value['to'] ) ? sanitize_text_field( $value['to'] ) : 0 ),
+                            'from'            => absint( $value['from'] ),
+                            'to'              => absint( $value['to'] ),
                             'commission_type' => sanitize_text_field( $value['commission_type'] ),
-                            'flat'            => (float) isset( $value['flat'] ) ? $value['flat'] : 0 ,
-                            'percentage'      => (float) isset( $value['percentage'] ) ? $value['percentage'] : 0 ,
+                            'flat'            => (float) isset( $value['flat'] ) ? sanitize_text_field( $value['flat'] ) : 0 ,
+                            'percentage'      => (float) isset( $value['percentage'] ) ? sanitize_text_field( $value['percentage'] ) : 0 ,
                         ];
 
                         array_push( $all_commission_set, $single_commission_set );
                     }
 
                     $admin_commission = $all_commission_set;
-                } else {
-                    $admin_commission = absint( $admin_commission );
                 }
 
                 $vendor->update_meta( 'dokan_admin_percentage', $admin_commission );
-
             }
         }
 

@@ -12,11 +12,11 @@
                 <input disabled type="text" placeholder="0" :value="commission.from">
             </div>
             <div class="dokan-new-commission-col-to">
-                <input :value="commission.to == 0 ? '' : commission.to" @blur="resetRows( $event.target.value, index )" @input="handleTOInput( $event.target.value, index, commission.to )" type="number" placeholder="∞" :ref="`dokan-to${index}`">
+                <input :value="commission.to == 0 ? '' : commission.to" @blur="resetRows( $event.target.value, index )" @input="handleTOInput( $event.target.value, index, commission.to, $event )" type="text" placeholder="∞" :ref="`dokan-to${index}`">
                 <span :ref="`dokan-${selectedCommissionLabel}-from-msg${index}`" class="dokan-commission-tooltiptext">Tooltip text</span>
             </div>
             <div class="dokan-new-commission-col-ct">
-                <select @change="updateCommissionValue( $event.target.value, 'commission_type', index, 'string' )" :value="commission.commission_type" :name="'commission_type' + index" :id="'commission_type' + index">
+                <select @change="updateCommissionValue( $event.target.value, 'commission_type', index, 'string', $event )" :value="commission.commission_type" :name="'commission_type' + index" :id="'commission_type' + index">
                     <option value="flat">{{ __( 'Flat', 'dokan') }}</option>
                     <option value="percentage">{{ __( 'Percentage', 'dokan') }}</option>
                     <option value="combine">{{ __( 'Combined', 'dokan') }}</option>
@@ -24,14 +24,14 @@
             </div>
             <div class="dokan-new-commission-col-commission">
                 <div class="commission-inner-type" v-if="'percentage' == commission.commission_type || 'combine' == commission.commission_type">
-                    <input :value="commission.percentage" @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"/> 
+                    <input :value="commission.percentage" @input="updateCommissionValue( $event.target.value, 'percentage', index, 'number', $event )" type="text" min="1" max="9999" class="dokan-commission-value"/>
                     <span class="commisson-indecator">%</span>
-                </div> 
+                </div>
                 <div class="commission-inner-type-middle" v-if="'combine' == commission.commission_type">
                     <span class="commission-inner-type-middle-text">+</span>
-                </div> 
+                </div>
                 <div class="commission-inner-type" v-if="'flat' == commission.commission_type || 'combine' == commission.commission_type">
-                    <input :value="commission.flat" @input="updateCommissionValue( $event.target.value, 'flat', index, 'number' )" type="number" min="1" max="9999" maxlength="10" oninput="this.value=this.value.slice(0,this.maxLength||1/1);this.value=(this.value < 0) ? 0 : this.value;" class="dokan-commission-value"> 
+                    <input :value="commission.flat" @input="updateCommissionValue( $event.target.value, 'flat', index, 'number', $event )" type="text" min="1" max="9999" class="dokan-commission-value">
                     <span class="commisson-indecator" v-html="get_currency_symbol"></span>
                 </div>
             </div>
@@ -47,16 +47,25 @@ export default {
     name : 'SinglePriceQuantityVendorSale',
     props: [ 'allCommission', 'selectedCommissionName', 'selectedCommissionLabel' ],
     methods: {
-        updateCommissionValue( event, field, index, type ) {
+        updateCommissionValue( input, field, index, type, event ) {
+            if ( 'number' === type ) {
+                input = this.validateNumber( input, event );
+            }
             this.$emit(
                 'updateCommissionState',
                 {
-                    value: event,
+                    value: input,
                     field: field,
                     index: index,
                     type: type
                 }
             );
+        },
+
+        validateNumber ( input, event ) {
+            let res = input.replace(/\D/g, '');
+            event.target.value = res;
+            return res;
         },
 
         removeCommissionFromList( index, ) {
@@ -86,20 +95,21 @@ export default {
             );
         },
 
-        async handleTOInput( e, index, to ) {
+        async handleTOInput( e, index, to, event ) {
             if ( isNaN( Number(e) ) ) {
                 this.$refs[`dokan-to${index}`].value = to;
+                this.validateNumber( e, event );
                 return;
             }
 
             this.allCommission[index].from > Number(e) && '' != e ? this.showFromErrorMessage( index, this.allCommission[index].from, e ) : this.hideFromErrorMessage( index );
-            
-            await this.updateCommissionValue( e, 'to', index, 'number' );
+
+            await this.updateCommissionValue( e, 'to', index, 'number', event );
             await this.generateNextRow( e, index );
         },
 
         showFromErrorMessage( index, from, to ) {
-            this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].innerText = `Must be more or equal ${from}`;
+            this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].innerText = this.sprintf( this.__( `Must be more or equal %d`, 'dokan' ), from );
             this.$refs[`dokan-${this.selectedCommissionLabel}-from-msg${index}`][0].style.display = 'block';
 
             jQuery('p.submit input#submit').prop('disabled', true);

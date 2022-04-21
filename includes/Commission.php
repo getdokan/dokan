@@ -261,12 +261,10 @@ class Commission {
 
         $product_price = is_null( $price ) && ! empty( $product ) ? (float) $product->get_price() : (float) $price;
         $vendor        = dokan_get_vendor_by_product( $product );
-
-        $vendor_id = ! empty( $vendor ) ? $vendor->get_id() : 0;
-        $product_id = ! empty( $product ) ? $product->get_id() : 0;
-
-        $earning = $this->calculate_commission( $product_id, $product_price, $vendor_id );
-        $earning = 'admin' === $context ? $product_price - $earning : $earning;
+        $vendor_id     = ! empty( $vendor ) ? $vendor->get_id() : 0;
+        $product_id    = ! empty( $product ) ? $product->get_id() : 0;
+        $earning       = $this->calculate_commission( $product_id, $product_price, $vendor_id );
+        $earning       = 'admin' === $context ? $product_price - $earning : $earning;
 
         return apply_filters( 'dokan_get_earning_by_product', $earning, $product, $context );
     }
@@ -369,10 +367,10 @@ class Commission {
      * @return float
      */
     public function get_global_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
-        // If new commissions is satisfied and found then return it.
-        if ( dokan_is_new_commission_type( $commission_type ) ) {
+        // If new commissions is applicable and found then return it.
+        if ( dokan_is_dynamic_commission_type( $commission_type ) ) {
             $all_commissions = dokan_get_option( $commission_type, 'dokan_selling', 0 );
-            return $this->get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions );
+            return $this->get_applicable_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions );
         }
 
         $additional_fee = null;
@@ -408,9 +406,9 @@ class Commission {
     public function get_vendor_wise_rate( $product_id, $product_price = null, $vendor_id = null, $commission_type = null, $func_fee = null ) {
         $commissions = get_user_meta( $vendor_id, 'dokan_admin_percentage', true );
 
-        // If new commissions is satisfied and found then return it.
-        if ( dokan_is_new_commission_type( $commission_type ) ) {
-            return $this->get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $commissions );
+        // If new commissions is applicable and found then return it.
+        if ( dokan_is_dynamic_commission_type( $commission_type ) ) {
+            return $this->get_applicable_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $commissions );
         }
 
         $additional_fee = null;
@@ -656,7 +654,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  function $callable
+     * @param  string $callable Callable function string.
      * @param  int $product_id
      * @param  float $product_price
      * @param  float $vendor_id
@@ -668,14 +666,13 @@ class Commission {
 
         // If an order has been purchased previously, calculate the earning with the previously stated commission rate.
         // It's important cause commission rate may get changed by admin during the order table `re-generation`.
-        $flat_rate       = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', true ): '';
-        $commission_type = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', true ): '';
+        $flat_rate       = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', true ) : '';
+        $commission_type = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', true ) : '';
         $percentage_fee  = $this->get_order_id() ? wc_get_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', true ) : '';
 
         // If the commission is not saved in the order item meta means this is a new order and we have to
         // find the commission from the setting of dokan. ( product / category / vendor / global )
         if ( empty( $flat_rate ) || empty( $commission_type ) || empty( $percentage_fee ) ) {
-
             if ( empty( $product_id ) ) {
                 return null;
             }
@@ -707,7 +704,7 @@ class Commission {
              * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
              * But in option field, looks like flat commission is selected.
              *
-             * @since DOKAN_LITE_SINCE
+             * @since DOKAN_SINCE
              */
             if ( ! dokan()->is_pro_exists() && ! in_array( $commission_type, [ 'percentage', 'flat' ], true ) ) {
                 $commission_type = 'flat';
@@ -735,7 +732,6 @@ class Commission {
             wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_rate', $flat_rate );
             wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_commission_type', $commission_type );
             wc_add_order_item_meta( $this->get_order_item_id_for_meta(), '_dokan_additional_fee', $percentage_fee );
-
         }
 
         $earning = null;
@@ -1009,7 +1005,7 @@ class Commission {
     }
 
     /**
-     * Returns satisfied commission [flat/percentage/combine] from different commission array set.
+     * Returns applicable commission [flat/percentage/combine] from different commission array set.
      *
      * @since 3.3.6
      *
@@ -1020,7 +1016,7 @@ class Commission {
      *
      * @return void
      */
-    public function get_satisfied_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions ) {
+    public function get_applicable_commission_from_new_commission_set( $product_id, $commission_type, $product_price, $all_commissions ) {
         if ( ! is_array( $all_commissions ) ) {
             return null;
         }
@@ -1031,14 +1027,14 @@ class Commission {
                     return null;
                 }
                 $total_sale = $this->get_order_subtotal();
-                return $this->get_satisfied_commission( $total_sale, 'vendor_sale', $all_commissions );
+                return $this->get_applicable_commission( $total_sale, 'vendor_sale', $all_commissions );
 
             case 'product_price':
-                return $this->get_satisfied_commission( $product_price, 'product_price', $all_commissions );
+                return $this->get_applicable_commission( $product_price, 'product_price', $all_commissions );
 
             case 'product_quantity':
                 $product_quantity = $this->get_order_qunatity();
-                return $this->get_satisfied_commission( $product_quantity, 'product_quantity', $all_commissions );
+                return $this->get_applicable_commission( $product_quantity, 'product_quantity', $all_commissions );
 
             default:
                 return null;
@@ -1046,7 +1042,7 @@ class Commission {
     }
 
     /**
-     * Returns an array of satisfied [flat/percentage/combine] commission, for vendor_sale,
+     * Returns an array of applicable [flat/percentage/combine] commission, for vendor_sale,
      * product_price, product_quantity commission type.
      *
      * @since  3.3.6
@@ -1057,20 +1053,13 @@ class Commission {
      *
      * @return array|null
      */
-    private function get_satisfied_commission( $compare, $commission_type, $all_commissions ) {
+    private function get_applicable_commission( $compare, $commission_type, $all_commissions ) {
         $type       = null;
         $flat       = null;
         $percentage = null;
 
         foreach ( $all_commissions as $key => $value ) {
-            if (
-                isset( $value[ 'commission_type' ] )  // Checking if commission type is set properly.
-                && 
-                (
-                    $compare <= $value[ 'to' ]  // Checking if the value satisfy the range.
-                    || empty( absint( $value[ 'to' ] ) ) // Checking if the range is infinity.
-                )
-            ) {
+            if ( isset( $value['commission_type'] ) && ( $compare <= $value['to'] || empty( absint( $value['to'] ) ) ) ) { // Checking if the value satisfy the range and checking if the range is infinity.
                 $type       = $value['commission_type'];
                 $flat       = $value['flat'];
                 $percentage = $value['percentage'];
