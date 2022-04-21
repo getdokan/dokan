@@ -4398,14 +4398,16 @@ function dokan_get_orders( $args_parameter ) {
             ],
         ],
         'date_query'  => [ $date_query ],
+        'fields'      => 'ids',
+        'paginate'    => true,
     ];
 
     if ( ! empty( $args_parameter['limit'] ) && ! empty( $args_parameter['page'] ) ) {
-        $args['numberposts'] = $args_parameter['limit'];
-        $args['offset']      = $args_parameter['limit'] * ( $args_parameter['page'] - 1 );
+        $args['posts_per_page'] = $args_parameter['limit'];
+        $args['paged']          = $args_parameter['page'];
     } else {
-        $args['numberposts'] = -1;
-        $args['offset']      = 0;
+        $args['posts_per_page'] = -1;
+        $args['paged']           = 1;
     }
 
     if ( empty( $args_parameter['sort_order'] ) || ! in_array( $args_parameter['sort_order'], [ 'ASC', 'DESC' ], true ) ) {
@@ -4430,10 +4432,12 @@ function dokan_get_orders( $args_parameter ) {
         $args['post__in'] = $order_ids;
     }
 
-    return get_posts(
+    $query = new WP_Query(
         apply_filters(
             'woocommerce_my_account_my_orders_query',
             $args
         )
     );
+
+    return [ $query->get_posts(), $query->max_num_pages ];
 }

@@ -15,8 +15,9 @@
     $sort_order = empty( $_GET['sort_order'] ) ? 'DESC' : sanitize_text_field( wp_unslash( $_GET['sort_order'] ) );
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
-    $statuses        = wc_get_order_statuses();
-    $customer_orders = dokan_get_orders( [
+    $statuses = wc_get_order_statuses();
+
+    list( $customer_orders, $total_pages ) = dokan_get_orders( [
         'start_date' => $start_date,
         'end_date'   => $end_date,
         'vendor_id'  => $vendor_id,
@@ -143,20 +144,12 @@
         </table>
 
     <?php
-        $customer_orders_count = count( dokan_get_orders( [
-            'start_date' => $start_date,
-            'end_date'   => $end_date,
-            'vendor_id'  => $vendor_id,
-        ] ) );
-
-        $num_of_pages = ceil( $customer_orders_count / $limit );
-
         $base_url  = get_permalink( $my_order_page_id = dokan_get_option( 'my_orders', 'dokan_pages' ) );
 
-        if ( $num_of_pages > 1 ) :
+        if ( $total_pages > 1 ) :
             $page_links = paginate_links( [
                 'current'   => $page,
-                'total'     => $num_of_pages,
+                'total'     => $total_pages,
                 'base'      => $base_url . '%_%',
                 'format'    => '?pagenum=%#%',
                 'add_args'  => false,
