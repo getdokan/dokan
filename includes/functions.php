@@ -4348,7 +4348,7 @@ function dokan_bool_to_on_off( $bool ) {
  *
  * @return array
  */
-function dokan_get_filtered_orders( $args_parameter ) {
+function dokan_get_orders( $args_parameter ) {
     global $wpdb;
 
     $defaults = [

@@ -16,7 +16,7 @@
     $vendor_id  = empty( $_GET['vendor'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['vendor'] ) );
 
     $statuses        = wc_get_order_statuses();
-    $customer_orders = dokan_get_filtered_orders( [
+    $customer_orders = dokan_get_orders( [
         'start_date' => $start_date,
         'end_date'   => $end_date,
         'vendor_id'  => $vendor_id,
@@ -143,7 +143,7 @@
         </table>
 
     <?php
-        $customer_orders_count = count( dokan_get_filtered_orders( [
+        $customer_orders_count = count( dokan_get_orders( [
             'start_date' => $start_date,
             'end_date'   => $end_date,
             'vendor_id'  => $vendor_id,
