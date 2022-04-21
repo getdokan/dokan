@@ -84,7 +84,7 @@ class MyOrders extends DokanShortcode {
                 'vendors'     => $vendor_info,
                 'orders'      => $customer_orders,
                 'total_pages' => $total_pages,
-                'page_links' => $page_links,
+                'page_links'  => $page_links,
             ]
         );
 
