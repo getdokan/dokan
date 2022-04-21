@@ -19,6 +19,7 @@ class MyOrders extends DokanShortcode {
         }
 
         wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], DOKAN_PLUGIN_VERSION );
+        wp_enqueue_script( 'dokan-script' );
         wp_enqueue_style( 'dokan-select2-css' );
         wp_enqueue_script( 'dokan-select2-js' );
         wp_enqueue_style( 'dokan-date-range-picker' );
