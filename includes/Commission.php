@@ -1007,7 +1007,7 @@ class Commission {
     /**
      * Returns applicable commission [flat/percentage/combine] from different commission array set.
      *
-     * @since 3.3.6
+     * @since DOKAN_SINCE
      *
      * @param string $product_id
      * @param string $commission_type
@@ -1045,7 +1045,7 @@ class Commission {
      * Returns an array of applicable [flat/percentage/combine] commission, for vendor_sale,
      * product_price, product_quantity commission type.
      *
-     * @since  3.3.6
+     * @since DOKAN_SINCE
      *
      * @param  int $compare Vendor sale amount or product total quantity or product price.
      * @param  string $commission_type vendor_sale / product_price / product_quantity.
