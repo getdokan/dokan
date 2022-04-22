@@ -48,7 +48,7 @@ class Manager {
             'role__in'   => [ 'seller', 'administrator' ],
             'number'     => 10,
             'offset'     => 0,
-            'orderby'    => 'registered',
+            'orderby'    => 'ID',
             'order'      => 'ASC',
             'status'     => [ 'approved' ],
             'featured'   => '', // yes or no
