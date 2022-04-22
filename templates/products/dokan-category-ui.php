@@ -86,9 +86,9 @@
         </div>
         <div class="dokan-single-category-modal-footer">
             <div class="dokan-selected-category-label-container">
-                <span class="dokan-selected-category-label"><?php esc_html_e( 'Selected: ', 'dokan' ); ?></span>
+                <span class="dokan-selected-category-label"><?php esc_html_e( 'Selected: ', 'dokan-lite' ); ?></span>
                 <span class="dokan-selected-category-span" id="dokan-selected-category-span">
-                    <span class="dokan-selected-category-single"><?php esc_html_e( 'No category', 'dokan' ) ?></span>
+                    <span class="dokan-selected-category-single"><?php esc_html_e( 'No category', 'dokan-lite' ) ?></span>
                 </span>
             </div>
             <div class="dokan-single-category-button-container">
