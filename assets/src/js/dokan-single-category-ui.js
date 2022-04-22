@@ -50,10 +50,10 @@
         SingleCategory.showIndicators( leftIndicator, left );
         SingleCategory.showIndicators( rightIndicator, right );
       });
-      $('body').on('click', '.dokan-single-categories-right', function() {
+      $('body').on('click', '.dokan-single-categories-right-box', function() {
         SingleCategory.indicatorScrollTo();
       });
-      $('body').on('click', '.dokan-single-categories-left', function() {
+      $('body').on('click', '.dokan-single-categories-left-box', function() {
         SingleCategory.indicatorScrollTo(false);
       });
       $('body').on('click', '.dokan-single-cat-select-btn', function() {

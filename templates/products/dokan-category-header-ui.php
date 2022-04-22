@@ -47,7 +47,7 @@
 <?php if ( ! $is_single ) : ?>
     <div class="dokan-form-group dokan-add-more-single-cat-container">
         <div class="dokan-single-cat-add-btn">
-            <span><i class="fas fa-plus"></i></span>
+            <span><?php esc_html_e( '+ Add new category', 'dokan' ); ?></span>
         </div>
     </div>
 <?php endif; ?>

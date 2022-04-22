@@ -7,6 +7,10 @@
 .dokan-select-single-category-container {
   display: flex;
 
+  &:last-child{
+    margin-bottom: -10px;
+  }
+
   .dokan-select-single-category {
       display: flex;
       justify-content: space-between;
@@ -39,14 +43,12 @@
 
 .dokan-add-more-single-cat-container {
   display: flex;
-  flex-direction: row-reverse;
   .dokan-single-cat-add-btn {
-    background-color: #EDEDED;
-    padding: 5px 25px;
     cursor: pointer;
-    &:hover {
-      background-color: #b3b0b0;
-      color: #FFF
+    color: #7F54B3;
+
+    &:hover{
+      text-decoration: underline;
     }
   }
 }
@@ -98,20 +100,37 @@
 
         .dokan-single-categories-arrow {
           position: absolute;
-          top: 50%;
           color: white;
-          width: 30px;
-          height: 30px;
-          text-align: center;
-          line-height: 30px;
-          background-color: #2271B1;
-          border-radius: 50px;
-          cursor: pointer;
-          box-shadow: 0 0 50px #ccc;
+          height: 100%;
+          top: 0;
+          width: 80px;
+          border-radius: 0;
+
+          >span{
+            background-color: #2271B1;
+            width: 30px;
+            display: block;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 15px;
+            margin-top: 110px;
+          }
         }
 
+        .dokan-single-categories-left {
+          background-image: linear-gradient(90deg, white, transparent);
+        }
+        .dokan-single-categories-left-box {
+          float: left;
+          cursor: pointer;
+        }
+        .dokan-single-categories-right-box {
+          float: right;
+          cursor: pointer;
+        }
         .dokan-single-categories-right {
           right: 0%;
+          background-image: linear-gradient(270deg, white, transparent);
         }
 
         .dokan-single-categories::-webkit-scrollbar {
@@ -143,7 +162,7 @@
             margin: 0 10px 0 0;
             width: 300px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             color: black;
             overflow-y: auto;
             flex-shrink: 0;
@@ -312,17 +331,15 @@
 
 /* The Close Button */
 .close {
-    color: rgb(0, 0, 0);
-    /* float: right; */
+    color: rgba(153, 153, 153, 0.5);
     font-size: 28px;
     font-weight: bold;
-}
-
-.close:hover,
-    .close:focus {
-    color: #000;
     text-decoration: none;
     cursor: pointer;
+
+    &:hover{
+      color: rgba(255, 87, 87, 0.904);
+    }
 }
 
 .dokan-single-category-modal-header {
@@ -373,22 +390,11 @@
     }
     .dokan-single-category-button-container {
       button {
-        background: #F05025;
-        border-radius: 3px;
-        color: #FFFFFF;
-        outline: none;
         float: right;
         width: 5.5rem;
         height: 2.5rem;
         font-size: 1rem;
         padding: 0;
-
-        &:hover {
-          background: #F7A792;
-        }
-        &:active {
-          background: #F05025;
-        }
       }
     }
 }

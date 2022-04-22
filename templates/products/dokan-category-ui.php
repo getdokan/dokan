@@ -67,24 +67,32 @@
                 </div>
             </div>
             <div class="dokan-single-categories-container">
-                <span class="dokan-single-categories-left dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-left"></i></span></span>
+                <span class="dokan-single-categories-left dokan-single-categories-arrow dokan-hide">
+                    <span class="dokan-single-categories-left-box">
+                        <span><i class="fas fa-chevron-left"></i></span>
+                    </span>
+                </span>
                 <div class="dokan-single-categories" id="dokan-single-categories"></div>
                 <div id="dokan-single-categories-loader" class="dokan-single-categories-loader dokan-hide">
                     <img src="" alt="" class="dokan-cat-loader">
                 </div>
-                <span class="dokan-single-categories-right dokan-single-categories-arrow dokan-hide"><span><i class="fas fa-chevron-right"></i></span></span>
+                <span class="dokan-single-categories-right dokan-single-categories-arrow dokan-hide">
+                    <span class="dokan-single-categories-right-box">
+                        <span><i class="fas fa-chevron-right"></i></span>
+                    </span>
+                </span>
             </div>
 
         </div>
         <div class="dokan-single-category-modal-footer">
             <div class="dokan-selected-category-label-container">
-                <span class="dokan-selected-category-label">Selected: </span>
+                <span class="dokan-selected-category-label"><?php esc_html_e( 'Selected: ', 'dokan' ); ?></span>
                 <span class="dokan-selected-category-span" id="dokan-selected-category-span">
-                    <span class="dokan-selected-category-single"><?php esc_html_e( 'No category', 'dokan-lite' ) ?></span>
+                    <span class="dokan-selected-category-single"><?php esc_html_e( 'No category', 'dokan' ) ?></span>
                 </span>
             </div>
             <div class="dokan-single-category-button-container">
-                <button class="dokan-single-cat-select-btn" id="dokan-single-cat-select-btn" type='button'><?php esc_html_e( 'Done', 'dokan-lite' ); ?></button>
+                <button class="dokan-single-cat-select-btn dokan-btn dokan-btn-default dokan-btn-theme" id="dokan-single-cat-select-btn" type='button'><?php esc_html_e( 'Done', 'dokan-lite' ); ?></button>
             </div>
         </div>
     </div>
