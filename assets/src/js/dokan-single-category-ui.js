@@ -19,8 +19,6 @@
       $('body').on('click', '.dokan-single-category-li', function() {
         let { catlevel, termId, name, haschild } = $(this).data();
 
-        // SingleCategory.setCatId( termId );
-        // SingleCategory.setCatName( name );
         selectedCatId = termId;
         SingleCategory.removeAfterClickedUls( catlevel, termId );
 
@@ -341,9 +339,3 @@
     });
   });
 })(jQuery);
-
-// window.onclick = function(event) {
-//   if (event.target == document.getElementById("dokan-single-category-modal")) {
-//     document.getElementById("dokan-single-category-modal").style.display = "flex";
-//   }
-// }
