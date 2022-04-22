@@ -123,24 +123,30 @@ if ( 'layout3' === $profile_layout ) {
                                                         <?php if ( $store_status === 'close' ) : ?>
                                                             <span class="store-close"><?php esc_html_e( 'CLOSED', 'dokan-lite' ); ?></span>
                                                         <?php endif; ?>
-    
+
                                                         <?php
                                                         // Get store times.
                                                         $opening_times = ! empty( $store_info['opening_time'] ) ? $store_info['opening_time'] : [];
-    
+
                                                         // If dokan pro doesn't exists then get single item.
                                                         if ( ! dokan()->is_pro_exists() ) {
                                                             $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : [];
                                                         }
-    
+
                                                         $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
-    
+
                                                         // Get formatted times.
                                                         for ( $index = 0; $index < $times_length; $index++ ) :
                                                             $formatted_opening_time = $current_time->modify( $store_info['opening_time'][ $index ] );
                                                             $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
+
+                                                            // check if store is open or closed time is valid.
+                                                            if ( empty( $formatted_opening_time ) || empty( $formatted_closing_time ) ) {
+                                                                continue;
+                                                            }
+
                                                             $exact_time = '';
-    
+
                                                             if ( $today === $day_key && $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
                                                                 $exact_time = 'current_time';
                                                             }
