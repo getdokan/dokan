@@ -39,20 +39,12 @@ class ReverseWithdrawal {
      * @return void
      */
     public function load_balance_section() {
-        $manager = new ReverseWithdrawalManager();
-        $balance = $manager->get_store_balance( [
-            'vendor_id' => dokan_get_current_user_id(),
-        ] );
+        $args = Helper::get_vendor_balance();
 
-        if ( is_wp_error( $balance ) ) {
-            // print error message and return
-            return;
+        if ( is_wp_error( $args ) ) {
+            // todo: handle error
         }
 
-        $args = [
-            'balance'   => $balance,
-            'threshold' => Helper::get_reverse_balance_limit(),
-        ];
         dokan_get_template_part( 'reverse-withdrawal/reverse-balance', '', $args );
     }
 

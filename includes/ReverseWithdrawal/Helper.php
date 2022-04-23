@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\Dokan\ReverseWithdrawal;
 
+use WP_Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
@@ -361,4 +363,69 @@ class Helper {
         ];
     }
 
+    /**
+     * This method will return payable balance of a vendor
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int|null $vendor_id
+     *
+     * @return array|WP_Error
+     */
+    public static function get_vendor_balance( $vendor_id = null ) {
+        // check for valid vendor id
+        if ( ! is_numeric( $vendor_id ) ) {
+            $vendor_id = dokan_get_current_user_id();
+        }
+
+        $manager = new Manager();
+        // get balance
+        $balance = $manager->get_store_balance(
+            [
+				'vendor_id' => dokan_get_current_user_id(),
+			]
+        );
+
+        if ( is_wp_error( $balance ) ) {
+            return $balance;
+        }
+        // get required settings
+        $args = [
+            'balance'      => $balance,
+            'billing_type' => self::get_billing_type(),
+            'billing_day'  => self::get_billing_day(),
+            'due_period'   => self::get_due_period(),
+        ];
+
+        // check settings for billing type
+        switch ( $args['billing_type'] ) {
+            case 'by_month':
+                // get previous month payable balance
+                $previous_month_balance = $manager->get_store_balance(
+                    [
+						'vendor_id' => dokan_get_current_user_id(),
+						'trn_date'  => [
+							'from' => dokan_current_datetime()->modify( 'first day of previous month' )->format( 'Y-m-d H:i:s' ),
+							'to'   => dokan_current_datetime()->modify( 'last day of previous month' )->format( 'Y-m-d H:i:s' ),
+						],
+					]
+                );
+
+                // is user paid for previous month
+                $paid_balance = $manager->get_payments_by_vendor();
+
+                if ( is_wp_error( $paid_balance ) ) {
+                    return $paid_balance;
+                }
+                // subtract paid balance from previous month balance
+                $args['min_payable_amount'] = $previous_month_balance - $paid_balance;
+                break;
+
+            case 'by_amount':
+                $args['min_payable_amount'] = self::get_reverse_balance_limit();
+                break;
+        }
+
+        return $args;
+    }
 }

@@ -625,6 +625,47 @@ class Manager {
     }
 
     /**
+     * This method will return all the payments made by a vendor
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return WP_Error|float
+     */
+    public function get_payments_by_vendor( $args = [] ) {
+        $default = [
+            'vendor_id' => dokan_get_current_user_id(),
+            'trn_date'  => [
+                'from' => dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d H:i:s' ),
+                'to'   => dokan_current_datetime()->modify( 'last day of this month' )->format( 'Y-m-d H:i:s' ),
+            ],
+        ];
+
+        $args = wp_parse_args( $args, $default );
+
+        // validate vendor id
+        if ( empty( $args['vendor_id'] ) ) {
+            return new WP_Error( 'get_payments_by_vendor_error', __( 'Invalid vendor id provide. Please provide a valid vendor id.', 'dokan-lite' ) );
+        }
+
+        $params = [
+            'vendor_id' => $args['vendor_id'],
+            'trn_date'  => $args['trn_date'],
+            'trn_type'  => 'vendor_payment',
+            'return'    => 'vendor_transaction_count',
+        ];
+
+        $result = $this->all( $params );
+
+        if ( is_wp_error( $result ) ) {
+            return $result;
+        }
+
+        return $result['credit'];
+    }
+
+    /**
      * This method will return commission amount for a specific order
      *
      * @since DOKAN_SINCE
