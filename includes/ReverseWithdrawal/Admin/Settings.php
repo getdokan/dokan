@@ -25,7 +25,6 @@ class Settings {
         // Hooks
         add_filter( 'dokan_settings_sections', [ $this, 'load_settings_section' ], 21 );
         add_filter( 'dokan_settings_fields', [ $this, 'load_settings_fields' ], 21 );
-        //add_action( 'dokan_before_saving_settings', [ $this, 'validate_admin_settings' ], 20, 2 );
     }
 
     /**
@@ -168,63 +167,5 @@ class Settings {
         $fields['dokan_reverse_withdrawal'] = apply_filters( 'dokan_reverse_withdrawal_setting_fields', $settings_fields );
 
         return $fields;
-    }
-
-
-    /**
-     * Validates admin delivery settings
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $option_name
-     * @param array $option_value
-     *
-     * @return void
-     */
-    public function validate_admin_settings( $option_name, $option_value ) {
-        if ( 'dokan_reverse_withdrawal' !== $option_name ) {
-            return;
-        }
-
-        $total_available_slot = intval( $option_value['total_available_slot'] );
-        $expire_after_days = intval( $option_value['expire_after_days'] );
-        $cost = $option_value['cost'];
-
-        $errors = [];
-
-        if ( $total_available_slot !== -1 && $total_available_slot <= 0 ) {
-            $errors[] = [
-                'name' => 'total_available_slot',
-                'error' => __( 'You need to enter a positive integer for this field. Enter -1 for no limit.', 'dokan' ),
-            ];
-        }
-
-        if ( $expire_after_days !== -1 && $expire_after_days <= 0 ) {
-            $errors[] = [
-                'name' => 'expire_after_days',
-                'error' => __( 'You need to enter a positive integer for this field. Enter -1 for no limit.', 'dokan' ),
-            ];
-        }
-
-        if ( ! is_numeric( $cost ) || floatval( $cost ) < 0 ) {
-            $errors[] = [
-                'name' => 'cost',
-                'error' => __( 'Cost can not be empty or less than 0', 'dokan' ),
-            ];
-        }
-
-        if ( ! empty( $errors ) ) {
-            wp_send_json_error(
-                [
-                    'settings' => [
-                        'name'  => $option_name,
-                        'value' => $option_value,
-                    ],
-                    'message'  => __( 'Validation error', 'dokan' ),
-                    'errors' => $errors,
-                ],
-                400
-            );
-        }
     }
 }

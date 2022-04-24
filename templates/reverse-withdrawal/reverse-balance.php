@@ -1,5 +1,7 @@
 <?php
 /**
+ * @since DOKAN_SINCE
+ *
  * @var $balance float
  * @var $min_payable_amount float
  * @var $threshold float
@@ -39,8 +41,5 @@ use Automattic\WooCommerce\Utilities\NumberUtil;
             <input type="text" id="reverse_pay_balance" data-step="0.5" data-min="<?php echo esc_attr( $min_payable_amount ); ?>" data-max="<?php echo esc_attr( $balance ); ?>" value="<?php echo esc_attr( wc_format_localized_price( NumberUtil::round( $balance, wc_get_price_decimals() ) ) ); ?>" />
             <input type="button" id="reverse_pay" class="button dokan-btn dokan-btn-success dokan-btn-lg dokan-theme" value="<?php esc_attr_e( 'Pay Now', 'dokan-lite' ); ?>" />
         </div>
-    <?php endif; ?>
-    <?php if ( 'by_month' === $billing_type ): ?>
-
     <?php endif; ?>
 </div>

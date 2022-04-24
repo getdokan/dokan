@@ -85,14 +85,14 @@ class Helper {
     }
 
     /**
-     * Create advertisement product
+     * Get reverse withdrawal base product id
      *
-     * @since 3.5.0
+     * @since DOKAN_SINCE
      *
      * @return int
      */
     public static function get_reverse_withdrawal_base_product() {
-        // get advertisement product id from option table
+        // get product id from option table
         return (int) get_option( static::get_base_product_option_key(), 0 );
     }
 
@@ -117,6 +117,17 @@ class Helper {
         return false;
     }
 
+    /**
+     * This method will return formatted transaction id
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $transaction_id
+     * @param string $transaction_type
+     * @param string $contex
+     *
+     * @return string
+     */
     public static function get_formatted_transaction_id( $transaction_id, $transaction_type, $contex = 'admin' ) {
         switch ( $transaction_type ) {
             case 'product_advertisement':
