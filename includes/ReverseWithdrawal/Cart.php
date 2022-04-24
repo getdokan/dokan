@@ -20,7 +20,7 @@ class Cart {
      */
     public function __construct() {
         // return if reverse withdrawal feature is disabled
-        if ( ! Helper::is_enabled() ) {
+        if ( ! Settings::is_enabled() ) {
             return;
         }
 

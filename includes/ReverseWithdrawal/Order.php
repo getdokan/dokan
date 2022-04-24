@@ -23,6 +23,11 @@ class Order {
         add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'hide_order_item_meta_key' ], 999, 3 );
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'hide_order_item_meta_value' ], 999, 3 );
 
+        // return if reverse withdrawal feature is disabled
+        if ( ! Settings::is_enabled() ) {
+            return;
+        }
+
         // store required metas
         add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'store_line_item_metas' ], 10, 3 );
 

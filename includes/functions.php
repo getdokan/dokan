@@ -7,7 +7,7 @@ use WeDevs\Dokan\Cache;
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokan_admin_menu_position() {
     return apply_filters( 'dokan_menu_position', '55.4' );
@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokana_admin_menu_capability() {
     return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );

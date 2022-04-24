@@ -2,6 +2,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\Settings;
 use WeDevs\Dokan\ReverseWithdrawal\Manager as ReverseWithdrawalManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class ReverseWithdrawal {
     /**
-     * @var string[] $trn_date
+     * @var int $seller_id
+     *
+     * @since DOKAN_SINCE
+     */
+    protected $seller_id;
+
+    /**
+     * @var string[] $transaction_date
+     *
+     * @since DOKAN_SINCE
      */
     protected $transaction_date = [
         'from' => '',
@@ -18,17 +28,68 @@ class ReverseWithdrawal {
     ];
 
     /**
-     * Admin constructor.
+     * Class Constructor.
+     *
+     * @since DOKAN_SINCE
      */
     public function __construct() {
+        // return if reverse withdrawal feature is disabled
+        if ( ! Settings::is_enabled() ) {
+            return;
+        }
+
+        if ( ! is_user_logged_in() ) {
+            return;
+        }
+
+        // get current user id
+        $this->seller_id = dokan_get_current_user_id();
+
+        // check if current user is vendor
+        if ( ! dokan_is_user_seller( $this->seller_id) ) {
+            return;
+        }
+
         //enqueue required scripts
         add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 10, 1 );
         add_filter( 'dokan_frontend_localize_script', [ $this, 'localized_scripts' ], 10, 1 );
+
+        // display notice to pay reverse withdrawal balance
+        add_action( 'dokan_dashboard_content_inside_before', [ $this, 'display_notice_on_vendor_dashboard' ] );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_notice_on_vendor_dashboard' ] );
 
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_filter_section' ], 10 );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_transactions_table' ], 10 );
+    }
+
+    public function display_notice_on_vendor_dashboard() {
+        // get vendor due status
+        $due_status = Helper::get_vendor_due_status( $this->seller_id );
+        if ( is_wp_error( $due_status ) ) {
+            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $due_status->get_error_message() ] );
+            return;
+        }
+
+        if (  $due_status['status'] === false ) {
+            // we don't need to show any notices on vendor dashboard
+            return;
+        }
+
+        if (  $due_status['status'] === true && $due_status['due_date'] === 'immediate' ) {
+            // due period is over, we don't need to show any notices on vendor dashboard
+            return;
+        }
+
+        // get formatted error messages
+        $message = sprintf( __( 'You have a reverse withdrawal balance of %s to be paid. Please <a href="%s">pay</a> it before %s. Below actions will be taken after the billing period is over. %s', 'dokan' ),
+            wc_price( $due_status['balance']['min_payable_amount'] ),
+            dokan_get_navigation_url( 'reverse-withdrawal' ),
+            $due_status['due_date'],
+            Helper::get_formatted_failed_actions()
+        );
+        dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
     }
 
     /**
@@ -42,7 +103,7 @@ class ReverseWithdrawal {
         $args = Helper::get_vendor_balance();
 
         if ( is_wp_error( $args ) ) {
-            // todo: handle error
+            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $args->get_error_message() ] );
         }
 
         dokan_get_template_part( 'reverse-withdrawal/reverse-balance', '', $args );
@@ -81,7 +142,7 @@ class ReverseWithdrawal {
         $manager = new ReverseWithdrawalManager();
 
         $transactions = $manager->get_store_transactions( [
-            'vendor_id' => dokan_get_current_user_id(),
+            'vendor_id' => $this->seller_id,
             'trn_date'  => $this->get_transaction_date(),
             'orderby'   => 'added',
             'order'     => 'DESC',

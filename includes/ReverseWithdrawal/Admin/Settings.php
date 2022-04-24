@@ -1,7 +1,7 @@
 <?php
 namespace WeDevs\Dokan\ReverseWithdrawal\Admin;
 
-use WeDevs\Dokan\ReverseWithdrawal\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\Settings as SettingsHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
@@ -86,7 +86,7 @@ class Settings {
                 'label'   => __( 'Reverse Withdrawal Payment Methods', 'dokan-lite' ),
                 'desc'    => __( 'Check the payment gateways you want to enable reverse withdrawal for.', 'dokan-lite' ),
                 'type'    => 'multicheck',
-                'options' => Helper::get_reverse_withrawal_payment_gateways(),
+                'options' => SettingsHelper::get_reverse_withrawal_payment_gateways(),
                 'default' => [ 'cod' => 'cod' ],
             ],
             'billing_type' => [
@@ -94,12 +94,12 @@ class Settings {
                 'label'   => __( 'Billing Type', 'dokan-lite' ),
                 'desc'    => __( 'Select how vendors will be charged for their reverse balance.', 'dokan-lite' ),
                 'type'    => 'select',
-                'options' => Helper::get_billing_type_options(),
+                'options' => SettingsHelper::get_billing_type_options(),
                 'default' => 'by_amount',
             ],
-            'reverse_balance_limit' => [
-                'name'    => 'reverse_balance_limit',
-                'label'   => sprintf( '%1$s (%2$s)', __( 'Reverse Balance Limit', 'dokan-lite' ), get_woocommerce_currency() ),
+            'reverse_balance_threshold' => [
+                'name'    => 'reverse_balance_threshold',
+                'label'   => sprintf( '%1$s (%2$s)', __( 'Reverse Balance Threshold', 'dokan-lite' ), get_woocommerce_currency() ),
                 'desc'    => __( 'Set reverse withdrawal threshold limit.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 0,
@@ -141,12 +141,12 @@ class Settings {
                 'label'   => __( 'After Due Period', 'dokan-lite' ),
                 'desc'    => __( 'Select one or more actions to perform after due period is over and vendors was unable to pay.', 'dokan-lite' ),
                 'type'    => 'multicheck',
-                'options' => Helper::get_failed_payment_actions(),
+                'options' => SettingsHelper::get_failed_payment_actions(),
                 'default' => [ 'status_inactive' => 'status_inactive' ],
             ],
             'display_notice' => [
                 'name'    => 'display_notice',
-                'label'   => __( 'Display Notice To Make Payment', 'dokan-lite' ),
+                'label'   => __( 'Display Notice During Due Period', 'dokan-lite' ),
                 'desc'    => __( 'Display notice to pay reverse withdrawal balance during Due Period under vendor dashboard.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'off',
@@ -157,7 +157,7 @@ class Settings {
         if ( dokan()->is_pro_exists() ) {
             $settings_fields['send_announcement'] = [
                 'name'    => 'send_announcement',
-                'label'   => __( 'Send announcement ?', 'dokan-lite' ),
+                'label'   => __( 'Send announcement?', 'dokan-lite' ),
                 'desc'    => __( 'Check this checkbox if you want to send announcement during due period. Note that, maximum one announcement will be send during a single billing period.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'off',

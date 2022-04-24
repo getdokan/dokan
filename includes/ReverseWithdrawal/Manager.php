@@ -121,7 +121,7 @@ class Manager {
         }
 
         // transaction type validation
-        if ( ! empty( $args['trn_type'] ) && array_key_exists( $args['trn_type'], Helper::get_transaction_types() ) ) {
+        if ( ! empty( $args['trn_type'] ) && array_key_exists( $args['trn_type'], Settings::get_transaction_types() ) ) {
             $where .= ' AND trn.trn_type = %s';
             $query_args[] = $args['trn_type'];
         }
@@ -366,7 +366,8 @@ class Manager {
         if ( is_wp_error( $balance ) ) {
             return $balance;
         }
-        return floatval( $balance['debit'] - $balance['credit'] );
+
+        return isset( $balance['debit'], $balance['credit'] ) ? floatval( $balance['debit'] - $balance['credit'] ) : 0;
     }
 
     /**
@@ -520,7 +521,7 @@ class Manager {
             return new WP_Error( 'insert_rw_invalid_transaction_id', __( 'Transaction id is required.', 'dokan-lite' ) );
         }
 
-        if ( empty( $args['trn_type'] ) || ! array_key_exists( $args['trn_type'], Helper::get_transaction_types() ) ) {
+        if ( empty( $args['trn_type'] ) || ! array_key_exists( $args['trn_type'], Settings::get_transaction_types() ) ) {
             return new WP_Error( 'insert_rw_invalid_transaction_type', __( 'Invalid transaction type is provide. Please check your input.', 'dokan-lite' ) );
         }
 

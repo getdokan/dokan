@@ -18,22 +18,34 @@
   border-radius: 5px;
 
   .reverse-balance {
-    font-size: 18px;
+    font-size: 1.2em;
     font-weight: bold;
   }
 
   .reverse-threshold {
-    font-size: 14px;
-    color: #a5a5a5;
+    font-size: 1em;
+    color: #999;
+    span {
+      margin-right: 5px;
+    }
   }
 
   .reverse-pay-form {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
   }
 
   .reverse-pay-form input {
+    width: 100px;
     margin-left: 10px;
+  }
+  .reverse-pay-form input.button {
+    width: auto;
+  }
+  .reverse-balance-notice {
+    color: #ff0000;
+    font-size: 0.8em;
   }
 }
 

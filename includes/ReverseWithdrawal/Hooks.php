@@ -21,6 +21,9 @@ class Hooks {
     public function __construct() {
         // after order status changed
         add_action( 'woocommerce_order_status_changed', [ $this, 'process_order_status_changed' ], 10, 3 );
+
+        // vendor dashboard navigation url
+        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10, 2 );
     }
 
     /**
@@ -45,7 +48,7 @@ class Hooks {
         }
 
         // check if reverse withdrawal setting is enabled
-        if ( ! Helper::is_enabled() ) {
+        if ( ! Settings::is_enabled() ) {
             return;
         }
 
@@ -58,7 +61,7 @@ class Hooks {
         }
 
         // check if order payment gateway is enabled for reverse withdrawal
-        if ( ! Helper::is_gateway_enabled_for_reverse_withdrawal( $order->get_payment_method() ) ) {
+        if ( ! Settings::is_gateway_enabled_for_reverse_withdrawal( $order->get_payment_method() ) ) {
             return;
         }
 
@@ -86,5 +89,28 @@ class Hooks {
         ];
         // insert reverse withdrawal entry
         $manager->insert( $data );
+    }
+
+    /**
+     * Add reverse withdrawal nav
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $urls
+     *
+     * @return array
+     */
+    public function add_reverse_withdrawal_nav( $urls ) {
+        if ( Settings::is_enabled() ) {
+            $urls['reverse-withdrawal'] = [
+                'title'      => __( 'Reverse Withdrawal', 'dokan-lite' ),
+                'icon'       => '<i class="fas fa-dollar-sign"></i>',
+                'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
+                'pos'        => 71,
+                'permission' => 'dokan_view_withdraw_menu',
+            ];
+        }
+
+        return $urls;
     }
 }

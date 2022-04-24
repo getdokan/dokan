@@ -14,143 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Helper {
     /**
-     * Check if reverse withdrawal feature is enabled
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_enabled() {
-        return 'on' === dokan_get_option( 'enabled', 'dokan_reverse_withdrawal', 'off' );
-    }
-
-    /**
-     * Get enabled payment gateways for reverse withdrawal
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public static function get_enabled_payment_gateways() {
-        $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
-
-        return array_keys( $payment_methods );
-    }
-
-    /**
-     * Check if gateway is enabled for reverse withdrawal
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_gateway_enabled_for_reverse_withdrawal( $gateway ) {
-        $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
-
-        return isset( $payment_methods[ $gateway ] );
-    }
-
-    /**
-     * Get reverse withdrawal billing type
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public static function get_billing_type() {
-        $billing_type = dokan_get_option( 'billing_type', 'dokan_reverse_withdrawal', 'by_amount' );
-
-        return $billing_type;
-    }
-
-    /**
-     * Get reverse withdrawal threshold limit
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return float
-     */
-    public static function get_reverse_balance_limit() {
-        $limit = dokan_get_option( 'reverse_balance_limit', 'dokan_reverse_withdrawal', '150' );
-
-        return (float) wc_format_decimal( $limit, 2 );
-    }
-
-    /**
-     * Get reverse withdrawal billing day
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return float
-     */
-    public static function get_billing_day() {
-        $billing_day = dokan_get_option( 'billing_day', 'dokan_reverse_withdrawal', '1' );
-
-        return $billing_day;
-    }
-
-    /**
-     * Get reverse withdrawal billing day
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return float
-     */
-    public static function get_due_period() {
-        $due_period = dokan_get_option( 'due_period', 'dokan_reverse_withdrawal', '7' );
-
-        return absint( $due_period );
-    }
-
-    /**
-     * Get reverse withdrawal failed payment actions
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public static function get_failed_actions() {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
-
-        return array_keys( $failed_actions );
-    }
-
-    /**
-     * Check if action is enabled for reverse withdrawal
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_failed_action_enabled( $action ) {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
-
-        return isset( $failed_actions[ $action ] );
-    }
-
-    /**
-     * Check if display notification is enabled during due period for reverse withdrawal
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_display_notice_enabled() {
-        return 'on' === dokan_get_option( 'display_notice', 'dokan_reverse_withdrawal', 'off' );
-    }
-
-    /**
-     * Check if sending announcement is enabled during due period for reverse withdrawal
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_announcement_enabled() {
-        return 'on' === dokan_get_option( 'send_announcement', 'dokan_reverse_withdrawal', 'off' );
-    }
-
-    /**
      * This method will return option key for reverse withdrawal base product
      *
      * @since DOKAN_SINCE
@@ -159,6 +22,17 @@ class Helper {
      */
     public static function get_base_product_option_key() {
         return 'dokan_reverse_withdrawal_product_id';
+    }
+
+    /**
+     * This method will return balance_threshold_exceed_date_key
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function balance_threshold_exceed_date_key() {
+        return '_dokan_last_balance_threshold_exceed_date';
     }
 
     /**
@@ -243,80 +117,6 @@ class Helper {
         return false;
     }
 
-    /**
-     * Get reverse withdrawal payment gateways
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public static function get_reverse_withrawal_payment_gateways() {
-        $gateways = [
-            'cod'    => __( 'Cash on delivery', 'dokan-lite' ),
-            'cheque' => __( 'Cheque Payments', 'dokan-lite' ),
-        ];
-        return apply_filters( 'dokan_reverse_withdrawal_payment_gateways', $gateways );
-    }
-
-    /**
-     * Get reverse withdrawal billing type
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public static function get_billing_type_options() {
-        $options = [
-            'by_amount' => __( 'By Amount Limit', 'dokan-lite' ),
-            'by_month'  => __( 'By Monthly', 'dokan-lite' ),
-        ];
-        return apply_filters( 'dokan_reverse_withdrawal_billing_type_options', $options );
-    }
-
-    /**
-     * Get reverse withdrawal failed payment actions
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public static function get_failed_payment_actions() {
-        $actions = [
-            'status_inactive'     => __( 'Make Vendor Status Inactive', 'dokan-lite' ),
-            'enable_catalog_mode' => __( 'Enable Catalog Mode', 'dokan-lite' ),
-            'hide_withdraw_menu'  => __( 'Hide Withdraw Menu', 'dokan-lite' ),
-        ];
-        return apply_filters( 'dokan_reverse_withdrawal_failed_payment_actions', $actions );
-    }
-
-    /**
-     * Get reverse withdrawal failed payment actions
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array|string return associated array of transaction types if no argument is provided. If $transaction_type is provided and if data exists then return the label otherwise return empty string
-     */
-    public static function get_transaction_types( $transaction_type = null ) {
-        /**
-         * ! do not change the keys, it will break the query
-         * ! also do not use any filter here, if new transaction type is needed add it to the array and also add it under database table
-         */
-        $transaction_types = [
-            'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
-            'vendor_payment'            => esc_html__( 'Payment', 'dokan-lite' ),
-            'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
-            'order_refund'              => esc_html__( 'Refund', 'dokan-lite' ),
-            'product_advertisement'     => esc_html__( 'Product Advertisement', 'dokan-lite' ),
-            'manual_order_commission'   => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
-        ];
-
-        if ( $transaction_type ) {
-            return isset( $transaction_types[ $transaction_type ] ) ? $transaction_types[ $transaction_type ] : '';
-        }
-
-        return $transaction_types;
-    }
-
     public static function get_formatted_transaction_id( $transaction_id, $transaction_type, $contex = 'admin' ) {
         switch ( $transaction_type ) {
             case 'product_advertisement':
@@ -354,7 +154,7 @@ class Helper {
             'trn_id'        => absint( $item['trn_id'] ),
             'trn_url'       => self::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
             'trn_date'      => dokan_format_date( $item['trn_date'] ),
-            'trn_type'      => self::get_transaction_types( $item['trn_type'] ),
+            'trn_type'      => Settings::get_transaction_types( $item['trn_type'] ),
             'vendor_id'     => absint( $item['vendor_id'] ),
             'note'          => esc_html( $item['note'] ),
             'debit'         => $item['debit'],
@@ -392,9 +192,10 @@ class Helper {
         // get required settings
         $args = [
             'balance'      => $balance,
-            'billing_type' => self::get_billing_type(),
-            'billing_day'  => self::get_billing_day(),
-            'due_period'   => self::get_due_period(),
+            'billing_type' => Settings::get_billing_type(),
+            'billing_day'  => Settings::get_billing_day(),
+            'due_period'   => Settings::get_due_period(),
+            'threshold'    => Settings::get_reverse_balance_threshold(),
         ];
 
         // check settings for billing type
@@ -422,10 +223,171 @@ class Helper {
                 break;
 
             case 'by_amount':
-                $args['min_payable_amount'] = self::get_reverse_balance_limit();
+                if ( $balance < $args['threshold'] ) {
+                    $args['min_payable_amount'] = $balance;
+                } else {
+                    $args['min_payable_amount'] = $args['threshold'];
+                }
                 break;
         }
 
         return $args;
+    }
+
+    /**
+     * This method will check if vendor needs to pay balance along with details data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int|null $vendor_id
+     *
+     * @return array|WP_Error
+     */
+    public static function get_vendor_due_status( $vendor_id = null ) {
+        // check for valid vendor id
+        if ( ! is_numeric( $vendor_id ) ) {
+            $vendor_id = dokan_get_current_user_id();
+        }
+
+        // get balance
+        $balance = static::get_vendor_balance( $vendor_id );
+
+        // check for error
+        if ( is_wp_error( $balance ) ) {
+            return $balance;
+        }
+
+        $ret = [
+            'status'   => false,
+            'message'  => '',
+            'due_date' => '',
+            'balance'  => $balance,
+        ];
+
+        // check which billing type setting is enabled
+        switch ( Settings::get_billing_type() ) {
+            case 'by_month':
+                // check if we need to display payment notice
+                if ( $balance['min_payable_amount'] <= 0 ) {
+                    // there is no balance to be paid
+                    $ret['status'] = false;
+                    break;
+                }
+
+                // vendor needs to pay due amount
+                $ret['status'] = true;
+
+                // check if user crossed the due period
+                $today    = dokan_current_datetime();
+                $due_date = $today->modify( 'first day of this month' );
+
+                if ( Settings::get_due_period() ) {
+                    $due_date = $due_date->modify( '+' . Settings::get_due_period() . ' days' );
+                }
+
+                if ( $today > $due_date ) {
+                    // vendor needs to pay due balance immediately
+                    $ret['due_date'] = 'immediate';
+                } else {
+                    // vendor needs to pay due balance on due date
+                    $ret['due_date'] = $due_date->format( 'Y-m-d' );
+                }
+
+                break;
+
+            case 'by_amount':
+                $threshold = Settings::get_reverse_balance_threshold();
+                if ( $ret['balance']['balance'] < $threshold ) {
+                    // balance amount is less than threshold
+                    $ret['status'] = false;
+                    break;
+                }
+
+                $ret['status'] = true;
+                // check when user crossed the threshold limit
+                $last_threshold_limit_exceed_date = get_user_meta( $vendor_id, static::balance_threshold_exceed_date_key(), true );
+                if ( ! $last_threshold_limit_exceed_date ) {
+                    $last_threshold_limit_exceed_date = dokan_current_datetime()->format( 'Y-m-d' );
+                    update_user_meta( $vendor_id, static::balance_threshold_exceed_date_key(), $last_threshold_limit_exceed_date );
+                }
+
+                $today    = dokan_current_datetime();
+                $due_date = $today->modify( $last_threshold_limit_exceed_date );
+
+                if ( Settings::get_due_period() ) {
+                    $due_date = $due_date->modify( '+' . Settings::get_due_period() . ' days' );
+                }
+
+                if ( $today > $due_date ) {
+                    // vendor needs to pay due balance immediately
+                    $ret['due_date'] = 'immediate';
+                } else {
+                    // vendor needs to pay due balance on due date
+                    $ret['due_date'] = $due_date->format( 'Y-m-d' );
+                }
+
+                break;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * This method will check if a vendors need to pay their unpaid balance
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int|null $vendor_id
+     *
+     * @return bool|WP_Error
+     */
+    public static function is_balance_due( $vendor_id = null ) {
+        $due_status = static::get_vendor_due_status( $vendor_id );
+
+        if ( is_wp_error( $due_status ) ) {
+            return $due_status;
+        }
+
+        return $due_status['status'];
+    }
+
+    /**
+     * This method will return formatted failed action messages
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function get_formatted_failed_actions() {
+        $failed_actions = Settings::get_failed_actions();
+        $messages       = [];
+        foreach ( $failed_actions as $failed_action ) {
+            switch ( $failed_action ) {
+                case 'status_inactive':
+                    $messages[] = __( 'Your account will be disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
+                    break;
+
+                case 'enable_catalog_mode':
+                    $messages[] = __( 'Your products catalog visibility will be hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
+                    break;
+
+                case 'hide_withdraw_menu':
+                    $messages[] = __( 'Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.', 'dokan-lite' );
+                    break;
+            }
+        }
+
+        $ret = '';
+        if ( empty( $messages ) ) {
+            return $ret;
+        }
+
+        $ret = '<ol>';
+        foreach ( $messages as $message ) {
+            $ret .= '<li>' . $message . '</li>';
+        }
+        $ret .= '</ol>';
+
+        return $ret;
     }
 }
