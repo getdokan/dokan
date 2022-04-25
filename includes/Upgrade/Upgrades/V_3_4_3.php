@@ -3,9 +3,9 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_3_9_UpdateProductCategories;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_4_3_UpdateProductCategories;
 
-class V_3_3_9 extends DokanUpgrader {
+class V_3_4_3 extends DokanUpgrader {
 
     /**
      * Updates product categories.
@@ -18,7 +18,7 @@ class V_3_3_9 extends DokanUpgrader {
     public static function update_products_categories() {
         $i         = 0;
         $products  = [];
-        $processor = new V_3_3_9_UpdateProductCategories();
+        $processor = new V_3_4_3_UpdateProductCategories();
 
         while ( null !== $products ) {
             $args = [

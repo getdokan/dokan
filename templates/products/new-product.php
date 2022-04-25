@@ -198,7 +198,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                     </div>
 
                                     <?php dokan_get_template_part('products/dokan-category-header-ui', '', array() ); ?>
-                                    <?php dokan_get_template_part('products/dokan-category-ui', '', array() ); ?>
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>

@@ -9,7 +9,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
  *
  * @since 3.3.9
  */
-class V_3_3_9_UpdateProductCategories extends DokanBackgroundProcesses {
+class V_3_4_3_UpdateProductCategories extends DokanBackgroundProcesses {
 
     /**
      * Save all ancestors ids based on child id.
@@ -42,18 +42,20 @@ class V_3_3_9_UpdateProductCategories extends DokanBackgroundProcesses {
 
                 // If the child already in the array and the current child is more younger than the previous child we are
                 // updating as the chosen category.
-                if( ! array_key_exists( $most_old_parent, $all_parents ) || $all_parents[ $most_old_parent ]['size'] < sizeof( $all_ancestors ) ) {
-                    $all_parents[ $most_old_parent ]['size']   = sizeof( $all_ancestors );
+                if ( ! array_key_exists( $most_old_parent, $all_parents ) || $all_parents[ $most_old_parent ]['size'] < count( $all_ancestors ) ) {
+                    $all_parents[ $most_old_parent ]['size']   = count( $all_ancestors );
                     $all_parents[ $most_old_parent ]['parent'] = $most_old_parent;
                     $all_parents[ $most_old_parent ]['child']  = $category;
                 }
                 $all_cats_with_parents = array_unique( array_merge( $all_cats_with_parents, $all_categories ) );
             }
 
+            // phpcs:disable
             $chosen_cat = array_map( function( $value ) {
                 return $value['child'];
             }, $all_parents );
             $chosen_cat = array_values( $chosen_cat );
+            // phpcs:enable
 
             update_post_meta( $product->ID, 'chosen_product_cat', $chosen_cat );
             wp_set_object_terms( $product->ID, $all_cats_with_parents, 'product_cat' );

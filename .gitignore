@@ -15,4 +15,5 @@ config.json
 # Composer
 /vendor/
 phpcs-report.txt
-/assets/css/dokan-single-category-ui.css
+/assets/js/dokan-single-category-ui.css
+/assets/js/dokan-single-category-ui.js

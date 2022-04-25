@@ -90,7 +90,7 @@
     },
 
     doSearchCates: async ( text ) => {
-      let allCategories = [...dokan_all_product_categories];
+      let allCategories = [...dokan_product_category_data.categories];
       let searchResult = await allCategories.filter( ( category, index ) => {
         let fullText = category.cat_name;
         let found = fullText.toLowerCase().indexOf(text);
@@ -132,7 +132,7 @@
       SingleCategory.loadingCategories( false );
     },
     getCategoriesWithParentId: ( parentId = 0, level = 1, selectedId = false ) => {
-      let allCategories = [...dokan_all_product_categories];
+      let allCategories = [...dokan_product_category_data.categories];
       let categories = allCategories.filter( ( category, index ) => {
         if ( category.category_parent == parentId ) {
           allCategories[index].uiActivaion = category.cat_ID === selectedId ? 'dokan-single-category-li-active' : false;
@@ -265,13 +265,13 @@
     },
 
     setCatId: (id) => {
-      let ui = `<input type="hidden" name="${ dokan_is_single_category ? 'product_cat' : 'product_cat[]' }" class="dokan_product_cat" id="dokan_product_cat" value="${id}"></input>`;
+      let ui = `<input type="hidden" name="${ dokan_product_category_data.is_single ? 'product_cat' : 'product_cat[]' }" class="dokan_product_cat" id="dokan_product_cat" value="${id}"></input>`;
       ui += `<input type="hidden" class="dokan_chosen_product_cat" name="chosen_product_cat[]" value="${id}"></input>`;
-      let category = dokan_all_product_categories.filter( (element, index) => {
+      let category = dokan_product_category_data.categories.filter( (element, index) => {
         return element.cat_ID == id;
       } );
 
-      if ( ! dokan_is_single_category ) {
+      if ( ! dokan_product_category_data.is_single ) {
         ui += category[0].parents.map( (element, index) => {
           return `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${element.cat_ID}"></input>`;
         } ).join('');
@@ -290,7 +290,7 @@
             <span id="dokan_product_cat_res" class="dokan-select-single-category-title dokan-ssct-level-${boxCounter}">- Select a category -</span>
             <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
         </div>
-            ${ ! dokan_is_single_category ? `
+            ${ ! dokan_product_category_data.is_single ? `
             <div class="dokan-select-single-category-remove-container">
                 <span class="dokan-select-single-category-remove"><i class="fas fa-times"></i></span>
             </div>`
@@ -303,7 +303,7 @@
     },
 
     findCategory: (id) => {
-      let allCategories = [...dokan_all_product_categories];
+      let allCategories = [...dokan_product_category_data.categories];
 
       return allCategories.findIndex( ( category, index ) => {
         return id == category.cat_ID;
@@ -324,7 +324,7 @@
       if ( chosenCat.length > 0 ) {
         let catId = chosenCat.val();
         let catIndex = SingleCategory.findCategory(catId);
-        let category = dokan_all_product_categories[catIndex];
+        let category = dokan_product_category_data.categories[catIndex];
         SingleCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
       }
     });

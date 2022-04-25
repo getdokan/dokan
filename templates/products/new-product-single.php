@@ -296,7 +296,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             }
 
                                             dokan_get_template_part('products/dokan-category-header-ui', '', array( 'terms' => $terms, 'chosen_cat' => $chosen_cat ) );
-                                            dokan_get_template_part('products/dokan-category-ui', '', array( ) );
                                         ?>
 
                                     <div class="dokan-form-group">

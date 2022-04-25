@@ -31,7 +31,7 @@ class Products {
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
         add_action( 'dokan_render_product_edit_template', array( $this, 'load_product_edit_template' ), 11 );
         add_action( 'dokan_after_listing_product', array( $this, 'load_add_new_product_popup' ), 10 );
-        add_action( 'dokan_after_listing_product', array( $this, 'load_single_category_ui_on_popup' ), 10 );
+        add_action( 'dokan_dashboard_content_after', array( $this, 'load_add_category_modal' ), 10 );
         add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
@@ -548,10 +548,78 @@ class Products {
     /**
      * Returns new category select ui html elements.
      *
+     * @since DOKAN_SINCE
+     *
      * @return html
      */
-    public function load_single_category_ui_on_popup() {
-        dokan_get_template_part('products/dokan-category-ui', '', array() );
+    public function load_add_category_modal() {
+        /**
+         * Checking if current page is dokan dashboard.
+         * And
+         * Checking if it is a dokan add product page.
+         * Or
+         * Checking it is a edit page or product page.
+         */
+        if ( 'dashboard' === get_query_var('pagename','dokan-not-dashboard-page') && ( 'dokan-not-add-product-page' !== get_query_var( 'new-product', 'dokan-not-add-product-page' ) || 'dokan-not-products-page' != get_query_var( 'products', 'dokan-not-products-page' ) ) ) {
+            wp_enqueue_style( 'dokan-single-category-ui-css' );
+
+            $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false;
+
+            $args = array(
+                'taxonomy'     => 'product_cat',
+                'orderby'      => 'name',
+                'show_count'   => 1,      // 1 for yes, 0 for no
+                'pad_counts'   => 1,      // 1 for yes, 0 for no
+                'hierarchical' => 1,      // 1 for yes, 0 for no
+                'title_li'     => '',
+                'hide_empty'   => 0,
+            );
+            $all_categories = get_categories( $args );
+
+            foreach ( $all_categories as $key => $value ) {
+                $children = get_terms( 'product_cat', array(
+                    'parent'    => $value->term_id,
+                    'hide_empty' => false
+                ) );
+
+                $children ? $all_categories[$key]->has_child = true : $all_categories[$key]->has_child = false;
+                $parents = [];
+                $parents = $this->dokan_get_single_cat_parents( $parents, $all_categories, $value, $key );
+                $all_categories[$key]->parents = array_reverse( $parents );
+            }
+
+            $data = [
+                'categories' => $all_categories,
+                'is_single'  => $is_single,
+            ];
+
+            wp_localize_script( 'dokan-script', 'dokan_product_category_data', $data );
+
+            dokan_get_template_part('products/dokan-category-ui', '', array() );
+        }
+    }
+
+    /**
+     * Returns every single category parents from all categories array.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $parents
+     * @param array $all_categories
+     * @param object $value
+     * @param string $key
+     *
+     * @return array
+     */
+    private function dokan_get_single_cat_parents ( $parents, $all_categories, $value, $key ) {
+        foreach ( $all_categories as $category ) {
+            if ( $category->term_id === $value->category_parent && $value->category_parent !== 0 ) {
+                array_push( $parents, $category );
+                $parents = $this->dokan_get_single_cat_parents( $parents, $all_categories, $category, $key );
+            }
+        }
+
+        return $parents;
     }
 
     /**

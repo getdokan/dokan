@@ -470,7 +470,6 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-fontawesome' );
-            wp_enqueue_style( 'dokan-single-category-ui-css' );
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
