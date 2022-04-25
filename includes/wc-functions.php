@@ -312,7 +312,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             try {
                 wc_update_product_stock_status( $post_id, $stock_status );
             } catch ( Exception $ex ) {
-                error_log( __FILE__ .':' . __LINE__ . ' ' . $ex->getMessage() );
+                error_log( __FILE__ . ':' . __LINE__ . ' ' . $ex->getMessage() );
             }
         }
 
