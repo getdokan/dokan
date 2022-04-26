@@ -193,7 +193,13 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $methods      = dokan_withdraw_get_active_methods();
+        $methods = dokan_withdraw_get_active_methods();
+
+        if ( empty( $methods ) ) {
+            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
+            return;
+        }
+
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
         $is_edit_mode = false;
@@ -229,23 +235,24 @@ class Settings {
         $unused_methods = $this->get_payment_methods( $unused_method_keys );
         $used_methods   = $this->get_payment_methods( $used_method_keys );
 
-        $method_key = str_replace( '/manage-', '', $slug_suffix );
+        $method_key = str_replace( '/manage-', '', $slug_suffix ); // if we are requesting a single payment method page(to edit or for first time setup) then we have the corresponding payment method key in the url
 
-        if ( stripos( $method_key, '/edit' ) !== false ) {
+        if ( stripos( $method_key, '/edit' ) !== false ) { // if payment method key has /edit suffix then we are trying to edit the method, otherwise we are doing a initial setup for that payment method
             $is_edit_mode = true;
-            $method_key   = str_replace( '/edit', '', $method_key );
+            $method_key   = str_replace( '/edit', '', $method_key ); // removing /edit suffix to get payment method key
         }
 
         if ( $is_edit_mode && 'bank' === $method_key ) {
             $profile_info['is_edit_method'] = $is_edit_mode;
         }
 
+        // template arguments
         $args = [
             'current_user' => $currentuser,
             'profile_info' => $profile_info,
         ];
 
-        if ( empty( $method_key ) ) {
+        if ( empty( $method_key ) ) { // payment method list page arguments
             $args = array_merge(
                 $args,
                 [
@@ -254,12 +261,9 @@ class Settings {
                 ]
             );
 
-            if ( empty( $methods ) ) {
-                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
-                return;
-            }
-        } else {
-            $method = dokan_withdraw_get_method( $method_key );
+            dokan_get_template_part( 'settings/payment', '', $args ); // show the payment method list template
+        } else { // single payment method edit page arguments
+            $method = dokan_withdraw_get_method( $method_key ); // get the single payment method for the $method_key
             $args   = array_merge(
                 $args,
                 [
@@ -272,9 +276,9 @@ class Settings {
                 dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'Invalid withdraw method. Please contact site admin', 'dokan-lite' ) ) );
                 return;
             }
-        }
 
-        dokan_get_template_part( 'settings/payment', ! empty( $method_key ) ? 'manage' : '', $args );
+            dokan_get_template_part( 'settings/payment', 'manage', $args ); // show the single payment method page
+        }
     }
 
     /**
@@ -791,7 +795,7 @@ class Settings {
     }
 
     /**
-     * Separate the used and unused method keys
+     * Separate the used and unused payment method keys by the current user
      *
      * @since DOKAN_SINCE
      *
