@@ -413,7 +413,7 @@ class SetupWizard {
         $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
-        $dokan_commission_types    = dokan_commission_types(true);
+        $dokan_commission_types    = dokan_commission_types( true );
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', array(

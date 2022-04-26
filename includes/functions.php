@@ -3641,17 +3641,6 @@ function dokan_is_dynamic_commission_type( $commission_type ) {
 }
 
 /**
- * Dokan new commission types
- *
- * @since DOKAN_SINCE
- *
- * @return array
- */
-function dokan_dynamic_commission_types() {
-    return apply_filters( 'dokan_dynamic_commission_types', [] );
-}
-
-/**
  * Dokan Login Form
  *
  * @since 2.9.11
