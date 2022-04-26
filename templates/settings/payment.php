@@ -18,24 +18,25 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             <button id="toggle-vendor-payment-method-drop-down" class="dokan-btn dokan-btn-success"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></button>
             <div id="vendor-payment-method-drop-down-wrapper">
                 <div id="vendor-payment-method-drop-down">
-                    <ul>
-                    <?php foreach ( $unused_methods as $method_key => $method ) :?>
-                        <li>
-                            <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
-                                <div>
-                                    <img src="<?php echo esc_url( dokan_withdraw_get_method_icon(  $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
-                                    <span>
-                                        <?php
-                                        //translators: %s: payment method title
-                                        printf( esc_html__( 'Direct to %s', 'dokan-lite' ), apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
-                                        ?>
-                                    </span>
-                                </div>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                    </ul>
-                    <?php if ( empty( $unused_methods ) ) : ?>
+                    <?php if ( is_array( $unused_methods ) && ! empty( $unused_methods ) ) : ?>
+                        <ul>
+                        <?php foreach ( $unused_methods as $method_key => $method ) :?>
+                            <li>
+                                <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
+                                    <div>
+                                        <img src="<?php echo esc_url( dokan_withdraw_get_method_icon(  $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
+                                        <span>
+                                            <?php
+                                            //translators: %s: payment method title
+                                            printf( esc_html__( 'Direct to %s', 'dokan-lite' ), apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
+                                            ?>
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php else : ?>
                         <div class="no-content">
                             <?php esc_html_e( 'There is no payment method to add.', 'dokan-lite' ); ?>
                         </div>
@@ -55,7 +56,11 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                     <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                     <span>
                         <?php
-                        echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
+                        if ( is_array( $method ) ) {
+                            echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
+                        } else {
+                            echo esc_html( $method );
+                        }
 
                         if ( isset( $profile_info['payment'][ $method_key ] ) && ! empty( dokan_withdraw_get_method_additional_info( $method_key ) ) ) {
                             ?>
