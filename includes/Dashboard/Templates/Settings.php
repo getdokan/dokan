@@ -193,7 +193,13 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $methods      = dokan_withdraw_get_active_methods();
+        $methods = dokan_withdraw_get_active_methods();
+
+        if ( empty( $methods ) ) {
+            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
+            return;
+        }
+
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
         $is_edit_mode = false;
@@ -253,11 +259,6 @@ class Settings {
                     'unused_methods' => $unused_methods,
                 ]
             );
-
-            if ( empty( $methods ) ) {
-                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
-                return;
-            }
         } else {
             $method = dokan_withdraw_get_method( $method_key );
             $args   = array_merge(
