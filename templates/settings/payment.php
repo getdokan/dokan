@@ -45,7 +45,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             </div>
         </div>
     </div>
-    <?php if ( is_array( $methods ) && ! empty( $methods ) ) : ?>
+    <?php if ( false && is_array( $methods ) && ! empty( $methods ) ) : ?>
         <ul>
         <?php foreach ( $methods as $method_key => $method ) : ?>
             <li>
@@ -73,6 +73,10 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
             </li>
         <?php endforeach; ?>
         </ul>
+    <?php else: ?>
+        <div class="no-content">
+            <?php esc_html_e( 'There is no payment method to show.', 'dokan-lite' ); ?>
+        </div>
     <?php endif; ?>
 </div>
 
