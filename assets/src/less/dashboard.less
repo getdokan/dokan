@@ -185,6 +185,208 @@ div.media-sidebar a.edit-attachment{
                     height: 300px;
                 }
             }
+
+            .dokan-payment-settings-summary {
+
+                #vendor-dashboard-payment-settings-error {
+                    padding: 25px;
+                    display: none;
+                    background-color: palevioletred;
+                }
+
+                div.payment-methods-listing-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    background-color: #EEEEEE;
+
+                    > h2 {
+                        margin: 5px 0;
+                        flex-grow: 1;
+                    }
+
+                    #vendor-dashboard-payment-settings-toggle-dropdown {
+                        flex-grow: 2;
+                        text-align: right;
+
+                        #vendor-payment-method-drop-down-wrapper {
+                            position: relative;
+                        }
+
+                        #vendor-payment-method-drop-down {
+                            display: none;
+                            max-height: 200px;
+                            border: 1px black solid;
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            background-color: white;
+
+                            ul {
+                                list-style: none;
+                                margin: 0;
+                                max-height: 200px;
+                                overflow-y: scroll;
+                                overflow-x: hidden;
+
+                                li {
+                                    padding-right: 20px;
+                                    border-bottom: 1px #dddddd solid;
+
+                                    div {
+                                        white-space: nowrap;
+                                        display: flex;
+                                        align-items: center;
+                                        padding: 10px 10px;
+
+                                        img {
+                                            width: calc(12px + 1.5vw);
+                                            border: 1px solid lightgray;
+                                            border-radius: 50%;
+                                        }
+
+                                        span {
+                                            margin-left: 10px;
+                                            color: #333333;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .no-content {
+                                padding: 20px;
+                            }
+                        }
+
+                        &:hover {
+                            #vendor-payment-method-drop-down {
+                                display: block;
+                            }
+                        }
+                    }
+                }
+
+                > ul {
+                    list-style: none;
+                    min-height: 200px;
+                    margin-left: 0;
+
+                    li {
+                        > div {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 10px;
+                            border-bottom: #CCCCCC solid 1px;
+
+                            > div {
+                                display: flex;
+                                align-items: center;
+
+                                img {
+                                    width: calc( 12px + 3vw );
+                                    border: 1px solid grey;
+                                    border-radius: 50%;
+                                }
+
+                                span {
+                                    margin-left: 10px; color: #333333
+                                }
+
+                                button {
+                                    margin-bottom: 3px !important;
+                                    min-height: 30px !important;
+                                }
+
+                                a {
+                                    button {
+                                        margin-left: 3px !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            #payment-form {
+                .payment-field-bank {
+                    > div.dokan-form-group {
+                        > div {
+                            background-color: white;
+                            box-shadow: 0 0 5px #bbbbbb;
+                            margin-right: 10px;
+                            padding: 20px;
+
+                            div.dokan-form-group {
+                                > div {
+                                    .dokan-text-left();
+
+                                    label {
+                                        color: black;
+                                        font-weight: bold;
+                                    }
+
+                                    select {
+                                        padding: 10px 15px;
+                                        border-radius: 5px;
+                                        min-height: 50px;
+                                    }
+                                }
+                            }
+
+                            div.data-warning {
+                                display: flex;
+                                box-shadow: 0 0 5px #AAAAAA;
+                                padding: 10px;
+                                margin-bottom: 10px;
+
+                                div.left-icon-container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    padding: 5px;
+
+                                    i {
+                                        color: orange;
+                                    }
+                                }
+
+                                div.vr-separator {
+                                    margin: 0 10px;
+                                    border-left: 1px #dddddd solid;
+                                }
+                            }
+
+                            .bottom-note {
+                                text-align: left;
+                                margin-bottom: 2em;
+                            }
+
+                            .bottom-actions {
+                                background-color: #EEEEEE;
+                                text-align: left;
+                                border-top: 1px #cccccc solid;
+                                padding: 20px;
+                                margin: -20px;
+
+                                a {
+                                    margin-left: 10px;
+                                    text-decoration: none;
+                                    color: #2B78E4;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                > div.dokan-form-group {
+                    > div.ajax_prev.dokan-w4 {
+                        margin-left: 24%;
+                    }
+                }
+            }
         }
 
         .edit-account {
