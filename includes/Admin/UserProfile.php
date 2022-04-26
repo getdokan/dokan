@@ -328,7 +328,7 @@ class UserProfile {
                     <th><?php esc_html_e( 'Admin Commission Type ', 'dokan-lite' ); ?></th>
                     <td>
                         <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
-                            <?php foreach ( dokan_commission_types( true ) as $key => $value ) : ?>
+                            <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
                                 <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key ); ?>><?php echo esc_attr( $value ); ?></option>
                             <?php endforeach; ?>
                         </select>

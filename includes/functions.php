@@ -3613,15 +3613,17 @@ function dokan_privacy_policy_text( $return = false ) {
  *
  * @since 2.9.21
  *
+ * @param boolean $exclude_dynamic_commissions
+ *
  * @return array
  */
-function dokan_commission_types( $include_dynamic_commissions = false ) {
+function dokan_commission_types( $exclude_dynamic_commissions = false ) {
     return apply_filters(
         'dokan_commission_types', [
             'flat'       => __( 'Flat', 'dokan-lite' ),
             'percentage' => __( 'Percentage', 'dokan-lite' ),
         ],
-        $include_dynamic_commissions
+        $exclude_dynamic_commissions
     );
 }
 
@@ -3635,7 +3637,7 @@ function dokan_commission_types( $include_dynamic_commissions = false ) {
  * @return boolean
  */
 function dokan_is_dynamic_commission_type( $commission_type ) {
-    return in_array( $commission_type, array_keys( dokan_dynamic_commission_types() ) ) ? true : false;
+    return apply_filters( 'dokan_is_dynamic_commission_type', false, $commission_type );
 }
 
 /**

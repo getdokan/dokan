@@ -8,8 +8,6 @@
  */
 
 $admin_commissions    = $args['admin_commissions'];
-$currency_symbol      = $args['currency_symbol'];
-$commission_i18n_data = $args['commission_i18n_data'];
 
 ?>
 
@@ -19,10 +17,10 @@ $commission_i18n_data = $args['commission_i18n_data'];
     <td class="new_commission_fields_body " id="new_commission_fields_body">
         <fieldset class="dokan-new-commission-wraper">
             <div class="dokan-new-commission-header dokan-new-commission-row">
-                <div class="dokan-new-commission-col-from"><?php echo esc_html( $commission_i18n_data['from'] ); ?></div>
-                <div class="dokan-new-commission-col-to"><?php echo esc_html( $commission_i18n_data['to'] ); ?></div>
-                <div class="dokan-new-commission-col-ct"><?php echo esc_html( $commission_i18n_data['type'] ); ?></div>
-                <div class="dokan-new-commission-col-commission"><?php echo esc_html( $commission_i18n_data['commission'] ); ?></div>
+                <div class="dokan-new-commission-col-from"><?php echo esc_html_e( 'From', 'dokan' ); ?></div>
+                <div class="dokan-new-commission-col-to"><?php echo esc_html_e( 'To', 'dokan' ); ?></div>
+                <div class="dokan-new-commission-col-ct"><?php echo esc_html_e( 'Type', 'dokan' ); ?></div>
+                <div class="dokan-new-commission-col-commission"><?php echo esc_html_e( 'Commission', 'dokan' ); ?></div>
                 <div class="dokan-new-commission-col-action"></div>
             </div>
 
@@ -38,9 +36,9 @@ $commission_i18n_data = $args['commission_i18n_data'];
                     </div>
                     <div class="dokan-new-commission-col-ct">
                         <select class="dokan-commission-type-select" data-rownumber="<?php echo esc_attr($key); ?>" name="dokan_commission_type[]">
-                            <option <?php selected( $commission['commission_type'], 'flat' ) ?> value="flat"><?php echo esc_html( $commission_i18n_data['flat'] ); ?></option>
-                            <option <?php selected( $commission['commission_type'], 'percentage' ) ?> value="percentage"><?php echo esc_html( $commission_i18n_data['percentage'] ); ?></option>
-                            <option <?php selected( $commission['commission_type'], 'combine' ) ?> value="combine"><?php echo esc_html( $commission_i18n_data['combine'] ); ?></option>
+                            <option <?php selected( $commission['commission_type'], 'flat' ) ?> value="flat"><?php esc_html_e( 'Flat', 'dokan' ); ?></option>
+                            <option <?php selected( $commission['commission_type'], 'percentage' ) ?> value="percentage"><?php esc_html_e( 'Percentage', 'dokan' ) ; ?></option>
+                            <option <?php selected( $commission['commission_type'], 'combine' ) ?> value="combine"><?php esc_html_e( 'Combined', 'dokan' ); ?></option>
                         </select>
                     </div>
                     <div class="dokan-new-commission-col-commission">
@@ -53,7 +51,7 @@ $commission_i18n_data = $args['commission_i18n_data'];
                         </div>
                         <div class="commission-inner-type commission-inner-type-flat-<?php echo esc_attr($key); ?>"  style="display: <?php echo $commission['commission_type'] === 'flat' || $commission['commission_type'] === 'combine' ? 'block' : 'none' ?>;">
                             <input value="<?php echo esc_attr($commission['flat']);?>" name="dokan_flat[]" class="dokan-validate-number dokan-commission-flat-<?php echo esc_attr($key); ?> dokan-commission-value" type="text"/>
-                            <span class="commisson-indecator"><?php echo $currency_symbol; ?></span>
+                            <span class="commisson-indecator"><?php echo get_woocommerce_currency_symbol(); ?></span>
                         </div>
                     </div>
                     <div class="dokan-new-commission-col-action">
