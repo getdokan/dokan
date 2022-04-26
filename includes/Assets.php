@@ -886,6 +886,7 @@ class Assets {
                 'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
+                'update_settings'                     => __( 'Update Settings', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );

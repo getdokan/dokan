@@ -5,9 +5,9 @@
 **Requires at least:** 4.4  
 **Tested up to:** 5.9.3  
 **WC requires at least:** 3.0  
-**WC tested up to:** 6.4.0  
+**WC tested up to:** 6.4.1  
 **Requires PHP:** 5.6  
-**Stable tag:** 3.4.2  
+**Stable tag:** 3.4.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -313,6 +313,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.4.3 ( Apr 26, 2022 ) ###
+
+- **fix:** Store Contact Form widget submits the contact form directly instead of ajax submission
+- **fix:** Stop sending new order emails to selected recipients (including admin) when the New Order email is disabled in WooCommerce Settings
+- **update:** Updated design for the payment settings page of vendor dashboard to separate the management of different payment methods
+- **new:** Added option to select a default payment method
+- **fix:** Fixed some validation logic under vendor dashboard payment settings page
 
 ### v3.4.2 ( Apr 13, 2022 ) ###
 
