@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.4.2\n"
+"Project-Id-Version: Dokan 3.4.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-04-13 04:11:21+00:00\n"
+"POT-Creation-Date: 2022-04-26 08:58:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: dokan.php:477 includes/Admin/AdminBar.php:81 includes/Admin/Menu.php:66
 #: includes/Dashboard/Templates/Settings.php:59
-#: includes/Dashboard/Templates/Settings.php:64 includes/template-tags.php:417
+#: includes/Dashboard/Templates/Settings.php:66 includes/template-tags.php:417
 #: src/admin/pages/Settings.vue:4
 msgid "Settings"
 msgstr ""
@@ -1364,15 +1364,15 @@ msgstr ""
 msgid "Something wrong, please try again later"
 msgstr ""
 
-#: includes/Ajax.php:108 includes/Dashboard/Templates/Settings.php:213
-#: includes/Dashboard/Templates/Settings.php:217
-#: includes/Dashboard/Templates/Settings.php:231
-#: includes/Dashboard/Templates/Settings.php:243
-#: includes/Dashboard/Templates/Settings.php:255
-#: includes/Dashboard/Templates/Settings.php:292
-#: includes/Dashboard/Templates/Settings.php:358
-#: includes/Dashboard/Templates/Settings.php:399
-#: includes/Dashboard/Templates/Settings.php:449
+#: includes/Ajax.php:108 includes/Dashboard/Templates/Settings.php:294
+#: includes/Dashboard/Templates/Settings.php:298
+#: includes/Dashboard/Templates/Settings.php:312
+#: includes/Dashboard/Templates/Settings.php:324
+#: includes/Dashboard/Templates/Settings.php:336
+#: includes/Dashboard/Templates/Settings.php:375
+#: includes/Dashboard/Templates/Settings.php:441
+#: includes/Dashboard/Templates/Settings.php:482
+#: includes/Dashboard/Templates/Settings.php:532
 #: includes/Dashboard/Templates/Withdraw.php:117
 #: includes/Dashboard/Templates/Withdraw.php:182
 #: includes/Withdraw/Hooks.php:116 includes/Withdraw/Hooks.php:189
@@ -1786,33 +1786,33 @@ msgstr ""
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
-#: includes/Assets.php:847 includes/Assets.php:1022
+#: includes/Assets.php:847 includes/Assets.php:1023
 #. translators: %s: decimal
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
-#: includes/Assets.php:849 includes/Assets.php:1024
+#: includes/Assets.php:849 includes/Assets.php:1025
 #. translators: %s: price decimal separator
 msgid ""
 "Please enter with one monetary decimal point (%s) without thousand "
 "separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:850 includes/Assets.php:1025
+#: includes/Assets.php:850 includes/Assets.php:1026
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:851 includes/Assets.php:1026
+#: includes/Assets.php:851 includes/Assets.php:1027
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:852 includes/Assets.php:1027
+#: includes/Assets.php:852 includes/Assets.php:1028
 msgid ""
 "This product has produced sales and may be linked to existing orders. Are "
 "you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:853 includes/Assets.php:1028
+#: includes/Assets.php:853 includes/Assets.php:1029
 msgid ""
 "This action cannot be reversed. Are you sure you wish to erase personal "
 "data from the selected orders?"
@@ -1900,6 +1900,7 @@ msgstr ""
 #: templates/products/new-product-single.php:220
 #: templates/products/new-product.php:169
 #: templates/products/tmpl-add-product-popup.php:68
+#: templates/settings/bank-payment-method-settings.php:125
 #: templates/store-lists-filter.php:83
 #: templates/withdraw/pending-request-listing-dashboard.php:20
 #: templates/withdraw/pending-request-listing-dashboard.php:37
@@ -1917,6 +1918,12 @@ msgstr ""
 msgid ""
 "Are you sure? You have uploaded banner but didn't click the Update Settings "
 "button!"
+msgstr ""
+
+#: includes/Assets.php:889 templates/settings/header.php:20
+#: templates/settings/payment-manage.php:35
+#: templates/settings/store-form.php:301
+msgid "Update Settings"
 msgstr ""
 
 #: includes/Commission.php:98
@@ -2058,8 +2065,8 @@ msgid "You have no permission to view this order"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:196
-#: includes/Dashboard/Templates/Settings.php:143
-#: includes/Dashboard/Templates/Settings.php:154
+#: includes/Dashboard/Templates/Settings.php:145
+#: includes/Dashboard/Templates/Settings.php:156
 #: includes/Shortcodes/Dashboard.php:29 templates/global/no-permission.php:53
 msgid "You have no permission to view this page"
 msgstr ""
@@ -2111,61 +2118,106 @@ msgid "You can only select %s tags"
 msgstr ""
 
 #: includes/Dashboard/Templates/Settings.php:62
-msgid "Payment Settings"
+msgid "Payment Method"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:83
+#: includes/Dashboard/Templates/Settings.php:85
 msgid ""
 "These are the withdraw methods available for you. Please update your "
 "payment information below to submit withdraw requests and get your store "
 "payments seamlessly."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:227
+#: includes/Dashboard/Templates/Settings.php:199
+msgid "No withdraw method is available. Please contact site admin."
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:276
+msgid "Invalid withdraw method. Please contact site admin"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:308
 msgid "Pemission denied social"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:239
-#: includes/Dashboard/Templates/Settings.php:251
+#: includes/Dashboard/Templates/Settings.php:320
+#: includes/Dashboard/Templates/Settings.php:332
 msgid "Pemission denied"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:269
+#: includes/Dashboard/Templates/Settings.php:342
+msgid "Failed to process data, invalid submission"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:352
 msgid "Your information has been saved successfully"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:300
-#: includes/Dashboard/Templates/Settings.php:407
+#: includes/Dashboard/Templates/Settings.php:383
+#: includes/Dashboard/Templates/Settings.php:490
 msgid "Store name required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:306
-#: includes/Dashboard/Templates/Settings.php:366
-#: includes/Dashboard/Templates/Settings.php:413
+#: includes/Dashboard/Templates/Settings.php:389
+#: includes/Dashboard/Templates/Settings.php:449
+#: includes/Dashboard/Templates/Settings.php:496
 msgid "Store type required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:314
-#: includes/Dashboard/Templates/Settings.php:374
-#: includes/Dashboard/Templates/Settings.php:421
-#: includes/Dashboard/Templates/Settings.php:458
+#: includes/Dashboard/Templates/Settings.php:397
+#: includes/Dashboard/Templates/Settings.php:457
+#: includes/Dashboard/Templates/Settings.php:504
+#: includes/Dashboard/Templates/Settings.php:541
+#: includes/Dashboard/Templates/Settings.php:549
 msgid "Invalid email"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:333
+#: includes/Dashboard/Templates/Settings.php:416
 msgid "Address field for %s is required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:643
+#: includes/Dashboard/Templates/Settings.php:555
+msgid "Account holder name is required"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:559
+msgid "Account number is required"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:563
+msgid "Routing number is required"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:567
+msgid "Please select account type"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:569
+msgid "Invalid Account Type"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:573
+msgid "You must attest that the bank account is yours."
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:754
 msgid "Book"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:644
+#: includes/Dashboard/Templates/Settings.php:755
 msgid "Dress"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:645
+#: includes/Dashboard/Templates/Settings.php:756
 msgid "Electronic"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:776
+msgid "Bank Account Settings"
+msgstr ""
+
+#: includes/Dashboard/Templates/Settings.php:781
+msgid "Paypal Settings"
 msgstr ""
 
 #: includes/Dashboard/Templates/Withdraw.php:125
@@ -3040,16 +3092,18 @@ msgstr ""
 
 #: includes/Privacy.php:276 src/admin/pages/VendorPaymentFields.vue:20
 #: src/admin/pages/VendorPaymentFields.vue:21
+#: templates/settings/bank-payment-method-settings.php:55
 msgid "Bank Name"
 msgstr ""
 
 #: includes/Privacy.php:277 src/admin/pages/VendorPaymentFields.vue:25
 #: src/admin/pages/VendorPaymentFields.vue:26
+#: templates/settings/bank-payment-method-settings.php:65
 msgid "Bank Address"
 msgstr ""
 
-#: includes/Privacy.php:279 includes/Withdraw/functions.php:211
-#: src/admin/pages/VendorPaymentFields.vue:35
+#: includes/Privacy.php:279 src/admin/pages/VendorPaymentFields.vue:35
+#: templates/settings/bank-payment-method-settings.php:79
 msgid "IBAN"
 msgstr ""
 
@@ -4885,44 +4939,28 @@ msgstr ""
 msgid "Bank Transfer"
 msgstr ""
 
-#: includes/Withdraw/functions.php:132
+#: includes/Withdraw/functions.php:132 includes/Withdraw/functions.php:155
 msgid "E-mail"
 msgstr ""
 
-#: includes/Withdraw/functions.php:181
-msgid "Your bank account name"
+#: includes/Withdraw/functions.php:180
+msgid "Save"
 msgstr ""
 
-#: includes/Withdraw/functions.php:187
-msgid "Your bank account number"
+#: includes/Withdraw/functions.php:180
+msgid "Add Account"
 msgstr ""
 
-#: includes/Withdraw/functions.php:193
-msgid "Name of bank"
-msgstr ""
-
-#: includes/Withdraw/functions.php:199
-msgid "Address of your bank"
-msgstr ""
-
-#: includes/Withdraw/functions.php:205
-msgid "Routing number"
-msgstr ""
-
-#: includes/Withdraw/functions.php:217
-msgid "Swift code"
-msgstr ""
-
-#: includes/Withdraw/functions.php:337
+#: includes/Withdraw/functions.php:298
 msgid "No information found."
 msgstr ""
 
-#: includes/Withdraw/functions.php:343
+#: includes/Withdraw/functions.php:304
 #. translators: 1: Email address for withdraw method.
 msgid "( %1$s )"
 msgstr ""
 
-#: includes/Withdraw/functions.php:347
+#: includes/Withdraw/functions.php:308
 #. translators: 1: Bank account holder name. 2: Bank name. 1: Bank account
 #. number
 msgid "- %1$s - %2$s - ****%3$s"
@@ -7950,13 +7988,114 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/header.php:20 templates/settings/payment.php:45
-#: templates/settings/store-form.php:301
-msgid "Update Settings"
+#: templates/settings/bank-payment-method-settings.php:16
+msgid "Deposit earnings directly to your U.S. bank account free of charge"
 msgstr ""
 
-#: templates/settings/payment.php:54
-msgid "No withdraw method is available. Please contact site admin."
+#: templates/settings/bank-payment-method-settings.php:20
+msgid "Account Holder"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:24
+msgid "Your bank account name"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:30
+msgid "Account Type"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:35
+msgid "Please Select..."
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:36
+msgid "Personal"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:37
+msgid "Business"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:44
+msgid "Routing & Account Number"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:48
+msgid "Routing number"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:49
+msgid "Your bank account number"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:59
+msgid "Name of bank"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:69
+msgid "Address of your bank"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:75
+msgid "Bank IBAN"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:85
+msgid "Bank Swift Code"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:89
+msgid "Swift code"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:94
+msgid "bank check"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:100
+msgid ""
+"I attest that I am the owner and have full authorization to this bank "
+"account"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:112
+msgid "Please double-check your account information!"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:114
+msgid ""
+"Incorrect or mismatched account name and number can result in withdrawal "
+"delays and fees"
+msgstr ""
+
+#: templates/settings/bank-payment-method-settings.php:118
+msgid "This Payment method will become available in 3 days."
+msgstr ""
+
+#: templates/settings/payment.php:16
+#: templates/withdraw/withdraw-dashboard.php:81
+msgid "Payment Methods"
+msgstr ""
+
+#: templates/settings/payment.php:18
+msgid "Add Payment Method"
+msgstr ""
+
+#: templates/settings/payment.php:31
+#. translators: %s: payment method title
+msgid "Direct to %s"
+msgstr ""
+
+#: templates/settings/payment.php:41
+msgid "There is no payment method to add."
+msgstr ""
+
+#: templates/settings/payment.php:69
+msgid "Manage"
+msgstr ""
+
+#: templates/settings/payment.php:78
+msgid "There is no payment method to show."
 msgstr ""
 
 #: templates/settings/store-form.php:56 templates/store-lists-loop.php:43
@@ -8232,10 +8371,6 @@ msgstr ""
 
 #: templates/withdraw/withdraw-dashboard.php:67
 msgid "View Payments"
-msgstr ""
-
-#: templates/withdraw/withdraw-dashboard.php:81
-msgid "Payment Methods"
 msgstr ""
 
 #: templates/withdraw/withdraw-dashboard.php:98

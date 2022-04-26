@@ -208,7 +208,7 @@ class Settings {
          * This filter is only used if the Payment method has different key than the key used in meta value of
          * meta key 'dokan_profile_settings' for that Payment method
          *
-         * @since DOKAN_SINCE
+         * @since 3.4.3
          */
         $method_key_to_storage_key = apply_filters( 'dokan_payment_method_storage_key', [] );
 
@@ -762,7 +762,7 @@ class Settings {
     /**
      * Get proper heading for payments of vendor dashboard payment settings
      *
-     * @since DOKAN_SINCE
+     * @since 3.4.3
      *
      * @param string $slug
      * @param string $heading
@@ -785,7 +785,7 @@ class Settings {
         /**
          * To allow new payment extension give their own heading
          *
-         * @since DOKAN_SINCE
+         * @since 3.4.3
          *
          * @param string $heading previous heading
          */
@@ -797,7 +797,7 @@ class Settings {
     /**
      * Separate the used and unused payment method keys by the current user
      *
-     * @since DOKAN_SINCE
+     * @since 3.4.3
      *
      * @param array $all_methods          All methods
      * @param array $used_methods         Used Methods
@@ -838,7 +838,7 @@ class Settings {
     /**
      * Get payment method details from the method keys
      *
-     * @since DOKAN_SINCE
+     * @since 3.4.3
      *
      * @param $method_keys
      *
