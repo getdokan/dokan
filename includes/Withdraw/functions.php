@@ -263,7 +263,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since DOKAN_SINCE
+ * @since 3.4.3
  *
  * @param string $method_key Withdraw Method key
  *
