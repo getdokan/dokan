@@ -54,11 +54,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                         <span>
                             <?php
-                            if ( is_array( $method ) ) {
-                                echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
-                            } else {
-                                echo esc_html( $method );
-                            }
+                            echo esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
 
                             if ( isset( $profile_info['payment'][ $method_key ] ) && ! empty( dokan_withdraw_get_method_additional_info( $method_key ) ) ) {
                                 ?>
