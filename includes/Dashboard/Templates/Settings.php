@@ -794,7 +794,7 @@ class Settings {
      * @return bool
      */
     public function is_seller_connected( $payment_method_id, $seller_id ) {
-        $connected = false;
+        $connected      = false;
         $store_settings = get_user_meta( $seller_id, 'dokan_profile_settings', true );
 
         switch ( $payment_method_id ) {
@@ -804,7 +804,7 @@ class Settings {
                 $optional_fields = [ 'bank_name', 'bank_addr', 'iban', 'swift' ];
 
                 foreach ( $bank_settings as $field => $value ) {
-                    if ( in_array( $field, $optional_fields ) ) { //don't check emptyness of $value for optional fields
+                    if ( in_array( $field, $optional_fields, true ) ) { // don't check emptyness of $value for optional fields
                         continue;
                     }
 
