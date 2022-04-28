@@ -216,8 +216,11 @@ div.media-sidebar a.edit-attachment{
                             #toggle-vendor-payment-method-drop-down {
                                 color: #333333;
                                 cursor: pointer;
-                                padding-left: 5px;
+                                padding: 10px 5px 10px 10px;
                                 font-size: 1.2em;
+                                box-shadow: inset 0 0 0 0 #54b3d6;
+                                margin: 0 -.25rem;
+                                transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
 
                                 &::after {
                                     content: '\25BC';
@@ -228,6 +231,7 @@ div.media-sidebar a.edit-attachment{
 
                             #vendor-payment-method-drop-down-wrapper {
                                 position: relative;
+                                top: 5px;
                             }
 
                             #vendor-payment-method-drop-down {
@@ -277,7 +281,8 @@ div.media-sidebar a.edit-attachment{
 
                             &:hover {
                                 #toggle-vendor-payment-method-drop-down {
-                                    background-color: #C0C0C0;
+                                    box-shadow: inset 250px 0 0 0 #54b3d6;
+                                    color: white;
 
                                     &::after {
                                         transform: rotate( 180deg );
