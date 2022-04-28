@@ -206,61 +206,66 @@ div.media-sidebar a.edit-attachment{
                         flex-grow: 1;
                     }
 
-                    #vendor-dashboard-payment-settings-toggle-dropdown {
+                    > div {
                         flex-grow: 2;
                         text-align: right;
 
-                        #vendor-payment-method-drop-down-wrapper {
-                            position: relative;
-                        }
+                        #vendor-dashboard-payment-settings-toggle-dropdown {
+                            display: inline-block;
 
-                        #vendor-payment-method-drop-down {
-                            display: none;
-                            max-height: 200px;
-                            border: 1px black solid;
-                            position: absolute;
-                            top: 0;
-                            right: 0;
-                            background-color: white;
+                            #vendor-payment-method-drop-down-wrapper {
+                                position: relative;
+                            }
 
-                            ul {
-                                list-style: none;
-                                margin: 0;
+                            #vendor-payment-method-drop-down {
+                                display: none;
                                 max-height: 200px;
-                                overflow-y: scroll;
-                                overflow-x: hidden;
+                                border: 1px black solid;
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                background-color: white;
 
-                                li {
-                                    border-bottom: 1px #dddddd solid;
+                                ul {
+                                    list-style: none;
+                                    margin: 0;
+                                    max-height: 200px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
 
-                                    div {
-                                        white-space: nowrap;
-                                        display: flex;
-                                        align-items: center;
-                                        padding: 10px 10px;
+                                    li {
+                                        border-bottom: 1px #dddddd solid;
+                                        padding-right: 20px;
 
-                                        img {
-                                            width: calc(12px + 1.5vw);
-                                            border: 1px solid lightgray;
-                                            border-radius: 50%;
-                                        }
+                                        div {
+                                            white-space: nowrap;
+                                            display: flex;
+                                            align-items: center;
+                                            padding: 10px 10px;
 
-                                        span {
-                                            margin-left: 10px;
-                                            color: #333333;
+                                            img {
+                                                width: calc(12px + 1.5vw);
+                                                border: 1px solid lightgray;
+                                                border-radius: 50%;
+                                            }
+
+                                            span {
+                                                margin-left: 10px;
+                                                color: #333333;
+                                            }
                                         }
                                     }
                                 }
+
+                                .no-content {
+                                    padding: 20px;
+                                }
                             }
 
-                            .no-content {
-                                padding: 20px;
-                            }
-                        }
-
-                        &:hover {
-                            #vendor-payment-method-drop-down {
-                                display: block;
+                            &:hover {
+                                #vendor-payment-method-drop-down {
+                                    display: block;
+                                }
                             }
                         }
                     }
