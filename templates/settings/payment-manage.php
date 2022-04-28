@@ -6,7 +6,7 @@
  */
 ?>
 
-<a class="dokan-btn dokan-btn-secondary" href="<?php echo esc_url_raw( dokan_get_page_url( 'dashboard' ) . 'settings/payment' ); ?>">
+<a href="<?php echo esc_url_raw( dokan_get_page_url( 'dashboard' ) . 'settings/payment' ); ?>">
     &larr; <?php esc_html_e( 'Back', 'dokan-lite' ); ?>
 </a>
 

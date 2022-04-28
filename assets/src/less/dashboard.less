@@ -214,8 +214,10 @@ div.media-sidebar a.edit-attachment{
                             display: inline-block;
 
                             #toggle-vendor-payment-method-drop-down {
-                                color: black;
+                                color: #333333;
                                 cursor: pointer;
+                                padding-left: 5px;
+                                font-size: 1.2em;
 
                                 &::after {
                                     content: '\25BC';
@@ -275,6 +277,8 @@ div.media-sidebar a.edit-attachment{
 
                             &:hover {
                                 #toggle-vendor-payment-method-drop-down {
+                                    background-color: #C0C0C0;
+
                                     &::after {
                                         transform: rotate( 180deg );
                                     }
