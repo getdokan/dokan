@@ -213,6 +213,17 @@ div.media-sidebar a.edit-attachment{
                         #vendor-dashboard-payment-settings-toggle-dropdown {
                             display: inline-block;
 
+                            #toggle-vendor-payment-method-drop-down {
+                                color: black;
+                                cursor: pointer;
+
+                                &::after {
+                                    content: '\25BC';
+                                    display: inline-block;
+                                    transition: transform 300ms ease-in-out;
+                                }
+                            }
+
                             #vendor-payment-method-drop-down-wrapper {
                                 position: relative;
                             }
@@ -263,6 +274,12 @@ div.media-sidebar a.edit-attachment{
                             }
 
                             &:hover {
+                                #toggle-vendor-payment-method-drop-down {
+                                    &::after {
+                                        transform: rotate( 180deg );
+                                    }
+                                }
+
                                 #vendor-payment-method-drop-down {
                                     display: block;
                                 }
