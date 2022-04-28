@@ -193,54 +193,43 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $methods = dokan_withdraw_get_active_methods();
+        $payment_methods = dokan_withdraw_get_active_methods();
+        $payment_methods = array_filter( $payment_methods, function ( $value ) { // methods which are inactive in Dokan > Withdraw Options has a empty value so filter them out
+                return ! empty( $value );
+            } );
 
-        if ( empty( $methods ) ) {
+        //no payment method is active, show informative message
+        if ( empty( $payment_methods ) ) {
             dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
             return;
         }
 
-        $currentuser  = dokan_get_current_user_id();
-        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
-        $is_edit_mode = false;
+        $payment_method_ids = array_keys( $payment_methods );
 
-        /**
-         * This filter is only used if the Payment method has different key than the key used in meta value of
-         * meta key 'dokan_profile_settings' for that Payment method
-         *
-         * @since 3.4.3
-         */
-        $method_key_to_storage_key = apply_filters( 'dokan_payment_method_storage_key', [] );
+        $seller_id = dokan_get_current_user_id();
 
-        $used_methods = $profile_info['payment'];
-
-        foreach ( $methods as $method_key => $method ) {
-            if ( empty( $method ) ) {
-                unset( $methods[ $method_key ] );
-
-                if ( isset( $used_methods[ $method_key ] ) ) {
-                    unset( $used_methods[ $method_key ] );
-                } else if ( isset( $method_key_to_storage_key[ $method_key ] ) && isset( $used_methods[ $method_key_to_storage_key[ $method_key ] ] ) ) {
-                    unset( $used_methods[ $method_key_to_storage_key[ $method_key ] ] );
-                }
-
-                if ( isset( $method_key_to_storage_key[ $method_key ] ) ) {
-                    unset( $method_key_to_storage_key[ $method_key ] );
-                }
+        $seller_connected_payment_method_ids = array_filter(
+            $payment_method_ids,
+            function ( $payment_method_id ) use( $seller_id ) {
+                return $this->is_seller_connected( $payment_method_id, $seller_id );
             }
-        }
+        );
 
-        list( $used_method_keys, $unused_method_keys ) = $this->get_separated_method_keys( $methods, $used_methods, $method_key_to_storage_key );
+        $seller_disconnected_payment_method_ids = array_diff( $payment_method_ids, $seller_connected_payment_method_ids );
 
-        $unused_methods = $this->get_payment_methods( $unused_method_keys );
-        $used_methods   = $this->get_payment_methods( $used_method_keys );
+        $seller_disconnected_payment_methods = $this->get_payment_methods( $seller_disconnected_payment_method_ids );
+        $seller_connected_payment_methods    = $this->get_payment_methods( $seller_connected_payment_method_ids );
 
         $method_key = str_replace( '/manage-', '', $slug_suffix ); // if we are requesting a single payment method page(to edit or for first time setup) then we have the corresponding payment method key in the url
 
-        if ( stripos( $method_key, '/edit' ) !== false ) { // if payment method key has /edit suffix then we are trying to edit the method, otherwise we are doing a initial setup for that payment method
+        $is_edit_mode = false;
+
+        if ( false !== stripos( $method_key, '/edit' ) ) { // if payment method key has /edit suffix then we are trying to edit the method, otherwise we are doing a initial setup for that payment method
             $is_edit_mode = true;
             $method_key   = str_replace( '/edit', '', $method_key ); // removing /edit suffix to get payment method key
         }
+
+        $profile_info = get_user_meta( get_current_user_id(), 'dokan_profile_settings', true );
 
         if ( $is_edit_mode && 'bank' === $method_key ) {
             $profile_info['is_edit_method'] = $is_edit_mode;
@@ -248,7 +237,7 @@ class Settings {
 
         // template arguments
         $args = [
-            'current_user' => $currentuser,
+            'current_user' => $seller_id,
             'profile_info' => $profile_info,
         ];
 
@@ -256,8 +245,8 @@ class Settings {
             $args = array_merge(
                 $args,
                 [
-                    'methods'        => $used_methods,
-                    'unused_methods' => $unused_methods,
+                    'methods'        => $seller_connected_payment_methods,
+                    'unused_methods' => $seller_disconnected_payment_methods,
                 ]
             );
 
@@ -795,44 +784,56 @@ class Settings {
     }
 
     /**
-     * Separate the used and unused payment method keys by the current user
+     * Check if a seller is connected to a payment method
      *
-     * @since 3.4.3
+     * @since DOKAN_PRO_SINCE
      *
-     * @param array $all_methods          All methods
-     * @param array $used_methods         Used Methods
-     * @param array $method_key_mismatchs The list of methods which has different key and name but the name is substring of key
+     * @param $payment_method_id
+     * @param $seller_id
      *
-     * @return array
+     * @return bool
      */
-    private function get_separated_method_keys( $all_methods, $used_methods, $method_key_mismatchs ) {
-        $used_method_keys = [];
+    public function is_seller_connected( $payment_method_id, $seller_id ) {
+        $connected = false;
+        $store_settings = get_user_meta( $seller_id, 'dokan_profile_settings', true );
 
-        foreach ( $used_methods as $method_key => $method ) {
-            if ( ! empty( $method ) ) {
-                $used_method_keys[] = $method_key;
-            }
+        switch ( $payment_method_id ) {
+            case 'bank': //check if bank is connected to seller
+                $bank_settings   = ( isset( $store_settings['payment'] ) && isset( $store_settings['payment']['bank'] ) ) ? $store_settings['payment']['bank'] : [];
+                $connected       = ! empty( $bank_settings );
+                $optional_fields = [ 'bank_name', 'bank_addr', 'iban', 'swift' ];
+
+                foreach ( $bank_settings as $field => $value ) {
+                    if ( in_array( $field, $optional_fields ) ) { //don't check emptyness of $value for optional fields
+                        continue;
+                    }
+
+                    if ( empty( $value ) ) {
+                        $connected = false; // if any of the required fields is empty then seller is not connected
+                        break;
+                    }
+                }
+                break;
+            case 'paypal':
+                $paypal_settings = ( isset( $store_settings['payment'] ) && isset( $store_settings['payment']['paypal'] ) ) ? $store_settings['payment']['paypal'] : [];
+
+                if ( isset( $paypal_settings['email'] ) && is_email( $paypal_settings['email'] ) ) {
+                    $connected = true;
+                }
+
+                break;
         }
 
-        $all_method_keys = array_keys( $all_methods );
-
-        foreach ( $all_method_keys as $method ) {
-            if ( isset( $method_key_mismatchs[ $method ] ) && in_array( $method_key_mismatchs[ $method ], $used_method_keys, true ) ) {
-                array_push( $used_method_keys, $method );
-            }
-        }
-
-        foreach ( $method_key_mismatchs as $storage_key ) {
-            $index = array_search( $storage_key, $used_method_keys, true );
-
-            if ( $index ) {
-                unset( $used_method_keys[ $index ] );
-            }
-        }
-
-        $unused_method_keys = array_diff( $all_method_keys, $used_method_keys );
-
-        return [ $used_method_keys, $unused_method_keys ];
+        /**
+         * Get if user with id $seller_id is connected to the payment method having $payment_method_id
+         *
+         * @since DOKAN_PRO_SINCE
+         *
+         * @param bool   $connected
+         * @param string $payment_method_id
+         * @param int    $seller_id
+         */
+        return apply_filters( 'dokan_is_seller_connected_to_payment_method', $connected, $payment_method_id, $seller_id );
     }
 
     /**
