@@ -232,7 +232,7 @@ class Settings {
         $profile_info = get_user_meta( get_current_user_id(), 'dokan_profile_settings', true );
 
         if ( $is_edit_mode && 'bank' === $method_key ) {
-            $profile_info['is_edit_method'] = $is_edit_mode;
+            $profile_info['is_edit_mode'] = $is_edit_mode;
         }
 
         // template arguments
