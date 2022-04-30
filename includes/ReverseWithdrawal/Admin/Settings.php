@@ -1,7 +1,7 @@
 <?php
 namespace WeDevs\Dokan\ReverseWithdrawal\Admin;
 
-use WeDevs\Dokan\ReverseWithdrawal\Settings as SettingsHelper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly

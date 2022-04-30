@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\REST;
 use Stripe\Util\Set;
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
-use WeDevs\Dokan\ReverseWithdrawal\Settings;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -425,6 +425,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'required'    => false,
                     'type'        => 'object',
                     'properties' => [
+                        'from'  => [
+                            'type'     => [ 'string', null ],
+                            'pattern'  => '^([0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]))?',
+                            'default'  => '',
+                            'required' => false,
+                        ],
                         'to' => [
                             'type'     => [ 'string' ],
                             'pattern'  => '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])',

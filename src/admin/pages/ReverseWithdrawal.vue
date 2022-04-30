@@ -72,13 +72,13 @@
                             class="mr-5"
                             ref="picker"
                             :locale-data="this.dateTimePickerFormat"
-                            :singleDatePicker="true"
-                            :showDropdowns="true",
+                            :singleDatePicker="single"
+                            :showDropdowns="true"
                             :autoApply="false"
-                            :ranges="false"
+                            :ranges="this.dateRangePickerRanges"
                             v-model="filter.transaction_date">
                             <template v-slot:input="picker">
-                                <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }}</span>
+                                <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }} - {{ filter.transaction_date.endDate | getFormattedDate }}</span>
                                 <span class="date-range-placeholder" v-if="! filter.transaction_date.startDate">{{ __( 'Filter by expire date', 'dokan-lite' ) }}</span>
                             </template>
 
@@ -108,6 +108,7 @@
 
 <script>
 import $ from 'jquery';
+import moment from "moment";
 
 const ListTable       = dokan_get_lib('ListTable');
 const Multiselect     = dokan_get_lib('Multiselect');
@@ -145,6 +146,7 @@ export default {
         return {
             transactionData: [],
             loading: false,
+            clearingFilters: false,
             counts: {
                 debit: 0,
                 credit: 0,
@@ -155,6 +157,14 @@ export default {
             dateTimePickerFormat: {
                 format: dokan_get_daterange_picker_format().toLowerCase(),
                 ...dokan_helper.daterange_picker_local,
+            },
+            dateRangePickerRanges: {
+                'Today': [moment().toDate(), moment().toDate()],
+                'Last 30 Days': [moment().subtract(29, 'days').toDate(), moment().toDate()],
+                'This Month': [moment().startOf('month').toDate(), moment().endOf('month').toDate()],
+                'Last Month': [moment().subtract(1, 'month').startOf('month').toDate(), moment().subtract(1, 'month').endOf('month').toDate()],
+                'This Year': [moment().month(0).startOf('month').toDate(), moment().month(11).endOf('month').toDate()],
+                'Last Year': [moment().month(0).subtract(1, 'year').startOf('month').toDate(), moment().month(11).subtract(1, 'year').endOf('month').toDate()]
             },
             totalPages: 1,
             perPage: 20,
@@ -178,14 +188,15 @@ export default {
                 stores: this.getDefaultStore(),
                 selected_store: this.getDefaultStore()[0],
                 transaction_date: {
-                    startDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
-                    endDate: moment().endOf('month').format('YYYY-MM-DD 23:59:59'),
+                    startDate: '',
+                    endDate: '',
                 },
             },
         }
     },
 
     created() {
+        this.setDefaultTransactionDate();
         this.fetchStoreLists();
         this.fetchBalances();
     },
@@ -218,7 +229,7 @@ export default {
         },
 
         filterStoreID() {
-            return this.filter.selected_store ?? 0;
+            return this.filter.selected_store ? this.filter.selected_store.id : 0;
         },
 
         filterTransactionDate() {
@@ -229,7 +240,12 @@ export default {
             if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
                 return data;
             }
+            data.from = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
             data.to = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+            // fix from param
+            if ( data.from === data.to ) {
+                data.from = '';
+            }
             return data;
         },
 
@@ -252,11 +268,17 @@ export default {
         },
 
         'filter.selected_store'() {
-            this.fetchBalances();
+            // added this condition to avoid multiple fetchBalances call
+            if ( ! this.clearingFilters && ! this.loading ) {
+                this.fetchBalances();
+            }
         },
 
         'filter.transaction_date.startDate'() {
-            this.fetchBalances();
+            // added this condition to avoid multiple fetchBalances call
+            if ( ! this.clearingFilters && ! this.loading ) {
+                this.fetchBalances();
+            }
         },
     },
 
@@ -286,8 +308,10 @@ export default {
 
         // clear filter
         clearFilters() {
+            this.clearingFilters = true;
             this.filter.selected_store = this.getDefaultStore()[0];
             this.setDefaultTransactionDate();
+            this.clearingFilters = false;
             this.fetchBalances();
         },
 
@@ -319,7 +343,9 @@ export default {
             let transaction_date = this.getDefaultTransactionDate();
             this.filter.transaction_date.startDate = transaction_date.startDate;
             this.filter.transaction_date.endDate   = transaction_date.endDate;
-            this.$refs.picker.togglePicker(false);
+            if ( this.$refs.picker ) {
+                this.$refs.picker.togglePicker(false);
+            }
         },
 
         fetchBalances() {
@@ -333,6 +359,10 @@ export default {
                 order: self.getSortOrder,
                 trn_date: self.filterTransactionDate,
             };
+
+            if ( self.filterStoreID ) {
+                data.vendor_id = self.filterStoreID;
+            }
 
             dokan.api.get('/reverse-withdrawal/stores-balance', data).done( ( response, status, xhr ) => {
                 self.transactionData = response;

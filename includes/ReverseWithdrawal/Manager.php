@@ -58,7 +58,7 @@ class Manager {
             ],
             'orderby'       => 'added',
             'order'         => 'DESC',
-            'return'        => 'all',   // possible values are vendor_transaction, vendor_transaction_count, all, balance, balance_count
+            'return'        => 'balance',   // possible values are vendor_transaction, vendor_transaction_count, balance, balance_count
             'per_page'      => 20,
             'page'          => 1,
         ];
