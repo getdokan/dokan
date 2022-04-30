@@ -19,6 +19,11 @@ class Hooks {
      * @return void
      */
     public function __construct() {
+        // check if reverse withdrawal setting is enabled
+        if ( ! SettingsHelper::is_enabled() ) {
+            return;
+        }
+
         // after reverse withdrawal is inserted
         add_action( 'dokan_reverse_withdrawal_created', [ $this, 'after_reverse_withdrawal_inserted' ], 99, 1 );
 
@@ -207,11 +212,6 @@ class Hooks {
             return;
         }
 
-        // check if reverse withdrawal setting is enabled
-        if ( ! Settings::is_enabled() ) {
-            return;
-        }
-
         // get order object from order id
         $order = wc_get_order( $order_id );
 
@@ -221,7 +221,7 @@ class Hooks {
         }
 
         // check if order payment gateway is enabled for reverse withdrawal
-        if ( ! Settings::is_gateway_enabled_for_reverse_withdrawal( $order->get_payment_method() ) ) {
+        if ( ! SettingsHelper::is_gateway_enabled_for_reverse_withdrawal( $order->get_payment_method() ) ) {
             return;
         }
 
@@ -261,15 +261,13 @@ class Hooks {
      * @return array
      */
     public function add_reverse_withdrawal_nav( $urls ) {
-        if ( Settings::is_enabled() ) {
-            $urls['reverse-withdrawal'] = [
-                'title'      => __( 'Reverse Withdrawal', 'dokan-lite' ),
-                'icon'       => '<i class="fas fa-dollar-sign"></i>',
-                'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
-                'pos'        => 71,
-                'permission' => 'dokan_view_withdraw_menu',
-            ];
-        }
+        $urls['reverse-withdrawal'] = [
+            'title'      => __( 'Reverse Withdrawal', 'dokan-lite' ),
+            'icon'       => '<i class="fas fa-dollar-sign"></i>',
+            'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
+            'pos'        => 71,
+            'permission' => 'dokan_view_withdraw_menu',
+        ];
 
         return $urls;
     }

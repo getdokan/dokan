@@ -24,7 +24,7 @@ class Order {
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'hide_order_item_meta_value' ], 999, 3 );
 
         // return if reverse withdrawal feature is disabled
-        if ( ! Settings::is_enabled() ) {
+        if ( ! SettingsHelper::is_enabled() ) {
             return;
         }
 

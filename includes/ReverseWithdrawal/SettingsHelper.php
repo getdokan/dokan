@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-class Settings {
+class SettingsHelper {
     /**
      * Check if reverse withdrawal feature is enabled
      *

@@ -39,7 +39,7 @@ class FailedActions {
             return;
         }
 
-        $failed_actions = Settings::get_failed_actions();
+        $failed_actions = SettingsHelper::get_failed_actions();
         if ( empty( $failed_actions ) ) {
             // no failed actions is enabled, so we don't need to take any action
             return;

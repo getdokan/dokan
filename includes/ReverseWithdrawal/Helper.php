@@ -297,10 +297,10 @@ class Helper {
         // get required settings
         $args = [
             'balance'      => $balance,
-            'billing_type' => Settings::get_billing_type(),
-            'billing_day'  => Settings::get_billing_day(),
-            'due_period'   => Settings::get_due_period(),
-            'threshold'    => Settings::get_reverse_balance_threshold(),
+            'billing_type' => SettingsHelper::get_billing_type(),
+            'billing_day'  => SettingsHelper::get_billing_day(),
+            'due_period'   => SettingsHelper::get_due_period(),
+            'threshold'    => SettingsHelper::get_reverse_balance_threshold(),
         ];
 
         // check settings for billing type
@@ -370,7 +370,7 @@ class Helper {
         ];
 
         // check which billing type setting is enabled
-        switch ( Settings::get_billing_type() ) {
+        switch ( SettingsHelper::get_billing_type() ) {
             case 'by_month':
                 // check if we need to display payment notice
                 if ( $balance['payable_amount'] <= 0 ) {
@@ -386,8 +386,8 @@ class Helper {
                 $today    = dokan_current_datetime();
                 $due_date = $today->modify( 'first day of this month' );
 
-                if ( Settings::get_due_period() ) {
-                    $due_date = $due_date->modify( '+' . Settings::get_due_period() . ' days' );
+                if ( SettingsHelper::get_due_period() ) {
+                    $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
                 }
 
                 if ( $today > $due_date ) {
@@ -401,7 +401,7 @@ class Helper {
                 break;
 
             case 'by_amount':
-                $threshold = Settings::get_reverse_balance_threshold();
+                $threshold = SettingsHelper::get_reverse_balance_threshold();
                 if ( $balance['payable_amount'] < $threshold ) {
                     // balance amount is less than threshold
                     $ret['status'] = false;
@@ -419,8 +419,8 @@ class Helper {
                 $today    = dokan_current_datetime();
                 $due_date = $today->modify( $last_threshold_limit_exceed_date );
 
-                if ( Settings::get_due_period() ) {
-                    $due_date = $due_date->modify( '+' . Settings::get_due_period() . ' days' );
+                if ( SettingsHelper::get_due_period() ) {
+                    $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
                 }
 
                 if ( $today > $due_date ) {
@@ -464,7 +464,7 @@ class Helper {
      * @return string
      */
     public static function get_formatted_failed_actions() {
-        $failed_actions = Settings::get_failed_actions();
+        $failed_actions = SettingsHelper::get_failed_actions();
         $messages       = [];
         foreach ( $failed_actions as $failed_action ) {
             switch ( $failed_action ) {

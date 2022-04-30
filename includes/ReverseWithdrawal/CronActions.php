@@ -21,7 +21,7 @@ class CronActions {
         add_action( 'init', [ $this, 'schedule_action' ] );
 
         // check if reverse withdrawal feature is enabled
-        if ( ! Settings::is_enabled() ) {
+        if ( ! SettingsHelper::is_enabled() ) {
             return;
         }
 

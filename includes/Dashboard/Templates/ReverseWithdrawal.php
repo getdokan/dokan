@@ -2,7 +2,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\Settings;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager as ReverseWithdrawalManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,7 +34,7 @@ class ReverseWithdrawal {
      */
     public function __construct() {
         // return if reverse withdrawal feature is disabled
-        if ( ! Settings::is_enabled() ) {
+        if ( ! SettingsHelper::is_enabled() ) {
             return;
         }
 
