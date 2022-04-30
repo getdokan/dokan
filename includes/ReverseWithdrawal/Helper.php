@@ -32,7 +32,100 @@ class Helper {
      * @return string
      */
     public static function balance_threshold_exceed_date_key() {
-        return '_dokan_last_balance_threshold_exceed_date';
+        return '_dokan_reverse_withdrawal_threshold_exceeded_date';
+    }
+
+    /**
+     * This method will return failed actions key
+     *
+     * @return string
+     */
+    public static function failed_actions_key() {
+        return '_dokan_reverse_withdrawal_failed_actions';
+    }
+
+    /**
+     * Get reverse withdrawal failed payment actions
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array|string return associated array of transaction types if no argument is provided. If $transaction_type is provided and if data exists then return the label otherwise return empty string
+     */
+    public static function get_transaction_types( $transaction_type = null ) {
+        /**
+         * ! do not change the keys, it will break the query
+         * ! also do not use any filter here, if new transaction type is needed add it to the below array
+         */
+        $transaction_types = [
+            // admin will get payment (debit)
+            'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
+            'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
+            'product_advertisement'     => esc_html__( 'Product Advertisement', 'dokan-lite' ),
+            'manual_order_commission'   => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
+            // vendor paid to admin (credit)
+            'vendor_payment'            => esc_html__( 'Payment', 'dokan-lite' ),
+            'order_refund'              => esc_html__( 'Refund', 'dokan-lite' ),
+        ];
+
+        if ( $transaction_type ) {
+            return isset( $transaction_types[ $transaction_type ] ) ? $transaction_types[ $transaction_type ] : '';
+        }
+
+        return $transaction_types;
+    }
+
+    /**
+     * Get reverse withdrawal failed payment actions
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return array
+     */
+    public static function get_failed_actions_by_vendor( $vendor_id ) {
+        return (array) get_user_meta( $vendor_id, self::failed_actions_key(), true );
+    }
+
+    /**
+     * Set reverse withdrawal failed payment actions
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     * @param array $failed_actions
+     *
+     * @return void
+     */
+    public static function set_failed_actions_by_vendor( $vendor_id, $failed_actions ) {
+        update_user_meta( $vendor_id, self::failed_actions_key(), $failed_actions );
+    }
+
+    /**
+     * This method will return the balance threshold exceeded date
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return mixed
+     */
+    public static function get_balance_threshold_exceed_date( $vendor_id ) {
+        return get_user_meta( $vendor_id, self::balance_threshold_exceed_date_key(), true );
+    }
+
+    /**
+     * This method will update the balance threshold exceeded date
+     *
+     * @since DOKA_SINCE
+     *
+     * @param int $vendor_id
+     * @param string $date
+     *
+     * @return void
+     */
+    public static function set_balance_threshold_exceed_date( $vendor_id, $date = '' ) {
+        update_user_meta( $vendor_id, self::balance_threshold_exceed_date_key(), $date );
     }
 
     /**
@@ -163,9 +256,9 @@ class Helper {
         return [
             'id'            => absint( $item['id'] ),
             'trn_id'        => absint( $item['trn_id'] ),
-            'trn_url'       => self::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
+            'trn_url'       => static::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
             'trn_date'      => dokan_format_date( $item['trn_date'] ),
-            'trn_type'      => Settings::get_transaction_types( $item['trn_type'] ),
+            'trn_type'      => static::get_transaction_types( $item['trn_type'] ),
             'vendor_id'     => absint( $item['vendor_id'] ),
             'note'          => esc_html( $item['note'] ),
             'debit'         => $item['debit'],
@@ -190,16 +283,17 @@ class Helper {
         }
 
         $manager = new Manager();
-        // get balance
+        // get balance of the vendor till now
         $balance = $manager->get_store_balance(
             [
-				'vendor_id' => dokan_get_current_user_id(),
+				'vendor_id' => $vendor_id,
 			]
         );
 
         if ( is_wp_error( $balance ) ) {
             return $balance;
         }
+
         // get required settings
         $args = [
             'balance'      => $balance,
@@ -215,30 +309,30 @@ class Helper {
                 // get previous month payable balance
                 $previous_month_balance = $manager->get_store_balance(
                     [
-						'vendor_id' => dokan_get_current_user_id(),
+						'vendor_id' => $vendor_id,
 						'trn_date'  => [
-							'from' => dokan_current_datetime()->modify( 'first day of previous month' )->format( 'Y-m-d H:i:s' ),
-							'to'   => dokan_current_datetime()->modify( 'last day of previous month' )->format( 'Y-m-d H:i:s' ),
+                            // we need remaining balance till previous month
+							'to'   => dokan_current_datetime()->modify( 'last day of previous month' )->format( 'Y-m-d' ),
 						],
 					]
                 );
 
                 // is user paid for previous month
-                $paid_balance = $manager->get_payments_by_vendor();
+                $paid_balance = $manager->get_payments_by_vendor(
+                    [
+                        'vendor_id' => $vendor_id,
+                    ]
+                );
 
                 if ( is_wp_error( $paid_balance ) ) {
                     return $paid_balance;
                 }
                 // subtract paid balance from previous month balance
-                $args['min_payable_amount'] = $previous_month_balance - $paid_balance;
+                $args['payable_amount'] = $previous_month_balance - $paid_balance;
                 break;
 
             case 'by_amount':
-                if ( $balance < $args['threshold'] ) {
-                    $args['min_payable_amount'] = $balance;
-                } else {
-                    $args['min_payable_amount'] = $args['threshold'];
-                }
+                $args['payable_amount'] = $balance;
                 break;
         }
 
@@ -279,7 +373,7 @@ class Helper {
         switch ( Settings::get_billing_type() ) {
             case 'by_month':
                 // check if we need to display payment notice
-                if ( $balance['min_payable_amount'] <= 0 ) {
+                if ( $balance['payable_amount'] <= 0 ) {
                     // there is no balance to be paid
                     $ret['status'] = false;
                     break;
@@ -308,7 +402,7 @@ class Helper {
 
             case 'by_amount':
                 $threshold = Settings::get_reverse_balance_threshold();
-                if ( $ret['balance']['balance'] < $threshold ) {
+                if ( $balance['payable_amount'] < $threshold ) {
                     // balance amount is less than threshold
                     $ret['status'] = false;
                     break;
@@ -316,10 +410,10 @@ class Helper {
 
                 $ret['status'] = true;
                 // check when user crossed the threshold limit
-                $last_threshold_limit_exceed_date = get_user_meta( $vendor_id, static::balance_threshold_exceed_date_key(), true );
-                if ( ! $last_threshold_limit_exceed_date ) {
+                $last_threshold_limit_exceed_date = static::get_balance_threshold_exceed_date( $vendor_id );
+                if ( empty( $last_threshold_limit_exceed_date ) ) {
                     $last_threshold_limit_exceed_date = dokan_current_datetime()->format( 'Y-m-d' );
-                    update_user_meta( $vendor_id, static::balance_threshold_exceed_date_key(), $last_threshold_limit_exceed_date );
+                    static::set_balance_threshold_exceed_date( $vendor_id, $last_threshold_limit_exceed_date );
                 }
 
                 $today    = dokan_current_datetime();

@@ -265,7 +265,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function get_transaction_types( $request ) {
-        $transaction_types = Settings::get_transaction_types();
+        $transaction_types = Helper::get_transaction_types();
         $items          = [];
         foreach ( $transaction_types as $key => $title ) {
             $items[] = [
@@ -457,7 +457,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
 				'description' => __( 'Transaction type to filter form', 'dokan-lite' ),
 				'type'              => 'string',
 				'required'          => false,
-				'enum'              => array_keys( Settings::get_transaction_types() ),
+				'enum'              => array_keys( Helper::get_transaction_types() ),
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 			'trn_date'  => [
@@ -577,7 +577,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'description' => __( 'Transaction type to filter form', 'dokan-lite' ),
                     'type'              => 'string',
                     'readonly'          => true,
-                    'enum'              => array_keys( Settings::get_transaction_types() ),
+                    'enum'              => array_keys( Helper::get_transaction_types() ),
                 ],
                 'vendor_id' => [
                     'description' => __( 'ID of the Store', 'dokan-lite' ),

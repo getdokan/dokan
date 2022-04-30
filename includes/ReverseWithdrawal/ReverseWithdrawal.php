@@ -49,22 +49,33 @@ class ReverseWithdrawal {
         $this->init_hooks();
     }
 
+    /**
+     * Set controllers
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     private function set_controllers() {
         $this->container['settings']      = new Settings();
         $this->container['hooks']         = new Hooks();
         $this->container['admin_hooks']   = new Admin\Hooks();
+        $this->container['cron_actions']  = new CronActions();
         $this->container['order_hooks']   = new Order();
         $this->container['cart_hooks']    = new Cart();
 
         if ( wp_doing_ajax() ) {
             $this->container['ajax'] = new Ajax();
         }
-
-        if ( ! is_admin() ) {
-            // load frontend specific files
-        }
     }
 
+    /**
+     * Initialize all hooks
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     private function init_hooks() {
         add_filter( 'dokan_rest_api_class_map', [ $this, 'rest_api_class_map' ] ); // include rest api class
     }

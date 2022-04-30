@@ -182,38 +182,10 @@ class Settings {
      */
     public static function get_failed_payment_actions() {
         $actions = [
-            'status_inactive'     => __( 'Make Vendor Status Inactive', 'dokan-lite' ),
             'enable_catalog_mode' => __( 'Enable Catalog Mode', 'dokan-lite' ),
             'hide_withdraw_menu'  => __( 'Hide Withdraw Menu', 'dokan-lite' ),
+            'status_inactive'     => __( 'Make Vendor Status Inactive', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_failed_payment_actions', $actions );
-    }
-
-    /**
-     * Get reverse withdrawal failed payment actions
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array|string return associated array of transaction types if no argument is provided. If $transaction_type is provided and if data exists then return the label otherwise return empty string
-     */
-    public static function get_transaction_types( $transaction_type = null ) {
-        /**
-         * ! do not change the keys, it will break the query
-         * ! also do not use any filter here, if new transaction type is needed add it to the below array
-         */
-        $transaction_types = [
-            'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
-            'vendor_payment'            => esc_html__( 'Payment', 'dokan-lite' ),
-            'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
-            'order_refund'              => esc_html__( 'Refund', 'dokan-lite' ),
-            'product_advertisement'     => esc_html__( 'Product Advertisement', 'dokan-lite' ),
-            'manual_order_commission'   => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
-        ];
-
-        if ( $transaction_type ) {
-            return isset( $transaction_types[ $transaction_type ] ) ? $transaction_types[ $transaction_type ] : '';
-        }
-
-        return $transaction_types;
     }
 }

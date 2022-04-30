@@ -121,7 +121,7 @@ class Manager {
         }
 
         // transaction type validation
-        if ( ! empty( $args['trn_type'] ) && array_key_exists( $args['trn_type'], Settings::get_transaction_types() ) ) {
+        if ( ! empty( $args['trn_type'] ) && array_key_exists( $args['trn_type'], Helper::get_transaction_types() ) ) {
             $where .= ' AND trn.trn_type = %s';
             $query_args[] = $args['trn_type'];
         }
@@ -521,7 +521,7 @@ class Manager {
             return new WP_Error( 'insert_rw_invalid_transaction_id', __( 'Transaction id is required.', 'dokan-lite' ) );
         }
 
-        if ( empty( $args['trn_type'] ) || ! array_key_exists( $args['trn_type'], Settings::get_transaction_types() ) ) {
+        if ( empty( $args['trn_type'] ) || ! array_key_exists( $args['trn_type'], Helper::get_transaction_types() ) ) {
             return new WP_Error( 'insert_rw_invalid_transaction_type', __( 'Invalid transaction type is provide. Please check your input.', 'dokan-lite' ) );
         }
 
@@ -559,7 +559,7 @@ class Manager {
             return new WP_Error( 'insert_reverse_withdrawal_error', __( 'Something went wrong while inserting reverse withdrawal data. Please contact site admin.', 'dokan-lite' ) );
         }
 
-        do_action( 'dokan_after_reverse_withdrawal_created', $insert_id, $data, $args );
+        do_action( 'dokan_reverse_withdrawal_created', $data, $insert_id, $args );
 
         return $insert_id;
     }
@@ -626,7 +626,7 @@ class Manager {
     }
 
     /**
-     * This method will return all the payments made by a vendor
+     * This method will return all the payments made by a vendor in a date range
      *
      * @since DOKAN_SINCE
      *
@@ -638,8 +638,8 @@ class Manager {
         $default = [
             'vendor_id' => dokan_get_current_user_id(),
             'trn_date'  => [
-                'from' => dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d H:i:s' ),
-                'to'   => dokan_current_datetime()->modify( 'last day of this month' )->format( 'Y-m-d H:i:s' ),
+                'from' => dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d' ),
+                'to'   => dokan_current_datetime()->modify( 'last day of this month' )->format( 'Y-m-d' ),
             ],
         ];
 

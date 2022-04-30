@@ -84,7 +84,7 @@ class ReverseWithdrawal {
 
         // get formatted error messages
         $message = sprintf( __( 'You have a reverse withdrawal balance of %s to be paid. Please <a href="%s">pay</a> it before %s. Below actions will be taken after the billing period is over. %s', 'dokan' ),
-            wc_price( $due_status['balance']['min_payable_amount'] ),
+            wc_price( $due_status['balance']['payable_amount'] ),
             dokan_get_navigation_url( 'reverse-withdrawal' ),
             $due_status['due_date'],
             Helper::get_formatted_failed_actions()

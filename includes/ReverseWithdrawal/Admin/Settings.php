@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\Admin
  *
- * @since DOkAN_SINCE
+ * @since DOKAN_SINCE
  */
 class Settings {
 
