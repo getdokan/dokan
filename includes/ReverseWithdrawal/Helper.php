@@ -217,7 +217,7 @@ class Helper {
      *
      * @param int $transaction_id
      * @param string $transaction_type
-     * @param string $contex
+     * @param string $contex admin or seller
      *
      * @return string
      */
@@ -228,6 +228,18 @@ class Helper {
                 $url = $contex === 'admin'
                     ? get_admin_url( null, 'post.php?post=' . $transaction_id . '&action=edit' )
                     : dokan_edit_product_url( $transaction_id );
+                break;
+
+            case 'vendor_payment':
+                $order = wc_get_order( $transaction_id );
+                // get vendor order view url
+                $order_view_url = '#';
+                if ( $order ) {
+                    $order_view_url = $order->get_view_order_url();
+                }
+                $url = $contex === 'admin'
+                    ? get_admin_url( null, 'post.php?post=' . $transaction_id . '&action=edit' )
+                    : $order_view_url;
                 break;
 
             default:

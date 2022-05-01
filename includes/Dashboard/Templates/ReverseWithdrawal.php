@@ -9,6 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+/**
+ * Load Reverse Withdrawal Template
+ *
+ * @since DOKAN_SINCE
+ *
+ * @package Wedevs\Dokan\Dashboard\Templates
+ */
 class ReverseWithdrawal {
     /**
      * @var int $seller_id
@@ -64,6 +71,13 @@ class ReverseWithdrawal {
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_transactions_table' ], 10 );
     }
 
+    /**
+     * Display notice on vendor dashboard and reverse withdrawal page
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     public function display_notice_on_vendor_dashboard() {
         // get vendor due status
         $due_status = Helper::get_vendor_due_status( $this->seller_id );
@@ -83,13 +97,24 @@ class ReverseWithdrawal {
         }
 
         // get formatted error messages
-        $message = sprintf( __( 'You have a reverse withdrawal balance of %s to be paid. Please <a href="%s">pay</a> it before %s. Below actions will be taken after the billing period is over. %s', 'dokan' ),
+        $message = sprintf( __( 'You have a reverse withdrawal balance of %1$s to be paid. Please <a href="%2$s">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s', 'dokan' ),
             wc_price( $due_status['balance']['payable_amount'] ),
             dokan_get_navigation_url( 'reverse-withdrawal' ),
             $due_status['due_date'],
             Helper::get_formatted_failed_actions()
         );
         dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
+    }
+
+    /**
+     * Dokan Reverse Withdrawal header Template render
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_header() {
+        dokan_get_template_part( 'reverse-withdrawal/header' );
     }
 
     /**
@@ -104,20 +129,10 @@ class ReverseWithdrawal {
 
         if ( is_wp_error( $args ) ) {
             dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $args->get_error_message() ] );
+            return;
         }
 
         dokan_get_template_part( 'reverse-withdrawal/reverse-balance', '', $args );
-    }
-
-    /**
-     * Dokan Reverse Withdrawal header Template render
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function render_header() {
-        dokan_get_template_part( 'reverse-withdrawal/header' );
     }
 
     /**
@@ -147,6 +162,11 @@ class ReverseWithdrawal {
             'orderby'   => 'added',
             'order'     => 'DESC',
         ] );
+
+        if ( is_wp_error( $transactions ) ) {
+            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $transactions->get_error_message() ] );
+            return;
+        }
 
         dokan_get_template_part( 'reverse-withdrawal/transaction-listing', '', [ 'transactions' => $transactions ] );
     }
@@ -206,13 +226,13 @@ class ReverseWithdrawal {
         $this->transaction_date['from'] = dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d' );
         $this->transaction_date['to']   = dokan_current_datetime()->format( 'Y-m-d' );
 
-        if ( isset( $_GET['_nonce'] ) && wp_verify_nonce( $_GET['_nonce'], 'dokan_reverse_withdrawal_filter' ) ) {
-            if ( ! empty( $_GET['trn_date']['from'] ) ) {
-                $this->transaction_date['from'] = sanitize_text_field( wp_unslash( $_GET['trn_date']['from'] ) );
+        if ( isset( $_REQUEST['_nonce'] ) && wp_verify_nonce( $_REQUEST['_nonce'], 'dokan_reverse_withdrawal_filter' ) ) {
+            if ( ! empty( $_REQUEST['trn_date']['from'] ) ) {
+                $this->transaction_date['from'] = sanitize_text_field( wp_unslash( $_REQUEST['trn_date']['from'] ) );
             }
 
-            if ( ! empty( $_GET['trn_date']['to'] ) ) {
-                $this->transaction_date['to'] = sanitize_text_field( wp_unslash( $_GET['trn_date']['to'] ) );
+            if ( ! empty( $_REQUEST['trn_date']['to'] ) ) {
+                $this->transaction_date['to'] = sanitize_text_field( wp_unslash( $_REQUEST['trn_date']['to'] ) );
             }
         }
 

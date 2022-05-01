@@ -37,10 +37,31 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
                 <td><?php echo esc_html( $transaction['trn_date'] ); ?></td>
                 <td><?php echo esc_html( $transaction['trn_type'] ); ?></td>
                 <td><?php echo esc_html( $transaction['note'] ); ?></td>
-                <td><?php echo wc_price( $transaction['debit'] ); ?></td>
-                <td><?php echo wc_price( $transaction['credit'] ); ?></td>
+                <td><?php echo $transaction['debit'] === '' ? '--' : wc_price( $transaction['debit'] ); ?></td>
+                <td><?php echo $transaction['credit'] === '' ? '--' : wc_price( $transaction['credit'] ); ?></td>
                 <td>
                     <?php echo $transaction['balance'] < 0 ? sprintf( '(%1$s)', wc_price( abs( $transaction['balance'] ) ) ) : wc_price( $transaction['balance'] ); ?>
+                </td>
+            </tr>
+            <?php
+        }
+        if ( count( $items ) > 1 ) {
+            ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b><?php _e( 'Balance:', 'dokan' ); ?></b></td>
+                <td><b><?php echo wc_price( $current_balance ); ?></b></td>
+            </tr>
+            <?php
+        } else {
+            ?>
+            <tr>
+                <td colspan="7">
+                    <?php esc_html_e( 'No transactions found!', 'dokan-lite' ); ?>
                 </td>
             </tr>
             <?php
