@@ -22,7 +22,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                         <ul>
                         <?php foreach ( $unused_methods as $method_key => $method ) :?>
                             <li>
-                                <a href="<?php echo esc_url( home_url( "dashboard/settings/payment/manage-" . $method_key ) ); ?>">
+                                <a href="<?php echo esc_url( dokan_get_page_url( 'dashboard', 'dokan', 'settings/payment/manage-' . $method_key ) ); ?>">
                                     <div>
                                         <img src="<?php echo esc_url( dokan_withdraw_get_method_icon(  $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>" />
                                         <span>
