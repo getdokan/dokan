@@ -423,7 +423,9 @@ class Helper {
                 $ret['status'] = true;
                 // check when user crossed the threshold limit
                 $last_threshold_limit_exceed_date = static::get_balance_threshold_exceed_date( $vendor_id );
+                $threshold_exceeded = false;
                 if ( empty( $last_threshold_limit_exceed_date ) ) {
+                    $threshold_exceeded = true;
                     $last_threshold_limit_exceed_date = dokan_current_datetime()->format( 'Y-m-d' );
                     static::set_balance_threshold_exceed_date( $vendor_id, $last_threshold_limit_exceed_date );
                 }
@@ -441,6 +443,10 @@ class Helper {
                 } else {
                     // vendor needs to pay due balance on due date
                     $ret['due_date'] = $due_date->format( 'Y-m-d' );
+                }
+
+                if ( $threshold_exceeded ) { // this will make sure that below hook will not be called twice
+                    do_action( 'dokan_reverse_withdrawal_balance_threshold_exceed', $vendor_id, $ret, $last_threshold_limit_exceed_date );
                 }
 
                 break;

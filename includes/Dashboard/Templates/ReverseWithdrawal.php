@@ -63,7 +63,7 @@ class ReverseWithdrawal {
 
         // display notice to pay reverse withdrawal balance
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'display_notice_on_vendor_dashboard' ] );
-        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_notice_on_vendor_dashboard' ] );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_payment_notice' ] );
 
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
@@ -72,13 +72,26 @@ class ReverseWithdrawal {
     }
 
     /**
-     * Display notice on vendor dashboard and reverse withdrawal page
+     * Display notice on vendor dashboard page
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
     public function display_notice_on_vendor_dashboard() {
+        if ( SettingsHelper::display_payment_notice_on_vendor_dashboard() ) {
+            $this->display_payment_notice();
+        }
+    }
+
+    /**
+     * Display notice on reverse withdrawal page
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function display_payment_notice() {
         // get vendor due status
         $due_status = Helper::get_vendor_due_status( $this->seller_id );
         if ( is_wp_error( $due_status ) ) {

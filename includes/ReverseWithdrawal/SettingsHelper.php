@@ -128,8 +128,8 @@ class SettingsHelper {
      *
      * @return bool
      */
-    public static function is_display_notice_enabled() {
-        return 'on' === dokan_get_option( 'display_notice', 'dokan_reverse_withdrawal', 'off' );
+    public static function display_payment_notice_on_vendor_dashboard() {
+        return 'on' === dokan_get_option( 'display_notice', 'dokan_reverse_withdrawal', 'on' );
     }
 
     /**
@@ -139,7 +139,7 @@ class SettingsHelper {
      *
      * @return bool
      */
-    public static function is_announcement_enabled() {
+    public static function send_balance_exceeded_announcement() {
         return 'on' === dokan_get_option( 'send_announcement', 'dokan_reverse_withdrawal', 'off' );
     }
 
@@ -153,7 +153,6 @@ class SettingsHelper {
     public static function get_reverse_withrawal_payment_gateways() {
         $gateways = [
             'cod'    => __( 'Cash on delivery', 'dokan-lite' ),
-            'cheque' => __( 'Cheque Payments', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_payment_gateways', $gateways );
     }

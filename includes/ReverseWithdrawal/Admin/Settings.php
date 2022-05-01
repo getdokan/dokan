@@ -148,7 +148,7 @@ class Settings {
                 'label'   => __( 'Display Notice During Due Period', 'dokan-lite' ),
                 'desc'    => __( 'Display notice to pay reverse withdrawal balance during Due Period under vendor dashboard.', 'dokan-lite' ),
                 'type'    => 'checkbox',
-                'default' => 'off',
+                'default' => 'on',
             ],
         ];
 
