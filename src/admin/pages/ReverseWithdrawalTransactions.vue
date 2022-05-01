@@ -48,15 +48,27 @@
                 </template>
 
                 <template slot="debit" slot-scope="data">
-                    <currency :amount="data.row.debit"></currency>
+                    <div v-if="data.row.debit === ''">--</div>
+                    <currency v-else-if="data.row.debit >= 0" :amount="data.row.debit"></currency>
+                    <div class="negative-balance" v-else-if="data.row.debit < 0">
+                        ( <currency :amount="data.row.debit * -1"></currency> )
+                    </div>
                 </template>
 
                 <template slot="credit" slot-scope="data">
-                    <currency :amount="data.row.credit"></currency>
+                    <div v-if="data.row.credit === ''">--</div>
+                    <currency v-else-if="data.row.credit >= 0" :amount="data.row.credit"></currency>
+                    <div class="negative-balance" v-else-if="data.row.credit < 0">
+                        ( <currency :amount="data.row.credit * -1"></currency> )
+                    </div>
                 </template>
 
                 <template slot="balance" slot-scope="data">
-                    <currency :amount="data.row.balance"></currency>
+                    <div v-if="data.row.balance === ''">--</div>
+                    <currency v-else-if="data.row.balance >= 0" :amount="data.row.balance"></currency>
+                    <div class="negative-balance" v-else-if="data.row.balance < 0">
+                        ( <currency :amount="data.row.balance * -1"></currency> )
+                    </div>
                 </template>
 
                 <template slot="filters">
@@ -470,6 +482,11 @@ export default {
 
     .widefat .product_title {
         width: 20em;
+    }
+
+    //fix negative balance display issue
+    .negative-balance>div {
+        display: inline;
     }
 }
 </style>

@@ -404,10 +404,12 @@ class Manager {
             'items'   => [],
         ];
 
-        // get balance for 1 day before start date
-        $one_day_before = dokan_current_datetime()->modify( 'yesterday' )->getTimestamp();
+        // get balance date
         if ( ! empty( $query_params['trn_date']['from'] ) ) {
             $one_day_before = dokan_current_datetime()->modify( $query_params['trn_date']['from'] )->modify( 'yesterday' )->getTimestamp();
+        } else {
+            // get balance for 1 day before start date
+            $one_day_before = dokan_current_datetime()->modify( 'yesterday' )->getTimestamp();
         }
 
         $balance_args = [
@@ -434,10 +436,10 @@ class Manager {
             'trn_type'  => __( 'Opening Balance', 'dokan-lite' ),
             'vendor_id' => isset( $balance['vendor_id'] ) ? absint( $balance['vendor_id'] ) : 0,
             'note'      => '',
-            'debit'     => isset( $balance['debit'] ) ? $balance['debit'] : 0,
-            'credit'    => isset( $balance['credit'] ) ? $balance['credit'] : 0,
+            'debit'     => '',
+            'credit'    => '',
         ];
-        $formatted_balance['balance'] = $formatted_balance['debit'] - $formatted_balance['credit'];
+        $formatted_balance['balance'] = isset( $balance['debit'], $balance['credit'] ) ? $balance['debit'] - $balance['credit'] : 0;
 
         $return['balance'] = $formatted_balance;
 

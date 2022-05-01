@@ -36,7 +36,11 @@
                 </template>
 
                 <template slot="balance" slot-scope="data">
-                    <currency :amount="data.row.balance"></currency>
+                    <div v-if="data.row.balance === ''">--</div>
+                    <currency v-else-if="data.row.balance >= 0" :amount="data.row.balance"></currency>
+                    <div class="negative-balance" v-else-if="data.row.balance < 0">
+                        ( <currency :amount="data.row.balance * -1"></currency> )
+                    </div>
                 </template>
 
                 <template slot="last_payment_date" slot-scope="data">
@@ -72,7 +76,7 @@
                             class="mr-5"
                             ref="picker"
                             :locale-data="this.dateTimePickerFormat"
-                            :singleDatePicker="single"
+                            :singleDatePicker="false"
                             :showDropdowns="true"
                             :autoApply="false"
                             :ranges="this.dateRangePickerRanges"
@@ -177,7 +181,6 @@ export default {
                 },
                 'balance': {
                     label: this.__( 'Balance', 'dokan-lite' ),
-                    sortable: true,
                 },
                 'last_payment_date': {
                     label: this.__( 'Last Payment Date', 'dokan-lite' ),
@@ -528,6 +531,11 @@ export default {
 
     .widefat .product_title {
         width: 20em;
+    }
+
+    //fix negative balance display issue
+    .negative-balance>div {
+        display: inline;
     }
 }
 </style>
