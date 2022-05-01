@@ -7,11 +7,11 @@
             </span>
         </div>
         <div class="card-fun-fact__text">
-            <h3 class="card-fun-fact__title">
+            <h3 class="card-fun-fact__title" v-if="count !== ''">
                 <Currency :amount="count" v-if="is_currency"></Currency>
                 <span v-if="!is_currency">{{ count }}</span>
             </h3>
-            <p class="card-fun-fact__description">{{ this.title }}</p>
+            <p class="card-fun-fact__description" v-if="title !== ''">{{ title }}</p>
         </div>
     </div>
 </template>
@@ -42,13 +42,11 @@ export default {
         },
         count: {
             type: Number|String,
-            default: '5000',
-            required: true,
+            default: '',
         },
         title: {
             type: String,
-            default: 'Sample Text',
-            required: true,
+            default: '',
         },
         is_currency: {
             type: Boolean,

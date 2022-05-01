@@ -4,10 +4,11 @@
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
             <a class="button" :href="this.reverseWithdrawalUrl()">&larr; {{ __( 'Go Back', 'dokan' ) }}</a>
         </h1>
-        <AdminNotice />
+
         <hr class="wp-header-end">
 
         <div class="dokan-reverse-withdrawal-fact-card">
+            <CardFunFact icon="fas fa-user" :title="storeDetails.store_name ? storeDetails.store_name : ''" />
             <CardFunFact :count="counts.credit" icon="fas fa-comments-dollar" is_currency :title="__('Total Collected', 'dokan-lite')" />
             <CardFunFact :count="counts.balance" icon="fas fa-coins" is_currency :title="__('Remaining Balance', 'dokan-lite')" />
             <CardFunFact :count="counts.total_transactions" icon="fas fa-info"  :title="__( 'Total Transactions', 'dokan-lite' )" />
@@ -84,6 +85,7 @@
                             :showDropdowns="true"
                             :autoApply="false"
                             v-model="filter.transaction_date"
+                            :ranges="this.dateRangePickerRanges"
                             :linkedCalendars="true"
                             opens="right">
                             <template v-slot:input="picker">
@@ -110,6 +112,7 @@
 
 <script>
 import $ from 'jquery';
+import moment from "moment";
 
 const ListTable       = dokan_get_lib('ListTable');
 const Multiselect     = dokan_get_lib('Multiselect');
@@ -144,8 +147,10 @@ export default {
 
     data () {
         return {
+            storeDetails: {},
             transactionData: [],
             loading: false,
+            clearingFilters: false,
             counts: {
                 debit: 0,
                 credit: 0,
@@ -155,6 +160,14 @@ export default {
                 format: dokan_get_daterange_picker_format().toLowerCase(),
                 ...dokan_helper.daterange_picker_local,
             },
+            dateRangePickerRanges: {
+                'Today': [moment().toDate(), moment().toDate()],
+                'Last 30 Days': [moment().subtract(29, 'days').toDate(), moment().toDate()],
+                'This Month': [moment().startOf('month').toDate(), moment().endOf('month').toDate()],
+                'Last Month': [moment().subtract(1, 'month').startOf('month').toDate(), moment().subtract(1, 'month').endOf('month').toDate()],
+                'This Year': [moment().month(0).startOf('month').toDate(), moment().month(11).endOf('month').toDate()],
+                'Last Year': [moment().month(0).subtract(1, 'year').startOf('month').toDate(), moment().month(11).subtract(1, 'year').endOf('month').toDate()]
+            },
             totalPages: 1,
             perPage: 100,
             totalItems: 0,
@@ -163,21 +176,18 @@ export default {
             columns: {
                 'trn_id': {
                     label: this.__( 'Transaction ID', 'dokan-lite' ),
-                    sortable: true,
                 },
                 'trn_date': {
                     label: this.__( 'Date', 'dokan-lite' ),
                 },
                 'trn_type': {
                     label: this.__( 'Transaction Type', 'dokan-lite' ),
-                    sortable: true,
                 },
                 'note': {
                     label: this.__( 'Note', 'dokan-lite' )
                 },
                 'debit': {
                     label: this.__( 'Debit', 'dokan-lite' ),
-                    sortable: true,
                 },
                 'credit': {
                     label: this.__( 'Credit', 'dokan-lite' ),
@@ -202,8 +212,9 @@ export default {
     },
 
     mounted() {
-        this.fetchBalance();
+        this.fetchStoreDetails();
         this.mountToolTips();
+        this.scrollToTop();
     },
 
     updated() {
@@ -262,7 +273,10 @@ export default {
         },
 
         'filter.transaction_date.startDate'() {
-            this.fetchTransactions();
+            // added this condition to avoid multiple fetchBalances call
+            if ( ! this.clearingFilters && ! this.loading ) {
+                this.fetchTransactions();
+            }
         },
     },
 
@@ -293,8 +307,10 @@ export default {
 
         // clear filter
         clearFilters() {
+            this.clearingFilters = true;
             this.setDefaultTransactionDate();
             this.fetchTransactions();
+            this.clearingFilters = false;
         },
 
         getDefaultTransactionDate() {
@@ -337,36 +353,30 @@ export default {
             dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data)
             .done( ( response, status, xhr ) => {
                 self.transactionData = response;
+                self.updatedCounts( xhr );
                 self.updatePagination( xhr );
             }).always( () => {
                 self.loading = false;
             }).fail( ( jqXHR ) => {
                 self.transactionData = [];
                 self.resetPagination();
-                let message = self.renderApiError( jqXHR );
+                let message = dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
                     self.showErrorAlert( message );
                 }
             });
         },
 
-        fetchBalance() {
+        fetchStoreDetails() {
             let self = this;
 
-            let data = {
-                vendor_id: self.ID,
-                trn_date: {
-                    'to': moment().format('YYYY-MM-DD 23:59:59'),
-                },
-            };
-
-            dokan.api.get('/reverse-withdrawal/stores-balance', data).done( ( response, status, xhr ) => {
-                self.updatedCounts( xhr );
+            dokan.api.get('/stores/' + self.ID).done( ( response, status, xhr ) => {
+                self.storeDetails = response;
             }).always( () => {
 
             } ).fail( ( jqXHR ) => {
-                self.resetCounts();
-                let message = self.renderApiError( jqXHR );
+                self.storeDetails = {};
+                let message = dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
                     self.showErrorAlert( message );
                 }
@@ -417,17 +427,9 @@ export default {
             );
         },
 
-        renderApiError( jqXHR ) {
-            let message = '';
-            if ( jqXHR.responseJSON && jqXHR.responseJSON.message ) {
-                message = jqXHR.responseJSON.message;
-            } else if ( jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message ) {
-                message = jqXHR.responseJSON.data.message;
-            } else if( jqXHR.responseText ) {
-                message = jqXHR.responseText;
-            }
-            return message;
-        }
+        scrollToTop() {
+            window.scrollTo(0,0);
+        },
     }
 };
 </script>

@@ -200,9 +200,10 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         }
 
         $response = rest_ensure_response( $items );
-        $response->header( 'X-Status-Total-Transaction', $data['count']['total_transactions'] );
+        $response->header( 'X-Status-Total-Transactions', $data['count']['total_transactions'] );
         $response->header( 'X-Status-Debit', $data['count']['debit'] );
         $response->header( 'X-Status-Credit', $data['count']['credit'] );
+        $response->header( 'X-Status-Balance', $current_balance );
         $response = $this->format_collection_response( $response, $request, $data['count']['total_transactions'] );
 
         return $response;

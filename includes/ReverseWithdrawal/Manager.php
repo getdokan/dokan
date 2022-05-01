@@ -406,10 +406,10 @@ class Manager {
 
         // get balance date
         if ( ! empty( $query_params['trn_date']['from'] ) ) {
-            $one_day_before = dokan_current_datetime()->modify( $query_params['trn_date']['from'] )->modify( 'yesterday' )->getTimestamp();
+            $one_day_before = dokan_current_datetime()->modify( $query_params['trn_date']['from'] )->setTime( 0, 0, 0 )->getTimestamp();
         } else {
             // get balance for 1 day before start date
-            $one_day_before = dokan_current_datetime()->modify( 'yesterday' )->getTimestamp();
+            $one_day_before = dokan_current_datetime()->setTime( 0, 0, 0 )->getTimestamp();
         }
 
         $balance_args = [
@@ -420,7 +420,7 @@ class Manager {
             'return'   => 'balance',
             'per_page' => 1,
         ];
-
+        // we are getting opening balance here
         $balance = $this->all( $balance_args );
 
         if ( is_wp_error( $balance ) ) {
