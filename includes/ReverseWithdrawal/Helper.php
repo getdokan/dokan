@@ -280,18 +280,103 @@ class Helper {
     }
 
     /**
+     * This method will return default transaction data for vendor reverse withdrawal balance
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public static function get_default_transaction_date() {
+        return [
+            'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d' ),
+            'to'   => dokan_current_datetime()->format( 'Y-m-d' ),
+        ];
+    }
+
+    /**
+     * This method will return payable amount of a vendor for a month
+     *
+     * @param int $vendor_id
+     * @param int|string $current_date
+     *
+     * @return float|WP_Error
+     */
+    public static function get_vendor_payable_amount_by_month( $vendor_id, $current_date ) {
+        // check for valid vendor id
+        if ( empty( $vendor_id ) || ! is_numeric( $vendor_id ) ) {
+            return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
+        }
+
+        // get current_date
+        $current_date = is_numeric( $current_date ) ? dokan_current_datetime()->setTimestamp( $current_date ) : dokan_current_datetime()->modify( $current_date );
+        // validate current date
+        if ( ! $current_date ) {
+            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
+        }
+
+        $manager = new Manager();
+        // get previous month balance
+        $previous_month_balance = $manager->get_store_balance(
+            [
+                'vendor_id' => $vendor_id,
+                'trn_date'  => [
+                    // we need remaining balance till previous month
+                    'to' => $current_date->modify( 'last day of previous month' )->format( 'Y-m-d' ),
+                ],
+            ]
+        );
+
+        if ( is_wp_error( $previous_month_balance ) ) {
+            return $previous_month_balance;
+        }
+
+        if ( $previous_month_balance <= 0 ) {
+            return 0;
+        }
+
+        // is user paid for previous month
+        $paid_balance = $manager->get_payments_by_vendor(
+            [
+                'vendor_id' => $vendor_id,
+                'trn_date'  => [
+                    'from' => $current_date->modify( 'first day of this month' )->format( 'Y-m-d' ),
+                    'to'   => $current_date->modify( 'last day of this month' )->format( 'Y-m-d' ),
+                ],
+            ]
+        );
+
+        if ( is_wp_error( $paid_balance ) ) {
+            return $paid_balance;
+        }
+
+        return $previous_month_balance - $paid_balance;
+    }
+
+    /**
      * This method will return payable balance of a vendor
      *
      * @since DOKAN_SINCE
      *
      * @param int|null $vendor_id
+     * @param int|string|null $current_date
      *
      * @return array|WP_Error
      */
-    public static function get_vendor_balance( $vendor_id = null ) {
+    public static function get_vendor_balance( $vendor_id = null, $current_date = null ) {
         // check for valid vendor id
         if ( ! is_numeric( $vendor_id ) ) {
             $vendor_id = dokan_get_current_user_id();
+        }
+
+        // validate current_date
+        if ( null === $current_date ) {
+            $current_date = dokan_current_datetime();
+        } else {
+            $current_date = is_numeric( $current_date ) ? dokan_current_datetime()->setTimestamp( $current_date ) : dokan_current_datetime()->modify( $current_date );
+        }
+
+        if ( ! $current_date ) {
+            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
         }
 
         $manager = new Manager();
@@ -318,29 +403,8 @@ class Helper {
         // check settings for billing type
         switch ( $args['billing_type'] ) {
             case 'by_month':
-                // get previous month payable balance
-                $previous_month_balance = $manager->get_store_balance(
-                    [
-						'vendor_id' => $vendor_id,
-						'trn_date'  => [
-                            // we need remaining balance till previous month
-							'to'   => dokan_current_datetime()->modify( 'last day of previous month' )->format( 'Y-m-d' ),
-						],
-					]
-                );
-
-                // is user paid for previous month
-                $paid_balance = $manager->get_payments_by_vendor(
-                    [
-                        'vendor_id' => $vendor_id,
-                    ]
-                );
-
-                if ( is_wp_error( $paid_balance ) ) {
-                    return $paid_balance;
-                }
                 // subtract paid balance from previous month balance
-                $args['payable_amount'] = $previous_month_balance - $paid_balance;
+                $args['payable_amount'] = static::get_vendor_payable_amount_by_month( $vendor_id, $current_date->getTimestamp() );
                 break;
 
             case 'by_amount':
@@ -360,14 +424,25 @@ class Helper {
      *
      * @return array|WP_Error
      */
-    public static function get_vendor_due_status( $vendor_id = null ) {
+    public static function get_vendor_due_status( $vendor_id = null, $current_date = null ) {
         // check for valid vendor id
         if ( ! is_numeric( $vendor_id ) ) {
             $vendor_id = dokan_get_current_user_id();
         }
 
+        // validate current_date
+        if ( null === $current_date ) {
+            $current_date = dokan_current_datetime();
+        } else {
+            $current_date = is_numeric( $current_date ) ? dokan_current_datetime()->setTimestamp( $current_date ) : dokan_current_datetime()->modify( $current_date );
+        }
+
+        if ( ! $current_date ) {
+            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
+        }
+
         // get balance
-        $balance = static::get_vendor_balance( $vendor_id );
+        $balance = static::get_vendor_balance( $vendor_id, $current_date->getTimestamp() );
 
         // check for error
         if ( is_wp_error( $balance ) ) {
@@ -395,14 +470,13 @@ class Helper {
                 $ret['status'] = true;
 
                 // check if user crossed the due period
-                $today    = dokan_current_datetime();
-                $due_date = $today->modify( 'first day of this month' );
+                $due_date = $current_date->modify( 'first day of this month' );
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
                 }
 
-                if ( $today > $due_date ) {
+                if ( $current_date > $due_date ) {
                     // vendor needs to pay due balance immediately
                     $ret['due_date'] = 'immediate';
                 } else {
@@ -425,19 +499,22 @@ class Helper {
                 $last_threshold_limit_exceed_date = static::get_balance_threshold_exceed_date( $vendor_id );
                 $threshold_exceeded = false;
                 if ( empty( $last_threshold_limit_exceed_date ) ) {
-                    $threshold_exceeded = true;
                     $last_threshold_limit_exceed_date = dokan_current_datetime()->format( 'Y-m-d' );
-                    static::set_balance_threshold_exceed_date( $vendor_id, $last_threshold_limit_exceed_date );
+                    // we will only update this value if current date is today, because this function can be used to get older month's data
+                    if ( $last_threshold_limit_exceed_date === $current_date->format( 'Y-m-d' ) ) {
+                        $threshold_exceeded = true;
+                        static::set_balance_threshold_exceed_date( $vendor_id, $last_threshold_limit_exceed_date );
+                    }
                 }
 
-                $today    = dokan_current_datetime();
-                $due_date = $today->modify( $last_threshold_limit_exceed_date );
+                //get due date
+                $due_date = $current_date->modify( $last_threshold_limit_exceed_date );
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
                 }
 
-                if ( $today > $due_date ) {
+                if ( $current_date > $due_date ) {
                     // vendor needs to pay due balance immediately
                     $ret['due_date'] = 'immediate';
                 } else {

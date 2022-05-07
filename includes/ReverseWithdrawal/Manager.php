@@ -306,7 +306,7 @@ class Manager {
      *
      * @return array|WP_Error
      */
-    public function get_stores_balance( array $args = [] ) {
+    public function get_stores_balance( $args = [] ) {
         $query_params = [
             'vendor_id' => isset( $args['vendor_id'] ) ? $args['vendor_id'] : 0,
             'trn_date'  => isset( $args['trn_date'] ) ? $args['trn_date'] : '',
@@ -350,7 +350,7 @@ class Manager {
      *
      * @return float|WP_Error
      */
-    public function get_store_balance( array $args = [] ) {
+    public function get_store_balance( $args = [] ) {
         $query_params = [
             'vendor_id' => isset( $args['vendor_id'] ) ? $args['vendor_id'] : 0,
             'trn_date'  => isset( $args['trn_date'] ) && ! $this->is_empty( $args['trn_date'] ) ? $args['trn_date'] : '',
@@ -379,7 +379,7 @@ class Manager {
      *
      * @return array|WP_Error
      */
-    public function get_store_transactions( array $args = [] ) {
+    public function get_store_transactions( $args = [] ) {
         $default_transactions_date = [
             'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d' ),
             'to'   => dokan_current_datetime()->format( 'Y-m-d' ),

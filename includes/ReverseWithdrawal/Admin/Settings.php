@@ -116,7 +116,7 @@ class Settings {
                 'desc'    => __( 'Enter day number when you want to send reverse withdrawal balance invoice to vendors.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 1,
-                'max'     => 31,
+                'max'     => 28,
                 'step'    => 1,
                 'default' => '1',
                 'show_if' => [

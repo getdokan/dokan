@@ -1,10 +1,8 @@
 <?php
 namespace WeDevs\Dokan\REST;
 
-use Stripe\Util\Set;
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -452,6 +450,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return array Query parameters for the collection.
      */
     public function get_store_transactions_route_params() {
+        $default_transaction_date = Helper::get_default_transaction_date();
         return [
 			'context'   => $this->get_context_param(),
 			'vendor_id' => [
@@ -475,12 +474,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
 					'from'  => [
 						'type'    => [ 'string' ],
 						'pattern' => '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])',
-						'default' => dokan_current_datetime()->modify( '-1 month' )->setTime( 0, 0, 0 )->format( 'Y-m-d H:i:s' ),
+						'default' => $default_transaction_date['from'],
 					],
 					'to' => [
 						'type'    => [ 'string' ],
 						'pattern' => '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])',
-						'default' => dokan_current_datetime()->setTime( 23, 59, 59 )->format( 'Y-m-d H:i:s' ),
+						'default' => $default_transaction_date['to'],
 					],
 				],
 			],

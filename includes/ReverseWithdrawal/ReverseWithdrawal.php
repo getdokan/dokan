@@ -2,6 +2,8 @@
 namespace WeDevs\Dokan\ReverseWithdrawal;
 
 use WeDevs\Dokan\ReverseWithdrawal\Admin\Settings;
+use WeDevs\Dokan\ReverseWithdrawal\BackgroundProcess\AsyncRequests;
+use WeDevs\Dokan\ReverseWithdrawal\BackgroundProcess\CronActions;
 use WeDevs\Dokan\Traits\ChainableContainer;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -59,6 +61,7 @@ class ReverseWithdrawal {
     private function set_controllers() {
         $this->container['settings']      = new Settings();
         $this->container['hooks']         = new Hooks();
+        $this->container['async_hooks']   = new AsyncRequests();
         $this->container['admin_hooks']   = new Admin\Hooks();
         $this->container['cron_actions']  = new CronActions();
         $this->container['order_hooks']   = new Order();
