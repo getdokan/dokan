@@ -97,6 +97,8 @@ class AsyncRequests {
 
             $invoice_email->trigger( $vendor_id, $due_status );
             dokan_log( sprintf( '[Reverse Withdrawal] Invoice Mail send to %d', $vendor_id ) );
+
+            do_action( 'dokan_reverse_withdrawal_invoice_email_sent', $vendor_id, $due_status, dokan_current_datetime()->format( 'Y-m-d' ) );
         }
     }
 }

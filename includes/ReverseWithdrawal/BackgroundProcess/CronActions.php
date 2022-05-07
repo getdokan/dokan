@@ -40,6 +40,24 @@ class CronActions {
     }
 
     /**
+     * Schedule an action with the hook 'dokan_reverse_withdrawal_midnight_cron' to run at midnight each day
+     * so that our callback is run then.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function schedule_action() {
+        $hook = 'dokan_reverse_withdrawal_midnight_cron';
+        if ( false === as_next_scheduled_action( $hook ) ) {
+            // remove previous actions, this will eliminate else condition
+            as_unschedule_all_actions( $hook );
+            $timestamp = dokan_current_datetime()->modify( 'tomorrow' )->getTimestamp();
+            as_schedule_recurring_action( $timestamp, DAY_IN_SECONDS, $hook );
+        }
+    }
+
+    /**
      * This method will schedule/unscheduled monthly billing reminder cron
      *
      * @since DOKAN_SINCE
@@ -85,21 +103,6 @@ class CronActions {
         $timestamp     = dokan_current_datetime()->modify( 'yesterday' )->getTimestamp();
         $cron_schedule = sprintf( '0 9 %1$d * *', intval( $new_value['monthly_billing_day'] ) ); // 9:00 AM on $new_value['monthly_billing_day']th of the month
         as_schedule_cron_action( $timestamp, $cron_schedule, $hook );
-    }
-
-    /**
-     * Schedule an action with the hook 'dokan_reverse_withdrawal_midnight_cron' to run at midnight each day
-     * so that our callback is run then.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function schedule_action() {
-        if ( false === as_next_scheduled_action( 'dokan_reverse_withdrawal_midnight_cron' ) ) {
-            $timestamp = dokan_current_datetime()->modify( 'tomorrow' )->getTimestamp();
-            as_schedule_recurring_action( $timestamp, DAY_IN_SECONDS, 'dokan_reverse_withdrawal_midnight_cron' );
-        }
     }
 
     /**
