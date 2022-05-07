@@ -29,16 +29,16 @@ use Automattic\WooCommerce\Utilities\NumberUtil;
         if ( 'by_amount' === $billing_type ) {
             printf( '<span class="payment-threshold">%s %s</span>', esc_html__( 'Threshold: ', 'dokan-lite' ), wc_price( $threshold ) );
         } elseif ( 'by_month' === $billing_type ) {
-            printf( '<span class="payment-min-payable">%s %s</span>',
+            printf( '<span class="payable-amount">%s %s</span>',
                 esc_html__( 'Payable Amount: ', 'dokan-lite' ),
                 $payable_amount >= 0 ? wc_price( $payable_amount ) : '( ' . wc_price( abs( $payable_amount ) ) . ' )'
             );
         }
         ?>
     </div>
-    <?php if ( $balance > 0 ): ?>
+    <?php if ( $payable_amount > 0 ): ?>
         <div class="reverse-pay-form">
-            <input type="text" id="reverse_pay_balance" data-step="0.5" data-min="<?php echo esc_attr( $payable_amount ); ?>" value="<?php echo esc_attr( wc_format_localized_price( NumberUtil::round( $balance, wc_get_price_decimals() ) ) ); ?>" />
+            <input type="text" id="reverse_pay_balance" value="<?php echo esc_attr( wc_format_localized_price( NumberUtil::round( $payable_amount, wc_get_price_decimals() ) ) ); ?>" readonly="readonly" />
             <input type="button" id="reverse_pay" class="button dokan-btn dokan-btn-success dokan-btn-lg dokan-theme" value="<?php esc_attr_e( 'Pay Now', 'dokan-lite' ); ?>" />
         </div>
     <?php endif; ?>

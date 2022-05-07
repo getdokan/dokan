@@ -470,7 +470,7 @@ class Helper {
                 $ret['status'] = true;
 
                 // check if user crossed the due period
-                $due_date = $current_date->modify( 'first day of this month' );
+                $due_date = $current_date->modify( 'first day of this month' )->setTime( 0, 0, 0 );
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );

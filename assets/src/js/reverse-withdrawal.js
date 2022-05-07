@@ -45,42 +45,31 @@
 
             Dokan_Reverse_Withdrawal.disableProps();
 
-            dokan_sweetalert( dokan.reverse_withdrawal.reverse_pay_msg, {
-                action  : 'confirm',
-                icon    : 'warning',
-            }).then( ( res ) => {
-                if ( ! res.isConfirmed ) {
-                  Dokan_Reverse_Withdrawal.disableProps(false);
-                    return;
-                }
+            let data = {
+                price: payment_el.val(),
+                _reverse_withdrawal_nonce: dokan.reverse_withdrawal.nonce
+            };
 
-                let data = {
-                    price: payment_el.val(),
-                    _reverse_withdrawal_nonce: dokan.reverse_withdrawal.nonce
+            // call ajax
+            wp.ajax.post( 'dokan_reverse_withdrawal_payment_to_cart', data ).then( async ( response ) => {
+                let alert_data = {
+                    action: 'confirm',
+                    title: dokan.reverse_withdrawal.on_success_title,
+                    icon: 'success',
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    focusConfirm: true,
                 };
-
-                // call ajax
-                wp.ajax.post( 'dokan_reverse_withdrawal_payment_to_cart', data ).then( async ( response ) => {
-                    let alert_data = {
-                        action: 'confirm',
-                        title: dokan.reverse_withdrawal.on_success_title,
-                        icon: 'success',
-                        showCloseButton: false,
-                        showCancelButton: false,
-                        focusConfirm: true,
-                    };
-                    await dokan_sweetalert( response.message, alert_data ).then( () => {
-                        window.location.replace( dokan.reverse_withdrawal.checkout_url );
-                    });
-                }).fail( ( jqXHR ) => {
-                    Dokan_Reverse_Withdrawal.disableProps(false);
-                    let error_message = dokan_handle_ajax_error( jqXHR );
-                    if ( error_message ) {
-                        dokan_sweetalert( error_message, { 'action': 'error', 'title': dokan.reverse_withdrawal.on_error_title, 'icon': 'error' } );
-                    }
+                await dokan_sweetalert( response.message, alert_data ).then( () => {
+                    window.location.replace( dokan.reverse_withdrawal.checkout_url );
                 });
+            }).fail( ( jqXHR ) => {
+                  Dokan_Reverse_Withdrawal.disableProps(false);
+                  let error_message = dokan_handle_ajax_error( jqXHR );
+                  if ( error_message ) {
+                    dokan_sweetalert( error_message, { 'action': 'error', 'title': dokan.reverse_withdrawal.on_error_title, 'icon': 'error' } );
+                  }
             });
-
         },
 
         disableProps( args = true ) {
