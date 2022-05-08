@@ -79,6 +79,7 @@ class Settings {
                 'desc'    => __( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'off',
+                'refresh_after_save' => true,
             ],
             'payment_gateways' => [
                 'name'    => 'payment_gateways',
