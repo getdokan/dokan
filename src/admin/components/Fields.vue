@@ -521,7 +521,7 @@
             </td>
         </template>
 
-        <template v-if="'color_palette' == fieldData.type">
+        <template v-if="'color_pallete' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
@@ -531,61 +531,249 @@
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
                 </fieldset>
-                <div class="field color-palette-container">
-                     <template v-for="( values, name ) in fieldData.options">
-                        <label class="color-palette-image" :class="{ 'active' : fieldValue[fieldData.name]['value'] === values.value, 'not-active' : fieldValue[fieldData.name]['value'] !== values.value }">
-                            <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="values">
-                            <span class="current-option-indicator"><span class="dashicons dashicons-yes"></span> {{ __( 'Active', 'dokan-lite' ) }}</span>
-                            <img :src="values.image">
-                            <span class="active-option">
-                                <button class="button button-primary button-hero" type="button" @click.prevent="fieldValue[fieldData.name] = values">
-                                    {{ __( 'Select', 'dokan-lite' ) }}
-                                </button>
-                            </span>
-                        </label>
-                    </template>
-                </div>
-            </div>
-        </template>
-
-        <template v-if="'color_palette2' == fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
-                </fieldset>
-                <div class="field color-palette-container">
-                     <template v-for="( values, name ) in fieldData.options">
+                <div class="field">
+                    <div class="color-option-settings">
                         <div
-                            class="color-palette-contents"
-                            v-bind:class="fieldValue[fieldData.name]['value'] === values.value ? 'active-palette' : ''"
-                            @click.stop="fieldValue[fieldData.name] = values"
+                            class="color_option"
+                            v-bind:class="fieldValue[fieldData.name].pallete_status === 'template' ? 'active-pallete' : ''"
+                            @click="setPalleteStatus( 'template' )"
                         >
-                            <div class="palette-btn">
-                                <input
-                                    :id="values.value"
-                                    type="radio"
-                                    :name="fieldData.name"
-                                    :value="values"
-                                    v-model="fieldValue[fieldData.name]"
-                                    :checked="fieldValue[fieldData.name]['value'] === values.value ? 'checked' : ''"
-                                >
-                                <label :for="values.value">{{ values.value }}</label>
+                            <div class="color-option-icon">
+                                <span class="dashicons dashicons-yes"></span>
                             </div>
-                            <div class="colors">
-                                <div
-                                    v-if='values.color_options'
-                                    v-for='( optionVal, optionKey ) in values.color_options'
-                                    :class="optionKey"
-                                    :style="'background-color: ' + optionVal"
-                                ></div>
+                            <div class="color-option-content">
+                                <h3 class="color-option-title">
+                                    {{ __( 'Pre-defined Color Pallete', 'dokan-lite' ) }}
+                                </h3>
+                                <p class="color-option-desc">
+                                    {{ __( "By choosing anyone from these color palletes to colorize your vendor dashboard; it’s a time saving tool.", 'dokan-lite' ) }}
+                                </p>
                             </div>
                         </div>
-                    </template>
+                        <div
+                            class="color_option"
+                            v-bind:class="fieldValue[fieldData.name].pallete_status === 'custom' ? 'active-pallete' : ''"
+                            @click="setPalleteStatus( 'custom' )"
+                        >
+                            <div class="color-option-icon">
+                                <span class="dashicons dashicons-yes"></span>
+                            </div>
+                            <div class="color-option-content">
+                                <h3 class="color-option-title">
+                                    {{ __( 'Custom Color', 'dokan-lite' ) }}
+                                </h3>
+                                <p class="color-option-desc">
+                                    {{ __( 'You can color your vendor dashboard by choosing any color as your brand identity or as your wish.', 'dokan-lite' ) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-pallete-container">
+                        <div class="pallete_settings">
+                            <template
+                                v-for="( values, name ) in fieldData.options"
+                                v-if="fieldValue[fieldData.name].pallete_status === 'template'"
+                            >
+                                <div
+                                    class="color-pallete-contents"
+                                    @click="setColorpalleteSettings( values )"
+                                    v-bind:class="isCurrentPalleteActive( values ) ? 'active-pallete' : ''"
+                                >
+                                    <div class="pallete-btn">
+                                        <input
+                                            :id="values.value"
+                                            type="radio"
+                                            :name="fieldData.name"
+                                            :value="values.value"
+                                            v-model="fieldValue[fieldData.name].value"
+                                            :checked="isCurrentPalleteActive( values ) ? 'true' : 'false'"
+                                        >
+                                        <label :for="values.value">{{ values.value }}</label>
+                                    </div>
+                                    <div class="colors">
+                                        <div
+                                            v-if='values.color_options'
+                                            v-for='( optionVal, optionKey ) in values.color_options'
+                                            :class="optionKey"
+                                            :style="'background-color: ' + optionVal"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="fieldValue[fieldData.name].pallete_status === 'custom'">
+                                <div class="custom-pallete-header">
+                                    <h3>{{ __( 'Choose the color: ', 'dokan-lite' ) }}</h3>
+                                    <p @click="resetColors" class="btnReset">{{ __( 'Reset all' ) }}</p>
+                                </div>
+                                <div class="color-pallete-contents custom-pallete" v-for="( values, key ) in customPicker">
+                                    <h4>{{ __( values.label, 'dokan-lite' ) }}</h4>
+                                    <color-picker v-model="fieldValue[fieldData.name][key]" @custom-change="e => setCustomColor( e, key )"></color-picker>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="pallete_preview">
+                            <h3 class="preview-title">{{ __( 'Preview', 'dokan-lite' ) }}</h3>
+                            <div class="preview">
+                                <div class="preview-header">
+                                    <div class="ellipsis">
+                                        <div class="ellipsis-1"></div>
+                                        <div class="ellipsis-2"></div>
+                                        <div class="ellipsis-3"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-body">
+                                    <div class="preview-sidebar" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_bg']">
+                                        <div class="dokan-logo">
+                                            <img :src="dokanAssetsUrl + '/images/dokan-logo.svg'" />
+                                        </div>
+                                        <div class="placeholder-menu">
+                                            <div class="active-menu" :style="'background-color: ' + fieldValue[fieldData.name]['dash_active_link']">
+                                                <div class="menu-icon"></div>
+                                                <div class="menu-content"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                            <div class="deactive-menu">
+                                                <div class="menu-icon" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                                <div class="menu-content" :style="'background-color: ' + fieldValue[fieldData.name]['dash_nav_text']"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="preview-content">
+                                        <div class="report-section">
+                                            <div class="reports">
+                                                <div class="report">
+                                                    <div class="report-content"></div>
+                                                    <div class="report-content"></div>
+                                                </div>
+                                                <div class="report">
+                                                    <div class="report-content"></div>
+                                                    <div class="report-content"></div>
+                                                </div>
+                                                <div class="report">
+                                                    <div class="report-content"></div>
+                                                    <div class="report-content"></div>
+                                                </div>
+                                                <div class="report">
+                                                    <div class="report-content"></div>
+                                                    <div class="report-content"></div>
+                                                </div>
+                                            </div>
+                                            <div class="button-preview" :style="'background-color: ' + fieldValue[fieldData.name]['btn_primary'] + '; color: ' + fieldValue[fieldData.name]['btn_text']">
+                                                {{ __( 'Button', 'dokan-lite' ) }}
+                                            </div>
+                                        </div>
+                                        <div class="chart-section">
+                                            <div class="chart-header">
+                                                <div class="contents">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                                <div class="btn-hover-preview" :style="'background-color: ' + fieldValue[fieldData.name]['btn_hover'] + '; color: ' + fieldValue[fieldData.name]['btn_hover_text']">
+                                                    {{ __( 'Button Hover', 'dokan-lite' ) }}
+                                                </div>
+                                            </div>
+                                            <div class="chart-preview">
+                                                <img :src="dokanAssetsUrl + '/images/chart-line.svg'" />
+                                            </div>
+                                        </div>
+                                        <div class="content-section">
+                                            <div class="content-half">
+                                                <div class="content-left">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                                <div class="content-center">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                                <div class="content-right">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                            </div>
+                                            <div class="content-half">
+                                                <div class="content"></div>
+                                                <div class="content"></div>
+                                                <div class="border-preview" :style="'border-color: ' + fieldValue[fieldData.name]['btn_primary_border']">
+                                                    {{ __( 'Button Border', 'dokan-lite' ) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile-section">
+                                            <div class="content-half">
+                                                <div class="content"></div>
+                                                <div class="profiles">
+                                                    <div class="profile">
+                                                        <div class="profile-pic">
+                                                            <img :src="dokanAssetsUrl + '/images/contact-icon.svg'" />
+                                                        </div>
+                                                        <div class="content"></div>
+                                                    </div>
+                                                    <div class="profile">
+                                                        <div class="profile-pic">
+                                                            <img :src="dokanAssetsUrl + '/images/contact-icon.svg'" />
+                                                        </div>
+                                                        <div class="content"></div>
+                                                    </div>
+                                                    <div class="profile">
+                                                        <div class="profile-pic">
+                                                            <img :src="dokanAssetsUrl + '/images/contact-icon.svg'" />
+                                                        </div>
+                                                        <div class="content"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="content-half">
+                                                <div class="content-left">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                                <div class="content-center">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                                <div class="content-right">
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                    <div class="content"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>
@@ -762,6 +950,19 @@
             return {
                 repeatableItem: {},
                 hideMap: false,
+                dokanAssetsUrl: dokan.urls.assetsUrl,
+                customPicker: {
+                    btn_text           : { label : 'Button Text color', default : '#FFF' },
+                    btn_primary        : { label : 'Button Background color', default : '#F05025' },
+                    btn_primary_border : { label : 'Button Border color', default : '#DA502B' },
+                    btn_hover_text     : { label : 'Button Hover Text color', default : '#FFF' },
+                    btn_hover          : { label : 'Button Hover color', default : '#DD3B0F' },
+                    btn_hover_border   : { label : 'Button Hover Border color', default : '#C83811' },
+                    dash_nav_text      : { label : 'Dashboard Navigation Text', default : '#CFCFCF' },
+                    dash_active_link   : { label : 'Dashboard Navigation Active Menu', default : '#F05025' },
+                    dash_nav_bg        : { label : 'Dashboard Navigation Background', default : '#1B233B' },
+                    dash_nav_border    : { label : 'Dashboard Menu Border', default : '#454545' },
+                },
                 disbursementSettings: {
                     quarterly: {
                         second: '',
@@ -778,6 +979,8 @@
         mounted() {
             this.setDisbursementQuarterlySettings();
             this.setDisbursementBiweeklySettings();
+            this.setPalleteStatus( this.fieldValue[ this.fieldData.name ].pallete_status, false );
+            this.setColorpalleteSettings( this.fieldValue[ this.fieldData.name ], false );
         },
 
     computed: {
@@ -999,6 +1202,59 @@
                 } else if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {
                     this.disbursementSettings.biweekly.second = '4';
                 }
+            },
+
+            setPalleteStatus( status, change = true ) {
+                let selectedValue  = this.fieldValue[this.fieldData.name].value,
+                    selectedOption = Object.assign({}, this.fieldData.options[selectedValue]);
+
+                if ( 'template' === status ) {
+                    this.fieldValue[this.fieldData.name] = this.fieldData.template ? this.fieldData.template : selectedOption;
+                }
+
+                if ( 'custom' === status ) {
+                    let customValue = change ? ( this.fieldData.custom ? this.fieldData.custom : this.fieldData.options.default ) : this.fieldValue[this.fieldData.name];
+
+                    for (const [optionKey, optionValue] of Object.entries(customValue)) {
+                        if ( optionKey === 'color_options' || optionKey === 'value' ) {
+                            continue;
+                        }
+                        this.fieldValue[ this.fieldData.name ][ optionKey ] = optionValue;
+                    }
+
+                    this.fieldData.custom       = this.fieldValue[this.fieldData.name];
+                    this.fieldData.custom.value = selectedValue;
+
+                    this.fieldData.options[selectedValue] = Object.assign({}, this.fieldData.options[selectedValue]);
+                }
+
+                this.fieldValue[ this.fieldData.name ].pallete_status = status;
+            },
+
+            setColorpalleteSettings( values, change = true ) {
+                if ( change ) {
+                    this.fieldData.template = Object.assign({}, values);
+                }
+
+                this.fieldValue[this.fieldData.name] = values;
+            },
+
+            setCustomColor( value, key ) {
+                if( ! key && this.fieldValue[this.fieldData.name].pallete_status !== 'custom' ) {
+                    return;
+                }
+
+                this.fieldValue[this.fieldData.name][key] = value;
+            },
+
+            resetColors() {
+                for (const [optionKey, optionValue] of Object.entries(this.customPicker)) {
+                    this.fieldValue[this.fieldData.name][optionKey] = optionValue.default;
+                }
+            },
+
+            isCurrentPalleteActive( values ) {
+                return this.fieldValue[this.fieldData.name]['value'] === values.value;
             },
 
             showSettingsField( fieldKey ) {
