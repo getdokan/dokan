@@ -7504,7 +7504,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return parseInt(page);
     },
     sortBy: function sortBy() {
-      return this.$route.query.orderby || 'registered';
+      return this.$route.query.orderby || 'ID';
     },
     sortOrder: function sortOrder() {
       return this.$route.query.order || 'desc';

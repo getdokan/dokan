@@ -53,7 +53,7 @@ class Helper {
         }
 
         $promos  = json_decode( $promos, true );
-        $notices = [];
+        $notices = apply_filters( 'dokan_admin_promo_notices', [] );
         // check if api data is valid
         if ( empty( $promos ) || ! is_array( $promos ) ) {
             return $notices;

@@ -4,6 +4,54 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.4.3',
+        'released' => '2022-04-26',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added option to select a default payment method',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'         => [
+                [
+                    'title'       => 'Updated design for the payment settings page of vendor dashboard to separate the management of different payment methods',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Store Contact Form widget submits the contact form directly instead of ajax submission',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Stop sending new order emails to selected recipients (including admin) when the New Order email is disabled in WooCommerce Settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some validation logic under vendor dashboard payment settings page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.2',
+        'released' => '2022-04-13',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed switching product type from variable to external doesn\'t remove product stock management options',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed store order by latest inconsistency',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.4.1',
         'released' => '2022-03-18',
         'changes'  => [
