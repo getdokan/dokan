@@ -66,6 +66,7 @@ class ReverseWithdrawal {
         $this->container['cron_actions']  = new CronActions();
         $this->container['order_hooks']   = new Order();
         $this->container['cart_hooks']    = new Cart();
+        $this->container['cache_hooks']   = new Cache();
 
         if ( wp_doing_ajax() ) {
             $this->container['ajax'] = new Ajax();

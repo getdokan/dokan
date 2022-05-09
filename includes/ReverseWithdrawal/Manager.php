@@ -209,7 +209,6 @@ class Manager {
         }
 
         $data = Cache::get( $cache_key, $cache_group );
-        $data = false;
 
         if ( in_array( $args['return'], [ 'vendor_transaction' ], true ) && false === $data ) {
             // @codingStandardsIgnoreStart
