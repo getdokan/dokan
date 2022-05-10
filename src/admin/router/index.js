@@ -5,6 +5,7 @@ import Help from 'admin/pages/Help.vue'
 import ChangeLog from 'admin/pages/ChangeLog.vue'
 import Settings from 'admin/pages/Settings.vue'
 import Vendors from 'admin/pages/Vendors.vue'
+import DummyData from 'admin/pages/DummyData.vue'
 import VendorCapabilities from "admin/pages/VendorCapabilities.vue"
 import ProModules from "admin/pages/ProModules.vue"
 
@@ -22,6 +23,7 @@ dokan_add_route(Help)
 dokan_add_route(Settings)
 dokan_add_route(VendorCapabilities)
 dokan_add_route(ProModules)
+dokan_add_route(DummyData)
 
 // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 if ( ! dokan.hasPro || VersionCompare( dokan.proVersion, '2.9.14', '>' ) ) {
