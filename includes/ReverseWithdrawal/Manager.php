@@ -23,14 +23,14 @@ class Manager {
      *
      * @var string
      *
-     * @since 3.5.0
+     * @since DOKAN_SINCE
      */
     private $table;
 
     /**
      * Manager constructor.
      *
-     * @since 3.5.0
+     * @since DOKAN_SINCE
      */
     public function __construct() {
         global $wpdb;
@@ -40,7 +40,7 @@ class Manager {
     /**
      * This method will return data from dokan_advertised_products table
      *
-     * @since 3.5.0
+     * @since DOKAN_SINCE
      *
      * @param array $args
      *
