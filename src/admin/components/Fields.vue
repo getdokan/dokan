@@ -168,7 +168,6 @@
                     </div>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <!-- <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" true-value="on" false-value="off"> -->
                             <switches @input="onToggleSwitch" :enabled="this.checked === 'on' ? true : false" value="isChecked"></switches>
                         </label>
                     </div>
@@ -190,7 +189,7 @@
                     </div>
                     <div class="field multicheck_fields">
                         <template v-for="(optionVal, optionKey) in fieldData.options">
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
                                 {{ optionVal }}
@@ -227,7 +226,7 @@
                     </div>
                     <div class="field multicheck_fields">
                         <template v-for="(optionVal, optionKey) in fieldData.options">
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
                                 {{ optionVal }}
@@ -252,7 +251,7 @@
                     </div>
                     <div class="field multicheck_fields">
                         <template v-for="(optionVal, optionKey) in fieldData.options">
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
                                 {{ optionVal }}
@@ -282,7 +281,7 @@
                             <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First Quarter', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][month]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['month']" v-on:change="setDisbursementQuarterlySettings">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.first" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.first" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -291,7 +290,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Second Quarter', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.second">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.second" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.second" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -300,7 +299,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Third Quarter', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.third">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.third" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.third" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -309,7 +308,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Fourth Quarter', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.quarterly.fourth">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.fourth" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.fourth" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -319,7 +318,7 @@
                                 <span class="dokan-input-group-addon">{{ __( 'Week', 'dokan-lite' ) }}</span>
                                 <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']">
                                     <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                    <option v-for="( optionVal, optionKey ) in fieldData.options.week" :value="optionKey" v-html="optionVal"></option>
+                                    <option v-for="( optionVal, optionKey ) in fieldData.options.week" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                                 </select>
                             </div>
                         </div>
@@ -328,7 +327,9 @@
                                 <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                                 <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                     <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                    <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                                    <template v-for="( optionVal, optionKey ) in fieldData.options.days">
+                                        <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -364,7 +365,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Week', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.week" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.week" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -373,7 +374,9 @@
                             <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                                <template v-for="( optionVal, optionKey ) in fieldData.options.days">
+                                    <option v-if="!( 'L' !== fieldValue[fieldData.name]['week'] && ( 'saturday' === optionKey || 'sunday'=== optionKey ) )" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
+                                </template>
                             </select>
                         </div>
                     </div>
@@ -408,7 +411,7 @@
                             <span class="dokan-input-group-addon" :id="sectionId + '[' + fieldData.name + ']'">{{ __( 'First', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][week]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['week']" v-on:change="setDisbursementBiweeklySettings">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.first" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.first" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -417,7 +420,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Second', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" disabled v-model="disbursementSettings.biweekly.second">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.second" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.second" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -426,7 +429,7 @@
                             <span class="dokan-input-group-addon">{{ __( 'Day', 'dokan-lite' ) }}</span>
                             <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + '][days]'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]['days']">
                                 <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                                <option v-for="( optionVal, optionKey ) in fieldData.options.days" :value="optionKey" v-html="optionVal"></option>
+                                <option v-for="( optionVal, optionKey ) in fieldData.options.days" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                             </select>
                         </div>
                     </div>
@@ -457,13 +460,13 @@
                     <div class="field">
                         <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                            <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
 
                         <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
-                            <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
-                                <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
+                            <optgroup v-for="optionGroup in fieldData.options" :key="optionGroup" :label="optionGroup.group_label">
+                                <option v-for="option in optionGroup.group_values" :value="option.value" :key="option" v-html="option.label" />
                             </optgroup>
                         </select>
                     </div>
@@ -494,13 +497,13 @@
                     <div class="field">
                         <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
-                            <option v-for="( optionVal, optionKey ) in fieldData.options" :value="optionKey" v-html="optionVal"></option>
+                            <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
 
                         <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
-                            <optgroup v-for="optionGroup in fieldData.options" :label="optionGroup.group_label">
-                                <option v-for="option in optionGroup.group_values" :value="option.value" v-html="option.label" />
+                            <optgroup v-for="optionGroup in fieldData.options" :key="optionGroup" :label="optionGroup.group_label">
+                                <option v-for="option in optionGroup.group_values" :key="option" :value="option.value" v-html="option.label" />
                             </optgroup>
                         </select>
 
@@ -600,7 +603,7 @@
                     </div>
                     <div class="field radio_fields">
                         <template v-for="( optionVal, optionKey ) in fieldData.options">
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input
                                     type="radio"
@@ -654,10 +657,12 @@
                     </div>
                 </fieldset>
                 <ul class="dokan-settings-repeatable-list">
-                    <li v-if="fieldValue[fieldData.name]" v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
-                        {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
-                        <span class="repeatable-item-description" v-html="optionVal.desc"></span>
-                    </li>
+                    <template v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
+                        <li v-if="fieldValue[fieldData.name]" :key="optionKey">
+                            {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                            <span class="repeatable-item-description" v-html="optionVal.desc"></span>
+                        </li>
+                    </template>
                 </ul>
             </div>
         </template>
@@ -674,7 +679,7 @@
                 </fieldset>
                 <div class="field radio-image-container">
                      <template v-for="( image, name ) in fieldData.options">
-                        <label class="radio-image" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
+                        <label class="radio-image" :key="name" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
                             <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="name">
                             <span class="current-option-indicator">
                                 <span class="dashicons dashicons-yes"></span> 
@@ -749,145 +754,32 @@
                             <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
                         </div>
                     </div>
-                    <div class="social_info" v-if="expandSocials">
-                        <template>
-                            <div class="social_html" v-if="fieldData.app_label" v-bind:class="[fieldData.app_label.content_class ? fieldData.app_label.content_class : '']">   
-                                <div class="html_contents">
-                                    <h3 class="field_heading" scope="row">
-                                        {{ fieldData.app_label.label }}
-                                    </h3>
-                                    <p class="field_desc" v-html="fieldData.app_label.desc"></p>
-                                </div> 
-                            </div>
-                            <div class="social_html" v-if="fieldData.app_url" v-bind:class="[fieldData.app_url.content_class ? fieldData.app_url.content_class : '']">   
-                                <div class="html_contents">
-                                    <h3 class="field_heading" scope="row">
-                                        {{ fieldData.app_url.label }}
-                                    </h3>
-                                    <p class="field_desc" v-html="fieldData.app_url.desc"></p>
-                                </div> 
-                                <div class="fields" v-if="fieldData.app_url">
-                                    <input class='regular-text' type='text' disabled :value='fieldData.app_url.url'>
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_service_id">
-                                <div class="html_contents" v-if="fieldData.app_service_id">
-                                    <h3 class="field_heading" scope="row">{{ fieldData.app_service_id.label }}</h3>
-                                    <p class="field_desc" v-html="fieldData.app_service_id.desc"></p>
-                                </div>
 
-                                <div class="fields" v-if="fieldData.app_service_id">
-                                    <input
-                                        type="text"
-                                        class="regular-text"
-                                        :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_service_id.name ) }, fieldData.app_service_id.class ]"
-                                        :id="sectionId + '[' + fieldData.app_service_id.name + ']'"
-                                        :name="sectionId + '[' + fieldData.app_service_id.name + ']'"
-                                        v-model="fieldValue[fieldData.app_service_id.name]"
-                                    >
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_id">
-                                <div class="html_contents" v-if="fieldData.app_id">
-                                    <h3 class="field_heading" scope="row">{{ fieldData.app_id.label }}</h3>
-                                    <p class="field_desc" v-html="fieldData.app_id.desc"></p>
-                                </div>
-                                <div class="fields" v-if="fieldData.app_id">
-                                    <input
-                                        type="text"
-                                        class="regular-text"
-                                        :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_id.name ) }, fieldData.app_id.class ]"
-                                        :id="sectionId + '[' + fieldData.app_id.name + ']'"
-                                        :name="sectionId + '[' + fieldData.app_id.name + ']'"
-                                        v-model="fieldValue[fieldData.app_id.name]"
-                                    >
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_team_id">
-                                <div class="html_contents" v-if="fieldData.app_team_id">
-                                    <h3 class="field_heading" scope="row">{{ fieldData.app_team_id.label }}</h3>
-                                    <p class="field_desc" v-html="fieldData.app_team_id.desc"></p>
-                                </div>
-                                <div class="fields" v-if="fieldData.app_team_id">
-                                    <input
-                                        type="text"
-                                        class="regular-text"
-                                        :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_team_id.name ) }, fieldData.app_team_id.class ]"
-                                        :id="sectionId + '[' + fieldData.app_team_id.name + ']'"
-                                        :name="sectionId + '[' + fieldData.app_team_id.name + ']'"
-                                        v-model="fieldValue[fieldData.app_team_id.name]"
-                                    >
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_key_id">
-                                <div class="html_contents" v-if="fieldData.app_key_id">
-                                    <h3 class="field_heading" scope="row">{{ fieldData.app_key_id.label }}</h3>
-                                    <p class="field_desc" v-html="fieldData.app_key_id.desc"></p>
-                                </div>
-                                <div class="fields" v-if="fieldData.app_team_id">
-                                    <div class="fields" v-if="fieldData.app_key_id">
-                                        <input
-                                            type="text"
-                                            class="regular-text"
-                                            :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_key_id.name ) }, fieldData.app_key_id.class ]"
-                                            :id="sectionId + '[' + fieldData.app_key_id.name + ']'"
-                                            :name="sectionId + '[' + fieldData.app_key_id.name + ']'"
-                                            v-model="fieldValue[fieldData.app_key_id.name]"
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_secret" v-bind:class="[fieldData.app_secret.content_class ? fieldData.app_secret.content_class : '']">
-                                <div class="html_contents">
-                                    <h3 class="field_heading" scope="row">
-                                        {{ fieldData.app_secret.label }}
-                                    </h3>
-                                    <p class="field_desc" v-html="fieldData.app_secret.desc"></p>
-                                </div>
-                                <div class="fields">
-                                    <input
-                                        v-if="fieldData.app_secret.type === 'text'"
-                                        :type="fieldData.app_secret.type"
-                                        class="regular-text"
-                                        :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_secret.name ) }, fieldData.app_secret.class ]"
-                                        :id="sectionId + '[' + fieldData.app_secret.name + ']'"
-                                        :name="sectionId + '[' + fieldData.app_secret.name + ']'"
-                                        v-model="fieldValue[fieldData.app_secret.name]"
-                                    >
-                                    <textarea
-                                        v-if="fieldData.app_secret.type === 'textarea'"
-                                        :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.app_secret.name ) }, fieldData.app_secret.class ]"
-                                        :id="sectionId + '[' + fieldData.app_secret.name + ']'"
-                                        :name="sectionId + '[' + fieldData.app_secret.name + ']'"
-                                        v-model="fieldValue[fieldData.app_secret.name]"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <div class="social_text" v-if="fieldData.app_code_type" v-bind:class="[fieldData.app_code_type.content_class ? fieldData.app_code_type.content_class : '']">
-                                <div class="html_contents">
-                                    <h3 class="field_heading" scope="row">
-                                        {{ fieldData.app_code_type.label }}
-                                    </h3>
-                                    <p class="field_desc" v-html="fieldData.app_code_type.desc"></p>
-                                </div>
-                                <div class="fields radio_fields">
-                                    <template v-for="( optionVal, optionKey ) in fieldData.app_code_type.options">
-                                        <label :class="isSocialOptionChecked( optionKey, 'app_code_type' ) ? 'checked' : ''" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
-                                            <span class="dashicons dashicons-yes"></span>
-                                            <input
-                                                :type="fieldData.app_code_type.type"
-                                                :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'"
-                                                class="radio"
-                                                :name="optionKey"
-                                                v-model="fieldValue[fieldData.app_code_type.name]"
-                                                :value="optionKey"
-                                            >
-                                            {{ optionVal }}
-                                        </label>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
+                    <div class="social_info" v-if="expandSocials">
+                        <div class="social_html" v-if="fieldData.app_label" v-bind:class="[fieldData.app_label.content_class ? fieldData.app_label.content_class : '']">
+                            <SocialFields :fieldType="'app_label'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_html" v-if="fieldData.app_url" v-bind:class="[fieldData.app_url.content_class ? fieldData.app_url.content_class : '']">
+                            <SocialFields :fieldType="'app_url'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_service_id">
+                            <SocialFields :fieldType="'app_service_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_id">
+                            <SocialFields :fieldType="'app_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_team_id">
+                            <SocialFields :fieldType="'app_team_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_key_id">
+                            <SocialFields :fieldType="'app_key_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_secret" v-bind:class="[fieldData.app_secret.content_class ? fieldData.app_secret.content_class : '']">
+                            <SocialFields :fieldType="'app_secret'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
+                        <div class="social_text" v-if="fieldData.app_code_type" v-bind:class="[fieldData.app_code_type.content_class ? fieldData.app_code_type.content_class : '']">
+                            <SocialFields :fieldType="'app_code_type'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -983,6 +875,7 @@
     import $ from 'jquery';
     import colorPicker from "admin/components/ColorPicker.vue";
     import Switches from "admin/components/Switches.vue";
+    import SocialFields from './SocialFields.vue';
     let TextEditor = dokan_get_lib('TextEditor');
     let GoogleMaps = dokan_get_lib('GoogleMaps');
     let Mapbox = dokan_get_lib('Mapbox');
@@ -997,7 +890,8 @@
             TextEditor,
             GoogleMaps,
             colorPicker,
-            RefreshSettingOptions,
+            SocialFields,
+            RefreshSettingOptions
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
@@ -1231,14 +1125,6 @@
 
             if ( 'radio' === this.fieldData.type ) {
                 return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
-            }
-
-            return false;
-        },
-
-        isSocialOptionChecked( optionKey, fieldName ) {
-            if ( 'radio' === this.fieldData[fieldName].type ) {
-                return this.fieldValue[this.fieldData[fieldName].name] === optionKey ? true : false;
             }
 
             return false;
@@ -1846,48 +1732,53 @@
                     background: rgba(244,246,250,.17);
                     justify-content: space-between;
 
-                    .html_contents {
-                        flex: 3;
-                        text-align: left;
+                    fieldset {
+                        width: 100%;
 
-                        .field_heading {
-                            color: #000;
-                            margin: 0;
-                            font-size: 15px;
-                            font-style: normal;
-                            font-weight: 600;
-                            line-height: 30px;
-                            font-family: Roboto,sans-serif;
+                        .html_contents {
+                            flex: 3;
+                            text-align: left;
+    
+                            .field_heading {
+                                color: #000;
+                                margin: 0;
+                                font-size: 15px;
+                                font-style: normal;
+                                font-weight: 600;
+                                line-height: 30px;
+                                font-family: Roboto,sans-serif;
+                            }
+    
+                            .field_desc {
+                                color: #000;
+                                margin: 0;
+                                font-size: 13px;
+                                font-style: normal;
+                                font-weight: 300;
+                                line-height: 17px;
+                                font-family: Roboto,sans-serif;
+                            }
                         }
-
-                        .field_desc {
-                            color: #000;
-                            margin: 0;
-                            font-size: 13px;
-                            font-style: normal;
-                            font-weight: 300;
-                            line-height: 17px;
-                            font-family: Roboto,sans-serif;
-                        }
-                    }
-
-                    .fields {
-                        flex: 2;
-                        align-self: center;
-                        text-align: right;
-
-                        .checked {
-                            color: rgba(3, 58, 163, 0.85);
-                            border: 1px solid rgba(3, 58, 163, 0.81);
-                            background: rgba(182, 206, 254, 0.38);
-                            box-sizing: border-box;
-                            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-                            .dashicons-yes {
-                                display: inline-block;
+    
+                        .fields {
+                            flex: 2;
+                            align-self: center;
+                            text-align: right;
+    
+                            .checked {
+                                color: rgba(3, 58, 163, 0.85);
+                                border: 1px solid rgba(3, 58, 163, 0.81);
+                                background: rgba(182, 206, 254, 0.38);
+                                box-sizing: border-box;
+                                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    
+                                .dashicons-yes {
+                                    display: inline-block;
+                                }
                             }
                         }
                     }
+
                 }
 
                 .field_top_styles {
