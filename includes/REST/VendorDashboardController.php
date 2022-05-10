@@ -122,19 +122,21 @@ class VendorDashboardController extends \WP_REST_Controller {
     /**
      * Get dashboard statistics.
      *
-     *
      * @since 3.3.3
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_dashboard_statistics() {
+        $user_id = dokan_get_current_user_id();
+
         return rest_ensure_response(
             [
-                'balance'  => dokan_get_seller_balance( dokan_get_current_user_id() ),
-                'orders'   => dokan_count_orders( dokan_get_current_user_id() ),
-                'products' => dokan_count_posts( 'product', dokan_get_current_user_id() ),
-                'earnings' => wc_price( dokan_author_total_sales( dokan_get_current_user_id() ) ),
-                'views'    => dokan_author_pageviews( dokan_get_current_user_id() ),
+                'balance'  => dokan_get_seller_balance( $user_id ),
+                'orders'   => dokan_count_orders( $user_id ),
+                'products' => dokan_count_posts( 'product', $user_id ),
+                'sales'    => wc_price( dokan_author_total_sales( $user_id ) ),
+                'earnings' => wc_price( dokan_get_seller_earnings( $user_id ) ),
+                'views'    => dokan_author_pageviews( $user_id ),
             ]
         );
     }
