@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since DOKAN_SINCE
  *
  * @class Manager
+ *
  * @package WeDevs\Dokan\ReverseWithdrawal\Manager
  */
 class Manager {
