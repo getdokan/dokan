@@ -477,12 +477,12 @@ class Helper {
 
                 if ( SettingsHelper::get_billing_day() ) {
                     $billing_day = SettingsHelper::get_billing_day() - 1;
-                    $due_date    = $due_date->modify( "+ {$billing_day} days" );
+                    $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
                 }
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_period = SettingsHelper::get_due_period() - 1;
-                    $due_date   = $due_date->modify( "+ {$due_period} days" );
+                    $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
                 }
 
                 if ( $current_date > $due_date ) {
@@ -521,7 +521,7 @@ class Helper {
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_period = SettingsHelper::get_due_period() - 1;
-                    $due_date   = $due_date->modify( "+ {$due_period} days" );
+                    $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
                 }
 
                 if ( $current_date > $due_date ) {
@@ -573,16 +573,16 @@ class Helper {
         $messages       = [];
         foreach ( $failed_actions as $failed_action ) {
             switch ( $failed_action ) {
-                case 'status_inactive':
-                    $messages[] = __( 'Your account will be disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
-                    break;
-
                 case 'enable_catalog_mode':
-                    $messages[] = __( 'Your products catalog visibility will be hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
+                    $messages[] = __( 'Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
                     break;
 
                 case 'hide_withdraw_menu':
                     $messages[] = __( 'Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.', 'dokan-lite' );
+                    break;
+
+                case 'status_inactive':
+                    $messages[] = __( 'Your account will be disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
                     break;
             }
         }
@@ -616,16 +616,16 @@ class Helper {
 
         foreach ( $failed_actions as $failed_action ) {
             switch ( $failed_action ) {
-                case 'status_inactive':
-                    $messages[] = __( 'Your account has been temporarily disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
-                    break;
-
                 case 'enable_catalog_mode':
-                    $messages[] = __( 'Withdraw menu has been temporarily hidden. Hence you will not be able to make any withdrawal requests from your account.', 'dokan-lite' );
+                    $messages[] = __( 'Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products currently.', 'dokan-lite' );
                     break;
 
                 case 'hide_withdraw_menu':
-                    $messages[] = __( 'Your product catalog visibility has been temporarily hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
+                    $messages[] = __( 'Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account.', 'dokan-lite' );
+                    break;
+
+                case 'status_inactive':
+                    $messages[] = __( 'Your account has been temporarily disabled for selling. Hence you are no longer able to sell any products.', 'dokan-lite' );
                     break;
             }
         }

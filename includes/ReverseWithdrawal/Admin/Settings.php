@@ -83,7 +83,7 @@ class Settings {
             ],
             'payment_gateways' => [
                 'name'    => 'payment_gateways',
-                'label'   => __( 'Reverse Withdrawal Payment Methods', 'dokan-lite' ),
+                'label'   => __( 'Enable Reverse Withdrawal for these Gateways', 'dokan-lite' ),
                 'desc'    => __( 'Check the payment gateways you want to enable reverse withdrawal for.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_reverse_withrawal_payment_gateways(),
@@ -113,8 +113,8 @@ class Settings {
             ],
             'monthly_billing_day' => [
                 'name'    => 'monthly_billing_day',
-                'label'   => __( 'Monthly Billing Day', 'dokan-lite' ),
-                'desc'    => __( 'Enter day number when you want to send reverse withdrawal balance invoice to vendors.', 'dokan-lite' ),
+                'label'   => __( 'Monthly Billing Date', 'dokan-lite' ),
+                'desc'    => __( 'Enter the day of month when you want to send reverse withdrawal balance invoice to vendors.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 1,
                 'max'     => 28,
@@ -128,7 +128,7 @@ class Settings {
             ],
             'due_period' => [
                 'name'    => 'due_period',
-                'label'   => __( 'Due Period', 'dokan-lite' ),
+                'label'   => __( 'Grace Period', 'dokan-lite' ),
                 'desc'    => __( 'Maximum Payment Due period in day(s) before selected action is taken. Enter 0 to take actions immediately.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => '0',
@@ -138,7 +138,7 @@ class Settings {
             ],
             'failed_actions' => [
                 'name'    => 'failed_actions',
-                'label'   => __( 'After Due Period', 'dokan-lite' ),
+                'label'   => __( 'After Grace Period', 'dokan-lite' ),
                 'desc'    => __( 'Select one or more actions to perform after due period is over and vendors was unable to pay.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_failed_payment_actions(),
@@ -146,8 +146,8 @@ class Settings {
             ],
             'display_notice' => [
                 'name'    => 'display_notice',
-                'label'   => __( 'Display Notice During Due Period', 'dokan-lite' ),
-                'desc'    => __( 'Display notice to pay reverse withdrawal balance during Due Period under vendor dashboard.', 'dokan-lite' ),
+                'label'   => __( 'Display Notice During Grace Period', 'dokan-lite' ),
+                'desc'    => __( 'Display notice to pay reverse withdrawal balance during grace Period under vendor dashboard.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'on',
             ],
@@ -158,7 +158,7 @@ class Settings {
             $settings_fields['send_announcement'] = [
                 'name'    => 'send_announcement',
                 'label'   => __( 'Send announcement?', 'dokan-lite' ),
-                'desc'    => __( 'Check this checkbox if you want to send announcement during due period. Note that, maximum one announcement will be send during a single billing period.', 'dokan-lite' ),
+                'desc'    => __( 'Check this checkbox if you want to send an announcement during the grace period. Note that a maximum of one announcement will be sent during a single billing period.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'off',
             ];

@@ -167,7 +167,7 @@ class SettingsHelper {
     public static function get_billing_type_options() {
         $options = [
             'by_amount' => __( 'By Amount Limit', 'dokan-lite' ),
-            'by_month'  => __( 'By Monthly', 'dokan-lite' ),
+            'by_month'  => __( 'Monthly', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_billing_type_options', $options );
     }
@@ -181,7 +181,7 @@ class SettingsHelper {
      */
     public static function get_failed_payment_actions() {
         $actions = [
-            'enable_catalog_mode' => __( 'Enable Catalog Mode', 'dokan-lite' ),
+            'enable_catalog_mode' => __( 'Disable Add to Cart Button', 'dokan-lite' ),
             'hide_withdraw_menu'  => __( 'Hide Withdraw Menu', 'dokan-lite' ),
             'status_inactive'     => __( 'Make Vendor Status Inactive', 'dokan-lite' ),
         ];

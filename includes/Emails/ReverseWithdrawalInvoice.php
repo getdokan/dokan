@@ -124,8 +124,9 @@ class ReverseWithdrawalInvoice extends WC_Email {
         $this->due_status = $due_status;
 
         // add placeholders
-        $this->placeholders['{month}'] = dokan_current_datetime()->format( 'F' );
-        $this->placeholders['{year}']  = dokan_current_datetime()->format( 'Y' );
+        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
+        $this->placeholders['{month}'] = $last_month->format( 'F' );
+        $this->placeholders['{year}']  = $last_month->format( 'Y' );
         $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
 
         $this->setup_locale();
