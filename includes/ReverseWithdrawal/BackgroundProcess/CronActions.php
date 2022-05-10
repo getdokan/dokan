@@ -28,10 +28,10 @@ class CronActions {
         add_action( 'init', [ $this, 'schedule_action' ] );
 
         // schedule monthly billing reminder cron
-        add_action( 'dokan_after_saving_settings', [ $this, 'before_save_settings' ], 10, 3 );
+        add_action( 'dokan_after_saving_settings', [ $this, 'after_save_settings' ], 10, 3 );
 
         // daily check for unpaid reverse withdrawal balance
-        add_action( 'dokan_reverse_withdrawal_midnight_cron', [ $this, 'add_vendors_to_queue' ] );
+        add_action( 'dokan_reverse_withdrawal_midnight_cron', [ $this, 'maybe_take_action' ] );
 
         //send billing invoice to vendor
         if ( 'by_month' === SettingsHelper::get_billing_type() ) {
@@ -68,7 +68,7 @@ class CronActions {
      *
      * @return void
      */
-    public function before_save_settings( $option_name, $new_value, $old_value ) {
+    public function after_save_settings( $option_name, $new_value, $old_value ) {
         if ( 'dokan_reverse_withdrawal' !== $option_name ) {
             return;
         }
@@ -77,6 +77,12 @@ class CronActions {
         $hook = 'dokan_reverse_withdrawal_monthly_cron';
         // check if we've defined the cron hook
         $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
+
+        // check if reverse withdrawal is enabled
+        if ( 'off' === $new_value['enabled'] ) {
+            as_unschedule_all_actions( $hook );
+            return;
+        }
 
         // check for previous billing type value
         // if previous value is by_month and new value is not
@@ -106,20 +112,20 @@ class CronActions {
     }
 
     /**
-     * Expire unpaid vendors
+     * Take actions for unpaid vendors or revert taken actions
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
-    public function add_vendors_to_queue() {
+    public function maybe_take_action() {
         $vendors = [];
-        $i       = 0;
+        $i       = 1;
         // there might be thousands of vendors, so we are paginating vendors
         while ( null !== $vendors ) {
             $args = [
-                'status' => 'active',
-                'offset' => $i++,
+                'status' => 'all',
+                'paged'  => $i++,
                 'number' => 10,
                 'fields' => 'ID',
             ];
@@ -139,7 +145,7 @@ class CronActions {
     }
 
     /**
-     * Add vendor to queue
+     * Send monthly billing reminder email to vendors
      *
      * @since DOKAN_SINCE
      *
@@ -151,12 +157,12 @@ class CronActions {
         }
 
         $vendors = [];
-        $i       = 0;
+        $i       = 1;
         // there might be thousands of vendors, so we are paginating vendors
         while ( null !== $vendors ) {
             $args = [
-                'status' => 'active',
-                'offset' => $i++,
+                'status' => 'all',
+                'paged'  => $i++,
                 'number' => 5,
                 'fields' => 'ID',
             ];

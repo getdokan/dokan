@@ -84,7 +84,7 @@ class Helper {
      * @return array
      */
     public static function get_failed_actions_by_vendor( $vendor_id ) {
-        return (array) get_user_meta( $vendor_id, self::failed_actions_key(), true );
+        return get_user_meta( $vendor_id, self::failed_actions_key(), true );
     }
 
     /**
@@ -430,6 +430,10 @@ class Helper {
             $vendor_id = dokan_get_current_user_id();
         }
 
+        if ( ! $vendor_id ) {
+            return new WP_Error( 'invalid_vendor_id', __( 'Invalid vendor provided.', 'dokan-lite' ) );
+        }
+
         // validate current_date
         if ( null === $current_date ) {
             $current_date = dokan_current_datetime();
@@ -462,7 +466,6 @@ class Helper {
                 // check if we need to display payment notice
                 if ( $balance['payable_amount'] <= 0 ) {
                     // there is no balance to be paid
-                    $ret['status'] = false;
                     break;
                 }
 
@@ -472,8 +475,14 @@ class Helper {
                 // check if user crossed the due period
                 $due_date = $current_date->modify( 'first day of this month' )->setTime( 0, 0, 0 );
 
+                if ( SettingsHelper::get_billing_day() ) {
+                    $billing_day = SettingsHelper::get_billing_day() - 1;
+                    $due_date    = $due_date->modify( "+ {$billing_day} days" );
+                }
+
                 if ( SettingsHelper::get_due_period() ) {
-                    $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
+                    $due_period = SettingsHelper::get_due_period() - 1;
+                    $due_date   = $due_date->modify( "+ {$due_period} days" );
                 }
 
                 if ( $current_date > $due_date ) {
@@ -511,7 +520,8 @@ class Helper {
                 $due_date = $current_date->modify( $last_threshold_limit_exceed_date );
 
                 if ( SettingsHelper::get_due_period() ) {
-                    $due_date = $due_date->modify( '+' . SettingsHelper::get_due_period() . ' days' );
+                    $due_period = SettingsHelper::get_due_period() - 1;
+                    $due_date   = $due_date->modify( "+ {$due_period} days" );
                 }
 
                 if ( $current_date > $due_date ) {
@@ -573,6 +583,49 @@ class Helper {
 
                 case 'hide_withdraw_menu':
                     $messages[] = __( 'Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.', 'dokan-lite' );
+                    break;
+            }
+        }
+
+        $ret = '';
+        if ( empty( $messages ) ) {
+            return $ret;
+        }
+
+        $ret = '<ol>';
+        foreach ( $messages as $message ) {
+            $ret .= '<li>' . $message . '</li>';
+        }
+        $ret .= '</ol>';
+
+        return $ret;
+    }
+
+    /**
+     * This method will return formatted failed action messages
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return string
+     */
+    public static function get_formatted_failed_actions_by_vendor( $vendor_id ) {
+        $failed_actions = static::get_failed_actions_by_vendor( $vendor_id );
+        $messages       = [];
+
+        foreach ( $failed_actions as $failed_action ) {
+            switch ( $failed_action ) {
+                case 'status_inactive':
+                    $messages[] = __( 'Your account has been temporarily disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
+                    break;
+
+                case 'enable_catalog_mode':
+                    $messages[] = __( 'Withdraw menu has been temporarily hidden. Hence you will not be able to make any withdrawal requests from your account.', 'dokan-lite' );
+                    break;
+
+                case 'hide_withdraw_menu':
+                    $messages[] = __( 'Your product catalog visibility has been temporarily hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
                     break;
             }
         }

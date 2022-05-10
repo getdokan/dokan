@@ -45,14 +45,18 @@ class AsyncRequests {
             return;
         }
 
-        $vendors = isset( $args['vendors'] ) ? $args['vendors'] : [];
+        $vendors = isset( $args['data'] ) ? $args['data'] : [];
         if ( empty( $vendors ) || ! is_array( $vendors ) ) {
             return;
         }
 
         $failed_actions = new FailedActions();
         foreach ( $vendors as $vendor_id ) {
+            error_log( 'Vendor ID: ' . $vendor_id );
+            // maybe take action
             $failed_actions->ensure_reverse_pay_actions( $vendor_id );
+            // maybe revert taken action
+            $failed_actions->revert_reverse_pay_actions( $vendor_id );
         }
     }
 
@@ -80,7 +84,7 @@ class AsyncRequests {
             return;
         }
 
-        $vendors = isset( $args['vendors'] ) ? $args['vendors'] : [];
+        $vendors = isset( $args['data'] ) ? $args['data'] : [];
         if ( empty( $vendors ) || ! is_array( $vendors ) ) {
             return;
         }

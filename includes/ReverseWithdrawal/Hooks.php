@@ -154,7 +154,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( in_array( 'hide_product_price', $failed_actions, true ) ) {
+        if ( is_array( $failed_actions ) && in_array( 'hide_product_price', $failed_actions, true ) ) {
             $price = '';
         }
 

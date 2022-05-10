@@ -65,6 +65,10 @@ class ReverseWithdrawal {
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'display_notice_on_vendor_dashboard' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_payment_notice' ] );
 
+        // display action taken notice
+        add_action( 'dokan_dashboard_content_inside_before', [ $this, 'display_action_taken_notice' ] );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_action_taken_notice' ] );
+
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_filter_section' ], 10 );
@@ -115,6 +119,27 @@ class ReverseWithdrawal {
             dokan_get_navigation_url( 'reverse-withdrawal' ),
             $due_status['due_date'],
             Helper::get_formatted_failed_actions()
+        );
+        dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
+    }
+
+    /**
+     * Display action taken notice
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function display_action_taken_notice() {
+        // check if we already took action for this vendor
+        if ( empty( Helper::get_failed_actions_by_vendor( $this->seller_id ) ) ) {
+            return;
+        }
+
+        // get formatted error messages
+        $message = sprintf( __( 'Below actions have been taken due to unpaid reverse withdrawal balance: %1$s Kindly <a href="%2$s">pay</a> your due to start selling again.', 'dokan' ),
+            Helper::get_formatted_failed_actions_by_vendor( $this->seller_id ),
+            dokan_get_navigation_url( 'reverse-withdrawal' )
         );
         dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
     }
