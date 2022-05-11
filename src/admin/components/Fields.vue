@@ -1163,6 +1163,59 @@
             }
         },
 
+        setPalleteStatus( status, change = true ) {
+            let selectedValue  = this.fieldValue[this.fieldData.name].value,
+                selectedOption = Object.assign({}, this.fieldData.options[selectedValue]);
+
+            if ( 'template' === status ) {
+                this.fieldValue[this.fieldData.name] = this.fieldData.template ? this.fieldData.template : selectedOption;
+            }
+
+            if ( 'custom' === status ) {
+                let customValue = change ? ( this.fieldData.custom ? this.fieldData.custom : this.fieldData.options.default ) : this.fieldValue[this.fieldData.name];
+
+                for (const [optionKey, optionValue] of Object.entries(customValue)) {
+                    if ( optionKey === 'color_options' || optionKey === 'value' ) {
+                        continue;
+                    }
+                    this.fieldValue[ this.fieldData.name ][ optionKey ] = optionValue;
+                }
+
+                this.fieldData.custom       = this.fieldValue[this.fieldData.name];
+                this.fieldData.custom.value = selectedValue;
+
+                this.fieldData.options[selectedValue] = Object.assign({}, this.fieldData.options[selectedValue]);
+            }
+
+            this.fieldValue[ this.fieldData.name ].pallete_status = status;
+        },
+
+        setColorpalleteSettings( values, change = true ) {
+            if ( change ) {
+                this.fieldData.template = Object.assign({}, values);
+            }
+
+            this.fieldValue[this.fieldData.name] = values;
+        },
+
+        setCustomColor( value, key ) {
+            if( ! key && this.fieldValue[this.fieldData.name].pallete_status !== 'custom' ) {
+                return;
+            }
+
+            this.fieldValue[this.fieldData.name][key] = value;
+        },
+
+        resetColors() {
+            for (const [optionKey, optionValue] of Object.entries(this.customPicker)) {
+                this.fieldValue[this.fieldData.name][optionKey] = optionValue.default;
+            }
+        },
+
+        isCurrentPalleteActive( values ) {
+            return this.fieldValue[this.fieldData.name]['value'] === values.value;
+        },
+
         getValidationErrorMessage( key ) {
             let errorMessage = '';
             this.validationErrors.forEach( obj => {
@@ -1202,59 +1255,6 @@
                 } else if ( this.fieldValue['biweekly_schedule']['week'] === '2' ) {
                     this.disbursementSettings.biweekly.second = '4';
                 }
-            },
-
-            setPalleteStatus( status, change = true ) {
-                let selectedValue  = this.fieldValue[this.fieldData.name].value,
-                    selectedOption = Object.assign({}, this.fieldData.options[selectedValue]);
-
-                if ( 'template' === status ) {
-                    this.fieldValue[this.fieldData.name] = this.fieldData.template ? this.fieldData.template : selectedOption;
-                }
-
-                if ( 'custom' === status ) {
-                    let customValue = change ? ( this.fieldData.custom ? this.fieldData.custom : this.fieldData.options.default ) : this.fieldValue[this.fieldData.name];
-
-                    for (const [optionKey, optionValue] of Object.entries(customValue)) {
-                        if ( optionKey === 'color_options' || optionKey === 'value' ) {
-                            continue;
-                        }
-                        this.fieldValue[ this.fieldData.name ][ optionKey ] = optionValue;
-                    }
-
-                    this.fieldData.custom       = this.fieldValue[this.fieldData.name];
-                    this.fieldData.custom.value = selectedValue;
-
-                    this.fieldData.options[selectedValue] = Object.assign({}, this.fieldData.options[selectedValue]);
-                }
-
-                this.fieldValue[ this.fieldData.name ].pallete_status = status;
-            },
-
-            setColorpalleteSettings( values, change = true ) {
-                if ( change ) {
-                    this.fieldData.template = Object.assign({}, values);
-                }
-
-                this.fieldValue[this.fieldData.name] = values;
-            },
-
-            setCustomColor( value, key ) {
-                if( ! key && this.fieldValue[this.fieldData.name].pallete_status !== 'custom' ) {
-                    return;
-                }
-
-                this.fieldValue[this.fieldData.name][key] = value;
-            },
-
-            resetColors() {
-                for (const [optionKey, optionValue] of Object.entries(this.customPicker)) {
-                    this.fieldValue[this.fieldData.name][optionKey] = optionValue.default;
-                }
-            },
-
-            isCurrentPalleteActive( values ) {
-                return this.fieldValue[this.fieldData.name]['value'] === values.value;
             },
 
             showSettingsField( fieldKey ) {
