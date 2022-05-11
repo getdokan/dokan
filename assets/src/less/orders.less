@@ -25,33 +25,61 @@
                 .dokan-form-group {
                     display: flex;
                     flex-wrap: wrap;
+                    align-items: center;
+
+                    @element_height: 35px;
+                    button,
+                    a,
+                    input,
+                    select,
+                    .select2-container {
+                        height: @element_height !important;
+
+                        .select2-selection--single {
+                          height: @element_height !important;
+                        }
+                    }
 
                     button {
                         margin-right: 5px;
+                        border: none !important;
+                        padding: 3px 10px !important;
                     }
 
                     select,
-                    .select2 {
-                        width: 90% !important;
+                    .select2-container {
+                        width: calc(50% - 80px) !important;
                         margin-right: 5px;
                     }
 
                     input {
-                        width: 90%;
+                        width: calc(50% - 80px) !important;
                         margin-right: 7.5px;
-                        height: 35px;
+                    }
+
+                    a {
+                        display: flex;
+                        align-items: center;
+
+                        .fa {
+                            margin-right: 3px;
+                        }
                     }
 
                     @media screen and ( max-width: 576px ) {
                         select,
-                        .select2,
+                        .select2-container,
                         input {
-                            width: 100% !important;
+                            width: calc(50% - 5px) !important;
                             margin-right: 0;
 
                             &:not(:last-child){
                                 margin-bottom: 5px;
                             }
+                        }
+
+                        .select2-container {
+                            margin-right: 10px;
                         }
                     }
                 }

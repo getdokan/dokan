@@ -36,13 +36,11 @@ $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( 
             <select name="customer_id" id="dokan-filter-customer" class="dokan-form-control dokan-w12"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
             </select>
-        </div>
-        <div class="dokan-form-group">
+
             <input autocomplete="off" id="order_filter_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start && $filter_date_end ? dokan_format_date( $filter_date_start ) . ' - ' . dokan_format_date( $filter_date_end ) : null ); ?>">
             <input id="order_filter_start_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
             <input id="order_filter_end_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
-        </div>
-        <div class="dokan-form-group">
+
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
             <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
         </div>
