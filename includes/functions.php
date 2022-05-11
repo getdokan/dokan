@@ -3637,7 +3637,7 @@ function dokan_commission_types( $exclude_dynamic_commissions = false ) {
  * @return boolean
  */
 function dokan_is_dynamic_commission_type( $commission_type ) {
-    return apply_filters( 'dokan_is_dynamic_commission_type', false, $commission_type );
+    return function_exists( 'dokan_get_dynamic_commission_types' ) && array_key_exists( $commission_type, dokan_get_dynamic_commission_types() );
 }
 
 /**
