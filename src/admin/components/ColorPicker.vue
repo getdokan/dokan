@@ -9,6 +9,15 @@
             <span class="dashicons dashicons-arrow-down-alt2"></span>
         </button>
 
+        <sketch
+            v-if="showColorPicker"
+            :value="value"
+            @input="updateColor"
+            :preset-colors="presetColors"
+            :disable-alpha="disableAlpha"
+            :disable-fields="disableFields"
+        ></sketch>
+
         <input
             v-if="showColorPicker && format === 'hex'"
             :value="value"
@@ -20,7 +29,7 @@
         <div v-if="showColorPicker" class="button-group">
             <button
                 type="button"
-                class="button button-small dashicons dashicons-no"
+                class="button button-small dashicons dashicons-no-alt"
                 @click="setLastColor(prevColor)"
             ></button>
 
@@ -30,15 +39,6 @@
                 @click="toggleColorPicker"
             ></button>
         </div>
-
-        <sketch
-            v-if="showColorPicker"
-            :value="value"
-            @input="updateColor"
-            :preset-colors="presetColors"
-            :disable-alpha="disableAlpha"
-            :disable-fields="disableFields"
-        ></sketch>
     </div>
 </template>
 
@@ -168,15 +168,16 @@
         }
 
         .button-group {
-            top: 115%;
-            right: 115%;
+            top: 260px;
+            right: 11px;
+            z-index: 1;
             position: absolute;
 
             .button-small {
                 color: #fff;
                 border: 0;
                 padding: 15px;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: bold;
                 border-radius: 5px 0 0 5px;
                 background-color: #1A9ED4;
@@ -190,10 +191,10 @@
                     border-radius: 0 5px 5px 0;
 
                     &:after {
-                        top: 18%;
+                        top: 20%;
                         left: 50%;
                         width: 1px;
-                        height: 65%;
+                        height: 60%;
                         content: '';
                         position: absolute;
                         transform: translateX(50%);
@@ -208,21 +209,23 @@
         }
 
         .vc-sketch {
-            top: 200%;
+            top: 120%;
             right: 0;
             z-index: 1;
             position: absolute;
+            padding-bottom: 40px;
         }
 
         .hex-input {
-            top: 108%;
-            width: 65px;
-            right: 0;
-            margin: 0 3 0 0;
-            padding: 3px 5px 4px;
+            top: 260px;
+            width: 75px;
+            right: 132px;
+            padding: 3px 10px 4px;
+            z-index: 1;
             position: absolute;
             font-size: 12px;
-            box-shadow: 0 1px 0 #ccc;
+            min-height: 30px !important;
+            box-shadow: none !important;
             font-family: monospace;
             line-height: 1.4;
             vertical-align: top;
