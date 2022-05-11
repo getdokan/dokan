@@ -75,8 +75,8 @@
                 labels: labels,
             },
             options: {
-                legend: {
-                    display: false
+                plugins: {
+                    legend: false
                 }
             }
         });

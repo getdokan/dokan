@@ -152,7 +152,7 @@ function dokan_withdraw_method_skrill( $store_settings ) {
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <div class="dokan-input-group">
-                <span class="dokan-input-group-addon"><?php esc_htmlt_e( 'E-mail', 'dokan-lite' ); ?></span>
+                <span class="dokan-input-group-addon"><?php esc_html_e( 'E-mail', 'dokan-lite' ); ?></span>
                 <input value="<?php echo esc_attr( $email ); ?>" name="settings[skrill][email]" class="dokan-form-control email" placeholder="you@domain.com" type="text">
             </div>
         </div>
@@ -168,56 +168,19 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_bank( $store_settings ) {
-    $account_name   = isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '';
-    $account_number = isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '';
-    $bank_name      = isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '';
-    $bank_addr      = isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '';
-    $routing_number = isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '';
-    $iban           = isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '';
-    $swift_code     = isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '';
-    ?>
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
+    $args = [
+        'account_name'         => isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '',
+        'account_number'       => isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '',
+        'bank_name'            => isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '',
+        'bank_addr'            => isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '',
+        'routing_number'       => isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '',
+        'iban'                 => isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '',
+        'swift_code'           => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
+        'account_type'         => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
+        'save_or_add_btn_text' => isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
+    ];
 
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Name of bank', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ); ?>"><?php echo esc_html( $bank_addr ); ?></textarea>
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'IBAN', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div>
-
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text">
-        </div>
-    </div> <!-- .dokan-form-group -->
-    <?php
+    dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
 }
 
 /**
@@ -300,7 +263,7 @@ function dokan_withdraw_get_active_order_status_in_comma() {
 /**
  * Get withdraw method formatted icon.
  *
- * @since 3.3.7
+ * @since 3.4.3
  *
  * @param string $method_key Withdraw Method key
  *
@@ -308,17 +271,15 @@ function dokan_withdraw_get_active_order_status_in_comma() {
  */
 function dokan_withdraw_get_method_icon( $method_key ) {
     $asset_path = DOKAN_PLUGIN_ASSEST . '/images/withdraw-methods/';
+
     switch ( $method_key ) {
         case 'paypal':
             $method_icon = $asset_path . 'paypal.svg';
             break;
-        case 'skrill':
-            $method_icon = $asset_path . 'skrill.svg';
-            break;
-        case 'bank':
         default:
             $method_icon = $asset_path . 'bank.svg';
     }
+
     return apply_filters( 'dokan_withdraw_method_icon', $method_icon, $method_key );
 }
 
@@ -332,8 +293,9 @@ function dokan_withdraw_get_method_icon( $method_key ) {
  * @return string
  */
 function dokan_withdraw_get_method_additional_info( $method_key ) {
-    $payment_methods = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' )[0]['payment'];
-    $no_information  = __( 'No information found.', 'dokan-lite' );
+    $profile_settings = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings' );
+    $payment_methods  = ! empty( $profile_settings[0]['payment'] ) ? $profile_settings[0]['payment'] : [];
+    $no_information   = __( 'No information found.', 'dokan-lite' );
 
     switch ( $method_key ) {
         case 'paypal':

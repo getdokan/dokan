@@ -112,7 +112,7 @@ var render = function() {
                               !notice.actions ||
                               !notice.description
                                 ? "align-items: center"
-                                : ""
+                                : "align-items: start"
                           },
                           [
                             _c("div", { staticClass: "logo-wrap" }, [
@@ -513,7 +513,7 @@ if (false) {
       }).done(function () {
         _this3.notices.splice(index, 1);
 
-        _this3.current_notice = 1;
+        _this3.slideNotice(1);
       });
     },
     handleAction: function handleAction(action, index) {
@@ -557,7 +557,7 @@ if (false) {
         } else {
           _this5.notices.splice(index, 1);
 
-          _this5.current_notice = 1;
+          _this5.slideNotice(1);
         }
       });
     }
@@ -566,12 +566,12 @@ if (false) {
 
 /***/ }),
 
-/***/ 260:
+/***/ 263:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(261);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(264);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
 
@@ -592,13 +592,13 @@ if (__WEBPACK_IMPORTED_MODULE_1_jquery___default()('#dokan-admin-notices').lengt
 
 /***/ }),
 
-/***/ 261:
+/***/ 264:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(95);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_8a647c3a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(262);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_8a647c3a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(265);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -645,7 +645,7 @@ if (false) {(function () {
 
 /***/ }),
 
-/***/ 262:
+/***/ 265:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -687,4 +687,4 @@ if (false) {
 
 /***/ })
 
-},[260]);
+},[263]);

@@ -282,7 +282,7 @@ class Installer {
                `status` int(1) NOT NULL,
                `method` varchar(30) NOT NULL,
                `note` text NOT NULL,
-               `details` longtext NOT NULL,
+               `details` longtext DEFAULT NULL,
                `ip` varchar(50) NOT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
