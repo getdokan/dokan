@@ -51,9 +51,7 @@ class SettingsHelper {
      * @return string
      */
     public static function get_billing_type() {
-        $billing_type = dokan_get_option( 'billing_type', 'dokan_reverse_withdrawal', 'by_amount' );
-
-        return $billing_type;
+        return dokan_get_option( 'billing_type', 'dokan_reverse_withdrawal', 'by_amount' );
     }
 
     /**
@@ -79,7 +77,7 @@ class SettingsHelper {
     public static function get_billing_day() {
         $billing_day = dokan_get_option( 'billing_day', 'dokan_reverse_withdrawal', '1' );
 
-        return $billing_day;
+        return absint( $billing_day );
     }
 
     /**

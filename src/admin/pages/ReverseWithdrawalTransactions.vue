@@ -2,7 +2,7 @@
     <div class="dokan-reverse-withdrawal-transactions">
         <h1 class="wp-heading-inline">
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
-            <a class="button" :href="this.reverseWithdrawalUrl()">&larr; {{ __( 'Go Back', 'dokan' ) }}</a>
+            <a class="button" :href="this.reverseWithdrawalUrl()">&larr; {{ __( 'Go Back', 'dokan-lite' ) }}</a>
         </h1>
 
         <hr class="wp-header-end">

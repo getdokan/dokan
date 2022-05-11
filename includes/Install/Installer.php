@@ -403,7 +403,7 @@ class Installer {
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_reverse_withdrawal` (
                     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                     `trn_id` bigint(20) UNSIGNED NOT NULL,
-                    `trn_type` varchar(250) NOT NULL DEFAULT 'order_commission',
+                    `trn_type` varchar(200) NOT NULL DEFAULT 'order_commission',
                     `vendor_id` bigint(20) UNSIGNED NOT NULL,
                     `note` mediumtext DEFAULT NULL,
                     `debit` decimal(19,4) NOT NULL DEFAULT '0.0000',
@@ -411,10 +411,10 @@ class Installer {
                     `trn_date` int(13) UNSIGNED NOT NULL DEFAULT '0',
                     PRIMARY KEY (`id`),
                     KEY `trn_date` (`trn_date`),
-                    KEY `vendor_id_trn_date` (`vendor_id`,`trn_date`) USING BTREE,
-                    KEY `vendor_id` (`vendor_id`) USING BTREE,
-                    KEY `vendor_id_trn_date_type` (`vendor_id`,`trn_date`,`trn_type`),
-                    KEY `trn_id_type` (`trn_id`,`trn_type`)
+                    KEY `vendor_id_trn_date` (`vendor_id`,`trn_date`),
+                    KEY `vendor_id` (`vendor_id`),
+                    KEY `trn_id_type` (`trn_id`,`trn_type`(191)),
+                    KEY `vendor_id_trn_date_type` (`vendor_id`,`trn_date`,`trn_type`(191))
                 ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
@@ -462,6 +462,7 @@ class Installer {
             $product->set_regular_price( 0 );
             $product->set_sale_price( 0 );
             $product->set_manage_stock( false );
+            $product->set_tax_status( 'none' );
             $product->save();
 
             update_option( Helper::get_base_product_option_key(), $product->get_id() );

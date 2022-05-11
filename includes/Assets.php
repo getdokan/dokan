@@ -604,6 +604,9 @@ class Assets {
                 'i18n_date_format'        => wc_date_format(),
                 'i18n_time_format'        => wc_time_format(),
                 'week_starts_day'         => intval( get_option( 'start_of_week', 0 ) ),
+                'reverse_withdrawal'                  => [
+                    'enabled' => SettingsHelper::is_enabled(),
+                ],
                 'daterange_picker_local'  => [
                     'toLabel'          => __( 'To', 'dokan-lite' ),
                     'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
@@ -1047,9 +1050,6 @@ class Assets {
                 'decimal_point'                       => $decimal,
                 'mon_decimal_point'                   => wc_get_price_decimal_separator(),
                 'i18n_date_format'                    => wc_date_format(),
-                'reverse_withdrawal'                  => [
-                    'enabled' => SettingsHelper::is_enabled(),
-                ],
             ]
         );
     }

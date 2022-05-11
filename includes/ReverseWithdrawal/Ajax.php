@@ -26,7 +26,7 @@ class Ajax {
     /**
      * This method will add a product to cart from product edit page
      *
-     * @since 3.5.0
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -49,8 +49,7 @@ class Ajax {
             wp_send_json_error( [ 'message' => __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ) ], 400 );
         }
 
-        // add advertisement product to cart
-        // get advertisement product id
+        // get reverse withdrawal product id
         $reverse_pay_product_id = Helper::get_reverse_withdrawal_base_product();
         if ( ! is_numeric( $reverse_pay_product_id ) ) {
             wp_send_json_error( [ 'message' => __( 'Invalid base payment product id. Please contact with site admin.', 'dokan-lite' ) ], 400 );
@@ -79,11 +78,7 @@ class Ajax {
         }
 
         if ( $added ) {
-            wp_send_json_success(
-                [
-                    'message'       => __( 'Product has been added to your cart.', 'dokan-lite' ),
-                ]
-            );
+            wp_send_json_success( [ 'message' => __( 'Product has been added to your cart.', 'dokan-lite' ) ] );
         }
 
         wp_send_json_error( [ 'message' => __( 'Something Went Wrong.', 'dokan-lite' ) ], 400 );

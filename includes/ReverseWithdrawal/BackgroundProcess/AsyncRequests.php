@@ -1,9 +1,9 @@
 <?php
 namespace WeDevs\Dokan\ReverseWithdrawal\BackgroundProcess;
 
+use WeDevs\Dokan\Emails\ReverseWithdrawalInvoice;
 use WeDevs\Dokan\ReverseWithdrawal\FailedActions;
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
@@ -52,7 +52,6 @@ class AsyncRequests {
 
         $failed_actions = new FailedActions();
         foreach ( $vendors as $vendor_id ) {
-            error_log( 'Vendor ID: ' . $vendor_id );
             // maybe take action
             $failed_actions->ensure_reverse_pay_actions( $vendor_id );
             // maybe revert taken action
@@ -89,7 +88,7 @@ class AsyncRequests {
             return;
         }
 
-        $invoice_email = new \WeDevs\Dokan\Emails\ReverseWithdrawalInvoice();
+        $invoice_email = new ReverseWithdrawalInvoice();
         foreach ( $vendors as $vendor_id ) {
             // check if we need to send invoice email
             $due_status = Helper::get_vendor_due_status( $vendor_id );
@@ -100,7 +99,6 @@ class AsyncRequests {
             }
 
             $invoice_email->trigger( $vendor_id, $due_status );
-            dokan_log( sprintf( '[Reverse Withdrawal] Invoice Mail send to %d', $vendor_id ) );
 
             do_action( 'dokan_reverse_withdrawal_invoice_email_sent', $vendor_id, $due_status, dokan_current_datetime()->format( 'Y-m-d' ) );
         }

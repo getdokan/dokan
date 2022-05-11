@@ -23,43 +23,7 @@ class Settings {
      */
     public function __construct() {
         // Hooks
-        add_filter( 'dokan_settings_sections', [ $this, 'load_settings_section' ], 21 );
         add_filter( 'dokan_settings_fields', [ $this, 'load_settings_fields' ], 21 );
-    }
-
-    /**
-     * Load admin settings section
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $section
-     *
-     * @return array
-     */
-    public function load_settings_section( $section ) {
-        $reverse_withdrawal = array(
-            'id'    => 'dokan_reverse_withdrawal',
-            'title' => __( 'Reverse Withdrawal', 'dokan-lite' ),
-            'icon'  => 'dashicons-money-alt',
-        );
-
-        // insert reverse withdrawal section after withdrawal section
-        $position = false;
-        $len      = count( $section );
-        for ( $i = 0; $i < $len; $i++ ) {
-            if ( 'dokan_withdraw' === $section[ $i ]['id'] ) {
-                $position = $i;
-                break;
-            }
-        }
-
-        if ( $position !== false ) {
-            array_splice( $section, $position + 1, 0, [ $reverse_withdrawal ] );
-        } else {
-            $section[] = $reverse_withdrawal;
-        }
-
-        return $section;
     }
 
     /**
@@ -162,7 +126,6 @@ class Settings {
                 'type'    => 'checkbox',
                 'default' => 'off',
             ];
-            //todo: add settings for failed refund from vendor end
         }
 
         $fields['dokan_reverse_withdrawal'] = apply_filters( 'dokan_reverse_withdrawal_setting_fields', $settings_fields );

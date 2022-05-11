@@ -20,12 +20,14 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
             <th><?php esc_html_e( 'Balance', 'dokan-lite' ); ?></th>
         </tr>
         <?php
+        // get current balance
         $current_balance = $transactions['balance']['balance'];
+
         $items[] = $transactions['balance'];
-        foreach ( $transactions['items'] as $item ) {
-            $items[] = ReverseWithdrawalHelper::get_formated_transaction_data( $item, $current_balance, 'seller' );
-        }
+        $items   = array_merge(  $items, $transactions['items'] );
+
         foreach ( $items as $transaction ) {
+            $transactions = ReverseWithdrawalHelper::get_formated_transaction_data( $transaction, $current_balance, 'seller' )
             ?>
             <tr>
                 <td>
@@ -53,7 +55,7 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><b><?php _e( 'Balance:', 'dokan' ); ?></b></td>
+                <td><b><?php _e( 'Balance:', 'dokan-lite' ); ?></b></td>
                 <td><b><?php echo wc_price( $current_balance ); ?></b></td>
             </tr>
             <?php

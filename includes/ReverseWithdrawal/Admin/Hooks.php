@@ -60,5 +60,4 @@ class Hooks {
 
         dokan()->reverse_withdrawal->cron_actions->maybe_take_action();
     }
-
 }

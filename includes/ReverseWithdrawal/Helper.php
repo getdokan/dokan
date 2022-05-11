@@ -266,16 +266,16 @@ class Helper {
     public static function get_formated_transaction_data( $item, &$current_balance, $context = 'admin' ) {
         $current_balance = ( $current_balance + $item['debit'] ) - $item['credit'];
         return [
-            'id'            => absint( $item['id'] ),
-            'trn_id'        => absint( $item['trn_id'] ),
-            'trn_url'       => static::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
-            'trn_date'      => dokan_format_date( $item['trn_date'] ),
-            'trn_type'      => static::get_transaction_types( $item['trn_type'] ),
-            'vendor_id'     => absint( $item['vendor_id'] ),
-            'note'          => esc_html( $item['note'] ),
-            'debit'         => $item['debit'],
-            'credit'        => $item['credit'],
-            'balance'       => $current_balance,
+            'id'        => absint( $item['id'] ),
+            'trn_id'    => absint( $item['trn_id'] ),
+            'trn_url'   => static::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
+            'trn_date'  => dokan_format_date( $item['trn_date'] ),
+            'trn_type'  => static::get_transaction_types( $item['trn_type'] ),
+            'vendor_id' => absint( $item['vendor_id'] ),
+            'note'      => esc_html( $item['note'] ),
+            'debit'     => $item['debit'],
+            'credit'    => $item['credit'],
+            'balance'   => $current_balance,
         ];
     }
 
@@ -473,7 +473,7 @@ class Helper {
                 $ret['status'] = true;
 
                 // check if user crossed the due period
-                $due_date = $current_date->modify( 'first day of this month' )->setTime( 0, 0, 0 );
+                $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
 
                 if ( SettingsHelper::get_billing_day() ) {
                     $billing_day = SettingsHelper::get_billing_day() - 1;
@@ -517,7 +517,7 @@ class Helper {
                 }
 
                 //get due date
-                $due_date = $current_date->modify( $last_threshold_limit_exceed_date );
+                $due_date = $current_date->modify( $last_threshold_limit_exceed_date )->setTime( 23, 59, 59 );
 
                 if ( SettingsHelper::get_due_period() ) {
                     $due_period = SettingsHelper::get_due_period() - 1;

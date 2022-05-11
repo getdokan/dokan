@@ -289,6 +289,11 @@ class Settings {
                 'icon'  => 'dashicons-money',
             ],
             [
+                'id'    => 'dokan_reverse_withdrawal',
+                'title' => __( 'Reverse Withdrawal', 'dokan-lite' ),
+                'icon'  => 'dashicons-money-alt',
+            ],
+            [
                 'id'    => 'dokan_pages',
                 'title' => __( 'Page Settings', 'dokan-lite' ),
                 'icon'  => 'dashicons-admin-page',

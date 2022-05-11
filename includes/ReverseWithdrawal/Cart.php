@@ -34,68 +34,6 @@ class Cart {
 
         // remove delivery time module section from checkout page
         add_action( 'woocommerce_review_order_before_payment', [ $this, 'remove_delivery_time_section_from_checkout' ], 9 );
-
-        // remove paypal marketplace checkout validations
-        add_filter( 'dokan_paypal_marketplace_escape_after_checkout_validation', [ $this, 'paypal_remove_gateway_validations' ], 10, 2 );
-        add_filter( 'dokan_paypal_marketplace_merchant_id', [ $this, 'paypal_get_merchant_id' ], 10, 2 );
-        add_filter( 'dokan_paypal_marketplace_purchase_unit_merchant_id', [ $this, 'paypal_purchase_unit_merchant_id' ], 10, 2 );
-    }
-
-    /**
-     * Remove PayPal Marketplace Checkout Validations
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool $escape
-     * @param array $cart_item
-     *
-     * @return bool
-     */
-    public function paypal_remove_gateway_validations( $escape, $cart_item ) {
-        if ( true === wc_string_to_bool( $escape ) ) {
-            return $escape;
-        } elseif ( Helper::has_reverse_withdrawal_payment_in_cart() ) {
-            return true;
-        }
-        return $escape;
-    }
-
-    /**
-     * Get admin partner id
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $merchant_id
-     * @param int $product_id
-     *
-     * @return string
-     */
-    public function paypal_get_merchant_id( $merchant_id, $product_id ) {
-        // check if this is a recurring subscription product
-        if ( (int) $product_id === Helper::has_reverse_withdrawal_payment_in_cart() ) {
-            return \WeDevs\DokanPro\Modules\PayPalMarketplace\Helper::get_partner_id();
-        }
-
-        return $merchant_id;
-    }
-
-    /**
-     * Get admin partner id
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $merchant_id
-     * @param \WC_Abstract_Order $order
-     *
-     * @return string
-     */
-    public function paypal_purchase_unit_merchant_id( $merchant_id, $order ) {
-        // check if this is a recurring subscription product
-        if ( Helper::has_reverse_withdrawal_payment_in_cart( $order ) ) {
-            return \WeDevs\DokanPro\Modules\PayPalMarketplace\Helper::get_partner_id();
-        }
-
-        return $merchant_id;
     }
 
     /**

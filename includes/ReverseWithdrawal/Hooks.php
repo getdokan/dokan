@@ -77,7 +77,6 @@ class Hooks {
         // enable catalog mode - reverse withdrawal action
         add_filter( 'woocommerce_is_purchasable', array( $this, 'hide_add_to_cart_button' ), 10, 2 );
         add_filter( 'woocommerce_get_price_html', array( $this, 'hide_product_price' ), 20, 2 );
-        //add_filter( 'woocommerce_product_is_visible', array( $this, 'hide_product_visibility' ), 10, 2 );
     }
 
     /**
@@ -159,36 +158,6 @@ class Hooks {
         }
 
         return $price;
-    }
-
-    /**
-     * This method will set visibility of product to false
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool $visible
-     * @param int $product_id
-     *
-     * @return bool
-     */
-    public function hide_product_visibility( $visible, $product_id ) {
-        if ( ! $visible ) {
-            return $visible;
-        }
-
-        $vendor_id = dokan_get_vendor_by_product( $product_id, true );
-
-        if ( ! $vendor_id ) {
-            return $visible;
-        }
-
-        // check if action is taken for this vendor
-        $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( in_array( 'enable_catalog_mode', $failed_actions, true ) ) {
-            $visible = false;
-        }
-
-        return $visible;
     }
 
     /**

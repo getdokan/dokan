@@ -69,10 +69,11 @@ class ReverseWithdrawal {
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'display_action_taken_notice' ] );
         add_action( 'dokan_reverse_withdrawal_content', [ $this, 'display_action_taken_notice' ] );
 
+        // render reverse withdrawal page content
         add_action( 'dokan_reverse_withdrawal_content_area_header', [ $this, 'render_header' ] );
-        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_balance_section' ], 10 );
-        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_filter_section' ], 10 );
-        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'load_transactions_table' ], 10 );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'render_balance_section' ], 10 );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'render_filter_section' ], 10 );
+        add_action( 'dokan_reverse_withdrawal_content', [ $this, 'render_transactions_table' ], 10 );
     }
 
     /**
@@ -114,7 +115,7 @@ class ReverseWithdrawal {
         }
 
         // get formatted error messages
-        $message = sprintf( __( 'You have a reverse withdrawal balance of %1$s to be paid. Please <a href="%2$s">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s', 'dokan' ),
+        $message = sprintf( __( 'You have a reverse withdrawal balance of %1$s to be paid. Please <a href="%2$s">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s', 'dokan-lite' ),
             wc_price( $due_status['balance']['payable_amount'] ),
             dokan_get_navigation_url( 'reverse-withdrawal' ),
             $due_status['due_date'],
@@ -162,7 +163,7 @@ class ReverseWithdrawal {
      *
      * @return void
      */
-    public function load_balance_section() {
+    public function render_balance_section() {
         $args = Helper::get_vendor_balance();
 
         if ( is_wp_error( $args ) ) {
@@ -180,7 +181,7 @@ class ReverseWithdrawal {
      *
      * @return void
      */
-    public function load_filter_section() {
+    public function render_filter_section() {
         dokan_get_template_part( 'reverse-withdrawal/filters', '', [ 'trn_date' => $this->get_transaction_date() ] );
     }
 
@@ -191,7 +192,7 @@ class ReverseWithdrawal {
      *
      * @return void
      */
-    public function load_transactions_table() {
+    public function render_transactions_table() {
         $manager = new ReverseWithdrawalManager();
 
         $transactions = $manager->get_store_transactions( [

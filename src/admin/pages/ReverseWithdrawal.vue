@@ -32,7 +32,7 @@
                 @pagination="goToPage">
 
                 <template slot="store_name" slot-scope="data">
-                    <strong><a :href="'?page=dokan#/reverse-withdrawal/store/' + data.row.vendor_id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan' ) }}</a></strong>
+                    <strong><a :href="'?page=dokan#/reverse-withdrawal/store/' + data.row.vendor_id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a></strong>
                 </template>
 
                 <template slot="balance" slot-scope="data">
@@ -52,7 +52,7 @@
                     <multiselect
                         @search-change="fetchStoreLists"
                         v-model="filter.selected_store"
-                        :placeholder="this.__( 'Filter by store', 'dokan' )"
+                        :placeholder="this.__( 'Filter by store', 'dokan-lite' )"
                         :options="filter.stores"
                         track-by="id"
                         label="name"
@@ -319,7 +319,7 @@ export default {
         },
 
         getDefaultStore() {
-            return [ { id: 0, name: this.__( 'All Stores', 'dokan' ) } ];
+            return [ { id: 0, name: this.__( 'All Stores', 'dokan-lite' ) } ];
         },
 
         // filter by stores

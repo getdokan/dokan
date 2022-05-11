@@ -122,6 +122,5 @@ export default {
     @media (max-width: 480px) {
         flex-basis: 100%;
     }
-
 }
 </style>
