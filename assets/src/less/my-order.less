@@ -3,35 +3,41 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
 
-  input,
-  select,
-  .select2-container {
-    height: 33px;
-  }
+    button, a {
+      width: 74px;
+    }
 
-  input {
-    width: calc(50% - 10px);
-  }
-
-  input:not(:last-child) {
-    margin-right: 10px;
-  }
-
-  select,
-  .select2 {
-    width: calc(50% - 5px) !important;
-    margin-right: 5px;
-  }
-
-  @media screen and ( max-width: 576px ) {
+    button,
+    a,
     input,
     select,
+    .select2-container {
+      height: 33px;
+      margin-right: 10px;
+    }
+
+    input {
+      width: calc(50% - 130px);
+    }
+
+    select,
     .select2 {
-      width: 100% !important;
-      margin-right: 0 !important;
-      margin-bottom: 5px;
+      width: calc(50% - 130px) !important;
+    }
+
+    @media screen and ( max-width: 576px ) {
+      input,
+      select,
+      .select2 {
+        width: calc(50% - 5px) !important;
+        margin-right: 0 !important;
+        margin-bottom: 5px;
+      }
+
+      .select2 {
+        margin-right: 10px !important;
+      }
     }
   }
 }

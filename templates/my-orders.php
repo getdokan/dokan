@@ -20,6 +20,10 @@
     <div id="dokan-my-orders-filter">
         <input type="hidden" value="<?php echo esc_attr( $sort_order ); ?>" name="sort_order">
         <div class="dokan-form-group">
+            <input autocomplete="off" id="my_order_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $start_date && $end_date ? dokan_format_date( $start_date ) . ' - ' . dokan_format_date( $end_date ) : null ); ?>">
+            <input type="hidden" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>">
+            <input type="hidden" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>">
+
             <select name="vendor" class="dokan-form-control dokan-my-order-select2">
                 <option value="" <?php selected( '', $vendor_id ); ?>><?php esc_html_e( 'All Vendors', 'dokan-lite' ); ?></option>
                 <?php foreach ( $vendors as $seller_id => $shop_info ) : ?>
@@ -27,14 +31,9 @@
                 <?php endforeach; ?>
             </select>
 
-            <input autocomplete="off" id="my_order_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $start_date && $end_date ? dokan_format_date( $start_date ) . ' - ' . dokan_format_date( $end_date ) : null ); ?>">
-            <input type="hidden" name="start_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $start_date ); ?>">
-            <input type="hidden" name="end_date" class="datepicker dokan-form-control" value="<?php echo esc_attr( $end_date ); ?>">
+            <button type="submit" class="dokan-btn dokan-btn-info"><span class="fa fa-filter"></span> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
+            <a id="dokan-my-order-filter-reset" class="dokan-btn"><span class="fa fa-undo"></span> <?php esc_html_e( 'Reset', 'dokan-lite' ); ?></a>
         </div>
-    </div>
-    <div class="dokan-form-group">
-        <button type="submit" class="dokan-btn dokan-btn-info"><span class="fa fa-filter"></span> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
-        <a id="dokan-my-order-filter-reset" class="dokan-btn"><span class="fa fa-undo"></span> <?php esc_html_e( 'Reset', 'dokan-lite' ); ?></a>
     </div>
 </form>
 
