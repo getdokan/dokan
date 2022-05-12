@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Widgets;
 
+use WeDevs\Dokan\Vendor\Vendor;
 use WP_Widget;
 
 class FilterByAttributes extends WP_Widget {
@@ -34,8 +35,20 @@ class FilterByAttributes extends WP_Widget {
             return;
         }
 
-        $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $taxonomy     = $this->get_instance_taxonomy( $instance );
+        $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
+        $vendor    = dokan()->vendor->get( $seller_id );
+
+        if ( ! $vendor instanceof Vendor ) {
+            return;
+        }
+
+        $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
+        if ( empty( $terms ) ) {
+            return;
+        }
+
+        $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $query_type   = isset( $instance['query_type'] ) ? apply_filters( 'widget_query_type', $instance['query_type'] ) : '';
 
         echo $args['before_widget'];

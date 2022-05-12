@@ -615,9 +615,11 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
     /**
      * Store category menu for a store
      *
-     * @param  int $seller_id
-     *
      * @since DOKAN_SINCE
+     *
+     * @param int    $seller_id
+     * @param array  $taxonomy
+     * @param string $query_type
      *
      * @return void
      */
