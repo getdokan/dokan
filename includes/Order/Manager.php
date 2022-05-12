@@ -30,6 +30,8 @@ class Manager {
             'date'        => null,
             'start_date'  => null,
             'end_date'    => null,
+            'order_id'    => null,
+            'search'      => null,
         ];
 
         $args = wp_parse_args( $args, $default );
@@ -47,6 +49,8 @@ class Manager {
             $date_query       = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
             $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
             $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
+            $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
+            $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
 
             $orders = $wpdb->get_results(
                 $wpdb->prepare(
@@ -62,6 +66,8 @@ class Manager {
                     {$start_date_query}
                     {$end_date_query}
                     {$status_where}
+                    {$order_id_query}
+                    {$search_query}
                 GROUP BY do.order_id
                 ORDER BY p.post_date DESC
                 LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']

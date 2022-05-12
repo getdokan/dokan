@@ -59,6 +59,8 @@ function dokan_get_seller_orders( $seller_id, $args ) {
         'customer_id' => null,
         'start_date'  => '',
         'end_date'    => '',
+        'order_id'    => null,
+        'search'      => null,
     ];
 
     $args = wp_parse_args( $args, $defaults );
@@ -88,6 +90,8 @@ function dokan_get_seller_orders( $seller_id, $args ) {
         $date_query       = ( $args['order_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['order_date'] ) : '';
         $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
         $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
+        $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
+        $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
 
         $orders = $wpdb->get_results(
             $wpdb->prepare(
@@ -103,6 +107,8 @@ function dokan_get_seller_orders( $seller_id, $args ) {
                 {$status_where}
                 {$start_date_query}
                 {$end_date_query}
+                {$order_id_query}
+                {$search_query}
                 {$exclude}
             GROUP BY do.order_id
             ORDER BY {$order_by} {$order}
@@ -229,6 +235,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
         $date_where       = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
         $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
         $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
+        $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
+        $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
 
         $count = (int) $wpdb->get_var(
             $wpdb->prepare(
@@ -243,6 +251,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
                     {$start_date_query}
                     {$end_date_query}
                     {$customer_where}
+                    {$order_id_query}
+                    {$search_query}
                     {$date_where}", $seller_id
             )
         );

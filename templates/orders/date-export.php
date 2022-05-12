@@ -29,6 +29,8 @@ if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
 $filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( wp_unslash( $_GET['order_date_start'] ) ) : '';
 $filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( wp_unslash( $_GET['order_date_end'] ) ) : '';
 $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( $_GET['order_status'] ) ) : 'all';
+$search            = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : null;
+
 ?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
@@ -36,6 +38,8 @@ $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( 
             <select name="customer_id" id="dokan-filter-customer" class="dokan-form-control dokan-w12"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
             </select>
+
+            <input name="search" type="text" placeholder="<?php esc_attr_e( 'Search Orders', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search ); ?>"/>
 
             <input autocomplete="off" id="order_filter_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start && $filter_date_end ? dokan_format_date( $filter_date_start ) . ' - ' . dokan_format_date( $filter_date_end ) : null ); ?>">
             <input id="order_filter_start_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
@@ -57,6 +61,7 @@ $order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( 
                 <input type="hidden" name="order_date_start" value="<?php echo esc_attr( $filter_date_start ); ?>">
                 <input type="hidden" name="order_date_end" value="<?php echo esc_attr( $filter_date_end ); ?>">
                 <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
+                <input type="hidden" name="search" value="<?php echo esc_attr( $search ); ?>"/>
             </div>
         </form>
     <?php endif; ?>

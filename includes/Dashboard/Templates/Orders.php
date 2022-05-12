@@ -127,8 +127,9 @@ class Orders {
             $order_date_start = ( isset( $_POST['order_date_start'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_start'] ) ) : null;
             $order_date_end   = ( isset( $_POST['order_date_end'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_date_end'] ) ) : null;
             $order_status     = ( isset( $_POST['order_status'] ) ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
+            $search           = ( isset( $_POST['search'] ) ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : null;
 
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), [
+            $query_args = [
                 'status'      => $order_status,
                 'order_date'  => null,
                 'limit'       => 10000000,
@@ -136,7 +137,15 @@ class Orders {
                 'customer_id' => $customer_id,
                 'start_date'  => $order_date_start,
                 'end_date'    => $order_date_end,
-            ] );
+            ];
+
+            if ( is_numeric( $search ) ) {
+                $query_args['order_id'] = absint( $search );
+            } elseif ( ! empty( $search ) ) {
+                $query_args['search'] = $search;
+            }
+
+            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $query_args );
 
             dokan_order_csv_export( $user_orders );
             exit();
