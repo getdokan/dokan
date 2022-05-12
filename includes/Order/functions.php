@@ -235,8 +235,8 @@ function dokan_get_seller_orders_number( $args = [] ) {
         $date_where       = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
         $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
         $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
-        $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
-        $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
+        $order_id_query   = isset( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
+        $search_query     = isset( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
 
         $count = (int) $wpdb->get_var(
             $wpdb->prepare(
