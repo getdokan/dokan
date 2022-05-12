@@ -45,15 +45,21 @@
   }
 }
 
-div.entry-content > table > thead > tr > th.order-number {
-  cursor: pointer;
-
-  & > span::after {
-    content: '\25B2';
-    display: inline-block;
+div.entry-content > table {
+  td, th {
+    padding: 1em 1.416em !important;
   }
 
-  & > span.rotated::after {
-    content: '\25BC';
+  > thead > tr > th.order-number {
+    cursor: pointer;
+
+    & > span::after {
+      content: '\25B2';
+      display: inline-block;
+    }
+
+    & > span.rotated::after {
+      content: '\25BC';
+    }
   }
 }
