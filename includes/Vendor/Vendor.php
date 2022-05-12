@@ -679,8 +679,8 @@ class Vendor {
      * @return array|mixed
      */
     public function get_vendor_used_terms_list( $vendor_id, $taxonomy ){
-        $transient_group = "seller_product_data_{$taxonomy}_{$this->get_id()}";
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_store_'. $taxonomy .'_' . wpml_get_current_language() . '_' . $this->get_id()  : 'get_store_'. $taxonomy .'_' . $this->get_id();
+        $transient_group = "seller_taxonomy_widget_data_{$this->get_id()}";
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'product_taxonomy_'. $taxonomy .'_' . wpml_get_current_language() : 'product_taxonomy_'. $taxonomy;
 
         // get the author's posts
         $products = $this->get_published_products();
@@ -728,7 +728,7 @@ class Vendor {
             }
         }
 
-        Cache::set_transient( $transient_key, $author_terms, $transient_group );
+//        Cache::set_transient( $transient_key, $author_terms, $transient_group );
 
         return $author_terms;
     }
