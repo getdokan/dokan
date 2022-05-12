@@ -496,7 +496,7 @@
 
                 if (
                     // Allow: backspace, delete, tab, escape, enter etc.
-                    $.inArray(e.keyCode, [46, 48, 57, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+                    $.inArray(e.keyCode, [46, 48, 53, 57, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
                     // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     //Allow Ctrl+v
