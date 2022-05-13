@@ -194,7 +194,9 @@ class Settings {
      */
     public function load_payment_content( $slug_suffix ) {
         $payment_methods = dokan_withdraw_get_active_methods();
-        $payment_methods = array_filter( $payment_methods, function ( $value ) { // methods which are inactive in Dokan > Withdraw Options has a empty value so filter them out
+
+        // methods which are inactive in Dokan > Settings > Withdraw Options has a empty value so filter them out
+        $payment_methods = array_filter( $payment_methods, function ( $value ) {
             return ! empty( $value );
         } );
 
