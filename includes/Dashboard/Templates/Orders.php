@@ -22,6 +22,7 @@ class Orders {
         add_action( 'dokan_order_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_order_inside_content', array( $this, 'order_listing_status_filter' ), 10 );
         add_action( 'dokan_order_inside_content', array( $this, 'order_main_content' ), 15 );
+        add_filter( 'body_class', array( $this, 'add_css_class_to_body' ) );
     }
 
     /**
@@ -160,4 +161,20 @@ class Orders {
         do_action( 'dokan_after_handle_order_export' );
     }
 
+    /**
+     * Add a specific class to the body of Vendor Dashboard Orders page to apply css into the select2 input box
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $classes
+     *
+     * @return array
+     */
+    public function add_css_class_to_body( $classes ) {
+        if ( dokan_is_seller_dashboard() && false !== get_query_var( 'orders', false ) ) {
+            $classes = array_merge( $classes, [ 'vendor-dashboard-orders-page' ] );
+        }
+
+        return $classes;
+    }
 }
