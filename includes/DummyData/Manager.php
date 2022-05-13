@@ -12,6 +12,12 @@ if ( ! class_exists( 'WC_Product_Importer', false ) ) {
 class Manager extends \WC_Product_Importer {
 
     /**
+     * Class constructor.
+     */
+    public function __construct() {
+    }
+
+    /**
      * Process importer.
      *
      * Do not import products with IDs or SKUs that already exist if option

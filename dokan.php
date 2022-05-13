@@ -376,6 +376,7 @@ final class WeDevs_Dokan {
         $this->container['customizer']       = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']         = new \WeDevs\Dokan\Upgrade\Manager();
         $this->container['product_sections'] = new \WeDevs\Dokan\ProductSections\Manager();
+        $this->container['dummy_data']       = new \WeDevs\Dokan\DummyData\Manager();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
