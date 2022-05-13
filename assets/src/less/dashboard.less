@@ -216,15 +216,19 @@ div.media-sidebar a.edit-attachment{
                             #toggle-vendor-payment-method-drop-down {
                                 color: #333333;
                                 cursor: pointer;
-                                padding: 10px 5px 10px 10px;
+                                padding: 10px 35px 10px 10px;
                                 white-space: nowrap;
                                 border-radius: 3px;
                                 background: #DDDDDD;
+                                position: relative;
 
                                 &::after {
                                     content: '\25BC';
                                     display: inline-block;
                                     transition: transform 300ms ease-in-out;
+                                    position: absolute;
+                                    right: 5px;
+                                    top: 20%;
                                 }
                             }
 
@@ -251,7 +255,7 @@ div.media-sidebar a.edit-attachment{
 
                                     li {
                                         border-bottom: 1px #dddddd solid;
-                                        padding-right: 20px;
+                                        padding-right: 30px;
 
                                         div {
                                             white-space: nowrap;
