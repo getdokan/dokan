@@ -16,7 +16,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
         <h2> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
         <div>
             <div id="vendor-dashboard-payment-settings-toggle-dropdown">
-                <a id="toggle-vendor-payment-method-drop-down"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?></a>
+                <a id="toggle-vendor-payment-method-drop-down"> <?php esc_html_e( 'Add Payment Method', 'dokan-lite' ); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 <div id="vendor-payment-method-drop-down-wrapper">
                     <div id="vendor-payment-method-drop-down">
                         <?php if ( is_array( $unused_methods ) && ! empty( $unused_methods ) ) : ?>
@@ -30,7 +30,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                                                 <?php
                                                 //translators: %s: payment method title
                                                 printf( esc_html__( 'Direct to %s', 'dokan-lite' ), apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
-                                                ?>
+                                                ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             </span>
                                         </div>
                                     </a>
