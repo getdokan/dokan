@@ -241,7 +241,7 @@ class Settings {
             $method_key   = str_replace( '/edit', '', $method_key ); // removing '/edit' suffix to get payment method key
         }
 
-        $profile_info = get_user_meta( get_current_user_id(), 'dokan_profile_settings', true );
+        $profile_info = get_user_meta( $seller_id, 'dokan_profile_settings', true );
 
         if ( $is_edit_mode && 'bank' === $method_key ) {
             $profile_info['is_edit_mode'] = $is_edit_mode;
