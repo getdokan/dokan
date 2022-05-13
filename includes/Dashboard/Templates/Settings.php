@@ -195,18 +195,24 @@ class Settings {
     public function load_payment_content( $slug_suffix ) {
         $payment_methods = dokan_withdraw_get_active_methods();
         $payment_methods = array_filter( $payment_methods, function ( $value ) { // methods which are inactive in Dokan > Withdraw Options has a empty value so filter them out
-                return ! empty( $value );
-            } );
+            return ! empty( $value );
+        } );
 
         //no payment method is active, show informative message
         if ( empty( $payment_methods ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ) ) );
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
+                ]
+            );
             return;
         }
 
-        $payment_method_ids = array_values( $payment_methods );
-
-        $seller_id = dokan_get_current_user_id();
+        $payment_method_ids = array_keys( $payment_methods );
+        $seller_id          = dokan_get_current_user_id();
 
         $seller_connected_payment_method_ids = array_filter(
             $payment_method_ids,
@@ -216,17 +222,23 @@ class Settings {
         );
 
         $seller_disconnected_payment_method_ids = array_diff( $payment_method_ids, $seller_connected_payment_method_ids );
+        $seller_disconnected_payment_methods    = $this->get_payment_methods( $seller_disconnected_payment_method_ids );
+        $seller_connected_payment_methods       = $this->get_payment_methods( $seller_connected_payment_method_ids );
 
-        $seller_disconnected_payment_methods = $this->get_payment_methods( $seller_disconnected_payment_method_ids );
-        $seller_connected_payment_methods    = $this->get_payment_methods( $seller_connected_payment_method_ids );
-
-        $method_key = str_replace( '/manage-', '', $slug_suffix ); // if we are requesting a single payment method page(to edit or for first time setup) then we have the corresponding payment method key in the url
-
+        /*
+         * If we are requesting a single payment method page (to edit or for first time setup)
+         * then we have the corresponding payment method key in the url.
+         */
+        $method_key   = str_replace( '/manage-', '', $slug_suffix );
         $is_edit_mode = false;
 
-        if ( false !== stripos( $method_key, '/edit' ) ) { // if payment method key has /edit suffix then we are trying to edit the method, otherwise we are doing a initial setup for that payment method
+        /*
+         * If payment method key has /edit suffix then we are trying to edit the method,
+         * otherwise we are doing a initial setup for that payment method.
+         */
+        if ( false !== stripos( $method_key, '/edit' ) ) {
             $is_edit_mode = true;
-            $method_key   = str_replace( '/edit', '', $method_key ); // removing /edit suffix to get payment method key
+            $method_key   = str_replace( '/edit', '', $method_key ); // removing '/edit' suffix to get payment method key
         }
 
         $profile_info = get_user_meta( get_current_user_id(), 'dokan_profile_settings', true );
@@ -235,7 +247,7 @@ class Settings {
             $profile_info['is_edit_mode'] = $is_edit_mode;
         }
 
-        // template arguments
+        // Template arguments
         $args = [
             'current_user' => $seller_id,
             'profile_info' => $profile_info,
@@ -250,24 +262,35 @@ class Settings {
                 ]
             );
 
-            dokan_get_template_part( 'settings/payment', '', $args ); // show the payment method list template
-        } else { // single payment method edit page arguments
-            $method = dokan_withdraw_get_method( $method_key ); // get the single payment method for the $method_key
-            $args   = array_merge(
-                $args,
+            // Show the payment method list template
+            dokan_get_template_part( 'settings/payment', '', $args );
+            return;
+        }
+
+        // Get the single payment method for the $method_key
+        $method = dokan_withdraw_get_method( $method_key );
+        $args   = array_merge(
+            $args,
+            [
+                'method'     => $method,
+                'method_key' => $method_key,
+            ]
+        );
+
+        if ( empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
                 [
-                    'method'     => $method,
-                    'method_key' => $method_key,
+                    'deleted' => false,
+                    'message' => __( 'Invalid withdraw method. Please contact site admin', 'dokan-lite' ),
                 ]
             );
-
-            if ( empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
-                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'Invalid withdraw method. Please contact site admin', 'dokan-lite' ) ) );
-                return;
-            }
-
-            dokan_get_template_part( 'settings/payment', 'manage', $args ); // show the single payment method page
+            return;
         }
+
+        // Show the single payment method page
+        dokan_get_template_part( 'settings/payment', 'manage', $args );
     }
 
     /**
@@ -794,34 +817,46 @@ class Settings {
      * @return bool
      */
     public function is_seller_connected( $payment_method_id, $seller_id ) {
-        $connected      = false;
-        $store_settings = get_user_meta( $seller_id, 'dokan_profile_settings', true );
+        $is_connected        = false;
+        $store_settings   = get_user_meta( $seller_id, 'dokan_profile_settings', true );
+        $payment_settings = ! isset( $store_settings['payment'] ) || ! isset( $store_settings['payment'][ $payment_method_id ] ) ? [] : $store_settings['payment'][ $payment_method_id ];
+        $required_fields  = []; // Holds the required fields that should be empty for connection
 
         switch ( $payment_method_id ) {
-            case 'bank': //check if bank is connected to seller
-                $bank_settings   = ( isset( $store_settings['payment'] ) && isset( $store_settings['payment']['bank'] ) ) ? $store_settings['payment']['bank'] : [];
-                $connected       = ! empty( $bank_settings );
-                $optional_fields = [ 'bank_name', 'bank_addr', 'iban', 'swift' ];
-
-                foreach ( $bank_settings as $field => $value ) {
-                    if ( in_array( $field, $optional_fields, true ) ) { // don't check emptyness of $value for optional fields
-                        continue;
-                    }
-
-                    if ( empty( $value ) ) {
-                        $connected = false; // if any of the required fields is empty then seller is not connected
-                        break;
-                    }
-                }
+            case 'bank':
+                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type', 'declaration' ];
                 break;
+
             case 'paypal':
-                $paypal_settings = ( isset( $store_settings['payment'] ) && isset( $store_settings['payment']['paypal'] ) ) ? $store_settings['payment']['paypal'] : [];
+                $required_fields = [ 'email' ];
+                break;
+        }
 
-                if ( isset( $paypal_settings['email'] ) && is_email( $paypal_settings['email'] ) ) {
-                    $connected = true;
+        /**
+         * To allow modifying the required fields for a payment method.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $required_fields
+         * @param string $payment_method_id
+         * @param int    $seller_id
+         */
+        $required_fields = apply_filters( 'dokan_payment_settings_required_fields', $required_fields, $payment_method_id, $seller_id );
+
+        // Check all the required fields have values
+        if ( ! empty( $payment_settings ) ) {
+            $is_connected = true;
+
+            foreach ( $payment_settings as $field => $value ) {
+                if ( ! in_array( $field, $required_fields, true ) ) {
+                    continue;
                 }
 
-                break;
+                if ( empty( $value ) || ( 'email' === $field && ! is_email( $value ) ) ) {
+                    $is_connected = false;
+                    break;
+                }
+            }
         }
 
         /**
@@ -829,11 +864,11 @@ class Settings {
          *
          * @since DOKAN_PRO_SINCE
          *
-         * @param bool   $connected
+         * @param bool   $is_connected
          * @param string $payment_method_id
          * @param int    $seller_id
          */
-        return apply_filters( 'dokan_is_seller_connected_to_payment_method', $connected, $payment_method_id, $seller_id );
+        return apply_filters( 'dokan_is_seller_connected_to_payment_method', $is_connected, $payment_method_id, $seller_id );
     }
 
     /**
