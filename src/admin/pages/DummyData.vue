@@ -39,14 +39,55 @@ export default {
             csvFileUrl: dokan.urls.dummy_data,
             progress: 0,
             dummyData: [],
-            loading: false
+            loading: false,
+            allVendors: [],
+            allProducts: []
         }
     },
+    created() {
+        this.loadCsvFile();
+    },
     methods: {
-        getCsvFile() {
+        resetDataState() {
+            this.dummyData = [];
+            this.allVendors = [];
+            this.allProducts = [];
+        },
+        loadCsvFile() {
             let self = this;
             self.loading = true;
+            self.resetDataState();
 
+            jQuery.ajax({
+                type: 'GET',
+                url: this.csvFileUrl,
+                data: {},
+                success: function(data){
+                    parse(data, {
+                        header: true,
+                        complete: function (results, file) {
+                            self.loading = false;
+                            self.dummyData = results.data;
+                            self.importCsvFile();
+                        },
+                    });
+                }
+            });
+        },
+
+        importCsvFile(){
+            this.dummyData.forEach( item => {
+                if ( 'vendor' === item.type ) {
+                    this.allVendors.push(this.formatVendorData(item));
+                } else {
+                    this.allProducts.push(this.formatProductData(item));
+                }
+            } );
+
+
+        },
+
+        requestToImport(data){
             jQuery.ajax({
                 xhr: function() {
                     var xhr = new window.XMLHttpRequest();
@@ -61,24 +102,144 @@ export default {
 
                     return xhr;
                 },
-                type: 'GET',
-                url: this.csvFileUrl,
-                data: {},
+                type: 'POST',
+                url: dokan.ajaxurl,
+                data: {
+                    action:'dokan_dummy_data_import',
+                    csv_file_data: data,
+                    'nonce': dokan.nonce,
+                },
                 success: function(data){
-                    parse(data, {
-                        header: true,
-                        complete: function (results, file) {
-                            console.log(results.data);
-
-                            self.loading = false;
-                        },
-                    });
+                    console.log(data);
                 }
             });
+
+            // jQuery.post(dokan.ajaxurl, {
+            //     'action': 'dokan_dummy_data_import',
+            //     'nonce': dokan.nonce,
+            //     'csv_file_data': data
+            // }, function (response, status, xhr) {
+            //     console.log(response, status, xhr);
+            // });
         },
+
         continueBtnHandler() {
-            this.getCsvFile();
+            let vendorData = this.allVendors[0];
+            let data = {
+                vendor_data: vendorData,
+                vendor_products: this.getVendorProducts(vendorData.id)
+            };
+
+            this.requestToImport(data);
         },
+
+        formatVendorData(data) {
+            delete( data.sku );
+            delete( data.status );
+            delete( data.catalog_visibility );
+            delete( data.short_description );
+            delete( data.date_on_sale_from );
+            delete( data.date_on_sale_to );
+            delete( data.tax_status );
+            delete( data.tax_class );
+            delete( data.stock_status );
+            delete( data.manage_stock );
+            delete( data.stock_quantity );
+            delete( data.children );
+            delete( data.backorders );
+            delete( data.sold_individually );
+            delete( data.reviews_allowed );
+            delete( data.purchase_note );
+            delete( data.sale_price );
+            delete( data.regular_price );
+            delete( data.category_ids );
+            delete( data.tag_ids );
+            delete( data.shipping_class_id );
+            delete( data.raw_image_id );
+            delete( data.raw_gallery_image_ids );
+            delete( data.download_limit );
+            delete( data.download_expiry );
+            delete( data.parent_id );
+            delete( data.grouped_products );
+            delete( data.upsell_ids );
+            delete( data.cross_sell_ids );
+            delete( data.product_url );
+            delete( data.button_text );
+            delete( data.menu_order );
+            delete( data.virtual );
+            delete( data.downloadable );
+            delete( data.status );
+            delete( data.attribute_1_name );
+            delete( data.attribute_1_value );
+            delete( data.attribute_1_visible );
+            delete( data.attribute_1_global );
+            delete( data.attribute_2_name );
+            delete( data.attribute_2_value );
+            delete( data.attribute_2_visible );
+            delete( data.attribute_2_global );
+            delete( data._wpcom_is_markdown );
+            delete( data.download1_name );
+            delete( data.download_1_url );
+            delete( data.download_2_name );
+            delete( data.download_2_url );
+            delete( data.vendor );
+
+            return data;
+        },
+        formatProductData(data) {
+            delete( data.email );
+            delete( data.password );
+            delete( data.store_name );
+            delete( data.social );
+            delete( data.payment );
+            delete( data.phone );
+            delete( data.show_email );
+            delete( data.address );
+            delete( data.location );
+            delete( data.banner );
+            delete( data.icon );
+            delete( data.gravatar );
+            delete( data.show_more_tpab );
+            delete( data.show_ppp );
+            delete( data.enable_tnc );
+            delete( data.store_tnc );
+            delete( data.show_min_order_discount );
+            delete( data.store_seo );
+            delete( data.dokan_store_time );
+            delete( data.enabled );
+            delete( data.trusted );
+
+            data.raw_attributes = [
+                {
+                    name: data.attribute_1_name,
+                    value: data.attribute_1_value.split(','),
+                    visible: data.attribute_1_visible,
+                    taxonomy: data.attribute_1_global,
+                },
+                {
+                    name: data.attribute_2_name,
+                    value: data.attribute_2_value.split(','),
+                    visible: data.attribute_2_visible,
+                    taxonomy: data.attribute_2_global,
+                },
+            ];
+
+            delete( data.attribute_1_name );
+            delete( data.attribute_1_value );
+            delete( data.attribute_1_visible );
+            delete( data.attribute_1_global );
+            delete( data.attribute_2_name );
+            delete( data.attribute_2_value );
+            delete( data.attribute_2_visible );
+            delete( data.attribute_2_global );
+
+            return data;
+        },
+        getVendorProducts(vendorId) {
+            return this.allProducts.filter( function (item) {
+                return item.vendor == vendorId
+            } );
+        }
     },
 }
 </script>
