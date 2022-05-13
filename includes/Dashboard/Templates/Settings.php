@@ -817,7 +817,7 @@ class Settings {
      * @return bool
      */
     public function is_seller_connected( $payment_method_id, $seller_id ) {
-        $is_connected        = false;
+        $is_connected     = false;
         $store_settings   = get_user_meta( $seller_id, 'dokan_profile_settings', true );
         $payment_settings = ! isset( $store_settings['payment'] ) || ! isset( $store_settings['payment'][ $payment_method_id ] ) ? [] : $store_settings['payment'][ $payment_method_id ];
         $required_fields  = []; // Holds the required fields that should be empty for connection
