@@ -204,7 +204,7 @@ class Settings {
             return;
         }
 
-        $payment_method_ids = array_keys( $payment_methods );
+        $payment_method_ids = array_values( $payment_methods );
 
         $seller_id = dokan_get_current_user_id();
 
