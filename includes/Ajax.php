@@ -776,11 +776,7 @@ class Ajax {
 
             $customer = new WC_Customer( $id );
             /* translators: 1: user display name 2: user ID 3: user email */
-            $found_customers[ $id ] = sprintf(
-                /* translators: 1. Customer name, 2. Customer ID, 3: Customer email */
-                esc_html__( '%1$s', 'dokan-lite' ),
-                $customer->get_first_name() . ' ' . $customer->get_last_name()
-            );
+            $found_customers[ $id ] = $customer->get_first_name() . ' ' . $customer->get_last_name();
         }
 
         wp_send_json( apply_filters( 'dokan_json_search_found_customers', $found_customers ) );
@@ -855,7 +851,7 @@ class Ajax {
         $parent_url = wp_get_attachment_url( $parent->ID );
         $url        = str_replace( basename( $parent_url ), basename( $cropped ), $parent_url );
 
-        $size       = @getimagesize( $cropped );
+        $size       = @getimagesize( $cropped );  // phpcs:ignore   WordPress.PHP.NoSilencedErrors.Discouraged
         $image_type = ( $size ) ? $size['mime'] : 'image/jpeg';
 
         $object = [
