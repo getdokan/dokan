@@ -2772,29 +2772,6 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
 }
 
 /**
- * Validation add for product price
- *
- * @param array $errors
- * @return array $errors 
- */
-function dokan_can_add_product_validation_customized( $errors ) {
-  $postdata       = wp_unslash( $_POST );
-  $_regular_price = absint( sanitize_text_field( $postdata['_regular_price'] ) );
-  if ( isset( $postdata['_regular_price'] ) && empty( $_regular_price ) && ! in_array( 'Product price is required' , $errors ) ) {
-      $errors[] = 'Product price is required';
-  }
-  return $errors;
-}
-add_filter( 'dokan_can_add_product', 'dokan_can_add_product_validation_customized', 35, 1 );
-add_filter( 'dokan_can_edit_product', 'dokan_can_add_product_validation_customized', 35, 1 );
-function dokan_new_product_popup_validation_customized( $errors, $data ) {
-  if ( isset( $data['_regular_price'] ) && ! $data['_regular_price'] ) {
-    return new WP_Error( 'no-price', __( 'Product price is required', 'dokan-lite' ) );
-  }
-}
-add_filter( 'dokan_new_product_popup_args', 'dokan_new_product_popup_validation_customized', 35, 2 );
-
-/**
  * Calculate category wise commission type for given product
  *
  * @since 2.6.9
