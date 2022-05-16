@@ -669,6 +669,71 @@ class Vendor {
     }
 
     /**
+     * Get vendor used terms list.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     * @param $taxonomy
+     *
+     * @return array|mixed
+     */
+    public function get_vendor_used_terms_list( $vendor_id, $taxonomy ){
+        $transient_group = "seller_taxonomy_widget_data_{$this->get_id()}";
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'product_taxonomy_'. $taxonomy .'_' . wpml_get_current_language() : 'product_taxonomy_'. $taxonomy;
+
+        // get the author's posts
+        $products = $this->get_published_products();
+        if ( empty( $products ) ) {
+            return [];
+        }
+
+        $author_terms = Cache::get_transient( $transient_key, $transient_group );
+
+        if ( false !== $author_terms ) {
+            return $author_terms;
+        }
+
+        $author_terms = [];
+        //loop over the posts and collect the terms
+        $category_index = [];
+        foreach ( $products as $product ) {
+            $terms = get_the_terms( $product, $taxonomy );
+            if ( ! $terms || is_wp_error( $terms ) ) {
+                continue;
+            }
+
+            foreach ( $terms as $term ) {
+                $args = [
+                    'nopaging' => true,
+                    'post_type' => 'product',
+                    'author' => $vendor_id,
+                    'tax_query' => [
+                        [
+                            'taxonomy' => $taxonomy,
+                            'field' => 'slug',
+                            'terms' => $term
+                        ],
+                    ],
+                    'fields' => 'ids'
+                ];
+
+                $all_posts = get_posts( $args );
+
+                if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                    $term->count  = count( $all_posts );
+                    $category_index[] = $term->term_id;
+                    $author_terms[]   = $term;
+                }
+            }
+        }
+
+//        Cache::set_transient( $transient_key, $author_terms, $transient_group );
+
+        return $author_terms;
+    }
+
+    /**
      * Get vendor orders
      *
      * @since 3.0.0
