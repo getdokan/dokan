@@ -851,7 +851,7 @@ class Ajax {
         $parent_url = wp_get_attachment_url( $parent->ID );
         $url        = str_replace( basename( $parent_url ), basename( $cropped ), $parent_url );
 
-        $size       = @getimagesize( $cropped );  // phpcs:ignore   WordPress.PHP.NoSilencedErrors.Discouraged
+        $size       = @getimagesize( $cropped );   // phpcs:ignore   WordPress.PHP.NoSilencedErrors.Discouraged
         $image_type = ( $size ) ? $size['mime'] : 'image/jpeg';
 
         $object = [
