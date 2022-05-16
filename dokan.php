@@ -7,7 +7,7 @@
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
- * WC requires at least: 3.0
+ * WC requires at least: 5.0.0
  * WC tested up to: 6.4.1
  * Domain Path: /languages/
  * License: GPL2
@@ -70,7 +70,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    private $min_php = '5.6.0';
+    private $min_php = '7.0';
 
     /**
      * Holds various class instances

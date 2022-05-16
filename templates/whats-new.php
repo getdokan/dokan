@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.5.0',
+        'released' => '2022-05-16',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new product attributes widget, by which users/customers will be able to search products by vendors used attributes.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed vendor store settings page phone number validation js console error.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Payment settings page 404 if dashboard url slug is changed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.4.3',
         'released' => '2022-04-26',
         'changes'  => [

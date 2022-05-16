@@ -4,9 +4,9 @@ Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 4.4
 Tested up to: 5.9.3
-WC requires at least: 3.0
+WC requires at least: 5.0.0
 WC tested up to: 6.4.1
-Requires PHP: 5.6
+Requires PHP: 7.0
 Stable tag: 3.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
