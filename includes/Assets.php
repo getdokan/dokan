@@ -623,6 +623,9 @@ class Assets {
             ],
         ];
 
+        wp_enqueue_style( 'dokan-date-range-picker' );
+        wp_enqueue_script( 'dokan-date-range-picker' );
+
         wp_localize_script( 'dokan-date-range-picker', 'dokan_daterange_i18n', $daterange_localize_data );
     }
 
@@ -687,8 +690,6 @@ class Assets {
             ) {
                 wp_enqueue_style( 'dokan-timepicker' );
             }
-
-            wp_enqueue_style( 'dokan-date-range-picker' );
         }
 
         if ( DOKAN_LOAD_SCRIPTS ) {
@@ -733,7 +734,6 @@ class Assets {
 
             wp_enqueue_script( 'wc-password-strength-meter' );
             wp_enqueue_script( 'dokan-script' );
-            wp_enqueue_script( 'dokan-date-range-picker' );
         }
 
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
