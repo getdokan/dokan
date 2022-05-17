@@ -21,7 +21,7 @@
 
                 // If dokan pro doesn't exists then get single item.
                 if ( ! dokan()->is_pro_exists() ) {
-                    $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : [];
+                    $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? [ $opening_times[0] ] : [];
                 }
 
                 $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
