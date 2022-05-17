@@ -215,6 +215,17 @@ class VendorDashboardController extends \WP_REST_Controller {
                         'function' => 'SUM',
                         'name'     => 'total_sales',
                     ),
+                    '_qty' => array(
+                        'type'            => 'order_item_meta',
+                        'order_item_type' => 'line_item',
+                        'function'        => 'SUM',
+                        'name'            => 'total_products'
+                    ),
+                    'net_amount' => array(
+                        'type'     => 'dokan_orders',
+                        'function' => 'SUM',
+                        'name'     => 'total_earnings',
+                    ),
                     'ID' => array(
                         'type'     => 'post_data',
                         'function' => 'COUNT',
@@ -250,11 +261,14 @@ class VendorDashboardController extends \WP_REST_Controller {
             $key = array_search( $post_date, array_column( $order_report_data, 'post_date' ), true );
 
             if ( false === $key ) {
-                $data[] = array(
-                    'post_date'    => $post_date,
-                    'total_sales'  => 0,
-                    'total_orders' => 0,
-                );
+                $sales_item = new \stdClass();
+                $sales_item->post_date      = $post_date;
+                $sales_item->total_sales    = 0;
+                $sales_item->total_orders   = 0;
+                $sales_item->total_earnings = 0;
+                $sales_item->total_products = 0;
+
+                $data[] = $sales_item;
             } else {
                 $data[] = $order_report_data[ $key ];
             }
