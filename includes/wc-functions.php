@@ -239,14 +239,14 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         // Update price if on sale
         if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
-        } elseif ( '' !== $sale_price && $date_from && strtotime( $date_from ) <= strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+        } elseif ( '' !== $sale_price && $date_from && strtotime( $date_from ) <= strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
         } else {
             update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         }
 
         //update product price if date to is smaller than current date
-        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', dokan_current_datetime()->getTimestamp() ) ) {
             update_post_meta( $post_id, '_price', $regular_price );
         }
     }
@@ -503,7 +503,7 @@ function dokan_seller_displayname( $display_name ) {
     return $display_name;
 }
 
-//add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
+//end add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
 
 /**
  * Get featured products
@@ -1268,4 +1268,4 @@ function send_email_for_order_cancellation( $recipient, $order ) {
     return $recipient;
 }
 
-add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 2);
+add_filter( 'woocommerce_email_recipient_cancelled_order', 'send_email_for_order_cancellation', 10, 2 );
