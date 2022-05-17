@@ -484,23 +484,39 @@
             dokan_address_select.init();
 
             $('#setting_phone').on( 'keydown', function(e) {
-                // Allow: backspace, delete, tab, escape, enter and .
-                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
-                     // Allow: Ctrl+A
+                let cKey     = 67,
+                    vKey     = 86,
+                    cmdKey   = 91,
+                    ctrlKey  = 17,
+                    ctrlDown = false;
+
+                if (e.keyCode === ctrlKey || e.keyCode === cmdKey) {
+                    ctrlDown = true;
+                }
+
+                if (
+                    // Allow: backspace, delete, tab, escape, enter etc.
+                    $.inArray(e.keyCode, [46, 48, 53, 57, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+                    // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     //Allow Ctrl+v
                     (e.keyCode === vKey && ctrlDown) ||
                     // Allow: Ctrl+c
                     (e.keyCode === cKey && ctrlDown) ||
-                     // Allow: home, end, left, right
-                    (e.keyCode >= 35 && e.keyCode <= 39)) {
-                         // let it happen, don't do anything
+                    // Allow: home, end, left, right.
+                    (e.keyCode >= 35 && e.keyCode <= 39)
+                ) {
+                    // Let it happen, don't do anything.
                     return;
                 }
 
-                // Ensure that it is a number and stop the keypress
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
+                if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
+                    return;
+                }
+
+                // Ensure that it is a number and stop the keypress.
+                if ( isNaN( Number(e.key) ) ) {
+                    e.preventDefault(); 
                 }
             });
         });
