@@ -25,6 +25,7 @@ class MyOrders extends DokanShortcode {
         wp_enqueue_style( 'dokan-date-range-picker' );
         wp_enqueue_script( 'dokan-date-range-picker' );
         wp_enqueue_script( 'dokan-tooltip' );
+        wp_enqueue_script( 'jquery-ui-datepicker' );
 
         $page       = empty( $_GET['pagenum'] ) ? 1 : (int) sanitize_text_field( wp_unslash( $_GET['pagenum'] ) );
         $limit      = 20;
