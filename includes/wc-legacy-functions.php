@@ -13,7 +13,7 @@
  * @hooked woocommerce_checkout_update_order_meta - 10
  */
 function dokan_create_sub_order( $parent_order_id ) {
-    if ( get_post_meta( $parent_order_id, 'has_sub_order' ) == true ) {
+    if ( get_post_meta( $parent_order_id, 'has_sub_order' ) === true ) {
         $args = array(
             'post_parent' => $parent_order_id,
             'post_type'   => 'shop_order',
@@ -31,7 +31,7 @@ function dokan_create_sub_order( $parent_order_id ) {
     $sellers              = dokan_get_sellers_by( $parent_order_id );
 
     // return if we've only ONE seller
-    if ( count( $sellers ) == 1 ) {
+    if ( count( $sellers ) === 1 ) {
         $temp = array_keys( $sellers );
         $seller_id = reset( $temp );
         wp_update_post(
@@ -63,6 +63,7 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
     $order_data = apply_filters(
         'woocommerce_new_order_data', array(
 			'post_type'     => 'shop_order',
+            /* translators: %s: search term */
 			'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan-lite' ), strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan-lite' ) ) ),
 			'post_status'   => 'wc-pending',
 			'ping_status'   => 'closed',
@@ -76,7 +77,8 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
     $order_id = wp_insert_post( $order_data );
 
     if ( $order_id && ! is_wp_error( $order_id ) ) {
-        $order_total = $order_tax = 0;
+        $order_total = 0;
+        $order_tax = 0;
         $product_ids = array();
 
         do_action( 'woocommerce_new_order', $order_id );
