@@ -75,6 +75,9 @@ module.exports = function(grunt) {
           ],
           '<%= dirs.js %>/dokan-maps-compat.js': [
             '<%= dirs.devJsSrc %>/dokan-maps-compat.js'
+          ],
+          '<%= dirs.js %>/my-orders.js': [
+            '<%= dirs.devJsSrc %>/my-orders.js'
           ]
         }
       },
