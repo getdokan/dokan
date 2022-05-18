@@ -1,4 +1,4 @@
-; (function ($) {
+; ( function( $ ) {
     let modal          = $( '#dokan-single-category-modal' );
     let loader         = $( '#dokan-single-categories-loader' );
     let searchRes      = $( '#dokan-cat-search-res' );
@@ -14,10 +14,10 @@
 
     var SingleCategory = {
 
-        init: function () {
-            $('#dokan-single-categories-loader img').attr( 'src', dokan.ajax_loader );
+        init: function() {
+            $( '#dokan-single-categories-loader img' ).attr( 'src', dokan.ajax_loader );
 
-            $('body').on( 'click', '.dokan-single-category-li', function () {
+            $( 'body' ).on( 'click', '.dokan-single-category-li', function() {
                 let { catlevel, termId, name, haschild } = $( this ).data();
                 selectedCatId = termId;
 
@@ -25,12 +25,12 @@
                 SingleCategory.loadChildCategories( catlevel, termId, name, haschild );
             } );
 
-            $('body').on( 'click', '.dokan-cat-search-res-li', function () {
+            $( 'body' ).on( 'click', '.dokan-cat-search-res-li', function() {
                 let { termid, index, name } = $( this ).data();
                 SingleCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[index] );
             } );
 
-            $('body').on( 'keyup', '#dokan-single-cat-search-input', function () {
+            $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', function() {
                 let inputText = $( this ).val();
                 $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
@@ -43,7 +43,7 @@
                 }
             } );
 
-            $( "#dokan-single-categories" ).scroll(function () {
+            $( '#dokan-single-categories' ).scroll(function() {
                 let totalScrollable = $( '#dokan-single-categories' ).get(0).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
                 let left = $( this ).scrollLeft();
                 let right = totalScrollable - left;
@@ -52,22 +52,22 @@
                 SingleCategory.showIndicators( rightIndicator, right );
             } );
 
-            $( 'body' ).on( 'click', '.dokan-single-categories-right-box', function () {
+            $( 'body' ).on( 'click', '.dokan-single-categories-right-box', function() {
                 SingleCategory.indicatorScrollTo();
             } );
 
-            $( 'body' ).on( 'click', '.dokan-single-categories-left-box', function () {
+            $( 'body' ).on( 'click', '.dokan-single-categories-left-box', function() {
                 SingleCategory.indicatorScrollTo(false);
             } );
 
-            $( 'body' ).on( 'click', '.dokan-single-cat-select-btn', function () {
+            $( 'body' ).on( 'click', '.dokan-single-cat-select-btn', function() {
                 SingleCategory.setCatName( SingleCategory.getSelectedLabel() );
                 SingleCategory.setCatId( selectedCatId );
                 SingleCategory.hideCategoryModal();
             } );
         },
 
-        setCatUiBasedOnOneCat: function ( catId, catIndex, category ) {
+        setCatUiBasedOnOneCat: function( catId, catIndex, category ) {
             SingleCategory.disableDoneBtn( category.has_child );
 
             selectedCatId  = catId;
@@ -350,10 +350,10 @@
     };
 
     // On DOM ready.
-    $(function () {
+    $( function() {
         SingleCategory.init();
 
-        $( 'body' ).on( 'click', '#dokan-category-open-modal', function () {
+        $( 'body' ).on( 'click', '#dokan-category-open-modal', function() {
             inputHolder   = $( this ).data( 'dokansclevel' );
             let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
 
@@ -368,16 +368,16 @@
             }
         } );
 
-        $( 'body' ).on( 'click', '#dokan-category-close-modal', function () {
+        $( 'body' ).on( 'click', '#dokan-category-close-modal', function() {
             SingleCategory.hideCategoryModal();
         } );
 
-        $( 'body' ).on( 'click', '.dokan-single-cat-add-btn', function () {
+        $( 'body' ).on( 'click', '.dokan-single-cat-add-btn', function() {
             SingleCategory.addANewCatBox();
         } );
 
-        $( 'body' ).on( 'click', '.dokan-select-single-category-remove-container', function () {
+        $( 'body' ).on( 'click', '.dokan-select-single-category-remove-container', function() {
             $( this ).closest( ".dokan-select-single-category-container" )[0].remove();
         } );
     });
-})(jQuery);
+})( jQuery );
