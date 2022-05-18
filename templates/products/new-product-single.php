@@ -276,9 +276,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         empty( $old_parent ) ? $old_parent = $term_id : '';
 
                                                         if( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < sizeof( $all_ancestors ) ) {
-                                                            $all_parents[ $old_parent ]['size'] = sizeof( $all_ancestors );
+                                                            $all_parents[ $old_parent ]['size']   = sizeof( $all_ancestors );
                                                             $all_parents[ $old_parent ]['parent'] = $old_parent;
-                                                            $all_parents[ $old_parent ]['child'] = $term_id;
+                                                            $all_parents[ $old_parent ]['child']  = $term_id;
                                                         }
                                                     }
 
@@ -295,7 +295,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                 $chosen_cat = [ reset( $chosen_cat ) ];
                                             }
 
-                                            dokan_get_template_part('products/dokan-category-header-ui', '', array( 'terms' => $terms, 'chosen_cat' => $chosen_cat ) );
+                                            dokan_get_template_part( 'products/dokan-category-header-ui', '', array( 'terms' => $terms, 'chosen_cat' => $chosen_cat ) );
                                         ?>
 
                                     <div class="dokan-form-group">

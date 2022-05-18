@@ -266,7 +266,7 @@ class Products {
                 }
             }
 
-            if ( ! isset( $postdata['chosen_product_cat'] ) && empty( $postdata['chosen_product_cat'] ) ) {
+            if ( empty( $postdata['chosen_product_cat'] ) ) {
                 $errors[] = __( 'Please select a category', 'dokan-lite' );
             }
 
@@ -300,14 +300,14 @@ class Products {
 
                     /** set product category * */
                     if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
-                        $category       = (int) $postdata['product_cat'];
+                        $category       = absint( $postdata['product_cat'] );
                         $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                         $all_categories = wp_parse_args( $all_categories, $category );
 
                         $cat_ids = array_map( 'absint', (array) $all_categories );
                         wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
                     } else {
-                        if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
+                        if ( ! empty( $postdata['product_cat'] ) ) {
                             $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
                             wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
                         }
@@ -492,7 +492,7 @@ class Products {
 
             /** set product category * */
             if ( 'single' == dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) ) {
-                $category       = $postdata['product_cat'];
+                $category       = absint( $postdata['product_cat'] );
                 $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                 $all_categories = wp_parse_args( $all_categories, $category );
 
@@ -554,48 +554,47 @@ class Products {
      */
     public function load_add_category_modal() {
         /**
-         * Checking if current page is dokan dashboard.
-         * And
-         * Checking if it is a dokan add product page.
-         * Or
-         * Checking it is a edit page or product page.
+         * Checking if dokan dashboard or add product page or product edit page or product list.
+         * Because without those page we don't need to load category modal.
          */
-        if ( 'dashboard' === get_query_var('pagename','dokan-not-dashboard-page') && ( 'dokan-not-add-product-page' !== get_query_var( 'new-product', 'dokan-not-add-product-page' ) || 'dokan-not-products-page' != get_query_var( 'products', 'dokan-not-products-page' ) ) ) {
+        if ( 'dashboard' === get_query_var( 'pagename', 'dokan-not-dashboard-page' ) && ( 'dokan-not-add-product-page' !== get_query_var( 'new-product', 'dokan-not-add-product-page' ) || 'dokan-not-products-page' != get_query_var( 'products', 'dokan-not-products-page' ) ) ) {
             wp_enqueue_style( 'dokan-single-category-ui-css' );
-
-            $is_single = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false;
 
             $args = array(
                 'taxonomy'     => 'product_cat',
                 'orderby'      => 'name',
-                'show_count'   => 1,      // 1 for yes, 0 for no
-                'pad_counts'   => 1,      // 1 for yes, 0 for no
-                'hierarchical' => 1,      // 1 for yes, 0 for no
+                'show_count'   => 1,
+                'pad_counts'   => 1,
+                'hierarchical' => 1,
                 'title_li'     => '',
                 'hide_empty'   => 0,
             );
             $all_categories = get_categories( $args );
 
+            /**
+             * If every single category has any sub category we are setting a variable has_child true/false.
+             * And finding all parents of a category from $all_categories array and setting them in a variable parents.
+             */
             foreach ( $all_categories as $key => $value ) {
                 $children = get_terms( 'product_cat', array(
-                    'parent'    => $value->term_id,
-                    'hide_empty' => false
+                    'parent'     => $value->term_id,
+                    'hide_empty' => false,
                 ) );
 
-                $children ? $all_categories[$key]->has_child = true : $all_categories[$key]->has_child = false;
+                $children ? $all_categories[ $key ]->has_child = true : $all_categories[ $key ]->has_child = false;
                 $parents = [];
-                $parents = $this->dokan_get_single_cat_parents( $parents, $all_categories, $value, $key );
-                $all_categories[$key]->parents = array_reverse( $parents );
+                $parents = $this->dokan_get_category_parents( $parents, $all_categories, $value, $key );
+                $all_categories[ $key ]->parents = array_reverse( $parents );
             }
 
             $data = [
                 'categories' => $all_categories,
-                'is_single'  => $is_single,
+                'is_single'  => dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false,
             ];
 
             wp_localize_script( 'dokan-script', 'dokan_product_category_data', $data );
 
-            dokan_get_template_part('products/dokan-category-ui', '', array() );
+            dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }
     }
 
@@ -611,11 +610,11 @@ class Products {
      *
      * @return array
      */
-    private function dokan_get_single_cat_parents ( $parents, $all_categories, $value, $key ) {
+    private function dokan_get_category_parents ( $parents, $all_categories, $value, $key ) {
         foreach ( $all_categories as $category ) {
             if ( $category->term_id === $value->category_parent && $value->category_parent !== 0 ) {
                 array_push( $parents, $category );
-                $parents = $this->dokan_get_single_cat_parents( $parents, $all_categories, $category, $key );
+                $parents = $this->dokan_get_category_parents( $parents, $all_categories, $category, $key );
             }
         }
 
