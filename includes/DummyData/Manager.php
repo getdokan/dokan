@@ -71,13 +71,24 @@ class Manager extends \WC_Product_Importer {
 
         $current_vendor = dokan()->vendor->create($data);
         add_user_meta( $current_vendor->id, 'dokan_dummy_data', true, true );
+
         return $current_vendor;
     }
 
+    /**
+     * Creates dummy vendors and products.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     * @param array $products
+     *
+     * @return void
+     */
     public function create_dummy_products_for_vendor( $vendor_id, $products ) {
         foreach ( $products as $product_key => $product ) {
-            $products[$product_key]['category_ids'] = $this->formate_product_categories_or_tags( $product, 'product_cat', 'category_ids' );
-            $products[$product_key]['tag_ids'] = $this->formate_product_categories_or_tags( $product, 'product_tag', 'tag_ids' );
+            $products[$product_key]['category_ids']          = $this->formate_product_categories_or_tags( $product, 'product_cat', 'category_ids' );
+            $products[$product_key]['tag_ids']               = $this->formate_product_categories_or_tags( $product, 'product_tag', 'tag_ids' );
             $products[$product_key]['raw_gallery_image_ids'] = $this->formate_string_by_separator( $product['raw_gallery_image_ids'] );
         }
 
@@ -98,7 +109,7 @@ class Manager extends \WC_Product_Importer {
      */
     private function formate_product_categories_or_tags($value, $taxonomy, $category_or_tag) {
         $all_category_or_tags = $this->formate_string_by_separator( $value[$category_or_tag] );
-        $all_ids = [];
+        $all_ids              = [];
         foreach ( $all_category_or_tags as $item ) {
             $term = term_exists( $item, $taxonomy );
 
@@ -134,7 +145,7 @@ class Manager extends \WC_Product_Importer {
      *
      * Do not import products with IDs or SKUs that already exist if option
      * update existing is false, and likewise, if updating products, do not
-     * process rows which do not exist if an ID/SKU is provided.
+     * process rows which do not exist if an SKU is provided.
      *
      * @since DOKAN_SINCE
      *

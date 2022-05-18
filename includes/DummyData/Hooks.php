@@ -20,6 +20,13 @@ class Hooks {
         add_action( 'wp_ajax_dokan_dummy_data_clear', [ $this, 'clear_dummy_data' ] );
     }
 
+    /**
+     * Imports dummy vendors and products.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     public function import_dummy_data() {
         $_post_data = wp_unslash( $_POST );
 
