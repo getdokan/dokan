@@ -34,7 +34,7 @@
                 let inputText = $( this ).val();
                 $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
-                if (inputText.length > 0) {
+                if ( inputText.length > 0 ) {
                     SingleCategory.loadingCategories();
                     SingleCategory.hideSearchRes(false);
                     SingleCategory.doSearchCates( inputText );
@@ -43,7 +43,7 @@
                 }
             } );
 
-            $( '#dokan-single-categories' ).scroll(function() {
+            $( '#dokan-single-categories' ).scroll( function() {
                 let totalScrollable = $( '#dokan-single-categories' ).get(0).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
                 let left = $( this ).scrollLeft();
                 let right = totalScrollable - left;
@@ -82,7 +82,7 @@
             let allUl = [ ...allParents ];
             let selectedInUls = [ ...allParents ];
 
-            allUl.unshift(0);
+            allUl.unshift( 0 );
             selectedInUls.push( Number( catId ) );
 
             let UL = allUl.map( ( id, index ) => {
@@ -180,8 +180,7 @@
             let html = '';
 
             html = searchResultState.map((element, index) => {
-                return `
-                    <li data-name="${ element.name }" data-termid="${ element.term_id }" data-index="${ index }" class="dokan-cat-search-res-li">
+                return `<li data-name="${ element.name }" data-termid="${ element.term_id }" data-index="${ index }" class="dokan-cat-search-res-li">
                         <div class="dokan-cat-search-res-item">
                             ${ element.name }
                         </div>
@@ -197,8 +196,7 @@
             let html = "";
 
             html = parents.map( ( element, index ) => {
-                return `
-                    <span class="dokan-cat-search-res-suggestion">${ element.name }</span>
+                return `<span class="dokan-cat-search-res-suggestion">${ element.name }</span>
                     <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>`;
             }).join('');
 
@@ -212,10 +210,9 @@
             let index = fullText.toLowerCase().indexOf( text );
 
             if ( index >= 0 ) {
-                return `
-                        <span>${ fullText.substring( 0, index ) }</span>
-                        <span class='dokan-cat-highlight'>${ fullText.substring( index, index + text.length ) }</span>
-                        <span>${ fullText.substring( index + text.length ) }</span>`;
+                return `<span>${ fullText.substring( 0, index ) }</span>
+                    <span class='dokan-cat-highlight'>${ fullText.substring( index, index + text.length ) }</span>
+                    <span>${ fullText.substring( index + text.length ) }</span>`;
             }
         },
 
@@ -269,8 +266,7 @@
             let html = '';
 
             element.forEach( ( category, index ) => {
-                html += `
-                    <li data-haschild="${ category.has_child }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${ category.has_child ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
+                html += `<li data-haschild="${ category.has_child }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${ category.has_child ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
                         <span class="dokan-single-category">${ category.name }</span>
                         <span class="dokan-single-category-icon"><i class="fas fa-chevron-right"></i></span>
                     </li>`;
@@ -291,7 +287,7 @@
         },
 
         scrollTo: ( to = 0 ) => {
-            $('#dokan-single-categories').animate( { scrollLeft: 300 * to }, 800 );
+            $( '#dokan-single-categories' ).animate( { scrollLeft: 300 * to }, 800 );
         },
 
         indicatorScrollTo: ( left = true ) => {
@@ -359,7 +355,7 @@
 
             SingleCategory.showCategoryModal();
 
-            if (chosenCat.length > 0) {
+            if ( chosenCat.length > 0 ) {
                 let catId    = chosenCat.val();
                 let catIndex = SingleCategory.findCategory( catId );
                 let category = dokan_product_category_data.categories[ catIndex ];
@@ -377,7 +373,7 @@
         } );
 
         $( 'body' ).on( 'click', '.dokan-select-single-category-remove-container', function() {
-            $( this ).closest( ".dokan-select-single-category-container" )[0].remove();
+            $( this ).closest( '.dokan-select-single-category-container' )[0].remove();
         } );
     });
 })( jQuery );
