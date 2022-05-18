@@ -1967,4 +1967,98 @@
             background: #555;
         }
     }
+
+    @media only screen and (max-width: 430px) {
+        .field_contents {
+            padding: 14px 14px 18px 14px;
+
+            fieldset {
+                display: block;
+
+                .field_data {
+                    .field_heading {
+                        font-size: 10px;
+                        line-height: 24px;
+                    }
+
+                    .field_desc {
+                        font-size: 8px;
+                    }
+                }
+
+                .field {
+                    margin-top: 15px;
+                    text-align: left;
+
+                    select,
+                    textarea,
+                    input[type=text] {
+                        min-height: 28px;
+                        font-size: 8px;
+                    }
+                }
+
+                .radio_fields {
+                    label {
+                        &:first-child {
+                            display: flex;
+                        }
+                    }
+                }
+            }
+
+            .social_fields {
+                padding: 10px 15px;
+
+                .social_header {
+                    display: block;
+
+                    .social_contents {
+                        display: block;
+
+                        .social_desc {
+                            font-size: 8px;
+                        }
+                    }
+
+                    .expand_btn {
+                        text-align: left;
+                    }
+                }
+
+                .social_info {
+                    .social_html,
+                    .social_text {
+                        padding: 10px;
+
+                        .field_html {
+                            font-size: 10px;
+                            line-height: 20px;
+                        }
+
+                        .field_desc {
+                            font-size: 8px;
+                        }
+
+                        select,
+                        textarea,
+                        input[type=text] {
+                            font-size: 8px;
+                            min-height: 28px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .field {
+            select,
+            textarea,
+            input[type=text] {
+                max-width: 125px !important;
+            }
+        }
+    }
 </style>

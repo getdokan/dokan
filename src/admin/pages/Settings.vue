@@ -941,4 +941,98 @@
             border-radius: 4.46803px;
         }
     }
+
+    @media only screen and (max-width: 430px) {
+        .dokan-settings-wrap {
+            .nav-tab-wrapper {
+                width: 60%;
+                padding: 10px 12px 15px 12px;
+
+                .nav-tab {
+                    padding-left: 10px !important;
+
+                    img {
+                        margin: 3px 8px 0px 4px;
+                    }
+
+                    .nav-content {
+                        .nav-title {
+                            font-size: 7px;
+                        }
+
+                        .nav-description {
+                            font-size: 5px !important;
+                        }
+                    }
+                }
+
+                .nav-tab-active {
+                    &:before {
+                        width: 2px !important;
+                    }
+                }
+            }
+
+            .metabox-holder {
+                width: 40%;
+
+                .settings-header {
+                    display: block;
+
+                    .settings-content {
+                        .settings-title,
+                        .settings-description {
+                            padding-left: 0;
+                        }
+                    }
+
+                    .settings-document-button {
+                        text-align: left;
+                    }
+                }
+            }
+
+            .search-box {
+                .dashicons.dashicons-search {
+                    margin-left: 10px;
+                }
+
+                .dokan-admin-search-settings {
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .dokan-settings-wrap {
+            .nav-tab-wrapper {
+                width: 35% !important;
+
+                .nav-tab {
+                    .nav-content {
+                        .nav-title {
+                            font-size: 10px;
+                        }
+
+                        .nav-description {
+                            font-size: 8px !important;
+                        }
+                    }
+                }
+            }
+
+            .metabox-holder {
+                width: 65%;
+
+                .settings-header {
+                    .settings-content {
+                        .settings-title {
+                            padding-left: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
 </style>
