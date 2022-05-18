@@ -93,7 +93,7 @@ class Settings {
             'due_period' => [
                 'name'    => 'due_period',
                 'label'   => __( 'Grace Period', 'dokan-lite' ),
-                'desc'    => __( 'Maximum Payment Due period in day(s) before selected action is taken. Enter 0 to take actions immediately.', 'dokan-lite' ),
+                'desc'    => __( 'Maximum Payment Due period in day(s) before selected action(s) is/are taken. Enter 0 to take action(s) immediately.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => '0',
                 'max'     => '28',

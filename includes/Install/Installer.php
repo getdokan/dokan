@@ -408,7 +408,7 @@ class Installer {
                     `note` mediumtext DEFAULT NULL,
                     `debit` decimal(19,4) NOT NULL DEFAULT '0.0000',
                     `credit` decimal(19,4) NOT NULL DEFAULT '0.0000',
-                    `trn_date` int(13) UNSIGNED NOT NULL DEFAULT '0',
+                    `trn_date` int(11) UNSIGNED NOT NULL DEFAULT '0',
                     PRIMARY KEY (`id`),
                     KEY `trn_date` (`trn_date`),
                     KEY `vendor_id_trn_date` (`vendor_id`,`trn_date`),
