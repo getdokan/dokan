@@ -615,7 +615,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
     /**
      * Store category menu for a store
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.0
      *
      * @param int    $seller_id
      * @param array  $taxonomy
@@ -702,7 +702,7 @@ function dokan_get_current_term_slug() {
 /**
  * Get chosen taxonomy attributes.
  *
- * @since DOKAN_SINCE
+ * @since 3.5.0
  *
  * @return array
  */

@@ -671,7 +671,7 @@ class Vendor {
     /**
      * Get vendor used terms list.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.0
      *
      * @param $vendor_id
      * @param $taxonomy
