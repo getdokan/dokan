@@ -1,10 +1,10 @@
 ; (function ($) {
-    let modal          = $('#dokan-single-category-modal');
-    let loader         = $('#dokan-single-categories-loader');
-    let searchRes      = $('#dokan-cat-search-res');
-    let searchResUl    = $('#dokan-cat-search-res-ul');
-    let rightIndicator = $('.dokan-single-categories-right');
-    let leftIndicator  = $('.dokan-single-categories-left');
+    let modal          = $( '#dokan-single-category-modal' );
+    let loader         = $( '#dokan-single-categories-loader' );
+    let searchRes      = $( '#dokan-cat-search-res' );
+    let searchResUl    = $( '#dokan-cat-search-res-ul' );
+    let rightIndicator = $( '.dokan-single-categories-right' );
+    let leftIndicator  = $( '.dokan-single-categories-left' );
 
     let categoriesState   = [];
     let searchResultState = [];
@@ -15,24 +15,24 @@
     var SingleCategory = {
 
         init: function () {
-            $('#dokan-single-categories-loader img').attr( "src", dokan.ajax_loader );
+            $('#dokan-single-categories-loader img').attr( 'src', dokan.ajax_loader );
 
             $('body').on( 'click', '.dokan-single-category-li', function () {
-                let { catlevel, termId, name, haschild } = $(this).data();
+                let { catlevel, termId, name, haschild } = $( this ).data();
                 selectedCatId = termId;
 
                 SingleCategory.removeAfterClickedUls( catlevel, termId );
                 SingleCategory.loadChildCategories( catlevel, termId, name, haschild );
-            });
+            } );
 
             $('body').on( 'click', '.dokan-cat-search-res-li', function () {
-                let { termid, index, name } = $(this).data();
+                let { termid, index, name } = $( this ).data();
                 SingleCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[index] );
-            });
+            } );
 
             $('body').on( 'keyup', '#dokan-single-cat-search-input', function () {
-                let inputText = $(this).val();
-                $('#dokan-cat-search-text-limit').html( inputText.length );
+                let inputText = $( this ).val();
+                $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
                 if (inputText.length > 0) {
                     SingleCategory.loadingCategories();
@@ -41,30 +41,30 @@
                 } else {
                     SingleCategory.hideSearchRes();
                 }
-            });
+            } );
 
-            $("#dokan-single-categories").scroll(function () {
-                let totalScrollable = $('#dokan-single-categories').get(0).scrollWidth - $('#dokan-single-categories').innerWidth();
-                let left = $(this).scrollLeft();
+            $( "#dokan-single-categories" ).scroll(function () {
+                let totalScrollable = $( '#dokan-single-categories' ).get(0).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
+                let left = $( this ).scrollLeft();
                 let right = totalScrollable - left;
 
                 SingleCategory.showIndicators( leftIndicator, left );
                 SingleCategory.showIndicators( rightIndicator, right );
-            });
+            } );
 
-            $('body').on( 'click', '.dokan-single-categories-right-box', function () {
+            $( 'body' ).on( 'click', '.dokan-single-categories-right-box', function () {
                 SingleCategory.indicatorScrollTo();
-            });
+            } );
 
-            $('body').on( 'click', '.dokan-single-categories-left-box', function () {
+            $( 'body' ).on( 'click', '.dokan-single-categories-left-box', function () {
                 SingleCategory.indicatorScrollTo(false);
-            });
+            } );
 
-            $('body').on( 'click', '.dokan-single-cat-select-btn', function () {
+            $( 'body' ).on( 'click', '.dokan-single-cat-select-btn', function () {
                 SingleCategory.setCatName( SingleCategory.getSelectedLabel() );
                 SingleCategory.setCatId( selectedCatId );
                 SingleCategory.hideCategoryModal();
-            });
+            } );
         },
 
         setCatUiBasedOnOneCat: function ( catId, catIndex, category ) {
@@ -83,7 +83,7 @@
             let selectedInUls = [ ...allParents ];
 
             allUl.unshift(0);
-            selectedInUls.push( Number(catId) );
+            selectedInUls.push( Number( catId ) );
 
             let UL = allUl.map( ( id, index ) => {
                 return SingleCategory.getCategoriesWithParentId( id, index + 1, selectedInUls[ index ] );
@@ -109,27 +109,27 @@
 
             searchResultState = searchResult;
             SingleCategory.updateSearchResultUi();
-            SingleCategory.loadingCategories(false);
+            SingleCategory.loadingCategories( false );
         },
 
         hideSearchRes: ( status = true ) => {
-            status ? searchRes.addClass('dokan-hide') : searchRes.removeClass('dokan-hide');
+            status ? searchRes.addClass( 'dokan-hide' ) : searchRes.removeClass( 'dokan-hide' );
         },
 
         showIndicators: ( element, scrolled ) => {
-            (scrolled > 5) ? element.removeClass('dokan-hide') : element.addClass('dokan-hide');
+            ( scrolled > 5 ) ? element.removeClass( 'dokan-hide' ) : element.addClass( 'dokan-hide' );
         },
 
         showCategoryModal: () => {
             selectedCatId = '';
             SingleCategory.disableDoneBtn();
-            modal.css('display', 'flex');
+            modal.css( 'display', 'flex' );
             categoriesState = [];
             SingleCategory.loadAllParentCategories();
         },
 
         disableDoneBtn: ( disable = true ) => {
-            $('.dokan-single-cat-select-btn').prop( 'disabled', disable );
+            $( '.dokan-single-cat-select-btn' ).prop( 'disabled', disable );
         },
 
         hideCategoryModal: () => {
@@ -137,14 +137,14 @@
         },
 
         loadingCategories: ( loading = true ) => {
-            loading ? loader.removeClass('dokan-hide') : loader.addClass('dokan-hide');
+            loading ? loader.removeClass( 'dokan-hide' ) : loader.addClass( 'dokan-hide' );
         },
 
         loadAllParentCategories: () => {
             SingleCategory.loadingCategories();
             categoriesState.push( SingleCategory.getCategoriesWithParentId() );
             SingleCategory.updateCategoryUi();
-            SingleCategory.loadingCategories(false);
+            SingleCategory.loadingCategories( false );
         },
 
         getCategoriesWithParentId: ( parentId = 0, level = 1, selectedId = false ) => {
@@ -208,7 +208,7 @@
         },
 
         highlight: ( fullText ) => {
-            let text = $('#dokan-single-cat-search-input').val().toLowerCase();
+            let text = $( '#dokan-single-cat-search-input' ).val().toLowerCase();
             let index = fullText.toLowerCase().indexOf( text );
 
             if ( index >= 0 ) {
@@ -222,16 +222,16 @@
         updateCategoryUi: () => {
             let html = SingleCategory.getCatUlHtml();
 
-            $('#dokan-single-categories').html( html );
+            $( '#dokan-single-categories' ).html( html );
             SingleCategory.updateSelectedLabel();
         },
 
         updateSelectedLabel: () => {
-            $('#dokan-selected-category-span').html( SingleCategory.getSelectedLabel() );
+            $( '#dokan-selected-category-span' ).html( SingleCategory.getSelectedLabel() );
         },
 
         getSelectedLabel: () => {
-            let activatedLi = $('.dokan-single-category-li-active');
+            let activatedLi = $( '.dokan-single-category-li-active' );
             let liLength    = activatedLi.length;
             let ui          = '';
 
@@ -295,7 +295,7 @@
         },
 
         indicatorScrollTo: ( left = true ) => {
-            jQuery("#dokan-single-categories").animate( { scrollLeft: `${ left ? '+' : '-' }=350px` }, 800 );
+            $( '#dokan-single-categories' ).animate( { scrollLeft: `${ left ? '+' : '-' }=350px` }, 800 );
         },
 
         setCatId: ( id ) => {
@@ -312,11 +312,11 @@
                 }).join('');
             }
 
-            $(`.dokan-cih-level-${ inputHolder }`).html( ui );
+            $( `.dokan-cih-level-${ inputHolder }` ).html( ui );
         },
 
         setCatName: ( name ) => {
-            $(`.dokan-ssct-level-${ inputHolder }`).html( name );
+            $( `.dokan-ssct-level-${ inputHolder }` ).html( name );
         },
 
         addANewCatBox: () => {
@@ -336,7 +336,7 @@
                 </div>
                 `;
 
-            $('.dokan-add-new-cat-box').append( html );
+            $( '.dokan-add-new-cat-box' ).append( html );
         },
 
         findCategory: ( id ) => {
@@ -353,9 +353,9 @@
     $(function () {
         SingleCategory.init();
 
-        $('body').on( 'click', '#dokan-category-open-modal', function () {
-            inputHolder   = $(this).data( 'dokansclevel' );
-            let chosenCat = $(this).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
+        $( 'body' ).on( 'click', '#dokan-category-open-modal', function () {
+            inputHolder   = $( this ).data( 'dokansclevel' );
+            let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
 
             SingleCategory.showCategoryModal();
 
@@ -366,18 +366,18 @@
 
                 SingleCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
             }
-        });
+        } );
 
-        $('body').on( 'click', '#dokan-category-close-modal', function () {
+        $( 'body' ).on( 'click', '#dokan-category-close-modal', function () {
             SingleCategory.hideCategoryModal();
-        });
+        } );
 
-        $('body').on( 'click', '.dokan-single-cat-add-btn', function () {
+        $( 'body' ).on( 'click', '.dokan-single-cat-add-btn', function () {
             SingleCategory.addANewCatBox();
-        });
+        } );
 
-        $('body').on( 'click', '.dokan-select-single-category-remove-container', function () {
-            $(this).closest( ".dokan-select-single-category-container" )[0].remove();
-        });
+        $( 'body' ).on( 'click', '.dokan-select-single-category-remove-container', function () {
+            $( this ).closest( ".dokan-select-single-category-container" )[0].remove();
+        } );
     });
 })(jQuery);
