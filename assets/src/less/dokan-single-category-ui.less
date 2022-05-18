@@ -1,78 +1,82 @@
 .dokan-hide {
     display: none !important;
 }
+
 .dokan-new-cat-ui-title {
     margin-bottom: 0;
 }
+
 .dokan-select-single-category-container {
-  display: flex;
+    display: flex;
 
-  &:last-child{
-    margin-bottom: -10px;
-  }
-
-  .dokan-select-single-category {
-      display: flex;
-      justify-content: space-between;
-      padding: 5px;
-      border: 1px solid #EDEDED;
-      cursor: pointer;
-      width: 100%;
-
-      .dokan-select-single-category-title {
-        .dokan-selected-category-icon {
-          font-size: 10px;
-          margin: 0 5px;
-        }
-      }
-  }
-  .dokan-select-single-category-remove-container {
-    margin-top: 5px;
-    .dokan-select-single-category-remove {
-      padding: 7px 10px;
-      cursor: pointer;
-      margin-left: 5px;
-      border: 1px solid #EDEDED;
-      &:hover {
-        background-color: #fa4242;
-        color: #FFF
-      }
+    &:last-child{
+        margin-bottom: -10px;
     }
-  }
+
+    .dokan-select-single-category {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        border: 1px solid #EDEDED;
+        cursor: pointer;
+        width: 100%;
+
+        .dokan-select-single-category-title {
+
+            .dokan-selected-category-icon {
+                font-size: 10px;
+                margin: 0 5px;
+            }
+        }
+    }
+    .dokan-select-single-category-remove-container {
+        margin-top: 5px;
+
+        .dokan-select-single-category-remove {
+            padding: 7px 10px;
+            cursor: pointer;
+            margin-left: 5px;
+            border: 1px solid #EDEDED;
+
+            &:hover {
+                background-color: #fa4242;
+                color: #FFF
+            }
+        }
+    }
 }
 
 .dokan-add-more-single-cat-container {
-  display: flex;
-  .dokan-single-cat-add-btn {
-    cursor: pointer;
-    color: #7F54B3;
+    display: flex;
 
-    &:hover{
-      text-decoration: underline;
+    .dokan-single-cat-add-btn {
+        cursor: pointer;
+        color: #7F54B3;
+
+        &:hover{
+            text-decoration: underline;
+        }
     }
-  }
 }
 
-/* The Modal (background) */
 .dokan-single-category-modal {
-    display: none; /* Hidden by default */
+    display: none;
     justify-content: center;
-    position: fixed; /* Stay in place */
-    z-index: 9999; /* Sit on top */
+    position: fixed;
+    z-index: 9999;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    -webkit-animation-name: fadeIn; /* Fade in the background */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    -webkit-animation-name: fadeIn;
     -webkit-animation-duration: 0.4s;
     animation-name: fadeIn;
     animation-duration: 0.4s;
 }
 
-/* Modal Content */
 .dokan-single-category-modal-content {
     position: fixed;
     bottom: 0;
@@ -87,246 +91,254 @@
     overflow: auto;
 
     .dokan-single-category-modal-body {
-      padding: 2px 16px;
-      border-bottom: 1px solid #E2E2E2;
-      margin-top: 15px;
-      margin-bottom: 15px;
-
-      .dokan-single-categories-container {
-        height: 250px;
-        position: relative;
+        padding: 2px 16px;
+        border-bottom: 1px solid #E2E2E2;
         margin-top: 15px;
         margin-bottom: 15px;
 
-        .dokan-single-categories-arrow {
-          position: absolute;
-          color: white;
-          height: 100%;
-          top: 0;
-          width: 80px;
-          border-radius: 0;
+        .dokan-single-categories-container {
+            height: 250px;
+            position: relative;
+            margin-top: 15px;
+            margin-bottom: 15px;
 
-          >span{
-            background-color: #2271B1;
-            width: 30px;
-            display: block;
-            text-align: center;
-            line-height: 30px;
-            border-radius: 15px;
-            margin-top: 110px;
-          }
-        }
+            .dokan-single-categories-arrow {
+                position: absolute;
+                color: white;
+                height: 100%;
+                top: 0;
+                width: 80px;
+                border-radius: 0;
 
-        .dokan-single-categories-left {
-          background-image: linear-gradient(90deg, white, transparent);
-        }
-        .dokan-single-categories-left-box {
-          float: left;
-          cursor: pointer;
-        }
-        .dokan-single-categories-right-box {
-          float: right;
-          cursor: pointer;
-        }
-        .dokan-single-categories-right {
-          right: 0%;
-          background-image: linear-gradient(270deg, white, transparent);
-        }
-
-        .dokan-single-categories::-webkit-scrollbar {
-          display: none;
-        }
-
-        ::-webkit-scrollbar {
-          margin-left: 5px;
-          width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-          background: #E0E0E0;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #BFBFBF;
-          border-radius: 10px;
-        }
-        &::-webkit-scrollbar-thumb:hover {
-          background: #919191;
-        }
-
-        .dokan-single-categories {
-          height: 100%;
-          background-color: #FFF;
-          display: flex;
-          overflow-x: auto;
-
-          .dokan-single-category-ul {
-            margin: 0 10px 0 0;
-            width: 300px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: black;
-            overflow-y: auto;
-            flex-shrink: 0;
-
-            .dokan-single-category-li {
-              margin: 0 9px 0 0;
-              display: flex;
-              justify-content: space-between;
-              cursor: pointer;
-              padding: 5px;
-              border-radius: 2px;
-              -webkit-border-radius: 2px;
-              -moz-border-radius: 2px;
-              -ms-border-radius: 2px;
-              -o-border-radius: 2px;
-
-              &:hover {
-                background-color: #F9F9F9;
-              }
-
-              .dokan-single-category-icon {
-                opacity: 0;
-                color: #BFBFBF;
-
-                i {
-                  line-height: 25px;
+                >span{
+                    background-color: #2271B1;
+                    width: 30px;
+                    display: block;
+                    text-align: center;
+                    line-height: 30px;
+                    border-radius: 15px;
+                    margin-top: 110px;
                 }
-              }
-
-              &:hover .dokan-single-category {
-                color: #2271B1;
-              }
-          }
-
-          .dokan-cat-has-child {
-            .dokan-single-category-icon {
-              opacity: 1 ;
-            }
-          }
-        }
-
-        .dokan-single-category-li-active {
-          color: #2271B1 !important;
-          background-color: #F9F9F9 !important;
-
-          &.dokan-cat-has-child {
-            .dokan-single-category-icon {
-              opacity: 1 !important;
-              color: #2271B1 !important;
-            }
-          }
-        }
-      }
-
-      .dokan-single-categories-loader {
-        background-color: rgba(255, 255, 255, 0.815);
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: wait;
-        z-index: 3;
-
-        img {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
-
-    .dokan-category-search-container {
-      position: relative;
-
-      .dokan-cat-search-box{
-        display: flex;
-        border: 1px solid #EDEDED;
-        justify-content: space-between;
-        padding: 5px 15px;
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        -ms-border-radius: 3px;
-        -o-border-radius: 3px;
-      }
-
-      .dokan-cat-search-icon {
-        width: 2%;
-      }
-
-      .dokan-cat-search-input {
-        padding: 0 0 0 10px;
-        background-color: white;
-        color: black;
-        border: 0;
-        -webkit-appearance: none;
-        box-sizing: border-box;
-        font-weight: 400;
-        box-shadow: none;
-        outline: none;
-        width: 88%;
-      }
-
-      .dokan-cat-search-text-limit {
-        width: 10%;
-        text-align: right;
-
-        &::before {
-          content: "|";
-          margin-right: 15px;
-        }
-      }
-
-      .dokan-cat-search-res {
-        max-height: 219px;
-        overflow: auto;
-        background: #FFFFFF;
-        border-left: 1px solid #E2E2E2;
-        border-right: 1px solid #E2E2E2;
-        border-bottom: 1px solid #E2E2E2;
-        box-sizing: border-box;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-        border-radius: 0px 0px 3px 3px;
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-
-        .dokan-cat-search-res-ul {
-          margin: 26px 0;
-
-          .dokan-cat-search-res-li {
-            padding: 5px 26px;
-            margin: 5px 0;
-            cursor: pointer;
-
-            &:hover {
-              background: #F9F9F9;
             }
 
-            .dokan-cat-search-res-item {
-                  color: #2271B1;
+            .dokan-single-categories-left {
+                background-image: linear-gradient(90deg, white, transparent);
             }
-            .dokan-cat-search-res-history {
-              color: #ACACAC;
 
-              .dokan-cat-search-res-suggestion-selected {
-                span {
-                  color: #000;
-                  margin: 0;
+            .dokan-single-categories-left-box {
+                float: left;
+                cursor: pointer;
+            }
+
+            .dokan-single-categories-right-box {
+                float: right;
+                cursor: pointer;
+            }
+
+            .dokan-single-categories-right {
+                right: 0%;
+                background-image: linear-gradient(270deg, white, transparent);
+            }
+
+            .dokan-single-categories::-webkit-scrollbar {
+            display: none;
+            }
+
+            ::-webkit-scrollbar {
+                margin-left: 5px;
+                width: 5px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #E0E0E0;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #BFBFBF;
+                border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background: #919191;
+            }
+
+            .dokan-single-categories {
+                height: 100%;
+                background-color: #FFF;
+                display: flex;
+                overflow-x: auto;
+
+                .dokan-single-category-ul {
+                    margin: 0 10px 0 0;
+                    width: 300px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: black;
+                    overflow-y: auto;
+                    flex-shrink: 0;
+
+                    .dokan-single-category-li {
+                        margin: 0 9px 0 0;
+                        display: flex;
+                        justify-content: space-between;
+                        cursor: pointer;
+                        padding: 5px;
+                        border-radius: 2px;
+                        -webkit-border-radius: 2px;
+                        -moz-border-radius: 2px;
+                        -ms-border-radius: 2px;
+                        -o-border-radius: 2px;
+
+                        &:hover {
+                            background-color: #F9F9F9;
+                        }
+
+                        .dokan-single-category-icon {
+                            opacity: 0;
+                            color: #BFBFBF;
+
+                            i {
+                            line-height: 25px;
+                            }
+                        }
+
+                        &:hover .dokan-single-category {
+                            color: #2271B1;
+                        }
+                    }
+
+                    .dokan-cat-has-child {
+
+                        .dokan-single-category-icon {
+                            opacity: 1 ;
+                        }
+                    }
                 }
-              }
 
-              span {
-                margin-right: 5px;
-              }
+                .dokan-single-category-li-active {
+                    color: #2271B1 !important;
+                    background-color: #F9F9F9 !important;
+
+                    &.dokan-cat-has-child {
+                        .dokan-single-category-icon {
+                        opacity: 1 !important;
+                        color: #2271B1 !important;
+                        }
+                    }
+                }
             }
-          }
+
+            .dokan-single-categories-loader {
+                background-color: rgba(255, 255, 255, 0.815);
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: wait;
+                z-index: 3;
+
+                img {
+                width: 20px;
+                height: 20px;
+                }
+            }
         }
-      }
+
+        .dokan-category-search-container {
+            position: relative;
+
+            .dokan-cat-search-box{
+                display: flex;
+                border: 1px solid #EDEDED;
+                justify-content: space-between;
+                padding: 5px 15px;
+                border-radius: 3px;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                -ms-border-radius: 3px;
+                -o-border-radius: 3px;
+            }
+
+            .dokan-cat-search-icon {
+                width: 2%;
+            }
+
+            .dokan-cat-search-input {
+                padding: 0 0 0 10px;
+                background-color: white;
+                color: black;
+                border: 0;
+                -webkit-appearance: none;
+                box-sizing: border-box;
+                font-weight: 400;
+                box-shadow: none;
+                outline: none;
+                width: 88%;
+            }
+
+            .dokan-cat-search-text-limit {
+                width: 10%;
+                text-align: right;
+
+                &::before {
+                content: "|";
+                margin-right: 15px;
+                }
+            }
+
+            .dokan-cat-search-res {
+                max-height: 219px;
+                overflow: auto;
+                background: #FFFFFF;
+                border-left: 1px solid #E2E2E2;
+                border-right: 1px solid #E2E2E2;
+                border-bottom: 1px solid #E2E2E2;
+                box-sizing: border-box;
+                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+                border-radius: 0px 0px 3px 3px;
+                position: absolute;
+                width: 100%;
+                z-index: 1;
+
+                .dokan-cat-search-res-ul {
+                    margin: 26px 0;
+
+                .dokan-cat-search-res-li {
+                    padding: 5px 26px;
+                    margin: 5px 0;
+                    cursor: pointer;
+
+                    &:hover {
+                        background: #F9F9F9;
+                    }
+
+                    .dokan-cat-search-res-item {
+                        color: #2271B1;
+                    }
+
+                    .dokan-cat-search-res-history {
+                        color: #ACACAC;
+
+                        .dokan-cat-search-res-suggestion-selected {
+                            span {
+                            color: #000;
+                            margin: 0;
+                            }
+                        }
+
+                        span {
+                            margin-right: 5px;
+                        }
+                    }
+                }
+                }
+            }
+        }
     }
-  }
 }
 
 .close {
@@ -348,23 +360,25 @@
     justify-content: space-between;
 
     .dokan-single-category-title {
-      .dokan-single-title {
-        font-size: 2em;
-        font-style: normal;
-        font-weight: 300;
-        line-height: 1.214;
-        letter-spacing: -1px;
-        color: #000;
-        display: block;
 
-      }
-      .dokan-single-des {
-        font-style: normal;
-        font-weight: 300;
-        font-size: 14px;
-        padding-top: 2px;
-        color: #ACACAC;
-      }
+        .dokan-single-title {
+            font-size: 2em;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 1.214;
+            letter-spacing: -1px;
+            color: #000;
+            display: block;
+
+        }
+
+        .dokan-single-des {
+            font-style: normal;
+            font-weight: 300;
+            font-size: 14px;
+            padding-top: 2px;
+            color: #ACACAC;
+        }
     }
 }
 
@@ -373,32 +387,34 @@
     color: white;
 
     .dokan-selected-category-label-container {
-      .dokan-selected-category-label {
-        color: #ACACAC;
-      }
-      .dokan-selected-category-span {
-        color: #000;
 
-        .dokan-selected-category-icon {
-          font-size: 9px;
+        .dokan-selected-category-label {
+            color: #ACACAC;
         }
-        .dokan-cat-selected {
-          color: #2271B1;
+
+        .dokan-selected-category-span {
+            color: #000;
+
+            .dokan-selected-category-icon {
+                font-size: 9px;
+            }
+            .dokan-cat-selected {
+                color: #2271B1;
+            }
         }
-      }
     }
+
     .dokan-single-category-button-container {
-      button {
-        float: right;
-        width: 5.5rem;
-        height: 2.5rem;
-        font-size: 1rem;
-        padding: 0;
-      }
+        button {
+            float: right;
+            width: 5.5rem;
+            height: 2.5rem;
+            font-size: 1rem;
+            padding: 0;
+        }
     }
 }
 
-/* Add Animation */
 @-webkit-keyframes slideIn {
     from {bottom: -300px; opacity: 0}
     to {bottom: 0; opacity: 1}
@@ -421,25 +437,29 @@
 
 .dokan-cat-highlight {
     background-color: yellow;
-  }
+}
 
-  @media only screen and ( max-width:800px ) {
+@media only screen and ( max-width:800px ) {
+
     .dokan-single-category-modal-content {
-      width: 100%;
-      padding: 19px 10px;
+        width: 100%;
+        padding: 19px 10px;
 
-      .dokan-single-category-modal-body{
-        .dokan-single-categories-container {
-          height: 180px;
+        .dokan-single-category-modal-body{
+
+            .dokan-single-categories-container {
+                height: 180px;
+            }
+
+            .dokan-category-search-container{
+
+                .dokan-cat-search-input{
+                    width: 60%;
+                }
+                .dokan-cat-search-text-limit{
+                    width: 30%;
+                }
+            }
         }
-        .dokan-category-search-container{
-          .dokan-cat-search-input{
-            width: 60%;
-          }
-          .dokan-cat-search-text-limit{
-            width: 30%;
-          }
-        }
-      }
     }
-  }
+}
