@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\DummyData;
 
+use \WP_Error;
+
 /**
  * Include dependencies.
  *
@@ -17,6 +19,13 @@ if ( ! class_exists( 'WC_Product_Importer', false ) ) {
  * @since DOKAN_SINCE
  */
 class Manager extends \WC_Product_Importer {
+
+    /**
+     * Created or existing vendor id
+     *
+     * @var int
+     */
+    private $vendor_id = null;
 
     /**
      * Create and return dummy vendor or if exists return the existing vendor
@@ -55,26 +64,31 @@ class Manager extends \WC_Product_Importer {
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
         if ( get_user_by( 'slug', $data['store_name'] ) ) {
-            return dokan()->vendor->get( get_user_by( 'slug', $data['store_name'] ) );
+            $current_vendor = dokan()->vendor->get( get_user_by( 'slug', $data['store_name'] ) );
         } elseif ( get_user_by( 'login', $data['store_name'] ) ) {
-            return dokan()->vendor->get( get_user_by( 'login', $data['store_name'] ) );
+            $current_vendor = dokan()->vendor->get( get_user_by( 'login', $data['store_name'] ) );
         }
 
-        return dokan()->vendor->create($data);
+        $current_vendor = dokan()->vendor->create($data);
+        add_user_meta( $current_vendor->id, 'dokan_dummy_data', true, true );
+        return $current_vendor;
     }
 
     public function create_dummy_products_for_vendor( $vendor_id, $products ) {
         foreach ( $products as $product_key => $product ) {
-            $product['category_ids'] = $this->formate_product_categories( $product );
-
-            error_log( print_r( $product , 1 ) );
+            $products[$product_key]['category_ids'] = $this->formate_product_categories_or_tags( $product, 'product_cat', 'category_ids' );
+            $products[$product_key]['tag_ids'] = $this->formate_product_categories_or_tags( $product, 'product_tag', 'tag_ids' );
+            $products[$product_key]['raw_gallery_image_ids'] = $this->formate_string_by_separator( $product['raw_gallery_image_ids'] );
         }
 
-        return [$vendor_id, $products];
+        $this->parsed_data = $products;
+        $this->vendor_id = $vendor_id;
+
+        return $this->import();
     }
 
     /**
-     * Formats category ids for products
+     * Formats category / tags ids for products
      *
      * @since DOKAN_SINCE
      *
@@ -82,20 +96,37 @@ class Manager extends \WC_Product_Importer {
      *
      * @return array
      */
-    private function formate_product_categories($value) {
-        $category_ids     = explode( ',', $value['category_ids'] );
-        $all_category_ids = [];
-        foreach ( $category_ids as $category ) {
-            $term = term_exists( $category, 'product_cat' );
+    private function formate_product_categories_or_tags($value, $taxonomy, $category_or_tag) {
+        $all_category_or_tags = $this->formate_string_by_separator( $value[$category_or_tag] );
+        $all_ids = [];
+        foreach ( $all_category_or_tags as $item ) {
+            $term = term_exists( $item, $taxonomy );
 
-            if ( ! $term ) {
-                $term = wp_insert_term( $category, 'product_cat' );
+            if ( ! $term && ! empty( $item ) ) {
+                $term = wp_insert_term( $item, $taxonomy );
+            } elseif( empty( $item ) ) {
+                continue;
             }
 
-            array_push( $all_category_ids, $term['term_id'] );
+            array_push( $all_ids, $term['term_id'] );
         }
 
-        return $all_category_ids;
+        return $all_ids;
+    }
+
+    /**
+     * Formats string by a separator
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $data
+     *
+     * @param string $separator
+     *
+     * @return array
+     */
+    public function formate_string_by_separator( $data = '', $separator = ',' ) {
+        return explode( $separator, $data );
     }
 
     /**
@@ -109,5 +140,114 @@ class Manager extends \WC_Product_Importer {
      *
      * @return array
      */
-    public function import() {}
+    public function import() {
+        $index            = 0;
+        $update_existing = false;
+        $data             = array(
+            'imported' => array(),
+            'failed'   => array(),
+            'updated'  => array(),
+            'skipped'  => array(),
+        );
+
+        foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
+
+            unset( $parsed_data['id'] );
+            $sku        = isset( $parsed_data['sku'] ) ? $parsed_data['sku'] : '';
+            $sku_exists = false;
+
+            if ( $sku ) {
+                $id_from_sku = wc_get_product_id_by_sku( $sku );
+                $product     = $id_from_sku ? wc_get_product( $id_from_sku ) : false;
+                $sku_exists  = $product ? true : false;
+            }
+
+            if ( $sku_exists && ! $this->is_my_product( $product ) ) {
+                $data['skipped'][] = new WP_Error(
+                    'woocommerce_product_importer_error',
+                    __( 'A product with this SKU already exists in another vendor.', 'dokan' ),
+                    array(
+                        'sku' => $sku,
+                        'item' => $parsed_data,
+                    )
+                );
+                continue;
+            }
+
+            if ( $sku_exists && ! $update_existing ) {
+                $data['skipped'][] = new WP_Error(
+                    'woocommerce_product_importer_error',
+                    esc_html__( 'A product with this SKU already exists.', 'dokan' ),
+                    array(
+                        'sku' => esc_attr( $sku ),
+                        'item' => $parsed_data,
+                    )
+                );
+                continue;
+            }
+
+            if ( $update_existing && isset( $parsed_data['sku'] ) && ! $sku_exists ) {
+                $data['skipped'][] = new WP_Error(
+                    'woocommerce_product_importer_error',
+                    esc_html__( 'No matching product exists to update.', 'dokan' ),
+                    array(
+                        'sku' => esc_attr( $sku ),
+                        'item' => $parsed_data,
+                    )
+                );
+                continue;
+            }
+
+            $result = $this->process_item( $parsed_data );
+
+            if ( is_wp_error( $result ) ) {
+                $data['failed'][] = [
+                    'error_data' => $result->get_error_message(),
+                    'item'       => $parsed_data,
+                ];
+            } elseif ( $result['updated'] ) {
+                $data['updated'][] = $result['id'];
+            } else {
+                $data['imported'][] = $result['id'];
+                add_post_meta( $result['id'], 'dokan_dummy_data', true, true );
+                wp_update_post( [ 'ID' => $result['id'], 'post_author' => $this->vendor_id, ] );
+            }
+
+            $index ++;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Check if the product is from my store
+     *
+     * @param int|WC_Product $product
+     *
+     * @return bool
+     */
+    private function is_my_product( $product ) {
+        return $this->vendor_id === dokan_get_vendor_by_product( $product )->get_id();
+    }
+
+    /**
+     * Remove all dummy data ( products and vendors ) that has 'dokan_dummy_data' meta key
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function clear_all_dummy_data() {
+        $allProducts= get_posts( array( 'post_type'=>'product', 'numberposts'=>-1, 'meta_key' => 'dokan_dummy_data' ) );
+        foreach ($allProducts as $product) {
+            wp_delete_post( $product->ID, true );
+        }
+
+        $all_vendors = dokan()->vendor->get_vendors( ['role__in'   => [ 'seller' ],'meta_key' => 'dokan_dummy_data'] );
+        foreach ( $all_vendors as $vendor ) {
+            wp_delete_user( $vendor->id );
+        }
+
+        return __( 'Cleared all dummy data successfully.', 'dokan-lite' );
+    }
 }

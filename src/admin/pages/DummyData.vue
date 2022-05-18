@@ -4,10 +4,10 @@
         <div class="dokan-importer-wrapper">
             <ol class="dokan-importer-progress-steps">
                 <li class="active">{{ __( 'Import', 'dokan-lite' ) }}</li>
-                <li class="">{{ __( 'Done!', 'dokan-lite' ) }}</li>
+                <li :class="done ? 'active' : ''">{{ __( 'Done!', 'dokan-lite' ) }}</li>
             </ol>
             <div v-if="'' != errorMsg" class="error inline"><p>{{ errorMsg }}</p></div>
-            <div class="dokan-importer">
+            <div v-if="! done" class="dokan-importer">
                 <header>
                     <h2>{{ __( 'Import dummy vendors and products', 'dokan-lite' ) }}</h2>
                     <p>{{ __( 'This tool allows you to import vendor and some products for vendors to your market place.', 'dokan-lite' ) }}</p>
@@ -22,7 +22,20 @@
                     </table>
                 </section>
                 <div class="dokan-importer-action">
-                    <button @click="continueBtnHandler" class="dokan-import-continue-btn" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
+                    <button @click="continueBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
+                </div>
+            </div>
+            <div v-else class="dokan-importer">
+                <section class="import-done">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100" height="100">
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z" fill="#F4624D"/>
+                    </svg>
+                    <p>
+                        {{__( 'Import complete!', 'dokan-lite' )}}
+                    </p>
+                </section>
+                <div class="dokan-importer-action">
+                    <button @click="clearAllDummyData" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Clear dummy data', 'dokan-lite' ) }}</button>
                 </div>
             </div>
         </div>
@@ -39,20 +52,37 @@ export default {
             csvFileUrl: dokan.urls.dummy_data,
             progress: 0,
             dummyData: [],
-            loading: false,
+            loading: true,
             allVendors: [],
-            allProducts: []
+            allProducts: [],
+            done: false,
         }
     },
     created() {
+        this.loadImportStatus();
         this.loadCsvFile();
     },
     methods: {
+        loadImportStatus() {
+            this.loading = true;
+            let self = this;
+
+            jQuery.post(dokan.ajaxurl, {
+                'action': 'dokan_dummy_data_import_status',
+                'nonce': dokan.nonce,
+            }, function (response, status, xhr) {
+                if (response.success && response.data == 'yes' ) {
+                    self.done = true;
+                }
+            });
+        },
+
         resetDataState() {
             this.dummyData = [];
             this.allVendors = [];
             this.allProducts = [];
         },
+
         loadCsvFile() {
             let self = this;
             self.loading = true;
@@ -71,6 +101,8 @@ export default {
                             self.importCsvFile();
                         },
                     });
+
+                    self.loading = false;
                 }
             });
         },
@@ -88,48 +120,72 @@ export default {
         },
 
         requestToImport(data){
-            jQuery.ajax({
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
+            let self = this;
 
-                    // Download progress
-                    xhr.addEventListener("progress", function(evt){
-                        if (evt.lengthComputable) {
-                            var percentComplete = ( evt.loaded / evt.total ) * 100;
-                            console.log(percentComplete);
-                        }
-                    }, false);
+            // jQuery.ajax({
+            //     xhr: function() {
+            //         var xhr = new window.XMLHttpRequest();
 
-                    return xhr;
-                },
-                type: 'POST',
-                url: dokan.ajaxurl,
-                data: {
-                    action:'dokan_dummy_data_import',
-                    csv_file_data: data,
-                    'nonce': dokan.nonce,
-                },
-                success: function(data){
-                    console.log(data);
+            //         // Download progress
+            //         xhr.addEventListener("progress", function(evt){
+            //             if (evt.lengthComputable) {
+            //                 var percentComplete = ( evt.loaded / evt.total ) * 100;
+            //                 console.log(percentComplete);
+            //             }
+            //         }, false);
+
+            //         return xhr;
+            //     },
+            //     type: 'POST',
+            //     url: dokan.ajaxurl,
+            //     data: {
+            //         action:'dokan_dummy_data_import',
+            //         csv_file_data: data,
+            //         'nonce': dokan.nonce,
+            //     },
+            //     success: function(data){
+            //         if (data.success) {
+            //             self.handleImport(data.data.vendor_index);
+            //         }
+            //     }
+            // });
+
+            jQuery.post(dokan.ajaxurl, {
+                'action': 'dokan_dummy_data_import',
+                'nonce': dokan.nonce,
+                'csv_file_data': data
+            }, function (response, status, xhr) {
+                if (response.success) {
+                    self.handleImport(response.data.vendor_index);
+                    self.updateProgress(response.data.vendor_index);
                 }
             });
-
-            // jQuery.post(dokan.ajaxurl, {
-            //     'action': 'dokan_dummy_data_import',
-            //     'nonce': dokan.nonce,
-            //     'csv_file_data': data
-            // }, function (response, status, xhr) {
-            //     console.log(response, status, xhr);
-            // });
         },
 
         continueBtnHandler() {
-            let vendorData = this.allVendors[0];
+            this.handleImport();
+        },
+
+        updateProgress( numVendorSucceed ){
+            this.progress = ( 100 * numVendorSucceed ) / this.allVendors.length;
+        },
+
+        handleImport( vendor_index = 0 ) {
+            let vendorData = this.allVendors[vendor_index];
+            if ( ! vendorData || undefined == vendorData ) {
+                this.loading = false;
+                this.done = true;
+
+                return;
+            }
             let data = {
                 vendor_data: vendorData,
-                vendor_products: this.getVendorProducts(vendorData.id)
+                vendor_products: this.getVendorProducts(vendorData.id),
+                vendor_index: vendor_index,
+                total_vendors: this.allVendors.length
             };
 
+            this.loading = true;
             this.requestToImport(data);
         },
 
@@ -186,6 +242,7 @@ export default {
 
             return data;
         },
+
         formatProductData(data) {
             delete( data.email );
             delete( data.password );
@@ -235,10 +292,45 @@ export default {
 
             return data;
         },
+
         getVendorProducts(vendorId) {
             return this.allProducts.filter( function (item) {
                 return item.vendor == vendorId
             } );
+        },
+
+        resetToImport() {
+            this.errorMsg = '';
+            this.progress = 0;
+            this.loading = false;
+            this.done = false;
+        },
+
+        clearAllDummyData() {
+            let self = this;
+            self.loading = true;
+            jQuery.post(dokan.ajaxurl, {
+                'action': 'dokan_dummy_data_clear',
+                'nonce': dokan.nonce,
+            }, function (response, status, xhr) {
+                if ( response.success ) {
+                    dokan_sweetalert('',{
+                        toast: true,
+                        icon: 'success',
+                        title: response.data,
+                        animation: false,
+                        position: 'bottom-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+                    self.resetToImport();
+                }
+            });
         }
     },
 }
@@ -341,6 +433,18 @@ export default {
                             }
                         }
                     }
+                }
+            }
+            .import-done{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 24px 24px 0 24px;
+
+                p{
+                    font-size: 1.2rem;
+                    color: #F5624D;
                 }
             }
             .dokan-importer-action{
