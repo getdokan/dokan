@@ -27,15 +27,28 @@ class Manager extends \WC_Product_Importer {
      */
     private $vendor_id = null;
 
-
+    /**
+     * Save existing user here for creating dummy data.
+     *
+     * @var array
+     */
     private $user = [];
 
-    private function set_user( $store_name, $key )
-    {
+    /**
+     * Saves user by slug, of not found save user by login.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param sting $store_name
+     * @param sting $key
+     *
+     * @return void
+     */
+    private function set_user( $store_name, $key ) {
         if ( 'slug' === $key ) {
-            $this->user[$key] = get_user_by( $key, $store_name );
-        } elseif ('login' === $key && ! empty( $this->user['slug'] ) ){
-            $this->user[$key] = get_user_by( $key, $store_name );
+            $this->user[ $key ] = get_user_by( $key, $store_name );
+        } elseif ( 'login' === $key && ! empty( $this->user['slug'] ) ){
+            $this->user[ $key ] = get_user_by( $key, $store_name );
         }
     }
 
@@ -76,7 +89,7 @@ class Manager extends \WC_Product_Importer {
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
 
-        // set user by key from store_name
+        // set user by key
         $this->set_user('slug', $data['store_name']);
         $this->set_user('login', $data['store_name']);
 
@@ -91,7 +104,6 @@ class Manager extends \WC_Product_Importer {
         add_user_meta( $current_vendor->id, 'dokan_dummy_data', true, true );
 
         return $current_vendor;
-
     }
 
     /**
@@ -106,9 +118,9 @@ class Manager extends \WC_Product_Importer {
      */
     public function create_dummy_products_for_vendor( $vendor_id, $products ) {
         foreach ( $products as $product_key => $product ) {
-            $products[$product_key]['category_ids']          = $this->formate_product_categories_or_tags( $product, 'product_cat', 'category_ids' );
-            $products[$product_key]['tag_ids']               = $this->formate_product_categories_or_tags( $product, 'product_tag', 'tag_ids' );
-            $products[$product_key]['raw_gallery_image_ids'] = $this->formate_string_by_separator( $product['raw_gallery_image_ids'] );
+            $products[ $product_key ]['category_ids']          = $this->formate_product_categories_or_tags( $product, 'product_cat', 'category_ids' );
+            $products[ $product_key ]['tag_ids']               = $this->formate_product_categories_or_tags( $product, 'product_tag', 'tag_ids' );
+            $products[ $product_key ]['raw_gallery_image_ids'] = $this->formate_string_by_separator( $product['raw_gallery_image_ids'] );
         }
 
         $this->parsed_data = $products;
@@ -126,9 +138,10 @@ class Manager extends \WC_Product_Importer {
      *
      * @return array
      */
-    private function formate_product_categories_or_tags($value, $taxonomy, $category_or_tag) {
-        $all_category_or_tags = $this->formate_string_by_separator( $value[$category_or_tag] );
+    private function formate_product_categories_or_tags( $value, $taxonomy, $category_or_tag ) {
+        $all_category_or_tags = $this->formate_string_by_separator( $value[ $category_or_tag ] );
         $all_ids              = [];
+
         foreach ( $all_category_or_tags as $item ) {
             $term = term_exists( $item, $taxonomy );
 
@@ -155,7 +168,7 @@ class Manager extends \WC_Product_Importer {
      *
      * @return array
      */
-    public function formate_string_by_separator( $data = '', $separator = ',' ) {
+    private function formate_string_by_separator( $data = '', $separator = ',' ) {
         return explode( $separator, $data );
     }
 
@@ -197,7 +210,7 @@ class Manager extends \WC_Product_Importer {
                     'woocommerce_product_importer_error',
                     __( 'A product with this SKU already exists in another vendor.', 'dokan' ),
                     array(
-                        'sku' => $sku,
+                        'sku'  => $sku,
                         'item' => $parsed_data,
                     )
                 );
@@ -209,7 +222,7 @@ class Manager extends \WC_Product_Importer {
                     'woocommerce_product_importer_error',
                     esc_html__( 'A product with this SKU already exists.', 'dokan' ),
                     array(
-                        'sku' => esc_attr( $sku ),
+                        'sku'  => esc_attr( $sku ),
                         'item' => $parsed_data,
                     )
                 );
@@ -221,7 +234,7 @@ class Manager extends \WC_Product_Importer {
                     'woocommerce_product_importer_error',
                     esc_html__( 'No matching product exists to update.', 'dokan' ),
                     array(
-                        'sku' => esc_attr( $sku ),
+                        'sku'  => esc_attr( $sku ),
                         'item' => $parsed_data,
                     )
                 );
@@ -268,12 +281,20 @@ class Manager extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $allProducts = get_posts( array( 'post_type' => 'product', 'numberposts' => -1, 'meta_key' => 'dokan_dummy_data', 'post_status' => 'any' ) );
+        $allProducts = get_posts( [
+            'post_type'   => 'product',
+            'numberposts' => -1,
+            'meta_key'    => 'dokan_dummy_data',
+            'post_status' => 'any' ,
+        ] );
         foreach ($allProducts as $product) {
             wp_delete_post( $product->ID, true );
         }
 
-        $all_vendors = dokan()->vendor->get_vendors( ['role__in' => [ 'seller' ], 'meta_key' => 'dokan_dummy_data'] );
+        $all_vendors = dokan()->vendor->get_vendors( [
+            'role__in' => [ 'seller' ],
+            'meta_key' => 'dokan_dummy_data' ,
+        ] );
         foreach ( $all_vendors as $vendor ) {
             wp_delete_user( $vendor->id );
         }

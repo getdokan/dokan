@@ -16,7 +16,7 @@
                     <table>
                         <tbody>
                             <tr>
-                                <progress class="dokan-dummy-data-progress-bar" max="100" :value="progress">30</progress>
+                                <progress class="dokan-dummy-data-progress-bar" max="100" :value="progress"></progress>
                             </tr>
                         </tbody>
                     </table>
@@ -44,8 +44,10 @@
 
 <script>
 import { parse } from "papaparse";
+
 export default {
     name: 'DummyData',
+
     data(){
         return {
             errorMsg: '',
@@ -58,108 +60,86 @@ export default {
             done: false,
         }
     },
+
     created() {
         this.loadImportStatus();
         this.loadCsvFile();
     },
+
     methods: {
         loadImportStatus() {
             this.loading = true;
-            let self = this;
+            let self     = this;
 
-            jQuery.post(dokan.ajaxurl, {
-                'action': 'dokan_dummy_data_import_status',
-                'nonce': dokan.nonce,
-            }, function (response, status, xhr) {
-                if (response.success && response.data == 'yes' ) {
-                    self.done = true;
+            jQuery.post( dokan.ajaxurl,
+                {
+                    'action': 'dokan_dummy_data_import_status',
+                    'nonce': dokan.nonce,
+                },
+                function ( response ) {
+                    if ( response.success && response.data == 'yes' ) {
+                        self.done = true;
+                    }
                 }
-            });
+            );
         },
 
         resetDataState() {
-            this.dummyData = [];
-            this.allVendors = [];
+            this.dummyData   = [];
+            this.allVendors  = [];
             this.allProducts = [];
         },
 
         loadCsvFile() {
-            let self = this;
+            let self     = this;
             self.loading = true;
             self.resetDataState();
 
-            jQuery.ajax({
+            jQuery.ajax( {
                 type: 'GET',
                 url: this.csvFileUrl,
                 data: {},
-                success: function(data){
-                    parse(data, {
+                success: function( data ){
+                    parse( data, {
                         header: true,
-                        complete: function (results, file) {
-                            self.loading = false;
+                        complete: function ( results ) {
+                            self.loading   = false;
                             self.dummyData = results.data;
                             self.importCsvFile();
                         },
-                    });
+                    } );
 
                     self.loading = false;
                 }
-            });
+            } );
         },
 
         importCsvFile(){
             this.dummyData.forEach( item => {
                 if ( 'vendor' === item.type ) {
-                    this.allVendors.push(this.formatVendorData(item));
+                    this.allVendors.push( this.formatVendorData( item ) );
                 } else {
-                    this.allProducts.push(this.formatProductData(item));
+                    this.allProducts.push( this.formatProductData( item ) );
                 }
             } );
-
-
         },
 
-        requestToImport(data){
+        requestToImport( data ){
             let self = this;
 
-            // jQuery.ajax({
-            //     xhr: function() {
-            //         var xhr = new window.XMLHttpRequest();
-
-            //         // Download progress
-            //         xhr.addEventListener("progress", function(evt){
-            //             if (evt.lengthComputable) {
-            //                 var percentComplete = ( evt.loaded / evt.total ) * 100;
-            //                 console.log(percentComplete);
-            //             }
-            //         }, false);
-
-            //         return xhr;
-            //     },
-            //     type: 'POST',
-            //     url: dokan.ajaxurl,
-            //     data: {
-            //         action:'dokan_dummy_data_import',
-            //         csv_file_data: data,
-            //         'nonce': dokan.nonce,
-            //     },
-            //     success: function(data){
-            //         if (data.success) {
-            //             self.handleImport(data.data.vendor_index);
-            //         }
-            //     }
-            // });
-
-            jQuery.post(dokan.ajaxurl, {
-                'action': 'dokan_dummy_data_import',
-                'nonce': dokan.nonce,
-                'csv_file_data': data
-            }, function (response, status, xhr) {
-                if (response.success) {
-                    self.handleImport(response.data.vendor_index);
-                    self.updateProgress(response.data.vendor_index);
+            jQuery.post( dokan.ajaxurl,
+                {
+                    'action': 'dokan_dummy_data_import',
+                    'nonce': dokan.nonce,
+                    'csv_file_data': data
+                },
+                function ( response ) {
+                    if ( response.success ) {
+                        self.handleImport( response.data.vendor_index );
+                        self.updateProgress( response.data.vendor_index );
+                    }
                 }
-            });
+            );
         },
 
         continueBtnHandler() {
@@ -171,25 +151,26 @@ export default {
         },
 
         handleImport( vendor_index = 0 ) {
-            let vendorData = this.allVendors[vendor_index];
+            let vendorData = this.allVendors[ vendor_index ];
             if ( ! vendorData || undefined == vendorData ) {
                 this.loading = false;
-                this.done = true;
+                this.done    = true;
 
                 return;
             }
+
             let data = {
                 vendor_data: vendorData,
-                vendor_products: this.getVendorProducts(vendorData.id),
+                vendor_products: this.getVendorProducts( vendorData.id ),
                 vendor_index: vendor_index,
                 total_vendors: this.allVendors.length
             };
 
             this.loading = true;
-            this.requestToImport(data);
+            this.requestToImport( data );
         },
 
-        formatVendorData(data) {
+        formatVendorData( data ) {
             delete( data.sku );
             delete( data.status );
             delete( data.catalog_visibility );
@@ -243,7 +224,7 @@ export default {
             return data;
         },
 
-        formatProductData(data) {
+        formatProductData( data ) {
             delete( data.email );
             delete( data.password );
             delete( data.store_name );
@@ -269,13 +250,13 @@ export default {
             data.raw_attributes = [
                 {
                     name: data.attribute_1_name,
-                    value: data.attribute_1_value.split(','),
+                    value: data.attribute_1_value.split( ',' ),
                     visible: data.attribute_1_visible,
                     taxonomy: data.attribute_1_global,
                 },
                 {
                     name: data.attribute_2_name,
-                    value: data.attribute_2_value.split(','),
+                    value: data.attribute_2_value.split( ',' ),
                     visible: data.attribute_2_visible,
                     taxonomy: data.attribute_2_global,
                 },
@@ -294,7 +275,7 @@ export default {
         },
 
         getVendorProducts(vendorId) {
-            return this.allProducts.filter( function (item) {
+            return this.allProducts.filter( function ( item ) {
                 return item.vendor == vendorId
             } );
         },
@@ -302,35 +283,40 @@ export default {
         resetToImport() {
             this.errorMsg = '';
             this.progress = 0;
-            this.loading = false;
-            this.done = false;
+            this.loading  = false;
+            this.done     = false;
         },
 
         clearAllDummyData() {
-            let self = this;
+            let self     = this;
             self.loading = true;
-            jQuery.post(dokan.ajaxurl, {
-                'action': 'dokan_dummy_data_clear',
-                'nonce': dokan.nonce,
-            }, function (response, status, xhr) {
-                if ( response.success ) {
-                    dokan_sweetalert('',{
-                        toast: true,
-                        icon: 'success',
-                        title: response.data,
-                        animation: false,
-                        position: 'bottom-right',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                    self.resetToImport();
+
+            jQuery.post( dokan.ajaxurl,
+                {
+                    'action': 'dokan_dummy_data_clear',
+                    'nonce': dokan.nonce,
+                },
+                function ( response ) {
+                    if ( response.success ) {
+                        dokan_sweetalert( '',{
+                            toast: true,
+                            icon: 'success',
+                            title: response.data,
+                            animation: false,
+                            position: 'bottom-right',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: ( toast ) => {
+                                toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                                toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                            }
+                        } );
+
+                        self.resetToImport();
+                    }
                 }
-            });
+            );
         }
     },
 }
