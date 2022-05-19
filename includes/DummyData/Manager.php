@@ -27,6 +27,18 @@ class Manager extends \WC_Product_Importer {
      */
     private $vendor_id = null;
 
+
+    private $user = [];
+
+    private function set_user( $store_name, $key )
+    {
+        if ( 'slug' === $key ) {
+            $this->user[$key] = get_user_by( $key, $store_name );
+        } elseif ('login' === $key && ! empty( $this->user['slug'] ) ){
+            $this->user[$key] = get_user_by( $key, $store_name );
+        }
+    }
+
     /**
      * Create and return dummy vendor or if exists return the existing vendor
      *
@@ -36,7 +48,7 @@ class Manager extends \WC_Product_Importer {
      *
      * @return object|Vendor instance
      */
-    public function create_dummy_vendor($data) {
+    public function create_dummy_vendor( $data ) {
         $data['name']                    = isset( $data['name'] ) ? sanitize_text_field( $data['name'] ) : '';
         $data['featured']                = isset( $data['featured'] ) ? sanitize_text_field( $data['featured'] ) : '';
         $data['description']             = isset( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '';
@@ -63,16 +75,23 @@ class Manager extends \WC_Product_Importer {
         $data['enabled']                 = isset( $data['enabled'] ) ? sanitize_text_field( $data['enabled'] ) : '';
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
-        if ( get_user_by( 'slug', $data['store_name'] ) ) {
-            $current_vendor = dokan()->vendor->get( get_user_by( 'slug', $data['store_name'] ) );
-        } elseif ( get_user_by( 'login', $data['store_name'] ) ) {
-            $current_vendor = dokan()->vendor->get( get_user_by( 'login', $data['store_name'] ) );
+
+        // set user by key from store_name
+        $this->set_user('slug', $data['store_name']);
+        $this->set_user('login', $data['store_name']);
+
+        if ( $this->user['slug'] ) {
+            $current_vendor = dokan()->vendor->get( $this->user['slug'] );
+        } elseif ( $this->user['login'] ) {
+            $current_vendor = dokan()->vendor->get( $this->user['login'] );
+        } else {
+            $current_vendor = dokan()->vendor->create($data);
         }
 
-        $current_vendor = dokan()->vendor->create($data);
         add_user_meta( $current_vendor->id, 'dokan_dummy_data', true, true );
 
         return $current_vendor;
+
     }
 
     /**
@@ -249,12 +268,12 @@ class Manager extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $allProducts= get_posts( array( 'post_type'=>'product', 'numberposts'=>-1, 'meta_key' => 'dokan_dummy_data' ) );
+        $allProducts = get_posts( array( 'post_type' => 'product', 'numberposts' => -1, 'meta_key' => 'dokan_dummy_data', 'post_status' => 'any' ) );
         foreach ($allProducts as $product) {
             wp_delete_post( $product->ID, true );
         }
 
-        $all_vendors = dokan()->vendor->get_vendors( ['role__in'   => [ 'seller' ],'meta_key' => 'dokan_dummy_data'] );
+        $all_vendors = dokan()->vendor->get_vendors( ['role__in' => [ 'seller' ], 'meta_key' => 'dokan_dummy_data'] );
         foreach ( $all_vendors as $vendor ) {
             wp_delete_user( $vendor->id );
         }

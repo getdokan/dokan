@@ -28,13 +28,15 @@ class Hooks {
      * @return void
      */
     public function import_dummy_data() {
-        $_post_data = wp_unslash( $_POST );
+        $this->check_nonce_and_capability();
 
-        if ( ! isset( $_post_data['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_post_data['nonce'] ), 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        $_post_data = wp_unslash( wc_clean( $_POST ) );
+
+        if( ! isset( $_post_data['csv_file_data'] ) ) {
+            wp_send_json_error( __( 'Csv file not found', 'dokan-lite' ) );
         }
 
-        $csv_file_data   = wc_clean( $_post_data['csv_file_data'] );
+        $csv_file_data   = $_post_data['csv_file_data'];
         $vendor_products = isset( $csv_file_data['vendor_products'] ) ? $csv_file_data['vendor_products'] : [];
         $vendor_data     = isset( $csv_file_data['vendor_data'] ) ? $csv_file_data['vendor_data'] : [];
         $vendor_index    = isset( $csv_file_data['vendor_index'] ) ? absint( $csv_file_data['vendor_index'] ): 0;
@@ -61,11 +63,7 @@ class Hooks {
      * @return void
      */
     public function clear_dummy_data() {
-        $_post_data = wp_unslash( $_POST );
-
-        if ( ! isset( $_post_data['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_post_data['nonce'] ), 'dokan_admin' ) ) {
-            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
-        }
+        $this->check_nonce_and_capability();
 
         $result = dokan()->dummy_data->clear_all_dummy_data();
         delete_option( 'dokan_dummy_data_import_success' );
@@ -81,6 +79,24 @@ class Hooks {
      * @return void
      */
     public function import_dummy_data_status() {
+        $this->check_nonce_and_capability();
         wp_send_json_success( get_option( 'dokan_dummy_data_import_success', 'no' ) );
+    }
+
+    /**
+     * Checks nonce and user capability.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function check_nonce_and_capability() {
+        if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'Invalid user.', 'dokan-lite' ) );
+        }
     }
 }
