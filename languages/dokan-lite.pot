@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.4.3\n"
+"Project-Id-Version: Dokan 3.5.0\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-04-26 08:58:29+00:00\n"
+"POT-Creation-Date: 2022-05-17 15:00:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: dokan.php:477 includes/Admin/AdminBar.php:81 includes/Admin/Menu.php:66
 #: includes/Dashboard/Templates/Settings.php:59
-#: includes/Dashboard/Templates/Settings.php:66 includes/template-tags.php:417
+#: includes/Dashboard/Templates/Settings.php:66 includes/template-tags.php:419
 #: src/admin/pages/Settings.vue:4
 msgid "Settings"
 msgstr ""
@@ -121,13 +121,13 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:54 includes/Admin/Menu.php:45
 #: includes/Admin/Settings.php:527 includes/Install/Installer.php:172
-#: includes/template-tags.php:386 src/admin/pages/Dashboard.vue:3
+#: includes/template-tags.php:388 src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:63 includes/Admin/Menu.php:34
 #: includes/Admin/Menu.php:46 includes/Admin/SetupWizard.php:160
-#: includes/functions.php:2979 includes/template-tags.php:408
+#: includes/functions.php:2979 includes/template-tags.php:410
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
@@ -930,7 +930,7 @@ msgid "Introduction"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:150 includes/Vendor/SetupWizard.php:75
-#: includes/template-tags.php:431
+#: includes/template-tags.php:433
 msgid "Store"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgid "Error installing WooCommerce plugin"
 msgstr ""
 
 #: includes/Admin/SetupWizardNoWC.php:176 includes/Vendor/SetupWizard.php:80
-#: includes/template-tags.php:438
+#: includes/template-tags.php:440
 msgid "Payment"
 msgstr ""
 
@@ -1408,7 +1408,7 @@ msgstr ""
 msgid "Please provide your email."
 msgstr ""
 
-#: includes/Ajax.php:343 includes/template-tags.php:165
+#: includes/Ajax.php:343 includes/template-tags.php:167
 msgid "Something went wrong!"
 msgstr ""
 
@@ -3471,7 +3471,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: includes/REST/AdminReportController.php:150 includes/template-tags.php:400
+#: includes/REST/AdminReportController.php:150 includes/template-tags.php:402
 #: templates/dashboard/orders-widget.php:15
 msgid "Orders"
 msgstr ""
@@ -4720,25 +4720,25 @@ msgstr ""
 msgid "Switched back to %1$s (%2$s)."
 msgstr ""
 
-#: includes/Vendor/Vendor.php:851
+#: includes/Vendor/Vendor.php:916
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/Vendor/Vendor.php:853
+#: includes/Vendor/Vendor.php:918
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Vendor/Vendor.php:854
+#: includes/Vendor/Vendor.php:919
 msgid "Rated %s out of %d"
 msgstr ""
 
-#: includes/Vendor/Vendor.php:985 templates/settings/store-form.php:283
+#: includes/Vendor/Vendor.php:1050 templates/settings/store-form.php:283
 msgid "Store is open"
 msgstr ""
 
-#: includes/Vendor/Vendor.php:999 templates/settings/store-form.php:291
+#: includes/Vendor/Vendor.php:1064 templates/settings/store-form.php:291
 msgid "Store is closed"
 msgstr ""
 
@@ -4747,6 +4747,7 @@ msgid "Best Selling Product"
 msgstr ""
 
 #: includes/Widgets/BestSellingProducts.php:72
+#: includes/Widgets/FilterByAttributes.php:106
 #: includes/Widgets/ProductCategoryMenu.php:99
 #: includes/Widgets/StoreCategoryMenu.php:87
 #: includes/Widgets/StoreContactForm.php:126
@@ -4770,6 +4771,34 @@ msgstr ""
 msgid "Hide Out of Stock"
 msgstr ""
 
+#: includes/Widgets/FilterByAttributes.php:15
+msgid "Dokan: Filter Products by Attribute Widget"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:17
+msgid "A Widget for displaying products by attribute for dokan"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:81
+msgid "Filter by"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:99
+msgid "AND"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:100
+msgid "OR"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:110
+msgid "Attribute"
+msgstr ""
+
+#: includes/Widgets/FilterByAttributes.php:118
+msgid "Query Type"
+msgstr ""
+
 #: includes/Widgets/ProductCategoryMenu.php:18
 msgid "Dokan product category menu"
 msgstr ""
@@ -4787,7 +4816,7 @@ msgid "Dokan: Store Product Category Menu"
 msgstr ""
 
 #: includes/Widgets/StoreCategoryMenu.php:36
-#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:712
+#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:838
 msgid "Store Product Category"
 msgstr ""
 
@@ -4800,7 +4829,7 @@ msgid "Dokan: Store Contact Form"
 msgstr ""
 
 #: includes/Widgets/StoreContactForm.php:42
-#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:751
+#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:877
 msgid "Contact Vendor"
 msgstr ""
 
@@ -4813,7 +4842,7 @@ msgid "Dokan: Store Location"
 msgstr ""
 
 #: includes/Widgets/StoreLocation.php:42 includes/Widgets/StoreLocation.php:103
-#: includes/template-tags.php:725
+#: includes/template-tags.php:851
 msgid "Store Location"
 msgstr ""
 
@@ -4826,7 +4855,7 @@ msgid "Dokan: Store Opening Closing Time Widget"
 msgstr ""
 
 #: includes/Widgets/StoreOpenClose.php:41
-#: includes/Widgets/StoreOpenClose.php:112 includes/template-tags.php:738
+#: includes/Widgets/StoreOpenClose.php:112 includes/template-tags.php:864
 msgid "Store Time"
 msgstr ""
 
@@ -5004,7 +5033,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: includes/functions.php:1301 includes/template-tags.php:393
+#: includes/functions.php:1301 includes/template-tags.php:395
 #: src/admin/pages/Dashboard.vue:54 templates/dashboard/products-widget.php:16
 msgid "Products"
 msgstr ""
@@ -5371,74 +5400,74 @@ msgstr ""
 msgid "Sales"
 msgstr ""
 
-#: includes/template-tags.php:119 includes/template-tags.php:123
+#: includes/template-tags.php:121 includes/template-tags.php:125
 #: templates/store-lists-loop.php:116
 msgid "&larr; Previous"
 msgstr ""
 
-#: includes/template-tags.php:135 templates/store-lists-loop.php:117
+#: includes/template-tags.php:137 templates/store-lists-loop.php:117
 msgid "Next &rarr;"
 msgstr ""
 
-#: includes/template-tags.php:156
+#: includes/template-tags.php:158
 msgid "Product successfully deleted"
 msgstr ""
 
-#: includes/template-tags.php:232
+#: includes/template-tags.php:234
 #: templates/products/listing-status-filter.php:13
 #. translators: %d : order count total
 msgid "All (%d)"
 msgstr ""
 
-#: includes/template-tags.php:250
+#: includes/template-tags.php:252
 #. translators: %d : order count completed status
 msgid "Completed (%d)"
 msgstr ""
 
-#: includes/template-tags.php:268
+#: includes/template-tags.php:270
 #. translators: %d : order count processing status
 msgid "Processing (%d)"
 msgstr ""
 
-#: includes/template-tags.php:286
+#: includes/template-tags.php:288
 #. translators: %d : order count on hold status
 msgid "On-hold (%d)"
 msgstr ""
 
-#: includes/template-tags.php:304
+#: includes/template-tags.php:306
 #. translators: %d : order count pending status
 msgid "Pending (%d)"
 msgstr ""
 
-#: includes/template-tags.php:322
+#: includes/template-tags.php:324
 #. translators: %d : order count cancelled status
 msgid "Cancelled (%d)"
 msgstr ""
 
-#: includes/template-tags.php:340
+#: includes/template-tags.php:342
 #. translators: %d : order count refunded status
 msgid "Refunded (%d)"
 msgstr ""
 
-#: includes/template-tags.php:359
+#: includes/template-tags.php:361
 #. translators: %d : order count failed status
 msgid "Failed (%d)"
 msgstr ""
 
-#: includes/template-tags.php:425
+#: includes/template-tags.php:427
 msgid "Back to Dashboard"
 msgstr ""
 
-#: includes/template-tags.php:564 templates/settings/header.php:14
+#: includes/template-tags.php:566 templates/settings/header.php:14
 #: templates/store-lists-loop.php:92
 msgid "Visit Store"
 msgstr ""
 
-#: includes/template-tags.php:565 templates/global/header-menu.php:48
+#: includes/template-tags.php:567 templates/global/header-menu.php:48
 msgid "Edit Account"
 msgstr ""
 
-#: includes/template-tags.php:566
+#: includes/template-tags.php:568
 msgid "Log out"
 msgstr ""
 
@@ -8468,12 +8497,12 @@ msgctxt "number of pages"
 msgid "of"
 msgstr ""
 
-#: includes/template-tags.php:48
+#: includes/template-tags.php:50
 msgctxt "Previous post link"
 msgid "&larr;"
 msgstr ""
 
-#: includes/template-tags.php:51
+#: includes/template-tags.php:53
 msgctxt "Next post link"
 msgid "&rarr;"
 msgstr ""

@@ -124,7 +124,7 @@ class ProductCache {
     /**
      * Clear Single Product taxonomy Caches.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.0
      *
      * @param int|\WC_Product $product
      *
