@@ -249,12 +249,15 @@ div.media-sidebar a.edit-attachment{
                                 ul {
                                     list-style: none;
                                     margin: 0;
-                                    max-height: 200px;
+                                    max-height: 199px;
                                     overflow-y: auto;
                                     overflow-x: hidden;
 
+                                    li:not(:last-child) {
+                                      border-bottom: 1px #dddddd solid;
+                                    }
+
                                     li {
-                                        border-bottom: 1px #dddddd solid;
                                         padding-right: 30px;
 
                                         div {
