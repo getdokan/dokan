@@ -193,7 +193,6 @@ class Manager extends \WC_Product_Importer {
         );
 
         foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
-
             unset( $parsed_data['id'] );
             $sku        = isset( $parsed_data['sku'] ) ? $parsed_data['sku'] : '';
             $sku_exists = false;
@@ -207,7 +206,7 @@ class Manager extends \WC_Product_Importer {
             if ( $sku_exists && ! $this->is_my_product( $product ) ) {
                 $data['skipped'][] = new WP_Error(
                     'woocommerce_product_importer_error',
-                    __( 'A product with this SKU already exists in another vendor.', 'dokan' ),
+                    __( 'A product with this SKU already exists in another vendor.', 'dokan-lite' ),
                     array(
                         'sku'  => $sku,
                         'item' => $parsed_data,
@@ -219,7 +218,7 @@ class Manager extends \WC_Product_Importer {
             if ( $sku_exists && ! $update_existing ) {
                 $data['skipped'][] = new WP_Error(
                     'woocommerce_product_importer_error',
-                    esc_html__( 'A product with this SKU already exists.', 'dokan' ),
+                    esc_html__( 'A product with this SKU already exists.', 'dokan-lite' ),
                     array(
                         'sku'  => esc_attr( $sku ),
                         'item' => $parsed_data,
@@ -231,7 +230,7 @@ class Manager extends \WC_Product_Importer {
             if ( $update_existing && isset( $parsed_data['sku'] ) && ! $sku_exists ) {
                 $data['skipped'][] = new WP_Error(
                     'woocommerce_product_importer_error',
-                    esc_html__( 'No matching product exists to update.', 'dokan' ),
+                    esc_html__( 'No matching product exists to update.', 'dokan-lite' ),
                     array(
                         'sku'  => esc_attr( $sku ),
                         'item' => $parsed_data,
@@ -287,7 +286,7 @@ class Manager extends \WC_Product_Importer {
         $allProducts = get_posts( [
             'post_type'   => 'product',
             'numberposts' => -1,
-            'meta_key'    => 'dokan_dummy_data',
+            'meta_key'    => 'dokan_dummy_data', // phpcs:ignore
             'post_status' => 'any' ,
         ] );
         foreach ($allProducts as $product) {
@@ -296,7 +295,7 @@ class Manager extends \WC_Product_Importer {
 
         $all_vendors = dokan()->vendor->get_vendors( [
             'role__in' => [ 'seller' ],
-            'meta_key' => 'dokan_dummy_data' ,
+            'meta_key' => 'dokan_dummy_data', // phpcs:ignore
         ] );
         foreach ( $all_vendors as $vendor ) {
             wp_delete_user( $vendor->id );
