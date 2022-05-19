@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>{{ __( 'Import dummy data', 'dokan-lite' ) }}</h1>
-        <div class="dokan-importer-wrapper">
+        <div v-if="! statusLoader" class="dokan-importer-wrapper">
             <ol class="dokan-importer-progress-steps">
                 <li class="active">{{ __( 'Import', 'dokan-lite' ) }}</li>
                 <li :class="done ? 'active' : ''">{{ __( 'Done!', 'dokan-lite' ) }}</li>
@@ -39,6 +39,26 @@
                 </div>
             </div>
         </div>
+        <div v-else class="dokan-importer-wrapper">
+            <div class="dokan-importer">
+                <header>
+                    <span class="loader-title skeleton-loader"></span>
+                    <span class="loader-description skeleton-loader"></span>
+                </header>
+                <section>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <span class="loader-loader skeleton-loader"></span>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <div class="dokan-importer-action">
+                    <span class="loader-btn skeleton-loader"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -58,6 +78,7 @@ export default {
             allVendors: [],
             allProducts: [],
             done: false,
+            statusLoader: true,
         }
     },
 
@@ -68,7 +89,7 @@ export default {
 
     methods: {
         loadImportStatus() {
-            this.loading = true;
+            this.statusLoader = true;
             let self     = this;
 
             jQuery.post( dokan.ajaxurl,
@@ -80,6 +101,7 @@ export default {
                     if ( response.success && response.data == 'yes' ) {
                         self.done = true;
                     }
+                    self.statusLoader = false;
                 }
             );
         },
@@ -328,6 +350,28 @@ export default {
         max-width: 700px;
         margin: 40px auto;
 
+        .skeleton-loader {
+            width: 100%;
+            display: block;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0) 80%
+                ),
+                lightgray;
+            background-repeat: repeat-y;
+            background-size: 50px 500px;
+            background-position: 0 0;
+            animation: shine 1s infinite;
+            border-radius: 5px;
+        }
+        @keyframes shine {
+            to {
+                background-position: 100% 0, /* move highlight to right */ 0 0;
+            }
+        }
+
         .error{
             border-radius: 5px;
         }
@@ -385,9 +429,19 @@ export default {
             text-align: left;
 
             header {
-                // border-bottom: 1px solid #eee;
                 margin: 0;
                 padding: 24px 24px 0;
+
+                .loader-title{
+                    width: 50%;
+                    height: 20px;
+                    margin-bottom: 24px;
+                }
+
+                .loader-description {
+                    height: 10px;
+                    margin-bottom: 10px;
+                }
             }
             section {
                 padding: 24px 24px 0 24px;
@@ -400,8 +454,8 @@ export default {
                     width: 100%;
                     clear: both;
 
-                    tbody{
-                        tr{
+                    tbody {
+                        tr {
                             .dokan-dummy-data-progress-bar{
                                 width: 100%;
                                 height: 35px;
@@ -416,6 +470,10 @@ export default {
                                     border-radius: 5px;
                                     transition: width 0.5s;
                                 }
+                            }
+
+                            .loader-loader{
+                                height: 35px;
                             }
                         }
                     }
@@ -438,6 +496,12 @@ export default {
                 margin: 0;
                 padding: 24px;
                 line-height: 3em;
+
+                .loader-btn {
+                    height: 35px;
+                    width: 150px;
+                    float: right;
+                }
 
                 .dokan-import-continue-btn{
                     float: right;
