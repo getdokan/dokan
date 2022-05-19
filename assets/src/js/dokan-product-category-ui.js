@@ -179,7 +179,7 @@
         updateSearchResultUi: () => {
             let html = '';
 
-            html = searchResultState.map((element, index) => {
+            html = searchResultState.map( ( element, index ) => {
                 return `<li data-name="${ element.name }" data-termid="${ element.term_id }" data-index="${ index }" class="dokan-cat-search-res-li">
                         <div class="dokan-cat-search-res-item">
                             ${ element.name }
