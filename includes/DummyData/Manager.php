@@ -47,7 +47,7 @@ class Manager extends \WC_Product_Importer {
     private function set_user( $store_name, $key ) {
         if ( 'slug' === $key ) {
             $this->user[ $key ] = get_user_by( $key, $store_name );
-        } elseif ( 'login' === $key && ! empty( $this->user['slug'] ) ){
+        } elseif ( 'login' === $key && ! empty( $this->user['slug'] ) ) {
             $this->user[ $key ] = get_user_by( $key, $store_name );
         }
     }
@@ -82,23 +82,22 @@ class Manager extends \WC_Product_Importer {
         $data['show_ppp']                = isset( $data['show_ppp'] ) ? sanitize_text_field( $data['show_ppp'] ) : '';
         $data['enable_tnc']              = isset( $data['enable_tnc'] ) ? sanitize_text_field( $data['enable_tnc'] ) : '';
         $data['store_tnc']               = isset( $data['store_tnc'] ) ? sanitize_text_field( $data['store_tnc'] ) : '';
-        $data['show_min_order_discount'] = isset( $data['show_min_order_discount'] ) ? sanitize_text_field( $data['show_min_order_discount'] ): '';
+        $data['show_min_order_discount'] = isset( $data['show_min_order_discount'] ) ? sanitize_text_field( $data['show_min_order_discount'] ) : '';
         $data['store_seo']               = isset( $data['store_seo'] ) ? maybe_unserialize( sanitize_text_field( $data['store_seo'] ) ) : '';
         $data['dokan_store_time']        = isset( $data['dokan_store_time'] ) ? maybe_unserialize( sanitize_text_field( $data['dokan_store_time'] ) ) : [];
         $data['enabled']                 = isset( $data['enabled'] ) ? sanitize_text_field( $data['enabled'] ) : '';
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
-
         // set user by key
-        $this->set_user('slug', $data['store_name']);
-        $this->set_user('login', $data['store_name']);
+        $this->set_user( 'slug', $data['store_name'] );
+        $this->set_user( 'login', $data['store_name'] );
 
         if ( $this->user['slug'] ) {
             $current_vendor = dokan()->vendor->get( $this->user['slug'] );
         } elseif ( $this->user['login'] ) {
             $current_vendor = dokan()->vendor->get( $this->user['login'] );
         } else {
-            $current_vendor = dokan()->vendor->create($data);
+            $current_vendor = dokan()->vendor->create( $data );
         }
 
         add_user_meta( $current_vendor->id, 'dokan_dummy_data', true, true );
@@ -147,7 +146,7 @@ class Manager extends \WC_Product_Importer {
 
             if ( ! $term && ! empty( $item ) ) {
                 $term = wp_insert_term( $item, $taxonomy );
-            } elseif( empty( $item ) ) {
+            } elseif ( empty( $item ) ) {
                 continue;
             }
 
@@ -185,7 +184,7 @@ class Manager extends \WC_Product_Importer {
      */
     public function import() {
         $index            = 0;
-        $update_existing = false;
+        $update_existing  = false;
         $data             = array(
             'imported' => array(),
             'failed'   => array(),
@@ -252,8 +251,12 @@ class Manager extends \WC_Product_Importer {
                 $data['updated'][] = $result['id'];
             } else {
                 $data['imported'][] = $result['id'];
+
                 add_post_meta( $result['id'], 'dokan_dummy_data', true, true );
-                wp_update_post( [ 'ID' => $result['id'], 'post_author' => $this->vendor_id, ] );
+                wp_update_post( [
+                    'ID'          => $result['id'],
+                    'post_author' => $this->vendor_id,
+                ] );
             }
 
             $index ++;
