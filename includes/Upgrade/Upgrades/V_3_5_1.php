@@ -3,22 +3,22 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_4_3_UpdateProductCategories;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_5_1_UpdateProductCategories;
 
-class V_3_4_3 extends DokanUpgrader {
+class V_3_5_1 extends DokanUpgrader {
 
     /**
      * Updates product categories.
      * For every child category, it will update the parent categories and ancestors.
      *
-     * @since 3.3.9
+     * @since DOKAN_SINCE
      *
      * @return void
      */
     public static function update_products_categories() {
         $i         = 0;
         $products  = [];
-        $processor = new V_3_4_3_UpdateProductCategories();
+        $processor = new V_3_5_1_UpdateProductCategories();
 
         while ( null !== $products ) {
             $args = [

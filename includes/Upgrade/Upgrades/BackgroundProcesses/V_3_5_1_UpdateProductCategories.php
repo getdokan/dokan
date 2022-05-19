@@ -7,16 +7,16 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 /**
  * Select all parent categories based on child category id.
  *
- * @since 3.3.9
+ * @since DOKAN_SINCE
  */
-class V_3_4_3_UpdateProductCategories extends DokanBackgroundProcesses {
+class V_3_5_1_UpdateProductCategories extends DokanBackgroundProcesses {
 
     /**
      * Save all ancestors ids based on child id.
      *
      * @param array $products
      *
-     * @since 3.3.9
+     * @since DOKAN_SINCE
      *
      * @return bool
      */
