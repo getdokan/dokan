@@ -1,5 +1,5 @@
-; ( function( $ ) {
-    let modal          = $( '#dokan-single-category-modal' );
+;( function( $ ) {
+    let modal          = $( '#dokan-product-category-modal' );
     let loader         = $( '#dokan-single-categories-loader' );
     let searchRes      = $( '#dokan-cat-search-res' );
     let searchResUl    = $( '#dokan-cat-search-res-ul' );
@@ -12,22 +12,22 @@
     let boxCounter        = 1;
     let selectedCatId     = '';
 
-    var SingleCategory = {
+    var ProductCategory = {
 
         init: function() {
             $( '#dokan-single-categories-loader img' ).attr( 'src', dokan.ajax_loader );
 
-            $( 'body' ).on( 'click', '.dokan-single-category-li', function() {
+            $( 'body' ).on( 'click', '.dokan-product-category-li', function() {
                 let { catlevel, termId, name, haschild } = $( this ).data();
                 selectedCatId = termId;
 
-                SingleCategory.removeAfterClickedUls( catlevel, termId );
-                SingleCategory.loadChildCategories( catlevel, termId, name, haschild );
+                ProductCategory.removeAfterClickedUls( catlevel, termId );
+                ProductCategory.loadChildCategories( catlevel, termId, name, haschild );
             } );
 
             $( 'body' ).on( 'click', '.dokan-cat-search-res-li', function() {
                 let { termid, index, name } = $( this ).data();
-                SingleCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[index] );
+                ProductCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[ index ] );
             } );
 
             $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', function() {
@@ -35,40 +35,40 @@
                 $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
                 if ( inputText.length > 0 ) {
-                    SingleCategory.loadingCategories();
-                    SingleCategory.hideSearchRes(false);
-                    SingleCategory.doSearchCates( inputText );
+                    ProductCategory.loadingCategories();
+                    ProductCategory.hideSearchRes( false );
+                    ProductCategory.doSearchCates( inputText );
                 } else {
-                    SingleCategory.hideSearchRes();
+                    ProductCategory.hideSearchRes();
                 }
             } );
 
             $( '#dokan-single-categories' ).scroll( function() {
-                let totalScrollable = $( '#dokan-single-categories' ).get(0).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
+                let totalScrollable = $( '#dokan-single-categories' ).get( 0 ).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
                 let left = $( this ).scrollLeft();
                 let right = totalScrollable - left;
 
-                SingleCategory.showIndicators( leftIndicator, left );
-                SingleCategory.showIndicators( rightIndicator, right );
+                ProductCategory.showIndicators( leftIndicator, left );
+                ProductCategory.showIndicators( rightIndicator, right );
             } );
 
             $( 'body' ).on( 'click', '.dokan-single-categories-right-box', function() {
-                SingleCategory.indicatorScrollTo();
+                ProductCategory.indicatorScrollTo();
             } );
 
             $( 'body' ).on( 'click', '.dokan-single-categories-left-box', function() {
-                SingleCategory.indicatorScrollTo(false);
+                ProductCategory.indicatorScrollTo( false );
             } );
 
             $( 'body' ).on( 'click', '.dokan-single-cat-select-btn', function() {
-                SingleCategory.setCatName( SingleCategory.getSelectedLabel() );
-                SingleCategory.setCatId( selectedCatId );
-                SingleCategory.hideCategoryModal();
+                ProductCategory.setCatName( ProductCategory.getSelectedLabel() );
+                ProductCategory.setCatId( selectedCatId );
+                ProductCategory.hideCategoryModal();
             } );
         },
 
         setCatUiBasedOnOneCat: function( catId, catIndex, category ) {
-            SingleCategory.disableDoneBtn( category.has_child );
+            ProductCategory.disableDoneBtn( category.has_child );
 
             selectedCatId  = catId;
             let allParents = [];
@@ -86,14 +86,14 @@
             selectedInUls.push( Number( catId ) );
 
             let UL = allUl.map( ( id, index ) => {
-                return SingleCategory.getCategoriesWithParentId( id, index + 1, selectedInUls[ index ] );
+                return ProductCategory.getCategoriesWithParentId( id, index + 1, selectedInUls[ index ] );
             });
 
             categoriesState = UL;
-            SingleCategory.updateCategoryUi();
+            ProductCategory.updateCategoryUi();
 
-            SingleCategory.hideSearchRes();
-            SingleCategory.scrollTo( UL.length );
+            ProductCategory.hideSearchRes();
+            ProductCategory.scrollTo( UL.length );
         },
 
         doSearchCates: async ( text ) => {
@@ -108,8 +108,8 @@
             });
 
             searchResultState = searchResult;
-            SingleCategory.updateSearchResultUi();
-            SingleCategory.loadingCategories( false );
+            ProductCategory.updateSearchResultUi();
+            ProductCategory.loadingCategories( false );
         },
 
         hideSearchRes: ( status = true ) => {
@@ -122,10 +122,10 @@
 
         showCategoryModal: () => {
             selectedCatId = '';
-            SingleCategory.disableDoneBtn();
+            ProductCategory.disableDoneBtn();
             modal.css( 'display', 'flex' );
             categoriesState = [];
-            SingleCategory.loadAllParentCategories();
+            ProductCategory.loadAllParentCategories();
         },
 
         disableDoneBtn: ( disable = true ) => {
@@ -141,17 +141,17 @@
         },
 
         loadAllParentCategories: () => {
-            SingleCategory.loadingCategories();
-            categoriesState.push( SingleCategory.getCategoriesWithParentId() );
-            SingleCategory.updateCategoryUi();
-            SingleCategory.loadingCategories( false );
+            ProductCategory.loadingCategories();
+            categoriesState.push( ProductCategory.getCategoriesWithParentId() );
+            ProductCategory.updateCategoryUi();
+            ProductCategory.loadingCategories( false );
         },
 
         getCategoriesWithParentId: ( parentId = 0, level = 1, selectedId = false ) => {
             let allCategories = [ ...dokan_product_category_data.categories ];
             let categories = allCategories.filter( ( category, index ) => {
                 if ( category.category_parent == parentId ) {
-                    allCategories[ index ].uiActivaion = category.cat_ID === selectedId ? 'dokan-single-category-li-active' : false;
+                    allCategories[ index ].uiActivaion = category.cat_ID === selectedId ? 'dokan-product-category-li-active' : false;
                     return true;
                 }
             });
@@ -165,15 +165,15 @@
 
         loadChildCategories: ( catlevel, termId, name, haschild ) => {
             if ( ! haschild ) {
-                SingleCategory.disableDoneBtn(false);
+                ProductCategory.disableDoneBtn(false);
                 return;
             }
-            SingleCategory.disableDoneBtn();
+            ProductCategory.disableDoneBtn();
 
-            let categories = SingleCategory.getCategoriesWithParentId( termId, catlevel + 1 );
+            let categories = ProductCategory.getCategoriesWithParentId( termId, catlevel + 1 );
             categoriesState.push( categories );
-            SingleCategory.updateCategoryUi();
-            SingleCategory.scrollTo( catlevel - 1 );
+            ProductCategory.updateCategoryUi();
+            ProductCategory.scrollTo( catlevel - 1 );
         },
 
         updateSearchResultUi: () => {
@@ -185,7 +185,7 @@
                             ${ element.name }
                         </div>
                         <div class="dokan-cat-search-res-history">
-                            ${ SingleCategory.getSearchedParentHistory( element.parents, element.name ) }
+                            ${ ProductCategory.getSearchedParentHistory( element.parents, element.name ) }
                         </div>
                     </li>`;
             });
@@ -200,7 +200,7 @@
                     <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>`;
             }).join('');
 
-            html += `<span class="dokan-cat-search-res-suggestion-selected">${ SingleCategory.highlight( searched ) }</span>`;
+            html += `<span class="dokan-cat-search-res-suggestion-selected">${ ProductCategory.highlight( searched ) }</span>`;
 
             return html;
         },
@@ -217,25 +217,25 @@
         },
 
         updateCategoryUi: () => {
-            let html = SingleCategory.getCatUlHtml();
+            let html = ProductCategory.getCatUlHtml();
 
             $( '#dokan-single-categories' ).html( html );
-            SingleCategory.updateSelectedLabel();
+            ProductCategory.updateSelectedLabel();
         },
 
         updateSelectedLabel: () => {
-            $( '#dokan-selected-category-span' ).html( SingleCategory.getSelectedLabel() );
+            $( '#dokan-selected-category-span' ).html( ProductCategory.getSelectedLabel() );
         },
 
         getSelectedLabel: () => {
-            let activatedLi = $( '.dokan-single-category-li-active' );
+            let activatedLi = $( '.dokan-product-category-li-active' );
             let liLength    = activatedLi.length;
             let ui          = '';
 
             activatedLi.each( ( index, obj ) => {
                 var allDataSets = obj.dataset;
 
-                ui += `<span class="dokan-selected-category-single ${ liLength == index + 1 ? 'dokan-cat-selected' : '' }">${ allDataSets.name }</span>
+                ui += `<span class="dokan-selected-category-product ${ liLength == index + 1 ? 'dokan-cat-selected' : '' }">${ allDataSets.name }</span>
                 ${ liLength != index + 1 ? '<span class="dokan-selected-category-icon"><i class="fas fa-chevron-right"></i></span>' : '' }`;
             });
 
@@ -245,18 +245,18 @@
         updateCategorySelection: ( catlevel, termId ) => {
             let expectedLi = categoriesState[ catlevel - 1 ];
             let updatedLi  = expectedLi.categories.map( element => {
-                element.term_id == termId ? element.uiActivaion = 'dokan-single-category-li-active' : element.uiActivaion = '';
+                element.term_id == termId ? element.uiActivaion = 'dokan-product-category-li-active' : element.uiActivaion = '';
                 return element;
             });
 
             categoriesState[ catlevel - 1 ].categories = updatedLi;
-            SingleCategory.updateCategoryUi();
+            ProductCategory.updateCategoryUi();
         },
 
         getCatUlHtml: () => {
             let html = categoriesState.map( ( element, index ) => {
-                let li = SingleCategory.getCatLiHtml( element.categories, element.level );
-                return `<ul id="${ element.level }-level-cat-ul" class="dokan-single-category-ul ${ element.level }-level-cat" data-level="${ element.level }">${ li }</ul>`;
+                let li = ProductCategory.getCatLiHtml( element.categories, element.level );
+                return `<ul id="${ element.level }-level-cat-ul" class="dokan-product-category-ul ${ element.level }-level-cat" data-level="${ element.level }">${ li }</ul>`;
             });
 
             return html;
@@ -266,9 +266,9 @@
             let html = '';
 
             element.forEach( ( category, index ) => {
-                html += `<li data-haschild="${ category.has_child }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-single-category-li ${ category.has_child ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
-                        <span class="dokan-single-category">${ category.name }</span>
-                        <span class="dokan-single-category-icon"><i class="fas fa-chevron-right"></i></span>
+                html += `<li data-haschild="${ category.has_child }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-product-category-li ${ category.has_child ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
+                        <span class="dokan-product-category">${ category.name }</span>
+                        <span class="dokan-product-category-icon"><i class="fas fa-chevron-right"></i></span>
                     </li>`;
             });
 
@@ -283,7 +283,7 @@
             });
 
             categoriesState = newCategories;
-            SingleCategory.updateCategorySelection( catlevel, termId );
+            ProductCategory.updateCategorySelection( catlevel, termId );
         },
 
         scrollTo: ( to = 0 ) => {
@@ -318,14 +318,14 @@
         addANewCatBox: () => {
             boxCounter++;
             let html = `
-                <div class="dokan-select-single-category-container">
-                    <div class="dokan-form-group dokan-select-single-category" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
-                        <span id="dokan_product_cat_res" class="dokan-select-single-category-title dokan-ssct-level-${ boxCounter }">- Select a category -</span>
-                        <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
+                <div class="dokan-select-product-category-container">
+                    <div class="dokan-form-group dokan-select-product-category" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
+                        <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-${ boxCounter }">- Select a category -</span>
+                        <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
                     </div>
                         ${ ! dokan_product_category_data.is_single ? `
-                        <div class="dokan-select-single-category-remove-container">
-                            <span class="dokan-select-single-category-remove"><i class="fas fa-times"></i></span>
+                        <div class="dokan-select-product-category-remove-container">
+                            <span class="dokan-select-product-category-remove"><i class="fas fa-times"></i></span>
                         </div>`
                         : ''}
                     <span class="dokan-cat-inputs-holder dokan-cih-level-${ boxCounter }" ></span>
@@ -347,33 +347,33 @@
 
     // On DOM ready.
     $( function() {
-        SingleCategory.init();
+        ProductCategory.init();
 
         $( 'body' ).on( 'click', '#dokan-category-open-modal', function() {
             inputHolder   = $( this ).data( 'dokansclevel' );
             let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
 
-            SingleCategory.showCategoryModal();
+            ProductCategory.showCategoryModal();
 
             if ( chosenCat.length > 0 ) {
                 let catId    = chosenCat.val();
-                let catIndex = SingleCategory.findCategory( catId );
+                let catIndex = ProductCategory.findCategory( catId );
                 let category = dokan_product_category_data.categories[ catIndex ];
 
-                SingleCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
+                ProductCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
             }
         } );
 
         $( 'body' ).on( 'click', '#dokan-category-close-modal', function() {
-            SingleCategory.hideCategoryModal();
+            ProductCategory.hideCategoryModal();
         } );
 
         $( 'body' ).on( 'click', '.dokan-single-cat-add-btn', function() {
-            SingleCategory.addANewCatBox();
+            ProductCategory.addANewCatBox();
         } );
 
-        $( 'body' ).on( 'click', '.dokan-select-single-category-remove-container', function() {
-            $( this ).closest( '.dokan-select-single-category-container' )[0].remove();
+        $( 'body' ).on( 'click', '.dokan-select-product-category-remove-container', function() {
+            $( this ).closest( '.dokan-select-product-category-container' )[0].remove();
         } );
     });
 } )( jQuery );

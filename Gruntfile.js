@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 
       admin: {
         files: {
-          '<%= dirs.css %>/dokan-single-category-ui.css': ['<%= dirs.devLessSrc %>/dokan-single-category-ui.less'],
+          '<%= dirs.css %>/dokan-product-category-ui.css': ['<%= dirs.devLessSrc %>/dokan-product-category-ui.less'],
           '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less'],
           '<%= dirs.css %>/global-admin.css': ['<%= dirs.devLessSrc %>/global-admin.less'],
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],

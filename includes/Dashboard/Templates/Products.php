@@ -558,7 +558,7 @@ class Products {
          * Because without those page we don't need to load category modal.
          */
         if ( 'dashboard' === get_query_var( 'pagename', 'dokan-not-dashboard-page' ) && ( 'dokan-not-add-product-page' !== get_query_var( 'new-product', 'dokan-not-add-product-page' ) || 'dokan-not-products-page' != get_query_var( 'products', 'dokan-not-products-page' ) ) ) {
-            wp_enqueue_style( 'dokan-single-category-ui-css' );
+            wp_enqueue_style( 'dokan-product-category-ui-css' );
 
             $args = array(
                 'taxonomy'     => 'product_cat',

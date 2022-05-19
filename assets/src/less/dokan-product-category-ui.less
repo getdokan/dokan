@@ -6,14 +6,14 @@
     margin-bottom: 0;
 }
 
-.dokan-select-single-category-container {
+.dokan-select-product-category-container {
     display: flex;
 
     &:last-child{
         margin-bottom: -10px;
     }
 
-    .dokan-select-single-category {
+    .dokan-select-product-category {
         display: flex;
         justify-content: space-between;
         padding: 5px;
@@ -21,7 +21,7 @@
         cursor: pointer;
         width: 100%;
 
-        .dokan-select-single-category-title {
+        .dokan-select-product-category-title {
 
             .dokan-selected-category-icon {
                 font-size: 10px;
@@ -29,10 +29,10 @@
             }
         }
     }
-    .dokan-select-single-category-remove-container {
+    .dokan-select-product-category-remove-container {
         margin-top: 5px;
 
-        .dokan-select-single-category-remove {
+        .dokan-select-product-category-remove {
             padding: 7px 10px;
             cursor: pointer;
             margin-left: 5px;
@@ -59,7 +59,7 @@
     }
 }
 
-.dokan-single-category-modal {
+.dokan-product-category-modal {
     display: none;
     justify-content: center;
     position: fixed;
@@ -77,7 +77,7 @@
     animation-duration: 0.4s;
 }
 
-.dokan-single-category-modal-content {
+.dokan-product-category-modal-content {
     position: fixed;
     bottom: 0;
     background-color: #fefefe;
@@ -90,7 +90,7 @@
     padding: 19px 45px;
     overflow: auto;
 
-    .dokan-single-category-modal-body {
+    .dokan-product-category-modal-body {
         padding: 2px 16px;
         border-bottom: 1px solid #E2E2E2;
         margin-top: 15px;
@@ -168,7 +168,7 @@
                 display: flex;
                 overflow-x: auto;
 
-                .dokan-single-category-ul {
+                .dokan-product-category-ul {
                     margin: 0 10px 0 0;
                     width: 300px;
                     font-size: 1rem;
@@ -177,7 +177,7 @@
                     overflow-y: auto;
                     flex-shrink: 0;
 
-                    .dokan-single-category-li {
+                    .dokan-product-category-li {
                         margin: 0 9px 0 0;
                         display: flex;
                         justify-content: space-between;
@@ -193,7 +193,7 @@
                             background-color: #F9F9F9;
                         }
 
-                        .dokan-single-category-icon {
+                        .dokan-product-category-icon {
                             opacity: 0;
                             color: #BFBFBF;
 
@@ -202,26 +202,26 @@
                             }
                         }
 
-                        &:hover .dokan-single-category {
+                        &:hover .dokan-product-category {
                             color: #2271B1;
                         }
                     }
 
                     .dokan-cat-has-child {
 
-                        .dokan-single-category-icon {
+                        .dokan-product-category-icon {
                             opacity: 1 ;
                         }
                     }
                 }
 
-                .dokan-single-category-li-active {
+                .dokan-product-category-li-active {
                     color: #2271B1 !important;
                     background-color: #F9F9F9 !important;
 
                     &.dokan-cat-has-child {
 
-                        .dokan-single-category-icon {
+                        .dokan-product-category-icon {
                         opacity: 1 !important;
                         color: #2271B1 !important;
                         }
@@ -354,13 +354,13 @@
     }
 }
 
-.dokan-single-category-modal-header {
+.dokan-product-category-modal-header {
     padding: 2px 16px;
     color: white;
     display: flex;
     justify-content: space-between;
 
-    .dokan-single-category-title {
+    .dokan-product-category-title {
 
         .dokan-single-title {
             font-size: 2em;
@@ -383,7 +383,7 @@
     }
 }
 
-.dokan-single-category-modal-footer {
+.dokan-product-category-modal-footer {
     padding: 2px 16px;
     color: white;
 
@@ -405,7 +405,7 @@
         }
     }
 
-    .dokan-single-category-button-container {
+    .dokan-product-category-button-container {
         button {
             float: right;
             width: 5.5rem;
@@ -442,11 +442,11 @@
 
 @media only screen and ( max-width:800px ) {
 
-    .dokan-single-category-modal-content {
+    .dokan-product-category-modal-content {
         width: 100%;
         padding: 19px 10px;
 
-        .dokan-single-category-modal-body{
+        .dokan-product-category-modal-body{
 
             .dokan-single-categories-container {
                 height: 180px;

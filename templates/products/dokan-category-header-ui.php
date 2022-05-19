@@ -14,8 +14,8 @@
 </div>
 <span class="dokan-add-new-cat-box">
     <?php foreach ( $chosen_cat as $key => $term ) : ?>
-        <div class="dokan-select-single-category-container">
-            <div class="dokan-form-group dokan-select-single-category" data-dokansclevel="<?php echo esc_attr( $key ); ?>" id="dokan-category-open-modal">
+        <div class="dokan-select-product-category-container">
+            <div class="dokan-form-group dokan-select-product-category" data-dokansclevel="<?php echo esc_attr( $key ); ?>" id="dokan-category-open-modal">
                 <?php
                     $all_parents   = get_ancestors( $term, 'product_cat' );
                     $all_parents   = array_reverse( $all_parents );
@@ -23,18 +23,18 @@
                     $html          = '';
 
                     foreach ( $all_parents as $index => $value ) {
-                        $label = "<span class='dokan-selected-category-single'>" . get_term_field( 'name', $value, 'product_cat' ) . "</span><span class='dokan-selected-category-icon'><i class='fas fa-chevron-right'></i></span>";
+                        $label = "<span class='dokan-selected-category-product'>" . get_term_field( 'name', $value, 'product_cat' ) . "</span><span class='dokan-selected-category-icon'><i class='fas fa-chevron-right'></i></span>";
                         $html .= $label;
                     }
-                    $html .= "<span class='dokan-selected-category-single dokan-cat-selected'>" . get_term_field( 'name', $term, 'product_cat' ) . "</span>";
+                    $html .= "<span class='dokan-selected-category-product dokan-cat-selected'>" . get_term_field( 'name', $term, 'product_cat' ) . "</span>";
                 ?>
-                <span id="dokan_product_cat_res" class="dokan-select-single-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $html ); ?></span>
-                <span class="dokan-select-single-category-icon"><i class="fas fa-edit"></i></span>
+                <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>"><?php echo $html; ?></span>
+                <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
 
             </div>
             <?php if ( ! $is_single ) : ?>
-                <div class="dokan-select-single-category-remove-container">
-                    <span class="dokan-select-single-category-remove"><i class="fas fa-times"></i></span>
+                <div class="dokan-select-product-category-remove-container">
+                    <span class="dokan-select-product-category-remove"><i class="fas fa-times"></i></span>
                 </div>
             <?php endif; ?>
             <span class="dokan-cat-inputs-holder dokan-cih-level-<?php echo esc_attr( $key ); ?>" >

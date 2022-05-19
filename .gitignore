@@ -11,9 +11,8 @@ secret.json
 debug.log
 package-lock.json
 config.json
+assets/css/dokan-product-category-ui.css
 
 # Composer
 /vendor/
 phpcs-report.txt
-/assets/js/dokan-single-category-ui.css
-/assets/js/dokan-single-category-ui.js

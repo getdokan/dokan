@@ -281,9 +281,9 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
-            'dokan-single-category-ui-css' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-single-category-ui.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-single-category-ui.css' ),
+            'dokan-product-category-ui-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
         ];
 
