@@ -252,10 +252,12 @@ class Manager extends \WC_Product_Importer {
                 $data['imported'][] = $result['id'];
 
                 add_post_meta( $result['id'], 'dokan_dummy_data', true, true );
-                wp_update_post( [
-                    'ID'          => $result['id'],
-                    'post_author' => $this->vendor_id,
-                ] );
+                wp_update_post(
+                    array(
+                        'ID'          => $result['id'],
+                        'post_author' => $this->vendor_id,
+                    )
+                );
             }
 
             $index ++;
@@ -283,12 +285,14 @@ class Manager extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $allProducts = get_posts( [
-            'post_type'   => 'product',
-            'numberposts' => -1,
-            'meta_key'    => 'dokan_dummy_data', // phpcs:ignore
-            'post_status' => 'any' ,
-        ] );
+        $allProducts = get_posts(
+            array(
+                'post_type'   => 'product',
+                'numberposts' => -1,
+                'meta_key'    => 'dokan_dummy_data', // phpcs:ignore
+                'post_status' => 'any' ,
+            )
+        );
         foreach ($allProducts as $product) {
             wp_delete_post( $product->ID, true );
         }
