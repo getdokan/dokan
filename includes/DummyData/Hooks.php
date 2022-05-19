@@ -32,7 +32,7 @@ class Hooks {
 
         $_post_data = wp_unslash( wc_clean( $_POST ) );
 
-        if( ! isset( $_post_data['csv_file_data'] ) ) {
+        if ( ! isset( $_post_data['csv_file_data'] ) ) {
             wp_send_json_error( __( 'Csv file not found', 'dokan-lite' ) );
         }
 

@@ -285,7 +285,7 @@ class Manager extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $allProducts = get_posts(
+        $all_products = get_posts(
             array(
                 'post_type'   => 'product',
                 'numberposts' => -1,
@@ -293,14 +293,16 @@ class Manager extends \WC_Product_Importer {
                 'post_status' => 'any',
             )
         );
-        foreach ( $allProducts as $product ) {
+        foreach ( $all_products as $product ) {
             wp_delete_post( $product->ID, true );
         }
 
-        $all_vendors = dokan()->vendor->get_vendors( [
-            'role__in' => [ 'seller' ],
-            'meta_key' => 'dokan_dummy_data', // phpcs:ignore
-        ] );
+        $all_vendors = dokan()->vendor->get_vendors(
+            array(
+                'role__in' => [ 'seller' ],
+                'meta_key' => 'dokan_dummy_data', // phpcs:ignore
+            )
+        );
         foreach ( $all_vendors as $vendor ) {
             wp_delete_user( $vendor->id );
         }
