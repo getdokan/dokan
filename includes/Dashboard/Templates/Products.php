@@ -360,7 +360,7 @@ class Products {
                         }
 
                         // Saving chosen_product_cat into post meta
-                        if ( isset( $postdata['chosen_product_cat'] ) && ! empty( $postdata['chosen_product_cat'] ) ) {
+                        if ( ! empty( $postdata['chosen_product_cat'] ) ) {
                             update_post_meta( $product_id, 'chosen_product_cat', array_map( 'absint', (array) $postdata['chosen_product_cat'] ) );
                         }
                     }
