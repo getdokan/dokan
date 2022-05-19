@@ -35,7 +35,13 @@
                     </p>
                 </section>
                 <div class="dokan-importer-action">
-                    <button @click="clearAllDummyData" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Clear dummy data', 'dokan-lite' ) }}</button>
+                    <button @click="clearAllDummyData" class="cancel-btn dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Clear dummy data', 'dokan-lite' ) }}</button>
+
+                    <div class="links">
+                        <router-link :to="{ name: 'Vendors', query: { status: 'all' }}" exact >{{ __( 'View vendors', 'dokan-lite' ) }}</router-link>
+                        &nbsp;
+                        <a :href="getProductsPageUrl()">{{ __( 'View products', 'dokan-lite' ) }}</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,36 +316,53 @@ export default {
         },
 
         clearAllDummyData() {
-            let self     = this;
-            self.loading = true;
+            let self = this;
 
-            jQuery.post( dokan.ajaxurl,
-                {
-                    'action': 'dokan_dummy_data_clear',
-                    'nonce': dokan.nonce,
-                },
-                function ( response ) {
-                    if ( response.success ) {
-                        dokan_sweetalert( '',{
-                            toast: true,
-                            icon: 'success',
-                            title: response.data,
-                            animation: false,
-                            position: 'bottom-right',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: ( toast ) => {
-                                toast.addEventListener( 'mouseenter', Swal.stopTimer )
-                                toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+            Swal.fire({
+                title: self.__( 'Are you sure?', 'dokan-lite' ),
+                text: self.__( "You won't be able to revert this!", 'dokan-lite' ),
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: self.__( 'Yes', 'dokan-lite' )
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    self.loading = true;
+
+                    jQuery.post( dokan.ajaxurl,
+                        {
+                            'action': 'dokan_dummy_data_clear',
+                            'nonce': dokan.nonce,
+                        },
+                        function ( response ) {
+                            if ( response.success ) {
+                                dokan_sweetalert( '',{
+                                    toast: true,
+                                    icon: 'success',
+                                    title: response.data,
+                                    animation: false,
+                                    position: 'bottom-right',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: ( toast ) => {
+                                        toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                                        toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                                    }
+                                } );
+
+                                self.resetToImport();
                             }
-                        } );
-
-                        self.resetToImport();
-                    }
+                        }
+                    );
                 }
-            );
-        }
+            });
+        },
+
+        getProductsPageUrl() {
+            return `${dokan.urls.adminRoot}edit.php?post_type=product`;
+        },
     },
 }
 </script>
@@ -528,6 +551,11 @@ export default {
                         background-image: linear-gradient(-45deg, #f7f6f6 33%, #e0e0e0 33%, #e0e0e0 70%, #f7f6f6 70%);
                         color: #848484;
                     }
+                }
+
+                .cancel-btn{
+                    background-color: #d33;
+                    border-color: #d33;
                 }
             }
         }
