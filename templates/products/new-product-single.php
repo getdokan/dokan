@@ -254,7 +254,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                         <?php
                                             $is_single  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ? true : false;
-                                            $terms      = array();
                                             $terms      = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' =>  'all') );
                                             $chosen_cat = get_post_meta( $post_id, 'chosen_product_cat', true );
 
