@@ -376,4 +376,4 @@
             $( this ).closest( '.dokan-select-single-category-container' )[0].remove();
         } );
     });
-})( jQuery );
+} )( jQuery );
