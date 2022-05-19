@@ -46,7 +46,7 @@
 
         <div class="dokan-w10">
             <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text" required>
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7 dokan-right" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text" required>
+            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7 dokan-right" placeholder="<?php esc_attr_e( 'Account number', 'dokan-lite' ); ?>" type="text" required>
         </div>
     </div>
 
