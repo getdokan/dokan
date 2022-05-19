@@ -39,7 +39,7 @@ class Hooks {
         $csv_file_data   = $_post_data['csv_file_data'];
         $vendor_products = isset( $csv_file_data['vendor_products'] ) ? $csv_file_data['vendor_products'] : [];
         $vendor_data     = isset( $csv_file_data['vendor_data'] ) ? $csv_file_data['vendor_data'] : [];
-        $vendor_index    = isset( $csv_file_data['vendor_index'] ) ? absint( $csv_file_data['vendor_index'] ): 0;
+        $vendor_index    = isset( $csv_file_data['vendor_index'] ) ? absint( $csv_file_data['vendor_index'] ) : 0;
         $total_vendors   = isset( $csv_file_data['total_vendors'] ) ? absint( $csv_file_data['total_vendors'] ) : 0;
 
         $created_vendor          = dokan()->dummy_data->create_dummy_vendor( $vendor_data );
@@ -49,10 +49,12 @@ class Hooks {
             update_option( 'dokan_dummy_data_import_success', 'yes', true );
         }
 
-        wp_send_json_success( [
-            'result'       => $created_products_result,
-            'vendor_index' => $vendor_index + 1,
-        ] );
+        wp_send_json_success(
+            array(
+                'result'       => $created_products_result,
+                'vendor_index' => $vendor_index + 1,
+            )
+        );
     }
 
     /**

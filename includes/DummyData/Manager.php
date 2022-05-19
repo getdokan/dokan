@@ -290,10 +290,10 @@ class Manager extends \WC_Product_Importer {
                 'post_type'   => 'product',
                 'numberposts' => -1,
                 'meta_key'    => 'dokan_dummy_data', // phpcs:ignore
-                'post_status' => 'any' ,
+                'post_status' => 'any',
             )
         );
-        foreach ($allProducts as $product) {
+        foreach ( $allProducts as $product ) {
             wp_delete_post( $product->ID, true );
         }
 
