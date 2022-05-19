@@ -28,7 +28,13 @@ class Hooks {
      * @return void
      */
     public function import_dummy_data() {
-        $this->check_nonce_and_capability();
+        if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'Invalid user.', 'dokan-lite' ) );
+        }
 
         $_post_data = wp_unslash( wc_clean( $_POST ) );
 
@@ -65,7 +71,13 @@ class Hooks {
      * @return void
      */
     public function clear_dummy_data() {
-        $this->check_nonce_and_capability();
+        if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'Invalid user.', 'dokan-lite' ) );
+        }
 
         $result = dokan()->dummy_data->clear_all_dummy_data();
         delete_option( 'dokan_dummy_data_import_success' );
@@ -81,18 +93,6 @@ class Hooks {
      * @return void
      */
     public function import_dummy_data_status() {
-        $this->check_nonce_and_capability();
-        wp_send_json_success( get_option( 'dokan_dummy_data_import_success', 'no' ) );
-    }
-
-    /**
-     * Checks nonce and user capability.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function check_nonce_and_capability() {
         if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_admin' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
@@ -100,5 +100,7 @@ class Hooks {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'Invalid user.', 'dokan-lite' ) );
         }
+
+        wp_send_json_success( get_option( 'dokan_dummy_data_import_success', 'no' ) );
     }
 }
