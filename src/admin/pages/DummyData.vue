@@ -13,13 +13,9 @@
                     <p>{{ __( 'This tool allows you to import vendor and some products for vendors to your market place.', 'dokan-lite' ) }}</p>
                 </header>
                 <section>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <progress class="dokan-dummy-data-progress-bar" max="100" :value="progress"></progress>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div>
+                        <progress class="dokan-dummy-data-progress-bar" max="100" :value="progress"></progress>
+                    </div>
                 </section>
                 <div class="dokan-importer-action">
                     <button @click="continueBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
@@ -52,13 +48,9 @@
                     <span class="loader-description skeleton-loader"></span>
                 </header>
                 <section>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <span class="loader-loader skeleton-loader"></span>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div>
+                        <span class="loader-loader skeleton-loader"></span>
+                    </div>
                 </section>
                 <div class="dokan-importer-action">
                     <span class="loader-btn skeleton-loader"></span>
@@ -459,9 +451,9 @@ export default {
                 }
             }
             section {
-                padding: 24px 24px 0 24px;
+                padding: 10px 24px 0;
 
-                table {
+                div {
                     margin: 0;
                     position: relative;
                     table-layout: fixed;
@@ -469,28 +461,24 @@ export default {
                     width: 100%;
                     clear: both;
 
-                    tbody {
-                        tr {
-                            .dokan-dummy-data-progress-bar{
-                                width: 100%;
-                                height: 35px;
-                                -webkit-appearance: none;
+                    .dokan-dummy-data-progress-bar{
+                        width: 100%;
+                        height: 35px;
+                        -webkit-appearance: none;
 
-                                &[value]::-webkit-progress-bar {
-                                    background-color: #ccc;
-                                    border-radius: 5px;
-                                }
-                                &[value]::-webkit-progress-value {
-                                    background-color: #F4624D;
-                                    border-radius: 5px;
-                                    transition: width 0.5s;
-                                }
-                            }
-
-                            .loader-loader{
-                                height: 35px;
-                            }
+                        &[value]::-webkit-progress-bar {
+                            background-color: #ccc;
+                            border-radius: 5px;
                         }
+                        &[value]::-webkit-progress-value {
+                            background-color: #F4624D;
+                            border-radius: 5px;
+                            transition: width 0.5s;
+                        }
+                    }
+
+                    .loader-loader{
+                        height: 35px;
                     }
                 }
             }
@@ -501,7 +489,7 @@ export default {
                 align-items: center;
                 padding: 24px 24px 0 24px;
 
-                p{
+                p {
                     font-size: 1.2rem;
                     color: #F5624D;
                 }
