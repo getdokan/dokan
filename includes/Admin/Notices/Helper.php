@@ -49,11 +49,11 @@ class Helper {
                 $promos = '[]';
             }
 
-            Cache::set_transient( 'promo_notices', $promos, DAY_IN_SECONDS );
+            Cache::set_transient( 'promo_notices', $promos, '', DAY_IN_SECONDS );
         }
 
         $promos  = json_decode( $promos, true );
-        $notices = [];
+        $notices = apply_filters( 'dokan_admin_promo_notices', [] );
         // check if api data is valid
         if ( empty( $promos ) || ! is_array( $promos ) ) {
             return $notices;

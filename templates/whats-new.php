@@ -4,6 +4,114 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.5.0',
+        'released' => '2022-05-18',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new product attributes widget, by which users/customers will be able to search products by vendors used attributes.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed vendor store settings page phone number validation js console error.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Payment settings page 404 if dashboard url slug is changed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.3',
+        'released' => '2022-04-26',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added option to select a default payment method',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'         => [
+                [
+                    'title'       => 'Updated design for the payment settings page of vendor dashboard to separate the management of different payment methods',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Store Contact Form widget submits the contact form directly instead of ajax submission',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Stop sending new order emails to selected recipients (including admin) when the New Order email is disabled in WooCommerce Settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some validation logic under vendor dashboard payment settings page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.2',
+        'released' => '2022-04-13',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed switching product type from variable to external doesn\'t remove product stock management options',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed store order by latest inconsistency',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.1',
+        'released' => '2022-03-18',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Introduced two new filter hooks dokan_shipping_fee_recipient and dokan_tax_fee_recipient',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Remove unnecessary error_log codes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Promotional notice cache expiration date is set to one day',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error on store closet time widget if store open/close time wasn’t set',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated jQuery form validate library from v1.11.0 to v1.19.3',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed popup not appearing after clicking withdraw button under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product table css fix for error class',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.4.0',
         'released' => '2022-03-08',
         'changes'  => [
