@@ -57,6 +57,7 @@ class Helper {
          * ! also do not use any filter here, if new transaction type is needed add it to the below array
          */
         $transaction_types = [
+            'opening_balance'           => esc_html__( 'Opening Balance', 'dokan-lite' ),
             // admin will get payment (debit)
             'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
             'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
@@ -264,17 +265,34 @@ class Helper {
      * @return array
      */
     public static function get_formated_transaction_data( $item, &$current_balance, $context = 'admin' ) {
-        $current_balance = ( $current_balance + $item['debit'] ) - $item['credit'];
+        $id        = ! empty( $item['id'] ) && is_numeric( $item['id'] ) ? absint( $item['id'] ) : '--';
+        $trn_id    = ! empty( $item['trn_id'] ) && is_numeric( $item['trn_id'] ) ? absint( $item['trn_id'] ) : '--';
+        $trn_url   = is_numeric( $trn_id ) ? static::get_formatted_transaction_id( $trn_id, sanitize_text_field( $item['trn_type'] ), $context ) : '#';
+        $trn_date  = ! empty( $item['trn_date'] ) ? dokan_format_date( $item['trn_date'] ) : '--';
+        $trn_type  = ! empty( $item['trn_type'] ) ? static::get_transaction_types( sanitize_text_field( $item['trn_type'] ) ) : '--';
+        $vendor_id = ! empty( $item['vendor_id'] ) && is_numeric( $item['vendor_id'] ) ? absint( $item['vendor_id'] ) : '--';
+        $note      = ! empty( $item['note'] ) ? esc_html( $item['note'] ) : '--';
+        $debit     = isset( $item['debit'] ) && is_numeric( $item['debit'] ) ? floatval( $item['debit'] ) : 0;
+        $credit    = isset( $item['credit'] ) && is_numeric( $item['credit'] ) ? floatval( $item['credit'] ) : 0;
+        // get current balance
+        $current_balance = (float) wc_format_decimal( ( $current_balance + $debit ) - $credit );
+
+        // fix some fields for opening_balance transaction type
+        if ( 'opening_balance' === $item['trn_type'] ) {
+            $debit  = '--';
+            $credit = '--';
+        }
+
         return [
-            'id'        => absint( $item['id'] ),
-            'trn_id'    => absint( $item['trn_id'] ),
-            'trn_url'   => static::get_formatted_transaction_id( absint( $item['trn_id'] ), sanitize_text_field( $item['trn_type'] ), $context ),
-            'trn_date'  => dokan_format_date( $item['trn_date'] ),
-            'trn_type'  => static::get_transaction_types( $item['trn_type'] ),
-            'vendor_id' => absint( $item['vendor_id'] ),
-            'note'      => esc_html( $item['note'] ),
-            'debit'     => $item['debit'],
-            'credit'    => $item['credit'],
+            'id'        => $id,
+            'trn_id'    => $trn_id,
+            'trn_url'   => $trn_url,
+            'trn_date'  => $trn_date,
+            'trn_type'  => $trn_type,
+            'vendor_id' => $vendor_id,
+            'note'      => $note,
+            'debit'     => $debit,
+            'credit'    => $credit,
             'balance'   => $current_balance,
         ];
     }
@@ -304,14 +322,14 @@ class Helper {
     public static function get_vendor_payable_amount_by_month( $vendor_id, $current_date ) {
         // check for valid vendor id
         if ( empty( $vendor_id ) || ! is_numeric( $vendor_id ) ) {
-            return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_vendor_id', esc_html__( 'No vendor id provided', 'dokan-lite' ) );
         }
 
         // get current_date
         $current_date = is_numeric( $current_date ) ? dokan_current_datetime()->setTimestamp( $current_date ) : dokan_current_datetime()->modify( $current_date );
         // validate current date
         if ( ! $current_date ) {
-            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_date', esc_html__( 'Invalid date provided', 'dokan-lite' ) );
         }
 
         $manager = new Manager();
@@ -349,7 +367,7 @@ class Helper {
             return $paid_balance;
         }
 
-        return $previous_month_balance - $paid_balance;
+        return (float) wc_format_decimal( $previous_month_balance - $paid_balance );
     }
 
     /**
@@ -376,7 +394,7 @@ class Helper {
         }
 
         if ( ! $current_date ) {
-            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_date', esc_html__( 'Invalid date provided', 'dokan-lite' ) );
         }
 
         $manager = new Manager();
@@ -392,7 +410,7 @@ class Helper {
         }
 
         // get required settings
-        $args = [
+        $data = [
             'balance'      => $balance,
             'billing_type' => SettingsHelper::get_billing_type(),
             'billing_day'  => SettingsHelper::get_billing_day(),
@@ -401,18 +419,18 @@ class Helper {
         ];
 
         // check settings for billing type
-        switch ( $args['billing_type'] ) {
+        switch ( $data['billing_type'] ) {
             case 'by_month':
                 // subtract paid balance from previous month balance
-                $args['payable_amount'] = static::get_vendor_payable_amount_by_month( $vendor_id, $current_date->getTimestamp() );
+                $data['payable_amount'] = static::get_vendor_payable_amount_by_month( $vendor_id, $current_date->getTimestamp() );
                 break;
 
             case 'by_amount':
-                $args['payable_amount'] = $balance;
+                $data['payable_amount'] = $balance;
                 break;
         }
 
-        return $args;
+        return $data;
     }
 
     /**
@@ -431,7 +449,7 @@ class Helper {
         }
 
         if ( ! $vendor_id ) {
-            return new WP_Error( 'invalid_vendor_id', __( 'Invalid vendor provided.', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_vendor_id', esc_html__( 'Invalid vendor provided.', 'dokan-lite' ) );
         }
 
         // validate current_date
@@ -442,7 +460,7 @@ class Helper {
         }
 
         if ( ! $current_date ) {
-            return new WP_Error( 'invalid_date', __( 'Invalid date provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_date', esc_html__( 'Invalid date provided', 'dokan-lite' ) );
         }
 
         // get balance
@@ -574,15 +592,15 @@ class Helper {
         foreach ( $failed_actions as $failed_action ) {
             switch ( $failed_action ) {
                 case 'enable_catalog_mode':
-                    $messages[] = __( 'Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.', 'dokan-lite' );
                     break;
 
                 case 'hide_withdraw_menu':
-                    $messages[] = __( 'Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.', 'dokan-lite' );
                     break;
 
                 case 'status_inactive':
-                    $messages[] = __( 'Your account will be disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Your account will be disabled for selling. Hence you will no longer be able to sell any products.', 'dokan-lite' );
                     break;
             }
         }
@@ -617,15 +635,15 @@ class Helper {
         foreach ( $failed_actions as $failed_action ) {
             switch ( $failed_action ) {
                 case 'enable_catalog_mode':
-                    $messages[] = __( 'Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products currently.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products currently.', 'dokan-lite' );
                     break;
 
                 case 'hide_withdraw_menu':
-                    $messages[] = __( 'Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account.', 'dokan-lite' );
                     break;
 
                 case 'status_inactive':
-                    $messages[] = __( 'Your account has been temporarily disabled for selling. Hence you are no longer able to sell any products.', 'dokan-lite' );
+                    $messages[] = esc_html__( 'Your account has been temporarily disabled for selling. Hence you are no longer able to sell any products.', 'dokan-lite' );
                     break;
             }
         }

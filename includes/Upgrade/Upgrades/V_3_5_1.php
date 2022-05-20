@@ -7,7 +7,7 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
 /**
  * @since DOKAN_SINCE
  */
-class V_3_4_5 extends DokanUpgrader {
+class V_3_5_1 extends DokanUpgrader {
 
     /**
      * Create Reverse Withdrawal Table
@@ -27,7 +27,7 @@ class V_3_4_5 extends DokanUpgrader {
                     `note` mediumtext DEFAULT NULL,
                     `debit` decimal(19,4) NOT NULL DEFAULT '0.0000',
                     `credit` decimal(19,4) NOT NULL DEFAULT '0.0000',
-                    `trn_date` int(13) UNSIGNED NOT NULL DEFAULT '0',
+                    `trn_date` int(11) UNSIGNED NOT NULL DEFAULT '0',
                     PRIMARY KEY (`id`),
                     KEY `trn_date` (`trn_date`),
                     KEY `vendor_id_trn_date` (`vendor_id`,`trn_date`),

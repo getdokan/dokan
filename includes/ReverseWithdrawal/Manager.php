@@ -45,7 +45,7 @@ class Manager {
      *
      * @param array $args
      *
-     * @return array|int|null|object
+     * @return array|int|WP_Error
      */
     public function all( $args = [] ) {
         $default = [
@@ -134,20 +134,22 @@ class Manager {
             // fix date format
             if ( is_numeric( $args['trn_date']['from'] ) ) {
                 $now = $now->setTimestamp( $args['trn_date']['from'] );
+                $args['trn_date']['from'] = $now ? $now->getTimestamp() : 0;
             } else {
                 $now = $now->modify( $args['trn_date']['from'] );
+                $args['trn_date']['from'] = $now ? $now->setTime( 0, 0, 0 )->getTimestamp() : 0;
             }
-            $args['trn_date']['from'] = $now ? $now->setTime( 0, 0, 0 )->getTimestamp() : 0;
         }
 
         // convert into timestamp
         if ( ! empty( $args['trn_date']['to'] ) ) {
             if ( is_numeric( $args['trn_date']['to'] ) ) {
                 $now = $now->setTimestamp( $args['trn_date']['to'] );
+                $args['trn_date']['to'] = $now ? $now->getTimestamp() : 0;
             } else {
                 $now = $now->modify( $args['trn_date']['to'] );
+                $args['trn_date']['to'] = $now ? $now->setTime( 23, 59, 59 )->getTimestamp() : 0;
             }
-            $args['trn_date']['to'] = $now ? $now->setTime( 23, 59, 59 )->getTimestamp() : 0;
         }
 
         // check if min and max both values are set, search  in between
@@ -359,7 +361,7 @@ class Manager {
         ];
 
         if ( empty( $query_params['vendor_id'] ) || ! is_numeric( $query_params['vendor_id'] ) ) {
-            return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_vendor_id', esc_html__( 'No vendor id provided', 'dokan-lite' ) );
         }
 
         $balance = $this->all( $query_params );
@@ -395,7 +397,7 @@ class Manager {
         ];
 
         if ( empty( $query_params['vendor_id'] ) || ! is_numeric( $query_params['vendor_id'] ) ) {
-            return new WP_Error( 'invalid_vendor_id', __( 'No vendor id provided', 'dokan-lite' ) );
+            return new WP_Error( 'invalid_vendor_id', esc_html__( 'No vendor id provided', 'dokan-lite' ) );
         }
 
         $return = [
@@ -428,20 +430,12 @@ class Manager {
         }
 
         // prepare formatted balance
-        $formatted_balance = [
-            'id'        => '--',
-            'trn_id'    => '--',
-            'trn_url'   => '#',
-            'trn_date'  => dokan_format_date( $one_day_before ),
-            'trn_type'  => __( 'Opening Balance', 'dokan-lite' ),
-            'vendor_id' => isset( $balance['vendor_id'] ) ? absint( $balance['vendor_id'] ) : 0,
-            'note'      => '',
-            'debit'     => '',
-            'credit'    => '',
-        ];
-        $formatted_balance['balance'] = isset( $balance['debit'], $balance['credit'] ) ? $balance['debit'] - $balance['credit'] : 0;
+        $balance['trn_type']  = 'opening_balance';
+        $balance['trn_date']  = $one_day_before;
+        $balance['vendor_id'] = isset( $balance['vendor_id'] ) ? absint( $balance['vendor_id'] ) : 0;
 
-        $return['balance'] = $formatted_balance;
+        // set balance
+        $return['balance'] = $balance;
 
         // get item count
         $query_params['return'] = 'vendor_transaction_count';
@@ -488,7 +482,7 @@ class Manager {
         $data = $this->all( $args );
 
         if ( empty( $data ) ) {
-            return new WP_Error( 'get_reverse_withdrawal_error', __( 'No reverse withdrawal data found with given id.', 'dokan-lite' ) );
+            return new WP_Error( 'get_reverse_withdrawal_error', esc_html__( 'No reverse withdrawal data found with given id.', 'dokan-lite' ) );
         }
 
         return $data;
@@ -520,15 +514,15 @@ class Manager {
 
         // validate required fields
         if ( empty( $args['trn_id'] ) ) {
-            return new WP_Error( 'insert_rw_invalid_transaction_id', __( 'Transaction id is required.', 'dokan-lite' ) );
+            return new WP_Error( 'insert_rw_invalid_transaction_id', esc_html__( 'Transaction id is required.', 'dokan-lite' ) );
         }
 
         if ( empty( $args['trn_type'] ) || ! array_key_exists( $args['trn_type'], Helper::get_transaction_types() ) ) {
-            return new WP_Error( 'insert_rw_invalid_transaction_type', __( 'Invalid transaction type is provide. Please check your input.', 'dokan-lite' ) );
+            return new WP_Error( 'insert_rw_invalid_transaction_type', esc_html__( 'Invalid transaction type is provide. Please check your input.', 'dokan-lite' ) );
         }
 
         if ( empty( $args['vendor_id'] ) ) {
-            return new WP_Error( 'insert_rw_invalid_vendor_id', __( 'Invalid vendor id provide. Please provide a valid vendor id.', 'dokan-lite' ) );
+            return new WP_Error( 'insert_rw_invalid_vendor_id', esc_html__( 'Invalid vendor id provide. Please provide a valid vendor id.', 'dokan-lite' ) );
         }
 
         // just to make sure $args doesn't contain any unnecessary elements
@@ -558,7 +552,7 @@ class Manager {
 
         if ( false === $inserted ) {
             dokan_log( '[Dokan Reverse Withdrawal] Error while inserting data: <strong>' . $wpdb->last_error . '</strong>, Data: ' . print_r( $data, true ) );
-            return new WP_Error( 'insert_reverse_withdrawal_error', __( 'Something went wrong while inserting reverse withdrawal data. Please contact site admin.', 'dokan-lite' ) );
+            return new WP_Error( 'insert_reverse_withdrawal_error', esc_html__( 'Something went wrong while inserting reverse withdrawal data. Please contact site admin.', 'dokan-lite' ) );
         }
 
         do_action( 'dokan_reverse_withdrawal_created', $data, $insert_id, $args );
@@ -649,7 +643,7 @@ class Manager {
 
         // validate vendor id
         if ( empty( $args['vendor_id'] ) ) {
-            return new WP_Error( 'get_payments_by_vendor_error', __( 'Invalid vendor id provide. Please provide a valid vendor id.', 'dokan-lite' ) );
+            return new WP_Error( 'get_payments_by_vendor_error', esc_html__( 'Invalid vendor id provide. Please provide a valid vendor id.', 'dokan-lite' ) );
         }
 
         $params = [

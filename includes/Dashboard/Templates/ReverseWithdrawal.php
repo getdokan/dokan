@@ -104,12 +104,12 @@ class ReverseWithdrawal {
             return;
         }
 
-        if (  $due_status['status'] === false ) {
+        if ( false === $due_status['status'] ) {
             // we don't need to show any notices on vendor dashboard
             return;
         }
 
-        if (  $due_status['status'] === true && $due_status['due_date'] === 'immediate' ) {
+        if (  true === $due_status['status'] && 'immediate' === $due_status['due_date'] ) {
             // due period is over, we don't need to show any notices on vendor dashboard
             return;
         }

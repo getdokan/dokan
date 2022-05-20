@@ -151,7 +151,7 @@ class Order {
     public function hide_order_item_meta_key( $display_key, $meta, $item ) {
         switch ( $display_key ) {
             case '_dokan_reverse_withdrawal_balance':
-                $display_key = __( 'Payment Amount', 'dokan-lite' );
+                $display_key = esc_html__( 'Payment Amount', 'dokan-lite' );
                 break;
         }
 

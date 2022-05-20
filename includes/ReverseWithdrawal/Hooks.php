@@ -93,7 +93,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( ! in_array( 'hide_withdraw_menu', $failed_actions, true ) ) {
+        if ( is_array( $failed_actions ) && ! in_array( 'hide_withdraw_menu', $failed_actions, true ) ) {
             return $menu;
         }
 
@@ -127,7 +127,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( in_array( 'enable_catalog_mode', $failed_actions, true ) ) {
+        if ( is_array( $failed_actions ) && in_array( 'enable_catalog_mode', $failed_actions, true ) ) {
             $purchasable = false;
         }
 
@@ -231,7 +231,7 @@ class Hooks {
      */
     public function add_reverse_withdrawal_nav( $urls ) {
         $urls['reverse-withdrawal'] = [
-            'title'      => __( 'Reverse Withdrawal', 'dokan-lite' ),
+            'title'      => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-dollar-sign"></i>',
             'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
             'pos'        => 71,

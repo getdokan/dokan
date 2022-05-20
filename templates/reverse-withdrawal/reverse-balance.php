@@ -9,9 +9,6 @@
  * @var $billing_day int
  * @var $due_period int
  */
-
-use Automattic\WooCommerce\Utilities\NumberUtil;
-
 ?>
 <div class="reverse-balance-section">
     <div class="reverse-balance">
@@ -38,7 +35,7 @@ use Automattic\WooCommerce\Utilities\NumberUtil;
     </div>
     <?php if ( $payable_amount > 0 ): ?>
         <div class="reverse-pay-form">
-            <input type="text" id="reverse_pay_balance" value="<?php echo esc_attr( wc_format_localized_price( NumberUtil::round( $payable_amount, wc_get_price_decimals() ) ) ); ?>" readonly="readonly" />
+            <input type="text" id="reverse_pay_balance" value="<?php echo esc_attr( wc_format_localized_price( wc_format_decimal( $payable_amount, wc_get_price_decimals() ) ) ); ?>" readonly="readonly" />
             <input type="button" id="reverse_pay" class="button dokan-btn dokan-btn-success dokan-btn-lg dokan-theme" value="<?php esc_attr_e( 'Pay Now', 'dokan-lite' ); ?>" />
         </div>
     <?php endif; ?>

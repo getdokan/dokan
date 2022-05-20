@@ -64,7 +64,7 @@ class SettingsHelper {
     public static function get_reverse_balance_threshold() {
         $limit = dokan_get_option( 'reverse_balance_threshold', 'dokan_reverse_withdrawal', '150' );
 
-        return (float) wc_format_decimal( $limit, 2 );
+        return (float) abs( wc_format_decimal( $limit, 2 ) );
     }
 
     /**
@@ -150,7 +150,7 @@ class SettingsHelper {
      */
     public static function get_reverse_withrawal_payment_gateways() {
         $gateways = [
-            'cod'    => __( 'Cash on delivery', 'dokan-lite' ),
+            'cod'    => esc_html__( 'Cash on delivery', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_payment_gateways', $gateways );
     }
@@ -164,8 +164,8 @@ class SettingsHelper {
      */
     public static function get_billing_type_options() {
         $options = [
-            'by_amount' => __( 'By Amount Limit', 'dokan-lite' ),
-            'by_month'  => __( 'Monthly', 'dokan-lite' ),
+            'by_amount' => esc_html__( 'By Amount Limit', 'dokan-lite' ),
+            'by_month'  => esc_html__( 'Monthly', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_billing_type_options', $options );
     }
@@ -179,9 +179,9 @@ class SettingsHelper {
      */
     public static function get_failed_payment_actions() {
         $actions = [
-            'enable_catalog_mode' => __( 'Disable Add to Cart Button', 'dokan-lite' ),
-            'hide_withdraw_menu'  => __( 'Hide Withdraw Menu', 'dokan-lite' ),
-            'status_inactive'     => __( 'Make Vendor Status Inactive', 'dokan-lite' ),
+            'enable_catalog_mode' => esc_html__( 'Disable Add to Cart Button', 'dokan-lite' ),
+            'hide_withdraw_menu'  => esc_html__( 'Hide Withdraw Menu', 'dokan-lite' ),
+            'status_inactive'     => esc_html__( 'Make Vendor Status Inactive', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_failed_payment_actions', $actions );
     }

@@ -187,14 +187,13 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             return rest_ensure_response( $data );
         }
 
-        $items[] = $data['balance'];
+        $current_balance = 0;
+        $transactions[] = $data['balance'];
+        $transactions   = ! empty( $data['items'] ) ? array_merge( $transactions, $data['items'] ) : $transactions;
 
-        if ( ! empty( $data['items'] ) ) {
-            $current_balance = $data['balance']['balance'];
-            foreach ( $data['items'] as $item ) {
-                $item = $this->prepare_transaction_for_response( $item, $request, $current_balance );
-                $items[] = $this->prepare_response_for_collection( $item );
-            }
+        foreach ( $transactions as $item ) {
+            $item = $this->prepare_transaction_for_response( $item, $request, $current_balance );
+            $items[] = $this->prepare_response_for_collection( $item );
         }
 
         $response = rest_ensure_response( $items );
@@ -295,12 +294,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             'vendor_id'         => absint( $item['vendor_id'] ),
             'debit'             => $item['debit'],
             'credit'            => $item['credit'],
-            'balance'           => $item['debit'] - $item['credit'],
+            'balance'           => (float) wc_format_decimal( $item['debit'] - $item['credit'] ),
             'last_payment_date' => ! empty( $item['last_payment_date'] ) ? dokan_format_date( $item['last_payment_date'] ) : '--',
         ];
 
         $response = rest_ensure_response( $data );
-        $response->add_links( $this->prepare_links( $item, $request ) );
+        $response->add_links( $this->prepare_links( $item, $request ) ); // todo: fix the links
 
         return apply_filters( 'dokan_rest_prepare_transaction_object', $response, $item, $request );
     }
@@ -320,7 +319,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         $data = Helper::get_formated_transaction_data( $item, $current_balance );
 
         $response = rest_ensure_response( $data );
-        $response->add_links( $this->prepare_links( $item, $request ) );
+        $response->add_links( $this->prepare_links( $item, $request ) ); // todo: fix the links
 
         return apply_filters( 'dokan_rest_prepare_vendor_transaction_object', $response, $item, $request, $current_balance );
     }
@@ -338,7 +337,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     protected function prepare_links( $item, $request ) {
         $links = [
             'self' => [
-                'href' => rest_url( sprintf( '/%s/%s/store/%d', $this->namespace, $this->rest_base, $item['vendor_id'] ) ),
+                'href' => rest_url( sprintf( '/%s/%s/store/%d', $this->namespace, $this->rest_base, isset( $item['vendor_id'] ) ? $item['vendor_id'] : 0 ) ),
             ],
             'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),

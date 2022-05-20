@@ -21,13 +21,13 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
         </tr>
         <?php
         // get current balance
-        $current_balance = $transactions['balance']['balance'];
-
+        $current_balance = 0;
+        // get items to be displayed
         $items[] = $transactions['balance'];
-        $items   = array_merge(  $items, $transactions['items'] );
+        $items   = ! empty(  $transactions['items'] ) ? array_merge(  $items, $transactions['items'] ) : $items;
 
         foreach ( $items as $transaction ) {
-            $transactions = ReverseWithdrawalHelper::get_formated_transaction_data( $transaction, $current_balance, 'seller' )
+            $transaction = ReverseWithdrawalHelper::get_formated_transaction_data( $transaction, $current_balance, 'seller' )
             ?>
             <tr>
                 <td>
