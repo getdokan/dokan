@@ -18,7 +18,7 @@
                     </div>
                 </section>
                 <div class="dokan-importer-action">
-                    <button @click="continueBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
+                    <button @click="importBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
                 </div>
             </div>
             <div v-else class="dokan-importer">
@@ -86,6 +86,7 @@ export default {
     },
 
     methods: {
+        // Loads and sets if import already successfully.
         loadImportStatus() {
             this.statusLoader = true;
             let self = this;
@@ -103,12 +104,14 @@ export default {
             );
         },
 
+        // Resets data states
         resetDataState() {
             this.dummyData   = [];
             this.allVendors  = [];
             this.allProducts = [];
         },
 
+        // Loads csv file and parse csv data.
         loadCsvFile() {
             let self     = this;
             self.loading = true;
@@ -124,7 +127,7 @@ export default {
                         complete: function ( results ) {
                             self.loading   = false;
                             self.dummyData = results.data;
-                            self.importCsvFile();
+                            self.loadCsvData();
                         },
                     } );
 
@@ -133,7 +136,8 @@ export default {
             } );
         },
 
-        importCsvFile(){
+        // Lodes and sates vendor and products data.
+        loadCsvData(){
             this.dummyData.forEach( item => {
                 if ( 'vendor' === item.type ) {
                     this.allVendors.push( this.formatVendorData( item ) );
@@ -143,6 +147,7 @@ export default {
             } );
         },
 
+        // Request ajax to import data to database.
         requestToImport( data ){
             let self = this;
 
@@ -160,14 +165,17 @@ export default {
             );
         },
 
-        continueBtnHandler() {
+        // Run importer button handler.
+        importBtnHandler() {
             this.handleImport();
         },
 
+        // Updates progress bar progress.
         updateProgress( numVendorSucceed ){
             this.progress = ( 100 * numVendorSucceed ) / this.allVendors.length;
         },
 
+        // Requrests to server.
         handleImport( vendor_index = 0 ) {
             let vendorData = this.allVendors[ vendor_index ];
             if ( ! vendorData || undefined == vendorData ) {
@@ -188,6 +196,7 @@ export default {
             this.requestToImport( data );
         },
 
+        // Formats data for vendor removing products data
         formatVendorData( data ) {
             delete( data.sku );
             delete( data.status );
@@ -242,6 +251,7 @@ export default {
             return data;
         },
 
+        // Formats products data removing vendors data.
         formatProductData( data ) {
             delete( data.email );
             delete( data.password );
@@ -292,12 +302,14 @@ export default {
             return data;
         },
 
-        getVendorProducts(vendorId) {
+        // Returns single vendors products from all products array.
+        getVendorProducts( vendorId ) {
             return this.allProducts.filter( function ( item ) {
                 return item.vendor == vendorId
             } );
         },
 
+        // Reset import state.
         resetToImport() {
             this.errorMsg = '';
             this.progress = 0;
@@ -305,6 +317,7 @@ export default {
             this.done     = false;
         },
 
+        // Request to server to clear dummy data from this site.
         async clearAllDummyData() {
             let self = this;
 
@@ -344,6 +357,7 @@ export default {
             }
         },
 
+        // Returns woocommerce admin products list page url.
         getProductsPageUrl() {
             return `${ dokan.urls.adminRoot }edit.php?post_type=product`;
         },
