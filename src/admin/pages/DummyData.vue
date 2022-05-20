@@ -96,10 +96,9 @@ export default {
     methods: {
         loadImportStatus() {
             this.statusLoader = true;
-            let self     = this;
+            let self = this;
 
-            jQuery.post( dokan.ajaxurl,
-                {
+            jQuery.post( dokan.ajaxurl, {
                     'action': 'dokan_dummy_data_import_status',
                     'nonce': dokan.nonce,
                 },
@@ -155,8 +154,7 @@ export default {
         requestToImport( data ){
             let self = this;
 
-            jQuery.post( dokan.ajaxurl,
-                {
+            jQuery.post( dokan.ajaxurl, {
                     'action': 'dokan_dummy_data_import',
                     'nonce': dokan.nonce,
                     'csv_file_data': data
@@ -315,53 +313,47 @@ export default {
             this.done     = false;
         },
 
-        clearAllDummyData() {
+        async clearAllDummyData() {
             let self = this;
 
-            Swal.fire({
-                title: self.__( 'Are you sure?', 'dokan-lite' ),
-                text: self.__( "You won't be able to revert this!", 'dokan-lite' ),
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: self.__( 'Yes', 'dokan-lite' )
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    self.loading = true;
+            const answer = await dokan_sweetalert( "Are you sure? You want to remove all dummy data!", {
+                action : 'confirm',
+                icon : 'warning',
+            } );
 
-                    jQuery.post( dokan.ajaxurl,
-                        {
-                            'action': 'dokan_dummy_data_clear',
-                            'nonce': dokan.nonce,
-                        },
-                        function ( response ) {
-                            if ( response.success ) {
-                                dokan_sweetalert( '',{
-                                    toast: true,
-                                    icon: 'success',
-                                    title: response.data,
-                                    animation: false,
-                                    position: 'bottom-right',
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: ( toast ) => {
-                                        toast.addEventListener( 'mouseenter', Swal.stopTimer )
-                                        toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-                                    }
-                                } );
+            if ( 'undefined' !== answer && answer.isConfirmed ) {
+                self.loading = true;
 
-                                self.resetToImport();
-                            }
+                jQuery.post( dokan.ajaxurl, {
+                    'action': 'dokan_dummy_data_clear',
+                    'nonce': dokan.nonce,
+                    },
+                    function ( response ) {
+                        if ( response.success ) {
+                            dokan_sweetalert( '', {
+                                toast: true,
+                                icon: 'success',
+                                title: response.data,
+                                animation: false,
+                                position: 'bottom-right',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: ( toast ) => {
+                                    toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                                    toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                                }
+                            } );
+
+                            self.resetToImport();
                         }
-                    );
-                }
-            });
+                    }
+                );
+            }
         },
 
         getProductsPageUrl() {
-            return `${dokan.urls.adminRoot}edit.php?post_type=product`;
+            return `${ dokan.urls.adminRoot }edit.php?post_type=product`;
         },
     },
 }
