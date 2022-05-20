@@ -846,7 +846,7 @@ class Settings {
         $required_fields = apply_filters( 'dokan_payment_settings_required_fields', $required_fields, $payment_method_id, $seller_id );
 
         // Check all the required fields have values
-        if ( ! empty( $payment_settings ) ) {
+        if ( ! empty( $payment_settings ) && is_array( $payment_settings ) ) {
             $is_connected = true;
 
             foreach ( $payment_settings as $field => $value ) {
