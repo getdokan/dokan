@@ -3,7 +3,7 @@
         <div class="color-option-settings">
             <div
                 class="color_option"
-                v-bind:class="fieldValue[fieldData.name].pallete_status === 'template' ? 'active-pallete' : ''"
+                v-bind:class="fieldValue[ fieldData.name ].pallete_status === 'template' ? 'active-pallete' : ''"
                 @click="setPalleteStatus( 'template' )"
             >
                 <div class="color-option-icon">
@@ -11,16 +11,16 @@
                 </div>
                 <div class="color-option-content">
                     <h3 class="color-option-title">
-                        {{ __( 'Pre-defined Color Pallete', 'dokan' ) }}
+                        {{ __( 'Pre-defined Color Pallete', 'dokan-lite' ) }}
                     </h3>
                     <p class="color-option-desc">
-                        {{ __( "By choosing anyone from these color palletes to colorize your vendor dashboard; it’s a time saving tool.", 'dokan' ) }}
+                        {{ __( "By choosing anyone from these color palletes to colorize your vendor dashboard; it’s a time saving tool.", 'dokan-lite' ) }}
                     </p>
                 </div>
             </div>
             <div
                 class="color_option"
-                v-bind:class="fieldValue[fieldData.name].pallete_status === 'custom' ? 'active-pallete' : ''"
+                v-bind:class="fieldValue[ fieldData.name ].pallete_status === 'custom' ? 'active-pallete' : ''"
                 @click="setPalleteStatus( 'custom' )"
             >
                 <div class="color-option-icon">
@@ -28,10 +28,10 @@
                 </div>
                 <div class="color-option-content">
                     <h3 class="color-option-title">
-                        {{ __( 'Custom Color', 'dokan' ) }}
+                        {{ __( 'Custom Color', 'dokan-lite' ) }}
                     </h3>
                     <p class="color-option-desc">
-                        {{ __( 'You can color your vendor dashboard by choosing any color as your brand identity or as your wish.', 'dokan' ) }}
+                        {{ __( 'You can color your vendor dashboard by choosing any color as your brand identity or as your wish.', 'dokan-lite' ) }}
                     </p>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         class="color-pallete-contents"
                         @click="setColorpalleteSettings( values )"
                         v-bind:class="isCurrentPalleteActive( values ) ? 'active-pallete' : ''"
-                        v-if="fieldValue[fieldData.name].pallete_status === 'template' && values.value !== 'custom'"
+                        v-if="fieldValue[ fieldData.name ].pallete_status === 'template' && values.value !== 'custom'"
                     >
                         <div class="pallete-btn">
                             <input
@@ -52,7 +52,7 @@
                                 type="radio"
                                 :name="fieldData.name"
                                 :value="values.value"
-                                v-model="fieldValue[fieldData.name].value"
+                                v-model="fieldValue[ fieldData.name ].value"
                                 :checked="isCurrentPalleteActive( values ) ? 'true' : 'false'"
                             >
                             <label :for="values.value">{{ values.value }}</label>
@@ -69,19 +69,19 @@
                         </div>
                     </div>
                 </template>
-                <template v-if="fieldValue[fieldData.name].pallete_status === 'custom'">
+                <template v-if="fieldValue[ fieldData.name ].pallete_status === 'custom'">
                     <div class="custom-pallete-header">
-                        <h3>{{ __( 'Choose the color: ', 'dokan' ) }}</h3>
-                        <p @click="resetColors" class="btnReset">{{ __( 'Reset all' ) }}</p>
+                        <h3>{{ __( 'Choose the color: ', 'dokan-lite' ) }}</h3>
+                        <p @click="resetColors" class="btnReset">{{ __( 'Reset all', 'dokan-lite' ) }}</p>
                     </div>
                     <div class="color-pallete-contents custom-pallete" v-for="( values, key ) in customPicker" :key="key">
-                        <h4>{{ __( values.label, 'dokan' ) }}</h4>
-                        <color-picker v-model="fieldValue[fieldData.name][key]" @custom-change="e => setCustomColor( e, key )"></color-picker>
+                        <h4>{{ __( values.label, 'dokan-lite' ) }}</h4>
+                        <color-picker v-model="fieldValue[ fieldData.name ][ key ]" @custom-change="e => setCustomColor( e, key )"></color-picker>
                     </div>
                 </template>
             </div>
             <div class="pallete_preview">
-                <h3 class="preview-title">{{ __( 'Preview', 'dokan' ) }}</h3>
+                <h3 class="preview-title">{{ __( 'Preview', 'dokan-lite' ) }}</h3>
                 <div class="preview">
                     <div class="preview-header">
                         <div class="ellipsis">
@@ -113,7 +113,7 @@
                                     </div>
                                 </div>
                                 <div class="button-preview" :style="'background-color: ' + preview['btn_primary'] + '; color: ' + preview['btn_text']">
-                                    {{ __( 'Button', 'dokan' ) }}
+                                    {{ __( 'Button', 'dokan-lite' ) }}
                                 </div>
                             </div>
                             <div class="chart-section">
@@ -122,7 +122,7 @@
                                         <div class="content" v-for="index in 4" :key="index"></div>
                                     </div>
                                     <div class="btn-hover-preview" :style="'background-color: ' + preview['btn_hover'] + '; color: ' + preview['btn_hover_text']">
-                                        {{ __( 'Button Hover', 'dokan' ) }}
+                                        {{ __( 'Button Hover', 'dokan-lite' ) }}
                                     </div>
                                 </div>
                                 <div class="chart-preview">
@@ -142,7 +142,7 @@
                                 <div class="content-half">
                                     <div class="content" v-for="index in 2" :key="index"></div>
                                     <div class="border-preview" :style="'border-color: ' + this.preview['btn_primary_border']">
-                                        {{ __( 'Button Border', 'dokan' ) }}
+                                        {{ __( 'Button Border', 'dokan-lite' ) }}
                                     </div>
                                 </div>
                             </div>
@@ -218,16 +218,16 @@
                     dash_nav_border    : '#454545',
                 },
                 customPicker : {
-                    btn_text           : { label : this.__( 'Button Text color', 'dokan' ), default : '#FFF' },
-                    btn_primary        : { label : this.__( 'Button Background color', 'dokan' ), default : '#F05025' },
-                    btn_primary_border : { label : this.__( 'Button Border color', 'dokan' ), default : '#DA502B' },
-                    btn_hover_text     : { label : this.__( 'Button Hover Text color', 'dokan' ), default : '#FFF' },
-                    btn_hover          : { label : this.__( 'Button Hover color', 'dokan' ), default : '#DD3B0F' },
-                    btn_hover_border   : { label : this.__( 'Button Hover Border color', 'dokan' ), default : '#C83811' },
-                    dash_nav_text      : { label : this.__( 'Dashboard Navigation Text', 'dokan' ), default : '#CFCFCF' },
-                    dash_active_link   : { label : this.__( 'Dashboard Navigation Active Menu', 'dokan' ), default : '#F05025' },
-                    dash_nav_bg        : { label : this.__( 'Dashboard Navigation Background', 'dokan' ), default : '#1B233B' },
-                    dash_nav_border    : { label : this.__( 'Dashboard Menu Border', 'dokan' ), default : '#454545' },
+                    btn_text           : { label : this.__( 'Button Text color', 'dokan-lite' ), default : '#FFF' },
+                    btn_primary        : { label : this.__( 'Button Background color', 'dokan-lite' ), default : '#F05025' },
+                    btn_primary_border : { label : this.__( 'Button Border color', 'dokan-lite' ), default : '#DA502B' },
+                    btn_hover_text     : { label : this.__( 'Button Hover Text color', 'dokan-lite' ), default : '#FFF' },
+                    btn_hover          : { label : this.__( 'Button Hover color', 'dokan-lite' ), default : '#DD3B0F' },
+                    btn_hover_border   : { label : this.__( 'Button Hover Border color', 'dokan-lite' ), default : '#C83811' },
+                    dash_nav_text      : { label : this.__( 'Dashboard Navigation Text', 'dokan-lite' ), default : '#CFCFCF' },
+                    dash_active_link   : { label : this.__( 'Dashboard Navigation Active Menu', 'dokan-lite' ), default : '#F05025' },
+                    dash_nav_bg        : { label : this.__( 'Dashboard Navigation Background', 'dokan-lite' ), default : '#1B233B' },
+                    dash_nav_border    : { label : this.__( 'Dashboard Menu Border', 'dokan-lite' ), default : '#454545' },
                 },
             }
         },
@@ -246,7 +246,7 @@
             setPreview( status, change ) {
                 if ( status === 'custom' ) {
                     if ( Object.keys( this.custom ).length === 0 ) {
-                        for (const [optionKey, optionValue] of Object.entries(this.customPicker)) {
+                        for ( const [ optionKey, optionValue ] of Object.entries( this.customPicker ) ) {
                             this.custom[ optionKey ] = change ? optionValue.default : this.fieldValue[ this.fieldData.name ][ optionKey ];
                         }
                     }
@@ -254,9 +254,9 @@
                     this.updatePreview( this.custom );
                 } else {
                     let selectedValue = this.fieldValue[ this.fieldData.name ].value,
-                        optionObj     = this.fieldData.options[ selectedValue.replace(' ', '_') ];
+                        optionObj     = this.fieldData.options[ selectedValue.replace( ' ', '_' ) ];
 
-                    for (const [optionKey, optionValue] of Object.entries(this.preview)) {
+                    for ( const [ optionKey, optionValue ] of Object.entries( this.preview ) ) {
                         this.template[ optionKey ] = optionObj[ optionKey ];
                     }
 
@@ -265,9 +265,9 @@
             },
 
             updateTemplate( value ) {
-                let tempObj = this.fieldData.options[ value.replace(' ', '_') ];
+                let tempObj = this.fieldData.options[ value.replace( ' ', '_' ) ];
 
-                for (const [optionKey, optionValue] of Object.entries(this.preview)) {
+                for ( const [ optionKey, optionValue ] of Object.entries( this.preview ) ) {
                     this.template[ optionKey ] = tempObj[ optionKey ];
                 }
 
@@ -275,17 +275,17 @@
             },
 
             updatePreview( colorObj ) {
-                for (const [optionKey, optionValue] of Object.entries(this.preview)) {
+                for ( const [ optionKey, optionValue ] of Object.entries( this.preview ) ) {
                     this.preview[ optionKey ] = colorObj[ optionKey ];
                 }
 
-                for (const [optionKey, optionValue] of Object.entries(this.preview)) {
+                for ( const [ optionKey, optionValue ] of Object.entries( this.preview ) ) {
                     this.fieldValue[ this.fieldData.name ][ optionKey ] = optionValue;
                 }
             },
 
             setColorpalleteSettings( values ) {
-                for (const [optionKey, optionValue] of Object.entries(values)) {
+                for ( const [ optionKey, optionValue ] of Object.entries( values ) ) {
                     if ( ! this.preview[ optionKey ] ) {
                         this.fieldValue[ this.fieldData.name ][ optionKey ] = optionValue;
                     }
@@ -297,7 +297,7 @@
             },
 
             setCustomColor( value, key ) {
-                if( ! key || this.fieldValue[this.fieldData.name].pallete_status !== 'custom' ) {
+                if( ! key || this.fieldValue[ this.fieldData.name ].pallete_status !== 'custom' ) {
                     return;
                 }
 
@@ -306,15 +306,15 @@
             },
 
             resetColors() {
-                for (const [optionKey, optionValue] of Object.entries(this.customPicker)) {
-                    this.custom[optionKey] = optionValue.default;
+                for ( const [ optionKey, optionValue ] of Object.entries( this.customPicker ) ) {
+                    this.custom[ optionKey ] = optionValue.default;
                 }
 
                 this.updatePreview( this.custom );
             },
 
             isCurrentPalleteActive( values ) {
-                return this.fieldValue[this.fieldData.name]['value'] === values.value;
+                return this.fieldValue[ this.fieldData.name ]['value'] === values.value;
             }
         },
     };
