@@ -1,5 +1,7 @@
 <?php
 /**
+ * @since DOKAN_SINCE
+ *
  * @var $transactions array
  */
 use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;

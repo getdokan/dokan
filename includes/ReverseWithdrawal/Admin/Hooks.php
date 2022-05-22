@@ -7,9 +7,18 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+/**
+ * Class Hooks
+ *
+ * @since DOKAN_SINCE
+ *
+ * @package WeDevs\Dokan\ReverseWithdrawal\Admin
+ */
 class Hooks {
     /**
      * Admin constructor.
+     *
+     * @since DOKAN_SINCE
      */
     public function __construct() {
         // fix admin report log list

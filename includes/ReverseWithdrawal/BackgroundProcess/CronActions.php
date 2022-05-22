@@ -19,11 +19,6 @@ class CronActions {
      * @since DOKAN_SINCE
      */
     public function __construct() {
-        // check if reverse withdrawal feature is enabled
-        if ( ! SettingsHelper::is_enabled() ) {
-            return;
-        }
-
         // init background process hook
         add_action( 'init', [ $this, 'schedule_action' ] );
 
@@ -49,6 +44,14 @@ class CronActions {
      */
     public function schedule_action() {
         $hook = 'dokan_reverse_withdrawal_midnight_cron';
+
+        // check if reverse withdrawal feature is enabled
+        if ( ! SettingsHelper::is_enabled() ) {
+            as_unschedule_all_actions( $hook );
+            return;
+        }
+
+        // schedule recurring cron action
         if ( false === as_next_scheduled_action( $hook ) ) {
             // remove previous actions, this will eliminate else condition
             as_unschedule_all_actions( $hook );
@@ -75,14 +78,15 @@ class CronActions {
 
         // define hook name beforehand
         $hook = 'dokan_reverse_withdrawal_monthly_cron';
-        // check if we've defined the cron hook
-        $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
 
         // check if reverse withdrawal is enabled
         if ( 'off' === $new_value['enabled'] ) {
             as_unschedule_all_actions( $hook );
             return;
         }
+
+        // check if we've defined the cron hook
+        $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
 
         // check for previous billing type value
         // if previous value is by_month and new value is not
@@ -107,7 +111,7 @@ class CronActions {
 
         // now schedule monthly billing reminder cron
         $timestamp     = dokan_current_datetime()->modify( 'yesterday' )->getTimestamp();
-        $cron_schedule = sprintf( '0 9 %1$d * *', intval( $new_value['monthly_billing_day'] ) ); // 9:00 AM on $new_value['monthly_billing_day']th of the month
+        $cron_schedule = sprintf( '0 8 %1$d * *', intval( $new_value['monthly_billing_day'] ) ); // 9:00 AM on $new_value['monthly_billing_day']th of the month
         as_schedule_cron_action( $timestamp, $cron_schedule, $hook );
     }
 

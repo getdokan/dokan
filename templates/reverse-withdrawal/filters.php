@@ -1,5 +1,7 @@
 <?php
 /**
+ * @since DOKAN_SINCE
+ *
  * @var $trn_date array
  */
 $localized_date = dokan_format_date( $trn_date['from'] ) . ' - ' . dokan_format_date( $trn_date['to'] );

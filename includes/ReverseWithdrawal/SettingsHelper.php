@@ -5,6 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+/**
+ * @class SettingsHelper
+ *
+ * @since DOKAN_SINCE
+ *
+ * @package WeDevs\Dokan\ReverseWithdrawal
+ */
 class SettingsHelper {
     /**
      * Check if reverse withdrawal feature is enabled

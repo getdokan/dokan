@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class Hooks
  *
  * @since DOKAN_SINCE
+ *
+ * @package WeDevs\Dokan\ReverseWithdrawal
  */
 class Hooks {
     /**
@@ -28,7 +30,11 @@ class Hooks {
         add_action( 'dokan_reverse_withdrawal_created', [ $this, 'after_reverse_withdrawal_inserted' ], 99, 1 );
 
         // take reverse withdrawal actions
-        add_action( 'init', [ $this, 'reverse_withdrawal_actions' ], 5 );
+        // remove withdraw menu - reverse withdrawal action
+        add_filter( 'dokan_get_dashboard_nav', array( $this, 'unset_withdraw_menu' ) );
+        // enable catalog mode - reverse withdrawal action
+        add_filter( 'woocommerce_is_purchasable', array( $this, 'hide_add_to_cart_button' ), 10, 2 );
+        add_filter( 'woocommerce_get_price_html', array( $this, 'hide_product_price' ), 20, 2 );
 
         // after order status changed
         add_action( 'woocommerce_order_status_changed', [ $this, 'process_order_status_changed' ], 10, 3 );
@@ -39,6 +45,9 @@ class Hooks {
 
     /**
      * After reverse withdrawal is inserted
+     *
+     * After a reverse withdrawal entry is inserted, we will check if we had to take any actions or revert previous taken actions.
+     * This will make sure immediate update of vendor status.
      *
      * @since DOKAN_SINCE
      *
@@ -61,22 +70,6 @@ class Hooks {
                 $failed_actions->revert_reverse_pay_actions( (int) $data['vendor_id'] );
                 break;
         }
-    }
-
-    /**
-     * This method will check and ensure reverse withdrawal actions
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function reverse_withdrawal_actions() {
-        // remove withdraw menu - reverse withdrawal action
-        add_filter( 'dokan_get_dashboard_nav', array( $this, 'unset_withdraw_menu' ) );
-
-        // enable catalog mode - reverse withdrawal action
-        add_filter( 'woocommerce_is_purchasable', array( $this, 'hide_add_to_cart_button' ), 10, 2 );
-        add_filter( 'woocommerce_get_price_html', array( $this, 'hide_product_price' ), 20, 2 );
     }
 
     /**
@@ -196,6 +189,11 @@ class Hooks {
 
         // if order has suborder, return
         if ( $order->get_meta( 'has_sub_order' ) ) {
+            return;
+        }
+
+        // check if this is a reverse withdrawal order, in that case, do not process
+        if ( 'cod' === $order->get_payment_method() && Helper::has_reverse_withdrawal_payment_in_order( $order ) ) {
             return;
         }
 

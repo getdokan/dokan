@@ -60,7 +60,7 @@ class Ajax {
             wp_send_json_error( [ 'message' => esc_html__( 'Invalid base payment product found. Please contact with site admin.', 'dokan-lite' ) ], 400 );
         }
 
-        if ( $product->get_status() !== 'publish' ) {
+        if ( 'publish' !== $product->get_status() ) {
             wp_send_json_error( [ 'message' => esc_html__( 'Base payment product status is not published. Please contact with site admin.', 'dokan-lite' ) ], 400 );
         }
 

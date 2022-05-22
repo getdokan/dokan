@@ -68,15 +68,6 @@ class AsyncRequests {
      *
      * @return void
      */
-    /**
-     * Take actions for given vendors
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $args
-     *
-     * @return void
-     */
     public function send_billing_invoice_email( $args = [] ) {
         // validate args
         if ( ! isset( $args['task'] ) || 'send_billing_invoice_email' !== $args['task'] ) {

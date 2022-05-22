@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class Manager
  *
- * @package WeDevs\Dokan\ReverseWithdrawal\Manager
+ * @package WeDevs\Dokan\ReverseWithdrawal
  */
 class Manager {
 
     /**
-     * Table name for advertisement table
+     * Table name for dokan_reverse_withdrawal table
      *
      * @var string
      *
@@ -39,7 +39,7 @@ class Manager {
     }
 
     /**
-     * This method will return data from dokan_advertised_products table
+     * This method will return data from dokan_reverse_withdrawal table
      *
      * @since DOKAN_SINCE
      *
@@ -214,6 +214,7 @@ class Manager {
         $data = Cache::get( $cache_key, $cache_group );
 
         if ( in_array( $args['return'], [ 'vendor_transaction' ], true ) && false === $data ) {
+            // get all transactions of vendor(s)
             // @codingStandardsIgnoreStart
             $data = $wpdb->get_results(
                 $wpdb->prepare(
@@ -236,6 +237,7 @@ class Manager {
             // store on cache
             Cache::set( $cache_key, $data, $cache_group );
         } elseif ( 'count' === $args['return'] && false === $data ) {
+            // get count of entries
             // @codingStandardsIgnoreStart
             $data = (int) $wpdb->get_var(
                 $wpdb->prepare(
@@ -289,7 +291,7 @@ class Manager {
             }
 
             // if per_page is 1, send single item
-            if ( 1 === $args['per_page'] ) {
+            if ( 1 === (int) $args['per_page'] ) {
                 $data = is_array( $data ) && ! empty( $data ) ? $data[0] : [];
             }
             // store on cache
@@ -747,7 +749,7 @@ class Manager {
     }
 
     /**
-     * Get advertisement table with prefix
+     * Get dokan_reverse_withdrawal table with prefix
      *
      * @since DOKAN_SINCE
      *

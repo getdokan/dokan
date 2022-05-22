@@ -1,3 +1,8 @@
+<?php
+/**
+ * @since DOKAN_SINCE
+ */
+?>
 <?php do_action( 'dokan_dashboard_wrap_start' ); ?>
 
     <div class="dokan-dashboard-wrap">
@@ -12,7 +17,7 @@
              *  @since DOKAN_SINCE
              */
             do_action( 'dokan_dashboard_content_before' );
-            do_action( 'dokan_withdraw_content_before' );
+            do_action( 'dokan_reverse_withdrawal_content_before' );
         ?>
 
         <div class="dokan-dashboard-content dokan-reverse-withdrawal-content">
@@ -77,7 +82,7 @@
              *  @since DOKAN_SINCE
              */
             do_action( 'dokan_dashboard_content_after' );
-            do_action( 'dokan_withdraw_content_after' );
+            do_action( 'dokan_reverse_withdrawal_content_after' );
         ?>
     </div><!-- .dokan-dashboard-wrap -->
 

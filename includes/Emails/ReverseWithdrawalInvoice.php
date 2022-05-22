@@ -132,7 +132,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
 
         $this->setup_locale();
 
-        if ( $this->get_recipient() ) {
+        if ( $this->get_recipient() !== 'unpaid_vendor@ofthe.site' ) {
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
 

@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Helper class for reverse withdrawal
  *
  * @since DOKAN_SINCE
+ *
+ * @package WeDevs\Dokan\ReverseWithdrawal
  */
 class Helper {
     /**
@@ -109,7 +111,7 @@ class Helper {
      *
      * @param $vendor_id
      *
-     * @return mixed
+     * @return string
      */
     public static function get_balance_threshold_exceed_date( $vendor_id ) {
         return get_user_meta( $vendor_id, self::balance_threshold_exceed_date_key(), true );
@@ -222,7 +224,7 @@ class Helper {
      *
      * @return string
      */
-    public static function get_formatted_transaction_id( $transaction_id, $transaction_type, $contex = 'admin' ) {
+    public static function get_transaction_url_from_transaction_id( $transaction_id, $transaction_type, $contex = 'admin' ) {
         switch ( $transaction_type ) {
             case 'product_advertisement':
                 // get product edit link
@@ -267,7 +269,7 @@ class Helper {
     public static function get_formated_transaction_data( $item, &$current_balance, $context = 'admin' ) {
         $id        = ! empty( $item['id'] ) && is_numeric( $item['id'] ) ? absint( $item['id'] ) : '--';
         $trn_id    = ! empty( $item['trn_id'] ) && is_numeric( $item['trn_id'] ) ? absint( $item['trn_id'] ) : '--';
-        $trn_url   = is_numeric( $trn_id ) ? static::get_formatted_transaction_id( $trn_id, sanitize_text_field( $item['trn_type'] ), $context ) : '#';
+        $trn_url   = is_numeric( $trn_id ) ? static::get_transaction_url_from_transaction_id( $trn_id, sanitize_text_field( $item['trn_type'] ), $context ) : '#';
         $trn_date  = ! empty( $item['trn_date'] ) ? dokan_format_date( $item['trn_date'] ) : '--';
         $trn_type  = ! empty( $item['trn_type'] ) ? static::get_transaction_types( sanitize_text_field( $item['trn_type'] ) ) : '--';
         $vendor_id = ! empty( $item['vendor_id'] ) && is_numeric( $item['vendor_id'] ) ? absint( $item['vendor_id'] ) : '--';
