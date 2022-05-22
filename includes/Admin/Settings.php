@@ -414,11 +414,11 @@ class Settings {
 
         $selling_option_commission = apply_filters(
             'dokan_settings_selling_option_commission', [
-                'commission'             => [
+                'commission'      => [
                     'name'        => 'commission',
                     'label'       => __( 'Commission', 'dokan-lite' ),
                     'type'        => 'sub_section',
-                    'description' => __( 'Configure your site settings and control access to your site.', 'dokan-lite' ),
+                    'description' => __( 'Define Commission types, admin commissions, shipping and tax recipients, and more.', 'dokan-lite' ),
                 ],
                 'commission_type'        => [
                     'name'          => 'commission_type',
@@ -470,9 +470,9 @@ class Settings {
             'dokan_settings_selling_option_vendor_capability', [
                 'selling_capabilities'      => [
                     'name'        => 'selling_capabilities',
-                    'label'       => __( 'Selling Capabilities', 'dokan-lite' ),
+                    'label'       => __( 'Vendor Capabilities', 'dokan-lite' ),
                     'type'        => 'sub_section',
-                    'description' => __( 'Configure your site settings and control access to your site.', 'dokan-lite' ),
+                    'description' => __( 'Configure your multivendor site settings and vendor selling capabilities.', 'dokan-lite' ),
                 ],
                 'new_seller_enable_selling' => [
                     'name'          => 'new_seller_enable_selling',
