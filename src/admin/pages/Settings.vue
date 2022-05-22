@@ -679,7 +679,6 @@
                 }
             }
 
-
             &:before {
                 top: 0;
                 left: 0;
@@ -691,20 +690,20 @@
             }
         }
 
-        .radio-image-container,
-        .color-palette-container {
+        .radio-image-container {
             padding: 20px 0;
             display: grid;
             grid-row-gap: 2.6%;
             grid-column-gap: 3.2%;
 
-            .radio-image,
-            .color-palette-image {
+            .radio-image {
                 display: block;
+                width: 50%;
                 width: 100%;
                 background: #fff;
                 -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
                 box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+                margin: 0 0 15px;
                 position: relative;
                 line-height: 0;
                 border: 1px solid #ededed;
@@ -779,75 +778,6 @@
 
         .radio-image-container {
             grid-template-columns: repeat(2, 1fr);
-        }
-
-        .color-palette-container {
-            grid-template-columns: repeat(3, 1fr);
-
-            .active-palette {
-                background-color: #dcdcde;
-            }
-
-            .color-palette-contents {
-                cursor: pointer;
-                padding: 15px;
-                border-radius: 5px;
-
-                .palette-btn {
-                    display: flex;
-                    align-items: center;
-                    padding-bottom: 7px;
-
-                    input[type='radio'] {
-                        color: #50575e;
-                        width: 1.25rem;
-                        clear: none;
-                        border: 1px solid #8c8f94;
-                        height: 1.25rem;
-                        margin: -0.25rem 0.6rem 0 0;
-                        outline: 0;
-                        display: inline-block;
-                        padding: 0 !important;
-                        min-width: 1rem;
-                        background: #fff;
-                        transition: .05s border-color ease-in-out;
-                        text-align: center;
-                        line-height: 0;
-                        border-radius: 50%;
-                        vertical-align: middle;
-                        -webkit-appearance: none;
-
-                        &:checked {
-                            &:before {
-                                width: 0.62rem;
-                                height: 0.62rem;
-                                margin: 0.256rem;
-                                border-radius: 60%;
-                            }
-                        }
-                    }
-
-                    label {
-                        text-transform: capitalize;
-                    }
-                }
-
-                .colors {
-                    height: 20px;
-                    display: flex;
-                    overflow: hidden;
-                    border-radius: 4px;
-
-                    div {
-                        flex: 2;
-                        height: 100%;
-                    }
-                }
-
-                &:hover {
-                    background-color: #dcdcde;
-                }
-            }
         }
 
         .search-box {

@@ -206,12 +206,7 @@
         <template v-if="'disbursement_sub_section' === fieldData.type && ! hideWithdrawOption()">
             <div class="dokan-settings-sub-section">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
-                <p class="sub-section-description">
-                    {{ fieldData.description }}
-                    <a :href="fieldData.learn_more" class="learn-more-btn">
-                        {{ __( 'Learn More', 'dokan-lite' ) }}
-                    </a>
-                </p>
+                <p class="sub-section-description">{{ fieldData.description }}</p>
             </div>
         </template>
 
@@ -903,7 +898,7 @@
                 expandSocials: false,
                 checked: this.isChecked(),
                 fullDay: this.checkFullDay(),
-                fullHours: '24 hours',
+                fullHours: this.__( '24 hours', 'dokan' ),
                 toggleActive: this.checkWorkingStatus(),
                 repeatableTime: [],
                 yourStringTimeValue: '',
@@ -938,55 +933,55 @@
         },
 
     computed: {
-        shouldShow() {
+        shouldShow(e) {
             let shouldShow = true;
 
             if ( this.fieldData.show_if ) {
-                const conditions = this.fieldData.show_if;
+                const conditions   = this.fieldData.show_if;
                 const dependencies = Object.keys( conditions );
 
                 let i = 0;
 
                 for ( i = 0; i < dependencies.length; i++ ) {
-                    const dependency = dependencies[i];
+                    const dependency            = dependencies[i];
                     const [ optionId, sectionId = this.sectionId ] = dependency.split( '.' ).reverse();
-                    const dependencyValue = this.allSettingsValues[ sectionId ][ optionId ];
-                    const [ operator, value ] = _.chain( conditions[ dependency ] ).pairs().first().value();
+                    const dependencyValue       = this.allSettingsValues[ sectionId ][ optionId ];
+                    const [ operator, value ]   = _.chain( conditions[ dependency ] ).pairs().first().value();
 
                     switch ( operator ) {
                         case 'greater_than':
-                            if ( ! (dependencyValue > value ) ) {
+                            if ( ! ( dependencyValue > value ) ) {
                                 shouldShow = false;
                             }
                             break;
 
                         case 'greater_than_equal':
-                            if ( ! (dependencyValue >= value ) ) {
+                            if ( ! ( dependencyValue >= value ) ) {
                                 shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
-                            if ( ! (dependencyValue < value ) ) {
+                            if ( ! ( dependencyValue < value ) ) {
                                 shouldShow = false;
                             }
                             break;
 
                         case 'less_than':
-                            if ( ! (dependencyValue <= value ) ) {
+                            if ( ! ( dependencyValue <= value ) ) {
                                 shouldShow = false;
                             }
                             break;
 
                         case 'contains':
-                            if ( ! Object.values(dependencyValue).includes( value ) ) {
+                            if ( ! Object.values( dependencyValue ).includes( value ) ) {
                                 shouldShow = false;
                             }
                             break;
 
                         case 'equal':
                         default:
-                            if ( dependencyValue != value ) {
+                            if ( dependencyValue !== value ) {
                                 shouldShow = false;
                             }
                             break;
@@ -996,7 +991,7 @@
                         break;
                     }
                 }
-            }
+            } 
 
             return shouldShow;
         },
@@ -1171,7 +1166,7 @@
                 timepicker_first_option = $( '.ui-timepicker-list' ).find( 'li:first' );
 
             if ( ! timepicker_first_option.hasClass( 'ui-timepicker-all-day' ) ) {
-                $( '.ui-timepicker-list' ).prepend( '<li class="ui-timepicker-all-day">24 hours</li>' );
+                $( '.ui-timepicker-list' ).prepend( `<li class="ui-timepicker-all-day">${this.fullHours}</li>` );
             }
 
             $( e.target ).on( 'changeTime', function() {
@@ -1257,21 +1252,21 @@
                 }
                 if ( this.fieldValue['quarterly_schedule']['month'] === 'january' ) {
                     this.disbursementSettings.quarterly.second = 'april';
-                    this.disbursementSettings.quarterly.third = 'july';
+                    this.disbursementSettings.quarterly.third  = 'july';
                     this.disbursementSettings.quarterly.fourth = 'october';
                 } else if ( this.fieldValue['quarterly_schedule']['month'] === 'february' ) {
                     this.disbursementSettings.quarterly.second = 'may';
-                    this.disbursementSettings.quarterly.third = 'august';
+                    this.disbursementSettings.quarterly.third  = 'august';
                     this.disbursementSettings.quarterly.fourth = 'november';
                 } else if ( this.fieldValue['quarterly_schedule']['month'] === 'march' ) {
                     this.disbursementSettings.quarterly.second = 'june';
-                    this.disbursementSettings.quarterly.third = 'september';
+                    this.disbursementSettings.quarterly.third  = 'september';
                     this.disbursementSettings.quarterly.fourth = 'december';
                 }
             },
 
             setDisbursementBiweeklySettings() {
-                if (  ! ( 'biweekly_schedule' in this.fieldValue ) ) {
+                if ( ! ( 'biweekly_schedule' in this.fieldValue ) ) {
                     return;
                 }
                 if ( this.fieldValue['biweekly_schedule']['week'] === '1' ) {
@@ -1297,11 +1292,6 @@
 </script>
 
 <style lang="less">
-    span.repeatable-item-description {
-        color: #999;
-        font-size: 11px;
-        font-style: italic;
-    }
     .dokan-settings-fields {
         div {
             &:last-child{
@@ -1312,6 +1302,11 @@
                 }
             }
         }
+    }
+    span.repeatable-item-description {
+        color: #999;
+        font-size: 11px;
+        font-style: italic;
     }
     ul.dokan-settings-repeatable-list {
         display: flex;
