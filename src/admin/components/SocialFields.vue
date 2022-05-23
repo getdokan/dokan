@@ -1,7 +1,12 @@
 <template>
     <fieldset>
         <div class="html_contents">
-            <h3 class="field_heading" scope="row" v-html="fieldData[fieldType].label"></h3>
+            <h3 class="field_heading" scope="row">
+                {{ fieldData[fieldType].label }}
+                <span v-if="fieldData.tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                </span>
+            </h3>
             <p class="field_desc" v-html="fieldData[fieldType].desc"></p>
         </div>
         <div class="fields" v-bind:class="[fieldType === 'app_code_type' ? 'radio_fields' : '']" v-if="fieldType !== 'app_label'">

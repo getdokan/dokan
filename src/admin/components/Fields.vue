@@ -15,6 +15,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -44,6 +47,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -77,6 +83,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -109,6 +118,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -141,6 +153,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -163,6 +178,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -184,6 +202,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -216,6 +237,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -241,6 +265,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -266,6 +293,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -350,6 +380,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -396,6 +429,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -449,6 +485,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -486,6 +525,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -522,6 +564,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -544,6 +589,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -563,6 +611,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -593,6 +644,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -625,6 +679,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -641,6 +698,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -654,7 +714,12 @@
                 <ul class="dokan-settings-repeatable-list">
                     <template v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
                         <li v-if="fieldValue[fieldData.name]" :key="optionKey">
-                            {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
+                            {{ optionVal.value }}
+                            <span
+                                v-if="!optionVal.must_use"
+                                class="dashicons dashicons-no-alt remove-item"
+                                @click.prevent="removeItem( optionKey, fieldData.name )"
+                            ></span>
                             <span class="repeatable-item-description" v-html="optionVal.desc"></span>
                         </li>
                     </template>
@@ -668,6 +733,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -698,6 +766,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -733,6 +804,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -786,6 +860,9 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
+                            <span v-if="fieldData.tooltip">
+                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -1434,6 +1511,16 @@
                     font-weight: 600;
                     line-height: 35px;
                     font-family: 'Roboto', sans-serif;
+
+                    span {
+                        i {
+                            margin: 5px 0 0 5px;
+                        }
+
+                        .tooltip {
+                            font-size: 14px;
+                        }
+                    }
                 }
 
                 .field_desc {
