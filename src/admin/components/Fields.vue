@@ -15,9 +15,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -47,9 +44,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -83,9 +77,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -118,9 +109,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -153,9 +141,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -178,9 +163,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -202,26 +184,14 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
                     <div class="field multicheck_fields">
                         <template v-for="(optionVal, optionKey) in fieldData.options">
-                            <!-- <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input type="checkbox" class="checkbox" :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" :name="sectionId + '[' + fieldData.name + '][' + optionKey + ']'" v-model="fieldValue[fieldData.name][optionKey]" :true-value="optionKey" false-value="">
-                                {{ optionVal }}
-                            </label> -->
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey">
-                                <switches
-                                    @input="onToggleDeliverySwitch"
-                                    :value="toggleActive ? 'enabled' : ''"
-                                    v-model="fieldValue[fieldData.name][optionKey]"
-                                    :enabled="isCurrentOptionChecked( optionKey ) ? true : false"
-                                ></switches>
                                 {{ optionVal }}
                             </label>
                         </template>
@@ -246,9 +216,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -274,9 +241,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -302,9 +266,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -389,9 +350,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -438,9 +396,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -494,9 +449,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -534,9 +486,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -573,9 +522,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -598,9 +544,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -620,9 +563,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -653,9 +593,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -688,9 +625,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -707,9 +641,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -723,12 +654,7 @@
                 <ul class="dokan-settings-repeatable-list">
                     <template v-for="(optionVal, optionKey) in fieldValue[fieldData.name]">
                         <li v-if="fieldValue[fieldData.name]" :key="optionKey">
-                            {{ optionVal.value }}
-                            <span
-                                v-if="!optionVal.must_use"
-                                class="dashicons dashicons-no-alt remove-item"
-                                @click.prevent="removeItem( optionKey, fieldData.name )"
-                            ></span>
+                            {{ optionVal.value }} <span v-if="!optionVal.must_use" class="dashicons dashicons-no-alt remove-item" @click.prevent="removeItem( optionKey, fieldData.name )"></span>
                             <span class="repeatable-item-description" v-html="optionVal.desc"></span>
                         </li>
                     </template>
@@ -742,9 +668,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -775,9 +698,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -813,9 +733,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
@@ -869,9 +786,6 @@
                     <div class="field_data">
                         <h3 class="field_heading" scope="row">
                             {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
                         </h3>
                         <p class="field_desc">{{ fieldData.desc }}</p>
                     </div>
@@ -981,7 +895,6 @@
             return {
                 repeatableItem: {},
                 hideMap: false,
-                display: true,
                 expandSocials: false,
                 checked: this.isChecked(),
                 fullDay: this.checkFullDay(),
@@ -1020,11 +933,8 @@
         },
 
     computed: {
-        
-
-        shouldShow: {
-            get: function () {
-                let shouldShow = true;
+        shouldShow(e) {
+            let shouldShow = true;
 
             if ( this.fieldData.show_if ) {
                 const conditions   = this.fieldData.show_if;
@@ -1082,11 +992,8 @@
                     }
                 }
             } 
-            return this.display && shouldShow;
-            },
-            set: function (show) {
-                this.display = show;
-            },
+
+            return shouldShow;
         },
 
         mapApiSource() {
@@ -1370,13 +1277,7 @@
             },
 
             showSettingsField( fieldKey ) {
-            
-                let showSettings = ! this.hideWithdrawOption() && ( fieldKey in this.fieldValue['disbursement_schedule'] ) && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
-                this.shouldShow = showSettings;
-                console.log( this.fieldData.type, this.shouldShow );
-                return showSettings;
-
-                // return ! this.hideWithdrawOption() && ( fieldKey in this.fieldValue['disbursement_schedule'] ) && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
+                return ! this.hideWithdrawOption() && ( fieldKey in this.fieldValue['disbursement_schedule'] ) && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
             },
 
             showDisbursementType( fieldKey ) {
@@ -1533,16 +1434,6 @@
                     font-weight: 600;
                     line-height: 35px;
                     font-family: 'Roboto', sans-serif;
-
-                    span {
-                        i {
-                            margin: 5px 0 0 5px;
-                        }
-
-                        .tooltip {
-                            font-size: 14px;
-                        }
-                    }
                 }
 
                 .field_desc {
@@ -1571,20 +1462,6 @@
                     width: 100px;
                 }
             }
-        }
-
-        .field.multicheck_fields .switch:hover {
-            box-shadow: none;
-            border-radius: 10px;
-            border: 0;
-        }
-
-        .field.multicheck_fields .switch {
-            margin: 0;
-            margin-right: 10px;
-            border: 0;
-            border-radius: 10px;
-            box-shadow: none;
         }
 
         .multicheck_fields {
