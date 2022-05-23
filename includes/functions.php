@@ -4055,7 +4055,7 @@ function dokan_wp_timezone_string() {
 /**
  * Get a formatted date from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
  *
  * @since 3.1.1
@@ -4074,8 +4074,13 @@ function dokan_format_date( $date = '', $format = false ) {
     }
 
     // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
+    if ( ! is_numeric( $date ) ) {
         $date = dokan_current_datetime()->modify( $date )->getTimestamp();
+    }
+
+    // check if we get valid date at this point
+    if ( empty( $date ) ) {
+        return false;
     }
 
     if ( function_exists( 'wp_date' ) ) {
@@ -4088,33 +4093,19 @@ function dokan_format_date( $date = '', $format = false ) {
 /**
  * Get a formatted date, time from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int $date the date string or timestamp
  * @param string|bool $format date format string or false for default WordPress date
  * @since 3.2.7
  *
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_datetime( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format() . ' ' . wc_time_format();
     }
 
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
+    return dokan_format_date( $date, $format );
 }
 
 /**
