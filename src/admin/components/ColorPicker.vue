@@ -145,6 +145,7 @@
             background: #FFF;
             box-sizing: unset;
             align-items: center;
+            margin-left: auto;
             border-radius: 3px;
 
             .color {

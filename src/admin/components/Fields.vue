@@ -521,6 +521,25 @@
             </td>
         </template>
 
+        <template v-if="'color' == fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <div class="field_data">
+                        <h3 class="field_heading" scope="row">
+                            {{ fieldData.label }}
+                        </h3>
+                        <p class="field_desc" v-html="fieldData.desc"></p>
+                    </div>
+                    <div class="field">
+                        <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
+                    </div>
+                </fieldset>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+            </div>
+        </template>
+
         <template v-if="'color_pallete' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -689,6 +708,7 @@
 </template>
 
 <script>
+    import colorPicker from "admin/components/ColorPicker.vue";
     import ColorPalletes from "admin/components/ColorPalletes.vue";
     let TextEditor = dokan_get_lib('TextEditor');
     let GoogleMaps = dokan_get_lib('GoogleMaps');
@@ -699,6 +719,7 @@
         name: 'Fields',
 
         components: {
+            colorPicker,
             ColorPalletes,
             TextEditor,
             GoogleMaps,
