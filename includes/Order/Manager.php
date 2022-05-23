@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WC_Order;
 use WeDevs\Dokan\Cache;
 
 /**
@@ -16,9 +17,9 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return WC_Order[]
      */
-    public function all( $args = [] ) {
+    public function all( $args = [] ): array {
         global $wpdb;
 
         $default = [
@@ -79,9 +80,9 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return WC_Order
      */
-    public function get( $id ) {
+    public function get( $id ): WC_Order {
         return wc_get_order( $id );
     }
 
