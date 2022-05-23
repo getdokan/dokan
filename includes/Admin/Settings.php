@@ -355,7 +355,7 @@ class Settings {
                 ],
                 'admin_access'           => [
                     'name'          => 'admin_access',
-                    'label'         => __( 'Admin area access', 'dokan-lite' ),
+                    'label'         => __( 'Admin Area Access', 'dokan-lite' ),
                     'desc'          => __( 'Disallow Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
                     'type'          => 'switcher',
                     'default'       => 'on',

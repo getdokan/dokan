@@ -168,7 +168,7 @@
                     </div>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <switches @input="onToggleSwitch" :enabled="this.checked === 'on' ? true : false" value="isChecked"></switches>
+                            <switches @input="onToggleSwitch" :enabled="checked === 'on' ? true : false" value="isChecked"></switches>
                         </label>
                     </div>
                 </fieldset>
@@ -1155,7 +1155,7 @@
             let timepicker_first_option = $( '.ui-timepicker-list' ).find( 'li:first' );
 
             if ( ! timepicker_first_option.hasClass( 'ui-timepicker-all-day' ) ) {
-                $( '.ui-timepicker-list' ).prepend( '<li class="ui-timepicker-all-day">24 hours</li>' );
+                $( '.ui-timepicker-list' ).prepend( `<li class="ui-timepicker-all-day">${this.fullHours}</li>` );
             }
         },
 
@@ -1175,8 +1175,8 @@
                 self.fullDay = false;
                 self.fieldValue[fieldName][fieldKey] = root.val();
 
-                if ( ! root.val() || '24 hours' === root.val() ) {
-                    root.val( '24 hours' );
+                if ( ! root.val() || this.fullHours === root.val() ) {
+                    root.val( this.fullHours );
                     self.fullDay = true;
                     self.fieldValue[fieldName]['opening_time'] = dokan_get_formatted_time( '12:00 am', dokan_get_i18n_time_format() );
                     self.fieldValue[fieldName]['closing_time'] = dokan_get_formatted_time( '11:59 pm', dokan_get_i18n_time_format() );
@@ -1186,7 +1186,7 @@
                     self.fullDay = false;
                     self.fieldValue[fieldName]['opening_time'] = dokan_get_formatted_time( '12:00 am', dokan_get_i18n_time_format() );
                     self.fieldValue[fieldName]['closing_time'] = dokan_get_formatted_time( '11:30 pm', dokan_get_i18n_time_format() );
-                    root.val( '24 hours' );
+                    root.val( this.fullHours );
                 }
             } );
         },
