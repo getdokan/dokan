@@ -521,7 +521,7 @@
             </td>
         </template>
 
-        <template v-if="'color_pallete' === fieldData.type">          
+        <template v-if="'color_pallete' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
