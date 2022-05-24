@@ -34,7 +34,7 @@ class SettingsHelper {
     public static function get_enabled_payment_gateways() {
         $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
 
-        return array_keys( $payment_methods );
+        return array_filter( $payment_methods );
     }
 
     /**
@@ -45,9 +45,9 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_gateway_enabled_for_reverse_withdrawal( $gateway ) {
-        $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
+        $payment_methods = static::get_enabled_payment_gateways();
 
-        return isset( $payment_methods[ $gateway ] );
+        return in_array( $gateway, $payment_methods, true );
     }
 
     /**
