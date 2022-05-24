@@ -47,8 +47,8 @@ class Settings {
             ],
             'payment_gateways' => [
                 'name'    => 'payment_gateways',
-                'label'   => esc_html__( 'Enable Reverse Withdrawal for these Gateways', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Check the payment gateways you want to enable reverse withdrawal for.', 'dokan-lite' ),
+                'label'   => esc_html__( 'Enable Reverse Withdrawal for this Gateway', 'dokan-lite' ),
+                'desc'    => esc_html__( 'Check the payment gateways you want to enable reverse withdrawal for. For now, only cash on delivery is available.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_reverse_withrawal_payment_gateways(),
                 'default' => [ 'cod' => 'cod' ],
@@ -121,7 +121,7 @@ class Settings {
         if ( dokan()->is_pro_exists() ) {
             $settings_fields['send_announcement'] = [
                 'name'    => 'send_announcement',
-                'label'   => esc_html__( 'Send announcement?', 'dokan-lite' ),
+                'label'   => esc_html__( 'Send Announcement?', 'dokan-lite' ),
                 'desc'    => esc_html__( 'Check this checkbox if you want to send an announcement during the grace period. Note that a maximum of one announcement will be sent during a single billing period.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'off',
