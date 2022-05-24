@@ -110,7 +110,7 @@ class SettingsHelper {
     public static function get_failed_actions() {
         $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
 
-        return array_keys( $failed_actions );
+        return array_filter( $failed_actions );
     }
 
     /**

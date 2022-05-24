@@ -87,7 +87,8 @@ class Helper {
      * @return array
      */
     public static function get_failed_actions_by_vendor( $vendor_id ) {
-        return get_user_meta( $vendor_id, self::failed_actions_key(), true );
+        $failed_actions = get_user_meta( $vendor_id, self::failed_actions_key(), true );
+        return is_array( $failed_actions ) ? $failed_actions : [];
     }
 
     /**

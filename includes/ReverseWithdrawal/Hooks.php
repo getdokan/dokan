@@ -86,11 +86,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( is_array( $failed_actions ) && ! in_array( 'hide_withdraw_menu', $failed_actions, true ) ) {
-            return $menu;
-        }
-
-        if ( array_key_exists( 'withdraw', $menu ) ) {
+        if ( in_array( 'hide_withdraw_menu', $failed_actions, true ) && array_key_exists( 'withdraw', $menu ) ) {
             unset( $menu['withdraw'] );
         }
 
@@ -120,7 +116,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( is_array( $failed_actions ) && in_array( 'enable_catalog_mode', $failed_actions, true ) ) {
+        if ( in_array( 'enable_catalog_mode', $failed_actions, true ) ) {
             $purchasable = false;
         }
 
@@ -146,7 +142,7 @@ class Hooks {
 
         // check if action is taken for this vendor
         $failed_actions = Helper::get_failed_actions_by_vendor( $vendor_id );
-        if ( is_array( $failed_actions ) && in_array( 'hide_product_price', $failed_actions, true ) ) {
+        if ( in_array( 'hide_product_price', $failed_actions, true ) ) {
             $price = '';
         }
 

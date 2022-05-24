@@ -106,7 +106,7 @@ class Settings {
                 'desc'    => esc_html__( 'Select one or more actions to perform after due period is over and vendors was unable to pay.', 'dokan-lite' ),
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_failed_payment_actions(),
-                'default' => [ 'status_inactive' => 'status_inactive' ],
+                'default' => [ 'enable_catalog_mode' => 'enable_catalog_mode' ],
             ],
             'display_notice' => [
                 'name'    => 'display_notice',
