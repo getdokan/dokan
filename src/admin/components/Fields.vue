@@ -374,7 +374,7 @@
             </div>
         </template>
 
-        <template v-if="'schedule_monthly' === fieldData.type && showSettingsField(  'monthly' )">
+        <template v-if="'schedule_monthly' === fieldData.type && showSettingsField( 'monthly' )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
@@ -423,7 +423,7 @@
             </div>
         </template>
 
-        <template v-if="'schedule_biweekly' === fieldData.type && showSettingsField( 'biweekly')">
+        <template v-if="'schedule_biweekly' === fieldData.type && showSettingsField( 'biweekly' )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '', ! hideWithdrawOption() ? 'disbursment_bottom_styles' : '']">
                 <fieldset>
                     <div class="field_data">
@@ -831,16 +831,16 @@
                         <div class="social_html" v-if="fieldData.app_url" v-bind:class="[fieldData.app_url.content_class ? fieldData.app_url.content_class : '']">
                             <SocialFields :fieldType="'app_url'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
                         </div>
-                        <div class="social_text" v-if="fieldData.app_service_id">
+                        <div class="social_text" v-if="fieldData.app_service_id" v-bind:class="[fieldData.app_service_id.content_class ? fieldData.app_service_id.content_class : '']">
                             <SocialFields :fieldType="'app_service_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
                         </div>
-                        <div class="social_text" v-if="fieldData.app_id">
+                        <div class="social_text" v-if="fieldData.app_id" v-bind:class="[fieldData.app_id.content_class ? fieldData.app_id.content_class : '']">
                             <SocialFields :fieldType="'app_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
                         </div>
-                        <div class="social_text" v-if="fieldData.app_team_id">
+                        <div class="social_text" v-if="fieldData.app_team_id" v-bind:class="[fieldData.app_team_id.content_class ? fieldData.app_team_id.content_class : '']">
                             <SocialFields :fieldType="'app_team_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
                         </div>
-                        <div class="social_text" v-if="fieldData.app_key_id">
+                        <div class="social_text" v-if="fieldData.app_key_id" v-bind:class="[fieldData.app_key_id.content_class ? fieldData.app_key_id.content_class : '']">
                             <SocialFields :fieldType="'app_key_id'" :fieldValue="fieldValue" :fieldData="fieldData"></SocialFields>
                         </div>
                         <div class="social_text" v-if="fieldData.app_secret" v-bind:class="[fieldData.app_secret.content_class ? fieldData.app_secret.content_class : '']">
@@ -1369,17 +1369,6 @@
 </script>
 
 <style lang="less">
-    .dokan-settings-fields {
-        div {
-            &:last-child{
-                .disbursment_bottom_styles {
-                    margin-bottom: 35px;
-                    border-bottom-left-radius: 5px;
-                    border-bottom-right-radius: 5px;
-                }
-            }
-        }
-    }
     span.repeatable-item-description {
         color: #999;
         font-size: 11px;
@@ -1394,14 +1383,14 @@
 
         li {
             color: rgba(0, 0, 0, 0.87);
-            border: 1px solid rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(0, 0, 0, 0.10);
             padding: 5px 12px;
             display: flex;
             font-size: 13px;
             box-sizing: border-box;
             background: rgba(182, 206, 254, 0.38);
             margin-top: 6px;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
             align-items: center;
             margin-left: 12px;
             font-family: 'Roboto', sans-serif;
@@ -1482,13 +1471,9 @@
     .field_contents.field_top_styles {
         margin-top: 30px;
         border-top: 1px solid #b0a7a7;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
     }
     .field_contents.field_bottom_styles {
         margin-bottom: 35px;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
     }
     .field_contents {
         border: 1px solid #B0A7A7;
@@ -1555,7 +1540,7 @@
             label {
                 color: #000;
                 margin: 6px 0 6px 8px;
-                border: 1px solid rgba(0, 0, 0, 0.25);
+                border: 1px solid rgba(0, 0, 0, 0.10);
                 display: inline-block;
                 padding: 10px 15px;
                 font-size: 12px;
@@ -1563,7 +1548,7 @@
                 font-style: normal;
                 box-sizing: border-box;
                 text-align: center;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
                 line-height: 14px;
                 font-family: 'Roboto', sans-serif;
                 border-radius: 8px;
@@ -1573,7 +1558,7 @@
                     border: 1px solid rgba(3, 58, 163, 0.81);
                     background: rgba(182, 206, 254, 0.38);
                     box-sizing: border-box;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
                 }
             }
         }
@@ -1589,7 +1574,7 @@
                 display: inline-block;
                 overflow: hidden;
                 font-size: 12px;
-                box-shadow: 0px 3.53187px 3.53187px rgba(0, 0, 0, 0.25);
+                box-shadow: 0px 3.53187px 3.53187px rgba(0, 0, 0, 0.10);
                 font-family: 'Roboto', sans-serif;
                 font-weight: 400;
                 line-height: 14px;
@@ -1610,7 +1595,7 @@
                     color: rgba(3, 58, 163, 0.85);
                     background: rgba(182, 206, 254, 0.38);
                     box-sizing: border-box;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
                     border-color: rgba(3, 58, 163, 0.81);
                 }
             }
@@ -1620,7 +1605,7 @@
                 border: 1px solid rgba(3, 58, 163, 0.81);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
             }
         }
 
@@ -1696,7 +1681,7 @@
                 border: 0.957434px solid #686666;
                 max-width: 240px;
                 min-height: 32px;
-                box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.25);
+                box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                 border-radius: 5px;
             }
 
@@ -1710,7 +1695,7 @@
                 border: 1px solid rgba(3, 58, 163, 0.81);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
 
                 .dashicons-yes {
                     display: inline-block;
@@ -1736,7 +1721,7 @@
             border: 0.82px solid #E5E5E5;
             padding: 10px 25px;
             background: rgba(220, 232, 254, 0.38);
-            box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
+            box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
             border-radius: 6.56px;
 
             .social_header {
@@ -1829,6 +1814,16 @@
                                 font-weight: 600;
                                 line-height: 30px;
                                 font-family: Roboto,sans-serif;
+
+                                span {
+                                    i {
+                                        margin: 2.5px 0 0 5px;
+                                    }
+
+                                    .tooltip {
+                                        font-size: 14px;
+                                    }
+                                }
                             }
     
                             .field_desc {
@@ -1852,7 +1847,7 @@
                                 border: 1px solid rgba(3, 58, 163, 0.81);
                                 background: rgba(182, 206, 254, 0.38);
                                 box-sizing: border-box;
-                                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
     
                                 .dashicons-yes {
                                     display: inline-block;
@@ -1866,14 +1861,10 @@
                 .field_top_styles {
                     margin-top: 15px;
                     border-top: 1px solid #b0a7a7;
-                    border-top-left-radius: 5px;
-                    border-top-right-radius: 5px;
                 }
 
                 .field_bottom_styles {
                     margin-bottom: 10px;
-                    border-bottom-left-radius: 5px;
-                    border-bottom-right-radius: 5px;
                 }
             }
         }
@@ -1979,7 +1970,7 @@
                         display: flex;
                         position: relative;
                         overflow: hidden;
-                        box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.25);
+                        box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                         align-items: center;
         
                         .dashicons-clock {

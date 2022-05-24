@@ -3,8 +3,8 @@
         <div class="html_contents">
             <h3 class="field_heading" scope="row">
                 {{ fieldData[fieldType].label }}
-                <span v-if="fieldData.tooltip">
-                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
+                <span v-if="fieldData[fieldType].tooltip">
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData[fieldType].tooltip" v-tooltip="fieldData[fieldType].tooltip"></i>
                 </span>
             </h3>
             <p class="field_desc" v-html="fieldData[fieldType].desc"></p>

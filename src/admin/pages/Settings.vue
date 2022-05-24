@@ -547,7 +547,6 @@
             box-sizing: border-box;
             margin-right: 12px;
             border-bottom: none;
-            border-radius: 5px;
             border-top-color: #cecaca85;
 
             .nav-section {
@@ -863,11 +862,13 @@
             color: #FFFFFF;
             padding: 10px 15px;
             font-size: 15px;
+            transition: .3s;
             background: #5a92ff;
             font-style: normal;
             font-family: 'Roboto', sans-serif;
             font-weight: 800;
             line-height: 17px;
+            border-color: transparent;
             border-radius: 4.46803px;
         }
     }
