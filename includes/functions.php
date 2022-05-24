@@ -707,21 +707,6 @@ function dokan_get_client_ip() {
 }
 
 /**
- * Datetime format helper function
- *
- * @param string $datetime
- *
- * @return string
- */
-function dokan_format_time( $datetime ) {
-    $timestamp   = strtotime( $datetime );
-    $date_format = get_option( 'date_format' );
-    $time_format = get_option( 'time_format' );
-
-    return date_i18n( $date_format . ' ' . $time_format, $timestamp );
-}
-
-/**
  * generate a input box based on arguments
  *
  * @param int    $post_id
@@ -4030,47 +4015,9 @@ function dokan_wp_timezone_string() {
 }
 
 /**
- * Get a formatted date from WordPress format
- *
- * @param string|int $date the date string or timestamp
- * @param string|bool $format date format string or false for default WordPress date
- *
- * @since 3.1.1
- *
- * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
- */
-function dokan_format_date( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
-    // if no format is specified, get default WordPress date format
-    if ( ! $format ) {
-        $format = wc_date_format();
-    }
-
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    // check if we get valid date at this point
-    if ( empty( $date ) ) {
-        return false;
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
-}
-
-/**
  * Get a formatted date, time from WordPress format
  *
- * @param string|int $date the date string or timestamp
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
  * @since 3.2.7
  *
@@ -4082,7 +4029,72 @@ function dokan_format_datetime( $date = '', $format = false ) {
         $format = wc_date_format() . ' ' . wc_time_format();
     }
 
-    return dokan_format_date( $date, $format );
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $timestamp = dokan_current_datetime()->getTimestamp();
+        // if date is not timestamp, convert it to timestamp
+    } elseif ( $date instanceof DateTimeImmutable ) {
+        $timestamp = $date->getTimestamp();
+        // if the date param is string, convert it to timestamp
+    } elseif ( ! is_numeric( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date );
+        // check if we get valid date at this point
+        if ( ! $date ) {
+            return false;
+        }
+        // get timestamp from modified date
+        $timestamp = $date->getTimestamp();
+        // if date is already timestamp, just use it
+    } elseif ( is_numeric( $date ) ) {
+        $timestamp = $date;
+    } else {
+        // we couldn't recognize the $date argument
+        return false;
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $timestamp );
+    }
+
+    return date_i18n( $format, $timestamp );
+}
+
+/**
+ * Get a formatted date from WordPress format
+ *
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
+ * @param string|bool $format date format string or false for default WordPress date
+ *
+ * @since 3.1.1
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_date( $date = '', $format = false ) {
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format();
+    }
+
+    return dokan_format_datetime( $date, $format );
+}
+
+/**
+ * Get a formatted time from WordPress format
+ *
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
+ * @param string|bool $format date format string or false for default WordPress date
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_time( $date = '', $format = false ) {
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_time_format();
+    }
+
+    return dokan_format_datetime( $date, $format );
 }
 
 /**
