@@ -32,7 +32,7 @@ printf(esc_attr__('Summary for %1$s : \n\n', 'dokan-lite'), $seller_info->get_sh
 
 printf( esc_attr__( 'Reverse withdrawal charges for %1$s %2$s: %3$s \n\n', 'dokan-lite' ), $data['{month}'], $data['{year}'], wc_price( $due_status['balance']['payable_amount'] ) );
 
-printf( esc_attr__( 'Due Date %1$s : \n\n', 'dokan-lite' ), dokan_format_date( $due_status['due_date'] ) );
+printf( esc_attr__( 'Due Date %1$s : \n\n', 'dokan-lite' ), 'immediate' === $due_status['due_date'] ? ucfirst( $due_status['due_date'] ) : dokan_format_date( $due_status['due_date'] ) );
 
 printf(
     wp_kses(

@@ -111,7 +111,7 @@ class Settings {
             'display_notice' => [
                 'name'    => 'display_notice',
                 'label'   => esc_html__( 'Display Notice During Grace Period', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Display notice to pay reverse withdrawal balance during grace Period under vendor dashboard.', 'dokan-lite' ),
+                'desc'    => esc_html__( 'Display notice to pay reverse withdrawal balance during grace period under vendor dashboard.', 'dokan-lite' ),
                 'type'    => 'checkbox',
                 'default' => 'on',
             ],

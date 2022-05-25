@@ -43,7 +43,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Due Date: ', 'dokan-lite' ); ?>
         </strong>
-        <?php echo dokan_format_date( $due_status['due_date'] ); ?>
+        <?php echo 'immediate' === $due_status['due_date'] ? ucfirst( $due_status['due_date'] ) : dokan_format_date( $due_status['due_date'] ); ?>
     </li>
 </ul>
 
