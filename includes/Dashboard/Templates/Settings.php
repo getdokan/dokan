@@ -336,7 +336,7 @@ class Settings {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
 
-                $ajax_validate = $this->payment_validate();
+                $ajax_validate = apply_filters( 'dokan_bank_payment_validation_error', $this->payment_validate() );
                 break;
             default:
                 $ajax_validate = new WP_Error( 'form_id_not_matched', __( 'Failed to process data, invalid submission', 'dokan-lite' ) );
