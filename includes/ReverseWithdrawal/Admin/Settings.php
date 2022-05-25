@@ -149,13 +149,17 @@ class Settings {
             return;
         }
 
-        $billing_type = isset( $option_value['billing_type'] ) ? sanitize_text_field( $option_value['billing_type'] ) : 'by_amount';
-        $reverse_balance_threshold = isset( $option_value['reverse_balance_threshold'] ) ? floatval( $option_value['reverse_balance_threshold'] ) : 150;
-        $monthly_billing_day = isset( $option_value['monthly_billing_day'] ) ? intval( $option_value['monthly_billing_day'] ) : 1;
-        $due_period = isset( $option_value['due_period'] ) ? intval( $option_value['due_period'] ) : 7;
+        $billing_type = isset( $option_value['billing_type'] ) ? sanitize_text_field( $option_value['billing_type'] ) : '';
+        $reverse_balance_threshold = isset( $option_value['reverse_balance_threshold'] ) ? floatval( $option_value['reverse_balance_threshold'] ) : '';
+        $monthly_billing_day = isset( $option_value['monthly_billing_day'] ) ? intval( $option_value['monthly_billing_day'] ) : '';
+        $due_period = isset( $option_value['due_period'] ) ? intval( $option_value['due_period'] ) : 0;
         $failed_actions = isset( $option_value['failed_actions'] ) ? array_filter( $option_value['failed_actions'] ) : [];
 
         $errors = [];
+
+        if ( empty( $billing_type ) || ! in_array( $billing_type, [ 'by_amount', 'by_month' ], true ) ) {
+            $errors[] = esc_html__( 'Please select a value for billing type field.', 'dokan-lite' );
+        }
 
         if ( $due_period < 0 || $due_period > 28 ) {
             $message = $due_period < 0 ? esc_html__( 'Due period cannot be negative.', 'dokan-lite' ) : esc_html__( 'Due period cannot be greater than 28.', 'dokan-lite' );
@@ -173,15 +177,15 @@ class Settings {
         }
 
         if ( 'by_amount' === $billing_type ) {
-            if ( $reverse_balance_threshold <= 0 ) {
+            if ( empty( $reverse_balance_threshold ) || $reverse_balance_threshold <= 0 ) {
                 $errors[] = [
                     'name'  => 'reverse_balance_threshold',
-                    'error' => esc_html__( 'Reverse balance threshold cannot be zero or negative.', 'dokan-lite' ),
+                    'error' => esc_html__( 'Reverse balance threshold cannot be empty, zero or negative.', 'dokan-lite' ),
                 ];
             }
         } else {
-            if ( $monthly_billing_day < 1 || $monthly_billing_day > 28 ) {
-                $message = $monthly_billing_day < 1 ? esc_html__( 'Monthly billing day cannot be negative.', 'dokan-lite' ) : esc_html__( 'Monthly billing day cannot be greater than 28.', 'dokan-lite' );
+            if ( empty( $monthly_billing_day ) || $monthly_billing_day < 1 || $monthly_billing_day > 28 ) {
+                $message = $monthly_billing_day < 1 ? esc_html__( 'Monthly billing day cannot be empty or negative.', 'dokan-lite' ) : esc_html__( 'Monthly billing day cannot be greater than 28.', 'dokan-lite' );
                 $errors[] = [
                     'name'  => 'monthly_billing_day',
                     'error' => $message,
@@ -189,7 +193,7 @@ class Settings {
             }
 
             // check if billing day + due period is greater than 28
-            if ( $monthly_billing_day + $due_period > 28 ) {
+            if ( (int) $monthly_billing_day + $due_period > 28 ) {
                 $errors[] = [
                     'name'  => 'monthly_billing_day',
                     'error' => esc_html__( 'Monthly billing day + due period cannot be greater than 28.', 'dokan-lite' ),
