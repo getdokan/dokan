@@ -79,8 +79,14 @@ class AsyncRequests {
             return;
         }
 
-        $invoice_email = new ReverseWithdrawalInvoice();
+        $failed_actions = new FailedActions();
+        $invoice_email  = new ReverseWithdrawalInvoice();
         foreach ( $vendors as $vendor_id ) {
+            // maybe take action
+            $failed_actions->ensure_reverse_pay_actions( $vendor_id );
+            // maybe revert taken action
+            $failed_actions->revert_reverse_pay_actions( $vendor_id );
+
             // check if we need to send invoice email
             $due_status = Helper::get_vendor_due_status( $vendor_id );
 
