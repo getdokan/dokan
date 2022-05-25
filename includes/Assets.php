@@ -92,6 +92,9 @@ class Assets {
             if ( version_compare( $wp_version, '5.3', '<' ) ) {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
+
+            // load fontawesome styles
+            wp_enqueue_style( 'dokan-fontawesome' );
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {

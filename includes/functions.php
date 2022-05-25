@@ -4036,17 +4036,11 @@ function dokan_format_datetime( $date = '', $format = false ) {
     } elseif ( $date instanceof DateTimeImmutable ) {
         $timestamp = $date->getTimestamp();
         // if the date param is string, convert it to timestamp
-    } elseif ( ! is_numeric( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date );
-        // check if we get valid date at this point
-        if ( ! $date ) {
-            return false;
-        }
-        // get timestamp from modified date
-        $timestamp = $date->getTimestamp();
-        // if date is already timestamp, just use it
     } elseif ( is_numeric( $date ) ) {
         $timestamp = $date;
+    } elseif ( is_string( $date ) && strtotime( $date ) ) {
+        $timestamp = dokan_current_datetime()->modify( $date )->getTimestamp();
+        // if date is already timestamp, just use it
     } else {
         // we couldn't recognize the $date argument
         return false;
