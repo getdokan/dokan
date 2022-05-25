@@ -497,7 +497,7 @@ class Helper {
                 $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
 
                 if ( SettingsHelper::get_billing_day() ) {
-                    $billing_day = SettingsHelper::get_billing_day();
+                    $billing_day = SettingsHelper::get_billing_day() - 1;
                     $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
                 }
 

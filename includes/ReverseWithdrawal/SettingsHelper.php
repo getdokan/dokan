@@ -82,7 +82,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_billing_day() {
-        $billing_day = dokan_get_option( 'billing_day', 'dokan_reverse_withdrawal', '1' );
+        $billing_day = dokan_get_option( 'monthly_billing_day', 'dokan_reverse_withdrawal', '1' );
 
         return absint( $billing_day );
     }
