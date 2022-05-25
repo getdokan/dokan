@@ -540,25 +540,6 @@
             </div>
         </template>
 
-        <template v-if="'color_pallete' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
-                </fieldset>
-
-                <colorPalletes
-                    :fieldValue="fieldValue"
-                    :fieldData="fieldData"
-                    :assetsUrl="dokanAssetsUrl"
-                ></colorPalletes>
-            </div>
-        </template>
-
         <template v-if="'html' == fieldData.type">
             <th scope="row">
                 <label :for="sectionId + '[' + fieldData.name + ']'">{{ fieldData.label }}</label>
@@ -704,12 +685,23 @@
                 <p class="description" v-html="fieldData.desc"></p>
             </td>
         </template>
+
+        <template v-if="customFieldComponents">
+            <component
+                v-for="(settingsComponent, index) in customFieldComponents"
+                :key="index"
+                :is="settingsComponent"
+                :fieldData="fieldData"
+                :sectionId="sectionId"
+                :fieldValue="fieldValue"
+                :assetsUrl="dokanAssetsUrl"
+            />
+        </template>
     </tr>
 </template>
 
 <script>
     import colorPicker from "admin/components/ColorPicker.vue";
-    import ColorPalletes from "admin/components/ColorPalletes.vue";
     let TextEditor = dokan_get_lib('TextEditor');
     let GoogleMaps = dokan_get_lib('GoogleMaps');
     let Mapbox = dokan_get_lib('Mapbox');
@@ -720,7 +712,6 @@
 
         components: {
             colorPicker,
-            ColorPalletes,
             TextEditor,
             GoogleMaps,
             Mapbox,
@@ -734,6 +725,7 @@
                 repeatableItem: {},
                 hideMap: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
+                customFieldComponents: dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
                 disbursementSettings: {
                     quarterly: {
                         second: '',
