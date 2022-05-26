@@ -162,7 +162,7 @@ class Settings {
         }
 
         if ( $due_period < 0 || $due_period > 28 ) {
-            $message = $due_period < 0 ? esc_html__( 'Due period cannot be negative.', 'dokan-lite' ) : esc_html__( 'Due period cannot be greater than 28.', 'dokan-lite' );
+            $message = $due_period < 0 ? esc_html__( 'Due period cannot be negative or empty.', 'dokan-lite' ) : esc_html__( 'Due period cannot be greater than 28.', 'dokan-lite' );
             $errors[] = [
                 'name'  => 'due_period',
                 'error' => $message,
@@ -185,7 +185,7 @@ class Settings {
             }
         } else {
             if ( empty( $monthly_billing_day ) || $monthly_billing_day < 1 || $monthly_billing_day > 28 ) {
-                $message = $monthly_billing_day < 1 ? esc_html__( 'Monthly billing day cannot be empty or negative.', 'dokan-lite' ) : esc_html__( 'Monthly billing day cannot be greater than 28.', 'dokan-lite' );
+                $message = $monthly_billing_day < 1 ? esc_html__( 'Monthly billing day cannot be empty or less than 1.', 'dokan-lite' ) : esc_html__( 'Monthly billing day cannot be greater than 28.', 'dokan-lite' );
                 $errors[] = [
                     'name'  => 'monthly_billing_day',
                     'error' => $message,
