@@ -33,6 +33,7 @@
 
             <button type="submit" class="dokan-btn dokan-btn-info"><span class="fa fa-filter"></span> <?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
             <a id="dokan-my-order-filter-reset" class="dokan-btn"><span class="fa fa-undo"></span> <?php esc_html_e( 'Reset', 'dokan-lite' ); ?></a>
+            <?php wp_nonce_field( 'my-orders-filter-nonce-action', 'my_orders_filter_nonce' ); ?>
         </div>
     </div>
 </form>

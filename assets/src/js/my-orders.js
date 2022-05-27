@@ -36,6 +36,7 @@
             const content   = head.find('span');
             const sortOrder = $('#dokan-my-orders-filter input[name="sort_order"]');
             const url       = new URL(window.location.href);
+            const nonce     = $('#dokan-my-orders-filter input[name="my_orders_filter_nonce"]');
 
             if (sortOrder.val() === 'DESC') {
                 sortOrder.val('ASC');
@@ -44,6 +45,7 @@
             }
 
             url.searchParams.set('sort_order', sortOrder.val());
+            url.searchParams.set('my_orders_filter_nonce', nonce.val());
 
             $("div.entry-content > table").block({
                 message: null,

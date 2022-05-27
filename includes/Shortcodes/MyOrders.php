@@ -15,7 +15,14 @@ class MyOrders extends DokanShortcode {
      */
     public function render_shortcode( $atts ) {
         if ( ! is_user_logged_in() ) {
-            return;
+            return '';
+        }
+
+        if ( count( $_GET ) > 0 && ( empty( $_GET['my_orders_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['my_orders_filter_nonce'] ) ), 'my-orders-filter-nonce-action' ) ) ) {
+            ?>
+            <p class="dokan-error"><?php esc_html_e( 'Nonce verification failed!', 'dokan-lite' ); ?></p>
+            <?php
+            return '';
         }
 
         wp_enqueue_style( 'dokan-my-orders-style', DOKAN_PLUGIN_ASSEST . '/css/my-orders-styles.css', [], DOKAN_PLUGIN_VERSION );
