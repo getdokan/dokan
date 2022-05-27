@@ -96,7 +96,7 @@ class Products {
             'is_downloadable' => $is_downloadable,
             'is_virtual'      => $is_virtual,
             'digital_mode'    => $digital_mode,
-            'class'           => 'show_if_subscription show_if_variable-subscription show_if_simple',
+            'class'           => 'show_if_subscription hide_if_variable-subscription show_if_simple',
         ) );
     }
 
@@ -268,13 +268,16 @@ class Products {
             self::$errors = apply_filters( 'dokan_can_add_product', $errors );
 
             if ( ! self::$errors ) {
+                $timenow        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'UTC' ) );
                 $product_status = dokan_get_new_post_status();
-                $post_data = apply_filters( 'dokan_insert_product_post_data', array(
-                    'post_type'    => 'product',
-                    'post_status'  => $product_status,
-                    'post_title'   => $post_title,
-                    'post_content' => $post_content,
-                    'post_excerpt' => $post_excerpt,
+                $post_data      = apply_filters( 'dokan_insert_product_post_data', array(
+                    'post_type'         => 'product',
+                    'post_status'       => $product_status,
+                    'post_title'        => $post_title,
+                    'post_content'      => $post_content,
+                    'post_excerpt'      => $post_excerpt,
+                    'post_date_gmt'     => $timenow->format( 'Y-m-d H:i:s' ),
+                    'post_modified_gmt' => $timenow->format( 'Y-m-d H:i:s' ),
                 ) );
 
                 $product_id = wp_insert_post( $post_data );

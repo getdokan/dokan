@@ -1,9 +1,9 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="dokan-settings">
             <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+            <AdminNotice></AdminNotice>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
                 <p><strong v-html="message"></strong></p>
@@ -40,7 +40,7 @@
                                 <table class="form-table">
                                     <thead v-if="showSectionTitle(fields)">
                                     <tr class="dokan-settings-field-type-sub_section">
-                                        <th colspan="2" class="dokan-settings-sub-section-title">
+                                        <th colspan="3" class="dokan-settings-sub-section-title">
                                             <label>{{ sectionTitle( index ) }}</label>
                                         </th>
                                     </tr>
@@ -79,7 +79,9 @@
 </template>
 
 <script>
-    let Loading = dokan_get_lib('Loading');
+    let Loading     = dokan_get_lib('Loading');
+    let AdminNotice = dokan_get_lib('AdminNotice');
+
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
@@ -94,6 +96,7 @@
             Loading,
             SettingsBanner,
             UpgradeBanner,
+            AdminNotice,
         },
 
         data () {
@@ -113,6 +116,8 @@
                 hasPro: dokan.hasPro ? true : false,
                 searchText: '',
                 awaitingSearch: false,
+                withdrawMethods: {},
+                isSaveConfirm: false,
             }
         },
 
@@ -190,6 +195,7 @@
 
                         self.showLoading = false;
                         self.isLoaded = true;
+                        self.setWithdrawMethods();
                     }
                 });
             },
@@ -213,22 +219,32 @@
                 file_frame.open();
             },
 
-            saveSettings( fieldData, section ) {
-                if ( ! this.formIsValid( section ) ) {
+            async saveSettings(fieldData, section) {
+                if (!this.formIsValid(section)) {
                     return;
+                }
+
+                if ('dokan_withdraw' === section) {
+                    const consent = await this.setPaymentChangeAnnouncementAction(fieldData, section);
+                    fieldData.send_announcement_for_payment_change = false;
+
+                    if ('value' in consent && consent.value === true) {
+                        fieldData.send_announcement_for_payment_change = this.getDifference( this.withdrawMethods, fieldData.withdraw_methods );
+                    }
+                    this.withdrawMethods = fieldData.withdraw_methods;
                 }
 
                 var self = this,
                     data = {
-                        action : 'dokan_save_settings',
+                        action: 'dokan_save_settings',
                         nonce: dokan.nonce,
                         settingsData: fieldData,
                         section: section
                     };
                 self.showLoading = true;
 
-                jQuery.post( dokan.ajaxurl, data )
-                    .done( function ( response ) {
+                jQuery.post(dokan.ajaxurl, data)
+                    .done(function (response) {
                         var settings = response.data.settings;
 
                         self.isSaved = true;
@@ -236,27 +252,64 @@
 
                         self.message = response.data.message;
 
-                        self.settingValues[ settings.name ] = settings.value;
+                        self.settingValues[settings.name] = settings.value;
 
                         let option;
 
-                        for ( option in fieldData ) {
+                        for (option in fieldData) {
                             const fieldName = `${section}.${option}`;
 
-                            if ( self.refreshable_props[ fieldName ] ) {
+                            if (self.refreshable_props[fieldName]) {
                                 window.location.reload();
                                 break;
                             }
                         }
 
                         self.validationErrors = [];
-                    } )
-                    .fail( function ( jqXHR ) {
+                    })
+                    .fail(function (jqXHR) {
                         self.validationErrors = jqXHR.responseJSON.data.errors;
-                    } )
-                    .always( function () {
+                    })
+                    .always(function () {
                         self.showLoading = false;
-                    } );
+                    });
+            },
+            setWithdrawMethods() {
+                if ( 'withdraw_methods' in this.settingValues.dokan_withdraw ) {
+                    this.withdrawMethods = this.settingValues.dokan_withdraw.withdraw_methods;
+                }
+            },
+
+            async setPaymentChangeAnnouncementAction( fieldData, section ) {
+                if ( ! ( 'withdraw_methods' in fieldData ) || 'dokan_withdraw' !== section ) {
+                    return Promise.resolve( {value: false} );
+                }
+
+                const diff = this.getDifference( this.withdrawMethods, fieldData.withdraw_methods );
+
+                if ( Object.keys( diff ).length === 0 ) {
+                    return Promise.resolve({value: false});
+                }
+
+                return this.$swal({
+                    title: this.__('Withdraw Method Changed'),
+                    text: this.__('Do you want to send an announcement to vendors about the removal of currently active payment method?'),
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: this.__('Yes, send announcement!')
+                });
+            },
+
+            getDifference(objA, objB) {
+                const keys = Object.keys(objB);
+                let difference = {};
+
+                keys.forEach( (key) => {
+                    if ( '' !== objA[key] && '' === objB[key] ) {
+                        difference[key] = key;
+                    }
+                });
+                return difference;
             },
 
             formIsValid( section ) {

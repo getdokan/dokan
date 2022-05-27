@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Cache;
+
 /**
  * Dokan Admin menu position
  *
@@ -31,7 +34,7 @@ function dokana_admin_menu_capability() {
 function dokan_get_current_user_id() {
     if ( current_user_can( 'vendor_staff' ) ) {
         $staff_id  = get_current_user_id();
-        $vendor_id = get_user_meta( $staff_id, '_vendor_id', true );
+        $vendor_id = (int) get_user_meta( $staff_id, '_vendor_id', true );
 
         if ( empty( $vendor_id ) ) {
             return $staff_id;
@@ -188,25 +191,21 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  * @return array
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array( 'booking' ) ) {
-    global $wpdb;
+    // get all function arguments as key => value pairs
+    $args = get_defined_vars();
 
-    $exclude_product_types      = esc_sql( $exclude_product_types );
-    $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
-    $exclude_product_types_key  = implode( '-', $exclude_product_types );
-    $cache_group                = 'dokan_cache_seller_product_data_' . $user_id;
-    $cache_key                  = 'dokan-count-' . $post_type . '-' . $exclude_product_types_key . '-' . $user_id;
-    $counts                     = wp_cache_get( $cache_key, $cache_group );
-    $tracked_cache_keys         = get_option( $cache_group, [] );
-
-    if ( ! in_array( $cache_key, $tracked_cache_keys, true ) ) {
-        $tracked_cache_keys[] = $cache_key;
-        update_option( $cache_group, $tracked_cache_keys );
-    }
+    $cache_group = "seller_product_data_$user_id";
+    $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
 
         if ( ! $results ) {
+            global $wpdb;
+            $exclude_product_types      = esc_sql( $exclude_product_types );
+            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+
             $results = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} as posts
@@ -242,7 +241,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
         $counts['total'] = $total;
         $counts          = (object) $counts;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -264,16 +263,9 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = array
 function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
     global $wpdb;
 
-    $cache_group   = 'dokan_cache_seller_product_stock_data_' . $user_id;
-    $cache_key     = 'dokan-count-' . $post_type . '_' . $stock_type . '-' . $user_id;
-    $counts        = wp_cache_get( $cache_key, $cache_group );
-    $get_old_cache = get_option( $cache_group, [] );
-
-    if ( ! in_array( $cache_key, $get_old_cache, true ) ) {
-        $get_old_cache[] = $cache_key;
-    }
-
-    update_option( $cache_group, $get_old_cache );
+    $cache_group = 'seller_product_stock_data_' . $user_id;
+    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
@@ -309,7 +301,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
         $counts = $total;
 
-        wp_cache_set( $cache_key, $counts, $cache_group, 3600 * 6 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -329,8 +321,9 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 function dokan_count_comments( $post_type, $user_id ) {
     global $wpdb;
 
-    $cache_key = 'dokan-count-comments-' . $post_type . '-' . $user_id;
-    $counts    = wp_cache_get( $cache_key, 'dokan-lite' );
+    $cache_group = "count_{$post_type}_comments_{$user_id}";
+    $cache_key   = 'comments';
+    $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
         $count = $wpdb->get_results(
@@ -373,7 +366,7 @@ function dokan_count_comments( $post_type, $user_id ) {
         $counts['total'] = $total;
 
         $counts = (object) $counts;
-        wp_cache_set( $cache_key, $counts, 'dokan-lite', 3600 * 2 );
+        Cache::set( $cache_key, $counts, $cache_group );
     }
 
     return $counts;
@@ -391,10 +384,10 @@ function dokan_count_comments( $post_type, $user_id ) {
 function dokan_author_pageviews( $seller_id ) {
     global $wpdb;
 
-    $cache_key = 'dokan-pageview-' . $seller_id;
-    $pageview  = wp_cache_get( $cache_key, 'dokan_page_view' );
+    $cache_key   = "pageview_{$seller_id}";
+    $pageview    = Cache::get( $cache_key );
 
-    if ( $pageview === false ) {
+    if ( false === $pageview ) {
         $count = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT SUM(meta_value) as pageview
@@ -407,7 +400,7 @@ function dokan_author_pageviews( $seller_id ) {
 
         $pageview = $count->pageview;
 
-        wp_cache_set( $cache_key, $pageview, 'dokan_page_view', 3600 * 4 );
+        Cache::set( $cache_key, $pageview );
     }
 
     return $pageview;
@@ -425,22 +418,19 @@ function dokan_author_pageviews( $seller_id ) {
 function dokan_author_total_sales( $seller_id ) {
     global $wpdb;
 
-    $cache_group = 'dokan_seller_data_' . $seller_id;
-    $cache_key   = 'dokan-earning-' . $seller_id;
-    $earnings    = wp_cache_get( $cache_key, $cache_group );
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = "earning_{$seller_id}";
+    $earnings    = Cache::get( $cache_key, $cache_group );
 
-    if ( $earnings === false ) {
-        $count = $wpdb->get_row(
+    if ( false === $earnings ) {
+        $earnings = (int) $wpdb->get_var(
             $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
 
-        $earnings = $count->earnings;
-
-        wp_cache_set( $cache_key, $earnings, $cache_group );
-        dokan_cache_update_group( $cache_key, $cache_group );
+        Cache::set( $cache_key, $earnings, $cache_group );
     }
 
-    return apply_filters( 'dokan_seller_total_sales', $earnings );
+    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
 }
 
 /**
@@ -717,21 +707,6 @@ function dokan_get_client_ip() {
 }
 
 /**
- * Datetime format helper function
- *
- * @param string $datetime
- *
- * @return string
- */
-function dokan_format_time( $datetime ) {
-    $timestamp   = strtotime( $datetime );
-    $date_format = get_option( 'date_format' );
-    $time_format = get_option( 'time_format' );
-
-    return date_i18n( $date_format . ' ' . $time_format, $timestamp );
-}
-
-/**
  * generate a input box based on arguments
  *
  * @param int    $post_id
@@ -948,7 +923,8 @@ function dokan_get_template_part( $slug, $name = '', $args = [] ) {
     $template = '';
 
     // Look in yourtheme/dokan/slug-name.php and yourtheme/dokan/slug.php
-    $template = locate_template( [ dokan()->template_path() . "{$slug}-{$name}.php", dokan()->template_path() . "{$slug}.php" ] );
+    $template_path = ! empty( $name ) ? "{$slug}-{$name}.php" : "{$slug}.php";
+    $template = locate_template( [ dokan()->template_path() . $template_path ] );
 
     /**
      * Change template directory path filter
@@ -1635,8 +1611,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y' ),
-                    'month' => date( 'm' ),
+                    'year'  => dokan_current_datetime()->format( 'Y' ),
+                    'month' => dokan_current_datetime()->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
@@ -1648,8 +1624,8 @@ function dokan_get_product_count( $from = null, $to = null, $seller_id = null ) 
         [
             'date_query' => [
                 [
-                    'year'  => date( 'Y', strtotime( 'last month' ) ),
-                    'month' => date( 'm', strtotime( 'last month' ) ),
+                    'year'  => dokan_current_datetime()->modify( 'last month' )->format( 'Y' ),
+                    'month' => dokan_current_datetime()->modify( 'last month' )->format( 'm' ),
                 ],
             ],
             'author' => $seller_id ? $seller_id : '',
@@ -2449,7 +2425,7 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Pinterest', 'dokan-lite' ),
         ],
         'linkedin' => [
-            'icon'  => 'linkedin-square',
+            'icon'  => 'linkedin',
             'title' => __( 'LinkedIn', 'dokan-lite' ),
         ],
         'youtube' => [
@@ -2807,79 +2783,6 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
 }
 
 /**
- * Keep record of keys by group name
- *
- * @since 2.6.9
- *
- * @param string $key
- * @param string $group
- *
- * @return void
- */
-function dokan_cache_update_group( $key, $group ) {
-    $keys = get_option( $group, [] );
-
-    if ( in_array( $key, $keys ) ) {
-        return;
-    }
-
-    $keys[] = $key;
-    update_option( $group, $keys );
-}
-
-/**
- * Bulk clear cache values by group name
- *
- * @since 2.6.9
- *
- * @param string $group
- *
- * @return void
- */
-function dokan_cache_clear_group( $group ) {
-    $keys = get_option( $group, [] );
-
-    if ( ! empty( $keys ) ) {
-        foreach ( $keys as $key ) {
-            wp_cache_delete( $key, $group );
-            unset( $keys[ $key ] );
-        }
-    }
-
-    update_option( $group, $keys );
-}
-
-//cache reset actions
-add_action( 'dokan_checkout_update_order_meta', 'dokan_cache_reset_seller_order_data', 10, 2 );
-add_action( 'woocommerce_order_status_changed', 'dokan_cache_reset_order_data_on_status', 10, 4 );
-add_action( 'dokan_new_product_added', 'dokan_cache_clear_seller_product_data', 20, 2 );
-add_action( 'dokan_product_updated', 'dokan_cache_clear_seller_product_data', 20 );
-
-/**
- * Reset cache group related to seller orders
- */
-function dokan_cache_reset_seller_order_data( $order_id, $seller_id ) {
-    dokan_cache_clear_group( 'dokan_seller_data_' . $seller_id );
-}
-
-function dokan_cache_reset_order_data_on_status( $order_id, $from_status, $to_status, $order ) {
-    $seller_id = dokan_get_seller_id_by_order( $order_id );
-    dokan_cache_clear_group( 'dokan_seller_data_' . $seller_id );
-}
-
-/**
- * Reset cache group related to seller products
- */
-function dokan_cache_clear_seller_product_data( $product_id, $post_data = [] ) {
-    $seller_id = dokan_get_current_user_id();
-
-    dokan_clear_product_caches( $product_id );
-    dokan_cache_clear_group( 'dokan_seller_product_data_' . $seller_id );
-    dokan_cache_clear_group( 'dokan_cache_seller_product_data_' . $seller_id );
-    dokan_cache_clear_group( 'dokan_cache_seller_product_stock_data_' . $seller_id );
-}
-
-/**
  * Get seller earning for a given product
  *
  * @since 2.6.9
@@ -3228,42 +3131,78 @@ add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_butt
 /**
  * Dokan get translated days
  *
- * @param  string day
+ * @param  string|null days
  *
  * @since  2.8.2
  *
- * @return string
+ * @return string|array
  */
-function dokan_get_translated_days( $day ) {
-    switch ( $day ) {
-        case 'saturday':
-            return __( 'Saturday', 'dokan-lite' );
+function dokan_get_translated_days( $day = '' ) {
+    $all_days = [
+        'sunday'    => __( 'Sunday', 'dokan-lite' ),
+        'monday'    => __( 'Monday', 'dokan-lite' ),
+        'tuesday'   => __( 'Tuesday', 'dokan-lite' ),
+        'wednesday' => __( 'Wednesday', 'dokan-lite' ),
+        'thursday'  => __( 'Thursday', 'dokan-lite' ),
+        'friday'    => __( 'Friday', 'dokan-lite' ),
+        'saturday'  => __( 'Saturday', 'dokan-lite' ),
+    ];
 
-        case 'sunday':
-            return __( 'Sunday', 'dokan-lite' );
+    $week_starts_on = get_option( 'start_of_week', 0 );
+    $day_keys       = array_keys( $all_days );
 
-        case 'monday':
-            return __( 'Monday', 'dokan-lite' );
+    // Make our start day of the week using by week starts settings.
+    for ( $i = 0; $i < $week_starts_on; $i++ ) {
+        $shifted_key   = $day_keys[ $i ];
+        $shifted_value = $all_days[ $shifted_key ];
 
-        case 'tuesday':
-            return __( 'Tuesday', 'dokan-lite' );
-
-        case 'wednesday':
-            return __( 'Wednesday', 'dokan-lite' );
-
-        case 'thursday':
-            return __( 'Thursday', 'dokan-lite' );
-
-        case 'friday':
-            return __( 'Friday', 'dokan-lite' );
-
-        case 'close':
-            return apply_filters( 'dokan_store_close_day_label', __( 'Off Day', 'dokan-lite' ) );
-
-        default:
-            return apply_filters( 'dokan_get_translated_days', '', $day );
-            break;
+        // Unset days and sets in the last.
+        unset( $all_days[ $shifted_key ] );
+        $all_days[ $shifted_key ] = $shifted_value;
     }
+
+    // Get days array if our $days is true.
+    if ( empty( $day ) ) {
+        return $all_days;
+    }
+
+    if ( isset( $all_days[ $day ] ) ) {
+        return $all_days[ $day ];
+    }
+
+    return apply_filters( 'dokan_get_translated_days', '', $day );
+}
+
+/**
+ * Collect store times here.
+ *
+ * @since 3.3.7
+ *
+ * @param string   $day
+ * @param string   $return_type  eg: opening_time or closing_time
+ * @param int      $index
+ * @param int|null $store_id
+ *
+ * @return mixed|string
+ */
+function dokan_get_store_times( $day, $return_type, $index = null, $store_id = null ) {
+    $store_id          = null === $store_id ? dokan_get_current_user_id() : $store_id;
+    $store_info        = dokan_get_store_info( $store_id );
+    $dokan_store_times = isset( $store_info['dokan_store_time'][ $day ][ $return_type ] ) ? $store_info['dokan_store_time'][ $day ][ $return_type ] : '';
+
+    if ( empty( $dokan_store_times ) ) {
+        return '';
+    }
+
+    if ( ! is_array( $dokan_store_times ) ) {
+        return $dokan_store_times;
+    }
+
+    if ( is_numeric( $index ) && isset( $dokan_store_times[ $index ] ) ) {
+        return $dokan_store_times[ $index ];
+    }
+
+    return $dokan_store_times[0]; // return the 1st index
 }
 
 /**
@@ -3277,34 +3216,43 @@ function dokan_get_translated_days( $day ) {
  * @return bool
  */
 function dokan_is_store_open( $user_id ) {
-    $store_user = dokan()->vendor->get( $user_id );
-    $store_info = $store_user->get_shop_info();
-    $open_days  = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+    $store_user        = dokan()->vendor->get( $user_id );
+    $store_info        = $store_user->get_shop_info();
+    $dokan_store_times = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
 
     $current_time = dokan_current_datetime();
     $today        = strtolower( $current_time->format( 'l' ) );
+    $store_open   = false;
 
-    if ( ! isset( $open_days[ $today ] ) ) {
-        return false;
+    // check if status is closed
+    if ( empty( $dokan_store_times[ $today ] ) || ( isset( $dokan_store_times[ $today ]['status'] ) && 'close' === $dokan_store_times[ $today ]['status'] ) ) {
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
-    $schedule = $open_days[ $today ];
-    $status   = isset( $schedule['open'] ) ? $schedule['open'] : $schedule['status'];
+    // Get store opening time.
+    $opening_times = ! empty( $dokan_store_times[ $today ]['opening_time'] ) ? $dokan_store_times[ $today ]['opening_time'] : '';
+    // Get single time.
+    $opening_time = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : $opening_times;
+    // Convert to timestamp.
+    $opening_time = ! empty( $opening_time ) ? $current_time->modify( $opening_time ) : false;
 
-    if ( 'open' === $status ) {
-        if ( empty( $schedule['opening_time'] ) || empty( $schedule['closing_time'] ) ) {
-            return true;
-        }
+    // Get closing time.
+    $closing_times = ! empty( $dokan_store_times[ $today ]['closing_time'] ) ? $dokan_store_times[ $today ]['closing_time'] : '';
+    // Get single time.
+    $closing_time = ! empty( $closing_times ) && is_array( $closing_times ) ? $closing_times[0] : $closing_times;
+    // Convert to timestamp.
+    $closing_time = ! empty( $closing_time ) ? $current_time->modify( $closing_time ) : false;
 
-        $open  = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['opening_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-        $close = DateTimeImmutable::createFromFormat( esc_attr( get_option( 'time_format' ) ), $schedule['closing_time'], new DateTimeZone( dokan_wp_timezone_string() ) );
-
-        if ( $open <= $current_time && $close >= $current_time ) {
-            return true;
-        }
+    if ( empty( $opening_time ) || empty( $closing_time ) ) {
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
-    return false;
+    // Check vendor picked time and current time for show store open.
+    if ( $opening_time <= $current_time && $closing_time >= $current_time ) {
+        $store_open = true;
+    }
+
+    return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
 }
 
 /**
@@ -4067,9 +4015,54 @@ function dokan_wp_timezone_string() {
 }
 
 /**
+ * Get a formatted date, time from WordPress format
+ *
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.2.7
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_datetime( $date = '', $format = false ) {
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format() . ' ' . wc_time_format();
+    }
+
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $timestamp = dokan_current_datetime()->getTimestamp();
+        // if date is not timestamp, convert it to timestamp
+    } elseif ( $date instanceof DateTimeImmutable ) {
+        $timestamp = $date->getTimestamp();
+        // if the date param is string, convert it to timestamp
+    } elseif ( ! is_numeric( $date ) ) {
+        $date = dokan_current_datetime()->modify( $date );
+        // check if we get valid date at this point
+        if ( ! $date ) {
+            return false;
+        }
+        // get timestamp from modified date
+        $timestamp = $date->getTimestamp();
+        // if date is already timestamp, just use it
+    } elseif ( is_numeric( $date ) ) {
+        $timestamp = $date;
+    } else {
+        // we couldn't recognize the $date argument
+        return false;
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $timestamp );
+    }
+
+    return date_i18n( $format, $timestamp );
+}
+
+/**
  * Get a formatted date from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
  *
  * @since 3.1.1
@@ -4077,58 +4070,31 @@ function dokan_wp_timezone_string() {
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format();
     }
 
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
+    return dokan_format_datetime( $date, $format );
 }
 
 /**
- * Get a formatted date, time from WordPress format
+ * Get a formatted time from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
- * @since 3.2.7
+ *
+ * @since DOKAN_SINCE
  *
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
-function dokan_format_datetime( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
+function dokan_format_time( $date = '', $format = false ) {
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
-        $format = wc_date_format() . ' ' . wc_time_format();
+        $format = wc_time_format();
     }
 
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
+    return dokan_format_datetime( $date, $format );
 }
 
 /**
@@ -4169,6 +4135,28 @@ function dokan_get_withdraw_threshold( $user_id ) {
     }
 
     return ( $threshold_day ) ? absint( $threshold_day ) : 0;
+}
+
+/**
+ * Mask or hide part of email address.
+ *
+ * @since 3.3.1
+ *
+ * @param string $email Email address
+ *
+ * @return string
+ */
+function dokan_mask_email_address( $email ) {
+    if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+        return $email;
+    }
+
+    list( $first, $last ) = explode( '@', $email );
+    $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
+    $last        = explode( '.', $last );
+    $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
+
+    return "{$first}@{$last_domain}.{$last['1']}";
 }
 
 /**
@@ -4242,4 +4230,114 @@ function dokan_get_vendor_store_banner_height() {
     $height = absint( apply_filters( 'dokan_store_banner_default_height', dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ) );
 
     return ( $height !== 0 ) ? $height : 300;
+}
+
+/**
+ * Get google recaptcha site key and secret key
+ *
+ * @param bool $bool
+ *
+ * @since 3.3.3
+ *
+ * @return array|bool
+ */
+function dokan_get_recaptcha_site_and_secret_keys( $bool = false ) {
+    $recaptcha_keys = [
+        'site_key'   => dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
+        'secret_key' => dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ),
+    ];
+
+    if ( $bool ) {
+        if ( empty( $recaptcha_keys['site_key'] ) || empty( $recaptcha_keys['secret_key'] ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    return $recaptcha_keys;
+}
+
+/**
+ * Handle google reCaptcha validation request.
+ *
+ * @since 3.3.6
+ *
+ * @param string $action
+ * @param string $token
+ * @param string $secretkey
+ *
+ * @return boolean
+ */
+function dokan_handle_recaptcha_validation( $action, $token, $secretkey ) {
+    // Check if action, token and secret key exist.
+    if ( empty( $action ) || empty( $token ) || empty( $secretkey ) ) {
+        return false;
+    }
+
+    // Response data.
+    $siteverify    = 'https://www.google.com/recaptcha/api/siteverify';
+    $response      = wp_remote_get( $siteverify . '?secret=' . $secretkey . '&response=' . $token );
+    $response_body = wp_remote_retrieve_body( $response );
+    $response_data = json_decode( $response_body, true );
+
+    // Check if the response data is not empty.
+    if ( empty( $response_data['success'] ) ) {
+        return false;
+    }
+
+    // Validate reCaptcha action.
+    if ( empty( $response_data['action'] ) || $action !== $response_data['action'] ) {
+        return false;
+    }
+
+    // Validate reCaptcha score.
+    $min_eligible_score = apply_filters( 'dokan_recaptcha_minimum_eligible_score', 0.5, $action );
+    if ( empty( $response_data['score'] ) || $response_data['score'] < $min_eligible_score ) {
+        return false;
+    }
+
+    // Return success status after passing checks.
+    return $response_data['success'];
+}
+
+/**
+ * Get additional products sections.
+ *
+ * @since 3.3.6
+ *
+ * @return array
+ */
+function dokan_get_additional_product_sections() {
+    return dokan()->product_sections->get_available_product_sections();
+}
+
+/**
+ * Converts a 'on' or 'off' to boolean
+ *
+ * @since 3.3.6
+ *
+ * @param string $value
+ *
+ * @return bool
+ */
+function dokan_string_to_bool( $value ) {
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
+}
+
+/**
+ * Converts a boolean value to a 'on' or 'off'.
+ *
+ * @since 3.3.7
+ *
+ * @param bool $bool
+ *
+ * @return string
+ */
+function dokan_bool_to_on_off( $bool ) {
+    if ( ! is_bool( $bool ) ) {
+        $bool = dokan_string_to_bool( $bool );
+    }
+
+    return true === $bool ? 'on' : 'off';
 }

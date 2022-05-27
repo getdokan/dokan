@@ -487,6 +487,10 @@ jQuery(function($) {
           );
 
           $('.dokan-ajax-response').append(resp.data.progress);
+
+          if ( dokan && dokan.storeProgressBar ) {
+            dokan.storeProgressBar.init();
+          }
         } else {
           $('.dokan-ajax-response').html(
             $('<div/>', {
@@ -572,7 +576,9 @@ jQuery(function($) {
           label.removeClass('error');
           label.remove();
         },
-        submitHandler: function(form) {
+        submitHandler: async function(form, event) {
+          event.preventDefault();
+
           $(form).block({
             message: null,
             overlayCSS: {
@@ -581,6 +587,9 @@ jQuery(function($) {
               opacity: 0.6
             }
           });
+
+          // Run recaptcha executer
+          await dokan_execute_recaptcha( 'form#dokan-form-contact-seller .dokan_recaptcha_token', 'dokan_contact_seller_recaptcha' );
 
           var form_data = $(form).serialize();
           $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -593,7 +602,7 @@ jQuery(function($) {
             }
 
             $(form)
-              .find('input[type=text], input[type=email], textarea')
+              .find('input[type=text], input[type=email], textarea, input[name=dokan_recaptcha_token]')
               .val('')
               .removeClass('valid');
           });
@@ -1157,8 +1166,8 @@ jQuery(function($) {
  * @returns boolean
  */
  async function dokan_show_delete_prompt( event, messgae ) {
-  event.preventDefault(); 
-  
+  event.preventDefault();
+
   let answer = await dokan_sweetalert( messgae, {
     action  : 'confirm',
     icon    : 'warning'
@@ -1166,7 +1175,7 @@ jQuery(function($) {
 
   if( answer.isConfirmed && undefined !== event.target.href ) {
       window.location.href = event.target.href;
-  } 
+  }
   else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
       window.location.href = event.target.dataset.url;
   }

@@ -1,7 +1,5 @@
 <template>
     <div>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
-
         <div class="vendor-list">
             <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan-lite') }}</h1>
             <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
@@ -11,6 +9,10 @@
                        :key="index"
                        :is="vendorHeaderArea"
             />
+
+            <AdminNotice></AdminNotice>
+
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
             <hr class="wp-header-end">
 
@@ -95,9 +97,10 @@
 import AddVendor from './AddVendor.vue'
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
-let ListTable = dokan_get_lib('ListTable');
-let Switches  = dokan_get_lib('Switches');
-let Search    = dokan_get_lib('Search');
+let ListTable   = dokan_get_lib('ListTable');
+let Switches    = dokan_get_lib('Switches');
+let Search      = dokan_get_lib('Search');
+let AdminNotice = dokan_get_lib('AdminNotice');
 
 export default {
 
@@ -109,6 +112,7 @@ export default {
         Search,
         AddVendor,
         UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
@@ -207,7 +211,7 @@ export default {
         },
 
         sortBy() {
-            return this.$route.query.orderby || 'registered';
+            return this.$route.query.orderby || 'ID';
         },
 
         sortOrder() {
@@ -260,7 +264,8 @@ export default {
             let self     = this;
             self.loading = true;
 
-            dokan.api.get(`/stores?search=${payload}`, {
+            dokan.api.get(`/stores`, {
+                search: payload,
                 page: this.currentPage,
                 orderby: this.sortBy,
                 order: this.sortOrder

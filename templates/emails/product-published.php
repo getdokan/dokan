@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
-    <?php esc_html_e( 'Hello '.$data['seller-name'], 'dokan-lite' ); ?>
-<p/>
+    <?php echo sprintf( __( 'Hello %s', 'dokan-lite' ), $data['seller-name'] ); ?>
+</p>
 <p>
     <?php echo wp_kses_post( sprintf( __( 'Your product : <a href="%s">%s</a> is approved by the admin, congrats!', 'dokan-lite' ), $data['product_url'], $data['product-title'] ) ); ?>
 </p>

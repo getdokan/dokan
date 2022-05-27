@@ -60,42 +60,48 @@
 
     table.product-listing-table {
       span.product-type:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f133';
         display: block;
         text-align: center;
       }
 
       span.product-type.downloadable:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f019';
         display: block;
         text-align: center;
       }
 
       span.product-type.variable:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f02d';
         display: block;
         text-align: center;
       }
 
       span.product-type.simple:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f0c9';
         display: block;
         text-align: center;
       }
 
       span.product-type.virtual:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f0c2';
         display: block;
         text-align: center;
       }
 
       span.earning-info:before {
-        font-family: FontAwesome;
+        font-family: "Font Awesome\ 5 Free";
+        font-weight: 900;
         content: '\f05a';
         display: inline;
         margin-left: 5px;
@@ -1549,6 +1555,82 @@
       vertical-align: middle;
       float: left;
       display: block;
+    }
+  }
+}
+.select2-container--open .select2-dropdown--below {
+  margin-top: 5px !important;
+}
+
+// style for seller info on product details page
+.dokan-vendor-info-wrap {
+  border: 1px solid #E7E7E7;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  h5, p {
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none!important;
+    background: transparent!important;
+    box-shadow: unset!important;
+    padding: 0!important;
+  }
+
+  .dokan-vendor-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 13px;
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  .dokan-vendor-info {
+    .dokan-vendor-name {
+      display: flex;
+      align-items: center;
+
+      h5 {
+        font-size: 16px;
+        font-weight: 500;
+        color: #000;
+        margin-right: 10px;
+      }
+    }
+
+    .dokan-vendor-rating {
+      display: flex;
+      align-items: center;
+
+      p {
+        color: #C1C1C1;
+        font-size: 14px;
+        font-weight: 500;
+        margin-right: 6px;
+      }
+
+      .dashicons-star-empty {
+        color: #e0e0e0;
+        font-size: 16px;
+      }
+
+      .dashicons-star-filled,
+      .dashicons-star-half {
+        color: #ffc239;
+        font-size: 16px;
+      }
+    }
+
+    .dokan-ratings-count {
+      color: #C1C1C1;
+      font-size: 11px;
+      font-weight: normal;
     }
   }
 }

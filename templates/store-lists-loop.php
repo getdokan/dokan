@@ -14,7 +14,6 @@
                     $store_info        = dokan_get_store_info( $seller->ID );
                     $store_address     = dokan_get_seller_short_address( $seller->ID );
                     $store_banner_url  = $store_banner_id ? wp_get_attachment_image_src( $store_banner_id, $image_size ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
-                    
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
                     $store_open_is_on = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
@@ -39,7 +38,6 @@
 
                                         <?php do_action( 'dokan_seller_listing_after_featured', $seller, $store_info ); ?>
                                     </div>
-                                    
                                     <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
                                         <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
                                             <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' );?>"><?php esc_html_e( 'Open', 'dokan-lite' ); ?></span>
@@ -49,7 +47,7 @@
                                     <?php endif ?>
 
                                     <div class="store-data <?php echo esc_attr( $store_open_is_on ); ?>">
-                                        <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a></h2>
+                                        <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a> <?php apply_filters( 'dokan_store_list_loop_after_store_name', $vendor ); ?></h2>
 
                                         <?php if ( !empty( $store_rating['count'] ) ): ?>
                                             <div class="dokan-seller-rating" title="<?php echo sprintf( esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_attr( $store_rating['rating'] ) ) ?>">
@@ -74,7 +72,7 @@
 
                                         <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
                                             <p class="store-phone">
-                                                <i class="fa fa-phone" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
+                                                <i class="fas fa-phone-alt" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
                                             </p>
                                         <?php } ?>
 

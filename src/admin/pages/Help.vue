@@ -1,7 +1,8 @@
 <template>
     <div class="dokan-help-page">
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
         <h1>{{ __( 'Help', 'dokan-lite' ) }}</h1>
+        <AdminNotice></AdminNotice>
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
         <div class="section-wrapper" v-if="docs !== null">
             <postbox v-for="(section, index) in docs" :title="section.title" :key="index">
@@ -20,8 +21,9 @@
 </template>
 
 <script>
-let Postbox = dokan_get_lib('Postbox');
-let Loading = dokan_get_lib('Loading');
+let Postbox     = dokan_get_lib('Postbox');
+let Loading     = dokan_get_lib('Loading');
+let AdminNotice = dokan_get_lib('AdminNotice');
 
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
@@ -33,6 +35,7 @@ export default {
         Postbox,
         Loading,
         UpgradeBanner,
+        AdminNotice
     },
 
     data () {

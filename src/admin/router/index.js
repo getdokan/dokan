@@ -2,6 +2,7 @@ import Dashboard from 'admin/pages/Dashboard.vue'
 import Withdraw from 'admin/pages/Withdraw.vue'
 import Premium from 'admin/pages/Premium.vue'
 import Help from 'admin/pages/Help.vue'
+import ChangeLog from 'admin/pages/ChangeLog.vue'
 import Settings from 'admin/pages/Settings.vue'
 import Vendors from 'admin/pages/Vendors.vue'
 import VendorCapabilities from "admin/pages/VendorCapabilities.vue"
@@ -16,6 +17,7 @@ Vue.use(Router)
 dokan_add_route(Dashboard)
 dokan_add_route(Withdraw)
 dokan_add_route(Premium)
+dokan_add_route(ChangeLog)
 dokan_add_route(Help)
 dokan_add_route(Settings)
 dokan_add_route(VendorCapabilities)

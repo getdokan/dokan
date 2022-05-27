@@ -519,6 +519,8 @@ class StoreController extends WP_REST_Controller {
 
         $request->set_param( 'post_status', [ 'publish' ] );
         $request->set_param( 'author', $request['id'] );
+        $request->set_param( 'per_page', $request['per_page'] );
+        $request->set_param( 'paged', $request['page'] );
 
         $response = $product_controller->get_items( $request );
 

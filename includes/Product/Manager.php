@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Cache;
 use WP_Query;
 use WP_Error;
 
@@ -32,8 +33,20 @@ class Manager {
         ];
 
         $args = wp_parse_args( $args, $defaults );
+        $args = apply_filters( 'dokan_all_products_query', $args );
+        // get cache group and key
+        $cache_group = ! empty( $args['author'] ) ? "seller_product_data_{$args['author']}" : 'product_data';
+        $cache_key   = 'product_manager_all_' . md5( wp_json_encode( $args ) );
 
-        return new WP_Query( apply_filters( 'dokan_all_products_query', $args ) );
+        $products = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $products ) {
+            $products = new WP_Query( $args );
+
+            Cache::set( $cache_key, $products, $cache_group );
+        }
+
+        return $products;
     }
 
     /**
@@ -248,6 +261,9 @@ class Manager {
             $product->set_stock_status( $stock_status );
         }
 
+        // sync stock status
+        $product = $this->maybe_update_stock_status( $product, $stock_status );
+
         // Upsells.
         if ( isset( $args['upsell_ids'] ) ) {
             $upsells = array();
@@ -449,7 +465,7 @@ class Manager {
         $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
 
         if ( empty( $id ) ) {
-            return new WP_Error( 'no-id-found', __( 'No product ID found for updating' ), [ 'status' => 401 ] );
+            return new WP_Error( 'no-id-found', __( 'No product ID found for updating', 'dokan-lite' ), [ 'status' => 401 ] );
         }
 
         return $this->create( $args );
@@ -556,6 +572,38 @@ class Manager {
             $files[] = $download;
         }
         $product->set_downloads( $files );
+
+        return $product;
+    }
+
+    /**
+     * Sync stock stats for variable products.
+     *
+     * @since 3.4.0
+     *
+     * @param \WC_Product $product
+     * @param string $stock_status
+     * @return mixed
+     */
+    protected function maybe_update_stock_status( $product, $stock_status ) {
+        if ( $product->is_type( 'external' ) ) {
+            // External products are always in stock.
+            $product->set_stock_status( 'instock' );
+        } elseif ( isset( $stock_status ) ) {
+            if ( $product->is_type( 'variable' ) && ! $product->get_manage_stock() ) {
+                // Stock status is determined by children.
+                foreach ( $product->get_children() as $child_id ) {
+                    $child = wc_get_product( $child_id );
+                    if ( ! $product->get_manage_stock() ) {
+                        $child->set_stock_status( $stock_status );
+                        $child->save();
+                    }
+                }
+                $product = \WC_Product_Variable::sync( $product, false );
+            } else {
+                $product->set_stock_status( $stock_status );
+            }
+        }
 
         return $product;
     }

@@ -1066,8 +1066,8 @@ jQuery(function($) {
 
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
-                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
-                    action : 'prompt', 
+                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {
+                    action : 'prompt',
                     input  :'text'
                 } );
                 var new_attribute_name = result.value;
@@ -1083,7 +1083,7 @@ jQuery(function($) {
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            dokan_sweetalert( response.error, { 
+                            dokan_sweetalert( response.error, {
                                 action : 'alert',
                                 icon   : 'warning'
                             } );
@@ -1128,6 +1128,18 @@ jQuery(function($) {
                         Dokan_Editor.loadSelect2();
                         Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
+
+                        if ( "variable" !== $( 'select#product_type' ).val() ) {
+                            let labels = $( 'div.dokan-product-attribute-wrapper label.show_if_variable' );
+
+                            for( let label of labels ) {
+                                let checkBox = $( label ).find('input[type="checkbox"]');
+
+                                if ( checkBox.length > 0 && checkBox[0].getAttribute('name')?.startsWith('attribute_variation[') ) {
+                                    $( label ).hide();
+                                }
+                            }
+                        }
                     }
 
                     self.closest('.dokan-attribute-type').find('span.dokan-attribute-spinner').addClass('dokan-hide');
@@ -1143,9 +1155,9 @@ jQuery(function($) {
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
+                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, {
                     action :'confirm',
-                    icon   :'warning' 
+                    icon   :'warning'
                 } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
@@ -1243,7 +1255,9 @@ jQuery(function($) {
         },
 
         showManageStock: function(e) {
-            if ( $(this).is(':checked') ) {
+            const product_type = $( '#product_type' ).val();
+
+            if ( $(this).is(':checked') && 'external' !== product_type ) {
                 $('.show_if_stock').slideDown('fast');
             } else {
                 $('.show_if_stock').slideUp('fast');
@@ -1486,6 +1500,7 @@ jQuery(function($) {
             var product_type    = $( '#product_type' ).val();
             var is_virtual      = $( 'input#_virtual:checked' ).length;
             var is_downloadable = $( 'input#_downloadable:checked' ).length;
+            let shippingTaxContainer  = $( '.dokan-product-shipping-tax' );
 
             // Hide/Show all with rules.
             var hide_classes = '.hide_if_downloadable, .hide_if_virtual';
@@ -1515,6 +1530,18 @@ jQuery(function($) {
             }
             if ( is_virtual ) {
                 $( '.hide_if_virtual' ).hide();
+
+                if ( 1 === $( '.dokan-product-shipping-tax .dokan-section-content' ).first().children().length ) {
+                    shippingTaxContainer.hide();
+                } else {
+                    if ( shippingTaxContainer.hasClass('hide_if_virtual') ) {
+                        shippingTaxContainer.removeClass('hide_if_virtual');
+                    }
+
+                    shippingTaxContainer.show();
+                }
+            } else {
+                shippingTaxContainer.show();
             }
 
             $( '.hide_if_' + product_type ).hide();
@@ -2237,6 +2264,10 @@ jQuery(function($) {
           );
 
           $('.dokan-ajax-response').append(resp.data.progress);
+
+          if ( dokan && dokan.storeProgressBar ) {
+            dokan.storeProgressBar.init();
+          }
         } else {
           $('.dokan-ajax-response').html(
             $('<div/>', {
@@ -2322,7 +2353,9 @@ jQuery(function($) {
           label.removeClass('error');
           label.remove();
         },
-        submitHandler: function(form) {
+        submitHandler: async function(form, event) {
+          event.preventDefault();
+
           $(form).block({
             message: null,
             overlayCSS: {
@@ -2331,6 +2364,9 @@ jQuery(function($) {
               opacity: 0.6
             }
           });
+
+          // Run recaptcha executer
+          await dokan_execute_recaptcha( 'form#dokan-form-contact-seller .dokan_recaptcha_token', 'dokan_contact_seller_recaptcha' );
 
           var form_data = $(form).serialize();
           $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -2343,7 +2379,7 @@ jQuery(function($) {
             }
 
             $(form)
-              .find('input[type=text], input[type=email], textarea')
+              .find('input[type=text], input[type=email], textarea, input[name=dokan_recaptcha_token]')
               .val('')
               .removeClass('valid');
           });
@@ -2907,8 +2943,8 @@ jQuery(function($) {
  * @returns boolean
  */
  async function dokan_show_delete_prompt( event, messgae ) {
-  event.preventDefault(); 
-  
+  event.preventDefault();
+
   let answer = await dokan_sweetalert( messgae, {
     action  : 'confirm',
     icon    : 'warning'
@@ -2916,7 +2952,7 @@ jQuery(function($) {
 
   if( answer.isConfirmed && undefined !== event.target.href ) {
       window.location.href = event.target.href;
-  } 
+  }
   else if( answer.isConfirmed && undefined !== event.target.dataset.url ) {
       window.location.href = event.target.dataset.url;
   }
@@ -2924,6 +2960,7 @@ jQuery(function($) {
     return false;
   }
 }
+
 ;(function($) {
     var storeLists = {
         /**
@@ -3295,4 +3332,211 @@ jQuery(function($) {
         };
     }
 
+})(jQuery);
+
+;(($) => {
+    const Dokan_Withdraw = {
+        init: () => {
+            $('#dokan-request-withdraw-button').on( 'click', (e) => {
+                e.preventDefault();
+                Dokan_Withdraw.openRequestWithdrawWindow();
+            } );
+
+            $('.dokan-withdraw-make-default-button').on( 'click', (e) => {
+                e.preventDefault();
+                Dokan_Withdraw.makeDefault( e );
+            } );
+
+            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
+                Dokan_Withdraw.handleWithdrawRequest( e );
+            } );
+
+            $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
+                Dokan_Withdraw.opensScheduleWindow( e );
+            } );
+
+            $('#dokan-withdraw-schedule-request-submit').on( 'click', (e) => {
+                Dokan_Withdraw.handleScheduleChangeRequest( e );
+            } );
+
+            $("input[name='withdraw-schedule']").on( 'change', (e) => {
+                Dokan_Withdraw.handleScheduleChange( e );
+            });
+        },
+        openRequestWithdrawWindow: () => {
+            let self = $(this),
+                withdrawTemplate = wp.template( 'withdraw-request-popup' );
+
+            $.magnificPopup.open({
+                fixedContentPos: true,
+                items: {
+                    src: withdrawTemplate().trim(),
+                    type: 'inline'
+                },
+                callbacks: {}
+            });
+            Dokan_Withdraw.init();
+        },
+        opensScheduleWindow: () => {
+            let self = $(this),
+                scheduleTemplate = wp.template( 'withdraw-schedule-popup' );
+
+            $.magnificPopup.open({
+                fixedContentPos: true,
+                items: {
+                    src: scheduleTemplate().trim(),
+                    type: 'inline'
+                },
+                callbacks: {}
+            });
+            Dokan_Withdraw.init();
+        },
+        makeDefault: ( e ) => {
+            const button      = $( e.target );
+            const paymentArea = $( '#dokan-withdraw-payment-method-list' );
+
+            paymentArea.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
+                }
+            });
+
+            $.post(
+                dokan.ajaxurl,
+                {
+                    action: 'dokan_withdraw_handle_make_default_method',
+                    nonce: paymentArea.data( 'security' ),
+                    method: button.data( 'method' ),
+                },
+                ( response ) => {
+                    if ( response.success ) {
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
+                        paymentArea.unblock();
+                        window.location.reload();
+                    } else {
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'error',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
+                        paymentArea.unblock();
+                    }
+                }
+            );
+        },
+        handleWithdrawRequest: ( e ) => {
+            e.preventDefault();
+            const amount = $( 'input#withdraw-amount').val();
+            const nonce  = $( 'input#dokan_withdraw_nonce').val();
+            const form   = $( '#withdraw-request-popup' );
+            const method = $( '#withdraw-method' ).val();
+
+            form.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
+                }
+            });
+
+            $.post(
+                dokan.ajaxurl,
+                {
+                    action: 'dokan_handle_withdraw_request',
+                    nonce: nonce,
+                    amount: amount,
+                    method: method,
+                },
+                ( response ) => {
+                    if ( response.success ) {
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
+                        form.unblock();
+                        window.location.reload();
+                    } else {
+                        dokan_sweetalert( '', {
+                            icon: 'error',
+                            html: response.data,
+                        } );
+                        form.unblock();
+                    }
+                }
+            );
+        },
+        handleScheduleChangeRequest: ( e ) => {
+            e.preventDefault();
+            const schedule = $( "input[name='withdraw-schedule']:checked").val();
+            const nonce    = $( '#dokan-withdraw-schedule-request-submit').data('security');
+            const form     = $( '#withdraw-schedule-popup' );
+            const reserve  = $( '#withdraw-remaining-amount' ).val();
+            const minimum  = $( '#minimum-withdraw-amount' ).val();
+            const method   = $( '#preferred-payment-method' ).val();
+
+            form.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
+                }
+            });
+
+            $.post(
+                dokan.ajaxurl,
+                {
+                    action: 'dokan_handle_withdraw_schedule_change_request',
+                    nonce: nonce,
+                    schedule: schedule,
+                    reserve: reserve,
+                    minimum: minimum,
+                    method: method,
+                },
+                ( response ) => {
+                    if ( response.success ) {
+                        dokan_sweetalert( response.data, {
+                            position: 'bottom-end',
+                            toast: true,
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                        } );
+                        form.unblock();
+                        window.location.reload();
+                    } else {
+                        dokan_sweetalert( '', {
+                            icon: 'error',
+                            html: response.data,
+                        } );
+                        form.unblock();
+                    }
+                }
+            );
+        },
+        handleScheduleChange: (e) => {
+            const nextDate = $(e.target).data('next-schedule');
+            $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
+        },
+    };
+
+    $(document).ready(function() {
+        Dokan_Withdraw.init();
+    });
 })(jQuery);
