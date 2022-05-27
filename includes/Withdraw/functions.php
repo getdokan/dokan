@@ -177,7 +177,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
         'iban'                 => isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '',
         'swift_code'           => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
         'account_type'         => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
-        'save_or_add_btn_text' => isset( $store_settings['is_edit_method'] ) && $store_settings['is_edit_method'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
+        'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
