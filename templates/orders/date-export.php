@@ -47,6 +47,8 @@ $search            = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash(
 
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
             <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
+
+            <?php wp_nonce_field( 'seller-order-filter-nonce', 'seller_order_filter_nonce' ); ?>
         </div>
     </form>
 

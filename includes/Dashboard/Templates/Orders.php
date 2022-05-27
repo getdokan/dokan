@@ -74,7 +74,12 @@ class Orders {
 
         } else {
             dokan_get_template_part( 'orders/date-export' );
-            dokan_get_template_part( 'orders/listing' );
+
+            if ( count( $_GET ) > 0 && ( empty( $_GET['seller_order_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) ) {
+                dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => __( 'Nonce verification failed!', 'dokan-lite' ) ] );
+            } else {
+                dokan_get_template_part( 'orders/listing' );
+            }
         }
     }
 
