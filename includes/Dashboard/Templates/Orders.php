@@ -87,6 +87,7 @@ class Orders {
             return;
         }
 
+        // default parameters
         $defaults = [
             'user_string'         => '',
             'user_id'             => '',
@@ -110,6 +111,7 @@ class Orders {
         $page  = 1;
         $limit = 10;
 
+        //if nonce is set and it is valid
         if ( ! empty( $_GET['seller_order_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) {
             $user_string = '';
             $user_id = '';
@@ -119,9 +121,9 @@ class Orders {
                 $customer = new \WC_Customer( $user_id );
 
                 $user_string = sprintf(
-                /* translators: 1: user display name */
-                    esc_html__( '%1$s', 'dokan-lite' ),
-                    $customer->get_first_name() . ' ' . $customer->get_last_name()
+                    /* translators: 1: user first, 2: user last name */
+                    esc_html__( '%1$s %2$s', 'dokan-lite' ),
+                    $customer->get_first_name(), $customer->get_last_name()
                 );
             }
 
@@ -155,9 +157,6 @@ class Orders {
 
             $template_args['user_orders'] = dokan()->order->all( $query_args );
 
-            $limit = $query_args['limit'];
-            $page = $query_args['paged'];
-
             unset( $query_args['limit'] );
             unset( $query_args['paged'] );
             $query_args['seller_id'] = dokan_get_current_user_id();
@@ -166,9 +165,9 @@ class Orders {
 
             dokan_get_template_part( 'orders/date-export', '', $template_args );
             dokan_get_template_part( 'orders/listing', '', $template_args );
-        } elseif ( ! empty( $_GET['seller_order_filter_nonce'] ) ) {
+        } elseif ( ! empty( $_GET['seller_order_filter_nonce'] ) ) { //if nonce is set but invalid
             dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => __( 'Nonce verification failed!', 'dokan-lite' ) ] );
-        } else {
+        } else { // if no nonce set
             $defaults['user_orders'] = dokan()->order->all( [
                 'paged'     => $page,
                 'limit'     => $limit,
@@ -302,7 +301,7 @@ class Orders {
             'current' => $page,
             'total' => $num_of_pages,
             'base' => $base_url . '%_%',
-            'format' => '?pagenum=%#%',
+            'format' => '?pagenum=%#%&asdf=44',
             'add_args' => false,
             'type' => 'array',
         ]);
