@@ -28,8 +28,6 @@ class Manager {
             'paged'       => 1,
             'limit'       => 10,
             'date'        => null,
-            'start_date'  => null,
-            'end_date'    => null,
             'order_id'    => null,
             'search'      => null,
         ];
@@ -47,8 +45,8 @@ class Manager {
             $where            = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
             $status_where     = ( 'all' === $args['status'] ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
             $date_query       = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
-            $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
-            $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
+            $start_date_query = isset( $args['date']['from'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['date']['from'] ) : '';
+            $end_date_query   = isset( $args['date']['to'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['date']['to'] ) : '';
             $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
             $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
 

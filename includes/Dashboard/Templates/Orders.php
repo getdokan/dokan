@@ -145,9 +145,16 @@ class Orders {
                 'status'      => $template_args['order_status'],
                 'paged'       => $page,
                 'limit'       => $limit,
-                'start_date'  => $template_args['filter_date_start'],
-                'end_date'    => $template_args['filter_date_end'],
+                'date'        => null,
             ];
+
+            if ( ! empty( $template_args['filter_date_start'] ) ) {
+                $query_args['date']['from'] = $template_args['filter_date_start'];
+            }
+
+            if ( ! empty( $template_args['filter_date_end'] ) ) {
+                $query_args['date']['to'] = $template_args['filter_date_end'];
+            }
 
             if ( is_numeric( $template_args['search'] ) ) {
                 $query_args['order_id'] = absint( $template_args['search'] );
