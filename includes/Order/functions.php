@@ -890,9 +890,8 @@ function dokan_order_csv_export( $orders, $file = null ) {
 
     fputcsv( $output, $headers );
 
-    foreach ( $orders as $order ) {
-        $line      = array();
-        $the_order = dokan()->order->get( $order->order_id );
+    foreach ( $orders as $the_order ) {
+        $line = array();
 
         foreach ( $headers as $row_key => $label ) {
             switch ( $row_key ) {
