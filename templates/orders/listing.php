@@ -1,41 +1,6 @@
 <?php
 global $woocommerce;
 
-$seller_id           = dokan_get_current_user_id();
-$limit               = 10;
-$customer_id         = isset( $_GET['customer_id'] ) ? sanitize_key( $_GET['customer_id'] ) : null;
-$order_status        = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
-$paged               = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-$order_date_start    = isset( $_GET['order_date_start'] ) ? sanitize_key( $_GET['order_date_start'] ) : null;
-$order_date_end      = isset( $_GET['order_date_end'] ) ? sanitize_key( $_GET['order_date_end'] ) : null;
-$search              = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : null;
-$allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
-$wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
-
-$order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
-    '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
-    'wc-on-hold'    => __( 'Change status to on-hold', 'dokan-lite' ),
-    'wc-processing' => __( 'Change status to processing', 'dokan-lite' ),
-    'wc-completed'  => __( 'Change status to completed', 'dokan-lite' ),
-] );
-
-$query_args = [
-    'customer_id' => $customer_id,
-    'status'      => $order_status,
-    'paged'       => $paged,
-    'limit'       => $limit,
-    'start_date'  => $order_date_start,
-    'end_date'    => $order_date_end,
-];
-
-if ( is_numeric( $search ) ) {
-    $query_args['order_id'] = absint( $search );
-} elseif( ! empty( $search ) ) {
-    $query_args['search'] = $search;
-}
-
-$user_orders  = dokan()->vendor->get( $seller_id )->get_orders( $query_args );
-
 if ( $user_orders ) {
     ?>
     <form id="order-filter" method="POST" class="dokan-form-inline">
@@ -44,7 +9,7 @@ if ( $user_orders ) {
                 <label for="bulk-order-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                 <select name="status" id="bulk-order-action-selector" class="dokan-form-control chosen">
-                    <?php foreach ( $order_statuses as $key => $value ) { ?>
+                    <?php foreach ( $bulk_order_statuses as $key => $value ) { ?>
                         <option class="bulk-order-status" value="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $value ); ?></option>
                     <?php } ?>
                 </select>
@@ -205,28 +170,9 @@ if ( $user_orders ) {
     </form>
 
     <?php
-    unset( $query_args['paged'] );
-    unset( $query_args['limit'] );
-    $query_args['seller_id'] = $seller_id;
-
-    $order_count = dokan_get_seller_orders_number( $query_args );
-
     // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );
-    $num_of_pages = ceil( $order_count / $limit );
-
-    $base_url  = dokan_get_navigation_url( 'orders' );
-
     if ( $num_of_pages > 1 ) {
         echo '<div class="pagination-wrap">';
-        $page_links = paginate_links( [
-            'current'   => $paged,
-            'total'     => $num_of_pages,
-            'base'      => $base_url . '%_%',
-            'format'    => '?pagenum=%#%',
-            'add_args'  => false,
-            'type'      => 'array',
-        ] );
-
         echo "<ul class='pagination'>\n\t<li>";
         echo join( "</li>\n\t<li>", $page_links );
         echo "</li>\n</ul>\n";

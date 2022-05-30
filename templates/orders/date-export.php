@@ -9,34 +9,12 @@
  * @package dokan
  */
 ?>
-<?php
-$user_string     = '';
-$user_id         = '';
-$orders_statuses = wc_get_order_statuses();
 
-if ( ! empty( $_GET['customer_id'] ) ) { // WPCS: input var ok.
-    $user_id = absint( $_GET['customer_id'] ); // WPCS: input var ok, sanitization ok.
-    $user    = get_user_by( 'id', $user_id );
-    $customer = new WC_Customer( $user_id );
-
-    $user_string = sprintf(
-        /* translators: 1: user display name 2: user ID 3: user email */
-        esc_html__( '%1$s', 'dokan-lite' ),
-        $customer->get_first_name() . ' ' . $customer->get_last_name()
-    );
-}
-
-$filter_date_start = isset( $_GET['order_date_start'] ) ? sanitize_key( wp_unslash( $_GET['order_date_start'] ) ) : '';
-$filter_date_end   = isset( $_GET['order_date_end'] ) ? sanitize_key( wp_unslash( $_GET['order_date_end'] ) ) : '';
-$order_status      = isset( $_GET['order_status'] ) ? sanitize_key( wp_unslash( $_GET['order_status'] ) ) : 'all';
-$search            = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : null;
-
-?>
 <div class="dokan-order-filter-serach">
     <form action="" method="GET" class="dokan-left">
         <div class="dokan-form-group">
             <select name="customer_id" id="dokan-filter-customer" class="dokan-form-control dokan-w12"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
-                <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
+                <option value="<?php echo esc_attr( $customer_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?></option>
             </select>
 
             <input name="search" type="text" placeholder="<?php esc_attr_e( 'Search Orders', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $search ); ?>"/>
@@ -44,11 +22,12 @@ $search            = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash(
             <input autocomplete="off" id="order_filter_date_range" type="text" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Select Date Range', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start && $filter_date_end ? dokan_format_date( $filter_date_start ) . ' - ' . dokan_format_date( $filter_date_end ) : null ); ?>">
             <input id="order_filter_start_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_start" placeholder="<?php esc_attr_e( 'Start Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_start ); ?>">
             <input id="order_filter_end_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
+            <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
 
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
             <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
 
-            <?php wp_nonce_field( 'seller-order-filter-nonce', 'seller_order_filter_nonce' ); ?>
+            <?php wp_nonce_field( 'seller-order-filter-nonce', 'seller_order_filter_nonce', false ); ?>
         </div>
     </form>
 
