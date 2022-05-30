@@ -293,7 +293,7 @@ class Orders {
      *
      * @return array
      */
-    private function add_pagination_info( $limit, $page, array $args, array $query_args ) {
+    private function add_pagination_info( $limit, $page, $args, $query_args ) {
         $order_count  = dokan_get_seller_orders_number( $query_args );
         $num_of_pages = ceil( $order_count / $limit );
         $base_url     = dokan_get_navigation_url( 'orders' );
