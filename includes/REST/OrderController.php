@@ -434,7 +434,7 @@ class OrderController extends DokanRESTController {
 
         if ( ! empty( $orders ) ) {
             foreach ( $orders as $order ) {
-                $wc_order       = $this->get_object( $order->order_id );
+                $wc_order       = $this->get_object( $order->get_id() );
                 $data           = $this->prepare_data_for_response( $wc_order, $request );
                 $data_objects[] = $this->prepare_response_for_collection( $data );
             }
