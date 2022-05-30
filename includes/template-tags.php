@@ -212,6 +212,7 @@ function dokan_order_listing_status_filter() {
     $canceled_order_url   = array();
     $refund_order_url     = array();
     $failed_order_url     = array();
+    $filter_nonce         = wp_create_nonce( 'seller-order-filter-nonce' );
     ?>
 
     <ul class="list-inline order-statuses-filter">
@@ -223,7 +224,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all' ) );
+                $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all', 'seller_order_filter_nonce' => $filter_nonce ) );
                 $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
             ?>
             <a href="<?php echo esc_url( $all_order_url ); ?>">
@@ -242,7 +243,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $complete_order_url = array_merge( array( 'order_status' => 'wc-completed' ), $date_filter );
+                $complete_order_url = array_merge( array( 'order_status' => 'wc-completed', 'seller_order_filter_nonce' => $filter_nonce ), $date_filter );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
                 <?php
@@ -260,7 +261,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing' ) );
+                $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $processing_order_url, $orders_url ) ); ?>">
                 <?php
@@ -278,7 +279,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold' ) );
+                $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $on_hold_order_url, $orders_url ) ); ?>">
                 <?php
@@ -296,7 +297,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending' ) );
+                $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $pending_order_url, $orders_url ) ); ?>">
                 <?php
@@ -314,7 +315,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled' ) );
+                $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $canceled_order_url, $orders_url ) ); ?>">
                 <?php
@@ -332,7 +333,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded' ) );
+                $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
                 <?php
@@ -351,7 +352,7 @@ function dokan_order_listing_status_filter() {
                 );
             }
 
-                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed' ) );
+                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
                 <?php
