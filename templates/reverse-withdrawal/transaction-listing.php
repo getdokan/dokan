@@ -57,7 +57,7 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
                 <td></td>
                 <td></td>
                 <td></td>
-                <td><b><?php _e( 'Balance:', 'dokan-lite' ); ?></b></td>
+                <td><b><?php esc_html_e( 'Balance:', 'dokan-lite' ); ?></b></td>
                 <td><b><?php echo wc_price( $current_balance ); ?></b></td>
             </tr>
             <?php

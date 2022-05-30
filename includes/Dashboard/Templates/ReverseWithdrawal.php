@@ -264,7 +264,7 @@ class ReverseWithdrawal {
         // get default transaction date
         $this->transaction_date = Helper::get_default_transaction_date();
 
-        if ( isset( $_REQUEST['_nonce'] ) && wp_verify_nonce( $_REQUEST['_nonce'], 'dokan_reverse_withdrawal_filter' ) ) {
+        if ( isset( $_REQUEST['_nonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_nonce'] ), 'dokan_reverse_withdrawal_filter' ) ) {
             if ( ! empty( $_REQUEST['trn_date']['from'] ) ) {
                 $this->transaction_date['from'] = sanitize_text_field( wp_unslash( $_REQUEST['trn_date']['from'] ) );
             }

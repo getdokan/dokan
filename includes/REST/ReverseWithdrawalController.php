@@ -275,7 +275,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         $response = rest_ensure_response( $items );
         $response = $this->format_collection_response( $response, $request, count( $transaction_types ) );
 
-        return rest_ensure_response( $response );
+        return $response;
     }
 
     /**

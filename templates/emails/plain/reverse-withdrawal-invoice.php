@@ -24,7 +24,7 @@ echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
 echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-printf( esc_attr__( 'Hi %s,\n\n', 'dokan-lite' ), esc_attr( $seller_info->get_shop_name() ) );
+printf( esc_attr__( 'Hi %s,\n\n', 'dokan-lite' ), $seller_info->get_shop_name() );
 
 printf( esc_attr__( 'Your %1$s %2$s invoice is now available for store: %3$s.\n\n', 'dokan-lite' ), $data['{month}'], $data['{year}'], $seller_info->get_shop_name() );
 
@@ -36,7 +36,7 @@ printf( esc_attr__( 'Due Date %1$s : \n\n', 'dokan-lite' ), 'immediate' === $due
 
 printf(
     wp_kses(
-        '<a href="' . $data['{reverse_withdrawal_url}'] . '">' . esc_html__( 'Pay Now', 'dokan-lite' ) . '</a>',
+        '<a href="' . $data['{reverse_withdrawal_url}'] . '">' . esc_attr__( 'Pay Now', 'dokan-lite' ) . '</a>',
         array(
             'a' => array(
                 'href' => array(),
