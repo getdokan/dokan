@@ -25,8 +25,7 @@ module.exports = function(grunt) {
         },
         files: {
           '<%= dirs.css %>/style.css': '<%= dirs.devLessSrc %>/style.less',
-          '<%= dirs.css %>/rtl.css': '<%= dirs.devLessSrc %>/rtl.less',
-          '<%= dirs.css %>/my-orders-styles.css': '<%= dirs.devLessSrc %>/my-order.less'
+          '<%= dirs.css %>/rtl.css': '<%= dirs.devLessSrc %>/rtl.less'
         }
       },
 
@@ -75,9 +74,6 @@ module.exports = function(grunt) {
           ],
           '<%= dirs.js %>/dokan-maps-compat.js': [
             '<%= dirs.devJsSrc %>/dokan-maps-compat.js'
-          ],
-          '<%= dirs.js %>/my-orders.js': [
-            '<%= dirs.devJsSrc %>/my-orders.js'
           ]
         }
       },
