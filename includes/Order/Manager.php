@@ -36,6 +36,13 @@ class Manager {
 
         $args = wp_parse_args( $args, $default );
 
+        //swap dates if start date is after end date
+        if ( isset( $args['date']['from'] ) && isset( $args['date']['to'] ) && $args['date']['from'] > $args['date']['to'] ) {
+            $temporary            = $args['date']['from'];
+            $args['date']['from'] = $args['date']['to'];
+            $args['date']['to']   = $temporary;
+        }
+
         if ( ! in_array( $args['order'], [ 'ASC', 'DESC' ], true ) ) {
             $args['order'] = 'DESC';
         }
