@@ -49,8 +49,6 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @return array
  */
 function dokan_get_seller_orders( $seller_id, $args ) {
-    global $wpdb;
-
     $defaults = [
         'status'      => 'all',
         'order_date'  => null,
@@ -65,61 +63,31 @@ function dokan_get_seller_orders( $seller_id, $args ) {
 
     $args = wp_parse_args( $args, $defaults );
 
-    $args['seller_id'] = $seller_id;
+    // max( $args['limit'], 1 ) to prevent division by zero if anyone gives $args['limit'] = 0
+    $args['paged'] = $args['offset'] / max( $args['limit'], 1 ) + 1;
 
-    $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = 'get_seller_orders_' . md5( wp_json_encode( array_merge( $args, [ 'page' => $pagenum ] ) ) );
-    $orders      = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $orders ) {
-        $getdata  = wp_unslash( $_GET );
-        $order    = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
-        $order_by = 'p.post_date';
-        $exclude  = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
-
-        if ( ! empty( $getdata['orderby'] ) &&
-            in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
-            $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
-        }
-
-        $join  = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-        $where = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-
-        $status_where     = ( 'all' === $args['status'] ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
-        $date_query       = ( $args['order_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['order_date'] ) : '';
-        $start_date_query = ( $args['start_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['start_date'] ) : '';
-        $end_date_query   = ( $args['end_date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['end_date'] ) : '';
-        $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
-        $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
-
-        $orders = $wpdb->get_results(
-            $wpdb->prepare(
-            "SELECT do.order_id, p.post_date
-            FROM {$wpdb->prefix}dokan_orders AS do
-            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-            {$join}
-            WHERE
-                do.seller_id = %d AND
-                {$where}
-                p.post_status != 'trash'
-                {$date_query}
-                {$status_where}
-                {$start_date_query}
-                {$end_date_query}
-                {$order_id_query}
-                {$search_query}
-                {$exclude}
-            GROUP BY do.order_id
-            ORDER BY {$order_by} {$order}
-            LIMIT %d, %d", $seller_id, $args['offset'], $args['limit']
-            )
-        );
-
-        Cache::set( $cache_key, $orders, $cache_group );
+    if ( ! empty( $args['order_date'] ) && empty( $args['start_date'] ) ) {
+        $args['start_date'] = $args['order_date'];
     }
 
-    return $orders;
+    if ( ! empty( $args['order_date'] ) && empty( $args['end_date'] ) ) {
+        $args['end_date'] = $args['order_date'];
+    }
+
+    $args['date'] = null;
+    if ( ! empty( $args['start_date'] ) ) {
+        $args['date']['from'] = $args['start_date'];
+    }
+
+    if ( ! empty( $args['end_date'] ) ) {
+        $args['date']['to'] = $args['end_date'];
+    }
+
+    unset( $args['order_date'], $args['start_date'], $args['end_date'] );
+
+    $args['seller_id'] = $seller_id;
+
+    return dokan()->order->all( $args );
 }
 
 /**
