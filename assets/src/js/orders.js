@@ -617,7 +617,7 @@ jQuery(function($) {
             format: dokan_get_daterange_picker_format(),
             ...dokan_daterange_i18n.locale
         },
-        init: function() {
+        init() {
             const order_filter_date_range = $('#order_filter_date_range');
 
             order_filter_date_range.daterangepicker({
@@ -626,7 +626,7 @@ jQuery(function($) {
             });
 
             order_filter_date_range.on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format(localeData.format) + ' - ' + picker.endDate.format(localeData.format));
+                $(this).val(picker.startDate.format(dokan_dashboard_orders.localeData.format) + ' - ' + picker.endDate.format(dokan_dashboard_orders.localeData.format));
 
                 // Set the value for date range fields to send backend
                 $("#order_filter_start_date").val(picker.startDate.format('YYYY-MM-DD'));
