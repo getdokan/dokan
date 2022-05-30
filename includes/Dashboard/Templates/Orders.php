@@ -301,7 +301,7 @@ class Orders {
             'current' => $page,
             'total' => $num_of_pages,
             'base' => $base_url . '%_%',
-            'format' => '?pagenum=%#%&asdf=44',
+            'format' => '?pagenum=%#%&seller_order_filter_nonce=' . wp_create_nonce( 'seller-order-filter-nonce' ),
             'add_args' => false,
             'type' => 'array',
         ]);
