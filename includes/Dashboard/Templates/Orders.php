@@ -21,6 +21,7 @@ class Orders {
         add_action( 'template_redirect', array( $this, 'handle_order_export' ) );
         add_action( 'dokan_order_content_inside_before', array( $this, 'show_seller_enable_message' ) );
         add_action( 'dokan_order_inside_content', array( $this, 'order_listing_status_filter' ), 10 );
+        add_action( 'dokan_order_inside_content', array( $this, 'order_details_content' ), 15 );
         add_action( 'dokan_order_inside_content', array( $this, 'order_main_content' ), 15 );
         add_filter( 'body_class', array( $this, 'add_css_class_to_body' ) );
     }
@@ -52,34 +53,46 @@ class Orders {
     }
 
     /**
+     * Render the order details page
+     *
+     * @since DOKAN_SINCE
+     */
+    public function order_details_content() {
+        if ( ! isset( $_GET['order_id'] ) ) {
+            return;
+        }
+
+        // get order id
+        $order_id = intval( wp_unslash( $_GET['order_id'] ) );
+
+        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'dokan_view_order' ) ) {
+            dokan_get_template_part( 'orders/details', '', [ 'order_id' => $order_id ] );
+        } elseif ( isset ( $_REQUEST['_view_mode'] ) && 'email' == $_REQUEST['_view_mode'] && current_user_can( 'dokan_view_order' ) ) {
+            dokan_get_template_part( 'orders/details', '', [ 'order_id' => $order_id ] );
+        } else {
+            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
+        }
+    }
+
+    /**
      * Get Order Main Content
      *
      * @since 2.4
+     * @since DOKAN_SINCE Moved order details content to a different function
      *
      * @return void
      */
     public function order_main_content() {
-        $order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
+        if ( isset( $_GET['order_id'] ) ) {
+            return;
+        }
 
-        if ( $order_id ) {
-            $_nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_key( $_REQUEST['_wpnonce'] ) : '';
+        dokan_get_template_part( 'orders/date-export' );
 
-            if ( wp_verify_nonce( $_nonce, 'dokan_view_order' ) && current_user_can( 'dokan_view_order' ) ) {
-                dokan_get_template_part( 'orders/details' );
-            } else if ( isset ( $_REQUEST['_view_mode'] ) && 'email' == $_REQUEST['_view_mode'] && current_user_can( 'dokan_view_order' ) ) {
-                dokan_get_template_part( 'orders/details' );
-            } else {
-                dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
-            }
-
+        if ( count( $_GET ) > 0 && ( empty( $_GET['seller_order_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) ) {
+            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => __( 'Nonce verification failed!', 'dokan-lite' ) ] );
         } else {
-            dokan_get_template_part( 'orders/date-export' );
-
-            if ( count( $_GET ) > 0 && ( empty( $_GET['seller_order_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) ) {
-                dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => __( 'Nonce verification failed!', 'dokan-lite' ) ] );
-            } else {
-                dokan_get_template_part( 'orders/listing' );
-            }
+            dokan_get_template_part( 'orders/listing' );
         }
     }
 
