@@ -310,7 +310,7 @@ class Settings {
                 'description'          => __( 'Custom Store Appearance', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/appearance/',
                 'settings_title'       => __( 'Appearance Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store appearance settings, configure Map API, Google reCaptcha and more. Dokan offers various store header templates to choose from.', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store appearance settings, configure map API, Google reCaptcha and more. Dokan offers various store header templates to choose from.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_privacy',
@@ -356,7 +356,7 @@ class Settings {
                 'admin_access'           => [
                     'name'          => 'admin_access',
                     'label'         => __( 'Admin Area Access', 'dokan-lite' ),
-                    'desc'          => __( 'Disallow Vendors and Customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
+                    'desc'          => __( 'Disallow vendors and customers from accessing the wp-admin dashboard area', 'dokan-lite' ),
                     'type'          => 'switcher',
                     'default'       => 'on',
                     'content_class' => 'field_top_styles',
@@ -365,7 +365,7 @@ class Settings {
                     'name'    => 'custom_store_url',
                     'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
                     /* translators: %s: store url */
-                    'desc'    => sprintf( __( 'Define the Vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'desc'    => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
                     'default' => 'store',
                     'type'    => 'text',
                 ],
@@ -373,7 +373,7 @@ class Settings {
                     'name'  => 'setup_wizard_logo_url',
                     'label' => __( 'Vendor Setup Wizard Logo', 'dokan-lite' ),
                     'type'  => 'file',
-                    'desc'  => __( 'Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default.', 'dokan-lite' ),
+                    'desc'  => __( 'Recommended logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default.', 'dokan-lite' ),
                 ],
                 'disable_welcome_wizard' => [
                     'name'    => 'disable_welcome_wizard',
@@ -421,12 +421,12 @@ class Settings {
                     'name'        => 'commission',
                     'label'       => __( 'Commission', 'dokan-lite' ),
                     'type'        => 'sub_section',
-                    'description' => __( 'Define Commission types, admin commissions, shipping and tax recipients, and more.', 'dokan-lite' ),
+                    'description' => __( 'Define commission types, admin commissions, shipping and tax recipients, and more.', 'dokan-lite' ),
                 ],
                 'commission_type'        => [
                     'name'          => 'commission_type',
                     'label'         => __( 'Commission Type ', 'dokan-lite' ),
-                    'desc'          => __( 'Select a commission type for Vendor', 'dokan-lite' ),
+                    'desc'          => __( 'Select a commission type for vendor', 'dokan-lite' ),
                     'type'          => 'select',
                     'options'       => $commission_types,
                     'default'       => 'percentage',
@@ -447,7 +447,7 @@ class Settings {
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
                     'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Who will be receiving the Shipping fees', 'dokan-lite' ),
+                    'desc'    => __( 'Who will be receiving the shipping fees', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -458,7 +458,7 @@ class Settings {
                 'tax_fee_recipient'      => [
                     'name'          => 'tax_fee_recipient',
                     'label'         => __( 'Tax Fee Recipient', 'dokan-lite' ),
-                    'desc'          => __( 'Who will be receiving the Tax fees', 'dokan-lite' ),
+                    'desc'          => __( 'Who will be receiving the tax fees', 'dokan-lite' ),
                     'type'          => 'radio',
                     'options'       => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -520,7 +520,7 @@ class Settings {
                 'withdraw_methods'    => [
                     'name'          => 'withdraw_methods',
                     'label'         => __( 'Withdraw Methods', 'dokan-lite' ),
-                    'desc'          => __( 'Select suitable Withdraw methods for Vendors', 'dokan-lite' ),
+                    'desc'          => __( 'Select suitable Withdraw methods for vendors', 'dokan-lite' ),
                     'type'          => 'multicheck',
                     'default'       => [ 'paypal' => 'paypal' ],
                     'options'       => dokan_withdraw_get_methods(),
@@ -561,7 +561,7 @@ class Settings {
                 'dashboard'     => [
                     'name'          => 'dashboard',
                     'label'         => __( 'Dashboard', 'dokan-lite' ),
-                    'desc'          => __( 'Select a page to show Vendor Dashboard', 'dokan-lite' ),
+                    'desc'          => __( 'Select a page to show vendor dashboard', 'dokan-lite' ),
                     'type'          => 'select',
                     'options'       => $pages_array,
                     'placeholder'   => __( 'Select page', 'dokan-lite' ),
@@ -570,7 +570,7 @@ class Settings {
                 'my_orders'     => [
                     'name'        => 'my_orders',
                     'label'       => __( 'My Orders', 'dokan-lite' ),
-                    'desc'        => __( 'Select a page to show My Orders', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show my Orders', 'dokan-lite' ),
                     'type'        => 'select',
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                     'options'     => $pages_array,
@@ -578,7 +578,7 @@ class Settings {
                 'store_listing' => [
                     'name'        => 'store_listing',
                     'label'       => __( 'Store Listing', 'dokan-lite' ),
-                    'desc'        => __( 'Select a page to show all Stores', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show all stores', 'dokan-lite' ),
                     'type'        => 'select',
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                     'options'     => $pages_array,
@@ -605,7 +605,7 @@ class Settings {
                 ],
                 'store_map'                  => [
                     'name'          => 'store_map',
-                    'label'         => __( 'Show Map on Store Page', 'dokan-lite' ),
+                    'label'         => __( 'Show map on Store Page', 'dokan-lite' ),
                     'desc'          => __( 'Enable Map of the Store Location in the store sidebar', 'dokan-lite' ),
                     'type'          => 'switcher',
                     'default'       => 'on',
@@ -614,7 +614,7 @@ class Settings {
                 'map_api_source'             => [
                     'name'               => 'map_api_source',
                     'label'              => __( 'Map API Source', 'dokan-lite' ),
-                    'desc'               => __( 'Which Map API source you want to use in your site?', 'dokan-lite' ),
+                    'desc'               => __( 'Which map API source you want to use in your site?', 'dokan-lite' ),
                     'refresh_after_save' => true,
                     'type'               => 'radio',
                     'default'            => 'google_maps',
@@ -723,7 +723,7 @@ class Settings {
                     'name'          => 'enable_privacy',
                     'label'         => __( 'Enable Privacy Policy', 'dokan-lite' ),
                     'type'          => 'switcher',
-                    'desc'          => __( 'Enable privacy policy for Vendor store contact form', 'dokan-lite' ),
+                    'desc'          => __( 'Enable privacy policy for vendor store contact form', 'dokan-lite' ),
                     'default'       => 'on',
                     'content_class' => 'field_top_styles',
                 ],

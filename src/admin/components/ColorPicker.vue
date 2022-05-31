@@ -1,43 +1,19 @@
 <template>
     <div class="color-picker-container">
-        <button
-            type="button"
-            class="button color-picker-button"
-            @click="toggleColorPicker"
-        >
+        <button type="button" class="button color-picker-button" @click="toggleColorPicker">
             <div class="color" :style="{backgroundColor: value}"></div>
             <span class="dashicons dashicons-arrow-down-alt2"></span>
-        </button>
+        </button>   
 
-        <sketch
-            v-if="showColorPicker"
-            :value="value"
-            @input="updateColor"
-            :preset-colors="presetColors"
-            :disable-alpha="disableAlpha"
-            :disable-fields="disableFields"
-        ></sketch>
+        <sketch v-if="showColorPicker" :value="value" @input="updateColor" :preset-colors="presetColors"
+            :disable-alpha="disableAlpha" :disable-fields="disableFields"></sketch>
 
-        <input
-            v-if="showColorPicker && format === 'hex'"
-            :value="value"
-            @input="setHexColor($event.target.value)"
-            type="text"
-            class="hex-input"
-        >
+        <input v-if="showColorPicker && format === 'hex'" @input="setHexColor( $event.target.value )"
+            type="text" :value="value" class="hex-input" />
 
         <div v-if="showColorPicker" class="button-group">
-            <button
-                type="button"
-                class="button button-small dashicons dashicons-no-alt"
-                @click="setLastColor(prevColor)"
-            ></button>
-
-            <button
-                type="button"
-                class="button button-small dashicons dashicons-saved"
-                @click="toggleColorPicker"
-            ></button>
+            <button type="button" class="button button-small dashicons dashicons-no-alt" @click="setLastColor( prevColor )"></button>
+            <button type="button" class="button button-small dashicons dashicons-saved" @click="toggleColorPicker"></button>
         </div>
     </div>
 </template>
@@ -46,29 +22,29 @@
     import Sketch from 'vue-color/src/components/Sketch.vue';
 
     export default {
-        components: {
+        components : {
             Sketch
         },
 
-        props: {
-            value: {
-                type: String,
-                required: true,
-                default: ''
+        props : {
+            value : {
+                type     : String,
+                default  : '',
+                required : true,
             },
 
-            format: {
-                type: String,
-                required: false,
-                default: 'hex',
-                validator(type) {
-                    return ['hsl', 'hex', 'rgba', 'hsv'].indexOf(type) !== -1;
+            format : {
+                type     : String,
+                required : false,
+                default  : 'hex',
+                validator( type ) {
+                    return ['hsl', 'hex', 'rgba', 'hsv'].indexOf( type ) !== -1;
                 }
             },
 
-            presetColors: {
-                type: Array,
-                required: false,
+            presetColors : {
+                type     : Array,
+                required : false,
                 default() {
                     return [
                         '#000',
@@ -83,51 +59,80 @@
                 }
             },
 
-            disableAlpha: {
-                type: Boolean,
-                required: false,
-                default: true
+            disableAlpha : {
+                type     : Boolean,
+                default  : true,
+                required : false
             },
 
-            disableFields: {
-                type: Boolean,
-                required: false,
-                default: true
+            disableFields : {
+                type     : Boolean,
+                default  : true,
+                required : false
+            },
+
+            customData : {
+                type     : Object,
+                required : true,
+            },
+
+            itemKey : {
+                type     : String,
+                required : true,
             }
         },
 
         data() {
             return {
                 prevColor       : '',
-                showColorPicker : false
+                showColorPicker : false,
             };
         },
 
+        watch: {
+            customData : {
+                handler() {
+                    this.showColorPicker = this.customData.show_pallete;
+                },
+                deep : true
+            }
+        },
+
         methods: {
-            updateColor(colors) {
+            updateColor( colors ) {
                 let color = '';
 
-                if (colors[this.format]) {
-                    color = colors[this.format];
+                if ( colors[ this.format ] ) {
+                    color = colors[ this.format ];
                 }
 
-                this.$emit('input', color);
-                this.$emit('custom-change', color);
+                this.$emit( 'input', color );
+                this.$emit( 'custom-change', color );
             },
 
             toggleColorPicker() {
-                this.prevColor       = this.value;
-                this.showColorPicker = !this.showColorPicker;
+                this.prevColor = this.value;
+                let data = {
+                    key    : this.itemKey,
+                    values : this.customData,
+                };
+
+                this.$emit( 'toggleColorPicker', data );
             },
 
-            setLastColor(color) {
-                this.updateColor({ hex: color });
-                this.toggleColorPicker();
+            setLastColor( color ) {
+                let data = {
+                    key    : this.itemKey,
+                    values : this.customData,
+                };
+
+                this.updateColor({ hex : color });
+                this.$emit( 'toggleColorPicker', data);
             },
 
-            setHexColor(color) {
+            setHexColor( color ) {
                 this.updateColor({
-                    hex: color
+                    hex : color
                 });
             }
         }
