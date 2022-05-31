@@ -17,14 +17,9 @@
                     <div class="nab-section">
                         <div class="search-box">
                             <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
-                            <input
-                                type="text"
-                                id="dokan-admin-search"
-                                class="dokan-admin-search-settings"
-                                :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )"
-                                @input="searchInSettings" ref="searchInSettings"
-                                v-model="searchText"
-                            >
+                            <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
+                                :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
+                                @input="searchInSettings" ref="searchInSettings" />
                             <span
                                 class="dashicons dashicons-no-alt"
                                 @click.prevent="clearSearch"
@@ -33,10 +28,8 @@
                         </div>
 
                         <template v-for="section in settingSections">
-                            <div
-                                :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                                @click.prevent="changeTab(section)"
-                            >
+                            <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                                @click.prevent="changeTab(section)" :key="section.id">
                                 <img :src="section.icon_url" :alt="section.settings_title"/>
                                 <div class="nav-content">
                                     <div class="nav-title">{{ section.title }}</div>
@@ -58,7 +51,7 @@
                         </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
-                        <div :id="index" class="group" v-if="currentTab === index">
+                        <div :id="index" class="group" v-if="currentTab === index" :key="index">
                             <form method="post" action="options.php">
                                 <input type="hidden" name="option_page" :value="index">
                                 <input type="hidden" name="action" value="update">
