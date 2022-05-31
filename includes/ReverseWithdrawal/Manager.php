@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Database Manager Class
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @class Manager
  *
@@ -24,14 +24,14 @@ class Manager {
      *
      * @var string
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     private $table;
 
     /**
      * Manager constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         global $wpdb;
@@ -41,7 +41,7 @@ class Manager {
     /**
      * This method will return data from dokan_reverse_withdrawal table
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -304,7 +304,7 @@ class Manager {
     /**
      * This method will get all/selected vendors balance
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -348,7 +348,7 @@ class Manager {
     /**
      * This method will return current balance of a vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -377,7 +377,7 @@ class Manager {
     /**
      * This method will get all the transactions for a vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -468,7 +468,7 @@ class Manager {
     /**
      * This method will return a single item from reverse withdrawal table
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $id
      *
@@ -493,7 +493,7 @@ class Manager {
     /**
      * Insert a new item into database.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -565,7 +565,7 @@ class Manager {
     /**
      * Check if reverse withdrawal already inserted for an order
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -585,7 +585,7 @@ class Manager {
     /**
      * Check if reverse withdrawal payment already inserted for an order
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -605,7 +605,7 @@ class Manager {
     /**
      * This method will return all refunded amount for a specific order
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -626,7 +626,7 @@ class Manager {
     /**
      * This method will return all the payments made by a vendor in a date range
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -667,7 +667,7 @@ class Manager {
     /**
      * This method will return commission amount for a specific order
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -690,7 +690,7 @@ class Manager {
      *
      * @param array $args
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array|WP_Error
      */
@@ -751,7 +751,7 @@ class Manager {
     /**
      * Get dokan_reverse_withdrawal table with prefix
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -762,7 +762,7 @@ class Manager {
     /**
      * This will check if given var is empty or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param mixed $var
      *

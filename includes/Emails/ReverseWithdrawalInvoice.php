@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Reverse Withdrawal Invoice Email.
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @extends WC_Email
  *
@@ -24,14 +24,14 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * @var \WeDevs\Dokan\Vendor\Vendor|null
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     protected $seller_info;
 
     /**
      * @var array|null
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @see Helper::get_vendor_due_status()
      */
@@ -40,7 +40,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         $this->id               = 'reverse_withdrawal_invoice';
@@ -65,7 +65,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Get email subject.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -76,7 +76,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Get email heading.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -87,7 +87,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Default content to show below main email content.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -98,7 +98,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Trigger this email.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      * @param array|array $due_status
@@ -142,7 +142,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Get vendor email address
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string|null
      */
@@ -153,7 +153,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Get content html.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -177,7 +177,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Get content plain.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -201,7 +201,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Initialize settings form fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

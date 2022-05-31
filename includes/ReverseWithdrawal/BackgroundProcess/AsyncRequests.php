@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Async Requests
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\BackgroundProcess
  */
@@ -20,7 +20,7 @@ class AsyncRequests {
     /**
      * Class Constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // check if we need to take reverse withdrawal actions
@@ -33,7 +33,7 @@ class AsyncRequests {
     /**
      * Take actions for given vendors
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *
@@ -62,7 +62,7 @@ class AsyncRequests {
     /**
      * Send billing invoice email
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $args
      *

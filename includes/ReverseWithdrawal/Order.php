@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Order
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class Order {
     /**
      * Order constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // replace meta text with formatted text
@@ -41,7 +41,7 @@ class Order {
     /**
      * Insert reverse withdrawal payment info into database after order status has been completed.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int    $order_id of the $order_id .
      * @param string $old_status old status of the order.
@@ -65,7 +65,7 @@ class Order {
     /**
      * Insert reverse withdrawal payment into database after order status has been completed
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -79,7 +79,7 @@ class Order {
     /**
      * This method will insert reverse withdrawal payment record into database
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $order_id
      *
@@ -125,7 +125,7 @@ class Order {
     /**
      * Stores reverse withdrawal payment amount under the line item meta.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param \WC_Order_Item_Product $line_item     The line item added to the order.
      * @param string                 $cart_item_key The key of the cart item being added to the cart.
@@ -140,7 +140,7 @@ class Order {
     /**
      * Hide meta key in the order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param  string $display_key of the key.
      * @param  object $meta for the meta data.
@@ -161,7 +161,7 @@ class Order {
     /**
      * Hide meta key in the order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param  mixed $display_value for the display item.
      * @param  object $meta data of the order.

@@ -186,7 +186,7 @@ class Manager {
     /**
      * Generate Rest API class map
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

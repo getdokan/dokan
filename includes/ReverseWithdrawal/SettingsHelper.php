@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * @class SettingsHelper
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class SettingsHelper {
     /**
      * Check if reverse withdrawal feature is enabled
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -27,7 +27,7 @@ class SettingsHelper {
     /**
      * Get enabled payment gateways for reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -40,7 +40,7 @@ class SettingsHelper {
     /**
      * Check if gateway is enabled for reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -53,7 +53,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal billing type
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -64,7 +64,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal threshold limit
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return float
      */
@@ -77,7 +77,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal billing day
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return float
      */
@@ -90,7 +90,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal billing day
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return float
      */
@@ -103,7 +103,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal failed payment actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -116,7 +116,7 @@ class SettingsHelper {
     /**
      * Check if action is enabled for reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -129,7 +129,7 @@ class SettingsHelper {
     /**
      * Check if display notification is enabled during due period for reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -140,7 +140,7 @@ class SettingsHelper {
     /**
      * Check if sending announcement is enabled during due period for reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -151,7 +151,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal payment gateways
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -165,7 +165,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal billing type
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -180,7 +180,7 @@ class SettingsHelper {
     /**
      * Get reverse withdrawal failed payment actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */

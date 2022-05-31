@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\REST
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 class ReverseWithdrawalController extends WP_REST_Controller {
     /**
@@ -38,7 +38,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Register all routes related with reverse withdrawal
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -101,7 +101,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request Full details about the request.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool True if the request has read access, false otherwise.
      */
@@ -114,7 +114,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return WP_REST_Response
      */
@@ -151,7 +151,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request Full details about the request.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool True if the request has read access, false otherwise.
      */
@@ -173,7 +173,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return WP_REST_Response
      */
@@ -211,7 +211,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request Full details about the request.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool True if the request has read access, false otherwise.
      */
@@ -224,7 +224,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return WP_REST_Response
      */
@@ -245,7 +245,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request Full details about the request.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool True if the request has read access, false otherwise.
      */
@@ -258,7 +258,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return WP_REST_Response
      */
@@ -281,7 +281,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Prepare refund for response
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $item
      * @param WP_REST_Request $request
@@ -307,7 +307,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Prepare transaction for response
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $item
      * @param WP_REST_Request $request
@@ -327,7 +327,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Prepare links for the request.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $item
      * @param WP_REST_Request $request Request object.
@@ -350,7 +350,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param  WP_REST_Response|WP_Error $response
      * @param  WP_REST_Request $request
@@ -397,7 +397,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Retrieves the query params for the collections.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array Query parameters for the collection.
      */
@@ -444,7 +444,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Retrieves the query params for the collections.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array Query parameters for the collection.
      */
@@ -488,7 +488,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Get the Cart schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -543,7 +543,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Get the Cart schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -623,7 +623,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Get the Cart schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -654,7 +654,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Get the Cart schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */

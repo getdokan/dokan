@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Load Reverse Withdrawal Template
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package Wedevs\Dokan\Dashboard\Templates
  */
@@ -20,14 +20,14 @@ class ReverseWithdrawal {
     /**
      * @var int $seller_id
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     protected $seller_id;
 
     /**
      * @var string[] $transaction_date
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     protected $transaction_date = [
         'from' => '',
@@ -37,7 +37,7 @@ class ReverseWithdrawal {
     /**
      * Class Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // return if reverse withdrawal feature is disabled
@@ -79,7 +79,7 @@ class ReverseWithdrawal {
     /**
      * Display notice on vendor dashboard page
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -92,7 +92,7 @@ class ReverseWithdrawal {
     /**
      * Display notice on reverse withdrawal page
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -127,7 +127,7 @@ class ReverseWithdrawal {
     /**
      * Display action taken notice
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -148,7 +148,7 @@ class ReverseWithdrawal {
     /**
      * Dokan Reverse Withdrawal header Template render
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -159,7 +159,7 @@ class ReverseWithdrawal {
     /**
      * Load payment section
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -177,7 +177,7 @@ class ReverseWithdrawal {
     /**
      * Dokan Reverse Withdrawal header Template render
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -188,7 +188,7 @@ class ReverseWithdrawal {
     /**
      * Dokan Reverse Withdrawal header Template render
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -215,7 +215,7 @@ class ReverseWithdrawal {
      *
      * @param string $hook
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -235,7 +235,7 @@ class ReverseWithdrawal {
     /**
      * Localize Reverse Withdrawal Scripts
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $localize_script
      *
@@ -256,7 +256,7 @@ class ReverseWithdrawal {
     /**
      * Get transaction date
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string[]
      */

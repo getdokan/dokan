@@ -281,7 +281,7 @@ function dokan_execute_recaptcha(inputFieldSelector, action) {
 /**
  * This method will extract ajax error message from ajax response
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @param jqXHR
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 ?>
 <?php do_action( 'dokan_dashboard_wrap_start' ); ?>
@@ -14,7 +14,7 @@
              *
              *  @hooked get_dashboard_side_navigation
              *
-             *  @since DOKAN_SINCE
+             *  @since 3.5.1
              */
             do_action( 'dokan_dashboard_content_before' );
             do_action( 'dokan_reverse_withdrawal_content_before' );
@@ -27,7 +27,7 @@
                 /**
                  *  dokan_reverse_withdrawal_content_inside_before hook
                  *
-                 *  @since DOKAN_SINCE
+                 *  @since 3.5.1
                  */
                 do_action( 'dokan_reverse_withdrawal_content_inside_before' );
             ?>
@@ -38,7 +38,7 @@
                     /**
                      * dokan_reverse_withdrawal_header_render hook
                      *
-                     * @since DOKAN_SINCE
+                     * @since 3.5.1
                      */
                     do_action( 'dokan_reverse_withdrawal_content_area_header' );
                 ?>
@@ -54,7 +54,7 @@
                          * @hooked dokan_show_seller_balance
                          * @hooked dokan_withdraw_form_and_listing
                          *
-                         * @since DOKAN_SINCE
+                         * @since 3.5.1
                          */
                         do_action( 'dokan_reverse_withdrawal_content' );
                     ?>
@@ -68,7 +68,7 @@
                 /**
                  *  dokan_reverse_withdrawal_content_inside_after hook
                  *
-                 *  @since DOKAN_SINCE
+                 *  @since 3.5.1
                  */
                 do_action( 'dokan_reverse_withdrawal_content_inside_after' );
             ?>
@@ -79,7 +79,7 @@
              *  dokan_dashboard_content_after hook
              *  dokan_reverse_withdrawal_content_after hook
              *
-             *  @since DOKAN_SINCE
+             *  @since 3.5.1
              */
             do_action( 'dokan_dashboard_content_after' );
             do_action( 'dokan_reverse_withdrawal_content_after' );

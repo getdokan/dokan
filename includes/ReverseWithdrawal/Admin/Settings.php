@@ -1,6 +1,8 @@
 <?php
 namespace WeDevs\Dokan\ReverseWithdrawal\Admin;
 
+use WeDevs\Dokan\ReverseWithdrawal\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,25 +14,26 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\Admin
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 class Settings {
 
     /**
      * Settings constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // Hooks
         add_filter( 'dokan_settings_fields', [ $this, 'load_settings_fields' ], 21 );
         add_action( 'dokan_before_saving_settings', [ $this, 'validate_admin_settings' ], 20, 2 );
+        add_action( 'dokan_after_saving_settings', [ $this, 'create_reverse_withdrawal_base_product' ], 20, 2 );
     }
 
     /**
      * Load all settings fields
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $fields
      *
@@ -137,7 +140,7 @@ class Settings {
     /**
      * Validates admin delivery settings
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param string $option_name
      * @param array $option_value
@@ -213,6 +216,26 @@ class Settings {
                 ],
                 400
             );
+        }
+    }
+
+    /**
+     * Validates admin delivery settings
+     *
+     * @since 3.5.1
+     *
+     * @param string $option_name
+     * @param array $option_value
+     *
+     * @return void
+     */
+    public function create_reverse_withdrawal_base_product( $option_name, $option_value ) {
+        if ( 'dokan_reverse_withdrawal' !== $option_name ) {
+            return;
+        }
+
+        if ( empty( Helper::get_reverse_withdrawal_base_product() ) ) {
+            InstallerHelper::create_reverse_withdrawal_base_product();
         }
     }
 }

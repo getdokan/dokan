@@ -32,7 +32,7 @@
 	<!-- Rules: WordPress Coding Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-	<config name="minimum_supported_wp_version" value="4.4"/>
+	<config name="minimum_supported_wp_version" value="5.4"/>
     <rule ref="WordPress-Core"/>
 	<rule ref="WordPress">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>

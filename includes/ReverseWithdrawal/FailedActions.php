@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class FailedActions {
     /**
      * Reverse pay actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      *
@@ -60,7 +60,7 @@ class FailedActions {
     /**
      * Revert reverse pay taken actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      *
@@ -97,7 +97,7 @@ class FailedActions {
     /**
      * This method will make vendor status inactive
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      *
@@ -121,7 +121,7 @@ class FailedActions {
     /**
      * This method will make vendor status active
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      * @param bool $remove_action
@@ -155,7 +155,7 @@ class FailedActions {
     /**
      * This method will remove a failed action for a vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      * @param string $action
