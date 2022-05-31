@@ -301,9 +301,13 @@ class Settings {
                 'settings_description' => __( 'You can configure your store\'s Withdrawal methods, limits, order status and more.', 'dokan-lite' ),
             ],
             [
-                'id'    => 'dokan_reverse_withdrawal',
-                'title' => __( 'Reverse Withdrawal', 'dokan-lite' ),
-                'icon'  => 'dashicons-money-alt',
+                'id'                   => 'dokan_reverse_withdrawal',
+                'title'                => __( 'Reverse Withdrawal', 'dokan-lite' ),
+                'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/withdraw.svg',
+                'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
+                'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
+                'settings_title'       => __( 'Reverse Withdrawal Settings', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store\'s Withdrawal methods, limits, order status and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_pages',

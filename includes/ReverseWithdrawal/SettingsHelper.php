@@ -157,7 +157,7 @@ class SettingsHelper {
      */
     public static function get_reverse_withrawal_payment_gateways() {
         $gateways = [
-            'cod'    => esc_html__( 'Cash on delivery', 'dokan-lite' ),
+            'cod' => esc_html__( 'Cash on delivery', 'dokan-lite' ),
         ];
         return apply_filters( 'dokan_reverse_withdrawal_payment_gateways', $gateways );
     }

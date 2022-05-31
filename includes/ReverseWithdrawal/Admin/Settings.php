@@ -39,11 +39,12 @@ class Settings {
     public function load_settings_fields( $fields ) {
         $settings_fields = [
             'enabled' => [
-                'name'    => 'enabled',
-                'label'   => esc_html__( 'Enable Reverse Withdrawal', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
-                'type'    => 'checkbox',
-                'default' => 'off',
+                'name'               => 'enabled',
+                'label'              => esc_html__( 'Enable Reverse Withdrawal', 'dokan-lite' ),
+                'desc'               => esc_html__( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
+                'type'               => 'switcher',
+                'default'            => 'off',
+                'content_class'      => 'field_top_styles',
                 'refresh_after_save' => true,
             ],
             'payment_gateways' => [
