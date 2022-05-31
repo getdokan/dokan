@@ -75,8 +75,7 @@
                                             :key="fieldId"
                                             :errors="errors"
                                             :validationErrors="validationErrors"
-                                            :toggle-loading-state="toggleLoadingState"
-                                        />
+                                            :toggle-loading-state="toggleLoadingState" />
                                     </div>
                                 </div>
                                 <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
