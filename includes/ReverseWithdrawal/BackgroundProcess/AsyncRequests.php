@@ -90,7 +90,7 @@ class AsyncRequests {
             // check if we need to send invoice email
             $due_status = Helper::get_vendor_due_status( $vendor_id );
 
-            if ( false === $due_status['status'] ) {
+            if ( is_wp_error( $due_status ) || false === $due_status['status'] ) {
                 // no need to send invoice email, coz vendor has no due
                 continue;
             }

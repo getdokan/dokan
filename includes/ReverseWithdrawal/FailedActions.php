@@ -29,7 +29,7 @@ class FailedActions {
         }
 
         $due_status = Helper::get_vendor_due_status( $vendor_id );
-        if ( false === $due_status['status'] ) {
+        if ( is_wp_error( $due_status ) || false === $due_status['status'] ) {
             // vendor due is not mature yet, so we don't need to take any action
             return;
         }
@@ -74,7 +74,7 @@ class FailedActions {
 
         // check due status, if false then proceed
         $due_status = Helper::get_vendor_due_status( $vendor_id );
-        if ( 'immediate' === $due_status['due_date'] ) {
+        if ( is_wp_error( $due_status ) || 'immediate' === $due_status['due_date'] ) {
             // vendor still needs to pay remaining reverse pay amount
             return;
         }
