@@ -23,7 +23,7 @@ class V_3_3_8 extends DokanUpgrader {
 
         while ( null !== $vendors ) {
             $args = [
-                'offset' => $i++,
+                'paged'  => $i++,
                 'number' => 10,
                 'fields' => 'ID',
             ];
