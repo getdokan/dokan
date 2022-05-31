@@ -23,6 +23,8 @@ class InstallerHelper {
     public static function create_reverse_withdrawal_table() {
         global $wpdb;
 
+        include_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_reverse_withdrawal` (
                     `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                     `trn_id` bigint(20) UNSIGNED NOT NULL,
@@ -51,6 +53,11 @@ class InstallerHelper {
      * @return void
      */
     public static function create_reverse_withdrawal_base_product() {
+         // ! Check if WooCommerce is active, we need to check this because dokan can be enabled without wooCommerce
+        if ( ! class_exists( 'WooCommerce' ) ) {
+            return;
+        }
+
         // get advertisement product id from option table
         $product_id = (int) get_option( Helper::get_base_product_option_key(), 0 );
         if ( $product_id ) {

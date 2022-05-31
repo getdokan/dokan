@@ -26,6 +26,9 @@ class Hooks {
 
         // maybe take action after settings has been saved
         add_action( 'dokan_after_saving_settings', [ $this, 'maybe_take_action' ], 11, 3 );
+
+        // remove reverse withdrawal base product if page has been deleted
+        add_action( 'wp_trash_post', array( $this, 'delete_base_product' ) );
     }
 
     /**
@@ -68,5 +71,24 @@ class Hooks {
         }
 
         dokan()->reverse_withdrawal->cron_actions->maybe_take_action();
+    }
+
+    /**
+     * Remove reverse withdrawal base product if page has been deleted
+     *
+     * @sience DOKAN_SINCE
+     *
+     * @param int $post_id
+     *
+     * @return void
+     */
+    public function delete_base_product( $post_id ) {
+        if ( 'product' !== get_post_type( $post_id ) ) {
+            return;
+        }
+
+        if ( (int) $post_id === Helper::get_reverse_withdrawal_base_product() ) {
+            update_option( Helper::get_base_product_option_key(), '' );
+        }
     }
 }

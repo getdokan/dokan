@@ -190,7 +190,14 @@ class Helper {
      */
     public static function get_reverse_withdrawal_base_product() {
         // get product id from option table
-        return (int) get_option( static::get_base_product_option_key(), 0 );
+        $product_id = (int) get_option( static::get_base_product_option_key(), 0 );
+        // check if we got a valid product id, otherwise create a new product
+        if ( empty( $product_id ) ) {
+            InstallerHelper::create_reverse_withdrawal_base_product();
+            $product_id = (int) get_option( static::get_base_product_option_key(), 0 );
+        }
+        // finally return product id
+        return $product_id;
     }
 
     /**
