@@ -206,61 +206,101 @@ div.media-sidebar a.edit-attachment{
                         flex-grow: 1;
                     }
 
-                    #vendor-dashboard-payment-settings-toggle-dropdown {
+                    > div {
                         flex-grow: 2;
                         text-align: right;
 
-                        #vendor-payment-method-drop-down-wrapper {
-                            position: relative;
-                        }
+                        #vendor-dashboard-payment-settings-toggle-dropdown {
+                            display: inline-block;
 
-                        #vendor-payment-method-drop-down {
-                            display: none;
-                            max-height: 200px;
-                            border: 1px black solid;
-                            position: absolute;
-                            top: 0;
-                            right: 0;
-                            background-color: white;
+                            #toggle-vendor-payment-method-drop-down {
+                                color: #333333;
+                                cursor: pointer;
+                                padding: 10px 35px 10px 10px;
+                                white-space: nowrap;
+                                border-radius: 3px;
+                                background: #DDDDDD;
+                                position: relative;
 
-                            ul {
-                                list-style: none;
-                                margin: 0;
-                                max-height: 200px;
-                                overflow-y: scroll;
-                                overflow-x: hidden;
-
-                                li {
-                                    border-bottom: 1px #dddddd solid;
-
-                                    div {
-                                        white-space: nowrap;
-                                        display: flex;
-                                        align-items: center;
-                                        padding: 10px 10px;
-
-                                        img {
-                                            width: calc(12px + 1.5vw);
-                                            border: 1px solid lightgray;
-                                            border-radius: 50%;
-                                        }
-
-                                        span {
-                                            margin-left: 10px;
-                                            color: #333333;
-                                        }
-                                    }
+                                &::after {
+                                    content: '\25BC';
+                                    display: inline-block;
+                                    transition: transform 300ms ease-in-out;
+                                    position: absolute;
+                                    right: 5px;
+                                    top: 20%;
                                 }
                             }
 
-                            .no-content {
-                                padding: 20px;
+                            #vendor-payment-method-drop-down-wrapper {
+                                position: relative;
+                                top: 5px;
                             }
-                        }
 
-                        &:hover {
                             #vendor-payment-method-drop-down {
-                                display: block;
+                                display: none;
+                                max-height: 200px;
+                                border: 1px black solid;
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                background-color: white;
+
+                                ul {
+                                    list-style: none;
+                                    margin: 0;
+                                    max-height: 199px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+
+                                    li:not(:last-child) {
+                                        border-bottom: 1px #dddddd solid;
+                                    }
+
+                                    li {
+                                        div {
+                                            white-space: nowrap;
+                                            display: flex;
+                                            align-items: center;
+                                            padding: 10px 10px;
+
+                                            img {
+                                                width: calc(12px + 1.5vw);
+                                                border: 1px solid lightgray;
+                                                border-radius: 50%;
+                                            }
+
+                                            span {
+                                                padding-right: 30px;
+                                                margin-left: 10px;
+                                                color: #333333;
+                                            }
+                                        }
+
+                                        &:hover {
+                                            background-color: #EFEFEF;
+                                        }
+                                    }
+                                }
+
+                                .no-content {
+                                    padding: 20px;
+                                    width: 300px;
+                                    text-align: center;
+                                }
+                            }
+
+                            &:hover {
+                                #toggle-vendor-payment-method-drop-down {
+                                    background-color: #CCCCCC;
+                                    &::after {
+                                        transform: rotate( 180deg );
+                                    }
+                                }
+
+                                #vendor-payment-method-drop-down {
+                                    display: block;
+                                }
                             }
                         }
                     }

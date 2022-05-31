@@ -71,6 +71,16 @@ class Dashboard extends DokanShortcode {
             return ob_get_clean();
         }
 
+        if ( isset( $wp->query_vars['reverse-withdrawal'] ) ) {
+            if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'reverse-withdrawal/reverse-withdrawal' );
+            }
+
+            return ob_get_clean();
+        }
+
         if ( isset( $wp->query_vars['settings'] ) ) {
             dokan_get_template_part( 'settings/store' );
 
