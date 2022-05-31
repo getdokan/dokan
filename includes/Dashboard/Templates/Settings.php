@@ -837,7 +837,7 @@ class Settings {
         /**
          * To allow modifying the required fields for a payment method.
          *
-         * @since DOKAN_SINCE
+         * @since 3.5.1
          *
          * @param array  $required_fields
          * @param string $payment_method_id

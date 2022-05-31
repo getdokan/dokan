@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * This class will be the base class for the reverse withdrawal feature
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 class ReverseWithdrawal {
 
@@ -24,7 +24,7 @@ class ReverseWithdrawal {
     /**
      * Cloning is forbidden.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __clone() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -34,7 +34,7 @@ class ReverseWithdrawal {
     /**
      * Unserializing instances of this class is forbidden.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __wakeup() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -44,7 +44,7 @@ class ReverseWithdrawal {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         $this->set_controllers();
@@ -54,7 +54,7 @@ class ReverseWithdrawal {
     /**
      * Set controllers
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -76,7 +76,7 @@ class ReverseWithdrawal {
     /**
      * Initialize all hooks
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -89,7 +89,7 @@ class ReverseWithdrawal {
      *
      * @param array $classes
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Hooks
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\Admin
  */
@@ -18,7 +18,7 @@ class Hooks {
     /**
      * Admin constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // fix admin report log list
@@ -34,7 +34,7 @@ class Hooks {
     /**
      * Exclude commission from report log if order contains advertisement product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param bool $exclude
      * @param object $order
@@ -52,7 +52,7 @@ class Hooks {
     /**
      * Maybe take action after settings has been saved
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param string $option_name
      * @param array $new_value
@@ -76,7 +76,7 @@ class Hooks {
     /**
      * Remove reverse withdrawal base product if page has been deleted
      *
-     * @sience DOKAN_SINCE
+     * @sience 3.5.1
      *
      * @param int $post_id
      *

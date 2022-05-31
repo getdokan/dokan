@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper class for reverse withdrawal
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -18,7 +18,7 @@ class Helper {
     /**
      * This method will return option key for reverse withdrawal base product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class Helper {
     /**
      * This method will return balance_threshold_exceed_date_key
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Helper {
     /**
      * Get reverse withdrawal failed payment actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array|string return associated array of transaction types if no argument is provided. If $transaction_type is provided and if data exists then return the label otherwise return empty string
      */
@@ -80,7 +80,7 @@ class Helper {
     /**
      * Get reverse withdrawal failed payment actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param $vendor_id
      *
@@ -94,7 +94,7 @@ class Helper {
     /**
      * Set reverse withdrawal failed payment actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      * @param array $failed_actions
@@ -108,7 +108,7 @@ class Helper {
     /**
      * This method will return the balance threshold exceeded date
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param $vendor_id
      *
@@ -135,7 +135,7 @@ class Helper {
     /**
      * This method will check if cart contain reverse withdrawal product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -164,7 +164,7 @@ class Helper {
      *
      * @param \WC_Abstract_Order $order
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return float|bool false if meta key not found
      */
@@ -184,26 +184,19 @@ class Helper {
     /**
      * Get reverse withdrawal base product id
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return int
      */
     public static function get_reverse_withdrawal_base_product() {
         // get product id from option table
-        $product_id = (int) get_option( static::get_base_product_option_key(), 0 );
-        // check if we got a valid product id, otherwise create a new product
-        if ( empty( $product_id ) ) {
-            InstallerHelper::create_reverse_withdrawal_base_product();
-            $product_id = (int) get_option( static::get_base_product_option_key(), 0 );
-        }
-        // finally return product id
-        return $product_id;
+        return (int) get_option( static::get_base_product_option_key(), 0 );
     }
 
     /**
      * This method will check if cart contain reverse withdrawal payment product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return bool
      */
@@ -224,7 +217,7 @@ class Helper {
     /**
      * This method will return formatted transaction id
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $transaction_id
      * @param string $transaction_type
@@ -266,7 +259,7 @@ class Helper {
     /**
      * This method will return formatted transaction data
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $item
      * @param float $current_balance
@@ -310,7 +303,7 @@ class Helper {
     /**
      * This method will return default transaction data for vendor reverse withdrawal balance
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return array
      */
@@ -383,7 +376,7 @@ class Helper {
     /**
      * This method will return payable balance of a vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int|null $vendor_id
      * @param int|string|null $current_date
@@ -446,7 +439,7 @@ class Helper {
     /**
      * This method will check if vendor needs to pay balance along with details data
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int|null $vendor_id
      *
@@ -573,7 +566,7 @@ class Helper {
     /**
      * This method will check if a vendors need to pay their unpaid balance
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int|null $vendor_id
      *
@@ -592,7 +585,7 @@ class Helper {
     /**
      * This method will return formatted failed action messages
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return string
      */
@@ -632,7 +625,7 @@ class Helper {
     /**
      * This method will return formatted failed action messages
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param int $vendor_id
      *

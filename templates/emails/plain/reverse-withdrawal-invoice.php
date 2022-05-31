@@ -8,7 +8,7 @@
  *
  * @package \WeDevs\Dokan\Emails\ReverseWithdrawalInvoice
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @var $seller_info \WeDevs\Dokan\Vendor\Vendor
  * @var $due_status array
@@ -28,11 +28,11 @@ printf( esc_html__( 'Hi %s,\n\n', 'dokan-lite' ), $seller_info->get_shop_name() 
 
 printf( esc_html__( 'Your %1$s %2$s invoice is now available for store: %3$s.\n\n', 'dokan-lite' ), $data['{month}'], $data['{year}'], $seller_info->get_shop_name() );
 
-printf(esc_html__('Summary for %1$s : \n\n', 'dokan-lite'), $seller_info->get_shop_name());
+printf(esc_html__('Summary for %1$s: \n\n', 'dokan-lite'), $seller_info->get_shop_name());
 
 printf( esc_html__( 'Reverse withdrawal charges for %1$s %2$s: %3$s \n\n', 'dokan-lite' ), $data['{month}'], $data['{year}'], wc_price( $due_status['balance']['payable_amount'] ) );
 
-printf( esc_html__( 'Due Date %1$s : \n\n', 'dokan-lite' ), 'immediate' === $due_status['due_date'] ? ucfirst( $due_status['due_date'] ) : dokan_format_date( $due_status['due_date'] ) );
+printf( esc_html__( 'Due Date %1$s: \n\n', 'dokan-lite' ), 'immediate' === $due_status['due_date'] ? ucfirst( $due_status['due_date'] ) : dokan_format_date( $due_status['due_date'] ) );
 
 printf(
     wp_kses(

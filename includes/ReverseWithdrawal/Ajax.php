@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Ajax
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class Ajax {
     /**
      * Ajax constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // ajax product add to cart
@@ -26,7 +26,7 @@ class Ajax {
     /**
      * This method will add a product to cart from product edit page
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

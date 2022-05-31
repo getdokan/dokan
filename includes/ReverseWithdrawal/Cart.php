@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Cart
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class Cart {
     /**
      * Cart constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // return if reverse withdrawal feature is disabled
@@ -31,28 +31,12 @@ class Cart {
         add_filter( 'woocommerce_get_item_data', [ $this, 'remove_seller_name_from_cart_item' ], 9, 2 );
 
         add_action( 'woocommerce_before_calculate_totals', [ $this, 'woocommerce_custom_price_to_cart_item' ], 99, 1 );
-
-        // remove delivery time module section from checkout page
-        add_action( 'woocommerce_review_order_before_payment', [ $this, 'remove_delivery_time_section_from_checkout' ], 9 );
-    }
-
-    /**
-     * This method will remove delivery time module section from checkout page
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function remove_delivery_time_section_from_checkout() {
-        if ( dokan_pro()->module->is_active( 'delivery_time' ) && Helper::has_reverse_withdrawal_payment_in_cart() ) {
-            remove_action( 'woocommerce_review_order_before_payment', [ dokan_pro()->module->delivery_time->dt_frontend, 'render_delivery_time_template' ], 10 );
-        }
     }
 
     /**
      * Remove seller name on cart and other areas
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $item_data
      * @param array $cart_item
@@ -73,7 +57,7 @@ class Cart {
     /**
      * Add custom price into cart meta item.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param \WC_Cart $cart for whole cart.
      */
@@ -90,7 +74,7 @@ class Cart {
     /**
      * This method will remove other products from cart if reverse withdrawal payment exists in cart.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param bool $passed
      * @param int $product_id

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal\BackgroundProcess
  */
@@ -16,7 +16,7 @@ class CronActions {
     /**
      * CronActions constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         // init background process hook
@@ -38,7 +38,7 @@ class CronActions {
      * Schedule an action with the hook 'dokan_reverse_withdrawal_midnight_cron' to run at midnight each day
      * so that our callback is run then.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -63,7 +63,7 @@ class CronActions {
     /**
      * This method will schedule/unscheduled monthly billing reminder cron
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param string $option_name
      * @param array $new_value
@@ -118,7 +118,7 @@ class CronActions {
     /**
      * Take actions for unpaid vendors or revert taken actions
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -151,7 +151,7 @@ class CronActions {
     /**
      * Send monthly billing reminder email to vendors
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

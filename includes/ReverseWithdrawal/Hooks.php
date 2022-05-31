@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Hooks
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class Hooks {
     /**
      * Hooks constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class Hooks {
      * After a reverse withdrawal entry is inserted, we will check if we had to take any actions or revert previous taken actions.
      * This will make sure immediate update of vendor status.
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $data
      *
@@ -75,7 +75,7 @@ class Hooks {
     /**
      * Unset withdraw menu
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $menu
      *
@@ -96,7 +96,7 @@ class Hooks {
     /**
      * This method will remove add to cart button
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param bool $purchasable
      * @param \WC_Product $product
@@ -126,7 +126,7 @@ class Hooks {
     /**
      * This method will hide product price
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param string $price
      * @param \WC_Product $product
@@ -152,7 +152,7 @@ class Hooks {
     /**
      * Process order status changed
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param string $order_id
      * @param string $old_status
@@ -217,7 +217,7 @@ class Hooks {
     /**
      * Add reverse withdrawal nav
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $urls
      *

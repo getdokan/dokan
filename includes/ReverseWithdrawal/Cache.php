@@ -10,14 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * @package WeDevs\Dokan\ReverseWithdrawal
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 class Cache {
 
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      */
     public function __construct() {
         add_action( 'dokan_reverse_withdrawal_created', [ $this, 'clear_cache' ], 10, 1 );
@@ -26,7 +26,7 @@ class Cache {
     /**
      * Clear cache
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @param array $data
      *

@@ -393,7 +393,7 @@ class Installer {
     /**
      * Create Reverse Withdrawal Table
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -404,7 +404,7 @@ class Installer {
     /**
      * This method will create reverse withdrawal base product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

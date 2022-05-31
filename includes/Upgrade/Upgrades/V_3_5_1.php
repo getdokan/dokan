@@ -6,14 +6,14 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 
 /**
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 class V_3_5_1 extends DokanUpgrader {
 
     /**
      * Create Reverse Withdrawal Table
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -24,7 +24,7 @@ class V_3_5_1 extends DokanUpgrader {
     /**
      * This method will create reverse withdrawal base product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -35,7 +35,7 @@ class V_3_5_1 extends DokanUpgrader {
     /**
      * Flush rewrite rules
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */

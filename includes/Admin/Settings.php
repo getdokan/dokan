@@ -112,14 +112,14 @@ class Settings {
             $old_options  = get_option( $option_name, [] );
 
             /**
-             * @since DOKAN_SINCE added $old_options parameter
+             * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
             update_option( $option_name, $option_value );
 
             /**
-             * @since DOKAN_SINCE added $old_options parameter
+             * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_after_saving_settings', $option_name, $option_value, $old_options );
 

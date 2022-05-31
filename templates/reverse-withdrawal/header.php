@@ -2,7 +2,7 @@
 /**
  * Dokan Dashboard Reverse Withdrawal Header Template
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  */
 ?>
 <header class="dokan-dashboard-header">

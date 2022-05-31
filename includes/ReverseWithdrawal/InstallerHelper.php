@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class InstallerHelper
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -16,7 +16,7 @@ class InstallerHelper {
     /**
      * Create Reverse Withdrawal Table
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
@@ -48,13 +48,17 @@ class InstallerHelper {
     /**
      * This method will create reverse withdrawal base product
      *
-     * @since DOKAN_SINCE
+     * @since 3.5.1
      *
      * @return void
      */
     public static function create_reverse_withdrawal_base_product() {
          // ! Check if WooCommerce is active, we need to check this because dokan can be enabled without wooCommerce
         if ( ! class_exists( 'WooCommerce' ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 

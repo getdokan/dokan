@@ -1,6 +1,6 @@
 <?php
 /**
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @var $trn_date array
  */
