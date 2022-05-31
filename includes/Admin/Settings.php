@@ -111,11 +111,17 @@ class Settings {
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
             $old_options  = get_option( $option_name, [] );
 
-            do_action( 'dokan_before_saving_settings', $option_name, $option_value );
+            /**
+             * @since DOKAN_SINCE added $old_options parameter
+             */
+            do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
             update_option( $option_name, $option_value );
 
-            do_action( 'dokan_after_saving_settings', $option_name, $option_value );
+            /**
+             * @since DOKAN_SINCE added $old_options parameter
+             */
+            do_action( 'dokan_after_saving_settings', $option_name, $option_value, $old_options );
 
             // only flush rewrite rules if store url has been changed
             if ( 'dokan_general' === $option_name && isset( $old_options['custom_store_url'] ) && $old_options['custom_store_url'] !== $option_value['custom_store_url'] ) {
@@ -293,6 +299,11 @@ class Settings {
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Withdraw Settings', 'dokan-lite' ),
                 'settings_description' => __( 'You can configure your store\'s Withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+            ],
+            [
+                'id'    => 'dokan_reverse_withdrawal',
+                'title' => __( 'Reverse Withdrawal', 'dokan-lite' ),
+                'icon'  => 'dashicons-money-alt',
             ],
             [
                 'id'                   => 'dokan_pages',

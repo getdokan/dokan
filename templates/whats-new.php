@@ -4,16 +4,48 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.5.1',
+        'released' => '2022-05-31',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added Reverse Withdrawal feature. Kindly read <a href="https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/" target="_blank">documentation</a> for more details.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Improved UI of Payment settings page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Correctly determine the vendor a product belongs to, so the "dokan_get_vendor_by_product" filter hook is called. ',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed a fatal error while changing product types to Simple > Variable > External/Affiliate > Group Product',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changing dokan vendor dashboard page slug gives 404 error',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.5.0',
         'released' => '2022-05-18',
         'changes'  => [
-            'New'         => [
+            'New' => [
                 [
                     'title'       => 'Added a new product attributes widget, by which users/customers will be able to search products by vendors used attributes.',
                     'description' => '',
                 ],
             ],
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Fixed vendor store settings page phone number validation js console error.',
                     'description' => '',
@@ -35,7 +67,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Improvement'         => [
+            'Improvement' => [
                 [
                     'title'       => 'Updated design for the payment settings page of vendor dashboard to separate the management of different payment methods',
                     'description' => '',
@@ -61,7 +93,7 @@ $changelog = [
         'version'  => 'Version 3.4.2',
         'released' => '2022-04-13',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Fixed switching product type from variable to external doesn\'t remove product stock management options',
                     'description' => '',
@@ -77,13 +109,13 @@ $changelog = [
         'version'  => 'Version 3.4.1',
         'released' => '2022-03-18',
         'changes'  => [
-            'New'         => [
+            'New' => [
                 [
                     'title'       => 'Introduced two new filter hooks dokan_shipping_fee_recipient and dokan_tax_fee_recipient',
                     'description' => '',
                 ],
             ],
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Remove unnecessary error_log codes',
                     'description' => '',
@@ -115,7 +147,7 @@ $changelog = [
         'version'  => 'Version 3.4.0',
         'released' => '2022-03-08',
         'changes'  => [
-            'Improvement'         => [
+            'Improvement' => [
                 [
                     'title'       => 'Stop loading unnecessary style and script files on every page',
                     'description' => '',
@@ -161,7 +193,7 @@ $changelog = [
         'version'  => 'Version 3.3.9',
         'released' => '2022-02-28',
         'changes'  => [
-            'Improvement'         => [
+            'Improvement' => [
                 [
                     'title'       => 'Added new theme customizer settings to set default order by filter for store listing page',
                     'description' => '',
@@ -191,7 +223,7 @@ $changelog = [
         'version'  => 'Version 3.3.8',
         'released' => '2022-02-17',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Store open close time widget wasn\'t working',
                     'description' => '',
@@ -203,13 +235,13 @@ $changelog = [
         'version'  => 'Version 3.3.7',
         'released' => '2022-02-03',
         'changes'  => [
-            'New Feature'         => [
+            'New Feature' => [
                 [
                     'title'       => 'Added Featured, Latest, Best Selling and Top Rated Product sections under single store page',
                     'description' => 'Now admin/vendor will be able to add multiple product sections under single store page. Kindly visit <a href="https://wedevs.com/docs/dokan/tutorials/how-to-create-product-sections-in-single-store-page" target="_blank">documentation</a> page to learn more about this feature.',
                 ],
             ],
-            'Improvement'         => [
+            'Improvement' => [
                 [
                     'title'       => 'Updated UI for Withdraw menu',
                     'description' => 'Withdraw page design has been updated.',
@@ -263,7 +295,7 @@ $changelog = [
         'version'  => 'Version 3.3.6',
         'released' => '2022-01-10',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'CSS class added for styling order details page.',
                     'description' => '',
@@ -287,7 +319,7 @@ $changelog = [
         'version'  => 'Version 3.3.5',
         'released' => '2021-12-23',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Fatal error while creating new vendor.',
                     'description' => '',
@@ -303,7 +335,7 @@ $changelog = [
         'version'  => 'Version 3.3.4',
         'released' => '2021-12-15',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Asset loading issue for admin notices',
                     'description' => '',
@@ -315,7 +347,7 @@ $changelog = [
         'version'  => 'Version 3.3.3',
         'released' => '2021-12-15',
         'changes'  => [
-            'New' => [
+            'New'         => [
                 [
                     'title'       => 'Added what’s New page for Dokan',
                     'description' => '',
