@@ -84,6 +84,7 @@ class Rewrites {
                 'orders',
                 'withdraw',
                 'withdraw-requests',
+                'reverse-withdrawal',
                 'settings',
                 'edit-account',
             ]
@@ -302,6 +303,17 @@ class Rewrites {
 
             $tax_query                    = [];
             $query->query['term_section'] = isset( $query->query['term_section'] ) ? $query->query['term_section'] : [];
+
+            $attributes = dokan_get_chosen_taxonomy_attributes();
+            if ( ! empty( $attributes ) ) {
+                foreach ( $attributes as $key => $attribute ) {
+                    $tax_query[] = [
+                        'taxonomy' => $key,
+                        'field'    => 'name',
+                        'terms'    => $attribute['terms'],
+                    ];
+                }
+            }
 
             if ( $query->query['term_section'] ) {
                 array_push(

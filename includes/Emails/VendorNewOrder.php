@@ -211,6 +211,6 @@ class VendorNewOrder extends WC_Email {
             return false;
         }
 
-        return true;
+        return $bool;
     }
 }

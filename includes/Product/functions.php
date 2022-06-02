@@ -526,7 +526,7 @@ function dokan_product_get_row_action( $post ) {
  *
  * @return int|\WeDevs\Dokan\Vendor\Vendor|false on failure
  */
-function dokan_get_vendor_by_product( $product, $get_vendor = false ) {
+function dokan_get_vendor_by_product( $product, $get_vendor_id = false ) {
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
@@ -543,7 +543,7 @@ function dokan_get_vendor_by_product( $product, $get_vendor = false ) {
 
     $vendor_id = apply_filters( 'dokan_get_vendor_by_product', $vendor_id, $product );
 
-    return false === $get_vendor ? dokan()->vendor->get( $vendor_id ) : (int) $vendor_id;
+    return false === $get_vendor_id ? dokan()->vendor->get( $vendor_id ) : (int) $vendor_id;
 }
 
 /**
