@@ -615,7 +615,7 @@ jQuery(function($) {
     const dokan_dashboard_orders = {
         localeData: {
             format: dokan_get_daterange_picker_format(),
-            ...dokan_daterange_i18n.locale
+            ...dokan_helper.daterange_picker_local
         },
         init() {
             const order_filter_date_range = $('#order_filter_date_range');
