@@ -303,7 +303,7 @@ class Settings {
             [
                 'id'                   => 'dokan_reverse_withdrawal',
                 'title'                => __( 'Reverse Withdrawal', 'dokan-lite' ),
-                'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/withdraw.svg',
+                'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/reverse-witdrawal.svg',
                 'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Reverse Withdrawal Settings', 'dokan-lite' ),
@@ -653,9 +653,9 @@ class Settings {
                     'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
                 ],
                 'recaptcha_validation_label' => [
-                    'name'        => 'recaptcha_validation_label',
-                    'type'        => 'social',
-                    'desc'        => sprintf(
+                    'name'                  => 'recaptcha_validation_label',
+                    'type'                  => 'social',
+                    'desc'                  => sprintf(
                         /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
                         __( '%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
                         '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
@@ -663,25 +663,27 @@ class Settings {
                         '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
                         '</a>'
                     ),
-                    'label'       => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
-                    'icon_url'    => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
-                    'social_desc' => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
-                    'app_id'      => [
+                    'label'                 => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
+                    'icon_url'              => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
+                    'social_desc'           => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
+                    'recaptcha_site_key'    => [
                         'name'          => 'recaptcha_site_key',
                         'type'          => 'text',
                         'label'         => __( 'Site Key', 'dokan-lite' ),
                         'tooltip'       => __( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
+                        'social_field'  => true,
                         'content_class' => 'field_top_styles',
                     ],
-                    'app_secret'  => [
+                    'recaptcha_secret_key'  => [
                         'name'          => 'recaptcha_secret_key',
                         'label'         => __( 'Secret Key', 'dokan-lite' ),
                         'type'          => 'text',
                         'tooltip'       => __( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
+                        'social_field'  => true,
                         'content_class' => 'field_bottom_styles',
                     ],
                 ],
-                'contact_seller'             => [
+                'contact_seller'            => [
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
                     'desc'    => __( 'Display a vendor contact form in the store sidebar', 'dokan-lite' ),

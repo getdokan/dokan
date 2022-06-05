@@ -506,65 +506,16 @@
                             <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
                         </div>
                     </div>
-
-                    <div class="social_info" v-if="expandSocials">
-                        <div class="social_html" v-if="fieldData.app_label" v-bind:class="[fieldData.app_label.content_class ? fieldData.app_label.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_label'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
+                    <template v-if="expandSocials">
+                        <div class="social_info" v-for="( fields, index ) in fieldData" :key="index">
+                            <div v-if="fields.social_field" :class="[ { 'social_html': fields.type === 'html' }, { 'social_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
+                                <SocialFields
+                                    :fieldData="fields"
+                                    :fieldValue="fieldValue"
+                                ></SocialFields>
+                            </div>
                         </div>
-                        <div class="social_html" v-if="fieldData.app_url" v-bind:class="[fieldData.app_url.content_class ? fieldData.app_url.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_url'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_service_id" v-bind:class="[fieldData.app_service_id.content_class ? fieldData.app_service_id.content_class : '']">
-                            <SocialFields
-                                :fieldData="fieldData"
-                                :fieldValue="fieldValue"
-                                :fieldType="'app_service_id'"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_id" v-bind:class="[fieldData.app_id.content_class ? fieldData.app_id.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_id'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_team_id" v-bind:class="[fieldData.app_team_id.content_class ? fieldData.app_team_id.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_team_id'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_key_id" v-bind:class="[fieldData.app_key_id.content_class ? fieldData.app_key_id.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_key_id'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_secret" v-bind:class="[fieldData.app_secret.content_class ? fieldData.app_secret.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_secret'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                        <div class="social_text" v-if="fieldData.app_code_type" v-bind:class="[fieldData.app_code_type.content_class ? fieldData.app_code_type.content_class : '']">
-                            <SocialFields
-                                :fieldType="'app_code_type'"
-                                :fieldValue="fieldValue"
-                                :fieldData="fieldData"
-                            ></SocialFields>
-                        </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </template>
