@@ -214,6 +214,7 @@ Elementor module for Dokan. Simply get the customizer to be able to customize th
 
 Dokan comes with a number of extended features that help your marketplace stay one step ahead of the competition. And more innovations and features are brought with regular and timely releases.
 
+* [Stripe Express](https://wedevs.com/dokan/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module) (Pro) - Utilize popular payment gateways – Apple Pay and Google Pay, to execute transactions like schedule payouts, request payments, and more.
 * [Minimum Maximum Order](https://wedevs.com/dokan/modules/minimum-maximum-order?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your merchants set a minimum or maximum limit upon order amounts (quantity or price).
 * [Product Advertising](https://wedevs.com/dokan/modules/product-advertising?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let the Vendors promote their selected products. This will enhance their chance of attracting more customers, and you as the admin can charge for this, thus resulting in more income for both Admin and Vendors.
 * [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
