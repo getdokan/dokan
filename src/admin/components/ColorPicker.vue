@@ -86,6 +86,8 @@
             return {
                 prevColor       : '',
                 showColorPicker : false,
+                selectedColor   : '',
+                isPicked        : false,
             };
         },
 
@@ -93,6 +95,11 @@
             customData : {
                 handler() {
                     this.showColorPicker = this.customData.show_pallete;
+
+                    if ( ! this.showColorPicker ){
+                        this.updateColor({ hex: this.prevColor });
+                    }
+            
                 },
                 deep : true
             }
@@ -104,6 +111,7 @@
 
                 if ( colors[ this.format ] ) {
                     color = colors[ this.format ];
+                    this.selectedColor = color;
                 }
 
                 this.$emit( 'input', color );
@@ -116,7 +124,11 @@
                     key    : this.itemKey,
                     values : this.customData,
                 };
-
+                
+                if ( ! this.isPicked ) {
+                    console.log( this.prevColor );
+                    this.updateColor({ hex : this.prevColor });
+                }
                 this.$emit( 'toggleColorPicker', data );
             },
 
