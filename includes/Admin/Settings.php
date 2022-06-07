@@ -350,6 +350,13 @@ class Settings {
                     'type'  => 'file',
                     'desc'  => __( 'Recommended Logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default.', 'dokan-lite' ),
                 ],
+                'setup_wizard_message'  => [
+                    'name'      => 'setup_wizard_message',
+                    'label'     => __( 'Vendor Setup Wizard Message', 'dokan-lite' ),
+                    'type'      => 'wpeditor',
+                    'default'   => __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ),
+                    'desc'      => ''
+                ],
                 'disable_welcome_wizard' => [
                     'name'    => 'disable_welcome_wizard',
                     'label'   => __( 'Disable Welcome Wizard', 'dokan-lite' ),
