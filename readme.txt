@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 5.4
-Tested up to: 5.9.3
+Tested up to: 6.0
 WC requires at least: 5.0.0
 WC tested up to: 6.5.1
 Requires PHP: 7.0
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,9 +214,11 @@ Elementor module for Dokan. Simply get the customizer to be able to customize th
 
 Dokan comes with a number of extended features that help your marketplace stay one step ahead of the competition. And more innovations and features are brought with regular and timely releases.
 
+* [Stripe Express](https://wedevs.com/dokan/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module) (Pro) - Utilize popular payment gateways – Apple Pay and Google Pay, to execute transactions like schedule payouts, request payments, and more.
 * [Minimum Maximum Order](https://wedevs.com/dokan/modules/minimum-maximum-order?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your merchants set a minimum or maximum limit upon order amounts (quantity or price).
 * [Product Advertising](https://wedevs.com/dokan/modules/product-advertising?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let the Vendors promote their selected products. This will enhance their chance of attracting more customers, and you as the admin can charge for this, thus resulting in more income for both Admin and Vendors.
-* [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
+* [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
+* [Request for Quotation](https://wedevs.com/dokan/modules/request-for-quotation/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules)(Pro) - Customers can communicate with vendors by requesting quoted prices on wholesale orders.
 * [Rank Math SEO](https://wedevs.com/dokan/modules/rank-math-seo) (Pro) - Let your vendors manage their product SEO with an easy-to-navigate frontend dashboard and drive traffic to your eCommerce site.
 * [Dokan MANGOPAY Integration](https://wedevs.com/dokan/modules/dokan-mangopay?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Make smooth transactions with split payments, multi vendor support and run your business operations in Europe with ease using Mangopay.
 * [Dokan Paypal Marketplace](https://wedevs.com/dokan/modules/dokan-paypal-marketplace) (Pro) - Make your marketplace payment system smoother than ever with the advanced PayPal integration with all PayPal Commerce Platform (PCP) features.
@@ -313,6 +315,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.5.1 ( May 31, 2022 ) =
+
+**new:** Added Reverse Withdrawal feature
+**update:** Determine if a seller is connected to a payment method
+**update:** improved UI of Payment settings page
+**update:** Correctly determine the vendor a product belongs to, so the "dokan_get_vendor_by_product" filter hook is called.
+**fix:** Simple > Variable > External/Affiliate > Group Product > Fatal error.
+**fix:** changing dokan vendor dashboard page slug gives 404 error
 
 = v3.5.0 ( May 18, 2022 ) =
 

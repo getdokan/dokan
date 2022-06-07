@@ -81,16 +81,17 @@ class Manager {
      * @return $wc_emails
      */
     public function load_dokan_emails( $wc_emails ) {
-        $wc_emails['Dokan_Email_New_Product']             = new NewProduct();
-        $wc_emails['Dokan_Email_New_Product_Pending']     = new NewProductPending();
-        $wc_emails['Dokan_Email_Product_Published']       = new ProductPublished();
-        $wc_emails['Dokan_Email_New_Seller']              = new NewSeller();
-        $wc_emails['Dokan_Email_Vendor_Withdraw_Request'] = new VendorWithdrawRequest();
-        $wc_emails['Dokan_Email_Withdraw_Approved']       = new WithdrawApproved();
-        $wc_emails['Dokan_Email_Withdraw_Cancelled']      = new WithdrawCancelled();
-        $wc_emails['Dokan_Email_Contact_Seller']          = new ContactSeller();
-        $wc_emails['Dokan_Email_New_Order']               = new VendorNewOrder();
-        $wc_emails['Dokan_Email_Completed_Order']         = new VendorCompletedOrder();
+        $wc_emails['Dokan_Email_New_Product']                = new NewProduct();
+        $wc_emails['Dokan_Email_New_Product_Pending']        = new NewProductPending();
+        $wc_emails['Dokan_Email_Product_Published']          = new ProductPublished();
+        $wc_emails['Dokan_Email_New_Seller']                 = new NewSeller();
+        $wc_emails['Dokan_Email_Vendor_Withdraw_Request']    = new VendorWithdrawRequest();
+        $wc_emails['Dokan_Email_Withdraw_Approved']          = new WithdrawApproved();
+        $wc_emails['Dokan_Email_Withdraw_Cancelled']         = new WithdrawCancelled();
+        $wc_emails['Dokan_Email_Contact_Seller']             = new ContactSeller();
+        $wc_emails['Dokan_Email_New_Order']                  = new VendorNewOrder();
+        $wc_emails['Dokan_Email_Completed_Order']            = new VendorCompletedOrder();
+        $wc_emails['Dokan_Email_Reverse_Withdrawal_Invoice'] = new ReverseWithdrawalInvoice();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
