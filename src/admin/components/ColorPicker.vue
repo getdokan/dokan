@@ -84,10 +84,10 @@
 
         data() {
             return {
+                isPicked        : false,
                 prevColor       : '',
                 showColorPicker : false,
                 selectedColor   : '',
-                isPicked        : false,
             };
         },
 
@@ -99,7 +99,6 @@
                     if ( ! this.showColorPicker ){
                         this.updateColor({ hex: this.prevColor });
                     }
-            
                 },
                 deep : true
             }
@@ -110,7 +109,7 @@
                 let color = '';
 
                 if ( colors[ this.format ] ) {
-                    color = colors[ this.format ];
+                    color              = colors[ this.format ];
                     this.selectedColor = color;
                 }
 
@@ -126,9 +125,9 @@
                 };
                 
                 if ( ! this.isPicked ) {
-                    console.log( this.prevColor );
                     this.updateColor({ hex : this.prevColor });
                 }
+
                 this.$emit( 'toggleColorPicker', data );
             },
 

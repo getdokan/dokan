@@ -290,7 +290,13 @@
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
                     <div class="field">
-                        <color-picker v-model="fieldValue[fieldData.name]"></color-picker>
+                        <color-picker
+                            v-model="fieldValue[fieldData.name]"
+                            :itemKey="fieldData.name"
+                            :customData="singleColorPicker"
+                            @custom-change="e => setCustomColor( e, fieldData.name )"
+                            @toggleColorPicker="toggleColorPicker"
+                        ></color-picker>
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -568,6 +574,7 @@
                 repeatableItem        : {},
                 repeatableTime        : [],
                 dokanAssetsUrl        : dokan.urls.assetsUrl,
+                singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
             }
@@ -823,6 +830,22 @@
                 } );
 
                 return errorMessage;
+            },
+
+            toggleColorPicker( data ) {
+                if ( this.fieldData.name === data.key ) {
+                    this.singleColorPicker.show_pallete = ! data.values.show_pallete;
+                } else {
+                    this.singleColorPicker.show_pallete = false;
+                }
+            },
+
+            setCustomColor( value, key ) {
+                if ( ! key ) {
+                    return;
+                }
+
+                this.fieldData[ key ] = value;
             },
         },
     };
