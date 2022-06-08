@@ -561,7 +561,9 @@ class Settings {
         if ( ! empty( $post_data['settings']['skrill'] ) && isset( $post_data['settings']['skrill']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['skrill']['email'] );
 
-            if ( empty( $email ) ) {
+            if ( isset( $post_data['settings']['skrill']['disconnect'] ) ) {
+                $post_data['settings']['skrill']['email'] = '';
+            } elseif ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }

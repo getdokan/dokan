@@ -470,7 +470,7 @@ jQuery(function($) {
           self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       var isDisconnect = false;
-      if (self.find('input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"]').length > 0){
+      if (self.find('input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"]').length > 0){
         isDisconnect = true;
         var nonce = self.find('input[name="_wpnonce"]').val();
         self.find('input[type=text]').val('');
