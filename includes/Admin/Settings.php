@@ -304,10 +304,10 @@ class Settings {
                 'id'                   => 'dokan_reverse_withdrawal',
                 'title'                => __( 'Reverse Withdrawal', 'dokan-lite' ),
                 'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/reverse-witdrawal.svg',
-                'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
+                'description'          => __( 'Payment Gateway Commission Config', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Reverse Withdrawal Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store\'s Withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+                'settings_description' => __( 'Configure commission from vendors on Cash on Delivery orders, method and threshold for reverse balance, restrictive actions on vendors and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_pages',
