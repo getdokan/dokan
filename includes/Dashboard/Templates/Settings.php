@@ -551,7 +551,9 @@ class Settings {
         if ( ! empty( $post_data['settings']['paypal'] ) && isset( $post_data['settings']['paypal']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['paypal']['email'] );
 
-            if ( empty( $email ) ) {
+            if ( isset( $post_data['settings']['paypal']['disconnect'] ) ) {
+                $post_data['settings']['paypal']['email'] = '';
+            } elseif ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
