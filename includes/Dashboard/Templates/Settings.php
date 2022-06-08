@@ -565,25 +565,27 @@ class Settings {
         }
 
         if ( ! empty( $post_data['settings']['bank'] ) ) {
-            if ( empty( $post_data['settings']['bank']['ac_name'] ) ) {
+            $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_name'] ) ) {
                 $error->add( 'dokan_bank_ac_name', __( 'Account holder name is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['ac_number'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_number'] ) ) {
                 $error->add( 'dokan_bank_ac_number', __( 'Account number is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['routing_number'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['routing_number'] ) ) {
                 $error->add( 'dokan_bank_ac_routing_number', __( 'Routing number is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['ac_type'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_type'] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
-            } else if ( ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
+            } else if ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['declaration'] ) ) {
                 $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
         }
