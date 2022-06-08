@@ -137,7 +137,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <input name="dokan_update_payment_settings" type="hidden">
-            <button class="ajax_prev disconnect dokan-btn dokan-btn-danger" type="submit" name="settings[paypal][disconnect]">
+            <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo empty( $email ) ? 'dokan-hide' : ''; ?>" type="submit" name="settings[paypal][disconnect]">
                 <?php esc_attr_e( 'Disconnect', 'dokan-lite' ); ?>
             </button>
         </div>

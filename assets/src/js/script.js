@@ -470,7 +470,8 @@ jQuery(function($) {
           self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       var isDisconnect = false;
-      if (self.find('input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"]').length > 0){
+      var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
+      if (self.find(selectors).length > 0){
         isDisconnect = true;
         var nonce = self.find('input[name="_wpnonce"]').val();
         self.find('input[type=text]').val('');
@@ -487,6 +488,7 @@ jQuery(function($) {
       } else {
         self.find('.ajax_prev.save').append('<span class="dokan-loading"> </span>');
       }
+
       $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
       $.post(dokan.ajaxurl, form_data, function(resp) {
@@ -509,10 +511,11 @@ jQuery(function($) {
             dokan.storeProgressBar.init();
           }
 
+          selectors = selectors.replaceAll( 'input', 'button' );
           if (isDisconnect){
-            self.find('button[name="settings[bank][disconnect]"]').addClass('dokan-hide');
+            self.find(selectors).addClass('dokan-hide');
           } else {
-            self.find('button[name="settings[bank][disconnect]"]').removeClass('dokan-hide');
+            self.find(selectors).removeClass('dokan-hide');
           }
         } else {
           $('.dokan-ajax-response').html(
