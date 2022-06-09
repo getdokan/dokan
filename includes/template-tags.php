@@ -538,7 +538,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     if ( isset( $active_menu_parts[1] )
             && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key )
             && isset( $nav_menu[ $settings_key ]['sub'] )
-            && ( array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) )
+            && ( array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) || ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) )
     ) {
         $urls        = $nav_menu[ $settings_key ]['sub'];
         $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
@@ -558,7 +558,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $urls as $key => $item ) {
-        $class = ( $active_menu === $key ) ? 'active ' . $key : $key;
+        $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key;
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
