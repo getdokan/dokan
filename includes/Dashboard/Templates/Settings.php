@@ -60,7 +60,7 @@ class Settings {
             $is_store_setting = true;
         } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             $heading = __( 'Payment Method', 'dokan-lite' );
-            $slug    = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
+            $slug    = str_replace( 'payment-manage-', '', $wp->query_vars['settings'] );
             $heading = $this->get_payment_heading( $slug, $heading );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
@@ -786,12 +786,12 @@ class Settings {
     private function get_payment_heading( $slug, $heading ) {
         switch ( $slug ) {
             case 'bank':
-            case 'bank/edit':
+            case 'bank-edit':
                 $heading = __( 'Bank Account Settings', 'dokan-lite' );
                 break;
 
             case 'paypal':
-            case 'paypal/edit':
+            case 'paypal-edit':
                 $heading = __( 'Paypal Settings', 'dokan-lite' );
                 break;
         }
