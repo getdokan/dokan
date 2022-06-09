@@ -122,7 +122,6 @@ Admin can extend flexibility to individual vendors to have control over their sh
 
 * [ShipStation](https://wedevs.com/dokan/modules/shipstation/) (Pro) - Enable vendors to import, manage, and ship orders hassle-free with the leading shipping application for online marketplaces.
 
-
 = PLAYS NICE WITH OTHER PLUGINS =
 
 Dokan is compatible with more than 70+ plugins so that you don’t have to worry about anything when it comes to compatibility.
@@ -159,6 +158,7 @@ Elementor module for Dokan. Simply get the customizer to be able to customize th
 * A part of the sale value is sent to admin as commission.
 * Commission rate can be customized.
 * [Per vendor percentage override](https://wedevs.com/docs/dokan/tutorials/how-to-setup-dokan-vendor-commission/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org). (Pro)
+* Reverse Withdrawal - With Reverse Withdrawal, Admin can collect commissions from vendor which can not be collected via regular commission system, such as when vendors ship orders with cash on delivery.
 
 **Simple Product Management**
 
