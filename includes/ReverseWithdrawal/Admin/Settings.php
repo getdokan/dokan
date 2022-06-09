@@ -95,7 +95,7 @@ class Settings {
             'due_period' => [
                 'name'    => 'due_period',
                 'label'   => esc_html__( 'Grace Period', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Maximum Payment Due period in day(s) before selected action(s) is/are taken. Enter 0 to take action(s) immediately.', 'dokan-lite' ),
+                'desc'    => esc_html__( 'Maximum payment due period in day(s) before selected action(s) is/are taken. Enter 0 to take action(s) immediately.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 0,
                 'max'     => 28,

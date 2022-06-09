@@ -298,13 +298,13 @@ class Settings {
                 'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Withdraw Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store\'s Withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store\'s withdrawal methods, limits, order status and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_reverse_withdrawal',
                 'title'                => __( 'Reverse Withdrawal', 'dokan-lite' ),
                 'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/reverse-witdrawal.svg',
-                'description'          => __( 'Payment Gateway Commission Config', 'dokan-lite' ),
+                'description'          => __( 'Admin commission config (on COD)', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Reverse Withdrawal Settings', 'dokan-lite' ),
                 'settings_description' => __( 'Configure commission from vendors on Cash on Delivery orders, method and threshold for reverse balance, restrictive actions on vendors and more.', 'dokan-lite' ),
@@ -412,10 +412,10 @@ class Settings {
                 'seller_enable_terms_and_conditions' => [
                     'name'          => 'seller_enable_terms_and_conditions',
                     'label'         => __( 'Store Terms and Conditions', 'dokan-lite' ),
-                    'desc'          => __( 'Enable Terms and Conditions for vendor stores', 'dokan-lite' ),
+                    'desc'          => __( 'Enable terms and conditions for vendor stores', 'dokan-lite' ),
                     'type'          => 'switcher',
                     'default'       => 'off',
-                    'tooltip'       => __( 'Prompt Terms and Condition check for Vendors when creating store on your site', 'dokan-lite' ),
+                    'tooltip'       => __( 'Prompt terms and condition check for vendors when creating store on your site', 'dokan-lite' ),
                     'content_class' => 'field_top_styles',
                 ],
                 'store_products_per_page' => [
@@ -535,7 +535,7 @@ class Settings {
                 'withdraw_methods'    => [
                     'name'          => 'withdraw_methods',
                     'label'         => __( 'Withdraw Methods', 'dokan-lite' ),
-                    'desc'          => __( 'Select suitable Withdraw methods for vendors', 'dokan-lite' ),
+                    'desc'          => __( 'Select suitable withdraw methods for vendors', 'dokan-lite' ),
                     'type'          => 'multicheck',
                     'default'       => [ 'paypal' => 'paypal' ],
                     'options'       => dokan_withdraw_get_methods(),
@@ -585,7 +585,7 @@ class Settings {
                 'my_orders'     => [
                     'name'        => 'my_orders',
                     'label'       => __( 'My Orders', 'dokan-lite' ),
-                    'desc'        => __( 'Select a page to show my Orders', 'dokan-lite' ),
+                    'desc'        => __( 'Select a page to show my orders', 'dokan-lite' ),
                     'type'        => 'select',
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                     'options'     => $pages_array,
@@ -621,7 +621,7 @@ class Settings {
                 'store_map'                  => [
                     'name'          => 'store_map',
                     'label'         => __( 'Show map on Store Page', 'dokan-lite' ),
-                    'desc'          => __( 'Enable Map of the Store Location in the store sidebar', 'dokan-lite' ),
+                    'desc'          => __( 'Enable map of the store location in the store sidebar', 'dokan-lite' ),
                     'type'          => 'switcher',
                     'default'       => 'on',
                     'content_class' => 'field_top_styles',
@@ -714,7 +714,7 @@ class Settings {
                 'enable_theme_store_sidebar' => [
                     'name'    => 'enable_theme_store_sidebar',
                     'label'   => __( 'Enable Store Sidebar From Theme', 'dokan-lite' ),
-                    'desc'    => __( 'Enable showing Store Sidebar From Your Theme.', 'dokan-lite' ),
+                    'desc'    => __( 'Enable showing store sidebar from your theme.', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
                 ],
