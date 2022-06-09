@@ -14,53 +14,63 @@
 
             <div class="dokan-settings-wrap">
                 <div class="nav-tab-wrapper">
-                    <div class="search-box">
-                        <input type="text" class="dokan-admin-search-settings" placeholder="Search e.g. vendor" @input="searchInSettings" ref="searchInSettings" v-model="searchText">
+                    <div class="nab-section">
+                        <div class="search-box">
+                            <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
+                            <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
+                                :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
+                                @input="searchInSettings" ref="searchInSettings" />
+                            <span
+                                class="dashicons dashicons-no-alt"
+                                @click.prevent="clearSearch"
+                                v-if="'' !== searchText"
+                            ></span>
+                        </div>
 
-                        <span class="dashicons dashicons-no-alt" @click.prevent="clearSearch" v-if="'' !== searchText"></span>
+                        <template v-for="section in settingSections">
+                            <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                                @click.prevent="changeTab(section)" :key="section.id">
+                                <img :src="section.icon_url" :alt="section.settings_title"/>
+                                <div class="nav-content">
+                                    <div class="nav-title">{{ section.title }}</div>
+                                    <div class="nav-description">{{ section.description }}</div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
-
-                    <template v-for="section in settingSections">
-                        <a
-                            href="#"
-                            :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                            @click.prevent="changeTab(section)"
-                        >
-                            <span class="dashicons" :class="section.icon"></span> {{ section.title }}
-                        </a>
-                    </template>
                 </div>
 
                 <div class="metabox-holder">
+                    <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
+                        <div class="settings-content">
+                            <h2 class="settings-title">{{ section.settings_title }}</h2>
+                            <p class="settings-description">{{ section.settings_description }}</p>
+                        </div>
+                        <div v-if="section.document_link" class="settings-document-button">
+                            <a :href="section.document_link" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                        </div>
+                    </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
-                        <div :id="index" class="group" v-if="currentTab === index">
+                        <div :id="index" class="group" v-if="currentTab === index" :key="index">
                             <form method="post" action="options.php">
                                 <input type="hidden" name="option_page" :value="index">
                                 <input type="hidden" name="action" value="update">
-                                <table class="form-table">
-                                    <thead v-if="showSectionTitle(fields)">
-                                    <tr class="dokan-settings-field-type-sub_section">
-                                        <th colspan="3" class="dokan-settings-sub-section-title">
-                                            <label>{{ sectionTitle( index ) }}</label>
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <Fields
-                                        v-for="(field, fieldId) in fields"
-                                        :section-id="index"
-                                        :id="fieldId"
-                                        :field-data="field"
-                                        :field-value="settingValues[index]"
-                                        :all-settings-values="settingValues"
-                                        @openMedia="showMedia"
-                                        :key="fieldId"
-                                        :errors="errors"
-                                        :validationErrors="validationErrors"
-                                        :toggle-loading-state="toggleLoadingState"
-                                    />
-                                    </tbody>
-                                </table>
+                                <div class="form-table">
+                                    <div class="dokan-settings-fields">
+                                        <Fields
+                                            v-for="(field, fieldId) in fields"
+                                            :section-id="index"
+                                            :id="fieldId"
+                                            :field-data="field"
+                                            :field-value="settingValues[index]"
+                                            :all-settings-values="settingValues"
+                                            @openMedia="showMedia"
+                                            :key="fieldId"
+                                            :errors="errors"
+                                            :validationErrors="validationErrors"
+                                            :toggle-loading-state="toggleLoadingState" />
+                                    </div>
+                                </div>
                                 <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
                             </form>
                         </div>
@@ -152,14 +162,6 @@
                 }
             },
 
-            showSectionTitle(fields) {
-                return ! _.findWhere(fields, {type: 'sub_section'});
-            },
-
-            sectionTitle( index ) {
-                return _.findWhere( this.settingSections, { id:index} ).title;
-            },
-
             fetchSettingValues() {
                 var self = this,
                     data = {
@@ -186,7 +188,7 @@
                                         self.settingValues[section][field] = self.settingFields[section][field].default;
                                     }
                                 } else {
-                                    self.settingValues[section][field] = resp.data[section][field];
+                                    self.settingValues[section] = resp.data[section];
                                 }
                             });
                         });
@@ -503,9 +505,12 @@
 
 <style lang="less">
     .dokan-settings-wrap {
-        position: relative;
-        display: flex;
         border: 1px solid #c8d7e1;
+        display: flex;
+        padding: 20px;
+        position: relative;
+        background: #fff;
+        padding-bottom: 100px;
 
         .loading{
             position: absolute;
@@ -521,51 +526,60 @@
 
         .dashicons {
             padding-top: 2px;
-            margin-right: 5px;
-
-            &.dashicons-admin-generic {
-                color: #6c75ff;
-            }
-
-            &.dashicons-cart {
-                color: #00aeff;
-            }
-
-            &.dashicons-money {
-                color: #d35400;
-            }
-
-            &.dashicons-admin-page {
-                color: #8e44ad;
-            }
-
-            &.dashicons-admin-appearance {
-                color: #3498db;
-            }
-
-            &.dashicons-networking {
-                color: #1abc9c;
-            }
+            margin-right: 15px;
         }
 
         div.nav-tab-wrapper {
-            flex: 1;
+            width: 340px;
+            border: 1px solid #c8d7e1;
+            padding: 14px 16px 30px 24px;
+            overflow: hidden;
+            background: #FAFBFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            box-sizing: border-box;
+            margin-right: 12px;
             border-bottom: none;
-            padding: 0;
-            background: #f1f1f1;
-            border-right: 1px solid #c8d7e1;
+            border-top-color: #cecaca85;
 
-            a {
+            .nav-section {
+                padding: 14px 16px 30px 24px;
+            }
+
+            .nav-tab {
+                color: #052B74;
                 float: none;
-                display: block;
                 margin: 0;
                 border: none;
-                padding: 13px 13px;
-                background: #f1f1f1;
-                font-weight: 500;
-                border-bottom: 1px solid #c8d7e1;
-                transition-property: none;
+                cursor: pointer;
+                display: flex;
+                padding: 18px;
+                font-size: 15px;
                 transition:none;
+                background: transparent;
+                font-weight: bold;
+                border-bottom: 1px solid #cecaca;
+                transition-property: none;
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                    margin: 3px 15px 0 0;
+                }
+
+                .nav-content {
+                    .nav-title {
+                        line-height: 22px;
+                        text-transform: uppercase;
+                    }
+
+                    .nav-description {
+                        color: #686666;
+                        font-size: 10px;
+                        line-height: 14px;
+                        font-weight: 500;
+                        text-transform: uppercase;
+                    }
+                }
 
                 &:focus,
                 &:active {
@@ -574,27 +588,109 @@
                 }
 
                 &.nav-tab-active {
+                    width: 100%;
+                    color: rgba(3, 58, 163, 0.81);
+                    position: relative;
+                    transition: .3s linear;
                     background: #fff !important;
-                    border-right: 1px solid #c8d7e1;
-                    width: 99%;
-                    color: #2e4453;
-                    transition:none;
+                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
                     transition-property: none;
+
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        left: 0px;
+                        width: 4px;
+                        background-color: #246EFE;
+                        height: 100%;
+                        top: 0;
+                    }
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        height: 1px;
+                        background: #cecaca;
+                        left: 0;
+                        top: -1px;
+                    }
                 }
             }
         }
 
         .metabox-holder {
             flex: 3;
-            padding-left: 3%;
-            padding-right: 10px;
-            background: #fff;
+            padding: 0 6px 0 3% !important;
+            position: relative;
+
+            .settings-header {
+                display: flex;
+                justify-content: space-between;
+
+                .settings-content {
+                    flex: 4;
+
+                    .settings-title {
+                        margin: 30px 0 20px 0;
+                        font-size: 22px;
+                        line-height: 26px;
+                        font-family: Roboto, sans-serif;
+                        margin-bottom: 12px;
+                    }
+    
+                    .settings-description {
+                        color: #000;
+                        margin: 0;
+                        font-size: 16px;
+                        font-weight: 300;
+                        line-height: 24px;
+                        font-family: Roboto, sans-serif;
+                    }
+                }
+
+                .settings-document-button {
+                    flex: 2.5;
+                    text-align: right;
+                    margin-top: 35px;
+
+                    a.doc-link {
+                        color: #033AA3D9;
+                        border: 0.82px solid #033AA3;
+                        padding: 10px 15px;
+                        font-size: 12px;
+                        background: #FFF;
+                        box-sizing: border-box;
+                        box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
+                        font-family: Roboto, sans-serif;
+                        line-height: 15px;
+                        border-radius: 6.56px;
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            &:before {
+                top: 0;
+                left: 0;
+                width: 1px;
+                height: 100%;
+                content: "";
+                position: absolute;
+                background: #E5E5E5;
+            }
         }
 
         .radio-image-container {
+            padding: 20px 0;
+            display: grid;
+            grid-row-gap: 2.6%;
+            grid-column-gap: 3.2%;
+
             .radio-image {
                 display: block;
                 width: 50%;
+                width: 100%;
                 background: #fff;
                 -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
                 box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
@@ -669,35 +765,55 @@
             label > img {
                 max-width:100%;
             }
-         }
+        }
+
+        .radio-image-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
         .search-box {
+            color: rgba(60, 60, 67, 0.6);
+            filter: drop-shadow(0px 0.0869484px 0.260845px rgba(0, 0, 0, 0.1)) drop-shadow(0px 0.869484px 1.73897px rgba(0, 0, 0, 0.2));
+            margin: 8px 0px 14px;
+            display: flex;
             position: relative;
+            background: #FFF;
+            align-items: center;
+            border-radius: 5px;
 
-            span.dashicons.dashicons-no-alt {
+            .dashicons.dashicons-search {
+                font-size: 26px;
+                margin-left: 15px;
+                line-height: 20px;
+                letter-spacing: 0.434742px;
+            }
+
+            .dashicons.dashicons-no-alt {
                 position: absolute;
-                top: 13px;
-                right: 0;
-                color: #ff0000;
-                z-index: 999;
+                top: 50%;
+                right: 15px;
                 cursor: pointer;
+                color: #000;
+                font-size: 25px;
+                transform: translate( 0%, -60%);
             }
 
             .dokan-admin-search-settings {
-                border: 1px solid #ddd;
-                border-radius: 0px;
+                width: 100%;
+                border: 0;
                 height: 48px;
                 display: block;
-                width: 100%;
-                border-left: 0;
-                border-top: 0;
                 padding: 0 15px;
-                background: #eee;
+                background: #FFF;
+                border-top: 0;
                 font-weight: 400;
+                font-family: Roboto, sans-serif;
             }
 
             input[type="text"]:focus {
                 border-color: transparent;
+                outline: none;
+                box-shadow: none;
             }
         }
     }
@@ -727,6 +843,119 @@
             padding: 5px;
             color: white;
             border-radius: 3px;
+        }
+    }
+
+    .submit {
+        margin-top: 40px !important;
+        text-align: right !important;
+
+        .button {
+            color: #FFFFFF;
+            padding: 10px 15px;
+            font-size: 15px;
+            transition: .3s;
+            background: #5a92ff;
+            font-style: normal;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 800;
+            line-height: 17px;
+            border-color: transparent;
+            border-radius: 4.46803px;
+        }
+    }
+
+    @media only screen and (max-width: 430px) {
+        .dokan-settings-wrap {
+            .nav-tab-wrapper {
+                width: 60%;
+                padding: 10px 12px 15px 12px;
+
+                .nav-tab {
+                    padding-left: 10px !important;
+
+                    img {
+                        margin: 3px 8px 0px 4px;
+                    }
+
+                    .nav-content {
+                        .nav-title {
+                            font-size: 7px;
+                        }
+
+                        .nav-description {
+                            font-size: 5px !important;
+                        }
+                    }
+                }
+
+                .nav-tab-active {
+                    &:before {
+                        width: 2px !important;
+                    }
+                }
+            }
+
+            .metabox-holder {
+                width: 40%;
+
+                .settings-header {
+                    display: block;
+
+                    .settings-content {
+                        .settings-title,
+                        .settings-description {
+                            padding-left: 0;
+                        }
+                    }
+
+                    .settings-document-button {
+                        text-align: left;
+                    }
+                }
+            }
+
+            .search-box {
+                .dashicons.dashicons-search {
+                    margin-left: 10px;
+                }
+
+                .dokan-admin-search-settings {
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .dokan-settings-wrap {
+            .nav-tab-wrapper {
+                width: 35% !important;
+
+                .nav-tab {
+                    .nav-content {
+                        .nav-title {
+                            font-size: 10px;
+                        }
+
+                        .nav-description {
+                            font-size: 8px !important;
+                        }
+                    }
+                }
+            }
+
+            .metabox-holder {
+                width: 65%;
+
+                .settings-header {
+                    .settings-content {
+                        .settings-title {
+                            padding-left: 0;
+                        }
+                    }
+                }
+            }
         }
     }
 </style>
