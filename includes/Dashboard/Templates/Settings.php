@@ -231,16 +231,16 @@ class Settings {
          * If we are requesting a single payment method page (to edit or for first time setup)
          * then we have the corresponding payment method key in the url.
          */
-        $method_key   = str_replace( '/manage-', '', $slug_suffix );
+        $method_key   = str_replace( '-manage-', '', $slug_suffix );
         $is_edit_mode = false;
 
         /*
          * If payment method key has /edit suffix then we are trying to edit the method,
          * otherwise we are doing a initial setup for that payment method.
          */
-        if ( false !== stripos( $method_key, '/edit' ) ) {
+        if ( false !== stripos( $method_key, '-edit' ) ) {
             $is_edit_mode = true;
-            $method_key   = str_replace( '/edit', '', $method_key ); // removing '/edit' suffix to get payment method key
+            $method_key   = str_replace( '-edit', '', $method_key ); // removing '/edit' suffix to get payment method key
         }
 
         $profile_info = get_user_meta( $seller_id, 'dokan_profile_settings', true );
