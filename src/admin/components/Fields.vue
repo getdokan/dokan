@@ -201,7 +201,7 @@
                                 {{ optionVal }}
                                 <switches
                                     @input="setCheckedValue"
-                                    :enabled="isCurrentOptionChecked( optionKey ) ? true : false"
+                                    :enabled="isSwitchOptionChecked( optionKey )"
                                     :value="optionKey"
                                 ></switches>
                             </div>
@@ -352,7 +352,7 @@
                     </div>
                     <div class="field radio_fields">
                         <template v-for="( optionVal, optionKey ) in fieldData.options">
-                            <label :class="isCurrentOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
+                            <label :class="isSwitchOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
                                 <span class="dashicons dashicons-yes"></span>
                                 <input type="radio" class="radio" :name="optionKey" :value="optionKey" v-model="fieldValue[fieldData.name]"
                                     :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'"/>
@@ -689,12 +689,6 @@
             }
         },
 
-        beforeMount() {
-            if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
-                this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
-            }
-        },
-
         methods: {
             containCommonFields( type ) {
                 return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
@@ -756,13 +750,11 @@
                 console.log('hello priting...', value);
             },
 
-            isCurrentOptionChecked( optionKey ) {
+            isSwitchOptionChecked( optionKey ) {
                 if ( 'multicheck' === this.fieldData.type ) {
-                    return this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey ? true : false;
-                }
-
-                if ( 'radio' === this.fieldData.type ) {
-                    return this.fieldValue[ this.fieldData.name ] === optionKey ? true : false;
+                    return this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey;
+                } else if ( 'radio' === this.fieldData.type ) {
+                    return this.fieldValue[ this.fieldData.name ] === optionKey;
                 }
 
                 return false;
@@ -1024,6 +1016,7 @@
 
                 label {
                     color: #000;
+                    cursor: inherit;
                     margin: 9px 0 9px 15px;
                     border: 1px solid rgba(0, 0, 0, 0.10);
                     display: inline-block;
@@ -1036,7 +1029,7 @@
                 }
             }
         }
-        
+
         .editor_field {
             margin-top: 20px;
         }
@@ -1279,7 +1272,7 @@
                         .html_contents {
                             flex: 3;
                             text-align: left;
-    
+
                             .field_heading {
                                 color: #000;
                                 margin: 0;
@@ -1299,7 +1292,7 @@
                                     }
                                 }
                             }
-    
+
                             .field_desc {
                                 color: #000;
                                 margin: 0;
@@ -1310,19 +1303,19 @@
                                 font-family: Roboto,sans-serif;
                             }
                         }
-    
+
                         .fields {
                             flex: 2;
                             align-self: center;
                             text-align: right;
-    
+
                             .checked {
                                 color: rgba(3, 58, 163, 0.85);
                                 border: 1px solid rgba(3, 58, 163, 0.81);
                                 background: rgba(182, 206, 254, 0.38);
                                 box-sizing: border-box;
                                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
-    
+
                                 .dashicons-yes {
                                     display: inline-block;
                                 }

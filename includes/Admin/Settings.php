@@ -601,8 +601,7 @@ class Settings {
                 'reg_tc_page'   => [
                     'name'          => 'reg_tc_page',
                     'type'          => 'select',
-                    /* translators: %s: dokan pages url */
-                    'desc'          => sprintf( __( 'Select where you want to add Dokan pages <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ),
+                    'desc'          => __( 'Select where you want to add Dokan pages.', 'dokan-lite' ),
                     'label'         => __( 'Terms and Conditions Page', 'dokan-lite' ),
                     'options'       => $pages_array,
                     'tooltip'       => __( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
@@ -693,8 +692,7 @@ class Settings {
                 'store_header_template'      => [
                     'name'    => 'store_header_template',
                     'type'    => 'radio_image',
-                    /* translators: %s: store header url */
-                    'desc'    => sprintf( __( 'Select a store header for your store. <a target="_blank" href="%s"> Learn More </a>', 'dokan-lite' ), '#' ),
+                    'desc'    => __( 'Select a store header for your store.', 'dokan-lite' ),
                     'label'   => __( 'Store Header Template', 'dokan-lite' ),
                     'options' => [
                         'default' => DOKAN_PLUGIN_ASSEST . '/images/store-header-templates/default.png',
