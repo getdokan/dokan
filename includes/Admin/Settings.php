@@ -537,7 +537,7 @@ class Settings {
                     'label'         => __( 'Withdraw Methods', 'dokan-lite' ),
                     'desc'          => __( 'Select suitable withdraw methods for vendors', 'dokan-lite' ),
                     'type'          => 'multicheck',
-                    'default'       => [ 'paypal' => 'paypal' ],
+                    'default'       => apply_filters( 'dokan_settings_withdraw_methods_default', [ 'paypal' => 'paypal' ] ),
                     'options'       => dokan_withdraw_get_methods(),
                     'tooltip'       => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                     'content_class' => 'field_top_styles',
