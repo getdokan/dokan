@@ -689,6 +689,12 @@
             }
         },
 
+        beforeMount() {
+            if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
+                this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
+            }
+        },
+
         methods: {
             containCommonFields( type ) {
                 return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
