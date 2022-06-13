@@ -253,15 +253,15 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
 
                                         <?php
-                                            $is_single  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ? true : false;
+                                            $is_single  = dokan_product_category_selection_is_single();
                                             $terms      = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' =>  'all') );
                                             $chosen_cat = get_post_meta( $post_id, 'chosen_product_cat', true );
 
                                             // If no chosen category found.
-                                            if ( ! $chosen_cat || ! is_array( $chosen_cat ) || sizeof( $chosen_cat ) < 1 ) {
+                                            if ( ! $chosen_cat || ! is_array( $chosen_cat ) || count( $chosen_cat ) < 1 ) {
                                                 // If product has only one category, choose it as the chosen category.
                                                 // Or if multiple category is selected, choose the common parents child as chosen category.
-                                                if ( sizeof( $terms ) <= 1 ) {
+                                                if ( count( $terms ) === 1 ) {
                                                     $chosen_cat = [ reset( $terms )->term_id ];
                                                 } else {
                                                     $chosen_cat   = $terms;
@@ -272,10 +272,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         $all_ancestors = get_ancestors( $term_id, 'product_cat' );
                                                         $old_parent    = end( $all_ancestors );
 
-                                                        empty( $old_parent ) ? $old_parent = $term_id : '';
+                                                        $old_parent = empty( $old_parent ) ? $term_id : $old_parent;
 
-                                                        if( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < sizeof( $all_ancestors ) ) {
-                                                            $all_parents[ $old_parent ]['size']   = sizeof( $all_ancestors );
+                                                        if( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < count( $all_ancestors ) ) {
+                                                            $all_parents[ $old_parent ]['size']   = count( $all_ancestors );
                                                             $all_parents[ $old_parent ]['parent'] = $old_parent;
                                                             $all_parents[ $old_parent ]['child']  = $term_id;
                                                         }

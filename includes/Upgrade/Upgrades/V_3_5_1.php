@@ -16,13 +16,13 @@ class V_3_5_1 extends DokanUpgrader {
      * @return void
      */
     public static function update_products_categories() {
-        $i         = 0;
+        $i         = 1;
         $products  = [];
         $processor = new V_3_5_1_UpdateProductCategories();
 
         while ( null !== $products ) {
             $args = [
-                'paged' => $i++,
+                'paged' => $i,
                 'posts_per_page' => 20,
             ];
 
@@ -33,6 +33,8 @@ class V_3_5_1 extends DokanUpgrader {
             } else {
                 $products = null;
             }
+
+            $i++;
         }
 
         $processor->dispatch_process();

@@ -532,6 +532,12 @@ class Assets {
             $this->dokan_dashboard_scripts();
         }
 
+        // Load category ui css in product add, edit and list page.
+        global $wp;
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
+            wp_enqueue_style( 'dokan-product-category-ui-css' );
+        }
+
         // store and my account page
         if (
             dokan_is_store_page()

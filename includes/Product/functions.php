@@ -31,7 +31,7 @@ function dokan_save_product( $args ) {
         return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan-lite' ) );
     }
 
-    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
+    if ( dokan_product_category_selection_is_single() ) {
         if ( absint( $data['product_cat'] ) < 0 ) {
             return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
         }
@@ -40,7 +40,7 @@ function dokan_save_product( $args ) {
             return new WP_Error( 'no-category', __( 'Please select AT LEAST ONE category', 'dokan-lite' ) );
         }
     }
-    if ( ! isset( $data['chosen_product_cat'] ) && empty( $data['chosen_product_cat'] ) ) {
+    if ( empty( $data['chosen_product_cat'] ) ) {
         return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
     }
 
@@ -74,7 +74,7 @@ function dokan_save_product( $args ) {
 
     $post_arr = apply_filters( 'dokan_insert_product_post_data', $post_arr, $data );
 
-    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
+    if ( dokan_product_category_selection_is_single() ) {
         $cat_ids[] = $data['product_cat'];
     } else {
         if ( ! empty( $data['product_cat'] ) ) {
@@ -141,13 +141,7 @@ function dokan_save_product( $args ) {
 
     $product = dokan()->product->create( $post_data );
 
-    if ( ! $is_updating ) {
-        do_action( 'dokan_new_product_added', $product->get_id(), $data );
-    } else {
-        do_action( 'dokan_product_updated', $product->get_id(), $data );
-    }
-
-    if ( $product && dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single' ) {
+    if ( $product && dokan_product_category_selection_is_single() ) {
         $all_categories = reset( $data['chosen_product_cat'] ) !== 0 ? get_ancestors( reset( $data['chosen_product_cat'] ), 'product_cat' ) : [];
         $all_categories = wp_parse_args( $all_categories, $data['chosen_product_cat'] );
 
@@ -158,6 +152,12 @@ function dokan_save_product( $args ) {
     if ( $product ) {
         update_post_meta( $product->get_id(), 'chosen_product_cat', array_map( 'absint', (array) $data['chosen_product_cat'] ) );
         return $product->get_id();
+    }
+
+    if ( ! $is_updating ) {
+        do_action( 'dokan_new_product_added', $product->get_id(), $data );
+    } else {
+        do_action( 'dokan_product_updated', $product->get_id(), $data );
     }
 
     return false;
@@ -626,4 +626,15 @@ function dokan_store_product_catalog_orderby() {
     );
 
     return $orderby_options;
+}
+
+/**
+ * Returns 'true' if category type selection for Products is single, 'false' if type is multiple
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return boolean
+ */
+function dokan_product_category_selection_is_single() {
+    return dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) === 'single';
 }

@@ -38,7 +38,7 @@ class V_3_5_1_UpdateProductCategories extends DokanBackgroundProcesses {
                 $all_categories  = $category !== 0 ? $all_ancestors : [];
                 $all_categories  = wp_parse_args( $all_categories, [ $category ] );
 
-                empty( $most_old_parent ) ? $most_old_parent = $category : '';
+                $most_old_parent = empty( $most_old_parent ) ? $category : '';
 
                 // If the child already in the array and the current child is more younger than the previous child we are
                 // updating as the chosen category.
@@ -57,8 +57,8 @@ class V_3_5_1_UpdateProductCategories extends DokanBackgroundProcesses {
             $chosen_cat = array_values( $chosen_cat );
             // phpcs:enable
 
-            update_post_meta( $product->ID, 'chosen_product_cat', $chosen_cat );
-            wp_set_object_terms( $product->ID, $all_cats_with_parents, 'product_cat' );
+            update_post_meta( $product->get_id(), 'chosen_product_cat', $chosen_cat );
+            wp_set_object_terms( $product->get_id(), $all_cats_with_parents, 'product_cat' );
         }
 
         return false;

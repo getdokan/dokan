@@ -75,267 +75,267 @@
     -webkit-animation-duration: 0.4s;
     animation-name: fadeIn;
     animation-duration: 0.4s;
-}
 
-.dokan-product-category-modal-content {
-    position: fixed;
-    bottom: 0;
-    background-color: #fefefe;
-    width: 80%;
-    height: 80vh;
-    -webkit-animation-name: slideIn;
-    -webkit-animation-duration: 0.4s;
-    animation-name: slideIn;
-    animation-duration: 0.4s;
-    padding: 19px 45px;
-    overflow: auto;
+    .dokan-product-category-modal-content {
+        position: fixed;
+        bottom: 0;
+        background-color: #fefefe;
+        width: 80%;
+        height: 80vh;
+        -webkit-animation-name: slideIn;
+        -webkit-animation-duration: 0.4s;
+        animation-name: slideIn;
+        animation-duration: 0.4s;
+        padding: 19px 45px;
+        overflow: auto;
 
-    .dokan-product-category-modal-body {
-        padding: 2px 16px;
-        border-bottom: 1px solid #E2E2E2;
-        margin-top: 15px;
-        margin-bottom: 15px;
-
-        .dokan-single-categories-container {
-            height: 250px;
-            position: relative;
+        .dokan-product-category-modal-body {
+            padding: 2px 16px;
+            border-bottom: 1px solid #E2E2E2;
             margin-top: 15px;
             margin-bottom: 15px;
 
-            .dokan-single-categories-arrow {
-                position: absolute;
-                color: white;
-                height: 100%;
-                top: 0;
-                width: 80px;
-                border-radius: 0;
+            .dokan-single-categories-container {
+                height: 250px;
+                position: relative;
+                margin-top: 15px;
+                margin-bottom: 15px;
 
-                >span{
-                    background-color: #2271B1;
-                    width: 30px;
-                    display: block;
-                    text-align: center;
-                    line-height: 30px;
-                    border-radius: 15px;
-                    margin-top: 110px;
+                .dokan-single-categories-arrow {
+                    position: absolute;
+                    color: white;
+                    height: 100%;
+                    top: 0;
+                    width: 80px;
+                    border-radius: 0;
+
+                    >span{
+                        background-color: #2271B1;
+                        width: 30px;
+                        display: block;
+                        text-align: center;
+                        line-height: 30px;
+                        border-radius: 15px;
+                        margin-top: 110px;
+                    }
+                }
+
+                .dokan-single-categories-left {
+                    background-image: linear-gradient(90deg, white, transparent);
+                }
+
+                .dokan-single-categories-left-box {
+                    float: left;
+                    cursor: pointer;
+                }
+
+                .dokan-single-categories-right-box {
+                    float: right;
+                    cursor: pointer;
+                }
+
+                .dokan-single-categories-right {
+                    right: 0%;
+                    background-image: linear-gradient(270deg, white, transparent);
+                }
+
+                .dokan-single-categories::-webkit-scrollbar {
+                    display: none;
+                }
+
+                ::-webkit-scrollbar {
+                    margin-left: 5px;
+                    width: 5px;
+                }
+
+                ::-webkit-scrollbar-track {
+                    background: #E0E0E0;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    background: #BFBFBF;
+                    border-radius: 10px;
+                }
+
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #919191;
+                }
+
+                .dokan-single-categories {
+                    height: 100%;
+                    background-color: #FFF;
+                    display: flex;
+                    overflow-x: auto;
+
+                    .dokan-product-category-ul {
+                        margin: 0 10px 0 0;
+                        width: 300px;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        color: black;
+                        overflow-y: auto;
+                        flex-shrink: 0;
+
+                        .dokan-product-category-li {
+                            margin: 0 9px 0 0;
+                            display: flex;
+                            justify-content: space-between;
+                            cursor: pointer;
+                            padding: 5px;
+                            border-radius: 2px;
+                            -webkit-border-radius: 2px;
+                            -moz-border-radius: 2px;
+                            -ms-border-radius: 2px;
+                            -o-border-radius: 2px;
+
+                            &:hover {
+                                background-color: #F9F9F9;
+                            }
+
+                            .dokan-product-category-icon {
+                                opacity: 0;
+                                color: #BFBFBF;
+
+                                i {
+                                    line-height: 25px;
+                                }
+                            }
+
+                            &:hover .dokan-product-category {
+                                color: #2271B1;
+                            }
+                        }
+
+                        .dokan-cat-has-child {
+
+                            .dokan-product-category-icon {
+                                opacity: 1 ;
+                            }
+                        }
+                    }
+
+                    .dokan-product-category-li-active {
+                        color: #2271B1 !important;
+                        background-color: #F9F9F9 !important;
+
+                        &.dokan-cat-has-child {
+
+                            .dokan-product-category-icon {
+                                opacity: 1 !important;
+                                color: #2271B1 !important;
+                            }
+                        }
+                    }
+                }
+
+                .dokan-single-categories-loader {
+                    background-color: rgba(255, 255, 255, 0.815);
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: wait;
+                    z-index: 3;
+
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
                 }
             }
 
-            .dokan-single-categories-left {
-                background-image: linear-gradient(90deg, white, transparent);
-            }
+            .dokan-category-search-container {
+                position: relative;
 
-            .dokan-single-categories-left-box {
-                float: left;
-                cursor: pointer;
-            }
+                .dokan-cat-search-box{
+                    display: flex;
+                    border: 1px solid #EDEDED;
+                    justify-content: space-between;
+                    padding: 5px 15px;
+                    border-radius: 3px;
+                    -webkit-border-radius: 3px;
+                    -moz-border-radius: 3px;
+                    -ms-border-radius: 3px;
+                    -o-border-radius: 3px;
+                }
 
-            .dokan-single-categories-right-box {
-                float: right;
-                cursor: pointer;
-            }
+                .dokan-cat-search-icon {
+                    width: 2%;
+                }
 
-            .dokan-single-categories-right {
-                right: 0%;
-                background-image: linear-gradient(270deg, white, transparent);
-            }
-
-            .dokan-single-categories::-webkit-scrollbar {
-                display: none;
-            }
-
-            ::-webkit-scrollbar {
-                margin-left: 5px;
-                width: 5px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background: #E0E0E0;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: #BFBFBF;
-                border-radius: 10px;
-            }
-
-            &::-webkit-scrollbar-thumb:hover {
-                background: #919191;
-            }
-
-            .dokan-single-categories {
-                height: 100%;
-                background-color: #FFF;
-                display: flex;
-                overflow-x: auto;
-
-                .dokan-product-category-ul {
-                    margin: 0 10px 0 0;
-                    width: 300px;
-                    font-size: 1rem;
-                    font-weight: 600;
+                .dokan-cat-search-input {
+                    padding: 0 0 0 10px;
+                    background-color: white;
                     color: black;
-                    overflow-y: auto;
-                    flex-shrink: 0;
+                    border: 0;
+                    -webkit-appearance: none;
+                    box-sizing: border-box;
+                    font-weight: 400;
+                    box-shadow: none;
+                    outline: none;
+                    width: 88%;
+                }
 
-                    .dokan-product-category-li {
-                        margin: 0 9px 0 0;
-                        display: flex;
-                        justify-content: space-between;
+                .dokan-cat-search-text-limit {
+                    width: 10%;
+                    text-align: right;
+
+                    &::before {
+                        content: "|";
+                        margin-right: 15px;
+                    }
+                }
+
+                .dokan-cat-search-res {
+                    max-height: 219px;
+                    overflow: auto;
+                    background: #FFFFFF;
+                    border-left: 1px solid #E2E2E2;
+                    border-right: 1px solid #E2E2E2;
+                    border-bottom: 1px solid #E2E2E2;
+                    box-sizing: border-box;
+                    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+                    border-radius: 0px 0px 3px 3px;
+                    position: absolute;
+                    width: 100%;
+                    z-index: 1;
+
+                    .dokan-cat-search-res-ul {
+                        margin: 26px 0;
+
+                    .dokan-cat-search-res-li {
+                        padding: 5px 26px;
+                        margin: 5px 0;
                         cursor: pointer;
-                        padding: 5px;
-                        border-radius: 2px;
-                        -webkit-border-radius: 2px;
-                        -moz-border-radius: 2px;
-                        -ms-border-radius: 2px;
-                        -o-border-radius: 2px;
 
                         &:hover {
-                            background-color: #F9F9F9;
+                            background: #F9F9F9;
                         }
 
-                        .dokan-product-category-icon {
-                            opacity: 0;
-                            color: #BFBFBF;
-
-                            i {
-                                line-height: 25px;
-                            }
-                        }
-
-                        &:hover .dokan-product-category {
+                        .dokan-cat-search-res-item {
                             color: #2271B1;
                         }
-                    }
 
-                    .dokan-cat-has-child {
+                        .dokan-cat-search-res-history {
+                            color: #ACACAC;
 
-                        .dokan-product-category-icon {
-                            opacity: 1 ;
-                        }
-                    }
-                }
+                            .dokan-cat-search-res-suggestion-selected {
+                                span {
+                                    color: #000;
+                                    margin: 0;
+                                }
+                            }
 
-                .dokan-product-category-li-active {
-                    color: #2271B1 !important;
-                    background-color: #F9F9F9 !important;
-
-                    &.dokan-cat-has-child {
-
-                        .dokan-product-category-icon {
-                            opacity: 1 !important;
-                            color: #2271B1 !important;
-                        }
-                    }
-                }
-            }
-
-            .dokan-single-categories-loader {
-                background-color: rgba(255, 255, 255, 0.815);
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: wait;
-                z-index: 3;
-
-                img {
-                    width: 20px;
-                    height: 20px;
-                }
-            }
-        }
-
-        .dokan-category-search-container {
-            position: relative;
-
-            .dokan-cat-search-box{
-                display: flex;
-                border: 1px solid #EDEDED;
-                justify-content: space-between;
-                padding: 5px 15px;
-                border-radius: 3px;
-                -webkit-border-radius: 3px;
-                -moz-border-radius: 3px;
-                -ms-border-radius: 3px;
-                -o-border-radius: 3px;
-            }
-
-            .dokan-cat-search-icon {
-                width: 2%;
-            }
-
-            .dokan-cat-search-input {
-                padding: 0 0 0 10px;
-                background-color: white;
-                color: black;
-                border: 0;
-                -webkit-appearance: none;
-                box-sizing: border-box;
-                font-weight: 400;
-                box-shadow: none;
-                outline: none;
-                width: 88%;
-            }
-
-            .dokan-cat-search-text-limit {
-                width: 10%;
-                text-align: right;
-
-                &::before {
-                    content: "|";
-                    margin-right: 15px;
-                }
-            }
-
-            .dokan-cat-search-res {
-                max-height: 219px;
-                overflow: auto;
-                background: #FFFFFF;
-                border-left: 1px solid #E2E2E2;
-                border-right: 1px solid #E2E2E2;
-                border-bottom: 1px solid #E2E2E2;
-                box-sizing: border-box;
-                box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-                border-radius: 0px 0px 3px 3px;
-                position: absolute;
-                width: 100%;
-                z-index: 1;
-
-                .dokan-cat-search-res-ul {
-                    margin: 26px 0;
-
-                .dokan-cat-search-res-li {
-                    padding: 5px 26px;
-                    margin: 5px 0;
-                    cursor: pointer;
-
-                    &:hover {
-                        background: #F9F9F9;
-                    }
-
-                    .dokan-cat-search-res-item {
-                        color: #2271B1;
-                    }
-
-                    .dokan-cat-search-res-history {
-                        color: #ACACAC;
-
-                        .dokan-cat-search-res-suggestion-selected {
                             span {
-                                color: #000;
-                                margin: 0;
+                                margin-right: 5px;
                             }
                         }
-
-                        span {
-                            margin-right: 5px;
-                        }
                     }
-                }
+                    }
                 }
             }
         }

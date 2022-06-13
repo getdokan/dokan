@@ -1,7 +1,7 @@
 ;( function( $ ) {
     let modal          = $( '#dokan-product-category-modal' );
     let loader         = $( '#dokan-single-categories-loader' );
-    let searchRes      = $( '#dokan-cat-search-res' );
+    let searchResultContainer      = $( '#dokan-cat-search-res' );
     let searchResUl    = $( '#dokan-cat-search-res-ul' );
     let rightIndicator = $( '.dokan-single-categories-right' );
     let leftIndicator  = $( '.dokan-single-categories-left' );
@@ -30,18 +30,18 @@
                 ProductCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[ index ] );
             } );
 
-            $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', function() {
+            $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', ProductCategory.debounce( function() {
                 let inputText = $( this ).val();
                 $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
                 if ( inputText.length > 0 ) {
                     ProductCategory.loadingCategories();
-                    ProductCategory.hideSearchRes( false );
+                    ProductCategory.hideSearchResults( false );
                     ProductCategory.doSearchCates( inputText );
                 } else {
-                    ProductCategory.hideSearchRes();
+                    ProductCategory.hideSearchResults();
                 }
-            } );
+            }, 500 ) );
 
             $( '#dokan-single-categories' ).scroll( function() {
                 let totalScrollable = $( '#dokan-single-categories' ).get( 0 ).scrollWidth - $( '#dokan-single-categories' ).innerWidth();
@@ -92,7 +92,7 @@
             categoriesState = UL;
             ProductCategory.updateCategoryUi();
 
-            ProductCategory.hideSearchRes();
+            ProductCategory.hideSearchResults();
             ProductCategory.scrollTo( UL.length );
         },
 
@@ -112,8 +112,8 @@
             ProductCategory.loadingCategories( false );
         },
 
-        hideSearchRes: ( status = true ) => {
-            status ? searchRes.addClass( 'dokan-hide' ) : searchRes.removeClass( 'dokan-hide' );
+        hideSearchResults: ( status = true ) => {
+            status ? searchResultContainer.addClass( 'dokan-hide' ) : searchResultContainer.removeClass( 'dokan-hide' );
         },
 
         showIndicators: ( element, scrolled ) => {
@@ -150,7 +150,7 @@
         getCategoriesWithParentId: ( parentId = 0, level = 1, selectedId = false ) => {
             let allCategories = [ ...dokan_product_category_data.categories ];
             let categories = allCategories.filter( ( category, index ) => {
-                if ( category.category_parent == parentId ) {
+                if ( category.parent == parentId ) {
                     allCategories[ index ].uiActivaion = category.cat_ID === selectedId ? 'dokan-product-category-li-active' : false;
                     return true;
                 }
@@ -341,18 +341,24 @@
             return allCategories.findIndex( ( category, index ) => {
                 return id == category.cat_ID;
             });
-        }
+        },
 
-    };
+        debounce: (func, wait, immediate) => {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        },
 
-    // On DOM ready.
-    $( function() {
-        ProductCategory.init();
-
-        $( 'body' ).on( 'click', '#dokan-category-open-modal', function() {
-            inputHolder   = $( this ).data( 'dokansclevel' );
-            let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
-
+        openModal: ( chosenCat ) => {
             ProductCategory.showCategoryModal();
 
             if ( chosenCat.length > 0 ) {
@@ -362,6 +368,18 @@
 
                 ProductCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
             }
+        }
+    };
+
+    // On DOM ready.
+    $( document ).ready( function() {
+        ProductCategory.init();
+
+        $( 'body' ).on( 'click', '#dokan-category-open-modal', function() {
+            inputHolder   = $( this ).data( 'dokansclevel' );
+            let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
+
+            ProductCategory.openModal( chosenCat );
         } );
 
         $( 'body' ).on( 'click', '#dokan-category-close-modal', function() {

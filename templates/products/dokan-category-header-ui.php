@@ -1,16 +1,16 @@
 <?php
-    $term_ids   = isset( $terms ) ? $terms : [];
-    $chosen_cat = isset( $terms ) ? $chosen_cat : [];
-    $is_single  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false;
+    $chosen_cat          = isset( $chosen_cat ) ? $chosen_cat : [];
+    $is_single           = dokan_product_category_selection_is_single();
+    $default_product_cat = get_term( get_option('default_product_cat') );
 
-    if ( count( $chosen_cat ) < 1 ) {
-        array_push( $chosen_cat, get_term( get_option('default_product_cat') )->term_id );
+    if ( count( $chosen_cat ) < 1 && ! is_wp_error( $default_product_cat ) ) {
+        array_push( $chosen_cat, $default_product_cat->term_id );
     }
 ?>
 
 <!-- Trigger/Open The Modal -->
 <div class="dokan-form-group dokan-new-cat-ui-title">
-<label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
+    <label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
 </div>
 <span class="dokan-add-new-cat-box">
     <?php foreach ( $chosen_cat as $key => $term ) : ?>
@@ -19,7 +19,7 @@
                 <?php
                     $all_parents   = get_ancestors( $term, 'product_cat' );
                     $all_parents   = array_reverse( $all_parents );
-                    $parents_count = sizeof( $all_parents );
+                    $parents_count = count( $all_parents );
                     $html          = '';
 
                     foreach ( $all_parents as $index => $value ) {

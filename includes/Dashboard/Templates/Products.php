@@ -31,7 +31,9 @@ class Products {
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
         add_action( 'dokan_render_product_edit_template', array( $this, 'load_product_edit_template' ), 11 );
         add_action( 'dokan_after_listing_product', array( $this, 'load_add_new_product_popup' ), 10 );
-        add_action( 'dokan_dashboard_content_after', array( $this, 'load_add_category_modal' ), 10 );
+        add_action( 'dokan_before_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
+        add_action( 'dokan_before_new_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
+        add_action( 'dokan_before_listing_product', array( $this, 'load_add_category_modal' ), 10 );
         add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
@@ -253,7 +255,7 @@ class Products {
                 $errors[] = __( 'Please enter product title', 'dokan-lite' );
             }
 
-            if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
+            if ( dokan_product_category_selection_is_single() ) {
                 $product_cat = intval( $postdata['product_cat'] );
 
                 if ( $product_cat < 0 ) {
@@ -299,7 +301,7 @@ class Products {
                     }
 
                     /** set product category * */
-                    if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
+                    if ( dokan_product_category_selection_is_single()) {
                         $category       = absint( $postdata['product_cat'] );
                         $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                         $all_categories = wp_parse_args( $all_categories, $category );
@@ -421,7 +423,7 @@ class Products {
             $errors[] = __( 'Please enter product title', 'dokan-lite' );
         }
 
-        if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ) {
+        if ( dokan_product_category_selection_is_single() ) {
             $product_cat = absint( $postdata['product_cat'] );
 
             if ( $product_cat < 0 ) {
@@ -433,7 +435,7 @@ class Products {
                 $errors[] = __( 'Please select AT LEAST ONE category', 'dokan-lite' );
             }
         }
-        if ( ! isset( $postdata['chosen_product_cat'] ) && empty( $postdata['chosen_product_cat'] ) ) {
+        if ( empty( $postdata['chosen_product_cat'] ) ) {
             $errors[] = __( 'Please select a category', 'dokan-lite' );
         }
 
@@ -491,7 +493,7 @@ class Products {
             wp_set_object_terms( $post_id, $tags_ids, 'product_tag' );
 
             /** set product category * */
-            if ( 'single' == dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) ) {
+            if ( dokan_product_category_selection_is_single() ) {
                 $category       = absint( $postdata['product_cat'] );
                 $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
                 $all_categories = wp_parse_args( $all_categories, $category );
@@ -557,9 +559,8 @@ class Products {
          * Checking if dokan dashboard or add product page or product edit page or product list.
          * Because without those page we don't need to load category modal.
          */
-        if ( 'dashboard' === get_query_var( 'pagename', 'dokan-not-dashboard-page' ) && ( 'dokan-not-add-product-page' !== get_query_var( 'new-product', 'dokan-not-add-product-page' ) || 'dokan-not-products-page' != get_query_var( 'products', 'dokan-not-products-page' ) ) ) {
-            wp_enqueue_style( 'dokan-product-category-ui-css' );
-
+        global $wp;
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
             $args = array(
                 'taxonomy'     => 'product_cat',
                 'orderby'      => 'name',
@@ -581,7 +582,7 @@ class Products {
                     'hide_empty' => false,
                 ) );
 
-                $children ? $all_categories[ $key ]->has_child = true : $all_categories[ $key ]->has_child = false;
+                $all_categories[ $key ]->has_child = ! empty( $children ) && ! is_wp_error( $children );
                 $parents = [];
                 $parents = $this->dokan_get_category_parents( $parents, $all_categories, $value, $key );
                 $all_categories[ $key ]->parents = array_reverse( $parents );
