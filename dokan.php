@@ -354,7 +354,6 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\Admin\Settings();
             new \WeDevs\Dokan\Admin\UserProfile();
             new \WeDevs\Dokan\Admin\SetupWizard();
-            new \WeDevs\Dokan\DummyData\Hooks();
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
@@ -377,7 +376,7 @@ final class WeDevs_Dokan {
         $this->container['customizer']       = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']         = new \WeDevs\Dokan\Upgrade\Manager();
         $this->container['product_sections'] = new \WeDevs\Dokan\ProductSections\Manager();
-        $this->container['dummy_data']       = new \WeDevs\Dokan\DummyData\Manager();
+        $this->container['dummy_data_importer']       = new \WeDevs\Dokan\DummyData\Importer();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {

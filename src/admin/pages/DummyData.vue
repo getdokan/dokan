@@ -77,6 +77,88 @@ export default {
             allProducts: [],
             done: false,
             statusLoader: true,
+            vendorsDataToRemove: [
+                'sku',
+                'status',
+                'catalog_visibility',
+                'short_description',
+                'date_on_sale_from',
+                'date_on_sale_to',
+                'tax_status',
+                'tax_class',
+                'stock_status',
+                'manage_stock',
+                'stock_quantity',
+                'children',
+                'backorders',
+                'sold_individually',
+                'reviews_allowed',
+                'purchase_note',
+                'sale_price',
+                'regular_price',
+                'category_ids',
+                'tag_ids',
+                'shipping_class_id',
+                'raw_image_id',
+                'raw_gallery_image_ids',
+                'download_limit',
+                'download_expiry',
+                'parent_id',
+                'grouped_products',
+                'upsell_ids',
+                'cross_sell_ids',
+                'product_url',
+                'button_text',
+                'menu_order',
+                'virtual',
+                'downloadable',
+                'status',
+                'attribute_1_name',
+                'attribute_1_value',
+                'attribute_1_visible',
+                'attribute_1_global',
+                'attribute_2_name',
+                'attribute_2_value',
+                'attribute_2_visible',
+                'attribute_2_global',
+                '_wpcom_is_markdown',
+                'download1_name',
+                'download_1_url',
+                'download_2_name',
+                'download_2_url',
+                'vendor',
+            ],
+            productsDataToRemove: [
+                'email',
+                'password',
+                'store_name',
+                'social',
+                'payment',
+                'phone',
+                'show_email',
+                'address',
+                'location',
+                'banner',
+                'icon',
+                'gravatar',
+                'show_more_tpab',
+                'show_ppp',
+                'enable_tnc',
+                'store_tnc',
+                'show_min_order_discount',
+                'store_seo',
+                'dokan_store_time',
+                'enabled',
+                'trusted',
+                'attribute_1_name',
+                'attribute_1_value',
+                'attribute_1_visible',
+                'attribute_1_global',
+                'attribute_2_name',
+                'attribute_2_value',
+                'attribute_2_visible',
+                'attribute_2_global',
+            ]
         }
     },
 
@@ -86,22 +168,38 @@ export default {
     },
 
     methods: {
+        renderApiError( jqXHR ) {
+            let message = '';
+            if ( jqXHR.responseJSON && jqXHR.responseJSON.message ) {
+                message = jqXHR.responseJSON.message;
+            } else if ( jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message ) {
+                message = jqXHR.responseJSON.data.message;
+            } else if( jqXHR.responseText ) {
+                message = jqXHR.responseText;
+            }
+            return message;
+        },
+
         // Loads and sets if import already successfully.
         loadImportStatus() {
             this.statusLoader = true;
             let self = this;
 
-            jQuery.post( dokan.ajaxurl, {
-                    'action': 'dokan_dummy_data_import_status',
-                    'nonce': dokan.nonce,
-                },
-                function ( response ) {
-                    if ( response.success && response.data == 'yes' ) {
-                        self.done = true;
-                    }
-                    self.statusLoader = false;
+            dokan.api.get(`/dummy-data/status`, {
+                'nonce': dokan.nonce,
+            })
+            .done((response, status, xhr) => {
+                if ( response == 'yes' ) {
+                    self.done = true;
                 }
-            );
+                self.statusLoader = false;
+            })
+            .fail( ( jqXHR ) => {
+                let message = self.renderApiError( jqXHR );
+                if ( message ) {
+                    swal.fire( message, '', 'error' );
+                }
+            });
         },
 
         // Resets data states
@@ -151,18 +249,20 @@ export default {
         requestToImport( data ){
             let self = this;
 
-            jQuery.post( dokan.ajaxurl, {
-                    'action': 'dokan_dummy_data_import',
-                    'nonce': dokan.nonce,
-                    'csv_file_data': data
-                },
-                function ( response ) {
-                    if ( response.success ) {
-                        self.handleImport( response.data.vendor_index );
-                        self.updateProgress( response.data.vendor_index );
-                    }
+            dokan.api.post(`/dummy-data/import`, {
+                'nonce': dokan.nonce,
+                'csv_file_data': data
+            })
+            .done((response, status, xhr) => {
+                self.handleImport( response.vendor_index );
+                self.updateProgress( response.vendor_index );
+            })
+            .fail( ( jqXHR ) => {
+                let message = self.renderApiError( jqXHR );
+                if ( message ) {
+                    swal.fire( message, '', 'error' );
                 }
-            );
+            });
         },
 
         // Run importer button handler.
@@ -198,83 +298,15 @@ export default {
 
         // Formats data for vendor removing products data
         formatVendorData( data ) {
-            delete( data.sku );
-            delete( data.status );
-            delete( data.catalog_visibility );
-            delete( data.short_description );
-            delete( data.date_on_sale_from );
-            delete( data.date_on_sale_to );
-            delete( data.tax_status );
-            delete( data.tax_class );
-            delete( data.stock_status );
-            delete( data.manage_stock );
-            delete( data.stock_quantity );
-            delete( data.children );
-            delete( data.backorders );
-            delete( data.sold_individually );
-            delete( data.reviews_allowed );
-            delete( data.purchase_note );
-            delete( data.sale_price );
-            delete( data.regular_price );
-            delete( data.category_ids );
-            delete( data.tag_ids );
-            delete( data.shipping_class_id );
-            delete( data.raw_image_id );
-            delete( data.raw_gallery_image_ids );
-            delete( data.download_limit );
-            delete( data.download_expiry );
-            delete( data.parent_id );
-            delete( data.grouped_products );
-            delete( data.upsell_ids );
-            delete( data.cross_sell_ids );
-            delete( data.product_url );
-            delete( data.button_text );
-            delete( data.menu_order );
-            delete( data.virtual );
-            delete( data.downloadable );
-            delete( data.status );
-            delete( data.attribute_1_name );
-            delete( data.attribute_1_value );
-            delete( data.attribute_1_visible );
-            delete( data.attribute_1_global );
-            delete( data.attribute_2_name );
-            delete( data.attribute_2_value );
-            delete( data.attribute_2_visible );
-            delete( data.attribute_2_global );
-            delete( data._wpcom_is_markdown );
-            delete( data.download1_name );
-            delete( data.download_1_url );
-            delete( data.download_2_name );
-            delete( data.download_2_url );
-            delete( data.vendor );
+            this.vendorsDataToRemove.forEach( item => {
+                delete(data[item]);
+            } );
 
             return data;
         },
 
         // Formats products data removing vendors data.
         formatProductData( data ) {
-            delete( data.email );
-            delete( data.password );
-            delete( data.store_name );
-            delete( data.social );
-            delete( data.payment );
-            delete( data.phone );
-            delete( data.show_email );
-            delete( data.address );
-            delete( data.location );
-            delete( data.banner );
-            delete( data.icon );
-            delete( data.gravatar );
-            delete( data.show_more_tpab );
-            delete( data.show_ppp );
-            delete( data.enable_tnc );
-            delete( data.store_tnc );
-            delete( data.show_min_order_discount );
-            delete( data.store_seo );
-            delete( data.dokan_store_time );
-            delete( data.enabled );
-            delete( data.trusted );
-
             data.raw_attributes = [
                 {
                     name: data.attribute_1_name,
@@ -290,14 +322,9 @@ export default {
                 },
             ];
 
-            delete( data.attribute_1_name );
-            delete( data.attribute_1_value );
-            delete( data.attribute_1_visible );
-            delete( data.attribute_1_global );
-            delete( data.attribute_2_name );
-            delete( data.attribute_2_value );
-            delete( data.attribute_2_visible );
-            delete( data.attribute_2_global );
+            this.productsDataToRemove.forEach( item => {
+                delete(data[item]);
+            } );
 
             return data;
         },
@@ -329,31 +356,33 @@ export default {
             if ( 'undefined' !== answer && answer.isConfirmed ) {
                 self.loading = true;
 
-                jQuery.post( dokan.ajaxurl, {
-                    'action': 'dokan_dummy_data_clear',
+                dokan.api.delete(`/dummy-data/clear`, {
                     'nonce': dokan.nonce,
-                    },
-                    function ( response ) {
-                        if ( response.success ) {
-                            dokan_sweetalert( '', {
-                                toast: true,
-                                icon: 'success',
-                                title: response.data,
-                                animation: false,
-                                position: 'bottom-right',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: ( toast ) => {
-                                    toast.addEventListener( 'mouseenter', Swal.stopTimer )
-                                    toast.addEventListener( 'mouseleave', Swal.resumeTimer )
-                                }
-                            } );
-
-                            self.resetToImport();
+                })
+                .done((response, status, xhr) => {
+                    dokan_sweetalert( '', {
+                        toast: true,
+                        icon: 'success',
+                        title: response,
+                        animation: false,
+                        position: 'bottom-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: ( toast ) => {
+                            toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
                         }
+                    } );
+
+                    self.resetToImport();
+                })
+                .fail( ( jqXHR ) => {
+                    let message = self.renderApiError( jqXHR );
+                    if ( message ) {
+                        swal.fire( message, '', 'error' );
                     }
-                );
+                });
             }
         },
 

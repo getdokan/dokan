@@ -13,12 +13,16 @@ if ( ! class_exists( 'WC_Product_Importer', false ) ) {
     include_once WC_ABSPATH . 'includes/import/abstract-wc-product-importer.php';
 }
 
+if ( ! function_exists( 'wp_delete_user' ) ) {
+    require_once( ABSPATH.'wp-admin/includes/user.php' );
+}
+
 /**
- * Dokan dummy data importer manager class.
+ * Dokan dummy data importer class.
  *
  * @since DOKAN_SINCE
  */
-class Manager extends \WC_Product_Importer {
+class Importer extends \WC_Product_Importer {
 
     /**
      * Created or existing vendor id
@@ -26,31 +30,6 @@ class Manager extends \WC_Product_Importer {
      * @var int
      */
     private $vendor_id = null;
-
-    /**
-     * Save existing user here for creating dummy data.
-     *
-     * @var array
-     */
-    private $user = [];
-
-    /**
-     * Saves user by slug, of not found save user by login.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param sting $store_name
-     * @param sting $key
-     *
-     * @return void
-     */
-    private function set_user( $store_name, $key ) {
-        if ( 'slug' === $key ) {
-            $this->user[ $key ] = get_user_by( $key, $store_name );
-        } elseif ( 'login' === $key && ! empty( $this->user['slug'] ) ) {
-            $this->user[ $key ] = get_user_by( $key, $store_name );
-        }
-    }
 
     /**
      * Create and return dummy vendor or if exists return the existing vendor
@@ -88,14 +67,13 @@ class Manager extends \WC_Product_Importer {
         $data['enabled']                 = isset( $data['enabled'] ) ? sanitize_text_field( $data['enabled'] ) : '';
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
-        // set user by key
-        $this->set_user( 'slug', $data['store_name'] );
-        $this->set_user( 'login', $data['store_name'] );
+        $existing_user = get_user_by( 'slug', $data['store_name'] );
+        if ( ! $existing_user ) {
+            $existing_user = get_user_by( 'login', $data['store_name'] );
+        }
 
-        if ( $this->user['slug'] ) {
-            $current_vendor = dokan()->vendor->get( $this->user['slug'] );
-        } elseif ( $this->user['login'] ) {
-            $current_vendor = dokan()->vendor->get( $this->user['login'] );
+        if ( $existing_user ) {
+            $current_vendor = dokan()->vendor->get( $existing_user );
         } else {
             $current_vendor = dokan()->vendor->create( $data );
         }
