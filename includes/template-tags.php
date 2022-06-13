@@ -540,7 +540,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             && isset( $nav_menu[ $settings_key ]['sub'] )
             && (
                 array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
-                array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ||
+                ( isset( $active_menu_parts[2] ) && array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ) ||
                 ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) // special case when submenu is payment
             )
     ) {
