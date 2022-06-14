@@ -12,7 +12,7 @@
                 </button>
             </div>
 
-            <div class="dokan-settings-wrap">
+            <div class="dokan-settings-wrap" ref='settingsWrapper'>
                 <div class="nav-tab-wrapper">
                     <div class="nab-section">
                         <div class="search-box">
@@ -157,6 +157,7 @@
                 this.currentTab = section.id;
                 this.requiredFields = [];
 
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
                 if ( typeof( localStorage ) != 'undefined' ) {
                     localStorage.setItem( "activetab", this.currentTab );
                 }
@@ -615,6 +616,10 @@
                         left: 0;
                         top: -1px;
                     }
+                }
+
+                &:last-child {
+                    border-bottom: 0;
                 }
             }
         }
