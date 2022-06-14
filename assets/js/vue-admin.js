@@ -6,75 +6,17 @@ dokanWebpack([0],[
 module.exports = jQuery;
 
 /***/ }),
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(32);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(128)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/components/UpgradeBanner.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75a73b30", Component.options)
-  } else {
-    hotAPI.reload("data-v-75a73b30", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
-/* 4 */,
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(31);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(30)
+  __webpack_require__(31)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -120,6 +62,64 @@ if (false) {(function () {
 
 
 /***/ }),
+/* 3 */,
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(53);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(132);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(131)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/UpgradeBanner.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75a73b30", Component.options)
+  } else {
+    hotAPI.reload("data-v-75a73b30", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 5 */,
 /* 6 */,
 /* 7 */,
 /* 8 */
@@ -222,30 +222,6 @@ if (false) {(function () {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   components: {
@@ -254,8 +230,8 @@ if (false) {(function () {
   props: {
     value: {
       type: String,
-      required: true,
-      default: ''
+      default: '',
+      required: true
     },
     format: {
       type: String,
@@ -274,19 +250,44 @@ if (false) {(function () {
     },
     disableAlpha: {
       type: Boolean,
-      required: false,
-      default: true
+      default: true,
+      required: false
     },
     disableFields: {
       type: Boolean,
-      required: false,
-      default: true
+      default: true,
+      required: false
+    },
+    customData: {
+      type: Object,
+      required: true
+    },
+    itemKey: {
+      type: String,
+      required: true
     }
   },
   data: function data() {
     return {
-      showColorPicker: false
+      isPicked: false,
+      prevColor: '',
+      showColorPicker: false,
+      selectedColor: ''
     };
+  },
+  watch: {
+    customData: {
+      handler: function handler() {
+        this.showColorPicker = this.customData.show_pallete;
+
+        if (!this.showColorPicker) {
+          this.updateColor({
+            hex: this.prevColor
+          });
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     updateColor: function updateColor(colors) {
@@ -294,12 +295,36 @@ if (false) {(function () {
 
       if (colors[this.format]) {
         color = colors[this.format];
+        this.selectedColor = color;
       }
 
       this.$emit('input', color);
+      this.$emit('custom-change', color);
     },
     toggleColorPicker: function toggleColorPicker() {
-      this.showColorPicker = !this.showColorPicker;
+      this.prevColor = this.value;
+      var data = {
+        key: this.itemKey,
+        values: this.customData
+      };
+
+      if (!this.isPicked) {
+        this.updateColor({
+          hex: this.prevColor
+        });
+      }
+
+      this.$emit('toggleColorPicker', data);
+    },
+    setLastColor: function setLastColor(color) {
+      var data = {
+        key: this.itemKey,
+        values: this.customData
+      };
+      this.updateColor({
+        hex: color
+      });
+      this.$emit('toggleColorPicker', data);
     },
     setHexColor: function setHexColor(color) {
       this.updateColor({
@@ -314,9 +339,44 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'Switches',
+  props: {
+    enabled: {
+      type: Boolean,
+      // String, Number, Boolean, Function, Object, Array
+      required: true,
+      default: false
+    },
+    value: {
+      type: [String, Number]
+    }
+  },
+  data: function data() {
+    return {};
+  },
+  methods: {
+    trigger: function trigger(e) {
+      this.$emit('input', e.target.checked, e.target.value);
+    }
+  }
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(23);
 //
@@ -687,41 +747,6 @@ if (false) {(function () {
       var width = dokan.store_banner_dimension.width;
       var height = dokan.store_banner_dimension.height;
       return this.__("Upload banner for your store. Banner size is (".concat(width, "x").concat(height, ") pixels."), 'dokan-lite');
-    }
-  }
-});
-
-/***/ }),
-/* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'Switches',
-  props: {
-    enabled: {
-      type: Boolean,
-      // String, Number, Boolean, Function, Object, Array
-      required: true,
-      default: false
-    },
-    value: {
-      type: [String, Number]
-    }
-  },
-  data: function data() {
-    return {};
-  },
-  methods: {
-    trigger: function trigger(e) {
-      this.$emit('input', e.target.checked, e.target.value);
     }
   }
 });
@@ -1222,7 +1247,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_multiselect__);
 //
@@ -1459,11 +1484,11 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(35);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(32)
+  __webpack_require__(34)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1515,7 +1540,7 @@ if (false) {(function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(36);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1618,17 +1643,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 26 */
+/* 26 */,
+/* 27 */,
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(30);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(27)
+  __webpack_require__(29)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1674,13 +1701,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1696,12 +1723,30 @@ var render = function() {
         "button",
         {
           staticClass: "button color-picker-button",
-          style: { backgroundColor: _vm.value },
           attrs: { type: "button" },
           on: { click: _vm.toggleColorPicker }
         },
-        [_c("span", [_vm._v(_vm._s(_vm.__("Select Color", "dokan-lite")))])]
+        [
+          _c("div", {
+            staticClass: "color",
+            style: { backgroundColor: _vm.value }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "dashicons dashicons-arrow-down-alt2" })
+        ]
       ),
+      _vm._v(" "),
+      _vm.showColorPicker
+        ? _c("sketch", {
+            attrs: {
+              value: _vm.value,
+              "preset-colors": _vm.presetColors,
+              "disable-alpha": _vm.disableAlpha,
+              "disable-fields": _vm.disableFields
+            },
+            on: { input: _vm.updateColor }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _vm.showColorPicker && _vm.format === "hex"
         ? _c("input", {
@@ -1718,42 +1763,22 @@ var render = function() {
       _vm._v(" "),
       _vm.showColorPicker
         ? _c("div", { staticClass: "button-group" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button button-small",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.updateColor({})
-                  }
+            _c("button", {
+              staticClass: "button button-small dashicons dashicons-no-alt",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.setLastColor(_vm.prevColor)
                 }
-              },
-              [_vm._v(_vm._s(_vm.__("Clear", "dokan-lite")))]
-            ),
+              }
+            }),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "button button-small",
-                attrs: { type: "button" },
-                on: { click: _vm.toggleColorPicker }
-              },
-              [_vm._v(_vm._s(_vm.__("Close", "dokan-lite")))]
-            )
+            _c("button", {
+              staticClass: "button button-small dashicons dashicons-saved",
+              attrs: { type: "button" },
+              on: { click: _vm.toggleColorPicker }
+            })
           ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showColorPicker
-        ? _c("sketch", {
-            attrs: {
-              value: _vm.value,
-              "preset-colors": _vm.presetColors,
-              "disable-alpha": _vm.disableAlpha,
-              "disable-fields": _vm.disableFields
-            },
-            on: { input: _vm.updateColor }
-          })
         : _vm._e()
     ],
     1
@@ -1771,13 +1796,50 @@ if (false) {
 }
 
 /***/ }),
-/* 29 */
+/* 31 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(10);
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("label", { staticClass: "switch tips" }, [
+    _c("input", {
+      staticClass: "toogle-checkbox",
+      attrs: { type: "checkbox" },
+      domProps: { checked: _vm.enabled, value: _vm.value },
+      on: { change: _vm.trigger }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "slider round" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
+  }
+}
+
+/***/ }),
+/* 33 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(37);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1823,50 +1885,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 31 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("label", { staticClass: "switch tips" }, [
-    _c("input", {
-      staticClass: "toogle-checkbox",
-      attrs: { type: "checkbox" },
-      domProps: { checked: _vm.enabled, value: _vm.value },
-      on: { change: _vm.trigger }
-    }),
-    _vm._v(" "),
-    _c("span", { staticClass: "slider round" })
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
-  }
-}
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1911,7 +1936,7 @@ if (false) {
 }
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1984,7 +2009,7 @@ if (false) {
 }
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2481,17 +2506,17 @@ if (false) {
 }
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(40);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(37)
+  __webpack_require__(39)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2537,13 +2562,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2818,17 +2843,17 @@ if (false) {
 }
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(43);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(40)
+  __webpack_require__(42)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2874,13 +2899,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3471,14 +3496,14 @@ if (false) {
 }
 
 /***/ }),
-/* 42 */,
-/* 43 */,
 /* 44 */,
 /* 45 */,
 /* 46 */,
 /* 47 */,
 /* 48 */,
-/* 49 */
+/* 49 */,
+/* 50 */,
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3494,12 +3519,12 @@ if (false) {
 });
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -3708,7 +3733,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3875,13 +3900,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -4457,14 +4482,14 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(144);
 //
 //
 //
@@ -5341,17 +5366,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(57);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(140);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(136)
+  __webpack_require__(139)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5397,7 +5422,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5436,11 +5461,11 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -5496,13 +5521,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -5766,21 +5791,31 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_Fields_vue__ = __webpack_require__(152);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_SettingsBanner_vue__ = __webpack_require__(181);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_Fields_vue__ = __webpack_require__(155);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_SettingsBanner_vue__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_jquery__);
 
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5921,20 +5956,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       var activetab = '';
       this.currentTab = section.id;
       this.requiredFields = [];
+      this.$refs.settingsWrapper.scrollIntoView({
+        behavior: 'smooth'
+      });
 
       if (typeof localStorage != 'undefined') {
         localStorage.setItem("activetab", this.currentTab);
       }
-    },
-    showSectionTitle: function showSectionTitle(fields) {
-      return !_.findWhere(fields, {
-        type: 'sub_section'
-      });
-    },
-    sectionTitle: function sectionTitle(index) {
-      return _.findWhere(this.settingSections, {
-        id: index
-      }).title;
     },
     fetchSettingValues: function fetchSettingValues() {
       var self = this,
@@ -5958,7 +5986,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                   self.settingValues[section][field] = self.settingFields[section][field].default;
                 }
               } else {
-                self.settingValues[section][field] = resp.data[section][field];
+                self.settingValues[section] = resp.data[section];
               }
             });
           });
@@ -6300,17 +6328,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 59 */,
-/* 60 */,
 /* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(154);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(157);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_Switches_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SocialFields_vue__ = __webpack_require__(183);
 
 
 
@@ -6862,187 +6890,54 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
+
+
+var Mapbox = dokan_get_lib('Mapbox');
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
-var Mapbox = dokan_get_lib('Mapbox');
 var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Fields',
   components: {
-    colorPicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__["a" /* default */],
+    Mapbox: Mapbox,
+    Switches: __WEBPACK_IMPORTED_MODULE_3_admin_components_Switches_vue__["a" /* default */],
     TextEditor: TextEditor,
     GoogleMaps: GoogleMaps,
-    Mapbox: Mapbox,
+    colorPicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__["a" /* default */],
+    SocialFields: __WEBPACK_IMPORTED_MODULE_4__SocialFields_vue__["a" /* default */],
     RefreshSettingOptions: RefreshSettingOptions
   },
   props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
   data: function data() {
     return {
-      repeatableItem: {},
       hideMap: false,
-      disbursementSettings: {
-        quarterly: {
-          second: '',
-          third: '',
-          fourth: ''
-        },
-        biweekly: {
-          second: ''
-        },
-        visible: []
-      }
+      checked: this.isChecked(),
+      expandSocials: false,
+      repeatableItem: {},
+      repeatableTime: [],
+      dokanAssetsUrl: dokan.urls.assetsUrl,
+      singleColorPicker: {
+        default: this.fieldData.default,
+        label: '',
+        show_pallete: false
+      },
+      yourStringTimeValue: '',
+      customFieldComponents: dokan.hooks.applyFilters('getDokanCustomFieldComponents', [])
     };
   },
-  mounted: function mounted() {
-    this.setDisbursementQuarterlySettings();
-    this.setDisbursementBiweeklySettings();
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('hasError', function (key) {
+      _this.hasValidationError(key);
+    });
+    this.$root.$on('getError', function (key) {
+      _this.getValidationErrorMessage(key);
+    });
   },
   computed: {
-    shouldShow: function shouldShow() {
+    shouldShow: function shouldShow(e) {
       var shouldShow = true;
 
       if (this.fieldData.show_if) {
@@ -7104,7 +6999,7 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 
             case 'equal':
             default:
-              if (dependencyValue != value) {
+              if (dependencyValue !== value) {
                 shouldShow = false;
               }
 
@@ -7133,10 +7028,10 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
       }), this.fieldValue[this.fieldData.name]);
 
       location = {
-        latitude: parseFloat(location.latitude),
-        longitude: parseFloat(location.longitude),
+        zoom: parseInt(location.zoom),
         address: "".concat(location.address),
-        zoom: parseInt(location.zoom)
+        latitude: parseFloat(location.latitude),
+        longitude: parseFloat(location.longitude)
       };
       return location;
     },
@@ -7159,6 +7054,9 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
   methods: {
     containCommonFields: function containCommonFields(type) {
       return _.contains([undefined, 'text', 'email', 'url', 'phone', 'time'], type);
+    },
+    setCheckedValue: function setCheckedValue(checked, value) {
+      this.fieldValue[this.fieldData.name][value] = checked ? value : '';
     },
     addItem: function addItem(type, name) {
       this.fieldValue[name] = this.fieldValue[name] || [];
@@ -7197,6 +7095,44 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     onUpdateMap: function onUpdateMap(payload) {
       this.fieldValue[this.fieldData.name] = _objectSpread(_objectSpread({}, this.mapLocation), payload);
     },
+    isSocialChecked: function isSocialChecked() {
+      return !this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
+    },
+    thisSomeEvent: function thisSomeEvent(value) {
+      console.log('hello priting...', value);
+    },
+    isSwitchOptionChecked: function isSwitchOptionChecked(optionKey) {
+      if ('multicheck' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] && this.fieldValue[this.fieldData.name][optionKey] === optionKey;
+      } else if ('radio' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] && this.fieldValue[this.fieldData.name] === optionKey;
+      }
+
+      return false;
+    },
+    expandSocial: function expandSocial() {
+      this.expandSocials = !this.expandSocials;
+    },
+    getSocialValue: function getSocialValue(optionValue) {
+      this.fieldValue[optionValue.name] = this.fieldValue[optionValue.name] ? this.fieldValue[optionValue.name] : '';
+    },
+    isChecked: function isChecked() {
+      return !this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
+    },
+    onToggleSwitch: function onToggleSwitch(status, key) {
+      if ('isChecked' !== key) {
+        return;
+      }
+
+      if (status) {
+        this.checked = 'on';
+        this.fieldValue[this.fieldData.name] = 'on';
+        return;
+      }
+
+      this.checked = 'off';
+      this.fieldValue[this.fieldData.name] = 'off';
+    },
     hasError: function hasError(key) {
       var errors = this.errors;
 
@@ -7231,44 +7167,19 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
       });
       return errorMessage;
     },
-    setDisbursementQuarterlySettings: function setDisbursementQuarterlySettings() {
-      if (!('quarterly_schedule' in this.fieldValue)) {
+    toggleColorPicker: function toggleColorPicker(data) {
+      if (this.fieldData.name === data.key) {
+        this.singleColorPicker.show_pallete = !data.values.show_pallete;
+      } else {
+        this.singleColorPicker.show_pallete = false;
+      }
+    },
+    setCustomColor: function setCustomColor(value, key) {
+      if (!key) {
         return;
       }
 
-      if (this.fieldValue['quarterly_schedule']['month'] === 'january') {
-        this.disbursementSettings.quarterly.second = 'april';
-        this.disbursementSettings.quarterly.third = 'july';
-        this.disbursementSettings.quarterly.fourth = 'october';
-      } else if (this.fieldValue['quarterly_schedule']['month'] === 'february') {
-        this.disbursementSettings.quarterly.second = 'may';
-        this.disbursementSettings.quarterly.third = 'august';
-        this.disbursementSettings.quarterly.fourth = 'november';
-      } else if (this.fieldValue['quarterly_schedule']['month'] === 'march') {
-        this.disbursementSettings.quarterly.second = 'june';
-        this.disbursementSettings.quarterly.third = 'september';
-        this.disbursementSettings.quarterly.fourth = 'december';
-      }
-    },
-    setDisbursementBiweeklySettings: function setDisbursementBiweeklySettings() {
-      if (!('biweekly_schedule' in this.fieldValue)) {
-        return;
-      }
-
-      if (this.fieldValue['biweekly_schedule']['week'] === '1') {
-        this.disbursementSettings.biweekly.second = '3';
-      } else if (this.fieldValue['biweekly_schedule']['week'] === '2') {
-        this.disbursementSettings.biweekly.second = '4';
-      }
-    },
-    showSettingsField: function showSettingsField(fieldKey) {
-      return !this.hideWithdrawOption() && this.fieldValue['disbursement_schedule'][fieldKey] !== '' && this.showDisbursementType('schedule');
-    },
-    showDisbursementType: function showDisbursementType(fieldKey) {
-      return this.fieldValue['disbursement'][fieldKey] !== '';
-    },
-    hideWithdrawOption: function hideWithdrawOption() {
-      return 'hide_withdraw_option' in this.fieldValue && this.fieldValue['hide_withdraw_option'] === 'on';
+      this.fieldData[key] = value;
     }
   }
 });
@@ -7283,6 +7194,76 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 /* 68 */,
 /* 69 */,
 /* 70 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  props: {
+    fieldData: {
+      type: Object,
+      required: true
+    },
+    fieldValue: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    isSocialOptionChecked: function isSocialOptionChecked(optionKey) {
+      if ('radio' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
+      }
+
+      return false;
+    }
+  }
+});
+
+/***/ }),
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7315,12 +7296,12 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 });
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(187);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(192);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -7685,13 +7666,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(41);
 //
 //
 //
@@ -7916,11 +7897,328 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_papaparse__);
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'DummyData',
+  data: function data() {
+    return {
+      errorMsg: '',
+      csvFileUrl: dokan.urls.dummy_data,
+      progress: 0,
+      dummyData: [],
+      loading: true,
+      allVendors: [],
+      allProducts: [],
+      done: false,
+      statusLoader: true,
+      vendorsDataToRemove: ['sku', 'status', 'catalog_visibility', 'short_description', 'date_on_sale_from', 'date_on_sale_to', 'tax_status', 'tax_class', 'stock_status', 'manage_stock', 'stock_quantity', 'children', 'backorders', 'sold_individually', 'reviews_allowed', 'purchase_note', 'sale_price', 'regular_price', 'category_ids', 'tag_ids', 'shipping_class_id', 'raw_image_id', 'raw_gallery_image_ids', 'download_limit', 'download_expiry', 'parent_id', 'grouped_products', 'upsell_ids', 'cross_sell_ids', 'product_url', 'button_text', 'menu_order', 'virtual', 'downloadable', 'status', 'attribute_1_name', 'attribute_1_value', 'attribute_1_visible', 'attribute_1_global', 'attribute_2_name', 'attribute_2_value', 'attribute_2_visible', 'attribute_2_global', '_wpcom_is_markdown', 'download1_name', 'download_1_url', 'download_2_name', 'download_2_url', 'vendor'],
+      productsDataToRemove: ['email', 'password', 'store_name', 'social', 'payment', 'phone', 'show_email', 'address', 'location', 'banner', 'icon', 'gravatar', 'show_more_tpab', 'show_ppp', 'enable_tnc', 'store_tnc', 'show_min_order_discount', 'store_seo', 'dokan_store_time', 'enabled', 'trusted', 'attribute_1_name', 'attribute_1_value', 'attribute_1_visible', 'attribute_1_global', 'attribute_2_name', 'attribute_2_value', 'attribute_2_visible', 'attribute_2_global']
+    };
+  },
+  created: function created() {
+    this.loadImportStatus();
+    this.loadCsvFile();
+  },
+  methods: {
+    renderApiError: function renderApiError(jqXHR) {
+      var message = '';
+
+      if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+        message = jqXHR.responseJSON.message;
+      } else if (jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message) {
+        message = jqXHR.responseJSON.data.message;
+      } else if (jqXHR.responseText) {
+        message = jqXHR.responseText;
+      }
+
+      return message;
+    },
+    // Loads and sets if import already successfully.
+    loadImportStatus: function loadImportStatus() {
+      this.statusLoader = true;
+      var self = this;
+      dokan.api.get("/dummy-data/status", {
+        'nonce': dokan.nonce
+      }).done(function (response, status, xhr) {
+        if (response.import_status == 'yes') {
+          self.done = true;
+        }
+
+        self.statusLoader = false;
+      }).fail(function (jqXHR) {
+        var message = self.renderApiError(jqXHR);
+
+        if (message) {
+          swal.fire(message, '', 'error');
+        }
+      });
+    },
+    // Resets data states
+    resetDataState: function resetDataState() {
+      this.dummyData = [];
+      this.allVendors = [];
+      this.allProducts = [];
+    },
+    // Loads csv file and parse csv data.
+    loadCsvFile: function loadCsvFile() {
+      var self = this;
+      self.loading = true;
+      self.resetDataState();
+      jQuery.ajax({
+        type: 'GET',
+        url: this.csvFileUrl,
+        data: {},
+        success: function success(data) {
+          Object(__WEBPACK_IMPORTED_MODULE_2_papaparse__["parse"])(data, {
+            header: true,
+            complete: function complete(results) {
+              self.loading = false;
+              self.dummyData = results.data;
+              self.loadCsvData();
+            }
+          });
+          self.loading = false;
+        }
+      });
+    },
+    // Lodes and sates vendor and products data.
+    loadCsvData: function loadCsvData() {
+      var _this = this;
+
+      this.dummyData.forEach(function (item) {
+        if ('vendor' === item.type) {
+          _this.allVendors.push(_this.formatVendorData(item));
+        } else {
+          _this.allProducts.push(_this.formatProductData(item));
+        }
+      });
+    },
+    // Request ajax to import data to database.
+    requestToImport: function requestToImport(data) {
+      var self = this;
+      dokan.api.post("/dummy-data/import", data).done(function (response, status, xhr) {
+        self.handleImport(response.vendor_index);
+        self.updateProgress(response.vendor_index);
+      }).fail(function (jqXHR) {
+        var message = self.renderApiError(jqXHR);
+
+        if (message) {
+          swal.fire(message, '', 'error');
+        }
+      });
+    },
+    // Run importer button handler.
+    importBtnHandler: function importBtnHandler() {
+      this.handleImport();
+    },
+    // Updates progress bar progress.
+    updateProgress: function updateProgress(numVendorSucceed) {
+      this.progress = 100 * numVendorSucceed / this.allVendors.length;
+    },
+    // Requrests to server.
+    handleImport: function handleImport() {
+      var vendor_index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var vendorData = this.allVendors[vendor_index];
+
+      if (!vendorData || undefined == vendorData) {
+        this.loading = false;
+        this.done = true;
+        return;
+      }
+
+      var data = {
+        nonce: dokan.nonce,
+        vendor_data: vendorData,
+        vendor_products: this.getVendorProducts(vendorData.id),
+        vendor_index: vendor_index,
+        total_vendors: this.allVendors.length
+      };
+      this.loading = true;
+      this.requestToImport(data);
+    },
+    // Formats data for vendor removing products data
+    formatVendorData: function formatVendorData(data) {
+      this.vendorsDataToRemove.forEach(function (item) {
+        delete data[item];
+      });
+      return data;
+    },
+    // Formats products data removing vendors data.
+    formatProductData: function formatProductData(data) {
+      data.raw_attributes = [{
+        name: data.attribute_1_name,
+        value: data.attribute_1_value.split(','),
+        visible: data.attribute_1_visible,
+        taxonomy: data.attribute_1_global
+      }, {
+        name: data.attribute_2_name,
+        value: data.attribute_2_value.split(','),
+        visible: data.attribute_2_visible,
+        taxonomy: data.attribute_2_global
+      }];
+      this.productsDataToRemove.forEach(function (item) {
+        delete data[item];
+      });
+      return data;
+    },
+    // Returns single vendors products from all products array.
+    getVendorProducts: function getVendorProducts(vendorId) {
+      return this.allProducts.filter(function (item) {
+        return item.vendor == vendorId;
+      });
+    },
+    // Reset import state.
+    resetToImport: function resetToImport() {
+      this.errorMsg = '';
+      this.progress = 0;
+      this.loading = false;
+      this.done = false;
+    },
+    // Request to server to clear dummy data from this site.
+    clearAllDummyData: function clearAllDummyData() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var self, answer;
+        return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                self = _this2;
+                _context.next = 3;
+                return dokan_sweetalert("Are you sure? You want to remove all dummy data!", {
+                  action: 'confirm',
+                  icon: 'warning'
+                });
+
+              case 3:
+                answer = _context.sent;
+
+                if ('undefined' !== answer && answer.isConfirmed) {
+                  self.loading = true;
+                  dokan.api.delete("/dummy-data/clear", {
+                    'nonce': dokan.nonce
+                  }).done(function (response, status, xhr) {
+                    dokan_sweetalert('', {
+                      toast: true,
+                      icon: 'success',
+                      title: response.message,
+                      animation: false,
+                      position: 'bottom-right',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      timerProgressBar: true,
+                      didOpen: function didOpen(toast) {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                      }
+                    });
+                    self.resetToImport();
+                  }).fail(function (jqXHR) {
+                    var message = self.renderApiError(jqXHR);
+
+                    if (message) {
+                      swal.fire(message, '', 'error');
+                    }
+                  });
+                }
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    // Returns woocommerce admin products list page url.
+    getProductsPageUrl: function getProductsPageUrl() {
+      return "".concat(dokan.urls.adminRoot, "edit.php?post_type=product");
+    }
+  }
+});
+
+/***/ }),
+/* 75 */,
+/* 76 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(56);
 //
 //
 //
@@ -8063,11 +8361,11 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 74 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(196);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(204);
 //
 //
 //
@@ -8300,7 +8598,7 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 75 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8423,7 +8721,7 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 76 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8860,7 +9158,7 @@ var swal = Swal.mixin({
 });
 
 /***/ }),
-/* 77 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9274,9 +9572,6 @@ var swal = Swal.mixin({
 });
 
 /***/ }),
-/* 78 */,
-/* 79 */,
-/* 80 */,
 /* 81 */,
 /* 82 */,
 /* 83 */,
@@ -9313,14 +9608,17 @@ var swal = Swal.mixin({
 /* 114 */,
 /* 115 */,
 /* 116 */,
-/* 117 */
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(118);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(121);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(121);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(214);
 
 
 
@@ -9356,17 +9654,17 @@ new Vue({
 Object(__WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__["a" /* default */])('dokan');
 
 /***/ }),
-/* 118 */
+/* 121 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(51);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(123);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(119)
+  __webpack_require__(122)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9412,13 +9710,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 119 */
+/* 122 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 120 */
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9449,23 +9747,25 @@ if (false) {
 }
 
 /***/ }),
-/* 121 */
+/* 124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(125);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(123);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(131);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(134);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(143);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__ = __webpack_require__(146);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__ = __webpack_require__(149);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__ = __webpack_require__(185);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__ = __webpack_require__(191);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__ = __webpack_require__(194);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_pages_ReverseWithdrawal_vue__ = __webpack_require__(200);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawalTransactions_vue__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__ = __webpack_require__(190);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_DummyData_vue__ = __webpack_require__(196);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_pages_VendorCapabilities_vue__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_pages_ProModules_vue__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawal_vue__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_pages_ReverseWithdrawalTransactions_vue__ = __webpack_require__(211);
+
 
 
 
@@ -9488,10 +9788,11 @@ dokan_add_route(__WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__["a" /* def
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_10_admin_pages_ReverseWithdrawal_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawalTransactions_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_9_admin_pages_VendorCapabilities_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_10_admin_pages_ProModules_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_DummyData_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawal_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_12_admin_pages_ReverseWithdrawalTransactions_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 
 if (!dokan.hasPro || VersionCompare(dokan.proVersion, '2.9.14', '>')) {
   dokan_add_route(__WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__["a" /* default */]);
@@ -9529,18 +9830,18 @@ parseRouteComponent(dokan.routes);
 }));
 
 /***/ }),
-/* 122 */,
-/* 123 */
+/* 125 */,
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(52);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(133);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(124)
+  __webpack_require__(127)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9586,22 +9887,22 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 124 */
+/* 127 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 125 */,
-/* 126 */,
-/* 127 */,
-/* 128 */
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 129 */
+/* 132 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10444,7 +10745,7 @@ if (false) {
 }
 
 /***/ }),
-/* 130 */
+/* 133 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10941,17 +11242,17 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 134 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(54);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(136);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(132)
+  __webpack_require__(135)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10997,13 +11298,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 132 */
+/* 135 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 133 */
+/* 136 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11482,17 +11783,17 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(55);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(145);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(135)
+  __webpack_require__(138)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11538,19 +11839,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 135 */
+/* 138 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 136 */
+/* 139 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 137 */
+/* 140 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11640,11 +11941,11 @@ if (false) {
 }
 
 /***/ }),
-/* 138 */,
-/* 139 */,
-/* 140 */,
 /* 141 */,
-/* 142 */
+/* 142 */,
+/* 143 */,
+/* 144 */,
+/* 145 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12233,17 +12534,17 @@ if (false) {
 }
 
 /***/ }),
-/* 143 */
+/* 146 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(58);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(145);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(148);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(144)
+  __webpack_require__(147)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12289,13 +12590,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 144 */
+/* 147 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 145 */
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12368,17 +12669,17 @@ if (false) {
 }
 
 /***/ }),
-/* 146 */
+/* 149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__ = __webpack_require__(59);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__ = __webpack_require__(148);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__ = __webpack_require__(151);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(147)
+  __webpack_require__(150)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12424,13 +12725,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 147 */
+/* 150 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 148 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12925,17 +13226,17 @@ if (false) {
 }
 
 /***/ }),
-/* 149 */
+/* 152 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(60);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(189);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(150)
+  __webpack_require__(153)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -12981,24 +13282,24 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 150 */
+/* 153 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 151 */,
-/* 152 */
+/* 154 */,
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(61);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(185);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(153)
+  __webpack_require__(156)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -13044,15 +13345,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 153 */
+/* 156 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 154 */,
-/* 155 */,
-/* 156 */,
 /* 157 */,
 /* 158 */,
 /* 159 */,
@@ -13076,7 +13374,62 @@ if (false) {(function () {
 /* 177 */,
 /* 178 */,
 /* 179 */,
-/* 180 */
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SocialFields_vue__ = __webpack_require__(70);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d90d6894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SocialFields_vue__ = __webpack_require__(184);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SocialFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d90d6894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SocialFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/SocialFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d90d6894", Component.options)
+  } else {
+    hotAPI.reload("data-v-d90d6894", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13084,791 +13437,188 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.shouldShow
-    ? _c(
-        "tr",
-        { class: [_vm.id, "dokan-settings-field-type-" + _vm.fieldData.type] },
-        [
-          "sub_section" === _vm.fieldData.type
-            ? [
-                _c(
-                  "th",
+  return _c("fieldset", [
+    _c("div", { staticClass: "html_contents" }, [
+      _c("h3", { staticClass: "field_heading", attrs: { scope: "row" } }, [
+        _vm._v(
+          "\n            " + _vm._s(_vm.fieldData.label) + "\n            "
+        ),
+        _vm.fieldData.tooltip
+          ? _c("span", [
+              _c("i", {
+                directives: [
                   {
-                    staticClass: "dokan-settings-sub-section-title",
-                    attrs: { colspan: "3" }
-                  },
-                  [_c("label", [_vm._v(_vm._s(_vm.fieldData.label))])]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.containCommonFields(_vm.fieldData.type)
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    (_vm.fieldData.type || "text") === "checkbox"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: "checkbox"
-                          },
-                          domProps: {
-                            checked: Array.isArray(
-                              _vm.fieldValue[_vm.fieldData.name]
-                            )
-                              ? _vm._i(
-                                  _vm.fieldValue[_vm.fieldData.name],
-                                  null
-                                ) > -1
-                              : _vm.fieldValue[_vm.fieldData.name]
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.fieldValue[_vm.fieldData.name],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $$c
-                                )
-                              }
-                            }
-                          }
-                        })
-                      : (_vm.fieldData.type || "text") === "radio"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: "radio"
-                          },
-                          domProps: {
-                            checked: _vm._q(
-                              _vm.fieldValue[_vm.fieldData.name],
-                              null
-                            )
-                          },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(
-                                _vm.fieldValue,
-                                _vm.fieldData.name,
-                                null
-                              )
-                            }
-                          }
-                        })
-                      : _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: _vm.fieldData.type || "text"
-                          },
-                          domProps: {
-                            value: _vm.fieldValue[_vm.fieldData.name]
-                          },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.fieldValue,
-                                _vm.fieldData.name,
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n              " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "number" === _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      class: [
-                        {
-                          "dokan-input-validation-error": _vm.hasValidationError(
-                            _vm.fieldData.name
-                          )
-                        },
-                        _vm.fieldData.class
-                      ],
-                      attrs: {
-                        type: "number",
-                        min: _vm.fieldData.min,
-                        max: _vm.fieldData.max,
-                        step: _vm.fieldData.step,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n              " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "price" == _vm.fieldData.type &&
-          _vm.allSettingsValues.dokan_selling &&
-          "combine" !== _vm.allSettingsValues.dokan_selling.commission_type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      class: {
-                        wc_input_decimal:
-                          _vm.allSettingsValues.dokan_selling.commission_type ==
-                          "percentage",
-                        wc_input_price:
-                          _vm.allSettingsValues.dokan_selling.commission_type ==
-                          "flat"
-                      },
-                      attrs: {
-                        type: "text",
-                        min: _vm.fieldData.min,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n              " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "combine" == _vm.fieldData.type &&
-          _vm.haveCondition(_vm.fieldData) &&
-          _vm.fieldData.condition.type == "show" &&
-          _vm.checkConditionLogic(_vm.fieldData, _vm.fieldValue)
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data combine-tips-style" }),
-                _vm._v(" "),
-                _c("td", { staticClass: "percent_fee" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value:
-                          _vm.fieldValue[_vm.fieldData.fields.percent_fee.name],
-                        expression:
-                          "fieldValue[fieldData.fields.percent_fee.name]"
-                      }
-                    ],
-                    staticClass: "wc_input_decimal regular-text",
-                    attrs: {
-                      type: "text",
-                      id:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.name +
-                        "]" +
-                        "[" +
-                        "percent_fee" +
-                        "]",
-                      name:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.fields.percent_fee.name +
-                        "]"
-                    },
-                    domProps: {
-                      value:
-                        _vm.fieldValue[_vm.fieldData.fields.percent_fee.name]
-                    },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.fields.percent_fee.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v("\n            " + _vm._s("%") + "\n        ")
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "fixed_fee" }, [
-                  _vm._v("\n            " + _vm._s("+") + "\n            "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value:
-                          _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name],
-                        expression:
-                          "fieldValue[fieldData.fields.fixed_fee.name]"
-                      }
-                    ],
-                    staticClass: "wc_input_price regular-text",
-                    attrs: {
-                      type: "text",
-                      id:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.name +
-                        "]" +
-                        "[" +
-                        "fixed_fee" +
-                        "]",
-                      name:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.fields.fixed_fee.name +
-                        "]"
-                    },
-                    domProps: {
-                      value: _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name]
-                    },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.fields.fixed_fee.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm.hasError(_vm.fieldData.fields.percent_fee.name) &&
-                _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.__(
-                              "Both percentage and fixed fee is required.",
-                              "dokan-lite"
-                            )
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.getError(_vm.fieldData.fields.percent_fee.label)
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.getError(_vm.fieldData.fields.fixed_fee.label)
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("p", {
-                  staticClass: "description",
-                  domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    name: "tooltip",
+                    rawName: "v-tooltip",
+                    value: _vm.fieldData.tooltip,
+                    expression: "fieldData.tooltip"
+                  }
+                ],
+                staticClass: "dashicons dashicons-editor-help tips",
+                attrs: { title: _vm.fieldData.tooltip }
+              })
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("p", {
+        staticClass: "field_desc",
+        domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+      })
+    ]),
+    _vm._v(" "),
+    _vm.fieldData.url || _vm.fieldData.type !== "html"
+      ? _c(
+          "div",
+          {
+            staticClass: "fields",
+            class: [_vm.fieldData.type === "radio" ? "radio_fields" : ""]
+          },
+          [
+            _vm.fieldData.url
+              ? _c("input", {
+                  staticClass: "regular-text",
+                  attrs: { disabled: "", type: "text" },
+                  domProps: { value: _vm.fieldData.url }
                 })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "textarea" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "checkbox" && _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text",
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.fieldValue[_vm.fieldData.name])
+                      ? _vm._i(_vm.fieldValue[_vm.fieldData.name], null) > -1
+                      : _vm.fieldValue[_vm.fieldData.name]
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.fieldValue[_vm.fieldData.name],
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.fieldValue,
+                              _vm.fieldData.name,
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.fieldValue,
+                              _vm.fieldData.name,
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$c)
+                      }
+                    }
+                  }
+                })
+              : _vm.fieldData.type === "radio" && _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text",
+                  attrs: { type: "radio" },
+                  domProps: {
+                    checked: _vm._q(_vm.fieldValue[_vm.fieldData.name], null)
+                  },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.fieldValue, _vm.fieldData.name, null)
+                    }
+                  }
+                })
+              : _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text",
+                  attrs: { type: _vm.fieldData.type },
+                  domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.fieldValue,
+                        _vm.fieldData.name,
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "textarea"
+              ? _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.fieldValue,
+                        _vm.fieldData.name,
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "radio"
+              ? _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                  return _c(
                     "label",
                     {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
+                      key: optionKey,
+                      class: _vm.isSocialOptionChecked(optionKey)
+                        ? "checked"
                         : ""
-                    ]
-                  },
-                  [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      attrs: {
-                        type: "textarea",
-                        rows: _vm.fieldData.rows,
-                        cols: _vm.fieldData.cols,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "checkbox" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
                     },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("fieldset", [
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                          }
-                        },
-                        [
-                          _c("input", {
+                    [
+                      _c("span", { staticClass: "dashicons dashicons-yes" }),
+                      _vm._v(" "),
+                      _vm.fieldData.type === "checkbox"
+                        ? _c("input", {
                             directives: [
                               {
                                 name: "model",
@@ -13877,36 +13627,26 @@ var render = function() {
                                 expression: "fieldValue[fieldData.name]"
                               }
                             ],
-                            staticClass: "checkbox",
-                            attrs: {
-                              type: "checkbox",
-                              id:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              "true-value": "on",
-                              "false-value": "off"
-                            },
+                            staticClass: "radio",
+                            attrs: { name: optionKey, type: "checkbox" },
                             domProps: {
+                              value: optionKey,
                               checked: Array.isArray(
                                 _vm.fieldValue[_vm.fieldData.name]
                               )
                                 ? _vm._i(
                                     _vm.fieldValue[_vm.fieldData.name],
-                                    null
+                                    optionKey
                                   ) > -1
-                                : _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    "on"
-                                  )
+                                : _vm.fieldValue[_vm.fieldData.name]
                             },
                             on: {
                               change: function($event) {
                                 var $$a = _vm.fieldValue[_vm.fieldData.name],
                                   $$el = $event.target,
-                                  $$c = $$el.checked ? "on" : "off"
+                                  $$c = $$el.checked ? true : false
                                 if (Array.isArray($$a)) {
-                                  var $$v = null,
+                                  var $$v = optionKey,
                                     $$i = _vm._i($$a, $$v)
                                   if ($$el.checked) {
                                     $$i < 0 &&
@@ -13934,70 +13674,131 @@ var render = function() {
                                 }
                               }
                             }
-                          }),
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(_vm.fieldData.desc) +
-                              "\n                "
-                          )
-                        ]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
+                          })
+                        : _vm.fieldData.type === "radio"
+                        ? _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "radio",
+                            attrs: { name: optionKey, type: "radio" },
+                            domProps: {
+                              value: optionKey,
+                              checked: _vm._q(
+                                _vm.fieldValue[_vm.fieldData.name],
+                                optionKey
+                              )
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  optionKey
                                 )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e()
-                  ]
-                )
+                              }
+                            }
+                          })
+                        : _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "radio",
+                            attrs: {
+                              name: optionKey,
+                              type: _vm.fieldData.type
+                            },
+                            domProps: {
+                              value: optionKey,
+                              value: _vm.fieldValue[_vm.fieldData.name]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(optionVal) +
+                          "\n            "
+                      )
+                    ]
+                  )
+                })
+              : _vm._e()
+          ],
+          2
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d90d6894", esExports)
+  }
+}
+
+/***/ }),
+/* 185 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.shouldShow
+    ? _c(
+        "div",
+        { class: [_vm.id, "dokan-settings-field-type-" + _vm.fieldData.type] },
+        [
+          "sub_section" === _vm.fieldData.type
+            ? [
+                _c("div", { staticClass: "dokan-settings-sub-section" }, [
+                  _c("h3", { staticClass: "sub-section-title" }, [
+                    _vm._v(_vm._s(_vm.fieldData.label))
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "sub-section-description" }, [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(_vm.fieldData.description) +
+                        "\n            "
+                    )
+                  ])
+                ])
               ]
             : _vm._e(),
           _vm._v(" "),
-          "multicheck" == _vm.fieldData.type
+          _vm.containCommonFields(_vm.fieldData.type)
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -14005,136 +13806,231 @@ var render = function() {
                     ]
                   },
                   [
-                    _c(
-                      "fieldset",
-                      [
-                        _vm._l(_vm.fieldData.options, function(
-                          optionVal,
-                          optionKey
-                        ) {
-                          return [
-                            _c(
-                              "label",
-                              {
-                                attrs: {
-                                  for:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]"
-                                }
-                              },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      expression:
-                                        "fieldValue[fieldData.name][optionKey]"
-                                    }
-                                  ],
-                                  staticClass: "checkbox",
-                                  attrs: {
-                                    type: "checkbox",
-                                    id:
-                                      _vm.sectionId +
-                                      "[" +
-                                      _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    name:
-                                      _vm.sectionId +
-                                      "[" +
-                                      _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    "true-value": optionKey,
-                                    "false-value": ""
-                                  },
-                                  domProps: {
-                                    checked: Array.isArray(
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ]
-                                    )
-                                      ? _vm._i(
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                          null
-                                        ) > -1
-                                      : _vm._q(
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                          optionKey
-                                        )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a =
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? optionKey : ""
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            _vm.$set(
-                                              _vm.fieldValue[
-                                                _vm.fieldData.name
-                                              ],
-                                              optionKey,
-                                              $$a.concat([$$v])
-                                            )
-                                        } else {
-                                          $$i > -1 &&
-                                            _vm.$set(
-                                              _vm.fieldValue[
-                                                _vm.fieldData.name
-                                              ],
-                                              optionKey,
-                                              $$a
-                                                .slice(0, $$i)
-                                                .concat($$a.slice($$i + 1))
-                                            )
-                                        }
-                                      } else {
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          optionKey,
-                                          $$c
-                                        )
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(optionVal) +
-                                    "\n                    "
-                                )
-                              ]
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
                             ),
-                            _vm._v(" "),
-                            _c("br")
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
                           ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
                         })
-                      ],
-                      2
-                    ),
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field" }, [
+                        (_vm.fieldData.type || "text") === "checkbox"
+                          ? _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
+                                }
+                              ],
+                              staticClass: "regular-text",
+                              class: [
+                                {
+                                  "dokan-input-validation-error": _vm.hasValidationError(
+                                    _vm.fieldData.name
+                                  )
+                                },
+                                _vm.fieldData.class
+                              ],
+                              attrs: {
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                type: "checkbox"
+                              },
+                              domProps: {
+                                checked: Array.isArray(
+                                  _vm.fieldValue[_vm.fieldData.name]
+                                )
+                                  ? _vm._i(
+                                      _vm.fieldValue[_vm.fieldData.name],
+                                      null
+                                    ) > -1
+                                  : _vm.fieldValue[_vm.fieldData.name]
+                              },
+                              on: {
+                                change: function($event) {
+                                  var $$a = _vm.fieldValue[_vm.fieldData.name],
+                                    $$el = $event.target,
+                                    $$c = $$el.checked ? true : false
+                                  if (Array.isArray($$a)) {
+                                    var $$v = null,
+                                      $$i = _vm._i($$a, $$v)
+                                    if ($$el.checked) {
+                                      $$i < 0 &&
+                                        _vm.$set(
+                                          _vm.fieldValue,
+                                          _vm.fieldData.name,
+                                          $$a.concat([$$v])
+                                        )
+                                    } else {
+                                      $$i > -1 &&
+                                        _vm.$set(
+                                          _vm.fieldValue,
+                                          _vm.fieldData.name,
+                                          $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1))
+                                        )
+                                    }
+                                  } else {
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $$c
+                                    )
+                                  }
+                                }
+                              }
+                            })
+                          : (_vm.fieldData.type || "text") === "radio"
+                          ? _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
+                                }
+                              ],
+                              staticClass: "regular-text",
+                              class: [
+                                {
+                                  "dokan-input-validation-error": _vm.hasValidationError(
+                                    _vm.fieldData.name
+                                  )
+                                },
+                                _vm.fieldData.class
+                              ],
+                              attrs: {
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                type: "radio"
+                              },
+                              domProps: {
+                                checked: _vm._q(
+                                  _vm.fieldValue[_vm.fieldData.name],
+                                  null
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    null
+                                  )
+                                }
+                              }
+                            })
+                          : _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
+                                }
+                              ],
+                              staticClass: "regular-text",
+                              class: [
+                                {
+                                  "dokan-input-validation-error": _vm.hasValidationError(
+                                    _vm.fieldData.name
+                                  )
+                                },
+                                _vm.fieldData.class
+                              ],
+                              attrs: {
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                type: _vm.fieldData.type || "text"
+                              },
+                              domProps: {
+                                value: _vm.fieldValue[_vm.fieldData.name]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
@@ -14154,1741 +14050,135 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
-          "disbursement_sub_section" === _vm.fieldData.type &&
-          !_vm.hideWithdrawOption()
+          "number" === _vm.fieldData.type
             ? [
                 _c(
-                  "th",
+                  "div",
                   {
-                    staticClass: "dokan-settings-sub-section-title",
-                    attrs: { colspan: "3" }
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
                   },
-                  [_c("label", [_vm._v(_vm._s(_vm.fieldData.label))])]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "disbursement_method" === _vm.fieldData.type &&
-          !_vm.hideWithdrawOption()
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name][optionKey]"
-                                  }
-                                ],
-                                staticClass: "checkbox",
-                                attrs: {
-                                  type: "checkbox",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  "true-value": optionKey,
-                                  "false-value": ""
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fieldValue[_vm.fieldData.name][
-                                      optionKey
-                                    ]
-                                  )
-                                    ? _vm._i(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        null
-                                      ) > -1
-                                    : _vm._q(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        optionKey
-                                      )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a =
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? optionKey : ""
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        optionKey,
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("br")
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e()
-                ])
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "disbursement_type" === _vm.fieldData.type &&
-          _vm.showDisbursementType("schedule") &&
-          !_vm.hideWithdrawOption()
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "fieldset",
-                    [
-                      _vm._l(_vm.fieldData.options, function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return [
-                          _c(
-                            "label",
-                            {
-                              attrs: {
-                                for:
-                                  _vm.sectionId +
-                                  "[" +
-                                  _vm.fieldData.name +
-                                  "][" +
-                                  optionKey +
-                                  "]"
-                              }
-                            },
-                            [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name][optionKey]"
-                                  }
-                                ],
-                                staticClass: "checkbox",
-                                attrs: {
-                                  type: "checkbox",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]",
-                                  "true-value": optionKey,
-                                  "false-value": ""
-                                },
-                                domProps: {
-                                  checked: Array.isArray(
-                                    _vm.fieldValue[_vm.fieldData.name][
-                                      optionKey
-                                    ]
-                                  )
-                                    ? _vm._i(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        null
-                                      ) > -1
-                                    : _vm._q(
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                        optionKey
-                                      )
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$a =
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      $$el = $event.target,
-                                      $$c = $$el.checked ? optionKey : ""
-                                    if (Array.isArray($$a)) {
-                                      var $$v = null,
-                                        $$i = _vm._i($$a, $$v)
-                                      if ($$el.checked) {
-                                        $$i < 0 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a.concat([$$v])
-                                          )
-                                      } else {
-                                        $$i > -1 &&
-                                          _vm.$set(
-                                            _vm.fieldValue[_vm.fieldData.name],
-                                            optionKey,
-                                            $$a
-                                              .slice(0, $$i)
-                                              .concat($$a.slice($$i + 1))
-                                          )
-                                      }
-                                    } else {
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        optionKey,
-                                        $$c
-                                      )
-                                    }
-                                  }
-                                }
-                              }),
-                              _vm._v(
-                                "\n                        " +
-                                  _vm._s(optionVal) +
-                                  "\n                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("br")
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _vm.hasValidationError(_vm.fieldData.name)
-                    ? _c("p", { staticClass: "dokan-error" }, [
-                        _vm._v(
-                          "\n                " +
-                            _vm._s(
-                              _vm.getValidationErrorMessage(_vm.fieldData.name)
-                            ) +
-                            "\n            "
-                        )
-                      ])
-                    : _vm._e()
-                ])
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "schedule_quarterly" === _vm.fieldData.type &&
-          _vm.showSettingsField("quarterly")
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
                   [
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
                         _c(
-                          "span",
+                          "h3",
                           {
-                            staticClass: "dokan-input-group-addon",
-                            attrs: {
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            }
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
                           },
                           [
                             _vm._v(
-                              _vm._s(_vm.__("First Quarter", "dokan-lite"))
-                            )
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
                           ]
                         ),
                         _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        "month"
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name]['month']"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: {
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][month]",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "]"
-                                },
-                                on: {
-                                  change: [
-                                    function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        "month",
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    },
-                                    _vm.setDisbursementQuarterlySettings
-                                  ]
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.first, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
-                        _c("span", { staticClass: "dokan-input-group-addon" }, [
-                          _vm._v(_vm._s(_vm.__("Second Quarter", "dokan-lite")))
-                        ]),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.disbursementSettings.quarterly.second,
-                                    expression:
-                                      "disbursementSettings.quarterly.second"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: { disabled: "" },
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.disbursementSettings.quarterly,
-                                      "second",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.second, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
-                        _c("span", { staticClass: "dokan-input-group-addon" }, [
-                          _vm._v(_vm._s(_vm.__("Third Quarter", "dokan-lite")))
-                        ]),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.disbursementSettings.quarterly.third,
-                                    expression:
-                                      "disbursementSettings.quarterly.third"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: { disabled: "" },
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.disbursementSettings.quarterly,
-                                      "third",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.third, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
-                        _c("span", { staticClass: "dokan-input-group-addon" }, [
-                          _vm._v(_vm._s(_vm.__("Fourth Quarter", "dokan-lite")))
-                        ]),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.disbursementSettings.quarterly.fourth,
-                                    expression:
-                                      "disbursementSettings.quarterly.fourth"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: { disabled: "" },
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.disbursementSettings.quarterly,
-                                      "fourth",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.fourth, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "dokan-schedule-week-day-container" },
-                      [
-                        _c("div", { staticClass: "col-3" }, [
-                          _c("div", { staticClass: "dokan-input-group" }, [
-                            _c(
-                              "span",
-                              { staticClass: "dokan-input-group-addon" },
-                              [_vm._v(_vm._s(_vm.__("Week", "dokan-lite")))]
-                            ),
-                            _vm._v(" "),
-                            !_vm.fieldData.grouped
-                              ? _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "week"
-                                          ],
-                                        expression:
-                                          "fieldValue[fieldData.name]['week']"
-                                      }
-                                    ],
-                                    staticClass: "regular",
-                                    attrs: {
-                                      name:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "][week]",
-                                      id:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "]"
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          "week",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm.fieldData.placeholder
-                                      ? _c("option", {
-                                          attrs: { value: "" },
-                                          domProps: {
-                                            innerHTML: _vm._s(
-                                              _vm.fieldData.placeholder
-                                            )
-                                          }
-                                        })
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _vm._l(_vm.fieldData.options.week, function(
-                                      optionVal,
-                                      optionKey
-                                    ) {
-                                      return _c("option", {
-                                        domProps: {
-                                          value: optionKey,
-                                          innerHTML: _vm._s(optionVal)
-                                        }
-                                      })
-                                    })
-                                  ],
-                                  2
-                                )
-                              : _vm._e()
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-3" }, [
-                          _c("div", { staticClass: "dokan-input-group" }, [
-                            _c(
-                              "span",
-                              { staticClass: "dokan-input-group-addon" },
-                              [_vm._v(_vm._s(_vm.__("Day", "dokan-lite")))]
-                            ),
-                            _vm._v(" "),
-                            !_vm.fieldData.grouped
-                              ? _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "days"
-                                          ],
-                                        expression:
-                                          "fieldValue[fieldData.name]['days']"
-                                      }
-                                    ],
-                                    staticClass: "regular",
-                                    attrs: {
-                                      name:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "][days]",
-                                      id:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "]"
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          "days",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm.fieldData.placeholder
-                                      ? _c("option", {
-                                          attrs: { value: "" },
-                                          domProps: {
-                                            innerHTML: _vm._s(
-                                              _vm.fieldData.placeholder
-                                            )
-                                          }
-                                        })
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _vm._l(_vm.fieldData.options.days, function(
-                                      optionVal,
-                                      optionKey
-                                    ) {
-                                      return !(
-                                        "L" !==
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "week"
-                                          ] &&
-                                        ("saturday" === optionKey ||
-                                          "sunday" === optionKey)
-                                      )
-                                        ? _c("option", {
-                                            domProps: {
-                                              value: optionKey,
-                                              innerHTML: _vm._s(optionVal)
-                                            }
-                                          })
-                                        : _vm._e()
-                                    })
-                                  ],
-                                  2
-                                )
-                              : _vm._e()
-                          ])
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
-                          attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
-                          }
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
                         })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "schedule_monthly" === _vm.fieldData.type &&
-          _vm.showSettingsField("monthly")
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "dokan-schedule-week-day-container" },
-                      [
-                        _c("div", { staticClass: "col-3" }, [
-                          _c("div", { staticClass: "dokan-input-group" }, [
-                            _c(
-                              "span",
-                              { staticClass: "dokan-input-group-addon" },
-                              [_vm._v(_vm._s(_vm.__("Week", "dokan-lite")))]
-                            ),
-                            _vm._v(" "),
-                            !_vm.fieldData.grouped
-                              ? _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "week"
-                                          ],
-                                        expression:
-                                          "fieldValue[fieldData.name]['week']"
-                                      }
-                                    ],
-                                    staticClass: "regular",
-                                    attrs: {
-                                      name:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "][week]",
-                                      id:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "]"
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          "week",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm.fieldData.placeholder
-                                      ? _c("option", {
-                                          attrs: { value: "" },
-                                          domProps: {
-                                            innerHTML: _vm._s(
-                                              _vm.fieldData.placeholder
-                                            )
-                                          }
-                                        })
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _vm._l(_vm.fieldData.options.week, function(
-                                      optionVal,
-                                      optionKey
-                                    ) {
-                                      return _c("option", {
-                                        domProps: {
-                                          value: optionKey,
-                                          innerHTML: _vm._s(optionVal)
-                                        }
-                                      })
-                                    })
-                                  ],
-                                  2
-                                )
-                              : _vm._e()
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-3" }, [
-                          _c("div", { staticClass: "dokan-input-group" }, [
-                            _c(
-                              "span",
-                              { staticClass: "dokan-input-group-addon" },
-                              [_vm._v(_vm._s(_vm.__("Day", "dokan-lite")))]
-                            ),
-                            _vm._v(" "),
-                            !_vm.fieldData.grouped
-                              ? _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "days"
-                                          ],
-                                        expression:
-                                          "fieldValue[fieldData.name]['days']"
-                                      }
-                                    ],
-                                    staticClass: "regular",
-                                    attrs: {
-                                      name:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "][days]",
-                                      id:
-                                        _vm.sectionId +
-                                        "[" +
-                                        _vm.fieldData.name +
-                                        "]"
-                                    },
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          "days",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm.fieldData.placeholder
-                                      ? _c("option", {
-                                          attrs: { value: "" },
-                                          domProps: {
-                                            innerHTML: _vm._s(
-                                              _vm.fieldData.placeholder
-                                            )
-                                          }
-                                        })
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    _vm._l(_vm.fieldData.options.days, function(
-                                      optionVal,
-                                      optionKey
-                                    ) {
-                                      return !(
-                                        "L" !==
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            "week"
-                                          ] &&
-                                        ("saturday" === optionKey ||
-                                          "sunday" === optionKey)
-                                      )
-                                        ? _c("option", {
-                                            domProps: {
-                                              value: optionKey,
-                                              innerHTML: _vm._s(optionVal)
-                                            }
-                                          })
-                                        : _vm._e()
-                                    })
-                                  ],
-                                  2
-                                )
-                              : _vm._e()
-                          ])
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
-                          attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
-                          }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "schedule_biweekly" === _vm.fieldData.type &&
-          _vm.showSettingsField("biweekly")
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  [
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field" }, [
                         _c(
-                          "span",
+                          "label",
                           {
-                            staticClass: "dokan-input-group-addon",
                             attrs: {
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            }
-                          },
-                          [_vm._v(_vm._s(_vm.__("First", "dokan-lite")))]
-                        ),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        "week"
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name]['week']"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: {
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][week]",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "]"
-                                },
-                                on: {
-                                  change: [
-                                    function($event) {
-                                      var $$selectedVal = Array.prototype.filter
-                                        .call($event.target.options, function(
-                                          o
-                                        ) {
-                                          return o.selected
-                                        })
-                                        .map(function(o) {
-                                          var val =
-                                            "_value" in o ? o._value : o.value
-                                          return val
-                                        })
-                                      _vm.$set(
-                                        _vm.fieldValue[_vm.fieldData.name],
-                                        "week",
-                                        $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      )
-                                    },
-                                    _vm.setDisbursementBiweeklySettings
-                                  ]
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.first, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
-                        _c("span", { staticClass: "dokan-input-group-addon" }, [
-                          _vm._v(_vm._s(_vm.__("Second", "dokan-lite")))
-                        ]),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.disbursementSettings.biweekly.second,
-                                    expression:
-                                      "disbursementSettings.biweekly.second"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: { disabled: "" },
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.disbursementSettings.biweekly,
-                                      "second",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.second, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-3" }, [
-                      _c("div", { staticClass: "dokan-input-group" }, [
-                        _c("span", { staticClass: "dokan-input-group-addon" }, [
-                          _vm._v(_vm._s(_vm.__("Day", "dokan-lite")))
-                        ]),
-                        _vm._v(" "),
-                        !_vm.fieldData.grouped
-                          ? _c(
-                              "select",
-                              {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value:
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        "days"
-                                      ],
-                                    expression:
-                                      "fieldValue[fieldData.name]['days']"
-                                  }
-                                ],
-                                staticClass: "regular",
-                                attrs: {
-                                  name:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][days]",
-                                  id:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "]"
-                                },
-                                on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      _vm.fieldValue[_vm.fieldData.name],
-                                      "days",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
-                                }
-                              },
-                              [
-                                _vm.fieldData.placeholder
-                                  ? _c("option", {
-                                      attrs: { value: "" },
-                                      domProps: {
-                                        innerHTML: _vm._s(
-                                          _vm.fieldData.placeholder
-                                        )
-                                      }
-                                    })
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm._l(_vm.fieldData.options.days, function(
-                                  optionVal,
-                                  optionKey
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: optionKey,
-                                      innerHTML: _vm._s(optionVal)
-                                    }
-                                  })
-                                })
-                              ],
-                              2
-                            )
-                          : _vm._e()
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
-                          attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
-                          }
-                        })
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "schedule_weekly" === _vm.fieldData.type &&
-          _vm.showSettingsField("weekly")
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  [
-                    !_vm.fieldData.grouped
-                      ? _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
+                              for:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]"
                             }
                           },
                           [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.fieldData.options, function(
-                              optionVal,
-                              optionKey
-                            ) {
-                              return _c("option", {
-                                domProps: {
-                                  value: optionKey,
-                                  innerHTML: _vm._s(optionVal)
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
                                 }
-                              })
+                              ],
+                              staticClass: "regular-text",
+                              class: [
+                                {
+                                  "dokan-input-validation-error": _vm.hasValidationError(
+                                    _vm.fieldData.name
+                                  )
+                                },
+                                _vm.fieldData.class
+                              ],
+                              attrs: {
+                                type: "number",
+                                min: _vm.fieldData.min,
+                                max: _vm.fieldData.max,
+                                step: _vm.fieldData.step,
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              },
+                              domProps: {
+                                value: _vm.fieldValue[_vm.fieldData.name]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
                             })
-                          ],
-                          2
+                          ]
                         )
-                      : _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "", disabled: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.fieldData.options, function(
-                              optionGroup
-                            ) {
-                              return _c(
-                                "optgroup",
-                                { attrs: { label: optionGroup.group_label } },
-                                _vm._l(optionGroup.group_values, function(
-                                  option
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: option.value,
-                                      innerHTML: _vm._s(option.label)
-                                    }
-                                  })
-                                }),
-                                0
-                              )
-                            })
-                          ],
-                          2
-                        ),
+                      ])
+                    ]),
                     _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
-                          attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
-                          }
-                        })
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
                       : _vm._e(),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
                           _vm._v(
-                            "\n                " +
+                            "\n              " +
                               _vm._s(
                                 _vm.getValidationErrorMessage(
                                   _vm.fieldData.name
@@ -15896,65 +14186,21 @@ var render = function() {
                               ) +
                               "\n            "
                           )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "select" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      "combine" === _vm.fieldData.type
-                        ? "tooltips-data combine-tips-style"
-                        : "tooltips-data"
-                    ]
-                  },
-                  [
-                    _vm.fieldData.tooltip
-                      ? _c("span", [
-                          _c("i", {
-                            directives: [
-                              {
-                                name: "tooltip",
-                                rawName: "v-tooltip",
-                                value: _vm.fieldData.tooltip,
-                                expression: "fieldData.tooltip"
-                              }
-                            ],
-                            staticClass: "dashicons dashicons-editor-help tips",
-                            attrs: { title: _vm.fieldData.tooltip }
-                          })
                         ])
                       : _vm._e()
                   ]
-                ),
-                _vm._v(" "),
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "price" === _vm.fieldData.type &&
+          _vm.allSettingsValues.dokan_selling &&
+          "combine" !== _vm.allSettingsValues.dokan_selling.commission_type
+            ? [
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -15962,146 +14208,461 @@ var render = function() {
                     ]
                   },
                   [
-                    !_vm.fieldData.grouped
-                      ? _c(
-                          "select",
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
                           {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
                           },
                           [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.fieldData.options, function(
-                              optionVal,
-                              optionKey
-                            ) {
-                              return _c("option", {
-                                domProps: {
-                                  value: optionKey,
-                                  innerHTML: _vm._s(optionVal)
-                                }
-                              })
-                            })
-                          ],
-                          2
-                        )
-                      : _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
                                   })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
-                          [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "", disabled: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.fieldData.options, function(
-                              optionGroup
-                            ) {
-                              return _c(
-                                "optgroup",
-                                { attrs: { label: optionGroup.group_label } },
-                                _vm._l(optionGroup.group_values, function(
-                                  option
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: option.value,
-                                      innerHTML: _vm._s(option.label)
-                                    }
-                                  })
-                                }),
-                                0
-                              )
-                            })
-                          ],
-                          2
+                                ])
+                              : _vm._e()
+                          ]
                         ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field" }, [
+                        _c(
+                          "label",
+                          {
+                            attrs: {
+                              for:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            }
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
+                                }
+                              ],
+                              staticClass: "regular-text",
+                              class: {
+                                wc_input_decimal:
+                                  _vm.allSettingsValues.dokan_selling
+                                    .commission_type == "percentage",
+                                wc_input_price:
+                                  _vm.allSettingsValues.dokan_selling
+                                    .commission_type == "flat"
+                              },
+                              attrs: {
+                                type: "text",
+                                min: _vm.fieldData.min,
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              },
+                              domProps: {
+                                value: _vm.fieldValue[_vm.fieldData.name]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
                     _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "combine" === _vm.fieldData.type &&
+          _vm.haveCondition(_vm.fieldData) &&
+          _vm.fieldData.condition.type == "show" &&
+          _vm.checkConditionLogic(_vm.fieldData, _vm.fieldValue)
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field combine_fields" }, [
+                        _c("div", { staticClass: "percent_fee" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value:
+                                  _vm.fieldValue[
+                                    _vm.fieldData.fields.percent_fee.name
+                                  ],
+                                expression:
+                                  "fieldValue[fieldData.fields.percent_fee.name]"
+                              }
+                            ],
+                            staticClass: "wc_input_decimal regular-text",
+                            attrs: {
+                              type: "text",
+                              id:
+                                _vm.sectionId +
+                                "[" +
+                                _vm.fieldData.name +
+                                "]" +
+                                "[" +
+                                "percent_fee" +
+                                "]",
+                              name:
+                                _vm.sectionId +
+                                "[" +
+                                _vm.fieldData.fields.percent_fee.name +
+                                "]"
+                            },
+                            domProps: {
+                              value:
+                                _vm.fieldValue[
+                                  _vm.fieldData.fields.percent_fee.name
+                                ]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.fields.percent_fee.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s("%") +
+                              "\n                    "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "fixed_fee" }, [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s("+") +
+                              "\n                        "
+                          ),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value:
+                                  _vm.fieldValue[
+                                    _vm.fieldData.fields.fixed_fee.name
+                                  ],
+                                expression:
+                                  "fieldValue[fieldData.fields.fixed_fee.name]"
+                              }
+                            ],
+                            staticClass: "wc_input_price regular-text",
+                            attrs: {
+                              type: "text",
+                              id:
+                                _vm.sectionId +
+                                "[" +
+                                _vm.fieldData.name +
+                                "]" +
+                                "[" +
+                                "fixed_fee" +
+                                "]",
+                              name:
+                                _vm.sectionId +
+                                "[" +
+                                _vm.fieldData.fields.fixed_fee.name +
+                                "]"
+                            },
+                            domProps: {
+                              value:
+                                _vm.fieldValue[
+                                  _vm.fieldData.fields.fixed_fee.name
+                                ]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.fields.fixed_fee.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.fields.percent_fee.name) &&
+                    _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.__(
+                                    "Both percentage and fixed fee is required.",
+                                    "dokan-lite"
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.getError(
+                                    _vm.fieldData.fields.percent_fee.label
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.getError(
+                                    _vm.fieldData.fields.fixed_fee.label
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "textarea" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field" }, [
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
                           attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
+                            type: "textarea",
+                            rows: _vm.fieldData.rows,
+                            cols: _vm.fieldData.cols,
+                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                            name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                          },
+                          domProps: {
+                            value: _vm.fieldValue[_vm.fieldData.name]
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.fieldValue,
+                                _vm.fieldData.name,
+                                $event.target.value
+                              )
+                            }
                           }
                         })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
                       : _vm._e(),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
@@ -16116,130 +14677,18 @@ var render = function() {
                               "\n            "
                           )
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "file" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text wpsa-url",
-                      attrs: {
-                        type: "text",
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("input", {
-                      staticClass: "button wpsa-browse",
-                      attrs: { type: "button", value: "Choose File" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.$emit(
-                            "openMedia",
-                            {
-                              sectionId: _vm.sectionId,
-                              name: _vm.fieldData.name
-                            },
-                            $event
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
+                      : _vm._e()
                   ]
                 )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "color" == _vm.fieldData.type
+          "switcher" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -16247,72 +14696,92 @@ var render = function() {
                     ]
                   },
                   [
-                    _c("color-picker", {
-                      model: {
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        callback: function($$v) {
-                          _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
-                        },
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "field_desc" }, [
+                          _vm._v(_vm._s(_vm.fieldData.desc))
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "html" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field" }, [
+                        _c(
+                          "label",
+                          {
+                            attrs: {
+                              for:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]"
                             }
+                          },
+                          [
+                            _c("switches", {
+                              attrs: {
+                                enabled: _vm.checked === "on" ? true : false,
+                                value: "isChecked"
+                              },
+                              on: { input: _vm.onToggleSwitch }
+                            })
                           ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
+                          1
+                        )
                       ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "multicheck" === _vm.fieldData.type
+            ? [
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -16320,119 +14789,161 @@ var render = function() {
                     ]
                   },
                   [
-                    _vm.hasError(_vm.fieldData.name)
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "field_desc" }, [
+                          _vm._v(_vm._s(_vm.fieldData.desc))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field multicheck_fields" },
+                        [
+                          _vm._l(_vm.fieldData.options, function(
+                            optionVal,
+                            optionKey
+                          ) {
+                            return [
+                              _c(
+                                "div",
+                                { key: optionKey },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(optionVal) +
+                                      "\n                            "
+                                  ),
+                                  _c("switches", {
+                                    attrs: {
+                                      enabled: _vm.isSwitchOptionChecked(
+                                        optionKey
+                                      ),
+                                      value: optionKey
+                                    },
+                                    on: { input: _vm.setCheckedValue }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          })
+                        ],
+                        2
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
                           _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
                               "\n            "
                           )
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
+                      : _vm._e()
                   ]
                 )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "warning" == _vm.fieldData.type
+          "select" === _vm.fieldData.type
             ? [
                 _c(
-                  "th",
+                  "div",
                   {
-                    staticClass: "dokan-setting-warning",
-                    attrs: { scope: "row", colspan: "2" }
-                  },
-                  [
-                    _c("div", { staticClass: "error" }, [
-                      _c(
-                        "p",
-                        {
-                          attrs: {
-                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                          }
-                        },
-                        [
-                          _c(
-                            "span",
-                            { staticClass: "dokan-setting-warning-label" },
-                            [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-warning"
-                              }),
-                              _vm._v(" " + _vm._s(_vm.fieldData.label))
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            { staticClass: "dokan-setting-warning-msg" },
-                            [_vm._v(_vm._s(_vm.fieldData.desc))]
-                          )
-                        ]
-                      )
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "radio" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
-                        : "",
-                      "dokan-settings-field-type-radio"
+                        : ""
                     ]
                   },
                   [
-                    _c(
-                      "fieldset",
-                      [
-                        _vm._l(_vm.fieldData.options, function(
-                          optionVal,
-                          optionKey
-                        ) {
-                          return [
-                            _c(
-                              "label",
-                              {
-                                attrs: {
-                                  for:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]"
-                                }
-                              },
-                              [
-                                _c("input", {
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field" },
+                        [
+                          !_vm.fieldData.grouped
+                            ? _c(
+                                "select",
+                                {
                                   directives: [
                                     {
                                       name: "model",
@@ -16441,279 +14952,197 @@ var render = function() {
                                       expression: "fieldValue[fieldData.name]"
                                     }
                                   ],
-                                  staticClass: "radio",
+                                  staticClass: "regular",
                                   attrs: {
-                                    type: "radio",
+                                    name:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "]",
                                     id:
                                       _vm.sectionId +
                                       "[" +
                                       _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    name: optionKey
-                                  },
-                                  domProps: {
-                                    value: optionKey,
-                                    checked: _vm._q(
-                                      _vm.fieldValue[_vm.fieldData.name],
-                                      optionKey
-                                    )
+                                      "]"
                                   },
                                   on: {
                                     change: function($event) {
-                                      return _vm.$set(
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
                                         _vm.fieldValue,
                                         _vm.fieldData.name,
-                                        optionKey
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
                                       )
                                     }
                                   }
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(optionVal) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ]
-                        })
-                      ],
-                      2
-                    ),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "wpeditor" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ],
-                    attrs: { width: "72%" }
-                  },
-                  [
-                    _c("text-editor", {
-                      model: {
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        callback: function($$v) {
-                          _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
-                        },
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "repeatable" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ],
-                    attrs: { width: "72%" }
-                  },
-                  [
-                    _c(
-                      "ul",
-                      { staticClass: "dokan-settings-repeatable-list" },
-                      _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return _vm.fieldValue[_vm.fieldData.name]
-                          ? _c("li", [
-                              _vm._v(
-                                "\n                    " +
-                                  _vm._s(optionVal.value) +
-                                  " "
-                              ),
-                              !optionVal.must_use
-                                ? _c("span", {
-                                    staticClass:
-                                      "dashicons dashicons-no-alt remove-item",
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        return _vm.removeItem(
-                                          optionKey,
-                                          _vm.fieldData.name
-                                        )
+                                },
+                                [
+                                  _vm.fieldData.placeholder
+                                    ? _c("option", {
+                                        attrs: { value: "" },
+                                        domProps: {
+                                          innerHTML: _vm._s(
+                                            _vm.fieldData.placeholder
+                                          )
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.fieldData.options, function(
+                                    optionVal,
+                                    optionKey
+                                  ) {
+                                    return _c("option", {
+                                      key: optionKey,
+                                      domProps: {
+                                        value: optionKey,
+                                        innerHTML: _vm._s(optionVal)
                                       }
-                                    }
+                                    })
                                   })
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _c("span", {
-                                staticClass: "repeatable-item-description",
-                                domProps: { innerHTML: _vm._s(optionVal.desc) }
+                                ],
+                                2
+                              )
+                            : _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.fieldValue[_vm.fieldData.name],
+                                      expression: "fieldValue[fieldData.name]"
+                                    }
+                                  ],
+                                  staticClass: "regular",
+                                  attrs: {
+                                    name:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "]",
+                                    id:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "]"
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm.fieldData.placeholder
+                                    ? _c("option", {
+                                        attrs: { value: "", disabled: "" },
+                                        domProps: {
+                                          innerHTML: _vm._s(
+                                            _vm.fieldData.placeholder
+                                          )
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.fieldData.options, function(
+                                    optionGroup,
+                                    optionGroupKey
+                                  ) {
+                                    return _c(
+                                      "optgroup",
+                                      {
+                                        key: optionGroupKey,
+                                        attrs: {
+                                          label: optionGroup.group_label
+                                        }
+                                      },
+                                      _vm._l(optionGroup.group_values, function(
+                                        option,
+                                        optionKey
+                                      ) {
+                                        return _c("option", {
+                                          key: optionKey,
+                                          domProps: {
+                                            value: option.value,
+                                            innerHTML: _vm._s(option.label)
+                                          }
+                                        })
+                                      }),
+                                      0
+                                    )
+                                  })
+                                ],
+                                2
+                              ),
+                          _vm._v(" "),
+                          _vm.fieldData.refresh_options
+                            ? _c("RefreshSettingOptions", {
+                                attrs: {
+                                  field: _vm.fieldData,
+                                  section: _vm.sectionId,
+                                  "toggle-loading-state": _vm.toggleLoadingState
+                                }
                               })
-                            ])
-                          : _vm._e()
-                      }),
-                      0
-                    ),
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ]),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.repeatableItem[_vm.fieldData.name],
-                          expression: "repeatableItem[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      attrs: { type: "text" },
-                      domProps: {
-                        value: _vm.repeatableItem[_vm.fieldData.name]
-                      },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.repeatableItem,
-                            _vm.fieldData.name,
-                            $event.target.value
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
                           )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "button dokan-repetable-add-item-btn",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addItem(
-                              _vm.fieldData.type,
-                              _vm.fieldData.name
-                            )
-                          }
-                        }
-                      },
-                      [_vm._v("+")]
-                    ),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
+                        ])
+                      : _vm._e()
                   ]
                 )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "radio_image" == _vm.fieldData.type
+          "file" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -16721,15 +15150,813 @@ var render = function() {
                     ]
                   },
                   [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field add_files" }, [
+                        _c(
+                          "label",
+                          {
+                            attrs: {
+                              for:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            }
+                          },
+                          [
+                            _c("input", {
+                              staticClass: "button wpsa-browse",
+                              attrs: { type: "button", value: "Choose File" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.$emit(
+                                    "openMedia",
+                                    {
+                                      sectionId: _vm.sectionId,
+                                      name: _vm.fieldData.name
+                                    },
+                                    $event
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.fieldValue[_vm.fieldData.name],
+                                  expression: "fieldValue[fieldData.name]"
+                                }
+                              ],
+                              staticClass: "regular-text wpsa-url",
+                              attrs: {
+                                type: "text",
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]",
+                                name:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              },
+                              domProps: {
+                                value: _vm.fieldValue[_vm.fieldData.name]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "color" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field" },
+                        [
+                          _c("color-picker", {
+                            attrs: {
+                              itemKey: _vm.fieldData.name,
+                              customData: _vm.singleColorPicker
+                            },
+                            on: {
+                              "custom-change": function(e) {
+                                return _vm.setCustomColor(e, _vm.fieldData.name)
+                              },
+                              toggleColorPicker: _vm.toggleColorPicker
+                            },
+                            model: {
+                              value: _vm.fieldValue[_vm.fieldData.name],
+                              callback: function($$v) {
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $$v
+                                )
+                              },
+                              expression: "fieldValue[fieldData.name]"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "html" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "warning" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading dokan-setting-warning",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _c("div", { staticClass: "error" }, [
+                              _c(
+                                "p",
+                                {
+                                  attrs: {
+                                    for:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "]"
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "dokan-setting-warning-label"
+                                    },
+                                    [
+                                      _c("span", {
+                                        staticClass:
+                                          "dashicons dashicons-warning"
+                                      }),
+                                      _vm._v(" " + _vm._s(_vm.fieldData.label))
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "dokan-setting-warning-msg"
+                                    },
+                                    [_vm._v(_vm._s(_vm.fieldData.desc))]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "radio" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "field radio_fields" },
+                        [
+                          _vm._l(_vm.fieldData.options, function(
+                            optionVal,
+                            optionKey
+                          ) {
+                            return [
+                              _c(
+                                "label",
+                                {
+                                  key: optionKey,
+                                  class: _vm.isSwitchOptionChecked(optionKey)
+                                    ? "checked"
+                                    : "",
+                                  attrs: {
+                                    for:
+                                      _vm.sectionId +
+                                      "[" +
+                                      _vm.fieldData.name +
+                                      "][" +
+                                      optionKey +
+                                      "]"
+                                  }
+                                },
+                                [
+                                  _c("span", {
+                                    staticClass: "dashicons dashicons-yes"
+                                  }),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value:
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                        expression: "fieldValue[fieldData.name]"
+                                      }
+                                    ],
+                                    staticClass: "radio",
+                                    attrs: {
+                                      type: "radio",
+                                      name: optionKey,
+                                      id:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "][" +
+                                        optionKey +
+                                        "]"
+                                    },
+                                    domProps: {
+                                      value: optionKey,
+                                      checked: _vm._q(
+                                        _vm.fieldValue[_vm.fieldData.name],
+                                        optionKey
+                                      )
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.$set(
+                                          _vm.fieldValue,
+                                          _vm.fieldData.name,
+                                          optionKey
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(optionVal) +
+                                      "\n                        "
+                                  )
+                                ]
+                              )
+                            ]
+                          })
+                        ],
+                        2
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "wpeditor" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "radio-image-container" },
+                      { staticClass: "field editor_field" },
+                      [
+                        _c("text-editor", {
+                          domProps: {
+                            innerHTML: _vm._s(_vm.fieldData.default)
+                          },
+                          model: {
+                            value: _vm.fieldValue[_vm.fieldData.name],
+                            callback: function($$v) {
+                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
+                            },
+                            expression: "fieldValue[fieldData.name]"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "repeatable" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "field repeatable_fields" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.repeatableItem[_vm.fieldData.name],
+                              expression: "repeatableItem[fieldData.name]"
+                            }
+                          ],
+                          staticClass: "regular-text",
+                          attrs: { type: "text" },
+                          domProps: {
+                            value: _vm.repeatableItem[_vm.fieldData.name]
+                          },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.repeatableItem,
+                                _vm.fieldData.name,
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "button dokan-repetable-add-item-btn",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.addItem(
+                                  _vm.fieldData.type,
+                                  _vm.fieldData.name
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("span", {
+                              staticClass: "dashicons dashicons-plus-alt2"
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "dokan-settings-repeatable-list" },
+                      [
+                        _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _vm.fieldValue[_vm.fieldData.name]
+                              ? _c("li", { key: optionKey }, [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(optionVal.value) +
+                                      "\n                        "
+                                  ),
+                                  !optionVal.must_use
+                                    ? _c("span", {
+                                        staticClass:
+                                          "dashicons dashicons-no-alt remove-item",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.removeItem(
+                                              optionKey,
+                                              _vm.fieldData.name
+                                            )
+                                          }
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("span", {
+                                    staticClass: "repeatable-item-description",
+                                    domProps: {
+                                      innerHTML: _vm._s(optionVal.desc)
+                                    }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "radio_image" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field radio-image-container" },
                       [
                         _vm._l(_vm.fieldData.options, function(image, name) {
                           return [
                             _c(
                               "label",
                               {
+                                key: name,
                                 staticClass: "radio-image",
                                 class: {
                                   active:
@@ -16779,8 +16006,9 @@ var render = function() {
                                       staticClass: "dashicons dashicons-yes"
                                     }),
                                     _vm._v(
-                                      " " +
-                                        _vm._s(_vm.__("Active", "dokan-lite"))
+                                      "\n                            " +
+                                        _vm._s(_vm.__("Active", "dokan-lite")) +
+                                        "\n                        "
                                     )
                                   ]
                                 ),
@@ -16826,25 +16054,12 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
-          "gmap" == _vm.fieldData.type && !_vm.hideMap
+          "gmap" === _vm.fieldData.type && !_vm.hideMap
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -16852,37 +16067,85 @@ var render = function() {
                     ]
                   },
                   [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.mapLocation }
-                    }),
-                    _vm._v(" "),
-                    _vm.mapApiSource === "mapbox"
-                      ? _c("Mapbox", {
-                          attrs: {
-                            accessToken: _vm.mapboxAccessToken,
-                            location: _vm.mapLocation,
-                            width: "100%",
-                            height: "300px"
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
                           },
-                          on: {
-                            hideMap: _vm.onHideMap,
-                            updateMap: _vm.onUpdateMap
-                          }
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
                         })
-                      : _c("GoogleMaps", {
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field gmap-field" },
+                      [
+                        _c("input", {
                           attrs: {
-                            apiKey: _vm.googleMapApiKey,
-                            location: _vm.mapLocation
+                            type: "hidden",
+                            name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
                           },
-                          on: {
-                            hideMap: _vm.onHideMap,
-                            updateMap: _vm.onUpdateMap
-                          }
+                          domProps: { value: _vm.mapLocation }
                         }),
+                        _vm._v(" "),
+                        _vm.mapApiSource === "mapbox"
+                          ? _c("Mapbox", {
+                              attrs: {
+                                width: "100%",
+                                height: "300px",
+                                location: _vm.mapLocation,
+                                accessToken: _vm.mapboxAccessToken
+                              },
+                              on: {
+                                hideMap: _vm.onHideMap,
+                                updateMap: _vm.onUpdateMap
+                              }
+                            })
+                          : _c("GoogleMaps", {
+                              attrs: {
+                                location: _vm.mapLocation,
+                                apiKey: _vm.googleMapApiKey
+                              },
+                              on: {
+                                hideMap: _vm.onHideMap,
+                                updateMap: _vm.onUpdateMap
+                              }
+                            })
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     _vm.hasError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
@@ -16892,16 +16155,169 @@ var render = function() {
                               "\n            "
                           )
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
+                      : _vm._e()
+                  ]
                 )
               ]
+            : _vm._e(),
+          _vm._v(" "),
+          "social" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass: "field_heading",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.fieldData.label) +
+                                "\n                        "
+                            ),
+                            _vm.fieldData.tooltip
+                              ? _c("span", [
+                                  _c("i", {
+                                    directives: [
+                                      {
+                                        name: "tooltip",
+                                        rawName: "v-tooltip",
+                                        value: _vm.fieldData.tooltip,
+                                        expression: "fieldData.tooltip"
+                                      }
+                                    ],
+                                    staticClass:
+                                      "dashicons dashicons-editor-help tips",
+                                    attrs: { title: _vm.fieldData.tooltip }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", {
+                          staticClass: "field_desc",
+                          domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                        })
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field scl_fields" },
+                      [
+                        _c("div", { staticClass: "scl_header" }, [
+                          _c("div", { staticClass: "scl_contents" }, [
+                            _c("div", { staticClass: "scl_icon" }, [
+                              _c("img", {
+                                attrs: {
+                                  src: _vm.fieldData.icon_url,
+                                  alt: _vm.fieldData.label
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "scl_desc" }, [
+                              _vm._v(_vm._s(_vm.fieldData.social_desc))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "expand_btn",
+                              on: { click: _vm.expandSocial }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons",
+                                class: [
+                                  !this.expandSocials
+                                    ? "dashicons-arrow-down-alt2"
+                                    : "dashicons-arrow-up-alt2"
+                                ]
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.expandSocials
+                          ? _vm._l(_vm.fieldData, function(fields, index) {
+                              return _c(
+                                "div",
+                                { key: index, staticClass: "scl_info" },
+                                [
+                                  fields.social_field
+                                    ? _c(
+                                        "div",
+                                        {
+                                          class: [
+                                            {
+                                              scl_html: fields.type === "html"
+                                            },
+                                            {
+                                              scl_text: fields.type !== "html"
+                                            },
+                                            fields.content_class
+                                              ? fields.content_class
+                                              : ""
+                                          ]
+                                        },
+                                        [
+                                          _c("SocialFields", {
+                                            attrs: {
+                                              fieldData: fields,
+                                              fieldValue: _vm.fieldValue
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
+                                ]
+                              )
+                            })
+                          : _vm._e()
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.customFieldComponents
+            ? _vm._l(_vm.customFieldComponents, function(
+                settingsComponent,
+                index
+              ) {
+                return _c(settingsComponent, {
+                  key: index,
+                  tag: "component",
+                  attrs: {
+                    sectionId: _vm.sectionId,
+                    fieldData: _vm.fieldData,
+                    fieldValue: _vm.fieldValue,
+                    assetsUrl: _vm.dokanAssetsUrl,
+                    validationErrors: _vm.validationErrors,
+                    toggleLoadingState: _vm.toggleLoadingState
+                  },
+                  on: { "some-event": _vm.thisSomeEvent }
+                })
+              })
             : _vm._e()
         ],
         2
@@ -16920,17 +16336,17 @@ if (false) {
 }
 
 /***/ }),
-/* 181 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(71);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(183);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(188);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(182)
+  __webpack_require__(187)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -16976,13 +16392,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 182 */
+/* 187 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 183 */
+/* 188 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17070,7 +16486,7 @@ if (false) {
 }
 
 /***/ }),
-/* 184 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17132,220 +16548,262 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "dokan-settings-wrap" }, [
-            _c(
-              "div",
-              { staticClass: "nav-tab-wrapper" },
-              [
-                _c("div", { staticClass: "search-box" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.searchText,
-                        expression: "searchText"
-                      }
-                    ],
-                    ref: "searchInSettings",
-                    staticClass: "dokan-admin-search-settings",
-                    attrs: { type: "text", placeholder: "Search e.g. vendor" },
-                    domProps: { value: _vm.searchText },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
+          _c(
+            "div",
+            { ref: "settingsWrapper", staticClass: "dokan-settings-wrap" },
+            [
+              _c("div", { staticClass: "nav-tab-wrapper" }, [
+                _c(
+                  "div",
+                  { staticClass: "nab-section" },
+                  [
+                    _c("div", { staticClass: "search-box" }, [
+                      _c("label", {
+                        staticClass: "dashicons dashicons-search",
+                        attrs: { for: "dokan-admin-search" }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.searchText,
+                            expression: "searchText"
                           }
-                          _vm.searchText = $event.target.value
-                        },
-                        _vm.searchInSettings
-                      ]
-                    }
-                  }),
-                  _vm._v(" "),
-                  "" !== _vm.searchText
-                    ? _c("span", {
-                        staticClass: "dashicons dashicons-no-alt",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.clearSearch.apply(null, arguments)
-                          }
-                        }
-                      })
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.settingSections, function(section) {
-                  return [
-                    _c(
-                      "a",
-                      {
-                        class: [
-                          "nav-tab",
-                          _vm.currentTab === section.id ? "nav-tab-active" : ""
                         ],
-                        attrs: { href: "#" },
+                        ref: "searchInSettings",
+                        staticClass: "dokan-admin-search-settings",
+                        attrs: {
+                          type: "text",
+                          id: "dokan-admin-search",
+                          placeholder: _vm.__(
+                            "Search e.g. vendor",
+                            "dokan-lite"
+                          )
+                        },
+                        domProps: { value: _vm.searchText },
                         on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.changeTab(section)
-                          }
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.searchText = $event.target.value
+                            },
+                            _vm.searchInSettings
+                          ]
                         }
-                      },
-                      [
-                        _c("span", {
-                          staticClass: "dashicons",
-                          class: section.icon
-                        }),
-                        _vm._v(
-                          " " + _vm._s(section.title) + "\n                    "
+                      }),
+                      _vm._v(" "),
+                      "" !== _vm.searchText
+                        ? _c("span", {
+                            staticClass: "dashicons dashicons-no-alt",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clearSearch.apply(null, arguments)
+                              }
+                            }
+                          })
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.settingSections, function(section) {
+                      return [
+                        _c(
+                          "div",
+                          {
+                            key: section.id,
+                            class: [
+                              "nav-tab",
+                              _vm.currentTab === section.id
+                                ? "nav-tab-active"
+                                : ""
+                            ],
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.changeTab(section)
+                              }
+                            }
+                          },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: section.icon_url,
+                                alt: section.settings_title
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "nav-content" }, [
+                              _c("div", { staticClass: "nav-title" }, [
+                                _vm._v(_vm._s(section.title))
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "nav-description" }, [
+                                _vm._v(_vm._s(section.description))
+                              ])
+                            ])
+                          ]
                         )
                       ]
-                    )
-                  ]
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "metabox-holder" },
-              [
-                _vm._l(_vm.settingFields, function(fields, index) {
-                  return _vm.isLoaded
-                    ? [
-                        _vm.currentTab === index
-                          ? _c(
-                              "div",
-                              { staticClass: "group", attrs: { id: index } },
-                              [
-                                _c(
-                                  "form",
-                                  {
-                                    attrs: {
-                                      method: "post",
-                                      action: "options.php"
-                                    }
-                                  },
-                                  [
-                                    _c("input", {
-                                      attrs: {
-                                        type: "hidden",
-                                        name: "option_page"
-                                      },
-                                      domProps: { value: index }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      attrs: {
-                                        type: "hidden",
-                                        name: "action",
-                                        value: "update"
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("table", { staticClass: "form-table" }, [
-                                      _vm.showSectionTitle(fields)
-                                        ? _c("thead", [
-                                            _c(
-                                              "tr",
-                                              {
-                                                staticClass:
-                                                  "dokan-settings-field-type-sub_section"
-                                              },
-                                              [
-                                                _c(
-                                                  "th",
-                                                  {
-                                                    staticClass:
-                                                      "dokan-settings-sub-section-title",
-                                                    attrs: { colspan: "3" }
-                                                  },
-                                                  [
-                                                    _c("label", [
-                                                      _vm._v(
-                                                        _vm._s(
-                                                          _vm.sectionTitle(
-                                                            index
-                                                          )
-                                                        )
-                                                      )
-                                                    ])
-                                                  ]
-                                                )
-                                              ]
-                                            )
-                                          ])
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _c(
-                                        "tbody",
-                                        _vm._l(fields, function(
-                                          field,
-                                          fieldId
-                                        ) {
-                                          return _c("Fields", {
-                                            key: fieldId,
-                                            attrs: {
-                                              "section-id": index,
-                                              id: fieldId,
-                                              "field-data": field,
-                                              "field-value":
-                                                _vm.settingValues[index],
-                                              "all-settings-values":
-                                                _vm.settingValues,
-                                              errors: _vm.errors,
-                                              validationErrors:
-                                                _vm.validationErrors,
-                                              "toggle-loading-state":
-                                                _vm.toggleLoadingState
-                                            },
-                                            on: { openMedia: _vm.showMedia }
-                                          })
-                                        }),
-                                        1
+                    })
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "metabox-holder" },
+                [
+                  _vm._l(_vm.settingSections, function(section) {
+                    return _vm.currentTab === section.id
+                      ? _c("fieldset", { staticClass: "settings-header" }, [
+                          _c("div", { staticClass: "settings-content" }, [
+                            _c("h2", { staticClass: "settings-title" }, [
+                              _vm._v(_vm._s(section.settings_title))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "settings-description" }, [
+                              _vm._v(_vm._s(section.settings_description))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          section.document_link
+                            ? _c(
+                                "div",
+                                { staticClass: "settings-document-button" },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "doc-link",
+                                      attrs: { href: section.document_link }
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.__("Documentation", "dokan-lite")
+                                        )
                                       )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "submit" }, [
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.settingFields, function(fields, index) {
+                    return _vm.isLoaded
+                      ? [
+                          _vm.currentTab === index
+                            ? _c(
+                                "div",
+                                {
+                                  key: index,
+                                  staticClass: "group",
+                                  attrs: { id: index }
+                                },
+                                [
+                                  _c(
+                                    "form",
+                                    {
+                                      attrs: {
+                                        method: "post",
+                                        action: "options.php"
+                                      }
+                                    },
+                                    [
                                       _c("input", {
-                                        staticClass: "button button-primary",
                                         attrs: {
-                                          type: "submit",
-                                          name: "submit",
-                                          id: "submit",
-                                          value: "Save Changes"
+                                          type: "hidden",
+                                          name: "option_page"
                                         },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.saveSettings(
-                                              _vm.settingValues[index],
-                                              index
-                                            )
-                                          }
+                                        domProps: { value: index }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        attrs: {
+                                          type: "hidden",
+                                          name: "action",
+                                          value: "update"
                                         }
-                                      })
-                                    ])
-                                  ]
-                                )
-                              ]
-                            )
-                          : _vm._e()
-                      ]
-                    : _vm._e()
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm.showLoading
-              ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
-              : _vm._e()
-          ])
+                                      }),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-table" }, [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "dokan-settings-fields"
+                                          },
+                                          _vm._l(fields, function(
+                                            field,
+                                            fieldId
+                                          ) {
+                                            return _c("Fields", {
+                                              key: fieldId,
+                                              attrs: {
+                                                "section-id": index,
+                                                id: fieldId,
+                                                "field-data": field,
+                                                "field-value":
+                                                  _vm.settingValues[index],
+                                                "all-settings-values":
+                                                  _vm.settingValues,
+                                                errors: _vm.errors,
+                                                validationErrors:
+                                                  _vm.validationErrors,
+                                                "toggle-loading-state":
+                                                  _vm.toggleLoadingState
+                                              },
+                                              on: { openMedia: _vm.showMedia }
+                                            })
+                                          }),
+                                          1
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("p", { staticClass: "submit" }, [
+                                        _c("input", {
+                                          staticClass: "button button-primary",
+                                          attrs: {
+                                            type: "submit",
+                                            name: "submit",
+                                            id: "submit",
+                                            value: "Save Changes"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.saveSettings(
+                                                _vm.settingValues[index],
+                                                index
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ]
+                      : _vm._e()
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _vm.showLoading
+                ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+                : _vm._e()
+            ]
+          )
         ],
         1
       ),
@@ -17367,17 +16825,17 @@ if (false) {
 }
 
 /***/ }),
-/* 185 */
+/* 190 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(72);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(190);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(195);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(186)
+  __webpack_require__(191)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -17423,23 +16881,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 186 */
+/* 191 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 187 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(73);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(194);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(188)
+  __webpack_require__(193)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -17485,13 +16943,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 188 */
+/* 193 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 189 */
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17631,7 +17089,7 @@ if (false) {
 }
 
 /***/ }),
-/* 190 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17960,17 +17418,263 @@ if (false) {
 }
 
 /***/ }),
-/* 191 */
+/* 196 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DummyData_vue__ = __webpack_require__(74);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33b27104_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DummyData_vue__ = __webpack_require__(198);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(192)
+  __webpack_require__(197)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-33b27104"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DummyData_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33b27104_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DummyData_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/DummyData.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-33b27104", Component.options)
+  } else {
+    hotAPI.reload("data-v-33b27104", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 197 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 198 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", [_vm._v(_vm._s(_vm.__("Import dummy data", "dokan-lite")))]),
+    _vm._v(" "),
+    !_vm.statusLoader
+      ? _c("div", { staticClass: "dokan-importer-wrapper" }, [
+          _c("ol", { staticClass: "dokan-importer-progress-steps" }, [
+            _c("li", { staticClass: "active" }, [
+              _vm._v(_vm._s(_vm.__("Import", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("li", { class: _vm.done ? "active" : "" }, [
+              _vm._v(_vm._s(_vm.__("Done!", "dokan-lite")))
+            ])
+          ]),
+          _vm._v(" "),
+          "" != _vm.errorMsg
+            ? _c("div", { staticClass: "error inline" }, [
+                _c("p", [_vm._v(_vm._s(_vm.errorMsg))])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.done
+            ? _c("div", { staticClass: "dokan-importer" }, [
+                _c("header", [
+                  _c("h2", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.__(
+                          "Import dummy vendors and products",
+                          "dokan-lite"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.__(
+                          "This tool allows you to import vendor and some products for vendors to your market place.",
+                          "dokan-lite"
+                        )
+                      )
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("section", [
+                  _c("div", [
+                    _c("progress", {
+                      staticClass: "dokan-dummy-data-progress-bar",
+                      attrs: { max: "100" },
+                      domProps: { value: _vm.progress }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "dokan-importer-action" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "dokan-import-continue-btn",
+                      class: _vm.loading ? "is-busy" : "",
+                      attrs: { disabled: _vm.loading },
+                      on: { click: _vm.importBtnHandler }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Run the importer", "dokan-lite")))]
+                  )
+                ])
+              ])
+            : _c("div", { staticClass: "dokan-importer" }, [
+                _c("section", { staticClass: "import-done" }, [
+                  _c(
+                    "svg",
+                    {
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        viewBox: "0 0 512 512",
+                        width: "100",
+                        height: "100"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z",
+                          fill: "#F4624D"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.__("Import complete!", "dokan-lite")) +
+                        "\n                "
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "dokan-importer-action" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "cancel-btn dokan-import-continue-btn",
+                      class: _vm.loading ? "is-busy" : "",
+                      attrs: { disabled: _vm.loading },
+                      on: { click: _vm.clearAllDummyData }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Clear dummy data", "dokan-lite")))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "links" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: { name: "Vendors", query: { status: "all" } },
+                            exact: ""
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.__("View vendors", "dokan-lite")))]
+                      ),
+                      _vm._v("\n                     \n                    "),
+                      _c("a", { attrs: { href: _vm.getProductsPageUrl() } }, [
+                        _vm._v(_vm._s(_vm.__("View products", "dokan-lite")))
+                      ])
+                    ],
+                    1
+                  )
+                ])
+              ])
+        ])
+      : _c("div", { staticClass: "dokan-importer-wrapper" }, [_vm._m(0)])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dokan-importer" }, [
+      _c("header", [
+        _c("span", { staticClass: "loader-title skeleton-loader" }),
+        _vm._v(" "),
+        _c("span", { staticClass: "loader-description skeleton-loader" })
+      ]),
+      _vm._v(" "),
+      _c("section", [
+        _c("div", [
+          _c("span", { staticClass: "loader-loader skeleton-loader" })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "dokan-importer-action" }, [
+        _c("span", { staticClass: "loader-btn skeleton-loader" })
+      ])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-33b27104", esExports)
+  }
+}
+
+/***/ }),
+/* 199 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(76);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(201);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(200)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -18016,13 +17720,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 192 */
+/* 200 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 193 */
+/* 201 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18147,17 +17851,17 @@ if (false) {
 }
 
 /***/ }),
-/* 194 */
+/* 202 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(77);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(207);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(195)
+  __webpack_require__(203)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -18203,23 +17907,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 195 */
+/* 203 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 196 */
+/* 204 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(78);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(206);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(197)
+  __webpack_require__(205)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -18265,13 +17969,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 197 */
+/* 205 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 198 */
+/* 206 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18880,7 +18584,7 @@ if (false) {
 }
 
 /***/ }),
-/* 199 */
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19046,17 +18750,17 @@ if (false) {
 }
 
 /***/ }),
-/* 200 */
+/* 208 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawal_vue__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawal_vue__ = __webpack_require__(79);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36e64dc3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawal_vue__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36e64dc3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawal_vue__ = __webpack_require__(210);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(201)
+  __webpack_require__(209)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -19102,13 +18806,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 201 */
+/* 209 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 202 */
+/* 210 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19488,17 +19192,17 @@ if (false) {
 }
 
 /***/ }),
-/* 203 */
+/* 211 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(80);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6b51ff90_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(205);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6b51ff90_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(213);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(204)
+  __webpack_require__(212)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -19544,13 +19248,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 204 */
+/* 212 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 205 */
+/* 213 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19934,7 +19638,7 @@ if (false) {
 }
 
 /***/ }),
-/* 206 */
+/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19970,4 +19674,4 @@ function menuFix(slug) {
 /* harmony default export */ __webpack_exports__["a"] = (menuFix);
 
 /***/ })
-],[117]);
+],[120]);

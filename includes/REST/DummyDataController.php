@@ -29,7 +29,7 @@ class DummyDataController extends DokanRESTController {
     protected $base = 'dummy-data';
 
     /**
-     * Register the routes for orders.
+     * Register the routes for dummy data.
      */
     public function register_routes() {
         register_rest_route(
@@ -70,10 +70,14 @@ class DummyDataController extends DokanRESTController {
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @return array
      */
     public function import_dummy_data_status() {
-        return get_option( 'dokan_dummy_data_import_success', 'no' );
+        $status = [
+            'import_status' => get_option( 'dokan_dummy_data_import_success', 'no' ),
+        ];
+
+        return rest_ensure_response( $status );
     }
 
         /**
@@ -81,20 +85,15 @@ class DummyDataController extends DokanRESTController {
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @return array
      */
     public function import_dummy_data( $request ) {
-        $_post_data = wp_unslash( wc_clean( $request ) );
+        $_post_data = $request->get_params();
 
-        if ( ! isset( $_post_data['csv_file_data'] ) ) {
-            wp_send_json_error( __( 'Csv file not found', 'dokan-lite' ) );
-        }
-
-        $csv_file_data   = $_post_data['csv_file_data'];
-        $vendor_products = isset( $csv_file_data['vendor_products'] ) ? $csv_file_data['vendor_products'] : [];
-        $vendor_data     = isset( $csv_file_data['vendor_data'] ) ? $csv_file_data['vendor_data'] : [];
-        $vendor_index    = isset( $csv_file_data['vendor_index'] ) ? absint( $csv_file_data['vendor_index'] ) : 0;
-        $total_vendors   = isset( $csv_file_data['total_vendors'] ) ? absint( $csv_file_data['total_vendors'] ) : 0;
+        $vendor_products = isset( $_post_data['vendor_products'] ) ? wp_unslash( wc_clean( $_post_data['vendor_products'] ) ) : [];
+        $vendor_data     = isset( $_post_data['vendor_data'] ) ? wp_unslash( wc_clean( $_post_data['vendor_data'] ) ) : [];
+        $vendor_index    = isset( $_post_data['vendor_index'] ) ? absint( $_post_data['vendor_index'] ) : 0;
+        $total_vendors   = isset( $_post_data['total_vendors'] ) ? absint( $_post_data['total_vendors'] ) : 0;
 
         $created_vendor          = dokan()->dummy_data_importer->create_dummy_vendor( $vendor_data );
         $created_products_result = dokan()->dummy_data_importer->create_dummy_products_for_vendor( $created_vendor->id, $vendor_products );
@@ -103,10 +102,12 @@ class DummyDataController extends DokanRESTController {
             update_option( 'dokan_dummy_data_import_success', 'yes', true );
         }
 
-        return array(
+        $imported = [
             'result'       => $created_products_result,
             'vendor_index' => $vendor_index + 1,
-        );
+        ];
+
+        return rest_ensure_response( $imported );
     }
 
     /**
@@ -114,13 +115,17 @@ class DummyDataController extends DokanRESTController {
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @return string
      */
     public function clear_dummy_data() {
         $result = dokan()->dummy_data_importer->clear_all_dummy_data();
         delete_option( 'dokan_dummy_data_import_success' );
 
-        return $result;
+        $message = [
+            'message' => $result,
+        ];
+
+        return rest_ensure_response( $message );
     }
 
     /**
@@ -144,9 +149,60 @@ class DummyDataController extends DokanRESTController {
         return $permission;
     }
 
+    /**
+     * Retrieves the query params for the dummy data collection.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Collection parameters.
+     */
+    public function get_collection_params() {
+        $query_params = parent::get_collection_params();
+
+        $query_params['context']['default'] = 'view';
+
+        $schema            = $this->get_item_schema();
+        $schema_properties = $schema['properties'];
+
+        $query_params['vendor_products'] = array(
+            'required'          => true,
+            'default'           => [],
+            'description'       => $schema_properties['vendor_products']['description'],
+            'type'              => $schema_properties['vendor_products']['type'],
+            'sanitize_callback' => 'wc_clean',
+        );
+
+        $query_params['vendor_data'] = array(
+            'required'          => true,
+            'default'           => [],
+            'description'       => $schema_properties['vendor_data']['description'],
+            'type'              => $schema_properties['vendor_data']['type'],
+            'sanitize_callback' => 'wc_clean',
+        );
+
+        $query_params['vendor_index'] = array(
+            'required'          => true,
+            'default'           => [],
+            'description'       => $schema_properties['vendor_index']['description'],
+            'type'              => $schema_properties['vendor_index']['type'],
+            'sanitize_callback' => 'absint',
+        );
+
+        $query_params['total_vendors'] = array(
+            'required'          => true,
+            'default'           => [],
+            'description'       => $schema_properties['total_vendors']['description'],
+            'type'              => $schema_properties['total_vendors']['type'],
+            'sanitize_callback' => 'absint',
+        );
+
+        return $query_params;
+    }
 
     /**
-     * Get the Order's schema, conforming to JSON Schema.
+     * Get the dummy data's schema, conforming to JSON Schema.
+     *
+     * @since DOKAN_SINCE
      *
      * @return array
      */
@@ -771,7 +827,7 @@ class DummyDataController extends DokanRESTController {
                         ],
                     ],
                 ],
-                'vendor_products' => [
+                'vendor_data' => [
                     'description' => __( 'Vendors profile data.', 'dokan-lite' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],

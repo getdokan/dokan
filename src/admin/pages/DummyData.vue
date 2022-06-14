@@ -189,7 +189,7 @@ export default {
                 'nonce': dokan.nonce,
             })
             .done((response, status, xhr) => {
-                if ( response == 'yes' ) {
+                if ( response.import_status == 'yes' ) {
                     self.done = true;
                 }
                 self.statusLoader = false;
@@ -249,10 +249,7 @@ export default {
         requestToImport( data ){
             let self = this;
 
-            dokan.api.post(`/dummy-data/import`, {
-                'nonce': dokan.nonce,
-                'csv_file_data': data
-            })
+            dokan.api.post(`/dummy-data/import`, data)
             .done((response, status, xhr) => {
                 self.handleImport( response.vendor_index );
                 self.updateProgress( response.vendor_index );
@@ -286,6 +283,7 @@ export default {
             }
 
             let data = {
+                nonce: dokan.nonce,
                 vendor_data: vendorData,
                 vendor_products: this.getVendorProducts( vendorData.id ),
                 vendor_index: vendor_index,
@@ -363,7 +361,7 @@ export default {
                     dokan_sweetalert( '', {
                         toast: true,
                         icon: 'success',
-                        title: response,
+                        title: response.message,
                         animation: false,
                         position: 'bottom-right',
                         showConfirmButton: false,
