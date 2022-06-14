@@ -7,7 +7,7 @@
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 6.5.1  
 **Requires PHP:** 7.0  
-**Stable tag:** 3.5.1  
+**Stable tag:** 3.6.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -122,7 +122,6 @@ Admin can extend flexibility to individual vendors to have control over their sh
 
 * [ShipStation](https://wedevs.com/dokan/modules/shipstation/) (Pro) - Enable vendors to import, manage, and ship orders hassle-free with the leading shipping application for online marketplaces.
 
-
 ### PLAYS NICE WITH OTHER PLUGINS ###
 
 Dokan is compatible with more than 70+ plugins so that you don’t have to worry about anything when it comes to compatibility.
@@ -159,6 +158,7 @@ Elementor module for Dokan. Simply get the customizer to be able to customize th
 * A part of the sale value is sent to admin as commission.
 * Commission rate can be customized.
 * [Per vendor percentage override](https://wedevs.com/docs/dokan/tutorials/how-to-setup-dokan-vendor-commission/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org). (Pro)
+* Reverse Withdrawal - With Reverse Withdrawal, Admin can collect commissions from vendor which can not be collected via regular commission system, such as when vendors ship orders with cash on delivery.
 
 **Simple Product Management**
 
@@ -214,9 +214,11 @@ Elementor module for Dokan. Simply get the customizer to be able to customize th
 
 Dokan comes with a number of extended features that help your marketplace stay one step ahead of the competition. And more innovations and features are brought with regular and timely releases.
 
+* [Stripe Express](https://wedevs.com/dokan/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module) (Pro) - Utilize popular payment gateways – Apple Pay and Google Pay, to execute transactions like schedule payouts, request payments, and more.
 * [Minimum Maximum Order](https://wedevs.com/dokan/modules/minimum-maximum-order?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your merchants set a minimum or maximum limit upon order amounts (quantity or price).
 * [Product Advertising](https://wedevs.com/dokan/modules/product-advertising?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let the Vendors promote their selected products. This will enhance their chance of attracting more customers, and you as the admin can charge for this, thus resulting in more income for both Admin and Vendors.
-* [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
+* [Product Subscription](https://wedevs.com/dokan/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Let your vendors sell subscription-based products and services easily from the frontend of your website.
+* [Request for Quotation](https://wedevs.com/dokan/modules/request-for-quotation/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules)(Pro) - Customers can communicate with vendors by requesting quoted prices on wholesale orders.
 * [Rank Math SEO](https://wedevs.com/dokan/modules/rank-math-seo) (Pro) - Let your vendors manage their product SEO with an easy-to-navigate frontend dashboard and drive traffic to your eCommerce site.
 * [Dokan MANGOPAY Integration](https://wedevs.com/dokan/modules/dokan-mangopay?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro) - Make smooth transactions with split payments, multi vendor support and run your business operations in Europe with ease using Mangopay.
 * [Dokan Paypal Marketplace](https://wedevs.com/dokan/modules/dokan-paypal-marketplace) (Pro) - Make your marketplace payment system smoother than ever with the advanced PayPal integration with all PayPal Commerce Platform (PCP) features.
@@ -313,6 +315,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.6.0 ( Jun 14, 2022 ) ###
+
+**new:** Added a new filter named ‘dokan_bank_payment_validation_error’ so that payment validation errors can be filtered.
+**update:** Entirely redesigned Dokan Admin Settings page
+**fix:** WPML translated endpoints not working in payment settings page
 
 ### v3.5.1 ( May 31, 2022 ) ###
 
