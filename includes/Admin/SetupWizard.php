@@ -697,7 +697,7 @@ class SetupWizard {
         check_admin_referer( 'dokan-setup' );
 
         $_post_data = wp_unslash( $_POST );
-        $options = array();
+        $options = get_option( 'dokan_withdraw', [] );
 
         $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? wc_clean( $_post_data['withdraw_methods'] ) : [];
         $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? (float) wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) < 0 ? 0 : wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
