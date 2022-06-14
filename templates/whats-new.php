@@ -4,13 +4,37 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.6.0',
+        'released' => '2022-06-14',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new filter named ‘dokan_bank_payment_validation_error’ so that payment validation errors can be filtered.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Entirely redesigned Dokan Admin Settings page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'WPML translated endpoints not working in payment settings page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.5.1',
         'released' => '2022-05-31',
         'changes'  => [
             'New'         => [
                 [
-                    'title'       => 'Added Reverse Withdrawal feature. Kindly read <a href="https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/" target="_blank">documentation</a> for more details.',
-                    'description' => '',
+                    'title'       => 'Added Reverse Withdrawal feature.',
+                    'description' => 'Kindly read the <a href="https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/" target="_blank">documentation</a> for more details.',
                 ],
             ],
             'Improvement' => [

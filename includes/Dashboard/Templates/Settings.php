@@ -60,7 +60,7 @@ class Settings {
             $is_store_setting = true;
         } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             $heading = __( 'Payment Method', 'dokan-lite' );
-            $slug    = str_replace( 'payment/manage-', '', $wp->query_vars['settings'] );
+            $slug    = str_replace( 'payment-manage-', '', $wp->query_vars['settings'] );
             $heading = $this->get_payment_heading( $slug, $heading );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
@@ -231,16 +231,16 @@ class Settings {
          * If we are requesting a single payment method page (to edit or for first time setup)
          * then we have the corresponding payment method key in the url.
          */
-        $method_key   = str_replace( '/manage-', '', $slug_suffix );
+        $method_key   = str_replace( '-manage-', '', $slug_suffix );
         $is_edit_mode = false;
 
         /*
          * If payment method key has /edit suffix then we are trying to edit the method,
          * otherwise we are doing a initial setup for that payment method.
          */
-        if ( false !== stripos( $method_key, '/edit' ) ) {
+        if ( false !== stripos( $method_key, '-edit' ) ) {
             $is_edit_mode = true;
-            $method_key   = str_replace( '/edit', '', $method_key ); // removing '/edit' suffix to get payment method key
+            $method_key   = str_replace( '-edit', '', $method_key ); // removing '/edit' suffix to get payment method key
         }
 
         $profile_info = get_user_meta( $seller_id, 'dokan_profile_settings', true );
@@ -350,7 +350,7 @@ class Settings {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
 
-                $ajax_validate = $this->payment_validate();
+                $ajax_validate = apply_filters( 'dokan_bank_payment_validation_error', $this->payment_validate() );
                 break;
             default:
                 $ajax_validate = new WP_Error( 'form_id_not_matched', __( 'Failed to process data, invalid submission', 'dokan-lite' ) );
@@ -699,9 +699,9 @@ class Settings {
                 'location'                 => $location,
                 'find_address'             => $find_address,
                 'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
-                'phone'                    => sanitize_text_field( $post_data['setting_phone'] ),
-                'show_email'               => sanitize_text_field( $post_data['setting_show_email'] ),
-                'show_more_ptab'           => sanitize_text_field( $post_data['setting_show_more_ptab'] ),
+                'phone'                    => isset( $post_data['setting_phone'] ) ? sanitize_text_field( $post_data['setting_phone'] ) : 'no',
+                'show_email'               => isset( $post_data['setting_show_email'] ) ? sanitize_text_field( $post_data['setting_show_email'] ) :'no',
+                'show_more_ptab'           => isset( $post_data['setting_show_more_ptab'] ) ? sanitize_text_field( $post_data['setting_show_more_ptab'] ) : 'no',
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
@@ -786,12 +786,12 @@ class Settings {
     private function get_payment_heading( $slug, $heading ) {
         switch ( $slug ) {
             case 'bank':
-            case 'bank/edit':
+            case 'bank-edit':
                 $heading = __( 'Bank Account Settings', 'dokan-lite' );
                 break;
 
             case 'paypal':
-            case 'paypal/edit':
+            case 'paypal-edit':
                 $heading = __( 'Paypal Settings', 'dokan-lite' );
                 break;
         }
