@@ -34,33 +34,33 @@ class DummyDataController extends DokanRESTController {
     public function register_routes() {
         register_rest_route(
             $this->namespace, '/' . $this->base . '/status', array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'import_dummy_data_status' ),
-					'permission_callback' => array( $this, 'get_permissions_check' ),
-				),
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'import_dummy_data_status' ),
+                    'permission_callback' => array( $this, 'get_permissions_check' ),
+                ),
             )
         );
 
         register_rest_route(
             $this->namespace, '/' . $this->base . '/import', array(
-				array(
-					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'import_dummy_data' ),
-					'permission_callback' => array( $this, 'get_permissions_check' ),
-					'args'                => $this->get_collection_params(),
-				),
-				'schema' => array( $this, 'get_public_item_schema' ),
+                array(
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => array( $this, 'import_dummy_data' ),
+                    'permission_callback' => array( $this, 'get_permissions_check' ),
+                    'args'                => $this->get_collection_params(),
+                ),
+                'schema' => array( $this, 'get_public_item_schema' ),
             )
         );
 
         register_rest_route(
             $this->namespace, '/' . $this->base . '/clear', array(
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'clear_dummy_data' ),
-					'permission_callback' => array( $this, 'get_permissions_check' ),
-				),
+                array(
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => array( $this, 'clear_dummy_data' ),
+                    'permission_callback' => array( $this, 'get_permissions_check' ),
+                ),
             )
         );
     }

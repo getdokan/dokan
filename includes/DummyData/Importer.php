@@ -91,7 +91,7 @@ class Importer extends \WC_Product_Importer {
      * @param int $vendor_id
      * @param array $products
      *
-     * @return void
+     * @return array
      */
     public function create_dummy_products_for_vendor( $vendor_id, $products ) {
         foreach ( $products as $product_key => $product ) {
