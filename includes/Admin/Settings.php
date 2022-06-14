@@ -41,7 +41,7 @@ class Settings {
      * @param mixed $option_value
      * @param mixed $option_name
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.0
      *
      * @return void|mixed $option_value
      */
