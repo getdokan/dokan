@@ -9,7 +9,6 @@ import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
 import VersionCompare from '@/utils/VersionCompare'
-import AdminNotice from "../admin/components/AdminNotice.vue";
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -50,6 +49,8 @@ import VendorAccountFields from "admin/pages/VendorAccountFields.vue";
 import VendorAddressFields from "admin/pages/VendorAddressFields.vue";
 import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
 import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
+import AdminNotice from "../admin/components/AdminNotice.vue";
+import CardFunFact from "../admin/components/CardFunFact.vue";
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -118,7 +119,8 @@ window.dokan.libs['VendorAddressFields'] = VendorAddressFields;
 window.dokan.libs['VendorSocialFields']  = VendorSocialFields;
 window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
-window.dokan.libs['AdminNotice'] = AdminNotice;
+window.dokan.libs['AdminNotice']         = AdminNotice;
+window.dokan.libs['CardFunFact']         = CardFunFact;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

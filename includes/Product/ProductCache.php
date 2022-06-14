@@ -28,6 +28,8 @@ class ProductCache {
 
         add_action( 'wp_trash_post', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'delete_post', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'woocommerce_attribute_updated', [ $this, 'clear_seller_product_caches' ], 20 );
+        add_action( 'woocommerce_attribute_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
 
         add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
         add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
@@ -52,6 +54,8 @@ class ProductCache {
             return;
         }
 
+        // Delete caches for this product taxonomy.
+        $this->clear_single_product_taxonomy_caches( $product );
         $seller_id = get_post_field( 'post_author', $product->get_id() );
         self::delete( $seller_id );
     }
@@ -96,6 +100,8 @@ class ProductCache {
         wp_cache_delete( $product->get_id(), 'posts' );
         wp_cache_delete( $product->get_id(), 'post_meta' );
 
+        // Delete caches for this product taxonomy.
+        $this->clear_single_product_taxonomy_caches( $product );
         try {
             $store       = \WC_Data_Store::load( 'product-' . $product->get_type() );
             $class       = $store->get_current_class_name();
@@ -113,6 +119,30 @@ class ProductCache {
         } catch ( \Exception $e ) {
             return;
         }
+    }
+
+    /**
+     * Clear Single Product taxonomy Caches.
+     *
+     * @since 3.5.0
+     *
+     * @param int|\WC_Product $product
+     *
+     * @return void
+     */
+    public function clear_single_product_taxonomy_caches( $product ) {
+        if ( ! $product instanceof \WC_Product ) {
+            $product = wc_get_product( $product );
+        }
+
+        if ( ! $product instanceof \WC_Product ) {
+            return;
+        }
+
+        $vendor_id = dokan_get_vendor_by_product( $product, true );
+        $transient_group = "seller_taxonomy_widget_data_{$vendor_id}";
+
+        Cache::invalidate_transient_group( $transient_group );
     }
 
     /**
@@ -134,6 +164,8 @@ class ProductCache {
         foreach ( $products  as $product_id ) {
             $this->clear_single_product_caches( $product_id );
             $this->clear_seller_product_caches( $product_id );
+            // Delete caches for this product taxonomy.
+            $this->clear_single_product_taxonomy_caches( $product_id );
         }
     }
 }

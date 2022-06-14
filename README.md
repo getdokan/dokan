@@ -2,12 +2,12 @@
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988/), [wedevs](https://profiles.wordpress.org/wedevs/), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu/)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
-**Requires at least:** 4.4  
-**Tested up to:** 5.9.3  
-**WC requires at least:** 3.0  
-**WC tested up to:** 6.4.1  
-**Requires PHP:** 5.6  
-**Stable tag:** 3.4.3  
+**Requires at least:** 5.4  
+**Tested up to:** 6.0  
+**WC requires at least:** 5.0.0  
+**WC tested up to:** 6.5.1  
+**Requires PHP:** 7.0  
+**Stable tag:** 3.5.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -313,6 +313,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.5.1 ( May 31, 2022 ) ###
+
+**new:** Added Reverse Withdrawal feature
+**update:** Determine if a seller is connected to a payment method
+**update:** improved UI of Payment settings page
+**update:** Correctly determine the vendor a product belongs to, so the "dokan_get_vendor_by_product" filter hook is called.
+**fix:** Simple > Variable > External/Affiliate > Group Product > Fatal error.
+**fix:** changing dokan vendor dashboard page slug gives 404 error
+
+### v3.5.0 ( May 18, 2022 ) ###
+
+- **chore:** Minimum php version is set to 7.0
+- **chore:** Minimum WooCommerce version is set to 5.0
+- **chore:** Minimum WordPress version is set to 5.4
+- **new:** Added a new product attributes widget, by which users/customers will be able to search products by vendors used attributes.
+- **fix:** Fixed vendor store settings page phone number validation js console error
+- **fix:** payment settings page 404 if dashboard url slug is changed
 
 ### v3.4.3 ( Apr 26, 2022 ) ###
 
