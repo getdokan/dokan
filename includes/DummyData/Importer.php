@@ -14,7 +14,7 @@ if ( ! class_exists( 'WC_Product_Importer', false ) ) {
 }
 
 if ( ! function_exists( 'wp_delete_user' ) ) {
-    require_once( ABSPATH.'wp-admin/includes/user.php' );
+    require_once ABSPATH . 'wp-admin/includes/user.php';
 }
 
 /**
