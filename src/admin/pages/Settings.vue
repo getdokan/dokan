@@ -295,11 +295,12 @@
                 }
 
                 return this.$swal({
-                    title: this.__('Withdraw Method Changed'),
-                    text: this.__('Do you want to send an announcement to vendors about the removal of currently active payment method?'),
+                    title: this.__( 'Withdraw Method Changed', 'dokan-lite' ),
+                    text: this.__( 'Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite' ),
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: this.__('Yes, send announcement!')
+                    confirmButtonText: this.__('Save & send announcement', 'dokan-lite'),
+                    cancelButtonText: this.__( 'Save only', 'dokan-lite' ),
                 });
             },
 
@@ -643,7 +644,7 @@
                         font-family: Roboto, sans-serif;
                         margin-bottom: 12px;
                     }
-    
+
                     .settings-description {
                         color: #000;
                         margin: 0;
