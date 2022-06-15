@@ -151,7 +151,7 @@ class SetupWizard extends DokanSetupWizard {
         $setup_wizard_message = dokan_get_option( 'setup_wizard_message', 'dokan_general', $default_message );
         ?>
         <h1><?php esc_attr_e( 'Welcome to the Marketplace!', 'dokan-lite' ); ?></h1>
-        <?php if (! empty( $setup_wizard_message ) ): ?>
+        <?php if ( ! empty( $setup_wizard_message ) ): ?>
         <div><?php printf( '%s', $setup_wizard_message ); ?></div>
         <?php endif; ?>
         <p><?php esc_attr_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
