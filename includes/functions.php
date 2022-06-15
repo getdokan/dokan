@@ -7,7 +7,7 @@ use WeDevs\Dokan\Cache;
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokan_admin_menu_position() {
     return apply_filters( 'dokan_menu_position', '55.4' );
@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokana_admin_menu_capability() {
     return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
@@ -4036,17 +4036,11 @@ function dokan_format_datetime( $date = '', $format = false ) {
     } elseif ( $date instanceof DateTimeImmutable ) {
         $timestamp = $date->getTimestamp();
         // if the date param is string, convert it to timestamp
-    } elseif ( ! is_numeric( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date );
-        // check if we get valid date at this point
-        if ( ! $date ) {
-            return false;
-        }
-        // get timestamp from modified date
-        $timestamp = $date->getTimestamp();
-        // if date is already timestamp, just use it
     } elseif ( is_numeric( $date ) ) {
         $timestamp = $date;
+    } elseif ( is_string( $date ) && strtotime( $date ) ) {
+        $timestamp = dokan_current_datetime()->modify( $date )->getTimestamp();
+        // if date is already timestamp, just use it
     } else {
         // we couldn't recognize the $date argument
         return false;
@@ -4084,7 +4078,7 @@ function dokan_format_date( $date = '', $format = false ) {
  * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
  *
- * @since DOKAN_SINCE
+ * @since 3.5.1
  *
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
@@ -4340,4 +4334,16 @@ function dokan_bool_to_on_off( $bool ) {
     }
 
     return true === $bool ? 'on' : 'off';
+}
+
+/**
+ * Check is 12 hour format in current setup.
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @return bool
+ */
+function is_tweleve_hour_format() {
+    // Check if current setup format is 12 hour format.
+    return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
 }

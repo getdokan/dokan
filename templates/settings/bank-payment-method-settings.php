@@ -12,7 +12,7 @@
  */
 ?>
 
-<div>
+<div class="dokan-bank-settings-template">
     <p class="dokan-text-left"><?php esc_html_e( 'Deposit earnings directly to your U.S. bank account free of charge', 'dokan-lite' ); ?></p>
 
     <div class="dokan-form-group">
@@ -46,7 +46,7 @@
 
         <div class="dokan-w10">
             <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control dokan-w4" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text" required>
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7 dokan-right" placeholder="<?php esc_attr_e( 'Your bank account number', 'dokan-lite' ); ?>" type="text" required>
+            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control dokan-w7 dokan-right" placeholder="<?php esc_attr_e( 'Account number', 'dokan-lite' ); ?>" type="text" required>
         </div>
     </div>
 
@@ -117,12 +117,14 @@
 
     <p class="bottom-note"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
 
+    <?php if ( ! isset( $_GET['page'] ) || 'dokan-seller-setup' !== $_GET['page'] ) : ?>
     <div class="bottom-actions">
         <button class="ajax_prev dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
             <?php echo esc_html( $save_or_add_btn_text ); ?>
         </button>
-        <a href="<?php echo esc_url( dokan_get_page_url( 'dashboard', 'dokan', 'settings/payment' ) ); ?>">
+        <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>">
             <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
         </a>
     </div>
+    <?php endif; ?>
 </div>
