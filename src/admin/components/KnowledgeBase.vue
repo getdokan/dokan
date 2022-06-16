@@ -1,5 +1,5 @@
 <template>
-    <div class="dokan-knowledge-base">
+    <div class="dokan-knowledge-base" v-if="!hide">
         <div class="dokan-kb-header">
             <h3 class="dokan-kb-header-title">{{ __( 'Dokan Knowledge Base', 'dokan-lite' ) }}</h3>
             <p class="dokan-kb-header-info">{{ sprintf( __( 'Learn the ins and outs of %s page on Dokan', 'dokan-lite' ), getPageContent() ) }}</p>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="dokan-kb-article-content">
                             <h5 class="dokan-kb-article-title">{{ article.title.rendered }}</h5>
-                            <span v-for="category in article.categories" class="dokan-kb-article-category" :class="getCategoryColorClass()">{{ category.name }}</span>
+                            <span v-for="tag in article.tags" class="dokan-kb-article-category" :class="getCategoryColorClass()">{{ tag.name }}</span>
                         </div>
                     </a>
                 </div>
@@ -79,9 +79,10 @@ export default {
     name: "KnowledgeBase",
     data() {
         return {
-            base: 'https://wedevs.com/wp-json/wp/v2',
+            base: 'https://wedevs.com/account/wp-json/wp/v2',
             articlePosition: 0,
             loading: true,
+            hide:false,
             articles: [],
             docs: [],
             params: {
@@ -105,8 +106,12 @@ export default {
         getKnowledgeBase() {
             this.loading = true;
             this.articlePosition = 0;
+            let articleQueryParam = this.getPageArticleQueryParams();
+            let docQueryParam = this.getPageDocQueryParams();
+            console.log('articleQueryParam',articleQueryParam);
+            console.log('docQueryParam',docQueryParam);
 
-            axios.get( this.base + '/posts',{ params: { categories: [1292] } } )
+            axios.get( this.base + '/posts',{ params: articleQueryParam } )
                 .then( response => {
                     this.articles = response.data;
                     this.loading = false;
@@ -116,7 +121,8 @@ export default {
                     console.log( error );
                 } );
 
-            axios.get( this.base + '/docs',{ params: { per_page: 4 } } )
+            this.loading = true;
+            axios.get( this.base + '/docs',{ params: docQueryParam } )
                 .then( response => {
                     this.docs = response.data;
                     this.loading = false;
@@ -127,7 +133,7 @@ export default {
                 } );
 
         },
-        navigateArticle( direction ){
+        navigateArticle( direction = 'next' ) {
             if ('next' === direction) {
                 this.articlePosition = this.articlePosition + 2;
             } else {
@@ -152,6 +158,114 @@ export default {
                 default:
                     return currentPage;
             }
+        },
+        getPageArticleQueryParams() {
+            let currentPage = this.getCurrentPage();
+            let params = [];
+            switch (currentPage) {
+                case 'Dashboard':
+                    params = {tags: [1073]};
+                    break;
+                case 'Withdraw':
+                    params = {tags: []};
+                    break;
+                case 'Vendors':
+                case 'VendorSingle':
+                    params = {tags: [6724]};
+                    break;
+                case 'AbuseReports':
+                    params = {tags: []};
+                    break;
+                case 'StoreReviews':
+                    params = {tags: [6725]};
+                    break;
+                case 'AdminStoreSupport':
+                    params = {tags: [6726]};
+                    break;
+                case 'Announcement':
+                    params = {tags: []};
+                    break;
+                case 'Refund':
+                    params = { tags: [6727]};
+                    break;
+                case 'Reports':
+                    params = { tags: [6728]};
+                    break;
+                case 'Modules':
+                    params = { tags: [6729]};
+                    break;
+                case 'Tools':
+                    params = { tags: [6730]};
+                    break;
+                case 'ProductAdvertisement':
+                    params = { tags: [6731]};
+                    break;
+                case 'WholesaleCustomer':
+                    params = { tags: [6732]};
+                    break;
+                case 'Settings':
+                    params = { tags: [6733]};
+                    break;
+                default:
+                    params = {search : 'Dokan'};
+                    break;
+            }
+            params.per_page = 20;
+            return params;
+        },
+        getPageDocQueryParams() {
+            let currentPage = this.getCurrentPage();
+            let params = [];
+            switch (currentPage) {
+                case 'Dashboard':
+                    params = {doc_tag: [6748,6745]};
+                    break;
+                case 'Withdraw':
+                    params = {doc_tag: [6747]};
+                    break;
+                case 'Vendors':
+                case 'VendorSingle':
+                    params = {doc_tag: [6749]};
+                    break;
+                case 'AbuseReports':
+                    params = {doc_tag: [6778]};
+                    break;
+                case 'StoreReviews':
+                    params = {doc_tag: [6771]};
+                    break;
+                case 'AdminStoreSupport':
+                    params = {doc_tag: [6766]};
+                    break;
+                case 'Announcement':
+                    params = {doc_tag: [6750]};
+                    break;
+                case 'Refund':
+                    params = {doc_tag: [6751]};
+                    break;
+                case 'Reports':
+                    params = {doc_tag: [6752]};
+                    break;
+                case 'Modules':
+                    params = {doc_tag: [6753,6793]};
+                    break;
+                case 'Tools':
+                    params = {doc_tag: [6798]};
+                    break;
+                case 'ProductAdvertisement':
+                    params = {doc_tag: [6790]};
+                    break;
+                case 'WholesaleCustomer':
+                    params = {doc_tag: [6776]};
+                    break;
+                case 'Settings':
+                    params = {doc_tag: [6799]};
+                    break;
+                default:
+                    params = {search : 'Dokan'};
+                    break;
+            }
+            params.per_page = 5;
+            return params;
         },
     },
     computed: {
