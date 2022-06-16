@@ -19,7 +19,7 @@
                         </div>
                         <h4 class="dokan-kb-article-header-title">{{ __( 'Dokan Blog', 'dokan-lite' ) }}</h4>
                     </div>
-                    <div class="dokan-kb-article-header-nav" v-if="!loading && articles.length">
+                    <div class="dokan-kb-article-header-nav" v-if="!loading && articles.length>2">
                         <span v-on:click="navigateArticle('back')" class="dashicons dashicons-arrow-left-alt2 dokan-kb-article-header-nav-item"></span>
                         <span v-on:click="navigateArticle('next')" class="dashicons dashicons-arrow-right-alt2 dokan-kb-article-header-nav-item"></span>
                     </div>
