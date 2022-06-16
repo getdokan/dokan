@@ -17,7 +17,7 @@
                                 <path d="M4.4475 0.407385C2.24347 0.531556 0.411946 2.26995 0.163604 4.47398C0.0394331 5.71569 0.411946 6.92635 1.18801 7.85764C1.77782 8.57162 2.21242 9.37873 2.42972 10.2169H6.96196C7.17926 9.37873 7.61385 8.54057 8.20367 7.82659C8.88661 7.01948 9.25912 5.99507 9.25912 4.93962C9.25912 2.36308 7.05509 0.283214 4.4475 0.407385Z" fill="#2C75A9"/>
                             </svg>
                         </div>
-                        <h4 class="dokan-kb-article-header-title">{{ __( 'Dokan Blog', 'dokan-lite' ) }}</h4>
+                        <h4 class="dokan-kb-article-header-title">{{ __( 'Dokan\'s Blog', 'dokan-lite' ) }}</h4>
                     </div>
                     <div class="dokan-kb-article-header-nav" v-if="!loading && articles.length>2">
                         <span v-on:click="navigateArticle('back')" class="dashicons dashicons-arrow-left-alt2 dokan-kb-article-header-nav-item"></span>
@@ -25,8 +25,8 @@
                     </div>
                 </div>
                 <div class="dokan-kb-article-404" v-if="!loading && !articles.length">
-                    <h3>Oops, our posts aren't loading right now</h3>
-                    <p>Read the <a href="https://wedevs.com/category/dokan" target="_blank">{{ __( 'Dokan Blogs', 'dokan-lite' ) }}</a> for more tips on marketing your store</p>
+                    <h3>{{__('Oops, our posts aren\'t loading right now', 'dokan-lite')}}</h3>
+                    <p>{{__('Read the', 'dokan-lite')}} <a href="https://wedevs.com/category/dokan" target="_blank">{{ __( 'Dokan Blogs', 'dokan-lite' ) }}</a> {{__('for more tips on marketing your store', 'dokan-lite')}}</p>
                 </div>
                 <div class="dokan-kb-article-item" v-for="article in articles.slice( articlePosition, 2 + articlePosition )" :key="article.id">
                     <a :href="article.link" target="_blank">
@@ -49,12 +49,12 @@
                                 <path d="M6.6281 4.64506C6.40934 4.64506 6.23183 4.46755 6.23183 4.24879V0.682373H1.08036C0.861594 0.682373 0.684082 0.859885 0.684082 1.07865V12.4383C0.684082 12.6571 0.861594 12.8346 1.08036 12.8346H9.79824C10.017 12.8346 10.1945 12.6571 10.1945 12.4383V4.64506H6.6281ZM5.83557 10.457H2.66541C2.44665 10.457 2.26914 10.2795 2.26914 10.0607C2.26914 9.84193 2.44665 9.66442 2.66541 9.66442H5.83555C6.05431 9.66442 6.23183 9.84193 6.23183 10.0607C6.23183 10.2795 6.05434 10.457 5.83557 10.457ZM8.21318 8.87189H2.66541C2.44665 8.87189 2.26914 8.69438 2.26914 8.47562C2.26914 8.25685 2.44665 8.07934 2.66541 8.07934H8.21318C8.43195 8.07934 8.60946 8.25685 8.60946 8.47562C8.60946 8.69438 8.43195 8.87189 8.21318 8.87189ZM8.21318 7.28684H2.66541C2.44665 7.28684 2.26914 7.10932 2.26914 6.89056C2.26914 6.6718 2.44665 6.49429 2.66541 6.49429H8.21318C8.43195 6.49429 8.60946 6.6718 8.60946 6.89056C8.60944 7.10932 8.43195 7.28684 8.21318 7.28684Z" fill="#2C75A9"/>
                             </svg>
                         </div>
-                        <h4 class="dokan-kb-docs-header-title">{{ __( 'Basic Doc', 'dokan-lite' ) }}</h4>
+                        <h4 class="dokan-kb-docs-header-title">{{ __( 'Related Docs', 'dokan-lite' ) }}</h4>
                     </div>
                 </div>
                 <div class="dokan-kb-docs-404" v-if="!loading && !docs.length">
-                    <h3>Oops, our docs aren't loading right now</h3>
-                    <p>Read the <a href="https://wedevs.com/docs/dokan/" target="_blank">{{ __( 'Dokan Docs', 'dokan-lite' ) }}</a> for more tips on managing your store</p>
+                    <h3>{{__('Oops, our docs aren\'t loading right now', 'dokan-lite')}}</h3>
+                    <p>{{__('Read the', 'dokan-lite')}} <a href="https://wedevs.com/docs/dokan/" target="_blank">{{ __( 'Dokan Docs', 'dokan-lite' ) }}</a> {{__('for more tips on managing your store', 'dokan-lite')}}</p>
                 </div>
                 <ol class="dokan-kb-docs-ordered-list">
                     <div class="dokan-kb-doc-item" v-for="doc in docs.slice(0,4)">
@@ -74,6 +74,20 @@
 
 <script>
 import axios from 'axios';
+import { setupCache } from 'axios-cache-adapter'
+
+const cache = setupCache({
+    maxAge: 15 * 60 * 1000, // 15 minutes
+    // maxAge: 24 * 60 * 60 * 1000, // 1 day
+    // maxAge: 4 * 60 * 60 * 1000, // 4 hours
+    exclude: { query: false }, // exclude query string from excluded cache.
+    debug: false, // enable to see debug logs
+});
+
+// Create `axios` instance passing the newly created `cache.adapter`
+const api = axios.create({
+    adapter: cache.adapter
+});
 
 export default {
     name: "KnowledgeBase",
@@ -110,28 +124,20 @@ export default {
             this.articlePosition = 0;
             let articleQueryParam = this.getPageArticleQueryParams();
             let docQueryParam = this.getPageDocQueryParams();
+            this.articles = [];
+            this.docs = [];
 
-            axios.get( this.base + '/posts',{ params: articleQueryParam } )
-                .then( response => {
-                    this.articles = response.data;
-                    this.loading = false;
-                } )
-                .catch( error => {
-                    this.loading = false;
-                    console.log( error );
-                } );
-
-            this.loading = true;
-            axios.get( this.base + '/docs',{ params: docQueryParam } )
-                .then( response => {
-                    this.docs = response.data;
-                    this.loading = false;
-                } )
-                .catch( error => {
-                    this.loading = false;
-                    console.log( error );
-                } );
-
+            axios.all([
+                api.get(this.base + '/posts',{ params: articleQueryParam }),
+                api.get(this.base + '/docs', { params: docQueryParam } )
+            ]).then(axios.spread( async (...responses) => {
+                this.articles = responses[0].data;
+                this.docs = responses[1].data;
+                this.loading = false;
+            })).catch(error => {
+                console.log(error);
+                this.loading = false;
+            });
         },
         navigateArticle( direction = 'next' ) {
             if ('next' === direction) {
