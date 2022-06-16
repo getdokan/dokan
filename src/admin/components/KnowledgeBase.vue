@@ -95,9 +95,11 @@ export default {
             () => this.$route.name,
             (currentPage, previousPage) => {
                 this.getKnowledgeBase();
+                this.hideKnowledgeBase();
             }
         );
         this.getKnowledgeBase();
+        this.hideKnowledgeBase();
     },
     methods: {
         getCurrentPage() {
@@ -108,8 +110,6 @@ export default {
             this.articlePosition = 0;
             let articleQueryParam = this.getPageArticleQueryParams();
             let docQueryParam = this.getPageDocQueryParams();
-            console.log('articleQueryParam',articleQueryParam);
-            console.log('docQueryParam',docQueryParam);
 
             axios.get( this.base + '/posts',{ params: articleQueryParam } )
                 .then( response => {
@@ -267,6 +267,20 @@ export default {
             params.per_page = 5;
             return params;
         },
+        hideKnowledgeBase(){
+            let currentPage = this.getCurrentPage();
+            let hidden = this.hide;
+            switch (currentPage) {
+                case 'Help':
+                    hidden = true;
+                    break;
+                default:
+                    hidden = false;
+                    break;
+            }
+
+            this.hide = hidden;
+        }
     },
     computed: {
     },
