@@ -2353,9 +2353,7 @@ jQuery(function($) {
           label.removeClass('error');
           label.remove();
         },
-        submitHandler: async function(form, event) {
-          event.preventDefault();
-
+        submitHandler: async function(form) {
           $(form).block({
             message: null,
             overlayCSS: {
