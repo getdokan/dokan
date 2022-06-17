@@ -1,10 +1,10 @@
 ;( function( $ ) {
-    let modal          = $( '#dokan-product-category-modal' );
-    let loader         = $( '#dokan-single-categories-loader' );
-    let searchResultContainer      = $( '#dokan-cat-search-res' );
-    let searchResUl    = $( '#dokan-cat-search-res-ul' );
-    let rightIndicator = $( '.dokan-single-categories-right' );
-    let leftIndicator  = $( '.dokan-single-categories-left' );
+    let modal                 = $( '#dokan-product-category-modal' );
+    let loader                = $( '#dokan-single-categories-loader' );
+    let searchResultContainer = $( '#dokan-cat-search-res' );
+    let searchResUl           = $( '#dokan-cat-search-res-ul' );
+    let rightIndicator        = $( '.dokan-single-categories-right' );
+    let leftIndicator         = $( '.dokan-single-categories-left' );
 
     let categoriesState   = [];
     let searchResultState = [];
@@ -27,7 +27,9 @@
 
             $( 'body' ).on( 'click', '.dokan-cat-search-res-li', function() {
                 let { termid, index, name } = $( this ).data();
-                ProductCategory.setCatUiBasedOnOneCat( termid, index, searchResultState[ index ] );
+                if ( termid ) {
+                    ProductCategory.setCatUiBasedOnOneCat( termid, searchResultState[ index ] );
+                }
             } );
 
             $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', ProductCategory.debounce( function() {
@@ -67,20 +69,11 @@
             } );
         },
 
-        setCatUiBasedOnOneCat: function( catId, catIndex, category ) {
-            ProductCategory.disableDoneBtn( category.has_child );
+        setCatUiBasedOnOneCat: function( catId, category ) {
+            ProductCategory.disableDoneBtn( category.children.length > 0 );
 
-            selectedCatId  = catId;
-            let allParents = [];
-
-            if ( category.parents ) {
-                allParents = category.parents.map( parent => {
-                    return parent.term_id;
-                });
-            }
-
-            let allUl = [ ...allParents ];
-            let selectedInUls = [ ...allParents ];
+            let allUl = [ ...category.parents ];
+            let selectedInUls = [ ...category.parents ];
 
             allUl.unshift( 0 );
             selectedInUls.push( Number( catId ) );
@@ -97,15 +90,16 @@
         },
 
         doSearchCates: async ( text ) => {
-            let allCategories = [ ...dokan_product_category_data.categories ];
-            let searchResult = await allCategories.filter( ( category, index ) => {
-                let fullText = category.cat_name;
+            let searchResult = [];
+            for ( const key in dokan_product_category_data.categories ) {
+                let category = dokan_product_category_data.categories[ key ];
+                let fullText = category.name;
                 let found    = fullText.toLowerCase().indexOf( text );
-                let res      = false;
 
-                found >= 0 ? res = true : '';
-                return res;
-            });
+                if ( found >= 0 ) {
+                    searchResult.push( category );
+                }
+            }
 
             searchResultState = searchResult;
             ProductCategory.updateSearchResultUi();
@@ -148,16 +142,18 @@
         },
 
         getCategoriesWithParentId: ( parentId = 0, level = 1, selectedId = false ) => {
-            let allCategories = [ ...dokan_product_category_data.categories ];
-            let categories = allCategories.filter( ( category, index ) => {
-                if ( category.parent == parentId ) {
-                    allCategories[ index ].uiActivaion = category.cat_ID === selectedId ? 'dokan-product-category-li-active' : false;
-                    return true;
+            let returnableCategories = [];
+
+            for ( const key in dokan_product_category_data.categories ) {
+                let currentCategory = dokan_product_category_data.categories[ key ];
+                if ( currentCategory.parent_id == parentId ) {
+                    currentCategory.uiActivaion = Number( currentCategory.term_id ) === selectedId ? 'dokan-product-category-li-active' : false;
+                    returnableCategories.push( currentCategory );
                 }
-            });
+            }
 
             return {
-                categories: categories,
+                categories: returnableCategories,
                 level: level,
                 term_id: parentId,
             };
@@ -190,13 +186,23 @@
                     </li>`;
             });
 
+            if ( 0 == searchResultState.length ) {
+                html = `<li data-name="" data-termid="" data-index="" class="dokan-cat-search-res-li">
+                        <div class="dokan-cat-search-res-item">
+                            ${ window.dokan.i18n_no_result_found }
+                        </div>
+                        <div class="dokan-cat-search-res-history">
+                        </div>
+                    </li>`;
+            }
+
             searchResUl.html( html );
         },
         getSearchedParentHistory: ( parents, searched ) => {
             let html = "";
 
-            html = parents.map( ( element, index ) => {
-                return `<span class="dokan-cat-search-res-suggestion">${ element.name }</span>
+            html = parents.map( ( parentId, index ) => {
+                return `<span class="dokan-cat-search-res-suggestion">${ ProductCategory.findCategory( parentId ).name }</span>
                     <span class="dokan-cat-search-res-indicator"><i class="fas fa-caret-right"></i></span>`;
             }).join('');
 
@@ -266,7 +272,7 @@
             let html = '';
 
             element.forEach( ( category, index ) => {
-                html += `<li data-haschild="${ category.has_child }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-product-category-li ${ category.has_child ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
+                html += `<li data-haschild="${ category.children.length > 0 }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-product-category-li ${ category.children.length > 0 ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
                         <span class="dokan-product-category">${ category.name }</span>
                         <span class="dokan-product-category-icon"><i class="fas fa-chevron-right"></i></span>
                     </li>`;
@@ -298,13 +304,12 @@
             let ui = `<input type="hidden" name="${ dokan_product_category_data.is_single ? 'product_cat' : 'product_cat[]' }" class="dokan_product_cat" id="dokan_product_cat" value="${ id }"></input>`;
             ui += `<input type="hidden" class="dokan_chosen_product_cat" name="chosen_product_cat[]" value="${ id }"></input>`;
 
-            let category = dokan_product_category_data.categories.filter( ( element, index ) => {
-                return element.cat_ID == id;
-            });
+            console.log(id);
+            let category = dokan_product_category_data.categories[id];
 
             if ( ! dokan_product_category_data.is_single ) {
-                ui += category[0].parents.map( ( element, index ) => {
-                    return `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${ element.cat_ID }"></input>`;
+                ui += category.parents.map( ( element ) => {
+                    return `<input type="hidden" name="product_cat[]" class="dokan_product_cat" id="dokan_product_cat" value="${ element }"></input>`;
                 }).join('');
             }
 
@@ -336,11 +341,7 @@
         },
 
         findCategory: ( id ) => {
-            let allCategories = [ ...dokan_product_category_data.categories ];
-
-            return allCategories.findIndex( ( category, index ) => {
-                return id == category.cat_ID;
-            });
+            return dokan_product_category_data.categories[ id ];
         },
 
         debounce: (func, wait, immediate) => {
@@ -363,10 +364,9 @@
 
             if ( chosenCat.length > 0 ) {
                 let catId    = chosenCat.val();
-                let catIndex = ProductCategory.findCategory( catId );
-                let category = dokan_product_category_data.categories[ catIndex ];
+                let category = dokan_product_category_data.categories[ catId ];
 
-                ProductCategory.setCatUiBasedOnOneCat( catId, catIndex, category );
+                ProductCategory.setCatUiBasedOnOneCat( catId, category );
             }
         }
     };

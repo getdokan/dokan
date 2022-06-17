@@ -31,9 +31,6 @@ class Products {
         add_action( 'dokan_render_new_product_template', array( $this, 'render_new_product_template' ), 10 );
         add_action( 'dokan_render_product_edit_template', array( $this, 'load_product_edit_template' ), 11 );
         add_action( 'dokan_after_listing_product', array( $this, 'load_add_new_product_popup' ), 10 );
-        add_action( 'dokan_before_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_before_new_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_before_listing_product', array( $this, 'load_add_category_modal' ), 10 );
         add_action( 'dokan_product_edit_after_title', array( __CLASS__, 'load_download_virtual_template' ), 10, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_inventory_template' ), 5, 2 );
         add_action( 'dokan_product_edit_after_main', array( __CLASS__, 'load_downloadable_template' ), 10, 2 );
@@ -545,81 +542,6 @@ class Products {
 
     public function load_add_new_product_popup() {
         dokan_get_template_part( 'products/tmpl-add-product-popup' );
-    }
-
-    /**
-     * Returns new category select ui html elements.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return html
-     */
-    public function load_add_category_modal() {
-        /**
-         * Checking if dokan dashboard or add product page or product edit page or product list.
-         * Because without those page we don't need to load category modal.
-         */
-        global $wp;
-        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
-            $args = array(
-                'taxonomy'     => 'product_cat',
-                'orderby'      => 'name',
-                'show_count'   => 1,
-                'pad_counts'   => 1,
-                'hierarchical' => 1,
-                'title_li'     => '',
-                'hide_empty'   => 0,
-            );
-            $all_categories = get_categories( $args );
-
-            /**
-             * If every single category has any sub category we are setting a variable has_child true/false.
-             * And finding all parents of a category from $all_categories array and setting them in a variable parents.
-             */
-            foreach ( $all_categories as $key => $value ) {
-                $children = get_terms( 'product_cat', array(
-                    'parent'     => $value->term_id,
-                    'hide_empty' => false,
-                ) );
-
-                $all_categories[ $key ]->has_child = ! empty( $children ) && ! is_wp_error( $children );
-                $parents = [];
-                $parents = $this->dokan_get_category_parents( $parents, $all_categories, $value, $key );
-                $all_categories[ $key ]->parents = array_reverse( $parents );
-            }
-
-            $data = [
-                'categories' => $all_categories,
-                'is_single'  => dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false,
-            ];
-
-            wp_localize_script( 'dokan-script', 'dokan_product_category_data', $data );
-
-            dokan_get_template_part( 'products/dokan-category-ui', '', array() );
-        }
-    }
-
-    /**
-     * Returns every single category parents from all categories array.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $parents
-     * @param array $all_categories
-     * @param object $value
-     * @param string $key
-     *
-     * @return array
-     */
-    private function dokan_get_category_parents ( $parents, $all_categories, $value, $key ) {
-        foreach ( $all_categories as $category ) {
-            if ( $category->term_id === $value->category_parent && $value->category_parent !== 0 ) {
-                array_push( $parents, $category );
-                $parents = $this->dokan_get_category_parents( $parents, $all_categories, $category, $key );
-            }
-        }
-
-        return $parents;
     }
 
     /**

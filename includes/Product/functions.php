@@ -149,15 +149,16 @@ function dokan_save_product( $args ) {
         $product->set_category_ids( $all_categories );
         $product->save();
     }
-    if ( $product ) {
-        update_post_meta( $product->get_id(), 'chosen_product_cat', array_map( 'absint', (array) $data['chosen_product_cat'] ) );
-        return $product->get_id();
-    }
 
     if ( ! $is_updating ) {
         do_action( 'dokan_new_product_added', $product->get_id(), $data );
     } else {
         do_action( 'dokan_product_updated', $product->get_id(), $data );
+    }
+
+    if ( $product ) {
+        update_post_meta( $product->get_id(), 'chosen_product_cat', array_map( 'absint', (array) $data['chosen_product_cat'] ) );
+        return $product->get_id();
     }
 
     return false;
