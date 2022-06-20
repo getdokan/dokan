@@ -1,5 +1,5 @@
 <template>
-    <div v-if="apiKey" class="gmap-wrap regular-text">
+    <div v-if="apiKey" class="gmap-wrap">
         <input ref="searchAddress" class="search-address regular-text" type="text" :placeholder="__( 'Search Address', 'dokan-lite')">
         <div id="gmap" ref="gmapArea"></div>
     </div>

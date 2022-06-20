@@ -114,9 +114,9 @@ $currency_by_country = wp_list_pluck( $locale_info, 'currency_code' );
     <td>
         <div class="margin-bottom-10">
             <select id="product_type" name="product_type" required class="location-input wc-enhanced-select dropdown">
-                <option value="both" <?php selected( $product_type, 'both' ); ?>><?php esc_html_e( 'I plan to sell both physical and digital products', 'dokan-lite' ); ?></option>
-                <option value="physical" <?php selected( $product_type, 'physical' ); ?>><?php esc_html_e( 'I plan to sell physical products', 'dokan-lite' ); ?></option>
-                <option value="virtual" <?php selected( $product_type, 'virtual' ); ?>><?php esc_html_e( 'I plan to sell digital products', 'dokan-lite' ); ?></option>
+                <option value="physical" <?php selected( $product_type, 'physical' ); ?>><?php esc_html_e( 'Physical', 'dokan-lite' ); ?></option>
+                <option value="virtual" <?php selected( $product_type, 'virtual' ); ?>><?php esc_html_e( 'Digital', 'dokan-lite' ); ?></option>
+                <option value="both" <?php selected( $product_type, 'both' ); ?>><?php esc_html_e( 'Both', 'dokan-lite' ); ?></option>
             </select>
         </div>
         <input type="checkbox" name="sell_in_person" id="sell_in_person" class="switch-input" <?php checked( $sell_in_person, true ); ?>>

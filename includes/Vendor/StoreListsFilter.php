@@ -163,7 +163,7 @@ class StoreListsFilter {
         }
 
         if ( 'most_recent' === $this->orderby ) {
-            $this->query->query_orderby = 'ORDER BY user_registered, ID DESC';
+            $this->query->query_orderby = 'ORDER BY ID DESC';
             return;
         }
 
