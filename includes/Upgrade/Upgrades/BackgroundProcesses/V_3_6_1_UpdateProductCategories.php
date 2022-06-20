@@ -9,7 +9,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
  *
  * @since DOKAN_SINCE
  */
-class V_3_5_1_UpdateProductCategories extends DokanBackgroundProcesses {
+class V_3_6_1_UpdateProductCategories extends DokanBackgroundProcesses {
 
     /**
      * Save all ancestors ids based on child id.
