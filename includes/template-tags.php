@@ -7,6 +7,8 @@
  * @package dokan
  */
 
+use WeDevs\Dokan\Vendor\Vendor;
+
 if ( ! function_exists( 'dokan_content_nav' ) ) :
 
     /**
@@ -536,7 +538,11 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     if ( isset( $active_menu_parts[1] )
             && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key )
             && isset( $nav_menu[ $settings_key ]['sub'] )
-            && ( array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) )
+            && (
+                array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
+                ( isset( $active_menu_parts[2] ) && array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ) ||
+                ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) // special case when submenu is payment
+            )
     ) {
         $urls        = $nav_menu[ $settings_key ]['sub'];
         $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
@@ -556,7 +562,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $urls as $key => $item ) {
-        $class = ( $active_menu === $key ) ? 'active ' . $key : $key;
+        $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key; // checking starts with the key
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
@@ -595,7 +601,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
-        if ( $vendor instanceof \WeDevs\Dokan\Vendor\Vendor ) {
+        if ( $vendor instanceof Vendor ) {
             $categories = $vendor->get_store_categories();
             $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
             echo '<ul>';
@@ -608,6 +614,130 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
     }
 
 endif;
+if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
+
+    /**
+     * Store category menu for a store
+     *
+     * @since 3.5.0
+     *
+     * @param int    $seller_id
+     * @param array  $taxonomy
+     * @param string $query_type
+     *
+     * @return void
+     */
+    function dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type ) {
+        ?>
+    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+        <?php
+        $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
+        $vendor    = dokan()->vendor->get( $seller_id );
+        $store_url = dokan_get_store_url( $seller_id );
+
+        if ( $vendor instanceof Vendor ) {
+            $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
+
+            echo '<ul>';
+            $_chosen_attributes = dokan_get_chosen_taxonomy_attributes();
+            foreach ( $terms as $term ) {
+                $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : [];
+                $option_is_set  = in_array( $term->slug, $current_values, true );
+                $filter_name    = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
+                // phpcs:ignore
+                $current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array();
+
+                if ( ! in_array( $term->slug, $current_filter, true ) ) {
+                    $current_filter[] = $term->slug;
+                }
+
+                $link = remove_query_arg( $filter_name, $store_url );
+                // Add current filters to URL.
+                foreach ( $current_filter as $key => $value ) {
+                    // Exclude query arg for current term archive term.
+                    if ( $value === dokan_get_current_term_slug() ) {
+                        unset( $current_filter[ $key ] );
+                    }
+
+                    // Exclude self so filter can be unset on click.
+                    if ( $option_is_set && $value === $term->slug ) {
+                        unset( $current_filter[ $key ] );
+                    }
+                }
+
+                if ( ! empty( $current_filter ) ) {
+                    asort( $current_filter );
+                    $link = add_query_arg( $filter_name, implode( ',', $current_filter ), $link );
+
+                    // Add Query type Arg to URL.
+                    if ( 'or' === $query_type && ! ( 1 === count( $current_filter ) && $option_is_set ) ) {
+                        $link = add_query_arg( 'query_type_' . wc_attribute_taxonomy_slug( $taxonomy ), 'or', $link );
+                    }
+                    $link = str_replace( '%2C', ',', $link );
+                }
+
+                $checked = '';
+                if ( $option_is_set ) {
+                    $checked = 'checked';
+                }
+
+                echo '
+                <li class="parent-cat-wrap">
+                    <a href=' . esc_url( $link ) . '> <input style="pointer-events: none;" type="checkbox" ' . $checked . '> &nbsp;' . $term->name . ' <span style="float: right" class="count">(' . $term->count . ')</span> </a>
+                </li>';
+            }
+            echo '</ul>';
+        }
+        ?>
+    </div>
+        <?php
+    }
+
+endif;
+/**
+ * Return the currently viewed term slug.
+ *
+ * @return int
+ */
+function dokan_get_current_term_slug() {
+    return absint( is_tax() ? get_queried_object()->slug : 0 );
+}
+
+/**
+ * Get chosen taxonomy attributes.
+ *
+ * @since 3.5.0
+ *
+ * @return array
+ */
+function dokan_get_chosen_taxonomy_attributes() {
+    $attributes = [];
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
+    if ( empty( $_GET ) ) {
+        return $attributes;
+    }
+
+    foreach ( $_GET as $key => $value ) {
+        if ( 0 !== strpos( $key, 'filter_' ) ) {
+            continue;
+        }
+
+        $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
+        $taxonomy     = wc_attribute_taxonomy_name( $attribute );
+        $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
+
+        if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
+            continue;
+        }
+
+        // phpcs:ignore
+        $query_type                            = ! empty( $_GET['query_type_' . $attribute] ) && in_array(  $_GET['query_type_' . $attribute], [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
+        $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
+        $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
+    }
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
+    return $attributes;
+}
 
 function dokan_seller_reg_form_fields() {
     $postdata   = wc_clean( $_POST ); //phpcs:ignore

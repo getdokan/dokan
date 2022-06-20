@@ -37,7 +37,8 @@ module.exports = function(grunt) {
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],
           '<%= dirs.css %>/setup-no-wc.css': [
             '<%= dirs.devLessSrc %>/setup-no-wc.less'
-          ]
+          ],
+          '<%= dirs.css %>/reverse-withdrawal.css': ['<%= dirs.devLessSrc %>/reverse-withdrawal.less'],
         }
       }
     },
@@ -68,7 +69,8 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/login-form-popup.js',
             '!<%= dirs.devJsSrc %>/dokan-maps-compat.js',
             '!<%= dirs.devJsSrc %>/setup-no-wc.js',
-            '!<%= dirs.devJsSrc %>/helper.js'
+            '!<%= dirs.devJsSrc %>/helper.js',
+            '!<%= dirs.devJsSrc %>/reverse-withdrawal.js'
           ],
           '<%= dirs.js %>/login-form-popup.js': [
             '<%= dirs.devJsSrc %>/login-form-popup.js'

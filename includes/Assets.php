@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 
 class Assets {
 
@@ -91,6 +92,9 @@ class Assets {
             if ( version_compare( $wp_version, '5.3', '<' ) ) {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
+
+            // load fontawesome styles
+            wp_enqueue_style( 'dokan-fontawesome' );
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {
@@ -145,6 +149,16 @@ class Assets {
                 'path'      => '/withdraw',
                 'name'      => 'Withdraw',
                 'component' => 'Withdraw',
+            ],
+            [
+                'path'      => '/reverse-withdrawal',
+                'name'      => 'ReverseWithdrawal',
+                'component' => 'ReverseWithdrawal',
+            ],
+            [
+                'path'      => '/reverse-withdrawal/store/:store_id',
+                'name'      => 'ReverseWithdrawalTransactions',
+                'component' => 'ReverseWithdrawalTransactions',
             ],
             [
                 'path'      => '/premium',
@@ -284,6 +298,9 @@ class Assets {
             'dokan-product-category-ui-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
+            'dokan-reverse-withdrawal' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
             ],
         ];
 
@@ -453,6 +470,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
+            'dokan-reverse-withdrawal' => [
+                'src'     => $asset_url . '/js/reverse-withdrawal.js',
+                'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
+                'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
+            ],
         ];
 
         return $scripts;
@@ -592,52 +614,52 @@ class Assets {
         // Dokan helper JS file, need to load this file
         wp_enqueue_script( 'dokan-util-helper' );
 
-        $localize_data = [
-            'i18n_date_format' => wc_date_format(),
-            'i18n_time_format' => wc_time_format(),
-            'week_starts_day'  => intval( get_option( 'start_of_week', 0 ) ),
-        ];
+        $localize_data = apply_filters(
+            'dokan_helper_localize_script',
+            [
+                'i18n_date_format'        => wc_date_format(),
+                'i18n_time_format'        => wc_time_format(),
+                'week_starts_day'         => intval( get_option( 'start_of_week', 0 ) ),
+                'reverse_withdrawal'                  => [
+                    'enabled' => SettingsHelper::is_enabled(),
+                ],
+                'daterange_picker_local'  => [
+                    'toLabel'          => __( 'To', 'dokan-lite' ),
+                    'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
+                    'fromLabel'        => __( 'From', 'dokan-lite' ),
+                    'separator'        => __( ' - ', 'dokan-lite' ),
+                    'weekLabel'        => __( 'W', 'dokan-lite' ),
+                    'applyLabel'       => __( 'Apply', 'dokan-lite' ),
+                    'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
+                    'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
+                    'daysOfWeek'       => [
+                        __( 'Su', 'dokan-lite' ),
+                        __( 'Mo', 'dokan-lite' ),
+                        __( 'Tu', 'dokan-lite' ),
+                        __( 'We', 'dokan-lite' ),
+                        __( 'Th', 'dokan-lite' ),
+                        __( 'Fr', 'dokan-lite' ),
+                        __( 'Sa', 'dokan-lite' ),
+                    ],
+                    'monthNames'       => [
+                        __( 'January', 'dokan-lite' ),
+                        __( 'February', 'dokan-lite' ),
+                        __( 'March', 'dokan-lite' ),
+                        __( 'April', 'dokan-lite' ),
+                        __( 'May', 'dokan-lite' ),
+                        __( 'June', 'dokan-lite' ),
+                        __( 'July', 'dokan-lite' ),
+                        __( 'August', 'dokan-lite' ),
+                        __( 'September', 'dokan-lite' ),
+                        __( 'October', 'dokan-lite' ),
+                        __( 'November', 'dokan-lite' ),
+                        __( 'December', 'dokan-lite' ),
+                    ],
+                ],
+			]
+        );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
-
-        // Dokan date range picker localization
-        $daterange_localize_data = [
-            'locale'      => [
-                'toLabel'          => __( 'To', 'dokan-lite' ),
-                'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
-                'fromLabel'        => __( 'From', 'dokan-lite' ),
-                'separator'        => __( ' - ', 'dokan-lite' ),
-                'weekLabel'        => __( 'W', 'dokan-lite' ),
-                'applyLabel'       => __( 'Apply', 'dokan-lite' ),
-                'cancelLabel'      => __( 'Clear', 'dokan-lite' ),
-                'customRangeLabel' => __( 'Custom', 'dokan-lite' ),
-                'daysOfWeek'       => [
-                    __( 'Su', 'dokan-lite' ),
-                    __( 'Mo', 'dokan-lite' ),
-                    __( 'Tu', 'dokan-lite' ),
-                    __( 'We', 'dokan-lite' ),
-                    __( 'Th', 'dokan-lite' ),
-                    __( 'Fr', 'dokan-lite' ),
-                    __( 'Sa', 'dokan-lite' ),
-                ],
-                'monthNames'       => [
-                    __( 'January', 'dokan-lite' ),
-                    __( 'February', 'dokan-lite' ),
-                    __( 'March', 'dokan-lite' ),
-                    __( 'April', 'dokan-lite' ),
-                    __( 'May', 'dokan-lite' ),
-                    __( 'June', 'dokan-lite' ),
-                    __( 'July', 'dokan-lite' ),
-                    __( 'August', 'dokan-lite' ),
-                    __( 'September', 'dokan-lite' ),
-                    __( 'October', 'dokan-lite' ),
-                    __( 'November', 'dokan-lite' ),
-                    __( 'December', 'dokan-lite' ),
-                ],
-            ],
-        ];
-
-        wp_localize_script( 'dokan-date-range-picker', 'dokan_daterange_i18n', $daterange_localize_data );
     }
 
     /**
@@ -900,6 +922,7 @@ class Assets {
                 'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
                 'i18n_date_format'                    => get_option( 'date_format' ),
                 'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
+                'update_settings'                     => __( 'Update Settings', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
