@@ -77,8 +77,8 @@ import axios from 'axios';
 import { setupCache } from 'axios-cache-adapter'
 
 const cache = setupCache({
-    maxAge: 15 * 60 * 1000, // 15 minutes
-    // maxAge: 24 * 60 * 60 * 1000, // 1 day
+    // maxAge: 15 * 60 * 1000, // 15 minutes
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
     // maxAge: 4 * 60 * 60 * 1000, // 4 hours
     exclude: { query: false }, // exclude query string from excluded cache.
     debug: false, // enable to see debug logs
@@ -189,6 +189,7 @@ export default {
                     params = {tags: [6726]};
                     break;
                 case 'Announcement':
+                case 'NewAnnouncement':
                     params = {tags: []};
                     break;
                 case 'Refund':
@@ -243,6 +244,7 @@ export default {
                     params = {doc_tag: [6766]};
                     break;
                 case 'Announcement':
+                case 'NewAnnouncement':
                     params = {doc_tag: [6750]};
                     break;
                 case 'Refund':
@@ -278,6 +280,8 @@ export default {
             let hidden = this.hide;
             switch (currentPage) {
                 case 'Help':
+                case 'Modules':
+                case 'Tools':
                     hidden = true;
                     break;
                 default:
