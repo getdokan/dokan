@@ -1,7 +1,9 @@
 <?php
+    use WeDevs\Dokan\ProductCategory\Helper;
+
     $chosen_cat          = isset( $chosen_cat ) ? $chosen_cat : [];
-    $is_single           = dokan_product_category_selection_is_single();
-    $default_product_cat = get_term( get_option('default_product_cat') );
+    $is_single           = isset( $is_single ) ? $is_single : [];
+    $default_product_cat = isset( $default_product_cat ) ? $default_product_cat : new \WP_Error( 'not_found', __( 'Could not found default product category.', 'dokan' ) );
 
     if ( count( $chosen_cat ) < 1 && ! is_wp_error( $default_product_cat ) ) {
         array_push( $chosen_cat, $default_product_cat->term_id );
@@ -16,19 +18,7 @@
     <?php foreach ( $chosen_cat as $key => $term ) : ?>
         <div class="dokan-select-product-category-container">
             <div class="dokan-form-group dokan-select-product-category" data-dokansclevel="<?php echo esc_attr( $key ); ?>" id="dokan-category-open-modal">
-                <?php
-                    $all_parents   = get_ancestors( $term, 'product_cat' );
-                    $all_parents   = array_reverse( $all_parents );
-                    $parents_count = count( $all_parents );
-                    $html          = '';
-
-                    foreach ( $all_parents as $index => $value ) {
-                        $label = "<span class='dokan-selected-category-product'>" . get_term_field( 'name', $value, 'product_cat' ) . "</span><span class='dokan-selected-category-icon'><i class='fas fa-chevron-right'></i></span>";
-                        $html .= $label;
-                    }
-                    $html .= "<span class='dokan-selected-category-product dokan-cat-selected'>" . get_term_field( 'name', $term, 'product_cat' ) . "</span>";
-                ?>
-                <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>"><?php echo $html; ?></span>
+                <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>"><?php echo Helper::get_ancestors_html( $term ); ?></span>
                 <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
 
             </div>

@@ -2,6 +2,7 @@
 
 use WeDevs\Dokan\Walkers\CategoryDropdownSingle;
 use WeDevs\Dokan\Walkers\TaxonomyDropdown;
+use WeDevs\Dokan\ProductCategory\Helper;
 
 global $post;
 
@@ -250,52 +251,11 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         </div><!-- .sale-schedule-container -->
                                     </div>
 
-                                    <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
+                                    <?php
+                                        do_action( 'dokan_product_edit_after_pricing', $post, $post_id );
 
-                                        <?php
-                                            $is_single  = dokan_product_category_selection_is_single();
-                                            $terms      = wp_get_post_terms( $post_id, 'product_cat', array( 'fields' =>  'all') );
-                                            $chosen_cat = get_post_meta( $post_id, 'chosen_product_cat', true );
-
-                                            // If no chosen category found.
-                                            if ( ! $chosen_cat || ! is_array( $chosen_cat ) || count( $chosen_cat ) < 1 ) {
-                                                // If product has only one category, choose it as the chosen category.
-                                                // Or if multiple category is selected, choose the common parents child as chosen category.
-                                                if ( count( $terms ) === 1 ) {
-                                                    $chosen_cat = [ reset( $terms )->term_id ];
-                                                } else {
-                                                    $chosen_cat   = $terms;
-                                                    $all_parents  = [];
-
-                                                    foreach ( $chosen_cat as $key => $cat ) {
-                                                        $term_id       = ! empty( $cat->term_id ) ? $cat->term_id: $cat;
-                                                        $all_ancestors = get_ancestors( $term_id, 'product_cat' );
-                                                        $old_parent    = end( $all_ancestors );
-
-                                                        $old_parent = empty( $old_parent ) ? $term_id : $old_parent;
-
-                                                        if( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < count( $all_ancestors ) ) {
-                                                            $all_parents[ $old_parent ]['size']   = count( $all_ancestors );
-                                                            $all_parents[ $old_parent ]['parent'] = $old_parent;
-                                                            $all_parents[ $old_parent ]['child']  = $term_id;
-                                                        }
-                                                    }
-
-                                                    $chosen_cat = array_map( function( $value ) {
-                                                        return $value['child'];
-                                                    }, $all_parents );
-
-                                                    $chosen_cat = array_values( $chosen_cat );
-                                                }
-                                            }
-
-                                            if ( $is_single ) {
-                                                $terms      = [ reset( $terms ) ];
-                                                $chosen_cat = [ reset( $chosen_cat ) ];
-                                            }
-
-                                            dokan_get_template_part( 'products/dokan-category-header-ui', '', array( 'terms' => $terms, 'chosen_cat' => $chosen_cat ) );
-                                        ?>
+                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', Helper::get_saved_products_category( $post_id ) );
+                                    ?>
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>

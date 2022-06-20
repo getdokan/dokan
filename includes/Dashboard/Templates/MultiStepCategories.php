@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\ProductCategory\Categories;
+use WeDevs\Dokan\ProductCategory\Helper;
 
 /**
  * Multi step category ui class.
@@ -41,35 +42,12 @@ class MultiStepCategories {
 
             $data = [
                 'categories' => $all_categories,
-                'is_single'  => dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ? true : false,
+                'is_single'  => Helper::product_category_selection_is_single(),
             ];
 
             wp_localize_script( 'dokan-script', 'dokan_product_category_data', $data );
 
             dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }
-    }
-
-    /**
-     * Returns every single category parents from all categories array.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $parents
-     * @param array $all_categories
-     * @param object $value
-     * @param string $key
-     *
-     * @return array
-     */
-    private function dokan_get_category_parents ( $parents, $all_categories, $value, $key ) {
-        foreach ( $all_categories as $category ) {
-            if ( $category->term_id === $value->category_parent && $value->category_parent !== 0 ) {
-                array_push( $parents, $category );
-                $parents = $this->dokan_get_category_parents( $parents, $all_categories, $category, $key );
-            }
-        }
-
-        return $parents;
     }
 }
