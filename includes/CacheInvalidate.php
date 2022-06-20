@@ -22,8 +22,6 @@ class CacheInvalidate {
         add_action( 'edit_comment', [ $this, 'comment_updated' ], 10, 2 );
         add_action( 'delete_comment', [ $this, 'comment_deleted' ], 10, 1 );
         add_action( 'wp_set_comment_status', [ $this, 'comment_status_change' ], 10, 2 );
-        add_action( 'edit_product_cat', 'dokan_clear_multistep_category_cache', 10, 1 );
-        add_action( 'pre_delete_term', 'dokan_clear_multistep_category_cache', 10, 1 );
     }
 
     /**
@@ -113,17 +111,5 @@ class CacheInvalidate {
      */
     public function comment_status_change( $comment_id, $comment_status ) {
         $this->comment_deleted( $comment_id );
-    }
-
-    /**
-     * Delete product category cache
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function dokan_clear_multistep_category_cache() {
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
-        Cache::delete_transient( $transient_key );
     }
 }

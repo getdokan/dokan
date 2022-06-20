@@ -298,7 +298,8 @@ class Assets {
             'dokan-product-category-ui-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
-            'dokan-reverse-withdrawal' => [
+            ],
+                'dokan-reverse-withdrawal' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
             ],
