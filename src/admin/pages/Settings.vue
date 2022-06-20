@@ -47,7 +47,7 @@
                             <p class="settings-description">{{ section.settings_description }}</p>
                         </div>
                         <div v-if="section.document_link" class="settings-document-button">
-                            <a :href="section.document_link" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                            <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
@@ -95,7 +95,6 @@
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
-    import $ from 'jquery';
 
     export default {
 
@@ -275,6 +274,8 @@
                     .always(function () {
                         self.showLoading = false;
                     });
+
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
             },
             setWithdrawMethods() {
                 if ( 'withdraw_methods' in this.settingValues.dokan_withdraw ) {
@@ -462,26 +463,6 @@
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
             },
-
-            handleDataClearCheckboxEvent() {
-                let self = this;
-                $('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
-                    if( $(this).is(':checked') ) {
-                        self.$swal({
-                            title: self.__( 'Are you sure?', 'dokan-lite' ),
-                            type: 'warning',
-                            html: self.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
-                            showCancelButton: true,
-                            confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
-                            cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
-                        }).then( (response) => {
-                            if ( response.dismiss ) {
-                                self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
-                            }
-                        });
-                    }
-                });
-            }
         },
 
         created() {
@@ -492,13 +473,29 @@
                 this.currentTab = localStorage.getItem("activetab") ? localStorage.getItem("activetab") : 'dokan_general';
             }
 
+            this.$root.$on( 'onFieldSwitched', value => {
+                if ( value === 'on' && ( 'dokan_general' in this.settingValues ) &&
+                    ( 'data_clear_on_uninstall' in this.settingValues.dokan_general )
+                ) {
+                    Swal.fire({
+                        icon              : 'warning',
+                        html              : this.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
+                        title             : this.__( 'Are you sure?', 'dokan-lite' ),
+                        showCancelButton  : true,
+                        cancelButtonText  : this.__( 'Cancel', 'dokan-lite' ),
+                        confirmButtonText : this.__( 'Okay', 'dokan-lite' ),
+                    }).then( ( response ) => {
+                        if ( response.dismiss ) {
+                            this.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+                            this.$emit( 'switcHandler', 'data_clear_on_uninstall', this.settingValues.dokan_general.data_clear_on_uninstall );
+                        }
+                    });
+                }
+            });
+
             this.settingSections = dokan.settings_sections;
             this.settingFields = dokan.settings_fields;
         },
-
-        updated() {
-            this.handleDataClearCheckboxEvent();
-        }
     };
 
 </script>

@@ -903,8 +903,8 @@ class Settings {
             'desc'          => __( 'Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin.', 'dokan-lite' ),
             'type'          => 'switcher',
             'default'       => 'off',
-            'tooltip'       => __( 'Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won\'t happen when the plugins are deactivated..', 'dokan-lite' ),
-            'content_class' => 'field_bottom_styles',
+            'field_icon'    => __( 'Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won\'t happen when the plugins are deactivated..', 'dokan-lite' ),
+            'content_class' => 'field_bottom_styles data_clear',
         ];
 
         return $settings_fields;
