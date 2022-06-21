@@ -389,3 +389,20 @@ function dokan_withdraw_get_withdrawable_active_methods() {
         )
     );
 }
+
+/**
+ * Check if a withdrawal method is enabled in Dokan > Settings > Withdraw options
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $method_id The method id of withdraw method
+ *
+ * @retun bool
+ */
+function dokan_is_withdraw_method_enabled( $method_id ) {
+    $payment_methods = dokan_withdraw_get_active_methods();
+
+    return is_array( $payment_methods ) &&
+        in_array( $method_id, array_keys( $payment_methods ), true ) &&
+        ! empty( $payment_methods[ $method_id ] );
+}
