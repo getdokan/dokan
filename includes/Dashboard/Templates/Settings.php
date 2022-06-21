@@ -660,12 +660,75 @@ class Settings {
      */
     public function add_vendor_store_settings( $settings ) {
         $settings[] = array(
+            'id'     => 'general',
+            'title'  => __( 'General', 'dokan-lite' ),
+            'desc'   => __( 'The general store settings.', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'info'   => [],
+            'type'   => 'tab',
+            'parent_id' => 'store',
+        );
+        $settings[] = array(
+            'id'     => 'branding',
+            'title'  => __( 'Branding', 'dokan-lite' ),
+            'desc'   => __( 'Branding your store.', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
+            'parent_id' => 'store',
+            'tab'    => 'general',
+            'editable' => false,
+        );
+        $settings[] = array(
+            'id'      => 'banner',
+            'title'   => __( 'Store Banner', 'dokan-lite' ),
+            'desc'    => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent_id'  => 'store',
+            'tab'     => 'general',
+            'card'    => 'branding',
+        );
+        $settings[]   = array(
+            'id'      => 'gravatar',
+            'title'   => __( 'Store Gravatar', 'dokan-lite' ),
+            'desc'    => __( 'Upload a profile image for your store', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-picture-o"></i>',
+            'type'    => 'image',
+            'parent_id'  => 'store',
+            'tab'     => 'general',
+            'card'    => 'branding',
+        );
+        $settings[] = array(
+            'id'     => 'business_info',
+            'title'  => __( 'Business Info', 'dokan-lite' ),
+            'desc'   => __( 'Lorem Ipsum is simply dummy text', 'dokan-lite' ),
+            'info'   => [
+                [
+                    'text' => __( 'Docs', 'dokan-lite' ),
+                    'url'  => '#',
+                    'icon' => '<i class="fa fa-external-link"></i>',
+                ],
+                [
+                    'text' => __( 'Video Guide', 'dokan-lite' ),
+                    'url'  => '#',
+                    'icon' => '<i class="fa fa-video"></i>',
+                ],
+            ],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
+            'parent_id' => 'store',
+            'tab'    => 'general',
+        );
+        $settings[] = array(
             'id'     => 'store_name',
             'title'  => __( 'Store Name', 'dokan-lite' ),
             'desc'   => __( 'The name of your store.', 'dokan-lite' ),
             'icon'   => '<i class="fa fa-shopping-cart"></i>',
             'type'   => 'text',
             'parent_id' => 'store',
+            'tab'    => 'general',
+            'card'   => '',
         );
         $settings[]      = array(
             'id'     => 'phone',
@@ -747,22 +810,6 @@ class Settings {
                     'parent_id'  => 'address',
                 ),
             ),
-        );
-        $settings[] = array(
-            'id'      => 'banner',
-            'title'   => __( 'Store Banner', 'dokan-lite' ),
-            'desc'    => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
-            'icon'    => '<i class="fa fa-picture-o"></i>',
-            'type'    => 'image',
-            'parent_id'  => 'store',
-        );
-        $settings[]   = array(
-            'id'      => 'gravatar',
-            'title'   => __( 'Store Gravatar', 'dokan-lite' ),
-            'desc'    => __( 'Upload a profile image for your store', 'dokan-lite' ),
-            'icon'    => '<i class="fa fa-picture-o"></i>',
-            'type'    => 'image',
-            'parent_id'  => 'store',
         );
         $settings[]      = array(
             'id'      => 'location',

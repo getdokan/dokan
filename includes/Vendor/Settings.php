@@ -29,6 +29,11 @@ class Settings {
         $this->vendor = $vendor;
     }
 
+    /**
+     * Main Settings list
+     *
+     * @return array
+     */
     public function list_settings() {
         $settings = [
             [
