@@ -25,10 +25,10 @@ class ProductControllerV2 extends ProductController {
 
         register_rest_route(
             $this->namespace, '/' . $this->base . '/categories', [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_categories' ],
-					'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_categories' ],
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
             ]
         );
