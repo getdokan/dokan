@@ -1082,12 +1082,26 @@ class Settings {
      */
     public function add_paypal_payment_settings( $settings ) {
         $settings[] = array(
+            'id'     => 'paypal_card',
+            'title'  => __( 'Paypal', 'dokan-lite' ),
+            'desc'   => __( 'Paypal settings.', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-paypal"></i>',
+            'type'   => 'card',
+            'parent_id' => 'payment',
+            'tab'    => 'general',
+            'editable' => true,
+        );
+        $settings[] = array(
             'id' => 'paypal',
             'title' => __( 'PayPal', 'dokan-lite' ),
             'desc' => __( 'Paypal settings', 'dokan-lite' ),
             'icon'  => '<i class="fa fa-paypal"></i>',
             'type' => 'section',
             'parent_id' => 'payment',
+            'tab' => 'general',
+            'editable' => true,
+            'card' => 'paypal_card',
             'fields' => array(
                 array(
                     'id' => 'email',
@@ -1112,12 +1126,26 @@ class Settings {
      */
     public function add_bank_payment_settings( $settings ) {
         $settings[] = array(
+            'id'     => 'bank_card',
+            'title'  => __( 'Bank', 'dokan-lite' ),
+            'desc'   => __( 'Bank settings.', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-paypal"></i>',
+            'type'   => 'card',
+            'parent_id' => 'payment',
+            'tab'    => 'general',
+            'editable' => true,
+        );
+        $settings[] = array(
             'id'        => 'bank',
             'title'     => __( 'Bank', 'dokan-lite' ),
             'desc'      => __( 'Bank settings', 'dokan-lite' ),
             'icon'      => '<i class="fa fa-bank"></i>',
             'type'      => 'section',
             'parent_id' => 'payment',
+            'tab'       => 'general',
+            'editable'  => true,
+            'card'      => 'bank_card',
             'fields'    => array(
                 array(
                     'id'        => 'ac_name',

@@ -74,7 +74,7 @@ class Settings {
      */
     public function settings_group( $group_id ) {
 
-        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+        $found = in_array( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
             return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
@@ -101,7 +101,7 @@ class Settings {
      * @return array|WP_Error
      */
     public function single_settings( $group_id, $id ) {
-        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+        $found = in_array( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
             return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
@@ -128,7 +128,7 @@ class Settings {
      * @return array|WP_Error
      */
     public function single_settings_field( $group_id, $parent_id, $id ) {
-        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+        $found = in_array( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
             return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
@@ -157,7 +157,17 @@ class Settings {
      * @return array
      */
     public function payments() {
-        $payments = [];
+        $payments = [
+            [
+                'id'     => 'general',
+                'title'  => __( 'General', 'dokan-lite' ),
+                'desc'   => __( 'The general Payment settings.', 'dokan-lite' ),
+                'icon'   => '<i class="fa fa-piggy-bank"></i>',
+                'info'   => [],
+                'type'   => 'tab',
+                'parent_id' => 'payment',
+            ]
+        ];
 
         return array_map(
             [ $this, 'populate_value_and_active_state' ],
@@ -238,6 +248,10 @@ class Settings {
      * @return array
      */
     public function populate_settings_value( $settings ) {
+        if ( 'tab' === $settings['type'] || 'card' === $settings['type'] ) {
+            return $settings;
+        }
+
         $settings_values = $this->vendor->get_shop_info();
 
         if ( isset( $settings_values[ $settings['id'] ] ) ) {
@@ -262,8 +276,7 @@ class Settings {
             $settings['url'] = ! empty( $settings['value'] ) ? wp_get_attachment_url( $settings['value'] ) : false;
         }
 
-        $settings = $this->populate_single_settings_links_value( $settings );
-        return $settings;
+        return $this->populate_single_settings_links_value( $settings );
     }
 
     /**
@@ -276,6 +289,10 @@ class Settings {
     public function populate_value_and_active_state( $payment ) {
         $methods        = array_filter( dokan_withdraw_get_active_methods() );
         $payment_values = $this->vendor->get_payment_profiles();
+
+        if ( 'tab' === $payment['type'] || 'card' === $payment['type'] ) {
+            return $payment;
+        }
 
         if ( $payment['parent_id'] === 'payment' ) {
             $payment['active'] = in_array( $payment['id'], $methods, true );
@@ -316,7 +333,7 @@ class Settings {
             }
         }
         $this->vendor->save();
-//        do_action( 'dokan_update_vendor', $this->vendor->get_id() );
+        do_action( 'dokan_rest_update_vendor_payment', $this->vendor->get_id() );
         $this->vendor->popluate_store_data();
         return $this->settings_group( 'payment' );
     }
@@ -332,7 +349,7 @@ class Settings {
     public function save_settings( $requests ) {
         $group_id = $requests->get_param( 'group_id' );
 
-        $found = array_search( $group_id, array_column( $this->list_settings(), 'id' ), true );
+        $found = in_array( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
             return new WP_Error( 'dokan_rest_setting_group_not_found', __( 'Setting group not found', 'dokan-lite' ), [ 'status' => 404 ] );
