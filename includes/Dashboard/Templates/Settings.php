@@ -699,6 +699,27 @@ class Settings {
             'tab'     => 'general',
             'card'    => 'branding',
         );
+        $settings[]         = array(
+            'id'      => 'banner_id',
+            'title'   => __( 'Banner Image', 'dokan-lite' ),
+            'desc'    => __( 'Store Banner Image ID', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'image',
+            'parent_id'  => 'store',
+            'tab'     => 'general',
+            'card'    => 'branding',
+        );
+        $settings[]         = array(
+            'id'      => 'gravatar_id',
+            'title'   => __( 'Profile Image', 'dokan-lite' ),
+            'desc'    => __( 'Store Profile Image ID', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'image',
+            'parent_id'  => 'store',
+            'tab'     => 'general',
+            'card'    => 'branding',
+        );
+
         $settings[] = array(
             'id'     => 'business_info',
             'title'  => __( 'Business Info', 'dokan-lite' ),
@@ -728,7 +749,27 @@ class Settings {
             'type'   => 'text',
             'parent_id' => 'store',
             'tab'    => 'general',
-            'card'   => '',
+            'card'   => 'business_info',
+        );
+        $settings[] = array(
+            'id'     => 'store_details',
+            'title'  => __( 'Store Details', 'dokan-lite' ),
+            'desc'   => __( 'The store details settings.', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'info'   => [],
+            'type'   => 'tab',
+            'parent_id' => 'store',
+        );
+        $settings[] = array(
+            'id'     => 'location_contact',
+            'title'  => __( 'Location and Contact details', 'dokan-lite' ),
+            'desc'   => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
+            'parent_id' => 'store',
+            'tab'    => 'store_details',
+            'editable' => false,
         );
         $settings[]      = array(
             'id'     => 'phone',
@@ -737,19 +778,8 @@ class Settings {
             'icon'   => '<i class="fa fa-mobile"></i>',
             'type'   => 'text',
             'parent_id' => 'store',
-        );
-        $settings[] = array(
-            'id'      => 'show_email',
-            'title'   => __( 'Show Email', 'dokan-lite' ),
-            'desc'    => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
-            'icon'    => '<i class="fa fa-envelope-o"></i>',
-            'type'    => 'checkbox',
-            'default' => 'no',
-            'options' => array(
-                'yes' => __( 'Yes', 'dokan-lite' ),
-                'no'  => __( 'No', 'dokan-lite' ),
-            ),
-            'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'location_contact',
         );
         $settings[]    = array(
             'id'     => 'address',
@@ -758,6 +788,9 @@ class Settings {
             'icon'   => '<i class="fa fa-map-marker"></i>',
             'type'   => 'section',
             'parent_id' => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'location_contact',
+            'editable' => true,
             'fields' => array(
                 array(
                     'id'     => 'street_1',
@@ -818,6 +851,8 @@ class Settings {
             'icon'    => '<i class="fa fa-map-marked"></i>',
             'type'    => 'text',
             'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'location_contact',
         );
         $settings[]         = array(
             'id'      => 'find_address',
@@ -826,111 +861,22 @@ class Settings {
             'icon'    => '<i class="fa fa-map"></i>',
             'type'    => 'text',
             'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'location_contact',
         );
-        $settings[]    = array(
-            'id'     => 'social',
-            'title'  => __( 'Address', 'dokan-lite' ),
-            'desc'   => __( 'Your store address', 'dokan-lite' ),
-            'icon'   => '<i class="fa fa-map-marker"></i>',
-            'type'   => 'section',
+
+        $settings[] = array(
+            'id'     => 'store_weekly_timing',
+            'title'  => __( 'Store Weekly Timing', 'dokan-lite' ),
+            'desc'   => __( 'Set your convenient time according to business needs.', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
             'parent_id' => 'store',
-            'fields' => array(
-                array(
-                    'id'     => 'fb',
-                    'title'  => __( 'Facebook', 'dokan-lite' ),
-                    'desc'   => __( 'Facebook URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'twitter',
-                    'title'  => __( 'Twitter', 'dokan-lite' ),
-                    'desc'   => __( 'Twitter URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'pinterest',
-                    'title'  => __( 'Pinterest', 'dokan-lite' ),
-                    'desc'   => __( 'Pinterest URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'linkedin',
-                    'title'  => __( 'LinkedIn', 'dokan-lite' ),
-                    'desc'   => __( 'LinkedIn URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'youtube',
-                    'title'  => __( 'Youtube', 'dokan-lite' ),
-                    'desc'   => __( 'Youtube URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'instagram',
-                    'title'  => __( 'Instagram', 'dokan-lite' ),
-                    'desc'   => __( 'Instagram URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-                array(
-                    'id'     => 'flickr',
-                    'title'  => __( 'Flickr', 'dokan-lite' ),
-                    'desc'   => __( 'Flickr URL', 'dokan-lite' ),
-                    'icon'   => '',
-                    'type'   => 'text',
-                    'parent_id' => 'social',
-                ),
-            ),
+            'tab'    => 'store_details',
+            'editable' => false,
         );
-        $settings[]         = array(
-            'id'      => 'banner_id',
-            'title'   => __( 'Banner Image', 'dokan-lite' ),
-            'desc'    => __( 'Store Banner Image ID', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'image',
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'gravatar_id',
-            'title'   => __( 'Profile Image', 'dokan-lite' ),
-            'desc'    => __( 'Store Profile Image ID', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'image',
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'store_ppp',
-            'title'   => __( 'Product Per Page', 'dokan-lite' ),
-            'desc'    => __( 'Store Product Per Page', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'number',
-            'default' => 20,
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'show_more_ptab',
-            'title'   => __( 'Show More Product tab', 'dokan-lite' ),
-            'desc'    => __( 'Show More Product tab', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'checkbox',
-            'default' => 'yes',
-            'options' => array(
-                'yes' => __( 'Yes', 'dokan-lite' ),
-                'no'  => __( 'No', 'dokan-lite' ),
-            ),
-            'parent_id'  => 'store',
-        );
+
         $settings[]         = array(
             'id'      => 'dokan_store_time_enabled',
             'title'   => __( 'Enable Store Time', 'dokan-lite' ),
@@ -943,43 +889,8 @@ class Settings {
                 'no'  => __( 'No', 'dokan-lite' ),
             ),
             'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'enable_tnc',
-            'title'   => __( 'Display Terms & Condition', 'dokan-lite' ),
-            'desc'    => __( 'Enable Store Terms & Condition', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'checkbox',
-            'default' => 'yes',
-            'options' => array(
-                'on' => __( 'On', 'dokan-lite' ),
-                'off'  => __( 'Off', 'dokan-lite' ),
-            ),
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'dokan_store_open_notice',
-            'title'   => __( 'Store Open Notice', 'dokan-lite' ),
-            'desc'    => __( 'Store Open Notice Message', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'text',
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'dokan_store_close_notice',
-            'title'   => __( 'Store Close Notice', 'dokan-lite' ),
-            'desc'    => __( 'Store Close Notice Message', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'text',
-            'parent_id'  => 'store',
-        );
-        $settings[]         = array(
-            'id'      => 'find_address',
-            'title'   => __( 'Find Address', 'dokan-lite' ),
-            'desc'    => __( 'Store Find Address', 'dokan-lite' ),
-            'icon'    => '',
-            'type'    => 'text',
-            'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'store_weekly_timing',
         );
         $settings[]    = array(
             'id'     => 'dokan_store_time',
@@ -988,6 +899,8 @@ class Settings {
             'icon'   => '',
             'type'   => 'section',
             'parent_id' => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'store_weekly_timing',
             'fields' => array(
                 array(
                     'id'     => 'monday',
@@ -1046,6 +959,115 @@ class Settings {
                     'parent_id' => 'dokan_store_time',
                 ),
             ),
+        );
+        $settings[]         = array(
+            'id'      => 'dokan_store_open_notice',
+            'title'   => __( 'Store Open Notice', 'dokan-lite' ),
+            'desc'    => __( 'Store Open Notice Message', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'text',
+            'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'store_weekly_timing',
+        );
+        $settings[]         = array(
+            'id'      => 'dokan_store_close_notice',
+            'title'   => __( 'Store Close Notice', 'dokan-lite' ),
+            'desc'    => __( 'Store Close Notice Message', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'text',
+            'parent_id'  => 'store',
+            'tab'    => 'store_details',
+            'card'   => 'store_weekly_timing',
+        );
+
+
+        $settings[] = array(
+            'id'     => 'advanced',
+            'title'  => __( 'Advanced', 'dokan-lite' ),
+            'desc'   => __( 'The advanced store settings.', 'dokan-lite' ),
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'info'   => [],
+            'type'   => 'tab',
+            'parent_id' => 'store',
+        );
+        $settings[] = array(
+            'id'     => 'product_display',
+            'title'  => __( 'Product Display', 'dokan-lite' ),
+            'desc'   => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
+            'parent_id' => 'store',
+            'tab'    => 'advanced',
+            'editable' => false,
+        );
+        $settings[]         = array(
+            'id'      => 'show_more_ptab',
+            'title'   => __( 'Show More Product tab', 'dokan-lite' ),
+            'desc'    => __( 'Show More Product tab', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'checkbox',
+            'default' => 'yes',
+            'options' => array(
+                'yes' => __( 'Yes', 'dokan-lite' ),
+                'no'  => __( 'No', 'dokan-lite' ),
+            ),
+            'parent_id'  => 'store',
+            'tab'    => 'advanced',
+            'card'   => 'product_display',
+        );
+        $settings[] = array(
+            'id'      => 'show_email',
+            'title'   => __( 'Show Email', 'dokan-lite' ),
+            'desc'    => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
+            'icon'    => '<i class="fa fa-envelope-o"></i>',
+            'type'    => 'checkbox',
+            'default' => 'no',
+            'options' => array(
+                'yes' => __( 'Yes', 'dokan-lite' ),
+                'no'  => __( 'No', 'dokan-lite' ),
+            ),
+            'parent_id'  => 'store',
+            'tab'    => 'advanced',
+            'card'   => 'product_display',
+        );
+        $settings[]         = array(
+            'id'      => 'store_ppp',
+            'title'   => __( 'Product Per Page', 'dokan-lite' ),
+            'desc'    => __( 'Store Product Per Page', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'number',
+            'default' => 20,
+            'parent_id'  => 'store',
+            'tab'    => 'advanced',
+            'card'   => 'product_display',
+        );
+        $settings[] = array(
+            'id'     => 'terms_and_conditions',
+            'title'  => __( 'Terms and Conditions', 'dokan-lite' ),
+            'desc'   => __( 'Seller can close his store by giving a message to customer. ', 'dokan-lite' ),
+            'info'   => [],
+            'icon'   => '<i class="fa fa-shopping-cart"></i>',
+            'type'   => 'card',
+            'parent_id' => 'store',
+            'tab'    => 'advanced',
+            'editable' => true,
+        );
+        $settings[]         = array(
+            'id'      => 'enable_tnc',
+            'title'   => __( 'Display Terms & Condition', 'dokan-lite' ),
+            'desc'    => __( 'Enable Store Terms & Condition', 'dokan-lite' ),
+            'icon'    => '',
+            'type'    => 'checkbox',
+            'default' => 'yes',
+            'options' => array(
+                'on' => __( 'On', 'dokan-lite' ),
+                'off'  => __( 'Off', 'dokan-lite' ),
+            ),
+            'parent_id'  => 'store',
+            'tab'    => 'advanced',
+            'card'   => 'terms_and_conditions',
         );
 
         return $settings;
