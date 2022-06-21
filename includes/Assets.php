@@ -476,6 +476,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
+            'product-category-ui' => [
+                'src'     => $asset_url . '/js/product-category-ui.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
+            ],
         ];
 
         return $scripts;
@@ -559,6 +564,7 @@ class Assets {
         global $wp;
         if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
             wp_enqueue_style( 'dokan-product-category-ui-css' );
+            wp_enqueue_script( 'product-category-ui' );
         }
 
         // store and my account page

@@ -45,7 +45,7 @@ class MultiStepCategories {
                 'is_single'  => Helper::product_category_selection_is_single(),
             ];
 
-            wp_localize_script( 'dokan-script', 'dokan_product_category_data', $data );
+            wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
 
             dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }

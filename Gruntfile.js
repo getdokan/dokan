@@ -31,7 +31,6 @@ module.exports = function(grunt) {
 
       admin: {
         files: {
-          '<%= dirs.css %>/dokan-product-category-ui.css': ['<%= dirs.devLessSrc %>/dokan-product-category-ui.less'],
           '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less'],
           '<%= dirs.css %>/global-admin.css': ['<%= dirs.devLessSrc %>/global-admin.less'],
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],
@@ -70,7 +69,8 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/dokan-maps-compat.js',
             '!<%= dirs.devJsSrc %>/setup-no-wc.js',
             '!<%= dirs.devJsSrc %>/helper.js',
-            '!<%= dirs.devJsSrc %>/reverse-withdrawal.js'
+            '!<%= dirs.devJsSrc %>/reverse-withdrawal.js',
+            '!<%= dirs.devJsSrc %>/product-category-ui.js'
           ],
           '<%= dirs.js %>/login-form-popup.js': [
             '<%= dirs.devJsSrc %>/login-form-popup.js'
