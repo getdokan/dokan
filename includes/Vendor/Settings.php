@@ -37,11 +37,11 @@ class Settings {
     public function list_settings() {
         $settings = [
             [
-                'id' => 'store',
-                'label' => __( 'Store Settings', 'dokan-lite' ),
+                'id'          => 'store',
+                'label'       => __( 'Store Settings', 'dokan-lite' ),
                 'description' => __( 'Vendor Store Settings', 'dokan-lite' ),
-                'parent_id' => '',
-                'sub_groups' => apply_filters( 'dokan_vendor_settings_store_sub_groups', []  ),
+                'parent_id'   => '',
+                'sub_groups'  => apply_filters( 'dokan_vendor_settings_store_sub_groups', [] ),
             ],
 //            [
 //                'id' => 'social',
@@ -51,11 +51,11 @@ class Settings {
 //                'sub_groups' => apply_filters( 'dokan_vendor_settings_social_sub_groups', []  ),
 //            ],
             [
-                'id' => 'payment',
-                'label' => __( 'Payment Settings', 'dokan-lite' ),
+                'id'          => 'payment',
+                'label'       => __( 'Payment Settings', 'dokan-lite' ),
                 'description' => __( 'Vendor Payment Settings', 'dokan-lite' ),
-                'parent_id' => '',
-                'sub_groups' => apply_filters( 'dokan_vendor_settings_payment_sub_groups', []  ),
+                'parent_id'   => '',
+                'sub_groups'  => apply_filters( 'dokan_vendor_settings_payment_sub_groups', [] ),
             ],
         ];
 
@@ -73,7 +73,6 @@ class Settings {
      * @return array|WP_Error
      */
     public function settings_group( $group_id ) {
-
         $found = in_array( $group_id, array_column( $this->list_settings(), 'id' ), true );
 
         if ( false === $found ) {
@@ -159,12 +158,12 @@ class Settings {
     public function payments() {
         $payments = [
             [
-                'id'     => 'general',
-                'title'  => __( 'General', 'dokan-lite' ),
-                'desc'   => __( 'The general Payment settings.', 'dokan-lite' ),
-                'icon'   => '<i class="fa fa-piggy-bank"></i>',
-                'info'   => [],
-                'type'   => 'tab',
+                'id'        => 'general',
+                'title'     => __( 'General', 'dokan-lite' ),
+                'desc'      => __( 'The general Payment settings.', 'dokan-lite' ),
+                'icon'      => '<i class="fa fa-piggy-bank"></i>',
+                'info'      => [],
+                'type'      => 'tab',
                 'parent_id' => 'payment',
             ]
         ];
