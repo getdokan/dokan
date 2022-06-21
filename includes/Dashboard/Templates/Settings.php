@@ -895,6 +895,13 @@ class Settings {
             $cur_method = dokan_withdraw_get_method( $method_key );
 
             if ( ! empty( $cur_method ) ) {
+                //remove the 'Dokan' prefix from method title
+                $method_title = $cur_method['title'];
+                if ( 0 === stripos( $method_title, 'Dokan ' ) ) {
+                    $method_title = substr( $method_title, 6 );
+                    $cur_method['title'] = $method_title;
+                }
+
                 $methods[ $method_key ] = $cur_method;
             }
         }
