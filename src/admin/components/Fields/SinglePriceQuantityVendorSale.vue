@@ -137,26 +137,26 @@ export default {
     }
 
     .dokan-new-commission-wraper {
-        box-shadow: 0 4px 8px 0 rgba(140, 143, 148, 0.45);
-        border-radius: 4px;
-        padding: 10px;
+        display: flex;
+        flex-direction: column;
 
         .dokan-new-commission-header {
             padding-bottom: 5px;
             font-weight: 600;
         }
         .dokan-new-commission-content {
-            padding: 10px 0;
+            padding-bottom: 5px;
+            // padding: 10px 0;
 
             &:last-child{
                 border-bottom: none;
-                padding: 10px 0 0 0;
+                // padding: 10px 0 0 0;
             }
         }
         .dokan-new-commission-row {
             display: flex;
             flex-direction: row;
-            border-bottom: 1px solid #dddddd;
+            // border-bottom: 1px solid #dddddd;
 
             & input, select {
                 border-color: rgba(220, 220, 222, 0.75) !important;

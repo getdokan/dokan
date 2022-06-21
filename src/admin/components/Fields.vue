@@ -100,7 +100,7 @@
             </div>
         </template>
 
-        <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && 'combine' === allSettingsValues.dokan_selling.commission_type && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+        <template v-if="'combine' === fieldData.type && 'combine' === allSettingsValues.dokan_selling.commission_type && checkConditionLogic( fieldData, fieldValue )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
@@ -135,10 +135,12 @@
             </div>
         </template>
 
-        <template v-if="('product_price' == fieldData.type && 'product_price' === allSettingsValues.dokan_selling.commission_type)
-            || ('product_quantity' == fieldData.type && 'product_quantity' === allSettingsValues.dokan_selling.commission_type)
-            || ('vendor_sale' == fieldData.type && 'vendor_sale' === allSettingsValues.dokan_selling.commission_type)
-            && allSettingsValues.dokan_selling"
+        <template
+            v-if="
+            ( 'vendor_sale' == fieldData.type && allSettingsValues.dokan_selling && 'vendor_sale' === allSettingsValues.dokan_selling.commission_type )
+            || ( 'product_price' == fieldData.type && allSettingsValues.dokan_selling && 'product_price' === allSettingsValues.dokan_selling.commission_type )
+            || ( 'product_quantity' == fieldData.type && allSettingsValues.dokan_selling && 'product_quantity' === allSettingsValues.dokan_selling.commission_type )
+            "
         >
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -151,27 +153,24 @@
                         </h3>
                         <p class="field_desc" v-html="fieldData.desc"></p>
                     </div>
-                    <div class="field combine_fields">
-                        <PriceQuantityVendorSale
-                            :id="id"
-                            :fieldData="fieldData"
-                            :sectionId="sectionId"
-                            :fieldValue="fieldValue"
-                            :allSettingsValues="allSettingsValues"
-                            :errors="errors"
-                            :toggleLoadingState="toggleLoadingState"
-                            :validationErrors="validationErrors"
-                        />
-                    </div>
                 </fieldset>
-                <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
-                    {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
+                <div class="new-commission-fields">
+                    <PriceQuantityVendorSale
+                        :id="id"
+                        :fieldData="fieldData"
+                        :sectionId="sectionId"
+                        :fieldValue="fieldValue"
+                        :allSettingsValues="allSettingsValues"
+                        :errors="errors"
+                        :toggleLoadingState="toggleLoadingState"
+                        :validationErrors="validationErrors"
+                    />
+                </div>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
                 </p>
-                <p v-else-if="hasError( fieldData.fields.percent_fee.name )" class="dokan-error combine-commission">
-                    {{ getError( fieldData.fields.percent_fee.label ) }}
-                </p>
-                <p v-else-if="hasError( fieldData.fields.fixed_fee.name )" class="dokan-error combine-commission">
-                    {{ getError( fieldData.fields.fixed_fee.label ) }}
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                  {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
             </div>
         </template>
@@ -1058,6 +1057,10 @@
                     font-family: 'Roboto', sans-serif;
                 }
             }
+        }
+
+        .new-commission-fields{
+            margin-top: 20px;
         }
 
         .combine_fields {

@@ -1,5 +1,5 @@
 <template>
-    <td class="new-commission-holder">
+    <div class="new-commission-holder">
         <template v-if="'' !== fieldValue[fieldData.name]">
             <SinglePriceQuantityVendorSale
                 :allCommission="fieldValue[fieldData.name]"
@@ -11,7 +11,7 @@
                 v-on:resetRows="resetRows"
             />
         </template>
-    </td>
+    </div>
 </template>
 
 <script>
@@ -109,6 +109,7 @@ export default {
     }
     .new-commission-holder{
         line-height: 2 !important;
+        padding: 0;
     }
     .dashicons-no-container{
         display:block;
