@@ -91,7 +91,7 @@ class CronActions {
         // check for previous billing type value
         // if previous value is by_month and new value is not
         // and if we've scheduled a cron, we need to remove it
-        if ( 'by_month' === $old_value['billing_type'] && 'by_month' !== $new_value['billing_type'] && $cron_schedule ) {
+        if ( isset( $old_value['billing_type'] ) && 'by_month' === $old_value['billing_type'] && 'by_month' !== $new_value['billing_type'] && $cron_schedule ) {
             as_unschedule_all_actions( $hook );
             return;
         }
@@ -102,7 +102,7 @@ class CronActions {
         }
 
         // check if monthly billing day is similar to previous one, in that case, we don't need to schedule cron
-        if ( intval( $new_value['monthly_billing_day'] ) === intval( $old_value['monthly_billing_day'] ) && $cron_schedule ) {
+        if ( isset( $old_value['monthly_billing_day'] ) && intval( $new_value['monthly_billing_day'] ) === intval( $old_value['monthly_billing_day'] ) && $cron_schedule ) {
             return;
         }
 

@@ -4335,3 +4335,15 @@ function dokan_bool_to_on_off( $bool ) {
 
     return true === $bool ? 'on' : 'off';
 }
+
+/**
+ * Check is 12 hour format in current setup.
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @return bool
+ */
+function is_tweleve_hour_format() {
+    // Check if current setup format is 12 hour format.
+    return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
+}
