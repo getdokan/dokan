@@ -17,7 +17,7 @@
                                 <path d="M4.4475 0.407385C2.24347 0.531556 0.411946 2.26995 0.163604 4.47398C0.0394331 5.71569 0.411946 6.92635 1.18801 7.85764C1.77782 8.57162 2.21242 9.37873 2.42972 10.2169H6.96196C7.17926 9.37873 7.61385 8.54057 8.20367 7.82659C8.88661 7.01948 9.25912 5.99507 9.25912 4.93962C9.25912 2.36308 7.05509 0.283214 4.4475 0.407385Z" fill="#2C75A9"/>
                             </svg>
                         </div>
-                        <h4 class="dokan-kb-article-header-title">{{ __( 'Dokan\'s Blog', 'dokan-lite' ) }}</h4>
+                        <h4 class="dokan-kb-article-header-title">{{ sprintf( __( 'Blogs for %s', 'dokan-lite' ), getPageContent() ) }}</h4>
                     </div>
                     <div class="dokan-kb-article-header-nav" v-if="!loading && articles.length>2">
                         <span v-on:click="navigateArticle('back')" class="dashicons dashicons-arrow-left-alt2 dokan-kb-article-header-nav-item"></span>
@@ -49,7 +49,7 @@
                                 <path d="M6.6281 4.64506C6.40934 4.64506 6.23183 4.46755 6.23183 4.24879V0.682373H1.08036C0.861594 0.682373 0.684082 0.859885 0.684082 1.07865V12.4383C0.684082 12.6571 0.861594 12.8346 1.08036 12.8346H9.79824C10.017 12.8346 10.1945 12.6571 10.1945 12.4383V4.64506H6.6281ZM5.83557 10.457H2.66541C2.44665 10.457 2.26914 10.2795 2.26914 10.0607C2.26914 9.84193 2.44665 9.66442 2.66541 9.66442H5.83555C6.05431 9.66442 6.23183 9.84193 6.23183 10.0607C6.23183 10.2795 6.05434 10.457 5.83557 10.457ZM8.21318 8.87189H2.66541C2.44665 8.87189 2.26914 8.69438 2.26914 8.47562C2.26914 8.25685 2.44665 8.07934 2.66541 8.07934H8.21318C8.43195 8.07934 8.60946 8.25685 8.60946 8.47562C8.60946 8.69438 8.43195 8.87189 8.21318 8.87189ZM8.21318 7.28684H2.66541C2.44665 7.28684 2.26914 7.10932 2.26914 6.89056C2.26914 6.6718 2.44665 6.49429 2.66541 6.49429H8.21318C8.43195 6.49429 8.60946 6.6718 8.60946 6.89056C8.60944 7.10932 8.43195 7.28684 8.21318 7.28684Z" fill="#2C75A9"/>
                             </svg>
                         </div>
-                        <h4 class="dokan-kb-docs-header-title">{{ __( 'Related Docs', 'dokan-lite' ) }}</h4>
+                        <h4 class="dokan-kb-docs-header-title">{{ sprintf( __( '%s Related Docs', 'dokan-lite' ), getPageContent() ) }}</h4>
                     </div>
                 </div>
                 <div class="dokan-kb-docs-404" v-if="!loading && !docs.length">
@@ -160,7 +160,21 @@ export default {
             let currentPage = this.getCurrentPage();
             switch (currentPage) {
                 case 'Dashboard':
-                    return 'Every';
+                    return 'Dashboard';
+                case 'VendorSingle':
+                    return 'Vendors';
+                case 'AbuseReports':
+                    return 'Abuse Reports';
+                case 'StoreReviews':
+                    return 'Store Reviews';
+                case 'AdminStoreSupport':
+                    return 'Store Support';
+                case 'NewAnnouncement':
+                    return 'Announcement';
+                case 'ProductAdvertisement':
+                    return 'Product Advertisement';
+                case 'WholesaleCustomer':
+                    return 'Wholesale Customer';
                 default:
                     return currentPage;
             }
@@ -282,6 +296,7 @@ export default {
                 case 'Help':
                 case 'Modules':
                 case 'Tools':
+                case 'ProModules':
                     hidden = true;
                     break;
                 default:
@@ -409,7 +424,7 @@ export default {
 
                         .dokan-kb-article-image {
                             flex: 2;
-                            min-height: 90px;
+                            min-height: 7.5vw;
                             img {
                                 max-width: 100%;
                                 height: auto;
