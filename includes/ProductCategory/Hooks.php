@@ -34,11 +34,11 @@ class Hooks {
     public function delete_reference_category_from_chosen_cat( $category_id ) {
         global $wpdb;
         $deletable_term = get_term( $category_id );
-        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta where meta_key='chosen_product_cat' AND meta_value LIKE '%%%d%'", $category_id ), ARRAY_A );
+        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta where meta_key='chosen_product_cat' AND meta_value LIKE %s", '%' . $category_id . '%' ), ARRAY_A );
 
         foreach ( $results as $result ) {
             $datas = maybe_unserialize( $result['meta_value'] );
-            $searched = array_search( $category_id, $datas );
+            $searched = array_search( $category_id, $datas, true );
 
             if ( false !== $searched ) {
                 $datas[ $searched ] = $deletable_term->parent;

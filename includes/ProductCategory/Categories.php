@@ -64,11 +64,9 @@ class Categories {
         // we don't need old categories variable
         unset( $categories );
 
-
         foreach ( $this->categories as $category_id => $category_data ) {
             // set immediate child to a category
             $parent_id = $this->categories[ $category_id ]['parent_id'];
-
 
             if ( ! isset( $this->categories[ $category_id ]['children'] ) ) {
                 $this->categories[ $category_id ]['children'] = [];
