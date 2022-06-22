@@ -173,14 +173,14 @@ export default {
                     params = {tags: [1073]};
                     break;
                 case 'Withdraw':
-                    params = {tags: []};
+                    params = {tags: [6819]};
                     break;
                 case 'Vendors':
                 case 'VendorSingle':
                     params = {tags: [6724]};
                     break;
                 case 'AbuseReports':
-                    params = {tags: []};
+                    params = {tags: [6820]};
                     break;
                 case 'StoreReviews':
                     params = {tags: [6725]};
@@ -190,7 +190,7 @@ export default {
                     break;
                 case 'Announcement':
                 case 'NewAnnouncement':
-                    params = {tags: []};
+                    params = {tags: [6823]};
                     break;
                 case 'Refund':
                     params = { tags: [6727]};
