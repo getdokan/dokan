@@ -536,7 +536,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $settings_key = apply_filters( 'dokan_dashboard_nav_settings_key', 'settings' );
 
     if ( isset( $active_menu_parts[1] )
-            && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key )
+            && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key || urldecode( $active_menu_parts[0] ) === $settings_key )
             && isset( $nav_menu[ $settings_key ]['sub'] )
             && (
                 array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
