@@ -82,7 +82,7 @@ class Hooks {
      */
     public function add_chosen_categories_to_action_queue( $category_id ) {
         global $wpdb;
-        $limit               = ;
+        $limit               = 20;
         $offset              = 0;
         $results             = [];
         $deleting_term       = get_term( $category_id );
