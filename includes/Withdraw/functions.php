@@ -403,6 +403,6 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
     $payment_methods = dokan_withdraw_get_active_methods();
 
     return is_array( $payment_methods ) &&
-        in_array( $method_id, array_keys( $payment_methods ), true ) &&
+        array_key_exists( $method_id, $payment_methods ) &&
         ! empty( $payment_methods[ $method_id ] );
 }
