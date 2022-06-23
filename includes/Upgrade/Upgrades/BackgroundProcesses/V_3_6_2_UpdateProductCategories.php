@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
 
 use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
+use WeDevs\Dokan\ProductCategory\Helper;
 
 /**
  * Select all parent categories based on child category id.
@@ -25,40 +26,8 @@ class V_3_6_2_UpdateProductCategories extends DokanBackgroundProcesses {
             return false;
         }
 
-        foreach ( $products as $key => $product ) {
-            $terms = get_the_terms( $product->ID, 'product_cat' );
-
-            $all_cats_with_parents = [];
-            $all_parents           = [];
-
-            foreach ( $terms as $index => $term ) {
-                $category        = $term->term_id;
-                $all_ancestors   = get_ancestors( $category, 'product_cat' );
-                $most_old_parent = end( $all_ancestors );
-                $all_categories  = $category !== 0 ? $all_ancestors : [];
-                $all_categories  = wp_parse_args( $all_categories, [ $category ] );
-
-                $most_old_parent = empty( $most_old_parent ) ? $category : '';
-
-                // If the child already in the array and the current child is more younger than the previous child we are
-                // updating as the chosen category.
-                if ( ! array_key_exists( $most_old_parent, $all_parents ) || $all_parents[ $most_old_parent ]['size'] < count( $all_ancestors ) ) {
-                    $all_parents[ $most_old_parent ]['size']   = count( $all_ancestors );
-                    $all_parents[ $most_old_parent ]['parent'] = $most_old_parent;
-                    $all_parents[ $most_old_parent ]['child']  = $category;
-                }
-                $all_cats_with_parents = array_unique( array_merge( $all_cats_with_parents, $all_categories ) );
-            }
-
-            // phpcs:disable
-            $chosen_cat = array_map( function( $value ) {
-                return $value['child'];
-            }, $all_parents );
-            $chosen_cat = array_values( $chosen_cat );
-            // phpcs:enable
-
-            update_post_meta( $product->get_id(), 'chosen_product_cat', $chosen_cat );
-            wp_set_object_terms( $product->get_id(), $all_cats_with_parents, 'product_cat' );
+        foreach ( $products as $product ) {
+            $chosen_cat = Helper::get_saved_products_category( $product->ID );
         }
 
         return false;

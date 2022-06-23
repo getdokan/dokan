@@ -2,9 +2,6 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
-use WeDevs\Dokan\ProductCategory\Categories;
-use WeDevs\Dokan\ProductCategory\Helper;
-
 /**
  * Multi step category ui class.
  *
@@ -37,16 +34,6 @@ class MultiStepCategories {
          */
         global $wp;
         if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
-            $categories = new Categories();
-            $all_categories = $categories->get();
-
-            $data = [
-                'categories' => $all_categories,
-                'is_single'  => Helper::product_category_selection_is_single(),
-            ];
-
-            wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
-
             dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }
     }

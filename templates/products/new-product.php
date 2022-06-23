@@ -198,7 +198,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                                         <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo esc_attr( dokan_posted_textarea( 'post_excerpt' ) ); ?></textarea>
                                     </div>
 
-                                    <?php dokan_get_template_part('products/dokan-category-header-ui', '', Helper::get_saved_products_category( '' ) ); ?>
+                                    <?php dokan_get_template_part('products/dokan-category-header-ui', '', Helper::get_saved_products_category() ); ?>
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>

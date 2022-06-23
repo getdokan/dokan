@@ -299,20 +299,42 @@ class Products {
                         wp_set_object_terms( $product_id, $tags_ids, 'product_tag' );
                     }
 
-                    /** set product category * */
-                    if ( Helper::product_category_selection_is_single()) {
-                        $category       = absint( $postdata['product_cat'] );
-                        $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
-                        $all_categories = wp_parse_args( $all_categories, $category );
-
-                        $cat_ids = array_map( 'absint', (array) $all_categories );
-                        wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
-                    } else {
-                        if ( ! empty( $postdata['product_cat'] ) ) {
-                            $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
-                            wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
+                    /* set product category */
+                    if ( ! isset( $postdata['chosen_product_cat'] ) ) {
+                        if ( Helper::product_category_selection_is_single() ) {
+                            wp_set_object_terms( $product_id, (int) $postdata['product_cat'], 'product_cat' );
+                        } else {
+                            if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
+                                $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
+                                wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
+                            }
                         }
+                    } else {
+                        $chosen_cat = Helper::product_category_selection_is_single() ? [ reset( $postdata['chosen_product_cat'] ) ] : $postdata['chosen_product_cat'];
+                        Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_cat );
                     }
+
+
+
+
+                    /** set product category * */
+                    // if ( Helper::product_category_selection_is_single()) {
+                    //     $category       = absint( $postdata['product_cat'] );
+                    //     $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
+                    //     $all_categories = wp_parse_args( $all_categories, $category );
+
+                    //     $cat_ids = array_map( 'absint', (array) $all_categories );
+                    //     wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
+                    // } else {
+                    //     if ( ! empty( $postdata['product_cat'] ) ) {
+                    //         $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
+                    //         wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
+                    //     }
+                    // }
+
+
+
+
 
                     /** Set Product type, default is simple */
                     $product_type = empty( $postdata['product_type'] ) ? 'simple' : $postdata['product_type'];
@@ -358,11 +380,6 @@ class Products {
                         // Update price if on sale
                         if ( '' !== $postdata['_sale_price'] && $date_from && strtotime( $date_from ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $postdata['_sale_price'] ) );
-                        }
-
-                        // Saving chosen_product_cat into post meta
-                        if ( ! empty( $postdata['chosen_product_cat'] ) ) {
-                            update_post_meta( $product_id, 'chosen_product_cat', array_map( 'absint', (array) $postdata['chosen_product_cat'] ) );
                         }
                     }
 
@@ -422,18 +439,6 @@ class Products {
             $errors[] = __( 'Please enter product title', 'dokan-lite' );
         }
 
-        if ( Helper::product_category_selection_is_single() ) {
-            $product_cat = absint( $postdata['product_cat'] );
-
-            if ( $product_cat < 0 ) {
-                $errors[] = __( 'Please select a category', 'dokan-lite' );
-            }
-
-        } else {
-            if ( ! isset( $postdata['product_cat'] ) && empty( $postdata['product_cat'] ) ) {
-                $errors[] = __( 'Please select AT LEAST ONE category', 'dokan-lite' );
-            }
-        }
         if ( empty( $postdata['chosen_product_cat'] ) ) {
             $errors[] = __( 'Please select a category', 'dokan-lite' );
         }
@@ -491,22 +496,20 @@ class Products {
 
             wp_set_object_terms( $post_id, $tags_ids, 'product_tag' );
 
-            /** set product category * */
-            if ( Helper::product_category_selection_is_single() ) {
-                $category       = absint( $postdata['product_cat'] );
-                $all_categories = $category !== 0 ? get_ancestors( $category, 'product_cat' ) : [];
-                $all_categories = wp_parse_args( $all_categories, $category );
-
-                $cat_ids = array_map( 'absint', (array) $all_categories );
-                wp_set_object_terms( $post_id, $cat_ids, 'product_cat' );
-            } else {
-                if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
-                    $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
-                    wp_set_object_terms( $post_id, $cat_ids, 'product_cat' );
+            /* set product category */
+            if ( ! isset( $postdata['chosen_product_cat'] ) ) {
+                if ( Helper::product_category_selection_is_single() ) {
+                    wp_set_object_terms( $post_id, (int) $postdata['product_cat'], 'product_cat' );
+                } else {
+                    if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
+                        $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
+                        wp_set_object_terms( $post_id, $cat_ids, 'product_cat' );
+                    }
                 }
+            } else {
+                $chosen_cat = Helper::product_category_selection_is_single() ? [ reset( $postdata['chosen_product_cat'] ) ] : $postdata['chosen_product_cat'];
+                Helper::set_object_terms_from_chosen_categories( $post_id, $chosen_cat );
             }
-
-            update_post_meta( $post_id, 'chosen_product_cat', array_map( 'absint', (array) $postdata['chosen_product_cat'] ) );
 
             //set prodcuct type default is simple
             $product_type = empty( $postdata['product_type'] ) ? 'simple' : sanitize_text_field( $postdata['product_type'] );

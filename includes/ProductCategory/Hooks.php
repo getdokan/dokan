@@ -34,40 +34,33 @@ class Hooks {
      * @return void
      */
     public function delete_reference_category_from_chosen_cat( $results = [] ) {
-        global $wpdb;
-
         // validating results task.
         if ( ! isset( $results['task'] ) || 'delete_refrence_chosen_cats' !== $results['task'] ) {
             return;
         }
 
-        $categories = isset( $results['data'] ) ? $results['data'] : [];
-        $replace_by = isset( $results['replace_by'] ) ? $results['replace_by'] : '';
-        $replaceable_cat = isset( $results['replaceable'] ) ? $results['replaceable'] : '';
+        $meta_datas      = ! empty( $results['data'] ) ? $results['data'] : [];
+        $replace_by      = ! empty( $results['replace_by'] ) ? $results['replace_by'] : '';
+        $replaceable_cat = ! empty( $results['replaceable_cat'] ) ? $results['replaceable_cat'] : '';
 
         // Validating data and replace by category.
-        if ( empty( $categories ) || ! is_array( $categories ) || empty( $replace_by ) || empty( $replaceable_cat ) ) {
+        if ( empty( $meta_datas ) || ! is_array( $meta_datas ) || empty( $replace_by ) || empty( $replaceable_cat ) ) {
             return;
         }
 
-        foreach ( $categories as $category ) {
-            $data = maybe_unserialize( $category['meta_value'] );
-            $searched = array_search( $replaceable_cat, $data, true );
+        foreach ( $meta_datas as $meta_data ) {
+            $meta_value = maybe_unserialize( $meta_data['meta_value'] );
+            $searched   = array_search( $replaceable_cat, $meta_value, true );
 
-            if ( false !== $searched ) {
-                $data[ $searched ] = $replace_by;
-                $ids = maybe_serialize( $data );
-
-                $wpdb->update(
-                    $wpdb->prefix . 'postmeta',
-                    [
-                        'meta_value' => $ids,
-                    ],
-                    [
-                        'meta_id' => $category['meta_id'],
-                    ]
-                );
+            if ( false === $searched ) {
+                continue;
             }
+
+            // replace parent category id
+            $meta_value[ $searched ] = $replace_by;
+
+            // save updated data
+            update_post_meta( $meta_data['post_id'], 'chosen_product_cat', $meta_value );
         }
     }
 
@@ -82,32 +75,33 @@ class Hooks {
      */
     public function add_chosen_categories_to_action_queue( $category_id ) {
         global $wpdb;
-        $limit               = 20;
+        $limit               = 10;
         $offset              = 0;
         $results             = [];
         $deleting_term       = get_term( $category_id );
         $default_product_cat = get_option( 'default_product_cat' );
+        $search_key          = '%' . $wpdb->esc_like( $category_id ) . '%';
 
         while ( null !== $results ) {
             $results = $wpdb->get_results(
-                $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}postmeta where meta_key='chosen_product_cat' AND meta_value LIKE %s LIMIT %d OFFSET %d", '%' . $category_id . '%', $limit, $offset ),
+                $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->prefix}postmeta where meta_key='chosen_product_cat' AND meta_value LIKE %s LIMIT %d OFFSET %d", $search_key, $limit, $offset ),
                 ARRAY_A
             );
 
             if ( ! empty( $results ) ) {
                 $args = [
-                    'task'        => 'delete_refrence_chosen_cats',
-                    'data'        => $results,
-                    'replaceable' => $category_id,
-                    'replace_by'  => 0 !== absint( $deleting_term->parent ) ? $deleting_term->parent : $default_product_cat,
+                    'task'            => 'delete_refrence_chosen_cats',
+                    'data'            => $results,
+                    'replaceable_cat' => $category_id,
+                    'replace_by'      => $deleting_term->parent ? $deleting_term->parent : $default_product_cat,
                 ];
 
                 wc()->queue()->add( 'dokan_delete_reference_category_from_chosen_cat', [ $args ] );
-
-                $offset += $limit;
             } else {
                 $results = null;
             }
+
+            $offset += $limit;
         }
     }
 }

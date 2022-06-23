@@ -4,6 +4,8 @@ namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
+use WeDevs\Dokan\ProductCategory\Categories;
+use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 
 class Assets {
 
@@ -299,7 +301,7 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
-                'dokan-reverse-withdrawal' => [
+            'dokan-reverse-withdrawal' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
             ],
@@ -562,9 +564,19 @@ class Assets {
 
         // Load category ui css in product add, edit and list page.
         global $wp;
-        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) { // phpcs:ignore
             wp_enqueue_style( 'dokan-product-category-ui-css' );
             wp_enqueue_script( 'product-category-ui' );
+
+            $categories = new Categories();
+            $all_categories = $categories->get();
+
+            $data = [
+                'categories' => $all_categories,
+                'is_single'  => CategoryHelper::product_category_selection_is_single(),
+            ];
+
+            wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
         }
 
         // store and my account page
@@ -663,7 +675,7 @@ class Assets {
                         __( 'December', 'dokan-lite' ),
                     ],
                 ],
-			]
+            ]
         );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );

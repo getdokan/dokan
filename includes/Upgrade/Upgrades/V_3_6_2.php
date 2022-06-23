@@ -23,7 +23,7 @@ class V_3_6_2 extends DokanUpgrader {
         while ( null !== $products ) {
             $args = [
                 'paged' => $i,
-                'posts_per_page' => 20,
+                'posts_per_page' => 10,
             ];
 
             $products = dokan()->product->all( $args )->posts;
