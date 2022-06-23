@@ -168,18 +168,6 @@ export default {
     },
 
     methods: {
-        renderApiError( jqXHR ) {
-            let message = '';
-            if ( jqXHR.responseJSON && jqXHR.responseJSON.message ) {
-                message = jqXHR.responseJSON.message;
-            } else if ( jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message ) {
-                message = jqXHR.responseJSON.data.message;
-            } else if( jqXHR.responseText ) {
-                message = jqXHR.responseText;
-            }
-            return message;
-        },
-
         // Loads and sets if import already successfully.
         loadImportStatus() {
             this.statusLoader = true;
@@ -195,7 +183,7 @@ export default {
                 self.statusLoader = false;
             })
             .fail( ( jqXHR ) => {
-                let message = self.renderApiError( jqXHR );
+                let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
                     swal.fire( message, '', 'error' );
                 }
@@ -255,7 +243,7 @@ export default {
                 self.updateProgress( response.vendor_index );
             })
             .fail( ( jqXHR ) => {
-                let message = self.renderApiError( jqXHR );
+                let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
                     swal.fire( message, '', 'error' );
                 }
@@ -376,7 +364,7 @@ export default {
                     self.resetToImport();
                 })
                 .fail( ( jqXHR ) => {
-                    let message = self.renderApiError( jqXHR );
+                    let message = window.dokan_handle_ajax_error( jqXHR );
                     if ( message ) {
                         swal.fire( message, '', 'error' );
                     }

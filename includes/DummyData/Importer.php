@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DummyData;
 
 use \WP_Error;
+use \WP_Query;
 
 /**
  * Include dependencies.
@@ -30,6 +31,10 @@ class Importer extends \WC_Product_Importer {
      * @var int
      */
     private $vendor_id = null;
+
+    public function __construct() {
+        add_action( 'dokan_clear_dummy_data_vendor_orders', [ $this, 'delete_dummy_vendor_orders' ] );
+    }
 
     /**
      * Create and return dummy vendor or if exists return the existing vendor
@@ -252,7 +257,7 @@ class Importer extends \WC_Product_Importer {
      * @return bool
      */
     private function is_my_product( $product ) {
-        return $this->vendor_id === dokan_get_vendor_by_product( $product )->get_id();
+        return $this->vendor_id === dokan_get_vendor_by_product( $product, true );
     }
 
     /**
@@ -263,14 +268,15 @@ class Importer extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $all_products = get_posts(
-            array(
-                'post_type'   => 'product',
-                'numberposts' => -1,
-                'meta_key'    => 'dokan_dummy_data', // phpcs:ignore
-                'post_status' => 'any',
-            )
-        );
+        $args = [
+            'post_type'   => 'product',
+            'numberposts' => -1,
+            'post_status' => 'any',
+        ];
+
+        $query = new WP_query( $args );
+        $all_products = $query->posts;
+
         foreach ( $all_products as $product ) {
             wp_delete_post( $product->ID, true );
         }
@@ -283,8 +289,79 @@ class Importer extends \WC_Product_Importer {
         );
         foreach ( $all_vendors as $vendor ) {
             wp_delete_user( $vendor->id );
+
+            $task_args = [
+                'task'      => 'clear_dummy_vendors_orders',
+                'vendor_id' => $vendor->id,
+            ];
+
+            wc()->queue()->add( 'dokan_clear_dummy_data_vendor_orders', $task_args );
         }
 
         return __( 'Cleared all dummy data successfully.', 'dokan-lite' );
+    }
+
+    /**
+     * Delete orders data of a dummy vendors from database.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return void
+     */
+    public function delete_dummy_vendor_orders( $args ) {
+        // Validating args.
+        if ( ! isset( $args['task'] ) || 'clear_dummy_vendors_orders' !== $args['task'] ) {
+            return;
+        }
+
+        $vendor_id = isset( $args['vendor_id'] ) ? $args['vendor_id'] : '';
+        if ( empty( $vendor_id ) ) {
+            return;
+        }
+
+        $args = [
+            'post_type'   => 'shop_order',
+            'post_status' => 'any',
+            'meta_query'  => [
+                [
+                    'key'     => '_dokan_vendor_id',
+                    'value'   => $vendor_id,
+                    'compare' => '=',
+                ],
+            ],
+        ];
+        $query = new WP_query( $args );
+
+        $orders = $query->posts;
+
+        // Deleting vendors orders.
+        foreach ( $orders as $order ) {
+            wc_get_order( $order )->delete( true );
+        }
+
+        global $wpdb;
+
+        // Deleting orders from dokan orders table.
+        $wpdb->delete(
+            $wpdb->prefix . 'dokan_orders',
+            [ 'seller_id' => $vendor_id ],
+            ['%d'],
+        );
+
+        // Deleting orders from dokan vendors balance table.
+        $wpdb->delete(
+            $wpdb->prefix . 'dokan_vendor_balance',
+            [ 'vendor_id' => $vendor_id ],
+            ['%d'],
+        );
+
+        // Deleting orders from dokan withdraw table.
+        $wpdb->delete(
+            $wpdb->prefix . 'dokan_withdraw',
+            [ 'user_id' => $vendor_id ],
+            ['%d'],
+        );
     }
 }

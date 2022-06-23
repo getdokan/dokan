@@ -48,7 +48,7 @@ class DummyDataController extends DokanRESTController {
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => array( $this, 'import_dummy_data' ),
                     'permission_callback' => array( $this, 'get_permissions_check' ),
-                    'args'                => $this->get_collection_params(),
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 ),
                 'schema' => array( $this, 'get_public_item_schema' ),
             )
@@ -136,67 +136,11 @@ class DummyDataController extends DokanRESTController {
      * @return boolean
      */
     public function get_permissions_check() {
-        $permission = true;
-
-        if ( empty( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'dokan_admin' ) ) {
-            $permission = false;
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return false;
         }
 
-        if ( ! current_user_can( 'manage_woocommerce' ) && $permission ) {
-            $permission = false;
-        }
-
-        return $permission;
-    }
-
-    /**
-     * Retrieves the query params for the dummy data collection.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array Collection parameters.
-     */
-    public function get_collection_params() {
-        $query_params = parent::get_collection_params();
-
-        $query_params['context']['default'] = 'view';
-
-        $schema            = $this->get_item_schema();
-        $schema_properties = $schema['properties'];
-
-        $query_params['vendor_products'] = array(
-            'required'          => true,
-            'default'           => [],
-            'description'       => $schema_properties['vendor_products']['description'],
-            'type'              => $schema_properties['vendor_products']['type'],
-            'sanitize_callback' => 'wc_clean',
-        );
-
-        $query_params['vendor_data'] = array(
-            'required'          => true,
-            'default'           => [],
-            'description'       => $schema_properties['vendor_data']['description'],
-            'type'              => $schema_properties['vendor_data']['type'],
-            'sanitize_callback' => 'wc_clean',
-        );
-
-        $query_params['vendor_index'] = array(
-            'required'          => true,
-            'default'           => [],
-            'description'       => $schema_properties['vendor_index']['description'],
-            'type'              => $schema_properties['vendor_index']['type'],
-            'sanitize_callback' => 'absint',
-        );
-
-        $query_params['total_vendors'] = array(
-            'required'          => true,
-            'default'           => [],
-            'description'       => $schema_properties['total_vendors']['description'],
-            'type'              => $schema_properties['total_vendors']['type'],
-            'sanitize_callback' => 'absint',
-        );
-
-        return $query_params;
+        return true;
     }
 
     /**
@@ -215,10 +159,11 @@ class DummyDataController extends DokanRESTController {
             'type'       => 'object',
             'properties' => [
                 'vendor_products' => [
-                    'description' => __( 'Vendors products data.', 'dokan-lite' ),
-                    'type'        => 'array',
-                    'context'     => [ 'view', 'edit' ],
-                    'items'       => [
+                    'description'       => __( 'Vendors products data.', 'dokan-lite' ),
+                    'type'              => 'array',
+                    'sanitize_callback' => 'wc_clean',
+                    'context'           => [ 'view', 'edit' ],
+                    'items'             => [
                         'type'       => 'object',
                         'properties' => [
                             'id' => [
@@ -828,10 +773,11 @@ class DummyDataController extends DokanRESTController {
                     ],
                 ],
                 'vendor_data' => [
-                    'description' => __( 'Vendors profile data.', 'dokan-lite' ),
-                    'type'        => 'array',
-                    'context'     => [ 'view', 'edit' ],
-                    'items'       => [
+                    'description'       => __( 'Vendors profile data.', 'dokan-lite' ),
+                    'type'              => 'array',
+                    'sanitize_callback' => 'wc_clean',
+                    'context'           => [ 'view', 'edit' ],
+                    'items'             => [
                         'type'       => 'object',
                         'properties' => [
                             'email' => [
@@ -933,14 +879,16 @@ class DummyDataController extends DokanRESTController {
                     ],
                 ],
                 'vendor_index'                  => [
-                    'description' => __( 'Vendor item index to import.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ],
+                    'description'       => __( 'Vendor item index to import.', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'sanitize_callback' => 'absint',
+                    'context'           => [ 'view', 'edit' ],
                 ],
                 'total_vendors'                  => [
-                    'description' => __( 'Total vendors', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => [ 'view', 'edit' ],
+                    'description'       => __( 'Total vendors', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'sanitize_callback' => 'absint',
+                    'context'           => [ 'view', 'edit' ],
                 ],
             ],
         ];
