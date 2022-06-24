@@ -309,7 +309,10 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_backorders', $backorders );
 
         if ( $stock_status ) {
-            wc_update_product_stock_status( $post_id, $stock_status );
+            try {
+                wc_update_product_stock_status( $post_id, $stock_status );
+            } catch ( Exception $ex ) {
+            }
         }
 
         if ( ! empty( $data['_manage_stock'] ) ) {

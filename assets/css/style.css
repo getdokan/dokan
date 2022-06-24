@@ -2373,14 +2373,35 @@ div.media-sidebar a.edit-attachment {
   margin: 5px 0;
   flex-grow: 1;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div {
   flex-grow: 2;
   text-align: right;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down-wrapper {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown {
+  display: inline-block;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #toggle-vendor-payment-method-drop-down {
+  color: #333333;
+  cursor: pointer;
+  padding: 10px 35px 10px 10px;
+  white-space: nowrap;
+  border-radius: 3px;
+  background: #DDDDDD;
   position: relative;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #toggle-vendor-payment-method-drop-down::after {
+  content: '\25BC';
+  display: inline-block;
+  transition: transform 300ms ease-in-out;
+  position: absolute;
+  right: 5px;
+  top: 20%;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down-wrapper {
+  position: relative;
+  top: 5px;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down {
   display: none;
   max-height: 200px;
   border: 1px black solid;
@@ -2389,35 +2410,47 @@ div.media-sidebar a.edit-attachment {
   right: 0;
   background-color: white;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul {
   list-style: none;
   margin: 0;
-  max-height: 200px;
-  overflow-y: scroll;
+  max-height: 199px;
+  overflow-y: auto;
   overflow-x: hidden;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li:not(:last-child) {
   border-bottom: 1px #dddddd solid;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div {
   white-space: nowrap;
   display: flex;
   align-items: center;
   padding: 10px 10px;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div img {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div img {
   width: calc(12px + 1.5vw);
   border: 1px solid lightgray;
   border-radius: 50%;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div span {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div span {
+  padding-right: 30px;
   margin-left: 10px;
   color: #333333;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down .no-content {
-  padding: 20px;
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li:hover {
+  background-color: #EFEFEF;
 }
-.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header #vendor-dashboard-payment-settings-toggle-dropdown:hover #vendor-payment-method-drop-down {
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down .no-content {
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown:hover #toggle-vendor-payment-method-drop-down {
+  background-color: #CCCCCC;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown:hover #toggle-vendor-payment-method-drop-down::after {
+  transform: rotate(180deg);
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown:hover #vendor-payment-method-drop-down {
   display: block;
 }
 .dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary > ul {
