@@ -96,7 +96,7 @@ class Hooks {
                     'replace_by'      => $deleting_term->parent ? $deleting_term->parent : $default_product_cat,
                 ];
 
-                wc()->queue()->add( 'dokan_delete_reference_category_from_chosen_cat', [ $args ] );
+                WC()->queue()->add( 'dokan_delete_reference_category_from_chosen_cat', [ $args ] );
             } else {
                 $results = null;
             }
