@@ -324,7 +324,8 @@ class Importer extends \WC_Product_Importer {
         $args = [
             'post_type'   => 'shop_order',
             'post_status' => 'any',
-            'meta_query'  => [
+            'fields'      => 'all',
+            'meta_query'  => [  // phpcs:ignore
                 [
                     'key'     => '_dokan_vendor_id',
                     'value'   => $vendor_id,
@@ -334,10 +335,8 @@ class Importer extends \WC_Product_Importer {
         ];
         $query = new WP_query( $args );
 
-        $orders = $query->posts;
-
         // Deleting vendors orders.
-        foreach ( $orders as $order ) {
+        foreach ( $query->posts as $order ) {
             wc_get_order( $order )->delete( true );
         }
 
@@ -347,21 +346,21 @@ class Importer extends \WC_Product_Importer {
         $wpdb->delete(
             $wpdb->prefix . 'dokan_orders',
             [ 'seller_id' => $vendor_id ],
-            ['%d'],
+            [ '%d' ]
         );
 
         // Deleting orders from dokan vendors balance table.
         $wpdb->delete(
             $wpdb->prefix . 'dokan_vendor_balance',
             [ 'vendor_id' => $vendor_id ],
-            ['%d'],
+            [ '%d' ]
         );
 
         // Deleting orders from dokan withdraw table.
         $wpdb->delete(
             $wpdb->prefix . 'dokan_withdraw',
             [ 'user_id' => $vendor_id ],
-            ['%d'],
+            [ '%d' ]
         );
     }
 }
