@@ -22,7 +22,7 @@ class V_3_6_2_UpdateProductCategories extends DokanBackgroundProcesses {
      * @return bool
      */
     public function task( $products ) {
-        if ( empty( $products ) ) {
+        if ( empty( $products || ! is_array( $products ) ) ) {
             return false;
         }
 
