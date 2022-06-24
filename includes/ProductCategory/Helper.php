@@ -110,6 +110,11 @@ class Helper {
         // save chosen cat to database
         update_post_meta( $post_id, 'chosen_product_cat', $chosen_categories );
         // add all ancestor and chosen cat as product category
+
+        // We have to convert all the categories into integer because if an category is string ex: '23' not int ex: 23
+        // wp_set_object_terms will create a new term named 23. we don't want that.
+        $all_ancestors = array_map( 'absint', $all_ancestors );
+
         wp_set_object_terms( $post_id, array_unique( $all_ancestors ), 'product_cat' );
     }
 
