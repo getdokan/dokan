@@ -738,7 +738,7 @@ class Settings {
                     'iban'           => sanitize_text_field( $bank['iban'] ),
                     'swift'          => sanitize_text_field( $bank['swift'] ),
                     'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
-                    'declaration'    => sanitize_text_field( $bank['declaration'] ),
+                    'declaration'    => isset( $bank['declaration'] ) ? sanitize_text_field( $bank['declaration'] ) : '',
                 ];
             }
 
