@@ -28,6 +28,7 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_load_progressbar' ), 20 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_store_errors' ), 25 );
         add_action( 'dokan_settings_content', array( $this, 'render_settings_content' ), 10 );
+        add_filter( 'dokan_payment_method_title', [ $this, 'get_method_frontend_title' ], 10, 2 );
     }
 
     /**
@@ -907,5 +908,20 @@ class Settings {
         }
 
         return $methods;
+    }
+
+    /**
+     * Get Method title to show in frontend
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_method_frontend_title( $title, $method ) {
+        if ( 0 === stripos( $title, 'Dokan ' ) ) {
+            return substr( $title, 6 );
+        }
+
+        return $title;
     }
 }
