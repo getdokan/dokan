@@ -317,14 +317,14 @@ class DummyDataController extends DokanRESTController {
                             ],
                             'virtual' => [
                                 'description' => __( 'If the product is virtual.', 'dokan-lite' ),
-                                'type'        => 'boolean',
-                                'default'     => false,
+                                'type'        => 'string',
+                                'default'     => '',
                                 'context'     => [ 'view', 'edit' ],
                             ],
                             'downloadable' => [
                                 'description' => __( 'If the product is downloadable.', 'dokan-lite' ),
-                                'type'        => 'boolean',
-                                'default'     => false,
+                                'type'        => 'string',
+                                'default'     => '',
                                 'context'     => [ 'view', 'edit' ],
                             ],
                             'downloads' => [
@@ -396,7 +396,8 @@ class DummyDataController extends DokanRESTController {
                             ],
                             'stock_quantity' => [
                                 'description' => __( 'Stock quantity.', 'dokan-lite' ),
-                                'type'        => 'integer',
+                                'type'        => 'string',
+                                'default'     => '',
                                 'context'     => [ 'view', 'edit' ],
                             ],
                             'in_stock' => [
@@ -426,8 +427,8 @@ class DummyDataController extends DokanRESTController {
                             ],
                             'sold_individually' => [
                                 'description' => __( 'Allow one item to be bought in a single order.', 'dokan-lite' ),
-                                'type'        => 'boolean',
-                                'default'     => false,
+                                'type'        => 'string',
+                                'default'     => '',
                                 'context'     => [ 'view', 'edit' ],
                             ],
                             'weight' => [
@@ -529,7 +530,8 @@ class DummyDataController extends DokanRESTController {
                             ],
                             'parent_id' => [
                                 'description' => __( 'Product parent ID.', 'dokan-lite' ),
-                                'type'        => 'integer',
+                                'type'        => 'string',
+                                'default'        => '',
                                 'context'     => [ 'view', 'edit' ],
                             ],
                             'purchase_note' => [
@@ -774,7 +776,7 @@ class DummyDataController extends DokanRESTController {
                 ],
                 'vendor_data' => [
                     'description'       => __( 'Vendors profile data.', 'dokan-lite' ),
-                    'type'              => 'array',
+                    'type'              => 'object',
                     'sanitize_callback' => 'wc_clean',
                     'context'           => [ 'view', 'edit' ],
                     'items'             => [

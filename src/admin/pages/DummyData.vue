@@ -307,6 +307,7 @@ export default {
                     taxonomy: data.attribute_2_global,
                 },
             ];
+            data.manage_stock = Boolean( data.manage_stock );
 
             this.productsDataToRemove.forEach( item => {
                 delete(data[item]);

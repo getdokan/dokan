@@ -295,7 +295,7 @@ class Importer extends \WC_Product_Importer {
                 'vendor_id' => $vendor->id,
             ];
 
-            wc()->queue()->add( 'dokan_clear_dummy_data_vendor_orders', $task_args );
+            WC()->queue()->add( 'dokan_clear_dummy_data_vendor_orders', [ $task_args ] );
         }
 
         return __( 'Cleared all dummy data successfully.', 'dokan-lite' );
