@@ -494,7 +494,7 @@ jQuery(function($) {
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
         $('.dokan-update-setting-top-button span.dokan-loading').remove();
-        $('html,body').animate({ scrollTop: 100 });
+        $('html,body').animate({ scrollTop: $('.dokan-dashboard-header').offset().top });
 
         if (resp.success) {
           // Harcoded Customization for template-settings function
