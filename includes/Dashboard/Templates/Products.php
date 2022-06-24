@@ -421,7 +421,7 @@ class Products {
                 }
             } else {
                 if ( ! isset( $postdata['product_cat'] ) && empty( $postdata['product_cat'] ) ) {
-                    $errors[] = __( 'Please select AT LEAST ONE category', 'dokan-lite' );
+                    $errors[] = __( 'Please select at least one category', 'dokan-lite' );
                 }
             }
         } elseif ( empty( $postdata['chosen_product_cat'] ) ) {

@@ -574,6 +574,9 @@ class Assets {
             $data = [
                 'categories' => $all_categories,
                 'is_single'  => CategoryHelper::product_category_selection_is_single(),
+                'i18n'       => [
+                    'select_a_category' => __( 'Select a category', 'dokan-lite' ),
+                ],
             ];
 
             wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );

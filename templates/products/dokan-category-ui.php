@@ -30,9 +30,6 @@
                     </span>
                 </span>
                 <div class="dokan-single-categories" id="dokan-single-categories"></div>
-                <div id="dokan-single-categories-loader" class="dokan-single-categories-loader dokan-hide">
-                    <img src="" alt="" class="dokan-cat-loader">
-                </div>
                 <span class="dokan-single-categories-right dokan-single-categories-arrow dokan-hide">
                     <span class="dokan-single-categories-right-box">
                         <span><i class="fas fa-chevron-right"></i></span>

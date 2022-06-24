@@ -1,6 +1,5 @@
 ;( function( $ ) {
     let modal                 = $( '#dokan-product-category-modal' );
-    let loader                = $( '#dokan-single-categories-loader' );
     let searchResultContainer = $( '#dokan-cat-search-res' );
     let searchResUl           = $( '#dokan-cat-search-res-ul' );
     let rightIndicator        = $( '.dokan-single-categories-right' );
@@ -15,7 +14,6 @@
     var ProductCategory = {
 
         init() {
-            $( '#dokan-single-categories-loader img' ).attr( 'src', dokan.ajax_loader );
 
             $( 'body' ).on( 'click', '.dokan-product-category-li', this.categoryLiClick );
 
@@ -74,7 +72,6 @@
             $( '#dokan-cat-search-text-limit' ).html( inputText.length );
 
             if ( inputText.length > 0 ) {
-                ProductCategory.loadingCategories();
                 ProductCategory.hideSearchResults( false );
                 ProductCategory.doSearchCates( inputText );
             } else {
@@ -131,7 +128,6 @@
 
             searchResultState = searchResult;
             ProductCategory.updateSearchResultUi();
-            ProductCategory.loadingCategories( false );
         },
 
         hideSearchResults( status = true ) {
@@ -158,15 +154,9 @@
             modal.css( 'display', 'none' );
         },
 
-        loadingCategories( loading = true ) {
-            loading ? loader.removeClass( 'dokan-hide' ) : loader.addClass( 'dokan-hide' );
-        },
-
         loadAllParentCategories() {
-            ProductCategory.loadingCategories();
             categoriesState.push( ProductCategory.getCategoriesWithParentId() );
             ProductCategory.updateCategoryUi();
-            ProductCategory.loadingCategories( false );
         },
 
         getCategoriesWithParentId( parentId = 0, level = 1, selectedId = false ) {
@@ -344,7 +334,7 @@
             let html = `
                 <div class="dokan-select-product-category-container">
                     <div class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
-                        <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-${ boxCounter }">- Select a category -</span>
+                        <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-${ boxCounter }">- ${dokan_product_category_data.i18n.select_a_category} -</span>
                         <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
                     </div>
                         ${ ! dokan_product_category_data.is_single ? `
