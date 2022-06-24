@@ -20,8 +20,8 @@ var entryPoint = {
     'vue-bootstrap': './src/utils/Bootstrap.js',
     'vue-vendor': vueVendor,
     'dokan-wp': './src/wp-packages/index.js',
-    'dokan-admin-notice': './src/notice/main.js',
     'dokan-promo-notice': './src/promo-notice/main.js',
+    'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
     // style: './less/style.less',
 };
 

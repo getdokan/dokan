@@ -37,7 +37,7 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 2 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 3 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
@@ -66,7 +66,7 @@ class Hooks {
     /**
      * Change order item display meta key.
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @param $display_key
      *
@@ -82,7 +82,7 @@ class Hooks {
     /**
      * Change order item display meta value.
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @param $display_value
      * @param $meta
@@ -327,20 +327,28 @@ class Hooks {
      *
      * @param boolean $valid
      * @param \WC_Coupon $coupon
+     * @param \WC_Discounts $discount
      *
-     * @return boolean|Execption
+     * @return boolean|Exception
      * @throws Exception
      */
-    public function ensure_vendor_coupon( $valid, $coupon ) {
+    public function ensure_vendor_coupon( $valid, $coupon, $discount ) {
         $available_vendors  = [];
         $available_products = [];
 
-        foreach ( WC()->cart->get_cart() as $item ) {
-            $product_id = $item['data']->get_id();
-
-            $available_vendors[]  = (int) get_post_field( 'post_author', $product_id );
-            $available_products[] = $product_id;
+        if ( WC()->cart ) {
+            foreach ( WC()->cart->get_cart() as $item ) {
+                $product_id           = $item['data']->get_id();
+                $available_vendors[]  = (int) dokan_get_vendor_by_product( $product_id, true );
+                $available_products[] = $product_id;
+            }
+        } else {
+            foreach ( $discount->get_items() as $item_id => $item ) {
+                $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
+                $available_products[] = $item_id;
+            }
         }
+
 
         $available_vendors = array_unique( $available_vendors );
 

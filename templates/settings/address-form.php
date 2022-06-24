@@ -142,5 +142,18 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             <?php } ?>
             </div>
         <?php } ?>
+
+        <?php
+        /**
+         * Add vendor address verification templates.
+         * 
+         * @since 3.4.2
+         * 
+         * @param array $address               Vendor address info.
+         * @param array $seller_address_fields Vendor required addresses.
+         */
+        do_action( 'dokan_vendor_address_verification_template', $address, $seller_address_fields );
+
+        ?>
     </div>
 </div>

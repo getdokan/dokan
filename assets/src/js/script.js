@@ -487,6 +487,10 @@ jQuery(function($) {
           );
 
           $('.dokan-ajax-response').append(resp.data.progress);
+
+          if ( dokan && dokan.storeProgressBar ) {
+            dokan.storeProgressBar.init();
+          }
         } else {
           $('.dokan-ajax-response').html(
             $('<div/>', {
@@ -572,7 +576,9 @@ jQuery(function($) {
           label.removeClass('error');
           label.remove();
         },
-        submitHandler: async function(form) {
+        submitHandler: async function(form, event) {
+          event.preventDefault();
+
           $(form).block({
             message: null,
             overlayCSS: {
