@@ -7,7 +7,7 @@ use WeDevs\Dokan\Cache;
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokan_admin_menu_position() {
     return apply_filters( 'dokan_menu_position', '55.4' );
@@ -18,7 +18,7 @@ function dokan_admin_menu_position() {
  *
  * @since 3.0.0
  *
- * @return void
+ * @return string
  */
 function dokana_admin_menu_capability() {
     return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
@@ -704,21 +704,6 @@ function dokan_get_client_ip() {
     }
 
     return $ipaddress;
-}
-
-/**
- * Datetime format helper function
- *
- * @param string $datetime
- *
- * @return string
- */
-function dokan_format_time( $datetime ) {
-    $timestamp   = strtotime( $datetime );
-    $date_format = get_option( 'date_format' );
-    $time_format = get_option( 'time_format' );
-
-    return date_i18n( $date_format . ' ' . $time_format, $timestamp );
 }
 
 /**
@@ -3241,27 +3226,25 @@ function dokan_is_store_open( $user_id ) {
 
     // check if status is closed
     if ( empty( $dokan_store_times[ $today ] ) || ( isset( $dokan_store_times[ $today ]['status'] ) && 'close' === $dokan_store_times[ $today ]['status'] ) ) {
-        $store_open = false;
-        return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
     // Get store opening time.
-    $opening_times = ! empty( $dokan_store_times[ $today ]['opening_time'] ) ? $dokan_store_times[ $today ]['opening_time'] : [];
+    $opening_times = ! empty( $dokan_store_times[ $today ]['opening_time'] ) ? $dokan_store_times[ $today ]['opening_time'] : '';
     // Get single time.
     $opening_time = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : $opening_times;
     // Convert to timestamp.
-    $opening_time = $current_time->modify( $opening_time );
+    $opening_time = ! empty( $opening_time ) ? $current_time->modify( $opening_time ) : false;
 
     // Get closing time.
-    $closing_times = ! empty( $dokan_store_times[ $today ]['closing_time'] ) ? $dokan_store_times[ $today ]['closing_time'] : [];
+    $closing_times = ! empty( $dokan_store_times[ $today ]['closing_time'] ) ? $dokan_store_times[ $today ]['closing_time'] : '';
     // Get single time.
     $closing_time = ! empty( $closing_times ) && is_array( $closing_times ) ? $closing_times[0] : $closing_times;
     // Convert to timestamp.
-    $closing_time = $current_time->modify( $closing_time );
+    $closing_time = ! empty( $closing_time ) ? $current_time->modify( $closing_time ) : false;
 
     if ( empty( $opening_time ) || empty( $closing_time ) ) {
-        $store_open = false;
-        return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
     }
 
     // Check vendor picked time and current time for show store open.
@@ -4032,9 +4015,48 @@ function dokan_wp_timezone_string() {
 }
 
 /**
+ * Get a formatted date, time from WordPress format
+ *
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
+ * @param string|bool $format date format string or false for default WordPress date
+ * @since 3.2.7
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function dokan_format_datetime( $date = '', $format = false ) {
+    // if no format is specified, get default WordPress date format
+    if ( ! $format ) {
+        $format = wc_date_format() . ' ' . wc_time_format();
+    }
+
+    // if date is empty, get current datetime timestamp
+    if ( empty( $date ) ) {
+        $timestamp = dokan_current_datetime()->getTimestamp();
+        // if date is not timestamp, convert it to timestamp
+    } elseif ( $date instanceof DateTimeImmutable ) {
+        $timestamp = $date->getTimestamp();
+        // if the date param is string, convert it to timestamp
+    } elseif ( is_numeric( $date ) ) {
+        $timestamp = $date;
+    } elseif ( is_string( $date ) && strtotime( $date ) ) {
+        $timestamp = dokan_current_datetime()->modify( $date )->getTimestamp();
+        // if date is already timestamp, just use it
+    } else {
+        // we couldn't recognize the $date argument
+        return false;
+    }
+
+    if ( function_exists( 'wp_date' ) ) {
+        return wp_date( $format, $timestamp );
+    }
+
+    return date_i18n( $format, $timestamp );
+}
+
+/**
  * Get a formatted date from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
  *
  * @since 3.1.1
@@ -4042,58 +4064,31 @@ function dokan_wp_timezone_string() {
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
 function dokan_format_date( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
         $format = wc_date_format();
     }
 
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
+    return dokan_format_datetime( $date, $format );
 }
 
 /**
- * Get a formatted date, time from WordPress format
+ * Get a formatted time from WordPress format
  *
- * @param string|timestamp $date the date string or timestamp
+ * @param string|int|DateTimeImmutable $date the date string or timestamp or DateTimeImmutable object
  * @param string|bool $format date format string or false for default WordPress date
- * @since 3.2.7
+ *
+ * @since 3.5.1
  *
  * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
  */
-function dokan_format_datetime( $date = '', $format = false ) {
-    // if date is empty, get current datetime timestamp
-    if ( empty( $date ) ) {
-        $date = dokan_current_datetime()->getTimestamp();
-    }
-
+function dokan_format_time( $date = '', $format = false ) {
     // if no format is specified, get default WordPress date format
     if ( ! $format ) {
-        $format = wc_date_format() . ' ' . wc_time_format();
+        $format = wc_time_format();
     }
 
-    // if date is not timestamp, convert it to timestamp
-    if ( ! is_numeric( $date ) && strtotime( $date ) ) {
-        $date = dokan_current_datetime()->modify( $date )->getTimestamp();
-    }
-
-    if ( function_exists( 'wp_date' ) ) {
-        return wp_date( $format, $date );
-    }
-
-    return date_i18n( $format, $date );
+    return dokan_format_datetime( $date, $format );
 }
 
 /**
@@ -4339,4 +4334,16 @@ function dokan_bool_to_on_off( $bool ) {
     }
 
     return true === $bool ? 'on' : 'off';
+}
+
+/**
+ * Check is 12 hour format in current setup.
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @return bool
+ */
+function is_tweleve_hour_format() {
+    // Check if current setup format is 12 hour format.
+    return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
 }

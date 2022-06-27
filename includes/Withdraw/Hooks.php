@@ -40,7 +40,11 @@ class Hooks {
      */
     public function dokan_withdraw_dokan_custom_method_title( $title, $method_key, $request ) {
         if ( 'dokan_custom' === $method_key ) {
-            $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw', __( 'Custom', 'dokan-lite' ) );
+            $title = dokan_get_option( 'withdraw_method_name', 'dokan_withdraw', '' );
+            // set default title
+            if ( empty( $title ) ) {
+                $title = __( 'Custom', 'dokan-lite' );
+            }
             if ( null !== $request ) {
                 $details = maybe_unserialize( $request->details );
                 if ( isset( $details['value'] ) ) {

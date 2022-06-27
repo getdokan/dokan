@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Install;
 
+use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
 use WP_Roles;
 
@@ -18,11 +19,11 @@ class Installer {
         $this->setup_pages();
         $this->woocommerce_settings();
         $this->create_tables();
+        $this->create_reverse_withdrawal_base_product();
         $this->product_design();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
-            dokan()->include_backgorund_processing_files();
             dokan()->upgrades->do_upgrade();
         }
 
@@ -264,6 +265,7 @@ class Installer {
         $this->create_sync_table();
         $this->create_refund_table();
         $this->create_vendor_balance_table();
+        $this->create_reverse_withdrawal_table();
     }
 
     /**
@@ -275,17 +277,17 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_withdraw` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `user_id` bigint(20) unsigned NOT NULL,
-               `amount` decimal(19,4) NOT NULL,
-               `date` timestamp NOT NULL,
-               `status` int(1) NOT NULL,
-               `method` varchar(30) NOT NULL,
-               `note` text NOT NULL,
-               `details` longtext NOT NULL,
-               `ip` varchar(50) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `user_id` bigint(20) unsigned NOT NULL,
+                    `amount` decimal(19,4) NOT NULL,
+                    `date` timestamp NOT NULL,
+                    `status` int(1) NOT NULL,
+                    `method` varchar(30) NOT NULL,
+                    `note` text NOT NULL,
+                    `details` longtext DEFAULT NULL,
+                    `ip` varchar(50) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -299,16 +301,16 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_orders` (
-          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-          `order_id` bigint(20) DEFAULT NULL,
-          `seller_id` bigint(20) DEFAULT NULL,
-          `order_total` decimal(19,4) DEFAULT NULL,
-          `net_amount` decimal(19,4) DEFAULT NULL,
-          `order_status` varchar(30) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `order_id` (`order_id`),
-          KEY `seller_id` (`seller_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `order_id` bigint(20) DEFAULT NULL,
+                    `seller_id` bigint(20) DEFAULT NULL,
+                    `order_total` decimal(19,4) DEFAULT NULL,
+                    `net_amount` decimal(19,4) DEFAULT NULL,
+                    `order_status` varchar(30) DEFAULT NULL,
+                    PRIMARY KEY (`id`),
+                    KEY `order_id` (`order_id`),
+                    KEY `seller_id` (`seller_id`)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -323,17 +325,14 @@ class Installer {
     public function create_announcement_table() {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . 'dokan_announcement';
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_announcement` (
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `user_id` bigint(20) unsigned NOT NULL,
+                    `post_id` bigint(11) NOT NULL,
+                    `status` varchar(30) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
-        $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `user_id` bigint(20) unsigned NOT NULL,
-               `post_id` bigint(11) NOT NULL,
-               `status` varchar(30) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
     }
 
@@ -348,20 +347,20 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_refund` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `order_id` bigint(20) unsigned NOT NULL,
-               `seller_id` bigint(20) NOT NULL,
-               `refund_amount` decimal(19,4) NOT NULL,
-               `refund_reason` text NULL,
-               `item_qtys` varchar(200) NULL,
-               `item_totals` text NULL,
-               `item_tax_totals` text NULL,
-               `restock_items` varchar(10) NULL,
-               `date` timestamp NOT NULL,
-               `status` int(1) NOT NULL,
-               `method` varchar(30) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `order_id` bigint(20) unsigned NOT NULL,
+                    `seller_id` bigint(20) NOT NULL,
+                    `refund_amount` decimal(19,4) NOT NULL,
+                    `refund_reason` text NULL,
+                    `item_qtys` varchar(200) NULL,
+                    `item_totals` text NULL,
+                    `item_tax_totals` text NULL,
+                    `restock_items` varchar(10) NULL,
+                    `date` timestamp NOT NULL,
+                    `status` int(1) NOT NULL,
+                    `method` varchar(30) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -375,20 +374,42 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_vendor_balance` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `vendor_id` bigint(20) unsigned NOT NULL,
-               `trn_id` bigint(20) unsigned NOT NULL,
-               `trn_type` varchar(30) NOT NULL,
-               `perticulars` text NOT NULL,
-               `debit` decimal(19,4) NOT NULL,
-               `credit` decimal(19,4) NOT NULL,
-               `status` varchar(30) DEFAULT NULL,
-               `trn_date` timestamp NOT NULL,
-               `balance_date` timestamp NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `vendor_id` bigint(20) unsigned NOT NULL,
+                    `trn_id` bigint(20) unsigned NOT NULL,
+                    `trn_type` varchar(30) NOT NULL,
+                    `perticulars` text NOT NULL,
+                    `debit` decimal(19,4) NOT NULL,
+                    `credit` decimal(19,4) NOT NULL,
+                    `status` varchar(30) DEFAULT NULL,
+                    `trn_date` timestamp NOT NULL,
+                    `balance_date` timestamp NOT NULL,
+                    PRIMARY KEY (id)
+                ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
+    }
+
+    /**
+     * Create Reverse Withdrawal Table
+     *
+     * @since 3.5.1
+     *
+     * @return void
+     */
+    private function create_reverse_withdrawal_table() {
+        ReverseWithdrawalInstallerHelper::create_reverse_withdrawal_table();
+    }
+
+    /**
+     * This method will create reverse withdrawal base product
+     *
+     * @since 3.5.1
+     *
+     * @return void
+     */
+    private function create_reverse_withdrawal_base_product() {
+        ReverseWithdrawalInstallerHelper::create_reverse_withdrawal_base_product();
     }
 
     /**

@@ -974,7 +974,7 @@ class Ajax {
     /**
      * Get vendor earning
      *
-     * @since DOKAN_SINCE
+     * @since DOKAN_LITE_SINCE
      *
      * @return void
      */

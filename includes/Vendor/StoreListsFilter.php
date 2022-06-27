@@ -63,13 +63,11 @@ class StoreListsFilter {
      * @return void
      */
     public function filter_area( $stores ) {
-        $sort_by = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
-
         dokan_get_template_part( 'store-lists-filter', '', [
             'stores'          => $stores,
             'number_of_store' => $stores['count'],
             'sort_filters'    => self::sort_by_options(),
-            'sort_by'         => $sort_by,
+            'sort_by'         => $this->orderby,
         ] );
     }
 
@@ -101,9 +99,9 @@ class StoreListsFilter {
     public function filter_pre_user_query( $args, $request ) {
         if ( ! empty( $request['stores_orderby'] ) ) {
             $args['orderby'] = wc_clean( $request['stores_orderby'] );
-        } else {
+        } elseif ( empty( $args['orderby'] ) ) {
             $sort_by         = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
-            $args['orderby'] = ( ! dokan()->is_pro_exists() && ! in_array( $sort_by, [ 'most_recent', 'total_orders' ] ) ) ? 'most_recent': $sort_by;
+            $args['orderby'] = ( ! array_key_exists( $sort_by, self::sort_by_options() ) ) ? 'most_recent': $sort_by;
         }
 
         add_action( 'pre_user_query', array( $this, 'filter_user_query' ), 9 );
@@ -161,10 +159,32 @@ class StoreListsFilter {
     private function filter_query_orderby() {
         if ( 'total_orders' === $this->orderby ) {
             $this->query->query_orderby = 'ORDER BY orders_count DESC';
+            return;
         }
 
         if ( 'most_recent' === $this->orderby ) {
-            $this->query->query_orderby = 'ORDER BY user_registered DESC';
+            $this->query->query_orderby = 'ORDER BY ID DESC';
+            return;
+        }
+
+        if ( 'random' === $this->orderby ) {
+            $order_by = [
+                'ID',
+                'user_login, ID',
+                'user_email',
+                'user_registered, ID',
+                'user_nicename, ID',
+            ];
+
+            $selected_orderby = get_transient( 'dokan_store_listing_random_orderby' );
+
+            if ( false === $selected_orderby ) {
+                $selected_orderby = $order_by[ array_rand( $order_by, 1 ) ];
+
+                set_transient( 'dokan_store_listing_random_orderby', $selected_orderby, MINUTE_IN_SECONDS * 5 );
+            }
+
+            $this->query->query_orderby = "ORDER BY $selected_orderby";
         }
     }
 }
