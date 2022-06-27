@@ -10,7 +10,7 @@
             <div v-if="! done" class="dokan-importer">
                 <header>
                     <h2>{{ __( 'Import dummy vendors and products', 'dokan-lite' ) }}</h2>
-                    <p>{{ __( 'This tool allows you to import vendor and some products for vendors to your market place.', 'dokan-lite' ) }}</p>
+                    <p>{{ __( 'This tool allows you to import vendor and some products for vendors to your marketplace.', 'dokan-lite' ) }}</p>
                 </header>
                 <section>
                     <div>
