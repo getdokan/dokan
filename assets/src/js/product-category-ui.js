@@ -119,6 +119,7 @@
             for ( const key in dokan_product_category_data.categories ) {
                 let category = dokan_product_category_data.categories[ key ];
                 let fullText = category.name;
+                text = text.toLowerCase();
                 let found    = fullText.toLowerCase().indexOf( text );
 
                 if ( found >= 0 ) {

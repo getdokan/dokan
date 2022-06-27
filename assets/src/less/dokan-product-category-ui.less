@@ -67,21 +67,13 @@
     overflow: auto;
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
-    -webkit-animation-name: fadeIn;
-    -webkit-animation-duration: 0.4s;
-    animation-name: fadeIn;
-    animation-duration: 0.4s;
 
     .dokan-product-category-modal-content {
         position: fixed;
-        bottom: 0;
+        bottom: calc(50% - 275px);
         background-color: #fefefe;
         width: 80%;
-        height: 80vh;
-        -webkit-animation-name: slideIn;
-        -webkit-animation-duration: 0.4s;
-        animation-name: slideIn;
-        animation-duration: 0.4s;
+        height: 550px;
         padding: 19px 45px;
         overflow: auto;
 
@@ -402,50 +394,6 @@
             font-size: 1rem;
             padding: 0;
         }
-    }
-}
-
-@-webkit-keyframes slideIn {
-    from {
-        bottom: -300px;
-        opacity: 0;
-    }
-
-    to {
-        bottom: 0;
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    from {
-        bottom: -300px;
-        opacity: 0;
-    }
-
-    to {
-        bottom: 0;
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
     }
 }
 

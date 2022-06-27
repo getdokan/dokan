@@ -22,23 +22,6 @@ class Manager {
             return;
         }
 
-        $this->class_map = apply_filters(
-            'dokan_rest_api_class_map', array(
-                DOKAN_DIR . '/includes/REST/AdminReportController.php'           => 'WeDevs\Dokan\REST\AdminReportController',
-                DOKAN_DIR . '/includes/REST/AdminDashboardController.php'        => 'WeDevs\Dokan\REST\AdminDashboardController',
-                DOKAN_DIR . '/includes/REST/AdminMiscController.php'             => 'WeDevs\Dokan\REST\AdminMiscController',
-                DOKAN_DIR . '/includes/REST/StoreController.php'                 => '\WeDevs\Dokan\REST\StoreController',
-                DOKAN_DIR . '/includes/REST/ProductController.php'               => '\WeDevs\Dokan\REST\ProductController',
-                DOKAN_DIR . '/includes/REST/ProductAttributeController.php'      => '\WeDevs\Dokan\REST\ProductAttributeController',
-                DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php' => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
-                DOKAN_DIR . '/includes/REST/OrderController.php'                 => '\WeDevs\Dokan\REST\OrderController',
-                DOKAN_DIR . '/includes/REST/WithdrawController.php'              => '\WeDevs\Dokan\REST\WithdrawController',
-                DOKAN_DIR . '/includes/REST/StoreSettingController.php'          => '\WeDevs\Dokan\REST\StoreSettingController',
-                DOKAN_DIR . '/includes/REST/AdminNoticeController.php'           => '\WeDevs\Dokan\REST\AdminNoticeController',
-                DOKAN_DIR . '/includes/REST/ChangeLogController.php'             => '\WeDevs\Dokan\REST\ChangeLogController',
-            )
-        );
-
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
         add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
