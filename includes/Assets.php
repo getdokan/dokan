@@ -510,6 +510,8 @@ class Assets {
             'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
             'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
+            'store_url_prefix'           => home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+            'store_listing_url'          => get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ),
             /**
              * Filter of maximun a vendor can add tags.
              *
