@@ -175,119 +175,108 @@ export default {
                     return 'Product Advertisement';
                 case 'WholesaleCustomer':
                     return 'Wholesale Customer';
+                case 'RequestAQuote':
+                case 'NewRequestQuote':
+                    return 'Request A Quote';
+                case 'RequestAQuoteRules':
+                case 'NewQuoteRules':
+                    return 'Request A Quote Rules';
+                case 'ReverseWithdrawal':
+                    return 'Reverse Withdrawal';
                 default:
                     return currentPage;
             }
         },
         getPageArticleQueryParams() {
+            const {blogParams} = this.getPageQueryParams();
+            return blogParams;
+        },
+        getPageQueryParams() {
             let currentPage = this.getCurrentPage();
-            let params = [];
+            let blogParams = {};
+            let docParams = {};
             switch (currentPage) {
                 case 'Dashboard':
-                    params = {tags: [1073]};
+                    blogParams = {tags: [1073]};
+                    docParams = {doc_tag: [6748,6745]};
                     break;
                 case 'Withdraw':
-                    params = {tags: [6819]};
+                    blogParams = {tags: [6819]};
+                    docParams = {doc_tag: [6747]};
                     break;
                 case 'Vendors':
                 case 'VendorSingle':
-                    params = {tags: [6724]};
+                    blogParams = {tags: [6724]};
+                    docParams = {doc_tag: [6749]};
                     break;
                 case 'AbuseReports':
-                    params = {tags: [6820]};
+                    blogParams = {tags: [6820]};
+                    docParams = {doc_tag: [6778]};
                     break;
                 case 'StoreReviews':
-                    params = {tags: [6725]};
+                    blogParams = {tags: [6725]};
+                    docParams = {doc_tag: [6771]};
                     break;
                 case 'AdminStoreSupport':
-                    params = {tags: [6726]};
+                    blogParams = {tags: [6726]};
+                    docParams = {doc_tag: [6766]};
                     break;
                 case 'Announcement':
                 case 'NewAnnouncement':
-                    params = {tags: [6823]};
+                    blogParams = {tags: [6823]};
+                    docParams = {doc_tag: [6750]};
                     break;
                 case 'Refund':
-                    params = { tags: [6727]};
+                    blogParams = { tags: [6727]};
+                    docParams = {doc_tag: [6751]};
                     break;
                 case 'Reports':
-                    params = { tags: [6728]};
+                    blogParams = { tags: [6728]};
+                    docParams = {doc_tag: [6752]};
                     break;
                 case 'Modules':
-                    params = { tags: [6729]};
+                    blogParams = { tags: [6729]};
+                    docParams = {doc_tag: [6753,6793]};
                     break;
                 case 'Tools':
-                    params = { tags: [6730]};
+                    blogParams = { tags: [6730]};
+                    docParams = {doc_tag: [6798]};
                     break;
                 case 'ProductAdvertisement':
-                    params = { tags: [6731]};
+                    blogParams = { tags: [6731]};
+                    docParams = {doc_tag: [6790]};
                     break;
                 case 'WholesaleCustomer':
-                    params = { tags: [6732]};
+                    blogParams = { tags: [6732]};
+                    docParams = {doc_tag: [6776]};
                     break;
                 case 'Settings':
-                    params = { tags: [6733]};
+                    blogParams = { tags: [6733]};
+                    docParams = {doc_tag: [6799]};
+                    break;
+                case 'RequestAQuote':
+                case 'NewRequestQuote':
+                case 'RequestAQuoteRules':
+                case 'NewQuoteRules':
+                    blogParams = { tags: [6815]};
+                    docParams = {doc_tag: [6791]};
+                    break;
+                case 'ReverseWithdrawal':
+                    blogParams = { tags: [6825]};
+                    docParams = {doc_tag: [6824]};
                     break;
                 default:
-                    params = {search : 'Dokan'};
+                    blogParams = {search : 'Dokan'};
+                    docParams = {search : 'Dokan'};
                     break;
             }
-            params.per_page = 20;
-            return params;
+            blogParams.per_page = 20;
+            docParams.per_page = 5;
+            return {blogParams, docParams};
         },
         getPageDocQueryParams() {
-            let currentPage = this.getCurrentPage();
-            let params = [];
-            switch (currentPage) {
-                case 'Dashboard':
-                    params = {doc_tag: [6748,6745]};
-                    break;
-                case 'Withdraw':
-                    params = {doc_tag: [6747]};
-                    break;
-                case 'Vendors':
-                case 'VendorSingle':
-                    params = {doc_tag: [6749]};
-                    break;
-                case 'AbuseReports':
-                    params = {doc_tag: [6778]};
-                    break;
-                case 'StoreReviews':
-                    params = {doc_tag: [6771]};
-                    break;
-                case 'AdminStoreSupport':
-                    params = {doc_tag: [6766]};
-                    break;
-                case 'Announcement':
-                case 'NewAnnouncement':
-                    params = {doc_tag: [6750]};
-                    break;
-                case 'Refund':
-                    params = {doc_tag: [6751]};
-                    break;
-                case 'Reports':
-                    params = {doc_tag: [6752]};
-                    break;
-                case 'Modules':
-                    params = {doc_tag: [6753,6793]};
-                    break;
-                case 'Tools':
-                    params = {doc_tag: [6798]};
-                    break;
-                case 'ProductAdvertisement':
-                    params = {doc_tag: [6790]};
-                    break;
-                case 'WholesaleCustomer':
-                    params = {doc_tag: [6776]};
-                    break;
-                case 'Settings':
-                    params = {doc_tag: [6799]};
-                    break;
-                default:
-                    params = {search : 'Dokan'};
-                    break;
-            }
-            params.per_page = 5;
-            return params;
+            const {docParams} = this.getPageQueryParams();
+            return docParams;
         },
         hideKnowledgeBase(){
             let currentPage = this.getCurrentPage();
@@ -297,6 +286,7 @@ export default {
                 case 'Modules':
                 case 'Tools':
                 case 'ProModules':
+                case 'Premium':
                     hidden = true;
                     break;
                 default:
