@@ -1756,7 +1756,7 @@ class ProductController extends DokanRESTController {
      */
     public function get_multistep_categories() {
         $categories_controller = new Categories();
-        $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get());
+        $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
 
         return rest_ensure_response( $categories );
     }
