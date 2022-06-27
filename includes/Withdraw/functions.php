@@ -374,9 +374,7 @@ function dokan_withdraw_get_withdrawable_active_methods() {
             'dokan_withdraw_withdrawable_payment_methods',
             [
                 'paypal',
-                'dokan_custom',
                 'bank',
-                'skrill',
             ]
         )
     );
