@@ -18,26 +18,25 @@
                     </div>
                 </section>
                 <div class="dokan-importer-action">
-                    <button @click="importBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
+                    <button @click="importBtnHandler" class="dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-loading' : ''">{{ __( 'Run the importer', 'dokan-lite' ) }}</button>
                 </div>
             </div>
             <div v-else class="dokan-importer">
                 <section class="import-done">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100" height="100">
-                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z" fill="#F4624D"/>
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z" fill="#1BAC9E"/>
                     </svg>
                     <p>
                         {{__( 'Import complete!', 'dokan-lite' )}}
                     </p>
-                </section>
-                <div class="dokan-importer-action">
-                    <button @click="clearAllDummyData" class="cancel-btn dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Clear dummy data', 'dokan-lite' ) }}</button>
-
                     <div class="links">
                         <router-link :to="{ name: 'Vendors', query: { status: 'all' }}" exact >{{ __( 'View vendors', 'dokan-lite' ) }}</router-link>
                         &nbsp;
                         <a :href="getProductsPageUrl()">{{ __( 'View products', 'dokan-lite' ) }}</a>
                     </div>
+                </section>
+                <div class="dokan-importer-action">
+                    <button @click="clearAllDummyData" class="cancel-btn dokan-import-continue-btn" :disabled="loading" :class="loading ? 'is-busy' : ''">{{ __( 'Clear dummy data', 'dokan-lite' ) }}</button>
                 </div>
             </div>
         </div>
@@ -448,11 +447,11 @@ export default {
             }
 
             & li.active {
-                border-color: #F3624D;
-                color: #F3624D;
+                border-color: #1BAC9E;
+                color: #1BAC9E;
 
                 &::before{
-                    border-color: #F3624D;
+                    border-color: #1BAC9E;
                 }
             }
         }
@@ -497,11 +496,12 @@ export default {
                         -webkit-appearance: none;
 
                         &[value]::-webkit-progress-bar {
-                            background-color: #ccc;
+                            background-color: #EEEEEE;
+                            border: 1px solid #BCBCBC;
                             border-radius: 5px;
                         }
                         &[value]::-webkit-progress-value {
-                            background-color: #F4624D;
+                            background-color: #1BAC9E;
                             border-radius: 5px;
                             transition: width 0.5s;
                         }
@@ -521,7 +521,11 @@ export default {
 
                 p {
                     font-size: 1.2rem;
-                    color: #F5624D;
+                    color: #1BAC9E;
+                }
+
+                .links {
+                    text-align: center;
                 }
             }
             .dokan-importer-action{
@@ -543,17 +547,19 @@ export default {
                     line-height: 1.5em;
                     height: auto;
                     border-radius: 4px;
-                    background-color: #F3624D;
-                    border-color: #F3624D;
+                    background-color: #1BAC9E;
+                    border-color: #1BAC9E;
                     border: none;
                     margin: 0;
                     opacity: 1;
                     color: #FFF;
                     cursor: pointer;
 
-                    &:hover{
-
+                    &.is-loading {
+                        background-color: rgba(27, 172, 158, .5);
+                        border-color: rgba(27, 172, 158, .5);
                     }
+
                     &.is-busy {
                         animation: components-button__busy-animation 2500ms infinite linear;
                         opacity: 1;
@@ -564,8 +570,11 @@ export default {
                 }
 
                 .cancel-btn{
-                    background-color: #d33;
-                    border-color: #d33;
+                    background-color: #FFFFFF;
+                    border-color: #E2E2E2;
+                    color: #72777C;
+                    border: 1px solid #E2E2E2;
+                    margin-top: 15px
                 }
             }
         }
