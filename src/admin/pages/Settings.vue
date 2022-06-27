@@ -5,14 +5,14 @@
             <AdminNotice></AdminNotice>
             <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
-            <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
+            <div id="setting-message_updated" ref='settingsWrapper' class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
                 <p><strong v-html="message"></strong></p>
                 <button type="button" class="notice-dismiss" @click.prevent="isSaved = false">
                     <span class="screen-reader-text">{{ __( 'Dismiss this notice.', 'dokan-lite' ) }}</span>
                 </button>
             </div>
 
-            <div class="dokan-settings-wrap">
+            <div class="dokan-settings-wrap" ref='settingsWrapper'>
                 <div class="nav-tab-wrapper">
                     <div class="nab-section">
                         <div class="search-box">
@@ -68,13 +68,18 @@
                                             :key="fieldId"
                                             :errors="errors"
                                             :validationErrors="validationErrors"
-                                            :toggle-loading-state="toggleLoadingState" />
+                                            :toggle-loading-state="toggleLoadingState"
+                                            :dokanAssetsUrl="dokanAssetsUrl" />
                                     </div>
                                 </div>
                                 <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
                             </form>
                         </div>
                     </template>
+
+                    <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan' )" v-tooltip="__( 'Back to top', 'dokan' )">
+                        <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan' )" />
+                    </div>
                 </div>
 
                 <div class="loading" v-if="showLoading">
@@ -127,6 +132,7 @@
                 awaitingSearch: false,
                 withdrawMethods: {},
                 isSaveConfirm: false,
+                dokanAssetsUrl: dokan.urls.assetsUrl,
             }
         },
 
@@ -156,6 +162,7 @@
                 this.currentTab = section.id;
                 this.requiredFields = [];
 
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
                 if ( typeof( localStorage ) != 'undefined' ) {
                     localStorage.setItem( "activetab", this.currentTab );
                 }
@@ -463,20 +470,30 @@
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
             },
+
+            scrollToTop() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            handleScroll() {
+                if ( window.scrollY > ( document.body.scrollHeight - 800 ) ) {
+                    this.$refs.backToTop.style.transform = 'scale(1)';
+                } else {
+                    this.$refs.backToTop.style.transform = 'scale(0)';
+                }
+            },
         },
 
         created() {
             this.fetchSettingValues();
 
             this.currentTab = 'dokan_general';
-            if ( typeof(localStorage) != 'undefined' ) {
+            if ( typeof(localStorage) !== 'undefined' ) {
                 this.currentTab = localStorage.getItem("activetab") ? localStorage.getItem("activetab") : 'dokan_general';
             }
 
-            this.$root.$on( 'onFieldSwitched', value => {
-                if ( value === 'on' && ( 'dokan_general' in this.settingValues ) &&
-                    ( 'data_clear_on_uninstall' in this.settingValues.dokan_general )
-                ) {
+            this.$root.$on( 'onFieldSwitched', ( value, fieldName ) => {
+                if ( 'on' === value && ( 'dokan_general' in this.settingValues ) && 'data_clear_on_uninstall' === fieldName ) {
                     Swal.fire({
                         icon              : 'warning',
                         html              : this.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
@@ -494,7 +511,8 @@
             });
 
             this.settingSections = dokan.settings_sections;
-            this.settingFields = dokan.settings_fields;
+            this.settingFields   = dokan.settings_fields;
+            window.addEventListener( 'scroll', this.handleScroll );
         },
     };
 
@@ -613,16 +631,21 @@
                         top: -1px;
                     }
                 }
+
+                &:last-child {
+                    border-bottom: 0;
+                }
             }
         }
 
         .metabox-holder {
             flex: 3;
-            padding: 0 6px 0 3% !important;
+            padding: 0 6px 75px 3% !important;
             position: relative;
 
             .settings-header {
                 display: flex;
+                margin-bottom: 50px;
                 justify-content: space-between;
 
                 .settings-content {
@@ -667,6 +690,63 @@
                 }
             }
 
+            .group {
+                .form-table {
+                    .dokan-settings-fields {
+                        .dokan-settings-field-type-sub_section,
+                        .dokan-settings-field-type-disbursement_sub_section {
+                            border-bottom: 1px solid #b0a7a7;
+
+                            .sub-section-styles {
+                                margin-top: 50px;
+                            }
+                        }
+
+                        div {
+                            &:not(.dokan-settings-field-type-sub_section) {
+                                .field_contents {
+                                    border: 1px solid #b0a7a7;
+                                    border-top: none;
+                                }
+                            }
+                        }
+
+                        > div {
+                            &:not(.dokan-settings-field-type-sub_section) {
+                                &:first-child {
+                                    border-top: 1px solid #b0a7a7;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .back-to-top {
+                width: 44px;
+                right: 75px;
+                height: 44px;
+                bottom: 180px;
+                cursor: pointer;
+                position: fixed;
+                transition: .1s linear;
+                transform: scale(0);
+                box-shadow: 0px 0px 10px 0px #0000001F;
+                border-radius: 50%;
+                background-color: #fff;
+
+                img {
+                    top: 50%;
+                    left: 50%;
+                    position: absolute;
+                    transform: translate(-50%, -50%);
+                }
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+                
             &:before {
                 top: 0;
                 left: 0;

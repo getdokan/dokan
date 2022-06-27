@@ -1,7 +1,7 @@
 <template>
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
-            <div class="dokan-settings-sub-section">
+            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
                 <p class="sub-section-description">
                     {{ fieldData.description }}
@@ -378,9 +378,9 @@
                             <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
                         </div>
                     </div>
-                    <template v-if="expandSocials">
-                        <div class="social_info" v-for="( fields, index ) in fieldData" :key="index">
-                            <div v-if="fields.social_field" :class="[ { 'social_html': fields.type === 'html' }, { 'social_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
+                    <template v-for="( fields, index ) in fieldData">
+                        <div class="social_info" v-if="expandSocials && fields.social_field" :key="index">
+                            <div :class="[ { 'social_html': fields.type === 'html' }, { 'social_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
                                 <SocialFields
                                     :fieldData="fields"
                                     :fieldValue="fieldValue"
@@ -432,7 +432,7 @@
             RefreshSettingOptions
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
 
         data() {
             return {
@@ -441,7 +441,6 @@
                 expandSocials         : false,
                 repeatableItem        : {},
                 repeatableTime        : [],
-                dokanAssetsUrl        : dokan.urls.assetsUrl,
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
@@ -654,7 +653,7 @@
                 this.checked                           = status ? 'on' : 'off';
                 this.fieldValue[ this.fieldData.name ] = status ? 'on' : 'off';
 
-                this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ] );
+                this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
             },
 
             hasError( key ) {
@@ -786,7 +785,7 @@
         margin-left: 10px;
     }
     .dokan-settings-sub-section {
-        margin: 50px 0 22px 0;
+        margin-bottom: 30px;
 
         .sub-section-title {
             margin: 0;
@@ -809,13 +808,6 @@
                 text-decoration: none;
             }
         }
-    }
-    .field_contents.field_top_styles {
-        margin-top: 30px;
-        border-top: 1px solid #b0a7a7;
-    }
-    .field_contents.field_bottom_styles {
-        margin-bottom: 35px;
     }
     .field_contents.data_clear {
         background-color: #FFFBF3;
@@ -1204,12 +1196,12 @@
 
                 }
 
-                .field_top_styles {
+                &:nth-child(2) {
                     margin-top: 15px;
                     border-top: 1px solid #b0a7a7;
                 }
 
-                .field_bottom_styles {
+                &:last-child {
                     margin-bottom: 10px;
                 }
             }
