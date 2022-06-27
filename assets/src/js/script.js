@@ -1183,3 +1183,9 @@ jQuery(function($) {
     return false;
   }
 }
+
+(function ($){
+  $('.woocommerce-breadcrumb')
+    .find(`a[href="${dokan.vendor_store_url_prefix}"]`)
+    .attr("href", dokan.store_listing_url);
+})(jQuery);
