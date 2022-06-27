@@ -34,7 +34,7 @@
                             <img :src="article.featured_image.full[0]" :alt="article.title.rendered">
                         </div>
                         <div class="dokan-kb-article-content">
-                            <h5 class="dokan-kb-article-title">{{ article.title.rendered }}</h5>
+                            <h5 class="dokan-kb-article-title" v-html="article.title.rendered"></h5>
                             <span v-for="tag in article.tags" class="dokan-kb-article-category" :class="getCategoryColorClass()">{{ tag.name }}</span>
                         </div>
                     </a>
@@ -59,7 +59,7 @@
                 <ol class="dokan-kb-docs-ordered-list">
                     <div class="dokan-kb-doc-item" v-for="doc in docs.slice(0,4)">
                         <li class="dokan-kb-doc-title">
-                            <a :href="doc.guid.rendered" target="_blank">{{ doc.title.rendered }}</a>
+                            <a :href="doc.guid.rendered" target="_blank" v-html="doc.title.rendered"></a>
                         </li>
                     </div>
                 </ol>
@@ -409,7 +409,7 @@ export default {
 
                 }
                 .dokan-kb-article-item {
-                    margin-bottom: 30px;
+                    margin-bottom: 15px;
 
                     &:last-child {
                         margin-bottom: 0;
@@ -424,7 +424,7 @@ export default {
 
                         .dokan-kb-article-image {
                             flex: 2;
-                            min-height: 7.5vw;
+                            min-height: 7vw;
                             img {
                                 max-width: 100%;
                                 height: auto;
