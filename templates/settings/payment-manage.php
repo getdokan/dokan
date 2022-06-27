@@ -6,6 +6,12 @@
  */
 ?>
 
+<?php if ( isset( $status_message ) && ! empty( $status_message ) ) : ?>
+<div class="dokan-alert <?php echo ( 'success' === $connect_status ) ? 'dokan-alert-success' : 'dokan-alert-danger'; ?>">
+    <?php echo $status_message; ?>
+</div>
+<?php endif; ?>
+
 <a href="<?php echo esc_url_raw( dokan_get_navigation_url( 'settings/payment' ) ); ?>">
     &larr; <?php esc_html_e( 'Back', 'dokan-lite' ); ?>
 </a>

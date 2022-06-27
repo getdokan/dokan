@@ -280,6 +280,14 @@ class Settings {
             ]
         );
 
+        if ( isset( $_GET['status'] ) && isset( $_GET['message'] ) ) {
+            $connect_status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
+            $status_message = sanitize_text_field( wp_unslash( $_GET['message'] ) );
+
+            $args['connect_status'] = $connect_status;
+            $args['status_message'] = $status_message;
+        }
+
         if ( ! in_array( $method_key, $payment_method_ids, true ) || empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
             dokan_get_template_part(
                 'global/dokan-error',
