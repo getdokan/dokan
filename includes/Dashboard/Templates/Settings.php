@@ -282,7 +282,7 @@ class Settings {
 
         if ( isset( $_GET['status'] ) && isset( $_GET['message'] ) ) {
             $connect_status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
-            $status_message = sanitize_text_field( wp_unslash( $_GET['message'] ) );
+            $status_message = wp_kses_post( wp_unslash( $_GET['message'] ) );
 
             $args['connect_status'] = $connect_status;
             $args['status_message'] = $status_message;
