@@ -132,6 +132,16 @@ export default {
                 api.get(this.base + '/docs', { params: docQueryParam } )
             ]).then(axios.spread( async (...responses) => {
                 this.articles = responses[0].data;
+
+                // If no blog post found in the tag, then get the latest blogs.
+                if ( !this.articles.length ) {
+                    this.loading = true;
+                    api.get(this.base + '/posts',{ params: { tags: [1073], per_page: 20 } })
+                        .then(response => {
+                            this.articles = response.data;
+                            this.loading = false;
+                        });
+                }
                 this.docs = responses[1].data;
                 this.loading = false;
             })).catch(error => {
@@ -297,6 +307,9 @@ export default {
                 case 'Tools':
                 case 'ProModules':
                 case 'Premium':
+                case 'ReverseWithdrawal': // Remove when content is available
+                case 'AbuseReports': // Remove when content is available
+                case 'Announcement': // Remove when content is available
                     hidden = true;
                     break;
                 default:
