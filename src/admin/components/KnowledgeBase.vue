@@ -158,34 +158,44 @@ export default {
         },
         getPageContent() {
             let currentPage = this.getCurrentPage();
+            let content = '';
             switch (currentPage) {
-                case 'Dashboard':
-                    return 'Dashboard';
                 case 'VendorSingle':
-                    return 'Vendors';
+                    content = 'Vendors';
+                    break;
                 case 'AbuseReports':
-                    return 'Abuse Reports';
+                    content = 'Abuse Reports';
+                    break;
                 case 'StoreReviews':
-                    return 'Store Reviews';
+                    content = 'Store Reviews';
+                    break;
                 case 'AdminStoreSupport':
-                    return 'Store Support';
+                    content = 'Store Support';
+                    break;
                 case 'NewAnnouncement':
-                    return 'Announcement';
+                    content = 'Announcement';
+                    break;
                 case 'ProductAdvertisement':
-                    return 'Product Advertisement';
+                    content = 'Product Advertisement';
+                    break;
                 case 'WholesaleCustomer':
-                    return 'Wholesale Customer';
+                    content = 'Wholesale Customer';
+                    break;
                 case 'RequestAQuote':
                 case 'NewRequestQuote':
-                    return 'Request A Quote';
+                    content = 'Request A Quote';
+                    break;
                 case 'RequestAQuoteRules':
                 case 'NewQuoteRules':
-                    return 'Request A Quote Rules';
+                    content = 'Request A Quote Rules';
+                    break;
                 case 'ReverseWithdrawal':
-                    return 'Reverse Withdrawal';
+                    content = 'Reverse Withdrawal';
+                    break;
                 default:
-                    return currentPage;
+                    content = currentPage;
             }
+            return content;
         },
         getPageArticleQueryParams() {
             const {blogParams} = this.getPageQueryParams();
