@@ -14,7 +14,7 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <input :type="fieldData.type || 'text'" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'"
+                        <input :type="fieldData.type || 'text'" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                             :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
                             :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" />
                     </div>
@@ -35,7 +35,7 @@
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step"
-                                class="regular-text" v-model="fieldValue[fieldData.name]"
+                                class="regular-text medium" v-model="fieldValue[fieldData.name]"
                                 :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
                                 :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"/>
                         </label>
@@ -56,7 +56,7 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="text" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'"
+                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                                 :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
                                 :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"/>
                         </label>
@@ -77,12 +77,12 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field combine_fields">
                         <div class="percent_fee">
-                            <input type="text" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                            <input type="text" class="wc_input_decimal regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
                             {{ '%' }}
                         </div>
                         <div class="fixed_fee">
                             {{ '+' }}
-                            <input type="text" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                            <input type="text" class="wc_input_price regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
                         </div>
                     </div>
                 </fieldset>
@@ -103,7 +103,7 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
+                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -163,12 +163,12 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
 
-                        <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                             <optgroup v-for="optionGroup in fieldData.options" :key="optionGroup" :label="optionGroup.group_label">
                                 <option v-for="option in optionGroup.group_values" :key="option" :value="option.value" v-html="option.label" />
@@ -195,7 +195,7 @@
                     <div class="field add_files">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
-                            <input type="text" class="regular-text wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                            <input type="text" class="regular-text medium wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                         </label>
                     </div>
                 </fieldset>
@@ -289,7 +289,7 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field repeatable_fields">
-                        <input type="text" class="regular-text" v-model="repeatableItem[fieldData.name]">
+                        <input type="text" class="regular-text medium" v-model="repeatableItem[fieldData.name]">
                         <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">
                             <span class="dashicons dashicons-plus-alt2"></span>
                         </a>
@@ -1017,7 +1017,6 @@
             input[type='number'],
             input[type='button'] {
                 border: 0.957434px solid #686666;
-                max-width: 240px;
                 min-height: 32px;
                 box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                 border-radius: 5px;
@@ -1026,6 +1025,18 @@
             select,
             textarea {
                 width: 100%;
+            }
+
+            .small {
+                max-width: 35% !important;
+            }
+
+            .medium {
+                max-width: 70% !important;
+            }
+
+            .large {
+                max-width: 100% !important;
             }
 
             label.checked {
@@ -1141,7 +1152,7 @@
                         width: 100%;
 
                         .html_contents {
-                            flex: 3;
+                            width: 50%;
                             text-align: left;
 
                             .field_heading {
@@ -1176,7 +1187,7 @@
                         }
 
                         .fields {
-                            flex: 2;
+                            width: 50%;
                             align-self: center;
                             text-align: right;
 
@@ -1284,6 +1295,18 @@
                         min-height: 28px;
                         font-size: 8px;
                     }
+
+                    .small {
+                        max-width: 35% !important;
+                    }
+
+                    .medium {
+                        max-width: 70% !important;
+                    }
+
+                    .large {
+                        max-width: 100% !important;
+                    }
                 }
 
                 .radio_fields {
@@ -1346,6 +1369,18 @@
             textarea,
             input[type=text] {
                 max-width: 125px !important;
+            }
+
+            .small {
+                max-width: 35% !important;
+            }
+
+            .medium {
+                max-width: 70% !important;
+            }
+
+            .large {
+                max-width: 100% !important;
             }
         }
     }
