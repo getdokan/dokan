@@ -7,7 +7,7 @@ Tested up to: 6.0
 WC requires at least: 5.0.0
 WC tested up to: 6.5.1
 Requires PHP: 7.0
-Stable tag: 3.5.1
+Stable tag: 3.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -315,6 +315,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.6.0 ( Jun 14, 2022 ) =
+
+**new:** Added a new filter named ‘dokan_bank_payment_validation_error’ so that payment validation errors can be filtered.
+**update:** Entirely redesigned Dokan Admin Settings page
+**fix:** WPML translated endpoints not working in payment settings page
 
 = v3.5.1 ( May 31, 2022 ) =
 
