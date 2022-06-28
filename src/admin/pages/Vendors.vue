@@ -85,6 +85,12 @@
                     <template v-if="index !== (actions.length - 1)"> | </template>
                 </span>
                 </template>
+                <template slot="filters" slot-scope="data">
+                    <component v-for="(dokanVendorFilterSection, index) in dokanVendorFilterSectionStart"
+                               :key="index"
+                               :is="dokanVendorFilterSection"
+                    />
+                </template>
             </list-table>
 
             <add-vendor :vendor-id="vendorId" v-if="loadAddVendor" />
@@ -177,7 +183,8 @@ export default {
             vendors: [],
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
-            isVendorSwitchingEnabled: false
+            isVendorSwitchingEnabled: false,
+            dokanVendorFilterSectionStart: dokan.hooks.applyFilters( 'dokanVendorFilterSectionStart', [] ),
         }
     },
 
