@@ -8,7 +8,6 @@
     let categoriesState   = [];
     let searchResultState = [];
     let inputHolder       = '';
-    let boxCounter        = 1;
     let selectedCatId     = '';
 
     var ProductCategory = {
@@ -331,7 +330,7 @@
         },
 
         addANewCatBox() {
-            boxCounter++;
+            let boxCounter = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' ).length + 1;
             let html = `
                 <div class="dokan-select-product-category-container">
                     <div class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
