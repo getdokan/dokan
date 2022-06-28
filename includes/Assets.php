@@ -576,7 +576,7 @@ class Assets {
                 'is_single'  => CategoryHelper::product_category_selection_is_single(),
                 'i18n'       => [
                     'select_a_category' => __( 'Select a category', 'dokan-lite' ),
-                    'duplicate_category' => __( 'This categories has already been selected.', 'dokan-lite' ),
+                    'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
                 ],
             ];
 
