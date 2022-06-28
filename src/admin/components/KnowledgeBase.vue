@@ -167,45 +167,8 @@ export default {
             return 'color-scheme-' + number;
         },
         getPageContent() {
-            let currentPage = this.getCurrentPage();
-            let content = '';
-            switch (currentPage) {
-                case 'VendorSingle':
-                    content = 'Vendors';
-                    break;
-                case 'AbuseReports':
-                    content = 'Abuse Reports';
-                    break;
-                case 'StoreReviews':
-                    content = 'Store Reviews';
-                    break;
-                case 'AdminStoreSupport':
-                    content = 'Store Support';
-                    break;
-                case 'NewAnnouncement':
-                    content = 'Announcement';
-                    break;
-                case 'ProductAdvertisement':
-                    content = 'Product Advertisement';
-                    break;
-                case 'WholesaleCustomer':
-                    content = 'Wholesale Customer';
-                    break;
-                case 'RequestAQuote':
-                case 'NewRequestQuote':
-                    content = 'Request A Quote';
-                    break;
-                case 'RequestAQuoteRules':
-                case 'NewQuoteRules':
-                    content = 'Request A Quote Rules';
-                    break;
-                case 'ReverseWithdrawal':
-                    content = 'Reverse Withdrawal';
-                    break;
-                default:
-                    content = currentPage;
-            }
-            return content;
+            const {pageContent} = this.getPageQueryParams();
+            return pageContent;
         },
         getPageArticleQueryParams() {
             const {blogParams} = this.getPageQueryParams();
@@ -215,64 +178,80 @@ export default {
             let currentPage = this.getCurrentPage();
             let blogParams = {};
             let docParams = {};
+            let pageContent = '';
+
             switch (currentPage) {
                 case 'Dashboard':
                     blogParams = {tags: [1073]};
                     docParams = {doc_tag: [6748,6745]};
+                    pageContent = __('Dashboard', 'dokan-lite');
                     break;
                 case 'Withdraw':
                     blogParams = {tags: [6819]};
                     docParams = {doc_tag: [6747]};
+                    pageContent = __('Withdraw', 'dokan-lite');
                     break;
                 case 'Vendors':
                 case 'VendorSingle':
                     blogParams = {tags: [6724]};
                     docParams = {doc_tag: [6749]};
+                    pageContent = __('Vendors', 'dokan-lite');
                     break;
                 case 'AbuseReports':
                     blogParams = {tags: [6820]};
                     docParams = {doc_tag: [6778]};
+                    pageContent = __('Abuse Reports', 'dokan-lite');
                     break;
                 case 'StoreReviews':
                     blogParams = {tags: [6725]};
                     docParams = {doc_tag: [6771]};
+                    pageContent = __('Store Reviews', 'dokan-lite');
                     break;
                 case 'AdminStoreSupport':
                     blogParams = {tags: [6726]};
                     docParams = {doc_tag: [6766]};
+                    pageContent = __('Store Support', 'dokan-lite');
                     break;
                 case 'Announcement':
                 case 'NewAnnouncement':
                     blogParams = {tags: [6823]};
                     docParams = {doc_tag: [6750]};
+                    pageContent = __('Announcement', 'dokan-lite');
                     break;
                 case 'Refund':
                     blogParams = { tags: [6727]};
                     docParams = {doc_tag: [6751]};
+                    pageContent = __('Refund', 'dokan-lite');
                     break;
                 case 'Reports':
                     blogParams = { tags: [6728]};
                     docParams = {doc_tag: [6752]};
+                    pageContent = __('Reports', 'dokan-lite');
                     break;
                 case 'Modules':
                     blogParams = { tags: [6729]};
                     docParams = {doc_tag: [6753,6793]};
+                    pageContent = __('Modules', 'dokan-lite');
                     break;
                 case 'Tools':
                     blogParams = { tags: [6730]};
                     docParams = {doc_tag: [6798]};
+                    pageContent = __('Tools', 'dokan-lite');
                     break;
                 case 'ProductAdvertisement':
                     blogParams = { tags: [6731]};
                     docParams = {doc_tag: [6790]};
+                    pageContent = __('Product Advertisement', 'dokan-lite');
                     break;
                 case 'WholesaleCustomer':
                     blogParams = { tags: [6732]};
                     docParams = {doc_tag: [6776]};
+                    pageContent = __('Wholesale Customer', 'dokan-lite');
                     break;
                 case 'Settings':
                     blogParams = { tags: [6733]};
                     docParams = {doc_tag: [6799]};
+                    pageContent = __('Settings', 'dokan-lite');
                     break;
                 case 'RequestAQuote':
                 case 'NewRequestQuote':
@@ -280,19 +259,22 @@ export default {
                 case 'NewQuoteRules':
                     blogParams = { tags: [6815]};
                     docParams = {doc_tag: [6791]};
+                    pageContent = __('Request A Quote', 'dokan-lite');
                     break;
                 case 'ReverseWithdrawal':
                     blogParams = { tags: [6825]};
                     docParams = {doc_tag: [6824]};
+                    pageContent = __('Reverse Withdrawal', 'dokan-lite');
                     break;
                 default:
                     blogParams = {search : 'Dokan'};
                     docParams = {search : 'Dokan'};
+                    pageContent = currentPage;
                     break;
             }
             blogParams.per_page = 20;
             docParams.per_page = 5;
-            return {blogParams, docParams};
+            return {blogParams, docParams, pageContent};
         },
         getPageDocQueryParams() {
             const {docParams} = this.getPageQueryParams();
