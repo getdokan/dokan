@@ -60,7 +60,7 @@ class VendorStoreInfo {
             'show_vendor_info' => [
                 'name'              => 'show_vendor_info',
                 'label'             => __( 'Show Vendor Info', 'dokan-lite' ),
-                'desc'              => __( 'Show vendor information on product single page', 'dokan-lite' ),
+                'desc'              => __( 'Show vendor information on single product page', 'dokan-lite' ),
                 'type'              => 'switcher',
                 'default'           => 'off',
                 'class'             => 'show_vendor_info',

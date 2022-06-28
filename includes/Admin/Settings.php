@@ -31,7 +31,33 @@ class Settings {
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
+    }
+
+    /**
+     * Set unselected Withdraw Methods
+     *
+     * @param mixed $option_value
+     * @param mixed $option_name
+     *
+     * @since 3.6.0
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_withdraw_limit_gateways( $option_value, $option_name ) {
+        if ( 'dokan_withdraw' !== $option_name ) {
+            return $option_value;
+        }
+
+        if ( empty( $option_value ) ) { // for fresh installation
+            $option_value['withdraw_methods'] = apply_filters( 'dokan_settings_withdraw_methods_default', [ 'paypal' => 'paypal' ] );
+        }
+
+        $all_withdraw_methods = array_fill_keys( array_keys( dokan_withdraw_get_methods() ), '' );
+        $option_value['withdraw_methods'] = wp_parse_args( $option_value['withdraw_methods'], $all_withdraw_methods );
+
+        return $option_value;
     }
 
     /**
@@ -305,7 +331,7 @@ class Settings {
                 'title'                => __( 'Reverse Withdrawal', 'dokan-lite' ),
                 'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/reverse-witdrawal.svg',
                 'description'          => __( 'Admin commission config (on COD)', 'dokan-lite' ),
-                'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
+                'document_link'        => 'https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/',
                 'settings_title'       => __( 'Reverse Withdrawal Settings', 'dokan-lite' ),
                 'settings_description' => __( 'Configure commission from vendors on Cash on Delivery orders, method and threshold for reverse balance, restrictive actions on vendors and more.', 'dokan-lite' ),
             ],

@@ -170,8 +170,8 @@
 
                         <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
-                            <optgroup v-for="optionGroup in fieldData.options" :key="optionGroup" :label="optionGroup.group_label">
-                                <option v-for="option in optionGroup.group_values" :key="option" :value="option.value" v-html="option.label" />
+                            <optgroup v-for="( optionGroup, optionGroupKey ) in fieldData.options" :key="optionGroupKey" :label="optionGroup.group_label">
+                                <option v-for="(option, optionKey ) in optionGroup.group_values" :key="optionKey" :value="option.value" v-html="option.label" />
                             </optgroup>
                         </select>
 
@@ -318,7 +318,7 @@
                         <label class="radio-image" :key="name" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
                             <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="name">
                             <span class="current-option-indicator">
-                                <span class="dashicons dashicons-yes"></span> 
+                                <span class="dashicons dashicons-yes"></span>
                                 {{ __( 'Active', 'dokan-lite' ) }}
                             </span>
                             <img :src="image">
@@ -366,21 +366,21 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
-                <div class="field social_fields">
-                    <div class="social_header">
-                        <div class="social_contents">
-                            <div class="social_icon">
+                <div class="field scl_fields">
+                    <div class="scl_header">
+                        <div class="scl_contents">
+                            <div class="scl_icon">
                                 <img :src="fieldData.icon_url" :alt="fieldData.label" />
                             </div>
-                            <p class="social_desc">{{ fieldData.social_desc }}</p>
+                            <p class="scl_desc">{{ fieldData.social_desc }}</p>
                         </div>
                         <div class="expand_btn" @click="expandSocial">
                             <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
                         </div>
                     </div>
                     <template v-for="( fields, index ) in fieldData">
-                        <div class="social_info" v-if="expandSocials && fields.social_field" :key="index">
-                            <div :class="[ { 'social_html': fields.type === 'html' }, { 'social_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
+                        <div class="scl_info" v-if="expandSocials && fields.social_field" :key="index">
+                            <div v-if="fields.social_field" :class="[ { 'scl_html': fields.type === 'html' }, { 'scl_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
                                 <SocialFields
                                     :fieldData="fields"
                                     :fieldValue="fieldValue"
@@ -522,7 +522,7 @@
                             break;
                         }
                     }
-                } 
+                }
 
                 return shouldShow;
             },
@@ -559,6 +559,12 @@
 
             mapboxAccessToken() {
                 return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
+            }
+        },
+
+        beforeMount() {
+            if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
+                this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
             }
         },
 
@@ -625,9 +631,9 @@
 
             isSwitchOptionChecked( optionKey ) {
                 if ( 'multicheck' === this.fieldData.type ) {
-                    return this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey;
+                    return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey;
                 } else if ( 'radio' === this.fieldData.type ) {
-                    return this.fieldValue[ this.fieldData.name ] === optionKey;
+                    return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ] === optionKey;
                 }
 
                 return false;
@@ -1065,7 +1071,7 @@
             }
         }
 
-        .social_fields {
+        .scl_fields {
             margin: 15px 0 4px 0px;
             border: 0.82px solid #E5E5E5;
             padding: 10px 25px;
@@ -1073,17 +1079,17 @@
             box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
             border-radius: 6.56px;
 
-            .social_header {
+            .scl_header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
 
-                .social_contents {
+                .scl_contents {
                     flex: 2;
                     display: flex;
                     align-items: center;
 
-                    .social_icon {
+                    .scl_icon {
                         flex: 1.3;
                         text-align: left;
                         align-self: center;
@@ -1098,7 +1104,7 @@
                         }
                     }
 
-                    .social_desc {
+                    .scl_desc {
                         flex: 6;
                         color: #000000;
                         font-size: 14px;
@@ -1136,11 +1142,11 @@
                 }
             }
 
-            .social_info {
+            .scl_info {
                 background: #fff;
 
-                .social_text,
-                .social_html {
+                .scl_text,
+                .scl_html {
                     border: 1px solid #b0a7a7;
                     display: flex;
                     padding: 10px 30px 15px 27px;
@@ -1318,16 +1324,16 @@
                 }
             }
 
-            .social_fields {
+            .scl_fields {
                 padding: 10px 15px;
 
-                .social_header {
+                .scl_header {
                     display: block;
 
-                    .social_contents {
+                    .scl_contents {
                         display: block;
 
-                        .social_desc {
+                        .scl_desc {
                             font-size: 8px;
                         }
                     }
@@ -1337,9 +1343,9 @@
                     }
                 }
 
-                .social_info {
-                    .social_html,
-                    .social_text {
+                .scl_info {
+                    .scl_html,
+                    .scl_text {
                         padding: 10px;
 
                         .field_html {
