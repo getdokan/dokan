@@ -38,12 +38,14 @@ class StoreController extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
+        $params = $this->get_collection_params();
+        apply_filters( 'dokan_rest_api_store_collection_params', $params );
         register_rest_route(
             $this->namespace, '/' . $this->base, [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
-                    'args'                => $this->get_collection_params(),
+                    'args'                => $params,
                     'permission_callback' => '__return_true',
                 ],
                 [
@@ -235,7 +237,7 @@ class StoreController extends WP_REST_Controller {
         $args = [
             'number' => (int) $params['per_page'],
             'offset' => (int) ( $params['page'] - 1 ) * $params['per_page'],
-            'status' => 'all'
+            'status' => 'all',
         ];
 
         if ( ! empty( $params['search'] ) ) {
@@ -261,7 +263,7 @@ class StoreController extends WP_REST_Controller {
 
         $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
 
-        $stores       = dokan()->vendor->get_vendors( $args );
+        $stores = dokan()->vendor->get_vendors( $args );
 
         $search_text = isset( $params['search'] ) ? sanitize_text_field( $params['search'] ) : '';
 

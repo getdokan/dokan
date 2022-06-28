@@ -296,7 +296,7 @@ export default {
 
             self.loading = true;
 
-            const data = {
+            let data = {
                 per_page: self.perPage,
                 page: self.currentPage,
                 status: self.currentStatus,
@@ -305,6 +305,7 @@ export default {
                 store_category: self.storeCategory
             };
 
+            data = dokan.hooks.applyFilters( 'DokanGetVendorArgs', data, this.$route.query );
             dokan.api.get('/stores', data)
                 .done((response, status, xhr) => {
                     self.vendors = response;
