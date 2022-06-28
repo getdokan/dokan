@@ -1186,6 +1186,6 @@ jQuery(function($) {
 
 (function ($){
   $('.woocommerce-breadcrumb')
-    .find(`a[href="${dokan.vendor_store_url_prefix}"]`)
+    .find(`a[href="${dokan.store_url_prefix}"]`)
     .attr("href", dokan.store_listing_url);
 })(jQuery);
