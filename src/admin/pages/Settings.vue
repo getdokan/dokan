@@ -473,7 +473,7 @@
             },
 
             scrollToTop() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
             },
 
             handleScroll() {
