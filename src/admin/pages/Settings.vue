@@ -18,8 +18,8 @@
                         <div class="search-box">
                             <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
                             <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
-                                   :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
-                                   @input="searchInSettings" ref="searchInSettings" />
+                                :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
+                                @input="searchInSettings" ref="searchInSettings" />
                             <span
                                 class="dashicons dashicons-no-alt"
                                 @click.prevent="clearSearch"
@@ -29,7 +29,7 @@
 
                         <template v-for="section in settingSections">
                             <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                                 @click.prevent="changeTab(section)" :key="section.id">
+                                @click.prevent="changeTab(section)" :key="section.id">
                                 <img :src="section.icon_url" :alt="section.settings_title"/>
                                 <div class="nav-content">
                                     <div class="nav-title">{{ section.title }}</div>
