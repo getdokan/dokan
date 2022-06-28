@@ -58,11 +58,8 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 = SUCCESS STORIES OF PEOPLE WE ARE PROUD TO BE A PART OF =
 
-👨 [“This is why we are proud to be using Dokan as with it we are able to give you all the tools to help manage and run a successful business.”](https://wedevs.com/143965/michael-delaneys-story-successful-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) – Michael Delaney, Owner of [ShoppeRegion](https://shopperregion.com/)
 
 👨 [“Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors.”](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) - Bernd Payer, Founder [JOSHi](https://www.joshi.at)
-
-💁 [“Without Dokan I would not have a Marketplace option and I would be forced to hold stock. Dokan offers me the opportunity to have a drop shipping Marketing and offer Businesses that chance to scale and sell alongside like-minded businesses. It also offers me the opportunity to sell stock without packing and posting on my own.”](https://wedevs.com/blog/271341/dokan-success-story-of-leisa-papa-little-kids-business) - Leisa Papa, [Founder of Little Kids Business](https://www.littlekidsbusiness.com.au/)
 
 💁 [“The functionality delivers everything that you need to grow your marketplace.”](https://wedevs.com/blog/89525/dokan-customer-dream-multivendor-marketplace/) -  [Hawk and Peddle](https://hawkandpeddle.co.uk/)
 
