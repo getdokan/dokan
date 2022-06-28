@@ -1184,8 +1184,3 @@ jQuery(function($) {
   }
 }
 
-(function ($){
-  $('.woocommerce-breadcrumb')
-    .find(`a[href="${dokan.store_url_prefix}"]`)
-    .attr("href", dokan.store_listing_url);
-})(jQuery);
