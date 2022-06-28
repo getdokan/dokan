@@ -380,7 +380,7 @@
                     </div>
                     <template v-for="( fields, index ) in fieldData">
                         <div class="scl_info" v-if="expandSocials && fields.social_field" :key="index">
-                            <div v-if="fields.social_field" :class="[ { 'scl_html': fields.type === 'html' }, { 'scl_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
+                            <div :class="[ { 'scl_html': fields.type === 'html' }, { 'scl_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
                                 <SocialFields
                                     :fieldData="fields"
                                     :fieldValue="fieldValue"
