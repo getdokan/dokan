@@ -106,57 +106,18 @@ if ( 'layout3' === $profile_layout ) {
                                             <span class='store-notice'><?php echo esc_attr( $store_closed_notice ); ?></span>
                                         <?php endif; ?>
 
-                                        <span class="fa fa-angle-down"></span>
-                                        <div id="vendor-store-times">
-                                            <div class="store-times-heading">
-                                                <i class="fas fa-calendar-day"></i>
-                                                <h4><?php esc_html_e( 'Weekly Store Timing', 'dokan-lite' ); ?></h4>
-                                            </div>
-                                            <?php
-                                            foreach ( dokan_get_translated_days() as $day_key => $day ) :
-                                                $store_info   = ! empty( $dokan_store_times[ $day_key ] ) ? $dokan_store_times[ $day_key ] : [];
-                                                $store_status = ! empty( $store_info['status'] ) ? $store_info['status'] : 'close';
-                                                ?>
-                                                <div class="store-time-tags">
-                                                    <div class="store-days <?php echo $today === $day_key ? 'current_day' : ''; ?>"><?php echo esc_html( $day ); ?></div>
-                                                    <div class="store-times">
-                                                        <?php if ( $store_status === 'close' ) : ?>
-                                                            <span class="store-close"><?php esc_html_e( 'CLOSED', 'dokan-lite' ); ?></span>
-                                                        <?php endif; ?>
-
-                                                        <?php
-                                                        // Get store times.
-                                                        $opening_times = ! empty( $store_info['opening_time'] ) ? $store_info['opening_time'] : [];
-
-                                                        // If dokan pro doesn't exists then get single item.
-                                                        if ( ! dokan()->is_pro_exists() ) {
-                                                            $opening_times = ! empty( $opening_times ) && is_array( $opening_times ) ? $opening_times[0] : [];
-                                                        }
-
-                                                        $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
-
-                                                        // Get formatted times.
-                                                        for ( $index = 0; $index < $times_length; $index++ ) :
-                                                            $formatted_opening_time = $current_time->modify( $store_info['opening_time'][ $index ] );
-                                                            $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
-
-                                                            // check if store is open or closed time is valid.
-                                                            if ( empty( $formatted_opening_time ) || empty( $formatted_closing_time ) ) {
-                                                                continue;
-                                                            }
-
-                                                            $exact_time = '';
-
-                                                            if ( $today === $day_key && $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
-                                                                $exact_time = 'current_time';
-                                                            }
-                                                            ?>
-                                                            <span class="store-open <?php echo $exact_time; ?>" href="#"><?php echo esc_html( $formatted_opening_time->format( wc_time_format() ) . ' - ' . $formatted_closing_time->format( wc_time_format() ) ); ?></span>
-                                                        <?php endfor; ?>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
+                                        <span class="fas fa-angle-down"></span>
+                                        <?php
+                                        // Vendor store times template shown here.
+                                        dokan_get_template_part( 'store-header-times', '', [
+                                            'today'             => $today,
+                                            'dokan_days'        => dokan_get_translated_days(),
+                                            'current_time'      => $current_time,
+                                            'times_heading'     => __( 'Weekly Store Timing', 'dokan-lite' ),
+                                            'closed_status'     => __( 'CLOSED', 'dokan-lite' ),
+                                            'dokan_store_times' => $dokan_store_times,
+                                        ] );
+                                        ?>
                                     </div>
                                 </li>
                             <?php endif ?>
