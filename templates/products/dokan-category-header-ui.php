@@ -26,7 +26,7 @@
                 </div>
             <?php endif; ?>
             <span class="dokan-cat-inputs-holder dokan-cih-level-<?php echo esc_attr( $key ); ?>" >
-                <input type="hidden" class="dokan_chosen_product_cat" name="chosen_product_cat[]" value="<?php echo esc_attr( $term ); ?>"></input>
+                <input type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_<?php echo esc_attr( $term ); ?>" name="chosen_product_cat[]" value="<?php echo esc_attr( $term ); ?>"></input>
             </span>
         </div>
     <?php endforeach; ?>

@@ -88,6 +88,11 @@
         },
 
         chooseCatButton() {
+            if ( $(`.dokan_chosen_product_cat_${selectedCatId}`).length ) {
+                dokan_sweetalert( dokan_product_category_data.i18n.duplicate_category, { icon: 'warning', } );
+                return;
+            }
+
             ProductCategory.setCatName( ProductCategory.getSelectedLabel() );
             ProductCategory.setCatId( selectedCatId );
             ProductCategory.hideCategoryModal();
@@ -320,7 +325,7 @@
         },
 
         setCatId( id ) {
-            let ui = `<input type="hidden" class="dokan_chosen_product_cat" name="chosen_product_cat[]" value="${ id }"></input>`;
+            let ui = `<input type="hidden" class="dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
 
             $( `.dokan-cih-level-${ inputHolder }` ).html( ui );
         },
@@ -330,7 +335,14 @@
         },
 
         addANewCatBox() {
-            let boxCounter = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' ).length + 1;
+            let lastCatElement = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' ).length;
+            let lastCat = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' )[lastCatElement-1];
+            let boxCounter = $(lastCat).find('#dokan-category-open-modal').data('dokansclevel') + 1;
+
+            if ( isNaN( boxCounter ) ) {
+                boxCounter = 0;
+            }
+
             let html = `
                 <div class="dokan-select-product-category-container">
                     <div class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
