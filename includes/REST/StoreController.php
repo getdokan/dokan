@@ -38,14 +38,12 @@ class StoreController extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        $params = $this->get_collection_params();
-        apply_filters( 'dokan_rest_api_store_collection_params', $params );
         register_rest_route(
             $this->namespace, '/' . $this->base, [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
-                    'args'                => $params,
+                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_collection_params() ),
                     'permission_callback' => '__return_true',
                 ],
                 [
