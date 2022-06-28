@@ -77,8 +77,8 @@
                         </div>
                     </template>
 
-                    <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan' )" v-tooltip="__( 'Back to top', 'dokan' )">
-                        <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan' )" />
+                    <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan-lite' )" v-tooltip="__( 'Back to top', 'dokan-lite' )">
+                        <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan-lite' )" />
                     </div>
                 </div>
 
