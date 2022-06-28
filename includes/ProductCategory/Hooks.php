@@ -52,11 +52,11 @@ class Hooks {
             $meta_value = maybe_unserialize( $meta_data['meta_value'] );
             $searched   = array_search( $replaceable_cat, $meta_value, true );
 
-            if ( false === $searched ) {
+            if ( ! isset( $meta_value[ $searched ] ) ) {
                 continue;
             }
 
-            // replace parent category id
+            // replace parent category id / default category
             $meta_value[ $searched ] = $replace_by;
 
             // save updated data
