@@ -251,10 +251,18 @@
 
             $( '#dokan-single-categories' ).html( html );
             ProductCategory.updateSelectedLabel();
+            ProductCategory.adjustCategoryPosition();
         },
 
         updateSelectedLabel() {
             $( '#dokan-selected-category-span' ).html( ProductCategory.getSelectedLabel() );
+        },
+
+        adjustCategoryPosition() {
+            $.each(  $('.dokan-product-category-ul').find('.dokan-product-category-li-active'), function ( index, item ) {
+                let { catlevel, indexli } = $(item).data();
+                $( `#${catlevel}-level-cat-ul` ).scrollTop( 36.38 * indexli );
+            } );
         },
 
         getSelectedLabel() {
@@ -296,7 +304,7 @@
             let html = '';
 
             element.forEach( ( category, index ) => {
-                html += `<li data-haschild="${ category.children.length > 0 }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-product-category-li ${ category.children.length > 0 ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
+                html += `<li data-indexli="${ index }" data-haschild="${ category.children.length > 0 }" data-name="${ category.name }" data-catLevel="${ level }" class="${ category.uiActivaion ? category.uiActivaion : '' } dokan-product-category-li ${ category.children.length > 0 ? 'dokan-cat-has-child' : '' }" data-term-id="${ category.term_id }" data-taxonomy="product_cat">
                         <span class="dokan-product-category">${ category.name }</span>
                         <span class="dokan-product-category-icon"><i class="fas fa-chevron-right"></i></span>
                     </li>`;
@@ -325,7 +333,7 @@
         },
 
         setCatId( id ) {
-            let ui = `<input type="hidden" class="dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
+            let ui = `<input type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
 
             $( `.dokan-cih-level-${ inputHolder }` ).html( ui );
         },
