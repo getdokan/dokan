@@ -50,6 +50,7 @@ class Hooks {
 
         foreach ( $meta_datas as $meta_data ) {
             $meta_value = maybe_unserialize( $meta_data['meta_value'] );
+            $meta_value = array_map( 'absint', $meta_value );
             $searched   = array_search( $replaceable_cat, $meta_value, true );
 
             if ( ! isset( $meta_value[ $searched ] ) ) {
