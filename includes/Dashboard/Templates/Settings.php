@@ -28,6 +28,7 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_load_progressbar' ), 20 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_store_errors' ), 25 );
         add_action( 'dokan_settings_content', array( $this, 'render_settings_content' ), 10 );
+        add_filter( 'dokan_payment_method_title', [ $this, 'get_method_frontend_title' ], 10, 2 );
     }
 
     /**
@@ -279,7 +280,15 @@ class Settings {
             ]
         );
 
-        if ( empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+        if ( isset( $_GET['status'] ) && isset( $_GET['message'] ) ) {
+            $connect_status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
+            $status_message = wp_kses_post( wp_unslash( $_GET['message'] ) );
+
+            $args['connect_status'] = $connect_status;
+            $args['status_message'] = $status_message;
+        }
+
+        if ( ! in_array( $method_key, $payment_method_ids, true ) || empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
             dokan_get_template_part(
                 'global/dokan-error',
                 '',
@@ -551,7 +560,9 @@ class Settings {
         if ( ! empty( $post_data['settings']['paypal'] ) && isset( $post_data['settings']['paypal']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['paypal']['email'] );
 
-            if ( empty( $email ) ) {
+            if ( isset( $post_data['settings']['paypal']['disconnect'] ) ) {
+                $post_data['settings']['paypal']['email'] = '';
+            } elseif ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
@@ -559,31 +570,35 @@ class Settings {
         if ( ! empty( $post_data['settings']['skrill'] ) && isset( $post_data['settings']['skrill']['email'] ) ) {
             $email = sanitize_email( $post_data['settings']['skrill']['email'] );
 
-            if ( empty( $email ) ) {
+            if ( isset( $post_data['settings']['skrill']['disconnect'] ) ) {
+                $post_data['settings']['skrill']['email'] = '';
+            } elseif ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
             }
         }
 
         if ( ! empty( $post_data['settings']['bank'] ) ) {
-            if ( empty( $post_data['settings']['bank']['ac_name'] ) ) {
+            $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_name'] ) ) {
                 $error->add( 'dokan_bank_ac_name', __( 'Account holder name is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['ac_number'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_number'] ) ) {
                 $error->add( 'dokan_bank_ac_number', __( 'Account number is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['routing_number'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['routing_number'] ) ) {
                 $error->add( 'dokan_bank_ac_routing_number', __( 'Routing number is required', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['ac_type'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_type'] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
-            } else if ( ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
+            } else if ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
             }
 
-            if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['declaration'] ) ) {
                 $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
         }
@@ -732,7 +747,7 @@ class Settings {
                     'iban'           => sanitize_text_field( $bank['iban'] ),
                     'swift'          => sanitize_text_field( $bank['swift'] ),
                     'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
-                    'declaration'    => sanitize_text_field( $bank['declaration'] ),
+                    'declaration'    => isset( $bank['declaration'] ) ? sanitize_text_field( $bank['declaration'] ) : '',
                 ];
             }
 
@@ -889,10 +904,32 @@ class Settings {
             $cur_method = dokan_withdraw_get_method( $method_key );
 
             if ( ! empty( $cur_method ) ) {
+                //remove the 'Dokan' prefix from method title
+                $method_title = $cur_method['title'];
+                if ( 0 === stripos( $method_title, 'Dokan ' ) ) {
+                    $method_title = substr( $method_title, 6 );
+                    $cur_method['title'] = $method_title;
+                }
+
                 $methods[ $method_key ] = $cur_method;
             }
         }
 
         return $methods;
+    }
+
+    /**
+     * Get Method title to show in frontend
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_method_frontend_title( $title, $method ) {
+        if ( 0 === stripos( $title, 'Dokan ' ) ) {
+            return substr( $title, 6 );
+        }
+
+        return $title;
     }
 }
