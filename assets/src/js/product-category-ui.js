@@ -147,6 +147,9 @@
             selectedCatId = '';
             ProductCategory.disableDoneBtn();
             modal.css( 'display', 'flex' );
+            ProductCategory.hideSearchResults();
+            $( '#dokan-single-cat-search-input' ).val('');
+
             categoriesState = [];
             ProductCategory.loadAllParentCategories();
         },
