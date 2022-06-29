@@ -147,7 +147,7 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function dokan_setup_introduction() {
         $dashboard_url = dokan_get_navigation_url();
-        $default_message = wp_kses_post( __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ) );
+        $default_message = wp_kses_post( __( '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong></p>', 'dokan-lite' ) );
         $setup_wizard_message = dokan_get_option( 'setup_wizard_message', 'dokan_general', $default_message );
         ?>
         <h1><?php esc_attr_e( 'Welcome to the Marketplace!', 'dokan-lite' ); ?></h1>
