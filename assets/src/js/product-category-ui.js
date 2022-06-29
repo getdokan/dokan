@@ -396,6 +396,7 @@
 
             if ( chosenCat.length > 0 ) {
                 let catId    = chosenCat.val();
+                selectedCatId = catId;
                 let category = dokan_product_category_data.categories[ catId ];
 
                 ProductCategory.setCatUiBasedOnOneCat( catId, category );
