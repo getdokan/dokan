@@ -89,6 +89,7 @@
                     <component v-for="(dokanVendorFilterSection, index) in dokanVendorFilterSectionStart"
                                :key="index"
                                :is="dokanVendorFilterSection"
+                               @updateVendorComponent="updateVendorComponent"
                     />
                 </template>
             </list-table>
@@ -266,7 +267,11 @@ export default {
         addNew() {
             this.loadAddVendor = true;
         },
-
+        updateVendorComponent (rerender=false) {
+            if (rerender) {
+                this.fetchVendors()
+            }
+        },
         doSearch(payload) {
             let self     = this;
             self.loading = true;
