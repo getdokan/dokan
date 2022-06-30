@@ -134,6 +134,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
             </div>
         </div>
     </div>
+    <?php if ( dokan_is_seller_dashboard() ) : ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <input name="dokan_update_payment_settings" type="hidden">
@@ -142,6 +143,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
             </button>
         </div>
     </div>
+    <?php endif; ?>
     <?php
 }
 
