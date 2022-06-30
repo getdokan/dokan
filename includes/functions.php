@@ -4092,6 +4092,49 @@ function dokan_format_time( $date = '', $format = false ) {
 }
 
 /**
+ * Create an expected time format from a given time format.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array|string $time_types     eg: $opening_times or $closing_times
+ * @param string       $current_format Time format for current data
+ * @param string       $updated_format Time format for updated data
+ *
+ * @return mixed
+ */
+function dokan_create_time_from_format( $time_types, $current_format, $updated_format ) {
+    if ( empty( $time_types ) ) {
+        return $time_types;
+    }
+
+    if ( ! is_array( $time_types ) ) {
+        return \DateTimeImmutable::createFromFormat(
+            $current_format,
+            $time_types,
+            new \DateTimeZone( dokan_wp_timezone_string() )
+        )->format( $updated_format );
+    }
+
+    $times = [];
+
+    foreach ( $time_types as $time_type ) {
+        $formatted_time = '';
+
+        if ( ! empty( $time_type ) ) {
+            $formatted_time = \DateTimeImmutable::createFromFormat(
+                $current_format,
+                $time_type,
+                new \DateTimeZone( dokan_wp_timezone_string() )
+            )->format( $updated_format );
+        }
+
+        $times[] = $formatted_time;
+    }
+
+    return $times;
+}
+
+/**
  * This method will convert datetime string into timestamp
  *
  * @since 3.2.15
