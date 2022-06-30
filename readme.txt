@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.4
 Tested up to: 6.0
 WC requires at least: 5.0.0
-WC tested up to: 6.5.1
+WC tested up to: 6.6.1
 Requires PHP: 7.0
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.6.0 ( Jun 14, 2022 ) =
+
+- **fix:** Fixed some empty method names in Payment Methods section of Vendor Dashboard > Withdraw
+- **fix:** Fixed incorrect alignment of withdraw method title in Dokan setup wizard
+- **fix:** Vendor Store breadcrumb URL redirecting to 404 page
+- **update:** Added disconnect button to payment methods
+- **update:** Removed 'Dokan' Prefix from the payment method name under vendor dashboard payment settings page.
+- **update:** Added a new setting to change Vendor Setup Wizard welcome message under Dokan General Settings page.
 
 = v3.6.0 ( Jun 14, 2022 ) =
 
