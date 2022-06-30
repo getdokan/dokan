@@ -46,16 +46,25 @@ ul.subsubsub {
   padding: 0;
 
   li {
-    line-height: 13px;
     padding: 0 5px;
+    line-height: 13px;
     border-right: 1px solid @borderColor;
+
+    a {
+      color: #6d6d6d;
+      transition: .2s linear;
+
+      &:hover {
+        color: #000;
+      }
+    }
 
     &:last-child {
       border-right: none;
     }
 
     &.active a {
-      color: #999;
+      color: #000;
     }
   }
 }
