@@ -50,7 +50,7 @@ function dokan_get_i18n_date_format( format = true ) {
  *
  * @return {string} Return a specific time format
  */
-function dokan_get_i18n_time_format( format = true ) {
+ function dokan_get_i18n_time_format( format = true ) {
   if ( ! format ) {
     return dokan_helper.i18n_time_format;
   }
