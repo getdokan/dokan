@@ -42,13 +42,13 @@ class Manager {
 
         global $wpdb;
 
-        $fields      = '';
-        $join        = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
-        $where       = '';
-        $groupby     = '';
-        $orderby     = '';
-        $limits      = '';
-        $query_args  = [ 1, 1 ];
+        $fields     = '';
+        $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
+        $where      = '';
+        $groupby    = '';
+        $orderby    = '';
+        $limits     = '';
+        $query_args = [ 1, 1 ];
 
         // determine which fields to return
         if ( in_array( $args['return'], [ 'objects', 'ids' ], true ) ) {
@@ -61,31 +61,31 @@ class Manager {
         // filter by seller id
         if ( ! $this->is_empty( $args['seller_id'] ) ) {
             $seller_ids = implode( "','", array_map( 'absint', (array) $args['seller_id'] ) );
-            $where .= " AND do.seller_id IN ('$seller_ids')";
+            $where      .= " AND do.seller_id IN ('$seller_ids')";
         }
 
         // filter customer id
         if ( ! $this->is_empty( $args['customer_id'] ) ) {
-            $join .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+            $join         .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
             $customer_ids = implode( "','", array_map( 'absint', (array) $args['customer_id'] ) );
-            $where .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ('$customer_ids')";
+            $where        .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ('$customer_ids')";
         }
 
         // filter order id
         if ( ! $this->is_empty( $args['order_id'] ) ) {
             $order_ids = implode( "','", array_map( 'absint', (array) $args['order_id'] ) );
-            $where .= " AND do.order_id IN ('$order_ids')";
+            $where     .= " AND do.order_id IN ('$order_ids')";
         }
 
         // filter status
         if ( ! $this->is_empty( $args['status'] ) && 'all' !== $args['status'] ) {
             $status = implode( "','", array_map( 'sanitize_text_field', (array) $args['status'] ) );
-            $where .= " AND do.order_status IN ('$status')";
+            $where  .= " AND do.order_status IN ('$status')";
         }
 
         // date filter
         $date_from = false;
-        $date_to = false;
+        $date_to   = false;
         // check if start date is set
         if ( ! $this->is_empty( $args['date']['from'] ) ) {
             // convert date string to object
@@ -102,8 +102,8 @@ class Manager {
         if ( $date_from && $date_to ) {
             // fix start and end date
             if ( $date_from > $date_to ) {
-                $date_from = $date_from->format( 'Y-m-d' );
-                $date_to = $date_to->format( 'Y-m-d' );
+                $date_from    = $date_from->format( 'Y-m-d' );
+                $date_to      = $date_to->format( 'Y-m-d' );
                 $args['date'] = [
                     'from' => $date_to,
                     'to'   => $date_from,
@@ -128,8 +128,8 @@ class Manager {
 
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
-            $search = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-            $where .= ' AND p.post_title LIKE %s';
+            $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $where        .= ' AND p.post_title LIKE %s';
             $query_args[] = $search;
         }
 
@@ -140,9 +140,9 @@ class Manager {
 
         // fix order by parameter
         $supported_order_by = [
-            'post_date' => 'p.post_date',
-            'order_id' => 'do.order_id',
-            'seller_id' => 'do.seller_id',
+            'post_date'    => 'p.post_date',
+            'order_id'     => 'do.order_id',
+            'seller_id'    => 'do.seller_id',
             'order_status' => 'do.order_status',
         ];
         if ( ! empty( $args['orderby'] ) && array_key_exists( $args['orderby'], $supported_order_by ) ) {
@@ -155,7 +155,7 @@ class Manager {
         }
 
         // pagination param
-        if ( ! empty( $args['limit'] ) && -1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
+        if ( ! empty( $args['limit'] ) && - 1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
             $limit  = absint( $args['limit'] );
             $page   = absint( $args['paged'] );
             $page   = $page > 0 ? $page : 1;
@@ -175,9 +175,8 @@ class Manager {
         }
 
         $orders = Cache::get( $cache_key, $cache_group );
-        $orders = false;
 
-        if ( in_array( $args['return'], [ 'count' ], true ) && false === $orders ) {
+        if ( 'count' === $args['return'] && false === $orders ) {
             // get count of entries
             // @codingStandardsIgnoreStart
             $orders = (int) $wpdb->get_var(
@@ -211,7 +210,7 @@ class Manager {
 
             if ( 'objects' === $args['return'] ) {
                 $orders = array_map(
-                    function( $order_id ) {
+                    function ( $order_id ) {
                         return $this->get( $order_id );
                     }, $orders
                 );
@@ -248,25 +247,25 @@ class Manager {
 
         $bill_ship = array(
             'billing_country',
-			'billing_first_name',
-			'billing_last_name',
-			'billing_company',
+            'billing_first_name',
+            'billing_last_name',
+            'billing_company',
             'billing_address_1',
-			'billing_address_2',
-			'billing_city',
-			'billing_state',
-			'billing_postcode',
+            'billing_address_2',
+            'billing_city',
+            'billing_state',
+            'billing_postcode',
             'billing_email',
-			'billing_phone',
-			'shipping_country',
-			'shipping_first_name',
-			'shipping_last_name',
+            'billing_phone',
+            'shipping_country',
+            'shipping_first_name',
+            'shipping_last_name',
             'shipping_company',
-			'shipping_address_1',
-			'shipping_address_2',
-			'shipping_city',
+            'shipping_address_1',
+            'shipping_address_2',
+            'shipping_city',
             'shipping_state',
-			'shipping_postcode',
+            'shipping_postcode',
         );
 
         try {
@@ -366,9 +365,9 @@ class Manager {
     /**
      * Create tax line items
      *
-     * @param  \WC_Order $order
-     * @param  \WC_Order $parent_order
-     * @param  array $products
+     * @param \WC_Order $order
+     * @param \WC_Order $parent_order
+     * @param array $products
      *
      * @return void
      */
@@ -386,12 +385,12 @@ class Manager {
             $item = new \WC_Order_Item_Tax();
             $item->set_props(
                 array(
-					'rate_id'            => $tax->get_rate_id(),
-					'label'              => $tax->get_label(),
-					'compound'           => $tax->get_compound(),
-					'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
-					'tax_total'          => $tax_total,
-					'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
+                    'rate_id'            => $tax->get_rate_id(),
+                    'label'              => $tax->get_label(),
+                    'compound'           => $tax->get_compound(),
+                    'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
+                    'tax_total'          => $tax_total,
+                    'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
                 )
             );
 
@@ -434,6 +433,7 @@ class Manager {
         // bail out if no shipping methods found
         if ( ! $shipping_method ) {
             dokan_log( sprintf( '#%d - No shipping method found. Aborting.', $order->get_id() ) );
+
             return;
         }
 
@@ -444,10 +444,10 @@ class Manager {
 
             $item->set_props(
                 array(
-					'method_title' => $shipping_method->get_name(),
-					'method_id'    => $shipping_method->get_method_id(),
-					'total'        => $shipping_method->get_total(),
-					'taxes'        => $shipping_method->get_taxes(),
+                    'method_title' => $shipping_method->get_name(),
+                    'method_id'    => $shipping_method->get_method_id(),
+                    'total'        => $shipping_method->get_total(),
+                    'taxes'        => $shipping_method->get_taxes(),
                 )
             );
 
@@ -476,8 +476,8 @@ class Manager {
      */
     public function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids = array_map(
-            function( $item ) {
+        $product_ids  = array_map(
+            function ( $item ) {
                 return $item->get_product_id();
             }, $products
         );
@@ -499,15 +499,15 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                  apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
                     array(
-						'code'         => $item->get_code(),
-						'discount'     => $item->get_discount(),
-						'discount_tax' => $item->get_discount_tax(),
+                        'code'         => $item->get_code(),
+                        'discount'     => $item->get_discount(),
+                        'discount_tax' => $item->get_discount_tax(),
                     )
                 );
 
@@ -540,7 +540,7 @@ class Manager {
             $args = array(
                 'post_parent' => $parent_order_id,
                 'post_type'   => 'shop_order',
-                'numberposts' => -1,
+                'numberposts' => - 1,
                 'post_status' => 'any',
             );
 

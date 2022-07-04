@@ -70,7 +70,10 @@ class Orders {
         } elseif ( isset ( $_REQUEST['_view_mode'] ) && 'email' === $_REQUEST['_view_mode'] && current_user_can( 'dokan_view_order' ) ) {
             dokan_get_template_part( 'orders/details', '', [ 'order_id' => $order_id ] );
         } else {
-            dokan_get_template_part( 'global/dokan-error', '', array( 'deleted' => false, 'message' => __( 'You have no permission to view this order', 'dokan-lite' ) ) );
+            dokan_get_template_part( 'global/dokan-error', '', array(
+                'deleted' => false,
+                'message' => __( 'You have no permission to view this order', 'dokan-lite' )
+            ) );
         }
     }
 
@@ -89,7 +92,11 @@ class Orders {
 
         // check if nonce verification failed, in that case early return from here
         if ( ! empty( $_GET['seller_order_filter_nonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => __( 'Nonce verification failed!', 'dokan-lite' ) ] );
+            dokan_get_template_part( 'global/dokan-error', '', [
+                'deleted' => false,
+                'message' => __( 'Nonce verification failed!', 'dokan-lite' )
+            ] );
+
             return;
         }
 
@@ -112,8 +119,8 @@ class Orders {
                 'wc-processing' => __( 'Change status to processing', 'dokan-lite' ),
                 'wc-completed'  => __( 'Change status to completed', 'dokan-lite' ),
             ] ),
-            'page' => 1,
-            'limit' => 10,
+            'page'                => 1,
+            'limit'               => 10,
         ];
 
         // check if nonce isn't set, in that case display first 10 items without any filtering is applied
@@ -129,7 +136,7 @@ class Orders {
             $template_args['user_orders'] = dokan()->order->all( $query_args );
 
             $query_args['return'] = 'count';
-            $total_order_count = dokan()->order->all( $query_args );
+            $total_order_count    = dokan()->order->all( $query_args );
 
             $template_args = array_merge( $template_args, $this->add_pagination_info( $template_args['limit'], $template_args['page'], $total_order_count ) );
 
@@ -155,8 +162,8 @@ class Orders {
         ];
 
         if ( ! empty( $_GET['customer_id'] ) ) {
-            $customer_id  = absint( wp_unslash( $_GET['customer_id'] ) );
-            $customer = new \WC_Customer( $customer_id );
+            $customer_id = absint( wp_unslash( $_GET['customer_id'] ) );
+            $customer    = new \WC_Customer( $customer_id );
 
             $user_query_args['user_string'] = sprintf( '%1$s %2$s', $customer->get_first_name(), $customer->get_last_name() );
             $user_query_args['user_id']     = $customer_id;
@@ -183,14 +190,14 @@ class Orders {
 
         if ( is_numeric( $template_args['search'] ) ) {
             $query_args['order_id'] = absint( $template_args['search'] );
-        } elseif( ! empty( $search ) ) {
+        } elseif ( ! empty( $search ) ) {
             $query_args['search'] = $template_args['search'];
         }
 
         $template_args['user_orders'] = dokan()->order->all( $query_args );
 
         $query_args['return'] = 'count';
-        $total_order_count = dokan()->order->all( $query_args );
+        $total_order_count    = dokan()->order->all( $query_args );
 
         $template_args = array_merge( $template_args, $this->add_pagination_info( $template_args['limit'], $template_args['page'], $total_order_count ) );
 
@@ -266,7 +273,7 @@ class Orders {
                 $query_args['search'] = $search;
             }
 
-            $user_orders  = dokan_get_seller_orders( dokan_get_current_user_id(), $query_args );
+            $user_orders = dokan_get_seller_orders( dokan_get_current_user_id(), $query_args );
 
             dokan_order_csv_export( $user_orders );
             exit();
@@ -313,14 +320,14 @@ class Orders {
     private function add_pagination_info( $limit, $page, $order_count ) {
         $num_of_pages = ceil( $order_count / $limit );
         $base_url     = dokan_get_navigation_url( 'orders' );
-        $page_links   = paginate_links([
-            'current' => $page,
-            'total' => $num_of_pages,
-            'base' => $base_url . '%_%',
-            'format' => '?pagenum=%#%&seller_order_filter_nonce=' . wp_create_nonce( 'seller-order-filter-nonce' ),
+        $page_links   = paginate_links( [
+            'current'  => $page,
+            'total'    => $num_of_pages,
+            'base'     => $base_url . '%_%',
+            'format'   => '?pagenum=%#%&seller_order_filter_nonce=' . wp_create_nonce( 'seller-order-filter-nonce' ),
             'add_args' => false,
-            'type' => 'array',
-        ]);
+            'type'     => 'array',
+        ] );
 
         $args = [
             'num_of_pages' => $num_of_pages,
