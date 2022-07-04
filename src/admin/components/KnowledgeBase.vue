@@ -74,7 +74,8 @@
 
 <script>
 import axios from 'axios';
-import { setupCache } from 'axios-cache-adapter'
+import { setupCache } from 'axios-cache-adapter';
+import { __, sprintf } from "@/utils/i18n";
 
 const cache = setupCache({
     // maxAge: 15 * 60 * 1000, // 15 minutes
