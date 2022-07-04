@@ -246,6 +246,9 @@ class Assets {
             'dokan-magnific-popup' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/magnific/magnific-popup.css',
             ],
+            'dokan-minitoggle' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/minitoggle/minitoggle.css',
+            ],
             'dokan-select2-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
             ],
@@ -354,6 +357,10 @@ class Assets {
             ],
             'dokan-popup' => [
                 'src'       => $asset_url . '/vendors/magnific/jquery.magnific-popup.min.js',
+                'deps'      => [ 'jquery' ],
+            ],
+            'dokan-minitoggle' => [
+                'src'       => $asset_url . '/vendors/minitoggle/minitoggle.js',
                 'deps'      => [ 'jquery' ],
             ],
             'dokan-tooltip' => [
