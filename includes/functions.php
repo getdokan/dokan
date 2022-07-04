@@ -4104,7 +4104,7 @@ function dokan_format_time( $date = '', $format = false ) {
  */
 function dokan_create_time_from_format( $time_types, $current_format, $updated_format ) {
     if ( empty( $time_types ) ) {
-        return $time_types;
+        return;
     }
 
     if ( ! is_array( $time_types ) ) {
