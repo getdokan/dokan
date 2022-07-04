@@ -93,13 +93,6 @@
                                 <button @click="data.clickApply" v-if="! data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan-lite' ) }}</button>
                             </div>
                         </date-range-picker>
-                        <button
-                            v-if="filter.transaction_date.startDate !== getDefaultTransactionDate().startDate"
-                            type="button"
-                            class="button"
-                            @click="setDefaultTransactionDate()"
-                            style="line-height: 0; padding: 0 5px; margin-right: 5px;"
-                        ><i class="dashicons dashicons-no"></i></button>
                     </span>
                     <span class="form-group">
                         <button class="button action" v-on:click="this.clearFilters">{{ this.__( 'Clear', 'dokan-lite' ) }}</button>
@@ -243,8 +236,8 @@ export default {
             if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
                 return data;
             }
-            data.from = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
-            data.to = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+            data.from = $.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.startDate );
+            data.to = $.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.endDate );
             // fix from param
             if ( data.from === data.to ) {
                 data.from = '';
@@ -336,9 +329,10 @@ export default {
         }, 300 ),
 
         getDefaultTransactionDate() {
+            let today = moment().endOf('today').hour(23).minute(59).second(59).toDate();
             return {
-                startDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
-                endDate: moment().endOf('today').format('YYYY-MM-DD 23:59:59'),
+                startDate: today,
+                endDate: today,
             }
         },
 
