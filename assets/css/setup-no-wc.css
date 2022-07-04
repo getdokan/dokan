@@ -322,6 +322,9 @@ body {
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
 }
+.wc-wizard-service-item .wc-wizard-service-name p {
+  text-align: left;
+}
 .wc-wizard-service-item .dokan-wizard-service-enable {
   flex-basis: 0;
   min-width: 75px;

@@ -921,7 +921,7 @@ class Settings {
     /**
      * Get Method title to show in frontend
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.1
      *
      * @return string
      */

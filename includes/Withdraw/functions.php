@@ -134,6 +134,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
             </div>
         </div>
     </div>
+    <?php if ( dokan_is_seller_dashboard() ) : ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <input name="dokan_update_payment_settings" type="hidden">
@@ -142,6 +143,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
             </button>
         </div>
     </div>
+    <?php endif; ?>
     <?php
 }
 
@@ -391,7 +393,7 @@ function dokan_withdraw_get_withdrawable_active_methods() {
 /**
  * Check if a withdrawal method is enabled in Dokan > Settings > Withdraw options
  *
- * @since DOKAN_SINCE
+ * @since 3.6.1
  *
  * @param string $method_id The method id of withdraw method
  *
