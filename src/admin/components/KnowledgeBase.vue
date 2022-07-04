@@ -59,7 +59,7 @@
                 <ol class="dokan-kb-docs-ordered-list">
                     <div class="dokan-kb-doc-item" v-for="doc in docs.slice(0,4)">
                         <li class="dokan-kb-doc-title">
-                            <a :href="doc.guid.rendered" target="_blank" v-html="doc.title.rendered"></a>
+                            <a :href="getCorrectDocURL(doc.link)" target="_blank" v-html="doc.title.rendered"></a>
                         </li>
                     </div>
                 </ol>
@@ -260,7 +260,7 @@ export default {
                 case 'NewQuoteRules':
                     blogParams = { tags: [6815]};
                     docParams = {doc_tag: [6791]};
-                    pageContent = __('Request A Quote', 'dokan-lite');
+                    pageContent = __('Request For Quotation', 'dokan-lite');
                     break;
                 case 'ReverseWithdrawal':
                     blogParams = { tags: [6825]};
@@ -301,6 +301,9 @@ export default {
             }
 
             this.hide = hidden;
+        },
+        getCorrectDocURL( $urlWithAccount ){
+            return $urlWithAccount.replace( '/account/', '/' );
         }
     },
     computed: {
