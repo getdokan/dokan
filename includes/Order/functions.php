@@ -182,53 +182,8 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  * @return int
  */
 function dokan_get_seller_orders_number( $args = [] ) {
-    global $wpdb;
-
-    $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
-    $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = 'get_seller_orders_number_' . md5( wp_json_encode( $args ) );
-    $count       = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $count ) {
-        $status_where = ( 'all' === $status ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
-        $join = '';
-        $customer_where = '';
-
-        if ( ! empty( $args['customer_id'] ) ) {
-            $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
-            $customer_where = $wpdb->prepare( " AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
-        }
-
-        $date_where       = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
-        $start_date_query = isset( $args['date']['from'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['date']['from'] ) : '';
-        $end_date_query   = isset( $args['date']['to'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['date']['to'] ) : '';
-        $order_id_query   = isset( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
-        $search_query     = isset( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
-
-        $count = (int) $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(do.order_id) as count
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    p.post_status != 'trash'
-                    {$status_where}
-                    {$start_date_query}
-                    {$end_date_query}
-                    {$customer_where}
-                    {$order_id_query}
-                    {$search_query}
-                    {$date_where}", $seller_id
-            )
-        );
-
-        Cache::set( $cache_key, $count, $cache_group );
-    }
-
-    return $count;
+    $args['return'] = 'count';
+    return dokan()->order->all( $args );
 }
 
 /**

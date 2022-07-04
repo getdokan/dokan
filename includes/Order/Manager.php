@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WeDevs\Dokan\Cache;
+use WP_Error;
 
 /**
  * Order Management API
@@ -15,79 +16,206 @@ class Manager {
      * Get all orders
      *
      * @since 3.0.0
+     * @since DOKAN_SINCE rewritten to include filters
      *
-     * @return void
+     * @return WP_Error|int[]|\WC_Order[]
      */
     public function all( $args = [] ) {
-        global $wpdb;
-
         $default = [
-            'seller_id'   => dokan_get_current_user_id(),
-            'customer_id' => null,
+            'seller_id'   => 0,
+            'customer_id' => 0,
+            'order_id'    => 0,
             'status'      => 'all',
-            'paged'       => 1,
-            'limit'       => 10,
-            'date'        => null,
-            'order_id'    => null,
-            'search'      => null,
+            'date'        => [
+                'from' => '',
+                'to'   => '',
+            ],
+            'search'      => '',
             'order_by'    => 'post_date',
             'order'       => 'DESC',
+            'paged'       => 1,
+            'limit'       => 10,
+            'return'      => 'objects', // objects, ids, count
         ];
 
         $args = wp_parse_args( $args, $default );
 
-        //swap dates if start date is after end date
-        if ( isset( $args['date']['from'] ) && isset( $args['date']['to'] ) && $args['date']['from'] > $args['date']['to'] ) {
-            $temporary            = $args['date']['from'];
-            $args['date']['from'] = $args['date']['to'];
-            $args['date']['to']   = $temporary;
+        global $wpdb;
+
+        $fields      = '';
+        $join        = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
+        $where       = '';
+        $groupby     = '';
+        $orderby     = '';
+        $limits      = '';
+        $query_args  = [ 1, 1 ];
+
+        // determine which fields to return
+        if ( in_array( $args['return'], [ 'objects', 'ids' ], true ) ) {
+            $fields = 'do.order_id';
+        } elseif ( in_array( $args['return'], [ 'count' ], true ) ) {
+            $fields = 'COUNT(do.order_id) AS count';
         }
 
-        if ( ! in_array( $args['order'], [ 'ASC', 'DESC' ], true ) ) {
+        // now apply filtering on the fields
+        // filter by seller id
+        if ( ! $this->is_empty( $args['seller_id'] ) ) {
+            $seller_ids = implode( "','", array_map( 'absint', (array) $args['seller_id'] ) );
+            $where .= " AND do.seller_id IN ('$seller_ids')";
+        }
+
+        // filter customer id
+        if ( ! $this->is_empty( $args['customer_id'] ) ) {
+            $join .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+            $customer_ids = implode( "','", array_map( 'absint', (array) $args['customer_id'] ) );
+            $where .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ('$customer_ids')";
+        }
+
+        // filter order id
+        if ( ! $this->is_empty( $args['order_id'] ) ) {
+            $order_ids = implode( "','", array_map( 'absint', (array) $args['order_id'] ) );
+            $where .= " AND do.order_id IN ('$order_ids')";
+        }
+
+        // filter status
+        if ( ! $this->is_empty( $args['status'] ) && 'all' !== $args['status'] ) {
+            $status = implode( "','", array_map( 'sanitize_text_field', (array) $args['status'] ) );
+            $where .= " AND do.order_status IN ('$status')";
+        }
+
+        // date filter
+        $date_from = false;
+        $date_to = false;
+        // check if start date is set
+        if ( ! $this->is_empty( $args['date']['from'] ) ) {
+            // convert date string to object
+            $date_from = dokan_current_datetime()->modify( $args['date']['from'] );
+        }
+
+        // check if end date is set
+        if ( ! $this->is_empty( $args['date']['to'] ) ) {
+            // convert date string to object
+            $date_to = dokan_current_datetime()->modify( $args['date']['to'] );
+        }
+
+        //swap dates if start date is after end date
+        if ( $date_from && $date_to ) {
+            // fix start and end date
+            if ( $date_from > $date_to ) {
+                $date_from = $date_from->format( 'Y-m-d' );
+                $date_to = $date_to->format( 'Y-m-d' );
+                $args['date'] = [
+                    'from' => $date_to,
+                    'to'   => $date_from,
+                ];
+            }
+            $where        .= ' AND DATE( p.post_date ) BETWEEN %s AND %s';
+            $query_args[] = $args['date']['from'];
+            $query_args[] = $args['date']['to'];
+            // if only start date is set
+        } elseif ( $date_from ) {
+            $where        .= ' AND DATE( p.post_date ) >= %s';
+            $query_args[] = $date_from->format( 'Y-m-d' );
+            // if only end date is set
+        } elseif ( $date_to ) {
+            $where        .= ' AND DATE( p.post_date ) <= %s';
+            $query_args[] = $date_to->format( 'Y-m-d' );
+            // if only single date is set
+        } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
+            $where        .= ' AND DATE( p.post_date ) <= %s';
+            $query_args[] = $args['date'];
+        }
+
+        // filter by search parameter
+        if ( ! $this->is_empty( $args['search'] ) ) {
+            $search = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $where .= ' AND p.post_title LIKE %s';
+            $query_args[] = $search;
+        }
+
+        // fix order by parameter
+        if ( ! in_array( strtoupper( $args['order'] ), [ 'ASC', 'DESC' ], true ) ) {
             $args['order'] = 'DESC';
         }
 
-        $offset      = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = "seller_order_data_{$args['seller_id']}";
+        // fix order by parameter
+        $supported_order_by = [
+            'post_date' => 'p.post_date',
+            'order_id' => 'do.order_id',
+            'seller_id' => 'do.seller_id',
+            'order_status' => 'do.order_status',
+        ];
+        if ( ! empty( $args['orderby'] ) && array_key_exists( $args['orderby'], $supported_order_by ) ) {
+            $orderby = "ORDER BY {$supported_order_by[ $args['orderby'] ]} {$args['order']}"; //no need for prepare, we've already whitelisted the parameters
+
+            //second order by in case of similar value on first order by field
+            if ( 'order_id' !== $args['order_by'] ) {
+                $orderby .= ", do.order_id {$args['order']}";
+            }
+        }
+
+        // pagination param
+        if ( ! empty( $args['limit'] ) && -1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
+            $limit  = absint( $args['limit'] );
+            $page   = absint( $args['paged'] );
+            $page   = $page > 0 ? $page : 1;
+            $offset = ( $page - 1 ) * $limit;
+
+            $limits       = 'LIMIT %d, %d';
+            $query_args[] = $offset;
+            $query_args[] = $limit;
+        }
+
+        $cache_group = 'seller_order_data';
         $cache_key   = 'seller_orders_all_' . md5( wp_json_encode( $args ) ); // Use all arguments to create a hash used as cache key
+        if ( is_numeric( $args['seller_id'] ) ) {
+            $cache_group = "seller_order_data_{$args['seller_id']}";
+        } elseif ( ! $this->is_empty( $args['seller_id'] ) && 1 === count( $args['seller_id'] ) ) {
+            $cache_group = "seller_order_data_{$args['seller_id'][0]}";
+        }
 
         $orders = Cache::get( $cache_key, $cache_group );
+        $orders = false;
 
-        if ( false === $orders ) {
-            $join             = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-            $where            = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-            $status_where     = ( 'all' === $args['status'] ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
-            $start_date_query = isset( $args['date']['from'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) >= %s', $args['date']['from'] ) : '';
-            $end_date_query   = isset( $args['date']['to'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) <= %s', $args['date']['to'] ) : '';
-            $order_id_query   = ( $args['order_id'] ) ? $wpdb->prepare( 'AND p.ID = %d', $args['order_id'] ) : '';
-            $search_query     = ( $args['search'] ) ? $wpdb->prepare( ' AND p.post_title LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' ) : '';
-
-            $orders = $wpdb->get_results(
+        if ( in_array( $args['return'], [ 'count' ], true ) && false === $orders ) {
+            // get count of entries
+            // @codingStandardsIgnoreStart
+            $orders = (int) $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT do.order_id, p.post_date
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    {$where}
-                    p.post_status != 'trash'
-                    {$start_date_query}
-                    {$end_date_query}
-                    {$status_where}
-                    {$order_id_query}
-                    {$search_query}
-                GROUP BY do.order_id
-                ORDER BY p.{$args['order_by']} {$args['order']}
-                LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
+                    "SELECT $fields FROM {$wpdb->prefix}dokan_orders AS do $join WHERE %d=%d $where",
+                    $query_args
                 )
             );
 
-            $orders = array_map(
-                function( $order_data ) {
-                    return $this->get( $order_data->order_id );
-                }, $orders
+            // check for query error
+            if ( ! empty( $wpdb->last_error ) ) {
+                return new WP_Error( 'order_manager_db_error', $wpdb->last_error, $wpdb->last_query );
+            }
+
+            // @codingStandardsIgnoreEnd
+            Cache::set( $cache_key, $orders, $cache_group );
+        } elseif ( in_array( $args['return'], [ 'objects', 'ids' ], true ) && false === $orders ) {
+            // @codingStandardsIgnoreStart
+            $orders = $wpdb->get_col(
+                $wpdb->prepare(
+                    "SELECT $fields FROM {$wpdb->prefix}dokan_orders AS do $join WHERE %d=%d $where $groupby $orderby $limits",
+                    $query_args
+                )
             );
+            // @codingStandardsIgnoreEnd
+
+            // check for query error
+            if ( ! empty( $wpdb->last_error ) ) {
+                return new WP_Error( 'order_manager_db_error', $wpdb->last_error, $wpdb->last_query );
+            }
+
+            if ( 'objects' === $args['return'] ) {
+                $orders = array_map(
+                    function( $order_id ) {
+                        return $this->get( $order_id );
+                    }, $orders
+                );
+            }
 
             Cache::set( $cache_key, $orders, $cache_group );
         }
@@ -100,7 +228,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return bool|\WC_Order|\WC_Order_Refund
      */
     public function get( $id ) {
         return wc_get_order( $id );
@@ -457,5 +585,27 @@ class Manager {
         }
 
         dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
+    }
+
+    /**
+     * This will check if given var is empty or not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $var
+     *
+     * @return bool
+     */
+    protected function is_empty( $var ) {
+        if ( empty( $var ) ) {
+            return true;
+        }
+
+        // if var is an array, check if it's empty or not
+        if ( is_array( $var ) && isset( $var[0] ) && intval( $var[0] ) === 0 ) {
+            return true;
+        }
+
+        return false;
     }
 }
