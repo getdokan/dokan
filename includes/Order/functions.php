@@ -42,6 +42,8 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 /**
  * Get all the orders from a specific seller
  *
+ * @since DOKAN_SINCE Rewritten whole method
+ *
  * @global object $wpdb
  * @param int $seller_id
  * @param array $args
@@ -49,43 +51,13 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @return array
  */
 function dokan_get_seller_orders( $seller_id, $args ) {
-    $defaults = [
-        'status'      => 'all',
-        'order_date'  => null,
-        'limit'       => 10,
-        'offset'      => 0,
-        'customer_id' => null,
-        'start_date'  => '',
-        'end_date'    => '',
-        'order_id'    => null,
-        'search'      => null,
-    ];
-
-    $args = wp_parse_args( $args, $defaults );
-
-    // max( $args['limit'], 1 ) to prevent division by zero if anyone gives $args['limit'] = 0
-    $args['paged'] = $args['offset'] / max( $args['limit'], 1 ) + 1;
-
-    if ( ! empty( $args['order_date'] ) && empty( $args['start_date'] ) ) {
-        $args['start_date'] = $args['order_date'];
-    }
-
-    if ( ! empty( $args['order_date'] ) && empty( $args['end_date'] ) ) {
-        $args['end_date'] = $args['order_date'];
-    }
-
-    $args['date'] = null;
-    if ( ! empty( $args['start_date'] ) ) {
-        $args['date']['from'] = $args['start_date'];
-    }
-
-    if ( ! empty( $args['end_date'] ) ) {
-        $args['date']['to'] = $args['end_date'];
-    }
-
-    unset( $args['order_date'], $args['start_date'], $args['end_date'] );
-
     $args['seller_id'] = $seller_id;
+
+    if ( ! empty( $args['offset'] ) ) { // backward compatibility
+        // max( $args['limit'], 1 ) to prevent division by zero if anyone gives $args['limit'] = 0
+        $args['paged'] = $args['offset'] / max( $args['limit'], 1 ) + 1;
+        unset( $args['offset'] );
+    }
 
     return dokan()->order->all( $args );
 }

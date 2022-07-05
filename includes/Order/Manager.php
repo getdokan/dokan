@@ -26,11 +26,14 @@ class Manager {
             'customer_id' => 0,
             'order_id'    => 0,
             'status'      => 'all',
+            'order_date'  => '', // only for backward compatibility, will be removed in future, if date is passed in args, it will be ignored
             'date'        => [
                 'from' => '',
                 'to'   => '',
             ],
             'search'      => '',
+            'include'    => [],
+            'exclude'    => [],
             'order_by'    => 'post_date',
             'order'       => 'DESC',
             'paged'       => 1,
@@ -83,6 +86,18 @@ class Manager {
             $where  .= " AND do.order_status IN ('$status')";
         }
 
+        // include order ids
+        if ( ! $this->is_empty( $args['include'] ) ) {
+            $include = implode( "','", array_map( 'absint', (array) $args['include'] ) );
+            $where   .= " AND do.order_id IN ('$include')";
+        }
+
+        // exclude order ids
+        if ( ! $this->is_empty( $args['exclude'] ) ) {
+            $exclude = implode( "','", array_map( 'absint', (array) $args['exclude'] ) );
+            $where   .= " AND do.order_id NOT IN ('$exclude')";
+        }
+
         // date filter
         $date_from = false;
         $date_to   = false;
@@ -99,7 +114,9 @@ class Manager {
         }
 
         //swap dates if start date is after end date
+        $date_filter_applied = false;
         if ( $date_from && $date_to ) {
+            $date_filter_applied = true;
             // fix start and end date
             if ( $date_from > $date_to ) {
                 $date_from    = $date_from->format( 'Y-m-d' );
@@ -114,16 +131,28 @@ class Manager {
             $query_args[] = $args['date']['to'];
             // if only start date is set
         } elseif ( $date_from ) {
+            $date_filter_applied = true;
             $where        .= ' AND DATE( p.post_date ) >= %s';
             $query_args[] = $date_from->format( 'Y-m-d' );
             // if only end date is set
         } elseif ( $date_to ) {
+            $date_filter_applied = true;
             $where        .= ' AND DATE( p.post_date ) <= %s';
             $query_args[] = $date_to->format( 'Y-m-d' );
             // if only single date is set
         } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
-            $where        .= ' AND DATE( p.post_date ) <= %s';
+            $date_filter_applied = true;
+            $where        .= ' AND DATE( p.post_date ) = %s';
             $query_args[] = $args['date'];
+        }
+
+        // backward compatibility for old filter
+        if ( ! $this->is_empty( $args['order_date'] ) && ! $date_filter_applied ) {
+            $order_date = dokan_current_datetime()->modify( $args['order_date'] );
+            if ( $order_date ) {
+                $where        .= ' AND DATE( p.post_date ) = %s';
+                $query_args[] = $order_date->format( 'Y-m-d' );
+            }
         }
 
         // filter by search parameter
@@ -141,6 +170,7 @@ class Manager {
         // fix order by parameter
         $supported_order_by = [
             'post_date'    => 'p.post_date',
+            'id'           => 'do.id',
             'order_id'     => 'do.order_id',
             'seller_id'    => 'do.seller_id',
             'order_status' => 'do.order_status',
@@ -209,11 +239,16 @@ class Manager {
             }
 
             if ( 'objects' === $args['return'] ) {
-                $orders = array_map(
-                    function ( $order_id ) {
-                        return $this->get( $order_id );
-                    }, $orders
-                );
+                $order_objects = [];
+                foreach ( $orders as $order_id ) {
+                    $order = $this->get( $order_id );
+                    if ( $order ) {
+                        // only send legit order object, this will prevent some fatal error in case order object is not found
+                        $order_objects[] = $order;
+                    }
+                }
+                $orders = $order_objects;
+                unset( $order_objects );
             }
 
             Cache::set( $cache_key, $orders, $cache_group );
