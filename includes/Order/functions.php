@@ -819,6 +819,10 @@ function dokan_order_csv_export( $orders, $file = null ) {
 
     foreach ( $orders as $the_order ) {
         $line = array();
+        $the_order = wc_get_order( $the_order );
+        if ( ! $the_order ) {
+            continue;
+        }
 
         foreach ( $headers as $row_key => $label ) {
             switch ( $row_key ) {

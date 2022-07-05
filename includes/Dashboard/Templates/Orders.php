@@ -232,6 +232,7 @@ class Orders {
         $query_args = [
             'seller_id' => dokan_get_current_user_id(),
             'limit'     => 10000000,
+            'return'    => 'ids',
         ];
 
         if ( isset( $_POST['dokan_order_export_filtered'] ) ) {
