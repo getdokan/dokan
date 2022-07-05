@@ -183,6 +183,11 @@ class Assets {
                 'component' => 'Vendors',
             ],
             [
+                'path'      => '/dummy-data',
+                'name'      => 'DummyData',
+                'component' => 'DummyData',
+            ],
+            [
                 'path'      => '/vendor-capabilities',
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
@@ -1067,6 +1072,7 @@ class Assets {
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'    => dokan_pro_buynow_url(),
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                 ],
                 'states'                 => WC()->countries->get_allowed_country_states(),
                 'countries'              => WC()->countries->get_allowed_countries(),
