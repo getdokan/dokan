@@ -34,6 +34,10 @@ div.media-sidebar a.edit-attachment{
         * {
             box-sizing: border-box;
         }
+
+        a:focus {
+            outline-color: #ff5a40;
+        }
     }
 
     header.dokan-dashboard-header {
@@ -89,6 +93,17 @@ div.media-sidebar a.edit-attachment{
                     i {
                         color: #ccc;
                         padding-right: 5px;
+                    }
+
+                    .pull-right {
+                        a {
+                            color: #6d6d6d;
+                            transition: .2s linear;
+
+                            &:hover {
+                              color: #000;
+                            }
+                        }
                     }
                 }
 
@@ -150,6 +165,10 @@ div.media-sidebar a.edit-attachment{
                 }
 
                 .list-count {
+                    a {
+                        color: #6d6d6d;
+                    }
+
                     .count {
                         float: right;
                     }
