@@ -33,7 +33,7 @@ class MultiStepCategories {
          * Because without those page we don't need to load category modal.
          */
         global $wp;
-        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) ) {
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) {
             dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }
     }
