@@ -42,11 +42,11 @@ class Settings {
     public function load_settings_fields( $fields ) {
         $settings_fields = [
             'enabled' => [
-                'name'    => 'enabled',
-                'label'   => esc_html__( 'Enable Reverse Withdrawal', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
-                'type'    => 'checkbox',
-                'default' => 'off',
+                'name'               => 'enabled',
+                'label'              => esc_html__( 'Enable Reverse Withdrawal', 'dokan-lite' ),
+                'desc'               => esc_html__( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
+                'type'               => 'switcher',
+                'default'            => 'off',
                 'refresh_after_save' => true,
             ],
             'payment_gateways' => [
@@ -97,7 +97,7 @@ class Settings {
             'due_period' => [
                 'name'    => 'due_period',
                 'label'   => esc_html__( 'Grace Period', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Maximum Payment Due period in day(s) before selected action(s) is/are taken. Enter 0 to take action(s) immediately.', 'dokan-lite' ),
+                'desc'    => esc_html__( 'Maximum payment due period in day(s) before selected action(s) is/are taken. Enter 0 to take action(s) immediately.', 'dokan-lite' ),
                 'type'    => 'number',
                 'min'     => 0,
                 'max'     => 28,
@@ -116,7 +116,7 @@ class Settings {
                 'name'    => 'display_notice',
                 'label'   => esc_html__( 'Display Notice During Grace Period', 'dokan-lite' ),
                 'desc'    => esc_html__( 'Display notice to pay reverse withdrawal balance during grace period under vendor dashboard.', 'dokan-lite' ),
-                'type'    => 'checkbox',
+                'type'    => 'switcher',
                 'default' => 'on',
             ],
         ];
@@ -127,7 +127,7 @@ class Settings {
                 'name'    => 'send_announcement',
                 'label'   => esc_html__( 'Send Announcement?', 'dokan-lite' ),
                 'desc'    => esc_html__( 'Check this checkbox if you want to send an announcement during the grace period. Note that a maximum of one announcement will be sent during a single billing period.', 'dokan-lite' ),
-                'type'    => 'checkbox',
+                'type'    => 'switcher',
                 'default' => 'off',
             ];
         }
