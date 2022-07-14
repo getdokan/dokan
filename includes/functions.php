@@ -3188,7 +3188,7 @@ function dokan_get_translated_days( $day = '' ) {
 function dokan_get_store_times( $day, $return_type, $index = null, $store_id = null ) {
     $store_id          = null === $store_id ? dokan_get_current_user_id() : $store_id;
     $store_info        = dokan_get_store_info( $store_id );
-    $dokan_store_times = isset( $store_info['dokan_store_time'][ $day ][ $return_type ] ) ? $store_info['dokan_store_time'][ $day ][ $return_type ] : '';
+    $dokan_store_times = ! empty( $store_info['dokan_store_time'][ $day ][ $return_type ] ) ? $store_info['dokan_store_time'][ $day ][ $return_type ] : '';
 
     if ( empty( $dokan_store_times ) ) {
         return '';
@@ -4100,7 +4100,7 @@ function dokan_format_time( $date = '', $format = false ) {
  * @param string       $current_format Time format for current data
  * @param string       $updated_format Time format for updated data
  *
- * @return mixed
+ * @return string|array
  */
 function dokan_create_time_from_format( $time_types, $current_format, $updated_format ) {
     if ( empty( $time_types ) ) {

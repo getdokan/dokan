@@ -66,7 +66,7 @@
      * @since 3.3.7
      */
     $location = apply_filters( 'dokan_store_time_template', 'settings/store-time' );
-    $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
+    $args     = apply_filters( 'dokan_store_time_arguments', $args );
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -350,19 +350,12 @@
         } );
 
         // Set timepicker jquery here.
-        $( '.dokan-store-times .time .opening-time' ).timepicker({
+        $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
             scrollDefault : 'now',
-            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm' ?>',
+            minTime       : '12:00 am',
+            maxTime       : '11:30 pm',
             timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
-        });
-
-        $( '.dokan-store-times .time .closing-time' ).timepicker({
-            scrollDefault : 'now',
-            minTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '00:59' : '00:29 am' ?>',
-            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:59' : '11:59 pm' ?>',
-            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
+            step          : 30,
         });
 
         // Add validation for store time when changed.
@@ -370,8 +363,8 @@
             const self              = $( this ),
                 openValue           = self.find( '.opening-time' ).val(),
                 closeValue          = self.find( '.closing-time' ).val(),
-                formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
-                formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
+                formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
+                formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
 
             if ( formattedOpenValue > formattedCloseValue ) {
                 self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
@@ -385,8 +378,8 @@
                 const self              = $( this ),
                     openValue           = self.find( '.opening-time' ).val(),
                     closeValue          = self.find( '.closing-time' ).val(),
-                    formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
-                    formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
+                    formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
+                    formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
 
                 if ( formattedOpenValue > formattedCloseValue && '<?php echo ! dokan()->is_pro_exists(); ?>' ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
@@ -516,7 +509,7 @@
 
                 // Ensure that it is a number and stop the keypress.
                 if ( isNaN( Number(e.key) ) ) {
-                    e.preventDefault(); 
+                    e.preventDefault();
                 }
             });
         });
