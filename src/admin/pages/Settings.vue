@@ -477,10 +477,12 @@
             },
 
             handleScroll() {
-                if ( window.scrollY > ( document.body.scrollHeight - 800 ) ) {
-                    this.$refs.backToTop.style.transform = 'scale(1)';
-                } else {
-                    this.$refs.backToTop.style.transform = 'scale(0)';
+                if ( this.$route.name === 'Settings' ) {
+                    if ( window.scrollY > ( document.body.scrollHeight - 800 ) ) {
+                        this.$refs.backToTop.style.transform = 'scale(1)';
+                    } else {
+                        this.$refs.backToTop.style.transform = 'scale(0)';
+                    }
                 }
             },
         },
@@ -728,7 +730,7 @@
                 width: 44px;
                 right: 75px;
                 height: 44px;
-                bottom: 180px;
+                bottom: 80px;
                 cursor: pointer;
                 position: fixed;
                 transition: .1s linear;
