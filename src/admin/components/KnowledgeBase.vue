@@ -290,8 +290,6 @@ export default {
                 case 'Tools':
                 case 'ProModules':
                 case 'Premium':
-                case 'ChangeLog':
-                case 'DummyData':
                 case 'ReverseWithdrawal': // Remove when content is available
                 case 'AbuseReports': // Remove when content is available
                 case 'Announcement': // Remove when content is available
