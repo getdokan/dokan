@@ -341,6 +341,7 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Withdraw\Hooks();
         new \WeDevs\Dokan\Order\Hooks();
         new \WeDevs\Dokan\Product\Hooks();
+        new \WeDevs\Dokan\ProductCategory\Hooks();
         new \WeDevs\Dokan\Vendor\Hooks();
         new \WeDevs\Dokan\Upgrade\Hooks();
         new \WeDevs\Dokan\Vendor\UserSwitch();
@@ -377,6 +378,7 @@ final class WeDevs_Dokan {
         $this->container['upgrades']            = new \WeDevs\Dokan\Upgrade\Manager();
         $this->container['product_sections']    = new \WeDevs\Dokan\ProductSections\Manager();
         $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
+        $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {

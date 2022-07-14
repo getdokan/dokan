@@ -5,6 +5,7 @@ import Help from 'admin/pages/Help.vue'
 import ChangeLog from 'admin/pages/ChangeLog.vue'
 import Settings from 'admin/pages/Settings.vue'
 import Vendors from 'admin/pages/Vendors.vue'
+import DummyData from 'admin/pages/DummyData.vue'
 import VendorCapabilities from "admin/pages/VendorCapabilities.vue"
 import ProModules from "admin/pages/ProModules.vue"
 import ReverseWithdrawal from "admin/pages/ReverseWithdrawal.vue"
@@ -24,6 +25,7 @@ dokan_add_route(Help)
 dokan_add_route(Settings)
 dokan_add_route(VendorCapabilities)
 dokan_add_route(ProModules)
+dokan_add_route(DummyData)
 dokan_add_route(ReverseWithdrawal)
 dokan_add_route(ReverseWithdrawalTransactions)
 
