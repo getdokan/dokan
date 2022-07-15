@@ -8,7 +8,7 @@ use \WP_Query;
 /**
  * Include dependencies.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 if ( ! class_exists( 'WC_Product_Importer', false ) ) {
     include_once WC_ABSPATH . 'includes/import/abstract-wc-product-importer.php';
@@ -21,7 +21,7 @@ if ( ! function_exists( 'wp_delete_user' ) ) {
 /**
  * Dokan dummy data importer class.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 class Importer extends \WC_Product_Importer {
 
@@ -39,7 +39,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Create and return dummy vendor or if exists return the existing vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param array $data
      *
@@ -91,7 +91,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Creates dummy vendors and products.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param int $vendor_id
      * @param array $products
@@ -114,7 +114,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Formats category / tags ids for products
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param array $value
      *
@@ -142,7 +142,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Formats string by a separator
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param string $data
      *
@@ -161,7 +161,7 @@ class Importer extends \WC_Product_Importer {
      * update existing is false, and likewise, if updating products, do not
      * process rows which do not exist if an SKU is provided.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return array
      */
@@ -263,7 +263,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Remove all dummy data ( products and vendors ) that has 'dokan_dummy_data' meta key
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return string
      */
@@ -304,7 +304,7 @@ class Importer extends \WC_Product_Importer {
     /**
      * Delete orders data of a dummy vendors from database.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param array $args
      *

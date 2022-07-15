@@ -11,7 +11,7 @@ class V_3_6_2 extends DokanUpgrader {
      * Updates product categories.
      * For every child category, it will update the parent categories and ancestors.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return void
      */

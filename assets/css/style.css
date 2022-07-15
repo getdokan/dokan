@@ -2063,7 +2063,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li {
   margin: 0;
-  border-bottom: 1px solid #454545;
   position: relative;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a {
@@ -2090,7 +2089,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   width: 33.333333%;
   padding: 6% 13%;
   float: left;
-  border-right: 1px solid #454545;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:hover {
   background: #f05025;
