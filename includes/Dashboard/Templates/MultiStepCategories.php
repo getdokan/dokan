@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Dashboard\Templates;
 /**
  * Multi step category ui class.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 class MultiStepCategories {
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      */
     public function __construct() {
         add_action( 'dokan_before_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
@@ -23,7 +23,7 @@ class MultiStepCategories {
     /**
      * Returns new category select ui html elements.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return html
      */

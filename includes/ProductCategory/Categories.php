@@ -9,14 +9,14 @@ class Categories {
     /**
      * @var array
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      */
     private $categories = [];
 
     /**
      * This method will return category data
      *
-     * @sience DOKAN_SINCE
+     * @sience 3.6.2
      *
      * @return array
      */
@@ -38,7 +38,7 @@ class Categories {
     /**
      * This method will prepare category data
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return void
      */
@@ -83,7 +83,7 @@ class Categories {
     /**
      * This method will recursively get parent id of a category
      *
-     * @sience DOKAN_SINCE
+     * @sience 3.6.2
      *
      * @param int $current_item
      *

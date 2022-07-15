@@ -726,7 +726,7 @@
                 width: 44px;
                 right: 75px;
                 height: 44px;
-                bottom: 80px;
+                bottom: 150px;
                 cursor: pointer;
                 position: fixed;
                 transition: .1s linear;

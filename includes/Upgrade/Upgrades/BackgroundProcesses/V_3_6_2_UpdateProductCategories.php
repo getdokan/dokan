@@ -8,7 +8,7 @@ use WeDevs\Dokan\ProductCategory\Helper;
 /**
  * Select all parent categories based on child category id.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 class V_3_6_2_UpdateProductCategories extends DokanBackgroundProcesses {
 
@@ -17,7 +17,7 @@ class V_3_6_2_UpdateProductCategories extends DokanBackgroundProcesses {
      *
      * @param array $products
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return bool
      */
