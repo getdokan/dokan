@@ -1750,7 +1750,7 @@ class ProductController extends DokanRESTController {
     /**
      * Returns all categories.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return array
      */

@@ -7,14 +7,14 @@ use WeDevs\Dokan\ProductCategory\ProductCategoryCache;
 /**
  * Hooks class for product categories.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 class Hooks {
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      */
     public function __construct() {
         add_action( 'pre_delete_term', [ $this, 'add_chosen_categories_to_action_queue' ], 10, 1 );
@@ -27,7 +27,7 @@ class Hooks {
     /**
      * Delete all references for chosen_product_cat with category id under postmeta table.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param array $results
      *
@@ -70,7 +70,7 @@ class Hooks {
      *
      * @param int $category_id
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return void
      */

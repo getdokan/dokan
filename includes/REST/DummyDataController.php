@@ -8,7 +8,7 @@ use WeDevs\Dokan\Abstracts\DokanRESTController;
 /**
 * Dokan Dummy Data Controller Class
 *
-* @since DOKAN_SINCE
+* @since 3.6.2
 *
 * @package dokan
 */
@@ -68,7 +68,7 @@ class DummyDataController extends DokanRESTController {
     /**
      * Returns dokan import status.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return array
      */
@@ -83,7 +83,7 @@ class DummyDataController extends DokanRESTController {
         /**
      * Imports dummy vendors and products.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return array
      */
@@ -113,7 +113,7 @@ class DummyDataController extends DokanRESTController {
     /**
      * Clears dokan dummy data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return string
      */
@@ -131,7 +131,7 @@ class DummyDataController extends DokanRESTController {
     /**
      * Checking if have any permission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return boolean
      */
@@ -146,7 +146,7 @@ class DummyDataController extends DokanRESTController {
     /**
      * Get the dummy data's schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return array
      */
