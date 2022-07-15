@@ -47,7 +47,7 @@
                             <p class="settings-description">{{ section.settings_description }}</p>
                         </div>
                         <div v-if="section.document_link" class="settings-document-button">
-                            <a :href="section.document_link" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                            <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
@@ -68,13 +68,18 @@
                                             :key="fieldId"
                                             :errors="errors"
                                             :validationErrors="validationErrors"
-                                            :toggle-loading-state="toggleLoadingState" />
+                                            :toggle-loading-state="toggleLoadingState"
+                                            :dokanAssetsUrl="dokanAssetsUrl" />
                                     </div>
                                 </div>
                                 <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
                             </form>
                         </div>
                     </template>
+
+                    <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan-lite' )" v-tooltip="__( 'Back to top', 'dokan-lite' )">
+                        <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan-lite' )" />
+                    </div>
                 </div>
 
                 <div class="loading" v-if="showLoading">
@@ -95,7 +100,6 @@
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
-    import $ from 'jquery';
 
     export default {
 
@@ -128,6 +132,7 @@
                 awaitingSearch: false,
                 withdrawMethods: {},
                 isSaveConfirm: false,
+                dokanAssetsUrl: dokan.urls.assetsUrl,
             }
         },
 
@@ -276,6 +281,8 @@
                     .always(function () {
                         self.showLoading = false;
                     });
+
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
             },
             setWithdrawMethods() {
                 if ( 'withdraw_methods' in this.settingValues.dokan_withdraw ) {
@@ -465,42 +472,47 @@
                 self.settingSections = settingSections;
             },
 
-            handleDataClearCheckboxEvent() {
-                let self = this;
-                $('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
-                    if( $(this).is(':checked') ) {
-                        self.$swal({
-                            title: self.__( 'Are you sure?', 'dokan-lite' ),
-                            type: 'warning',
-                            html: self.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
-                            showCancelButton: true,
-                            confirmButtonText: self.__( 'Okay', 'dokan-lite' ),
-                            cancelButtonText: self.__( 'Cancel', 'dokan-lite' ),
-                        }).then( (response) => {
-                            if ( response.dismiss ) {
-                                self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
-                            }
-                        });
-                    }
-                });
-            }
+            scrollToTop() {
+                this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
+            },
+
+            handleScroll() {
+                if ( this.$route.name === 'Settings' && this.$refs.backToTop ) {
+                    this.$refs.backToTop.style.transform = window.scrollY > ( document.body.scrollHeight - 800 ) ? 'scale(1)' : 'scale(0)';
+                }
+            },
         },
 
         created() {
             this.fetchSettingValues();
 
             this.currentTab = 'dokan_general';
-            if ( typeof(localStorage) != 'undefined' ) {
+            if ( typeof(localStorage) !== 'undefined' ) {
                 this.currentTab = localStorage.getItem("activetab") ? localStorage.getItem("activetab") : 'dokan_general';
             }
 
-            this.settingSections = dokan.settings_sections;
-            this.settingFields = dokan.settings_fields;
-        },
+            this.$root.$on( 'onFieldSwitched', ( value, fieldName ) => {
+                if ( 'on' === value && ( 'dokan_general' in this.settingValues ) && 'data_clear_on_uninstall' === fieldName ) {
+                    Swal.fire({
+                        icon              : 'warning',
+                        html              : this.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
+                        title             : this.__( 'Are you sure?', 'dokan-lite' ),
+                        showCancelButton  : true,
+                        cancelButtonText  : this.__( 'Cancel', 'dokan-lite' ),
+                        confirmButtonText : this.__( 'Okay', 'dokan-lite' ),
+                    }).then( ( response ) => {
+                        if ( response.dismiss ) {
+                            this.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+                            this.$emit( 'switcHandler', 'data_clear_on_uninstall', this.settingValues.dokan_general.data_clear_on_uninstall );
+                        }
+                    });
+                }
+            });
 
-        updated() {
-            this.handleDataClearCheckboxEvent();
-        }
+            this.settingSections = dokan.settings_sections;
+            this.settingFields   = dokan.settings_fields;
+            window.addEventListener( 'scroll', this.handleScroll );
+        },
     };
 
 </script>
@@ -513,6 +525,7 @@
         position: relative;
         background: #fff;
         padding-bottom: 100px;
+        scroll-margin-top: 65px;
 
         .loading{
             position: absolute;
@@ -627,11 +640,12 @@
 
         .metabox-holder {
             flex: 3;
-            padding: 0 6px 0 3% !important;
+            padding: 0 6px 75px 3% !important;
             position: relative;
 
             .settings-header {
                 display: flex;
+                margin-bottom: 50px;
                 justify-content: space-between;
 
                 .settings-content {
@@ -673,6 +687,63 @@
                         border-radius: 6.56px;
                         text-decoration: none;
                     }
+                }
+            }
+
+            .group {
+                .form-table {
+                    .dokan-settings-fields {
+                        .dokan-settings-field-type-sub_section,
+                        .dokan-settings-field-type-disbursement_sub_section {
+                            border-bottom: 1px solid #b0a7a7;
+
+                            .sub-section-styles {
+                                margin-top: 50px;
+                            }
+                        }
+
+                        div {
+                            &:not(.dokan-settings-field-type-sub_section) {
+                                .field_contents {
+                                    border: 1px solid #b0a7a7;
+                                    border-top: none;
+                                }
+                            }
+                        }
+
+                        > div {
+                            &:not(.dokan-settings-field-type-sub_section) {
+                                &:first-child {
+                                    border-top: 1px solid #b0a7a7;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .back-to-top {
+                width: 44px;
+                right: 75px;
+                height: 44px;
+                bottom: 150px;
+                cursor: pointer;
+                position: fixed;
+                transition: .1s linear;
+                transform: scale(0);
+                box-shadow: 0px 0px 10px 0px #0000001F;
+                border-radius: 50%;
+                background-color: #fff;
+
+                img {
+                    top: 50%;
+                    left: 50%;
+                    position: absolute;
+                    transform: translate(-50%, -50%);
+                }
+
+                &:hover {
+                    transform: scale(1.05);
                 }
             }
 

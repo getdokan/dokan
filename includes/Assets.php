@@ -4,6 +4,8 @@ namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
+use WeDevs\Dokan\ProductCategory\Categories;
+use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 
 class Assets {
 
@@ -181,6 +183,11 @@ class Assets {
                 'component' => 'Vendors',
             ],
             [
+                'path'      => '/dummy-data',
+                'name'      => 'DummyData',
+                'component' => 'DummyData',
+            ],
+            [
                 'path'      => '/vendor-capabilities',
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
@@ -290,6 +297,14 @@ class Assets {
             'dokan-wp-version-before-5-3' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
+            ],
+            'dokan-global-admin-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
+            ],
+            'dokan-product-category-ui-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
             'dokan-reverse-withdrawal' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
@@ -468,6 +483,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
+            'product-category-ui' => [
+                'src'     => $asset_url . '/js/product-category-ui.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
+            ],
         ];
 
         return $scripts;
@@ -545,6 +565,27 @@ class Assets {
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
             $this->dokan_dashboard_scripts();
+        }
+
+        // Load category ui css in product add, edit and list page.
+        global $wp;
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) { // phpcs:ignore
+            wp_enqueue_style( 'dokan-product-category-ui-css' );
+            wp_enqueue_script( 'product-category-ui' );
+
+            $categories = new Categories();
+            $all_categories = $categories->get();
+
+            $data = [
+                'categories' => $all_categories,
+                'is_single'  => CategoryHelper::product_category_selection_is_single(),
+                'i18n'       => [
+                    'select_a_category' => __( 'Select a category', 'dokan-lite' ),
+                    'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
+                ],
+            ];
+
+            wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
         }
 
         // store and my account page
@@ -643,7 +684,7 @@ class Assets {
                         __( 'December', 'dokan-lite' ),
                     ],
                 ],
-			]
+            ]
         );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
@@ -1031,6 +1072,7 @@ class Assets {
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'    => dokan_pro_buynow_url(),
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                 ],
                 'states'                 => WC()->countries->get_allowed_country_states(),
                 'countries'              => WC()->countries->get_allowed_countries(),
