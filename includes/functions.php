@@ -4092,43 +4092,37 @@ function dokan_format_time( $date = '', $format = false ) {
 }
 
 /**
- * Create an expected time format from a given time format.
+ * Create an expected date time format from a given format.
  *
  * @since DOKAN_SINCE
  *
- * @param array|string $time_types     eg: $opening_times or $closing_times
- * @param string       $current_format Time format for current data
- * @param string       $updated_format Time format for updated data
+ * @param string $format      Date string format
+ * @param string $date_string Date time string
  *
- * @return string|array
+ * @return DateTimeImmutable|false
  */
-function dokan_create_time_from_format( $time_types, $current_format, $updated_format ) {
-    if ( empty( $time_types ) ) {
-        return;
-    }
+function dokan_create_date_from_format( $format, $date_string ) {
+    return \DateTimeImmutable::createFromFormat(
+        $format,
+        $date_string,
+        new \DateTimeZone( dokan_wp_timezone_string() )
+    );
+}
 
-    if ( ! is_array( $time_types ) ) {
-        return \DateTimeImmutable::createFromFormat(
-            $current_format,
-            $time_types,
-            new \DateTimeZone( dokan_wp_timezone_string() )
-        )->format( $updated_format );
-    }
-
+/**
+ * Convert times in expected format.
+ *
+ * @param array|string $times_data    Times data
+ * @param string       $input_format  Times current format
+ * @param string       $output_format Times converted format
+ *
+ * @return array
+ */
+function dokan_get_formatted_times( $times_data = [], $input_format = 'g:i a', $output_format = 'g:i a' ) {
     $times = [];
-
-    foreach ( $time_types as $time_type ) {
-        $formatted_time = '';
-
-        if ( ! empty( $time_type ) ) {
-            $formatted_time = \DateTimeImmutable::createFromFormat(
-                $current_format,
-                $time_type,
-                new \DateTimeZone( dokan_wp_timezone_string() )
-            )->format( $updated_format );
-        }
-
-        $times[] = $formatted_time;
+    foreach ( (array) $times_data as $time ) {
+        $datetime = dokan_create_date_from_format( $input_format, $time );
+        $times[]  = $datetime->format( $output_format );
     }
 
     return $times;

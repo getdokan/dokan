@@ -381,7 +381,7 @@
                     formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
                     formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
 
-                if ( formattedOpenValue > formattedCloseValue && '<?php echo ! dokan()->is_pro_exists(); ?>' ) {
+                if ( formattedOpenValue >= formattedCloseValue && '<?php echo ! dokan()->is_pro_exists(); ?>' ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
                     e.preventDefault();
                     return false;
