@@ -1239,6 +1239,15 @@ class Vendor {
     }
 
     /**
+     * Set bank ac type
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_type( $value ) {
+        $this->set_payment_prop( 'ac_type', 'bank', wc_clean( $value ) );
+    }
+
+    /**
      * Set bank ac number
      *
      * @param string $value
