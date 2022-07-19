@@ -38,6 +38,7 @@ class OrderCache {
      * @return void
      */
     public static function delete( $seller_id, $order_id = null ) {
+        Cache::invalidate_group( 'seller_order_data' );
         Cache::invalidate_group( "seller_order_data_{$seller_id}" );
 
         // Remove cached seller_id after an woocommerce order
