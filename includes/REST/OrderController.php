@@ -417,18 +417,21 @@ class OrderController extends DokanRESTController {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        $limit        = $request['per_page'];
-        $paged        = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-        $offset       = ( $paged - 1 ) * $limit;
+        $args = [
+            'status'      => $request['status'],
+            'order_date'  => $request['order_date'],
+            'limit'       => $request['per_page'],
+            'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
+            'customer_id' => $request['customer_id'],
+        ];
 
-        $orders = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
+        $orders = dokan()->order->all( $args );
 
         $data_objects = array();
         $total_orders = 0;
 
         if ( ! empty( $orders ) ) {
-            foreach ( $orders as $order ) {
-                $wc_order       = $this->get_object( $order->order_id );
+            foreach ( $orders as $wc_order ) {
                 $data           = $this->prepare_data_for_response( $wc_order, $request );
                 $data_objects[] = $this->prepare_response_for_collection( $data );
             }

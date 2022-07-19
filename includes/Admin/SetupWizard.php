@@ -440,7 +440,7 @@ class SetupWizard {
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_post_data['new_seller_enable_selling'] ) ? 'on' : 'off';
         $options['commission_type']           = sanitize_text_field( $_post_data['commission_type'] );
-        $options['admin_percentage']          = is_int( $_post_data['admin_percentage'] ) ? intval( $_post_data['admin_percentage'] ) : floatval( $_post_data['admin_percentage'] );
+        $options['admin_percentage']          = wc_format_decimal( sanitize_text_field( $_post_data['admin_percentage'] ) );
         $options['order_status_change']       = isset( $_post_data['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
@@ -456,11 +456,11 @@ class SetupWizard {
      */
     public function dokan_setup_withdraw() {
         $options = get_option(
-            'dokan_withdraw', array(
-				'withdraw_methods'      => array( 'paypal' ),
+            'dokan_withdraw', [
+				'withdraw_methods'      => [ 'paypal' => 'paypal' ],
 				'withdraw_limit'        => 50,
-				'withdraw_order_status' => array( 'wc-completed' => 'wc-completed' ),
-            )
+				'withdraw_order_status' => [ 'wc-completed' => 'wc-completed' ],
+            ]
         );
 
         $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : array();
@@ -697,11 +697,11 @@ class SetupWizard {
         check_admin_referer( 'dokan-setup' );
 
         $_post_data = wp_unslash( $_POST );
-        $options = array();
+        $options = get_option( 'dokan_withdraw', [] );
 
-        $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? $_post_data['withdraw_methods'] : array();
-        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? ( sanitize_text_field( $_post_data['withdraw_limit'] ) < 0 ? 0 : sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
-        $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? $_post_data['withdraw_order_status'] : array();
+        $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? wc_clean( $_post_data['withdraw_methods'] ) : [];
+        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? (float) wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) < 0 ? 0 : wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
+        $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? wc_clean( $_post_data['withdraw_order_status'] ) : [];
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard

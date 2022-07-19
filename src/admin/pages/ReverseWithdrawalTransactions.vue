@@ -315,8 +315,8 @@ export default {
 
         getDefaultTransactionDate() {
             return {
-                startDate: moment().subtract(29, 'days').format('YYYY-MM-DD 00:00:00'),
-                endDate: moment().format('YYYY-MM-DD 23:59:59'),
+                startDate: moment().subtract(29, 'days').hour(0).minute(0).second(0).toDate(),
+                endDate: moment().hour(23).minute(59).second(59).toDate(),
             }
         },
 

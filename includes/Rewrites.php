@@ -56,7 +56,7 @@ class Rewrites {
             return;
         }
 
-        $crumbs[1]   = [ ucwords( $this->custom_store_url ), site_url() . '/' . $this->custom_store_url ];
+        $crumbs[1]   = [ ucwords( $this->custom_store_url ), get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ];
         $crumbs[2]   = [ $author, dokan_get_store_url( $seller_info->data->ID ) ];
 
         return $crumbs;

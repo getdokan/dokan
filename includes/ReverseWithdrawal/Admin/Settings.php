@@ -47,7 +47,6 @@ class Settings {
                 'desc'               => esc_html__( 'Check this checkbox if you want to enable reverse withdrawal feature for vendors.', 'dokan-lite' ),
                 'type'               => 'switcher',
                 'default'            => 'off',
-                'content_class'      => 'field_top_styles',
                 'refresh_after_save' => true,
             ],
             'payment_gateways' => [
