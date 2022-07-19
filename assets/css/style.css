@@ -2063,7 +2063,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li {
   margin: 0;
-  border-bottom: 1px solid #454545;
   position: relative;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a {
@@ -2090,7 +2089,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   width: 33.333333%;
   padding: 6% 13%;
   float: left;
-  border-right: 1px solid #454545;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:hover {
   background: #f05025;
@@ -2424,7 +2422,7 @@ div.media-sidebar a.edit-attachment {
   white-space: nowrap;
   display: flex;
   align-items: center;
-  padding: 10px 10px;
+  padding: 10px 20px 10px 10px;
 }
 .dokan-dashboard .dokan-dashboard-content article.dokan-settings-area .dokan-payment-settings-summary div.payment-methods-listing-header > div #vendor-dashboard-payment-settings-toggle-dropdown #vendor-payment-method-drop-down ul li div img {
   width: calc(12px + 1.5vw);
@@ -2536,6 +2534,11 @@ div.media-sidebar a.edit-attachment {
   border-top: 1px #cccccc solid;
   padding: 20px;
   margin: -20px;
+  position: relative;
+}
+.dokan-dashboard .dokan-dashboard-content article.dokan-settings-area #payment-form .payment-field-bank > div.dokan-form-group > div .bottom-actions button.dokan-btn-danger {
+  position: absolute;
+  right: 20px;
 }
 .dokan-dashboard .dokan-dashboard-content article.dokan-settings-area #payment-form .payment-field-bank > div.dokan-form-group > div .bottom-actions a {
   margin-left: 10px;
@@ -4414,7 +4417,7 @@ div.media-sidebar a.edit-attachment {
   top: 110%;
   left: -20%;
   color: #3E474F;
-  width: 300px;
+  width: 310px;
   z-index: 1;
   display: none;
   padding: 1.5em 2em;

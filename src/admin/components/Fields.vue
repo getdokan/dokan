@@ -1,7 +1,7 @@
 <template>
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
-            <div class="dokan-settings-sub-section">
+            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
                 <p class="sub-section-description">
                     {{ fieldData.description }}
@@ -12,17 +12,9 @@
         <template v-if="containCommonFields( fieldData.type )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <input :type="fieldData.type || 'text'" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'"
+                        <input :type="fieldData.type || 'text'" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                             :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
                             :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" />
                     </div>
@@ -39,19 +31,11 @@
         <template v-if="'number' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step"
-                                class="regular-text" v-model="fieldValue[fieldData.name]"
+                                class="regular-text medium" v-model="fieldValue[fieldData.name]"
                                 :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
                                 :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"/>
                         </label>
@@ -69,18 +53,10 @@
         <template v-if="'price' === fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="text" :min="fieldData.min" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'"
+                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                                 :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
                                 :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"/>
                         </label>
@@ -98,23 +74,15 @@
         <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field combine_fields">
                         <div class="percent_fee">
-                            <input type="text" class="wc_input_decimal regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                            <input type="text" class="wc_input_decimal regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
                             {{ '%' }}
                         </div>
                         <div class="fixed_fee">
                             {{ '+' }}
-                            <input type="text" class="wc_input_price regular-text" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                            <input type="text" class="wc_input_price regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
                         </div>
                     </div>
                 </fieldset>
@@ -133,17 +101,9 @@
         <template v-if="'textarea' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
+                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -158,15 +118,7 @@
         <template v-if="'switcher' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc">{{ fieldData.desc }}</p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <switches
@@ -186,15 +138,7 @@
         <template v-if="'multicheck' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc">{{ fieldData.desc }}</p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field multicheck_fields">
                         <template v-for="(optionVal, optionKey) in fieldData.options">
                             <div :key="optionKey">
@@ -217,22 +161,14 @@
         <template v-if="'select' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <select v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
 
-                        <select v-else class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                             <optgroup v-for="( optionGroup, optionGroupKey ) in fieldData.options" :key="optionGroupKey" :label="optionGroup.group_label">
                                 <option v-for="(option, optionKey ) in optionGroup.group_values" :key="optionKey" :value="option.value" v-html="option.label" />
@@ -255,19 +191,11 @@
         <template v-if="'file' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field add_files">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
-                            <input type="text" class="regular-text wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                            <input type="text" class="regular-text medium wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                         </label>
                     </div>
                 </fieldset>
@@ -280,15 +208,7 @@
         <template v-if="'color' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <color-picker
                             v-model="fieldValue[fieldData.name]"
@@ -308,15 +228,7 @@
         <template v-if="'html' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
                     {{ getError( fieldData.label ) }}
@@ -328,10 +240,12 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
-                        <h3 scope="row" class="field_heading dokan-setting-warning">
-                            <div class="error">
-                                <p :for="sectionId + '[' + fieldData.name + ']'"><span class="dokan-setting-warning-label"><span class="dashicons dashicons-warning"></span> {{ fieldData.label }}</span> <span class="dokan-setting-warning-msg">{{fieldData.desc}}</span></p>
-                            </div>
+                        <h3 scope="row" class="field_heading dokan-setting-warning error">
+                            <span class="dokan-setting-warning-label">
+                                <span class="dashicons dashicons-warning"></span>
+                                {{ fieldData.label }}
+                            </span>
+                            <span class="field_desc" v-html="fieldData.desc"></span>
                         </h3>
                     </div>
                 </fieldset>
@@ -341,15 +255,7 @@
         <template v-if="'radio' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field radio_fields">
                         <template v-for="( optionVal, optionKey ) in fieldData.options">
                             <label :class="isSwitchOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
@@ -370,15 +276,7 @@
         <template v-if="'wpeditor' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="field editor_field">
                     <text-editor v-model="fieldValue[fieldData.name]" v-html="fieldData.default"></text-editor>
@@ -389,17 +287,9 @@
         <template v-if="'repeatable' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field repeatable_fields">
-                        <input type="text" class="regular-text" v-model="repeatableItem[fieldData.name]">
+                        <input type="text" class="regular-text medium" v-model="repeatableItem[fieldData.name]">
                         <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">
                             <span class="dashicons dashicons-plus-alt2"></span>
                         </a>
@@ -421,15 +311,7 @@
         <template v-if="'radio_image' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="field radio-image-container">
                      <template v-for="( image, name ) in fieldData.options">
@@ -454,15 +336,7 @@
         <template v-if="'gmap' === fieldData.type && ! hideMap">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="field gmap-field">
                     <input type="hidden" :name="sectionId + '[' + fieldData.name + ']'" :value="mapLocation">
@@ -490,15 +364,7 @@
         <template v-if="'social' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
-                    <div class="field_data">
-                        <h3 class="field_heading" scope="row">
-                            {{ fieldData.label }}
-                            <span v-if="fieldData.tooltip">
-                                <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
-                            </span>
-                        </h3>
-                        <p class="field_desc" v-html="fieldData.desc"></p>
-                    </div>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="field scl_fields">
                     <div class="scl_header">
@@ -512,9 +378,9 @@
                             <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
                         </div>
                     </div>
-                    <template v-if="expandSocials">
-                        <div class="scl_info" v-for="( fields, index ) in fieldData" :key="index">
-                            <div v-if="fields.social_field" :class="[ { 'scl_html': fields.type === 'html' }, { 'scl_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
+                    <template v-for="( fields, index ) in fieldData">
+                        <div class="scl_info" v-if="expandSocials && fields.social_field" :key="index">
+                            <div :class="[ { 'scl_html': fields.type === 'html' }, { 'scl_text': fields.type !== 'html' }, fields.content_class ? fields.content_class : '' ]">
                                 <SocialFields
                                     :fieldData="fields"
                                     :fieldValue="fieldValue"
@@ -546,6 +412,7 @@
     import colorPicker from "admin/components/ColorPicker.vue";
     import Switches from "admin/components/Switches.vue";
     import SocialFields from './SocialFields.vue';
+    import FieldHeading from './FieldHeading.vue';
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -560,11 +427,12 @@
             TextEditor,
             GoogleMaps,
             colorPicker,
+            FieldHeading,
             SocialFields,
             RefreshSettingOptions
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
 
         data() {
             return {
@@ -573,7 +441,6 @@
                 expandSocials         : false,
                 repeatableItem        : {},
                 repeatableTime        : [],
-                dokanAssetsUrl        : dokan.urls.assetsUrl,
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
@@ -587,6 +454,12 @@
 
             this.$root.$on( 'getError', ( key ) => {
                 this.getValidationErrorMessage( key );
+            });
+
+            this.$parent.$on( 'switcHandler', ( fieldKey, value ) => {
+                if ( this.fieldData.name === fieldKey ) {
+                    this.checked = value;
+                }
             });
         },
 
@@ -783,14 +656,10 @@
                     return;
                 }
 
-                if ( status ) {
-                    this.checked                           = 'on';
-                    this.fieldValue[ this.fieldData.name ] = 'on';
-                    return;
-                }
+                this.checked                           = status ? 'on' : 'off';
+                this.fieldValue[ this.fieldData.name ] = status ? 'on' : 'off';
 
-                this.checked                           = 'off';
-                this.fieldValue[ this.fieldData.name ] = 'off';
+                this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
             },
 
             hasError( key ) {
@@ -922,7 +791,7 @@
         margin-left: 10px;
     }
     .dokan-settings-sub-section {
-        margin: 50px 0 22px 0;
+        margin-bottom: 30px;
 
         .sub-section-title {
             margin: 0;
@@ -946,12 +815,13 @@
             }
         }
     }
-    .field_contents.field_top_styles {
-        margin-top: 30px;
-        border-top: 1px solid #b0a7a7;
-    }
-    .field_contents.field_bottom_styles {
-        margin-bottom: 35px;
+    .field_contents.data_clear {
+        background-color: #FFFBF3;
+
+        .field_desc,
+        .fa-exclamation-triangle {
+            color: #E67E22 !important;
+        }
     }
     .field_contents {
         border: 1px solid #B0A7A7;
@@ -1114,15 +984,16 @@
             .dokan-setting-warning-label {
                 color: #d63638;
                 font-weight: bold;
+                margin-right: 10px;
+
+                span {
+                    margin-top: 6px !important;
+                }
             }
 
             .dashicons {
                 margin: 0px;
                 padding: 0px;
-            }
-
-            .dokan-setting-warning-msg {
-                font-weight: 300;
             }
         }
 
@@ -1152,7 +1023,6 @@
             input[type='number'],
             input[type='button'] {
                 border: 0.957434px solid #686666;
-                max-width: 240px;
                 min-height: 32px;
                 box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                 border-radius: 5px;
@@ -1161,6 +1031,18 @@
             select,
             textarea {
                 width: 100%;
+            }
+
+            .small {
+                max-width: 35% !important;
+            }
+
+            .medium {
+                max-width: 70% !important;
+            }
+
+            .large {
+                max-width: 100% !important;
             }
 
             label.checked {
@@ -1276,7 +1158,7 @@
                         width: 100%;
 
                         .html_contents {
-                            flex: 3;
+                            width: 50%;
                             text-align: left;
 
                             .field_heading {
@@ -1311,7 +1193,7 @@
                         }
 
                         .fields {
-                            flex: 2;
+                            width: 50%;
                             align-self: center;
                             text-align: right;
 
@@ -1331,12 +1213,12 @@
 
                 }
 
-                .field_top_styles {
+                &:nth-child(2) {
                     margin-top: 15px;
                     border-top: 1px solid #b0a7a7;
                 }
 
-                .field_bottom_styles {
+                &:last-child {
                     margin-bottom: 10px;
                 }
             }
@@ -1419,6 +1301,18 @@
                         min-height: 28px;
                         font-size: 8px;
                     }
+
+                    .small {
+                        max-width: 35% !important;
+                    }
+
+                    .medium {
+                        max-width: 70% !important;
+                    }
+
+                    .large {
+                        max-width: 100% !important;
+                    }
                 }
 
                 .radio_fields {
@@ -1481,6 +1375,18 @@
             textarea,
             input[type=text] {
                 max-width: 125px !important;
+            }
+
+            .small {
+                max-width: 35% !important;
+            }
+
+            .medium {
+                max-width: 70% !important;
+            }
+
+            .large {
+                max-width: 100% !important;
             }
         }
     }

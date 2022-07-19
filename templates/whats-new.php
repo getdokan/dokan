@@ -4,6 +4,62 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.6.2',
+        'released' => '2022-07-15',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added dummy data import feature for Dokan',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Multistep category modal for product add and edit page under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added \'Back To Top\' button & fix some design broken issue under Dokan admin settings page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.1',
+        'released' => '2022-06-30',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added disconnect button to payment methods',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed \'Dokan\' Prefix from the payment method name under vendor dashboard payment settings page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new setting to change Vendor Setup Wizard welcome message under Dokan General Settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed some empty method names in Payment Methods section of Vendor Dashboard > Withdraw',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed incorrect alignment of withdraw method title in Dokan setup wizard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Store breadcrumb URL redirecting to 404 page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.6.0',
         'released' => '2022-06-14',
         'changes'  => [
