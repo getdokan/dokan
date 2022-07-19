@@ -56,14 +56,11 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-<<<<<<< HEAD
                             <input
                                 type="text"
                                 :min="fieldData.min"
-                                class="regular-text" :id="sectionId + '[' + fieldData.name + ']'"
-=======
-                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
->>>>>>> origin/develop
+                                class="regular-text medium"
+                                :id="sectionId + '[' + fieldData.name + ']'"
                                 :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
                                 :name="sectionId + '[' + fieldData.name + ']'"
                                 v-model="fieldValue[fieldData.name]"
@@ -212,11 +209,13 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-<<<<<<< HEAD
-                        <select @change="getAndCheckCommissionType" v-if="!fieldData.grouped" class="regular" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
-=======
-                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
->>>>>>> origin/develop
+                        <select
+                            @change="getAndCheckCommissionType"
+                            v-if="!fieldData.grouped"
+                            class="regular medium"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
