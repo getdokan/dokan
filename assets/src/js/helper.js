@@ -115,7 +115,7 @@ function dokan_get_i18n_time_format( format = true ) {
  *
  * @returns {string} Return format
  */
-function dokan_check_time_format_string( formats, format ) {
+function get_formatted_string( formats, format ) {
   return formats[format] ? formats[format] : format;
 }
 
@@ -129,14 +129,14 @@ function dokan_check_time_format_string( formats, format ) {
  *
  * @return {string} Return formatted time.
  */
-function dokan_get_formatted_time( time, format ) {
-  const length = format.length;
+function dokan_get_formatted_time( time_string, output_format, input_format = dokan_get_i18n_time_format() ) {
+  const length = output_format.length;
   // return if no length is provided
   if ( length <= 0 ) {
     return '';
   }
 
-  const times   = new Date( Date.parse( `Jan 1 ${time}` ) ), // We used this dummy date for getting time info.
+  const times   = moment( time_string, input_format ).toDate(), // We used this date for getting time info.
     add0        = function( t ) { return t < 10 ? '0' + t : t; },
     hours       = String( times.getHours() ),
     minutes     = String( times.getMinutes() ),
@@ -154,7 +154,7 @@ function dokan_get_formatted_time( time, format ) {
 
       return time[0];
     },
-    hour12 = convertTime (`${add0( hours )}:${add0( minutes )}`),
+    hour12      = convertTime (`${add0( hours )}:${add0( minutes )}`),
     replaceMent = {
       'hh' : add0( hour12 ),
       'h'  : hour12,
@@ -178,26 +178,26 @@ function dokan_get_formatted_time( time, format ) {
 
   for ( let i = 0; i < length; i++ ) {
     // get current string
-    current_string = format[i];
+    current_string = output_format[i];
 
     if ( '\\' === current_string ) {
       if ( temp_string.length > 0 ) {
-        formatted_string += dokan_check_time_format_string( replaceMent, temp_string );
+        formatted_string += get_formatted_string( replaceMent, temp_string );
         temp_string 			= '';
       }
       i++;
-      formatted_string += format[i];
+      formatted_string += output_format[i];
     } else if ( temp_string.length === 0 ) {
       temp_string = current_string;
     } else if ( temp_string !== current_string ) {
-      formatted_string += dokan_check_time_format_string( replaceMent, temp_string );
+      formatted_string += get_formatted_string( replaceMent, temp_string );
       temp_string 		  = current_string;
     } else if ( temp_string === current_string ) {
       temp_string += current_string;
     }
   }
 
-  formatted_string += temp_string.length ? dokan_check_time_format_string( replaceMent, temp_string ) : '';
+  formatted_string += temp_string.length ? get_formatted_string( replaceMent, temp_string ) : '';
 
   return formatted_string;
 }
