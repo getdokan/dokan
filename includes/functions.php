@@ -4116,16 +4116,20 @@ function dokan_create_date_from_format( $format, $date_string ) {
  * @param string       $input_format  Times current format
  * @param string       $output_format Times converted format
  *
- * @return array
+ * @return string|array
  */
-function dokan_get_formatted_times( $times_data = [], $input_format = 'g:i a', $output_format = 'g:i a' ) {
+function dokan_convert_date_format( $times_data, $input_format = 'g:i a', $output_format = 'g:i a' ) {
+    if ( empty( $times_data ) ) {
+        return $times_data;
+    }
+
     $times = [];
     foreach ( (array) $times_data as $time ) {
         $datetime = dokan_create_date_from_format( $input_format, $time );
-        $times[]  = $datetime->format( $output_format );
+        $times[]  = $datetime ? $datetime->format( $output_format ) : '';
     }
 
-    return $times;
+    return is_string( $times_data ) ? $times[0] : $times;
 }
 
 /**

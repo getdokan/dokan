@@ -352,11 +352,12 @@
         <?php if ( ! dokan()->is_pro_exists() ) : ?>
             // Set timepicker jquery here.
             $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
-                scrollDefault : 'now',
+                step          : 30,
+                lang          : dokan_helper.timepicker_locale,
                 minTime       : '12:00 am',
                 maxTime       : '11:30 pm',
                 timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-                step          : 30,
+                scrollDefault : 'now',
             });
 
             // Add validation for store time when changed.

@@ -115,7 +115,7 @@ function dokan_get_i18n_time_format( format = true ) {
  *
  * @returns {string} Return format
  */
-function get_formatted_string( formats, format ) {
+function dokan_get_formatted_string( formats, format ) {
   return formats[format] ? formats[format] : format;
 }
 
@@ -182,7 +182,7 @@ function dokan_get_formatted_time( time_string, output_format, input_format = do
 
     if ( '\\' === current_string ) {
       if ( temp_string.length > 0 ) {
-        formatted_string += get_formatted_string( replaceMent, temp_string );
+        formatted_string += dokan_get_formatted_string( replaceMent, temp_string );
         temp_string 			= '';
       }
       i++;
@@ -190,14 +190,14 @@ function dokan_get_formatted_time( time_string, output_format, input_format = do
     } else if ( temp_string.length === 0 ) {
       temp_string = current_string;
     } else if ( temp_string !== current_string ) {
-      formatted_string += get_formatted_string( replaceMent, temp_string );
+      formatted_string += dokan_get_formatted_string( replaceMent, temp_string );
       temp_string 		  = current_string;
     } else if ( temp_string === current_string ) {
       temp_string += current_string;
     }
   }
 
-  formatted_string += temp_string.length ? get_formatted_string( replaceMent, temp_string ) : '';
+  formatted_string += temp_string.length ? dokan_get_formatted_string( replaceMent, temp_string ) : '';
 
   return formatted_string;
 }

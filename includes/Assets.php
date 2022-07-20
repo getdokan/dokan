@@ -617,6 +617,15 @@ class Assets {
                 'reverse_withdrawal'                  => [
                     'enabled' => SettingsHelper::is_enabled(),
                 ],
+                'timepicker_locale'       => [
+                    'am'   => _x( 'am', 'time constant', 'dokan-lite' ),
+                    'pm'   => _x( 'pm', 'time constant', 'dokan-lite' ),
+                    'AM'   => _x( 'AM', 'time constant', 'dokan-lite' ),
+                    'PM'   => _x( 'PM', 'time constant', 'dokan-lite' ),
+                    'hr'   => _x( 'hr', 'time constant', 'dokan-lite' ),
+                    'hrs'  => _x( 'hrs', 'time constant', 'dokan-lite' ),
+                    'mins' => _x( 'mins', 'time constant', 'dokan-lite' ),
+                ],
                 'daterange_picker_local'  => [
                     'toLabel'          => __( 'To', 'dokan-lite' ),
                     'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
