@@ -429,7 +429,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment', 'dokan-date-range-picker' ],
                 'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
