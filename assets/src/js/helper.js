@@ -106,20 +106,6 @@ function dokan_get_i18n_time_format( format = true ) {
 }
 
 /**
- * Check format should convert or not.
- *
- * @since DOKAN_SINCE
- *
- * @param {object}         formats Time format object
- * @param {string|boolean} format  Format
- *
- * @returns {string} Return format
- */
-function dokan_get_formatted_string( formats, format ) {
-  return formats[format] ? formats[format] : format;
-}
-
-/**
  * Get formatted time.
  *
  * @since DOKAN_PRO_SINCE
@@ -143,6 +129,9 @@ function dokan_get_formatted_time( time_string, output_format, input_format = do
     seconds     = String( times.getSeconds() ),
     sampm       = hours >= 12 ? 'pm' : 'am',
     campm       = hours >= 12 ? 'PM' : 'AM',
+    checkFormat = ( formats, format ) => {
+      return formats[format] ? formats[format] : format;
+    }
     convertTime = ( time ) => {
       // Check correct time format and split into components
       time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -182,7 +171,7 @@ function dokan_get_formatted_time( time_string, output_format, input_format = do
 
     if ( '\\' === current_string ) {
       if ( temp_string.length > 0 ) {
-        formatted_string += dokan_get_formatted_string( replaceMent, temp_string );
+        formatted_string += checkFormat( replaceMent, temp_string );
         temp_string 			= '';
       }
       i++;
@@ -190,14 +179,14 @@ function dokan_get_formatted_time( time_string, output_format, input_format = do
     } else if ( temp_string.length === 0 ) {
       temp_string = current_string;
     } else if ( temp_string !== current_string ) {
-      formatted_string += dokan_get_formatted_string( replaceMent, temp_string );
+      formatted_string += checkFormat( replaceMent, temp_string );
       temp_string 		  = current_string;
     } else if ( temp_string === current_string ) {
       temp_string += current_string;
     }
   }
 
-  formatted_string += temp_string.length ? dokan_get_formatted_string( replaceMent, temp_string ) : '';
+  formatted_string += temp_string.length ? checkFormat( replaceMent, temp_string ) : '';
 
   return formatted_string;
 }

@@ -461,7 +461,7 @@ class Assets {
             ],
             'dokan-util-helper' => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'dokan-moment' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
