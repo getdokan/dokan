@@ -36,7 +36,7 @@ $order_status = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_stat
             <select name="customer_id" id="dokan-filter-customer" style="width:220px" class="dokan-form-control"  data-allow_clear="true" data-placeholder="<?php esc_attr_e( 'Filter by registered customer', 'dokan-lite' ); ?>">
                 <option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo wp_kses_post( $user_string ); ?><option>
             </select>
-            <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
+            <input type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm" value="<?php esc_attr_e( 'Filter', 'dokan-lite' ); ?>">
             <input type="hidden" name="order_status" value="<?php echo  esc_attr( $order_status ); ?>">
         </div>
     </form>
