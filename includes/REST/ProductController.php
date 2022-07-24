@@ -2,13 +2,14 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WC_Product_Attribute;
-use WC_Product_Download;
-use WC_Product_Factory;
-use WC_Product_Simple;
-use WC_REST_Exception;
 use WP_Error;
 use WP_REST_Server;
+use WC_Product_Simple;
+use WC_REST_Exception;
+use WC_Product_Factory;
+use WC_Product_Download;
+use WC_Product_Attribute;
+use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
 /**
@@ -243,6 +244,16 @@ class ProductController extends DokanRESTController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_latest_product' ],
                     'permission_callback' => '__return_true',
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/multistep-categories', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_multistep_categories' ],
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
             ]
         );
@@ -1734,6 +1745,20 @@ class ProductController extends DokanRESTController {
         }
 
         return $product;
+    }
+
+    /**
+     * Returns all categories.
+     *
+     * @since 3.6.2
+     *
+     * @return array
+     */
+    public function get_multistep_categories() {
+        $categories_controller = new Categories();
+        $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
+
+        return rest_ensure_response( $categories );
     }
 
     /**

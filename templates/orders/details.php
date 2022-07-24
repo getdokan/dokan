@@ -1,8 +1,6 @@
 <?php
 global $woocommerce, $wpdb;
 
-$order_id = isset( $_GET['order_id'] ) ? intval( $_GET['order_id'] ) : 0;
-
 if ( !dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
     echo '<div class="dokan-alert dokan-alert-danger">' . esc_html__( 'This is not yours, I swear!', 'dokan-lite' ) . '</div>';
     return;
@@ -13,7 +11,7 @@ $order    = new WC_Order( $order_id );
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
 $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 ?>
-<div class="dokan-clearfix">
+<div class="dokan-clearfix dokan-order-details-wrap">
     <div class="dokan-w8 dokan-order-left-content">
 
         <div class="dokan-clearfix">

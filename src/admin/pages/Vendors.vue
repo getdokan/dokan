@@ -211,7 +211,7 @@ export default {
         },
 
         sortBy() {
-            return this.$route.query.orderby || 'registered';
+            return this.$route.query.orderby || 'ID';
         },
 
         sortOrder() {

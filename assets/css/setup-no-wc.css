@@ -210,6 +210,59 @@ body {
   list-style-type: none;
   margin-bottom: 5px;
 }
+.form-table .dokan-bank-settings-template {
+  padding: 0 15px;
+  border: 1px solid #EEEEEE;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group {
+  height: 70px !important;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group input[name="settings[bank][routing_number]"],
+.form-table .dokan-bank-settings-template .dokan-form-group input[name="settings[bank][ac_number]"] {
+  width: 48% !important;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group textarea[name="settings[bank][bank_addr]"] {
+  height: 45px !important;
+  border-radius: 4px !important;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group input,
+.form-table .dokan-bank-settings-template .dokan-form-group select,
+.form-table .dokan-bank-settings-template .dokan-form-group textarea {
+  margin-top: 5px;
+  border: 1px solid #BBBBBB;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group input[type=checkbox] {
+  margin-top: 0;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group img {
+  height: 60px;
+}
+.form-table .dokan-bank-settings-template .dokan-form-group #declaration {
+  width: auto !important;
+}
+.form-table .dokan-bank-settings-template div.data-warning {
+  display: flex !important;
+  box-shadow: 0 0 5px #AAAAAA !important;
+  padding: 10px !important;
+  margin-bottom: 10px !important;
+}
+.form-table .dokan-bank-settings-template div.data-warning div.left-icon-container {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 5px !important;
+}
+.form-table .dokan-bank-settings-template div.data-warning div.left-icon-container i {
+  color: orange !important;
+}
+.form-table .dokan-bank-settings-template div.data-warning div.vr-separator {
+  margin: 0 10px !important;
+  border-left: 1px #dddddd solid !important;
+}
+.form-table .dokan-bank-settings-template .bottom-note {
+  text-align: left !important;
+  margin-bottom: 2em !important;
+}
 .dokan-form-group .dokan-w8 {
   margin-bottom: 10px;
 }
@@ -268,6 +321,9 @@ body {
 }
 .wc-wizard-service-item .wc-wizard-service-name {
   padding-left: 20px;
+}
+.wc-wizard-service-item .wc-wizard-service-name p {
+  text-align: left;
 }
 .wc-wizard-service-item .dokan-wizard-service-enable {
   flex-basis: 0;

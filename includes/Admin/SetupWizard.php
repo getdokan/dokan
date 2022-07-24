@@ -90,10 +90,10 @@ class SetupWizard {
 
         wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array( 'dashicons', 'install' ), WC_VERSION );
-        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', array( 'wc-setup' ), DOKAN_PLUGIN_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', array( 'wc-setup', 'dokan-fontawesome' ), DOKAN_PLUGIN_VERSION );
 
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', array( 'jquery' ), WC_VERSION, true );
-        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip' ), WC_VERSION );
+        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', array( 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ), WC_VERSION );
 
         wp_localize_script(
             'wc-setup',
@@ -440,7 +440,7 @@ class SetupWizard {
         $options = get_option( 'dokan_selling', array() );
         $options['new_seller_enable_selling'] = isset( $_post_data['new_seller_enable_selling'] ) ? 'on' : 'off';
         $options['commission_type']           = sanitize_text_field( $_post_data['commission_type'] );
-        $options['admin_percentage']          = is_int( $_post_data['admin_percentage'] ) ? intval( $_post_data['admin_percentage'] ) : floatval( $_post_data['admin_percentage'] );
+        $options['admin_percentage']          = wc_format_decimal( sanitize_text_field( $_post_data['admin_percentage'] ) );
         $options['order_status_change']       = isset( $_post_data['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
@@ -456,11 +456,11 @@ class SetupWizard {
      */
     public function dokan_setup_withdraw() {
         $options = get_option(
-            'dokan_withdraw', array(
-				'withdraw_methods'      => array( 'paypal' ),
+            'dokan_withdraw', [
+				'withdraw_methods'      => [ 'paypal' => 'paypal' ],
 				'withdraw_limit'        => 50,
-				'withdraw_order_status' => array( 'wc-completed' => 'wc-completed' ),
-            )
+				'withdraw_order_status' => [ 'wc-completed' => 'wc-completed' ],
+            ]
         );
 
         $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : array();
@@ -479,12 +479,12 @@ class SetupWizard {
                             <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
-                                        <p><?php echo $method['title']; ?></p>
+                                        <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>
                                     </div>
                                     <div class="wc-wizard-service-description">
                                         <?php
                                         // translators: %s: withdraw method name
-                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), $method['title'] );
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), dokan_withdraw_get_method_title( $key ) );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
@@ -697,11 +697,11 @@ class SetupWizard {
         check_admin_referer( 'dokan-setup' );
 
         $_post_data = wp_unslash( $_POST );
-        $options = array();
+        $options = get_option( 'dokan_withdraw', [] );
 
-        $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? $_post_data['withdraw_methods'] : array();
-        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? ( sanitize_text_field( $_post_data['withdraw_limit'] ) < 0 ? 0 : sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
-        $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? $_post_data['withdraw_order_status'] : array();
+        $options['withdraw_methods']      = ! empty( $_post_data['withdraw_methods'] ) ? wc_clean( $_post_data['withdraw_methods'] ) : [];
+        $options['withdraw_limit']        = ! empty( $_post_data['withdraw_limit'] ) ? (float) wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) < 0 ? 0 : wc_format_decimal( sanitize_text_field( $_post_data['withdraw_limit'] ) ) : 0;
+        $options['withdraw_order_status'] = ! empty( $_post_data['withdraw_order_status'] ) ? wc_clean( $_post_data['withdraw_order_status'] ) : [];
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard

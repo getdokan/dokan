@@ -118,7 +118,7 @@ class SetupWizard extends DokanSetupWizard {
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title><?php esc_attr_e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
             <?php wp_print_scripts( 'wc-setup' ); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
+            <?php wp_print_styles(); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
         <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
@@ -147,9 +147,13 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function dokan_setup_introduction() {
         $dashboard_url = dokan_get_navigation_url();
+        $default_message = wp_kses_post( __( '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong></p>', 'dokan-lite' ) );
+        $setup_wizard_message = dokan_get_option( 'setup_wizard_message', 'dokan_general', $default_message );
         ?>
         <h1><?php esc_attr_e( 'Welcome to the Marketplace!', 'dokan-lite' ); ?></h1>
-        <p><?php echo wp_kses( __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ), [ 'strong' => [] ] ); ?></p>
+        <?php if ( ! empty( $setup_wizard_message ) ): ?>
+        <div><?php printf( '%s', $setup_wizard_message ); ?></div>
+        <?php endif; ?>
         <p><?php esc_attr_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
             <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn dokan-btn-theme"><?php esc_attr_e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
@@ -165,7 +169,7 @@ class SetupWizard extends DokanSetupWizard {
     public function dokan_setup_store() {
         $store_info      = $this->store_info;
 
-        $store_ppp       = isset( $store_info['store_ppp'] ) ? esc_attr( $store_info['store_ppp'] ) : 10;
+        $store_ppp       = isset( $store_info['store_ppp'] ) ? absint( $store_info['store_ppp'] ) : (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
         $show_email      = isset( $store_info['show_email'] ) ? esc_attr( $store_info['show_email'] ) : 'no';
         $address_street1 = isset( $store_info['address']['street_1'] ) ? $store_info['address']['street_1'] : '';
         $address_street2 = isset( $store_info['address']['street_2'] ) ? $store_info['address']['street_2'] : '';
@@ -374,7 +378,7 @@ class SetupWizard extends DokanSetupWizard {
 					if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
                         ?>
                         <tr>
-                            <th scope="row"><label><?php echo esc_html( $method['title'] ); ?></label></th>
+                            <th scope="row"><label><?php echo esc_html( dokan_withdraw_get_method_title( $method_key ) ); ?></label></th>
                             <td>
         						<?php call_user_func( $method['callback'], $store_info ); ?>
                             </td>
@@ -414,6 +418,7 @@ class SetupWizard extends DokanSetupWizard {
 
             $dokan_settings['payment']['bank'] = array(
                 'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
+                'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
                 'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
                 'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
                 'bank_addr'      => sanitize_text_field( $bank['bank_addr'] ),
@@ -474,4 +479,3 @@ class SetupWizard extends DokanSetupWizard {
         <?php
     }
 }
-

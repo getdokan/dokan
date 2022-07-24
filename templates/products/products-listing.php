@@ -53,7 +53,7 @@
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                            <i class="fa fa-briefcase">&nbsp;</i>
+                                            <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
                                     <?php endif ?>
@@ -249,7 +249,7 @@
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ): ?>
                                         <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' == dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
-                                            <i class="fa fa-briefcase">&nbsp;</i>
+                                            <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
                                     <?php endif ?>

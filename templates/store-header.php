@@ -5,6 +5,10 @@ $social_info              = $store_user->get_social_profiles();
 $store_tabs               = dokan_get_store_tabs( $store_user->get_id() );
 $social_fields            = dokan_get_social_profile_fields();
 
+$dokan_store_times        = ! empty( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : [];
+$current_time             = dokan_current_datetime();
+$today                    = strtolower( $current_time->format( 'l' ) );
+
 $dokan_appearance         = get_option( 'dokan_appearance' );
 $profile_layout           = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
 $store_address            = dokan_get_seller_short_address( $store_user->get_id(), false );
@@ -57,7 +61,7 @@ if ( 'layout3' === $profile_layout ) {
                                 size="150">
                         </div>
                         <?php if ( ! empty( $store_user->get_shop_name() ) && 'default' === $profile_layout ) { ?>
-                            <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?></h1>
+                            <h1 class="store-name"><?php echo esc_html( $store_user->get_shop_name() ); ?> <?php apply_filters( 'dokan_store_header_after_store_name', $store_user ); ?></h1>
                         <?php } ?>
                     </div>
 
@@ -68,42 +72,57 @@ if ( 'layout3' === $profile_layout ) {
 
                         <ul class="dokan-store-info">
                             <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && isset( $store_address ) && !empty( $store_address ) ) { ?>
-                                <li class="dokan-store-address"><i class="fa fa-map-marker"></i>
+                                <li class="dokan-store-address"><i class="fas fa-map-marker-alt"></i>
                                     <?php echo wp_kses_post( $store_address ); ?>
                                 </li>
                             <?php } ?>
 
                             <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && ! empty( $store_user->get_phone() ) ) { ?>
                                 <li class="dokan-store-phone">
-                                    <i class="fa fa-mobile"></i>
+                                    <i class="fas fa-mobile-alt"></i>
                                     <a href="tel:<?php echo esc_html( $store_user->get_phone() ); ?>"><?php echo esc_html( $store_user->get_phone() ); ?></a>
                                 </li>
                             <?php } ?>
 
                             <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) && $store_user->show_email() == 'yes' ) { ?>
                                 <li class="dokan-store-email">
-                                    <i class="fa fa-envelope-o"></i>
+                                    <i class="far fa-envelope"></i>
                                     <a href="mailto:<?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?>"><?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?></a>
                                 </li>
                             <?php } ?>
 
                             <li class="dokan-store-rating">
-                                <i class="fa fa-star"></i>
+                                <i class="fas fa-star"></i>
                                 <?php echo wp_kses_post( dokan_get_readable_seller_rating( $store_user->get_id() ) ); ?>
                             </li>
 
                             <?php if ( $show_store_open_close == 'on' && $dokan_store_time_enabled == 'yes') : ?>
                                 <li class="dokan-store-open-close">
-                                    <i class="fa fa-shopping-cart"></i>
-                                    <?php if ( dokan_is_store_open( $store_user->get_id() ) ) {
-                                        echo esc_attr( $store_open_notice );
-                                    } else {
-                                        echo esc_attr( $store_closed_notice );
-                                    } ?>
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <div class="store-open-close-notice">
+                                        <?php if ( dokan_is_store_open( $store_user->get_id() ) ) : ?>
+                                            <span class='store-notice'><?php echo esc_attr( $store_open_notice ); ?></span>
+                                        <?php else : ?>
+                                            <span class='store-notice'><?php echo esc_attr( $store_closed_notice ); ?></span>
+                                        <?php endif; ?>
+
+                                        <span class="fas fa-angle-down"></span>
+                                        <?php
+                                        // Vendor store times template shown here.
+                                        dokan_get_template_part( 'store-header-times', '', [
+                                            'today'             => $today,
+                                            'dokan_days'        => dokan_get_translated_days(),
+                                            'current_time'      => $current_time,
+                                            'times_heading'     => __( 'Weekly Store Timing', 'dokan-lite' ),
+                                            'closed_status'     => __( 'CLOSED', 'dokan-lite' ),
+                                            'dokan_store_times' => $dokan_store_times,
+                                        ] );
+                                        ?>
+                                    </div>
                                 </li>
                             <?php endif ?>
 
-                            <?php do_action( 'dokan_store_header_info_fields',  $store_user->get_id() ); ?>
+                            <?php do_action( 'dokan_store_header_info_fields', $store_user->get_id() ); ?>
                         </ul>
 
                         <?php if ( $social_fields ) { ?>
@@ -112,7 +131,7 @@ if ( 'layout3' === $profile_layout ) {
                                     <?php foreach( $social_fields as $key => $field ) { ?>
                                         <?php if ( !empty( $social_info[ $key ] ) ) { ?>
                                             <li>
-                                                <a href="<?php echo esc_url( $social_info[ $key ] ); ?>" target="_blank"><i class="fa fa-<?php echo esc_attr( $field['icon'] ); ?>"></i></a>
+                                                <a href="<?php echo esc_url( $social_info[ $key ] ); ?>" target="_blank"><i class="fab fa-<?php echo esc_attr( $field['icon'] ); ?>"></i></a>
                                             </li>
                                         <?php } ?>
                                     <?php } ?>

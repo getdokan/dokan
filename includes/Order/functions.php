@@ -15,8 +15,8 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     $net_amount         = dokan_get_seller_earnings_by_order( $order, $seller_id );
     $order_shipping     = $order->get_total_shipping();
     $order_tax          = $order->get_total_tax();
-    $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' );
-    $tax_recipient      = dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' );
+    $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
+    $tax_recipient      = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
 
     if ( $get_array ) {
         $amount = array(
@@ -42,67 +42,24 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 /**
  * Get all the orders from a specific seller
  *
+ * @since DOKAN_SINCE Rewritten whole method
+ *
  * @global object $wpdb
  * @param int $seller_id
- * @param string $status
- * @param string $order_date
- * @param int $limit
- * @param int $offset
- * @param int $customer_id
+ * @param array $args
  *
  * @return array
  */
-function dokan_get_seller_orders( $seller_id, $status = 'all', $order_date = null, $limit = 10, $offset = 0, $customer_id = null ) {
-    // get all function arguments as key => value pairs
-    $args = get_defined_vars();
+function dokan_get_seller_orders( $seller_id, $args ) {
+    $args['seller_id'] = $seller_id;
 
-    global $wpdb;
-
-    $pagenum     = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = 'get_seller_orders_' . md5( wp_json_encode( array_merge( $args, [ 'page' => $pagenum ] ) ) );
-    $orders      = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $orders ) {
-        $getdata     = wp_unslash( $_GET );
-        $order       = empty( $getdata['order'] ) ? 'DESC' : sanitize_text_field( $getdata['order'] );
-        $order_by    = 'p.post_date';
-        $exclude     = ! empty( $getdata['exclude'] ) ? ' AND do.order_id NOT IN (' . esc_sql( $getdata['exclude'] ) . ')' : '';
-
-        if ( ! empty( $getdata['orderby'] ) &&
-            in_array( sanitize_text_field( $getdata['orderby'] ), [ 'id', 'order_id', 'seller_id', 'order_total', 'net_amount', 'order_status' ], true ) ) {
-            $order_by = 'do.' . sanitize_text_field( $getdata['orderby'] );
-        }
-
-        $join  = $customer_id ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-        $where = $customer_id ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $customer_id ) : '';
-
-        $status_where = ( $status === 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
-        $date_query   = ( $order_date ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $order_date ) : '';
-
-        $orders = $wpdb->get_results(
-            $wpdb->prepare(
-            "SELECT do.order_id, p.post_date
-            FROM {$wpdb->prefix}dokan_orders AS do
-            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-            {$join}
-            WHERE
-                do.seller_id = %d AND
-                {$where}
-                p.post_status != 'trash'
-                {$date_query}
-                {$status_where}
-                {$exclude}
-            GROUP BY do.order_id
-            ORDER BY {$order_by} {$order}
-            LIMIT %d, %d", $seller_id, $offset, $limit
-            )
-        );
-
-        Cache::set( $cache_key, $orders, $cache_group );
+    if ( ! empty( $args['offset'] ) ) { // backward compatibility
+        // max( $args['limit'], 1 ) to prevent division by zero if anyone gives $args['limit'] = 0
+        $args['paged'] = $args['offset'] / max( $args['limit'], 1 ) + 1;
+        unset( $args['offset'] );
     }
 
-    return $orders;
+    return dokan()->order->all( $args );
 }
 
 /**
@@ -197,43 +154,8 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  * @return int
  */
 function dokan_get_seller_orders_number( $args = [] ) {
-    global $wpdb;
-
-    $seller_id   = ! empty( $args['seller_id'] ) ? $args['seller_id'] : 0;
-    $status      = ! empty( $args['status'] ) ? $args['status'] : 'all';
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = 'get_seller_orders_number_' . md5( wp_json_encode( $args ) );
-    $count       = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $count ) {
-        $status_where = ( 'all' === $status ) ? '' : $wpdb->prepare( ' AND order_status = %s', $status );
-        $join = '';
-        $customer_where = '';
-        if ( ! empty( $args['customer_id'] ) ) {
-            $join = " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
-            $customer_where = $wpdb->prepare(" AND pm.meta_key = '_customer_user' AND pm.meta_value = %d", $args['customer_id'] );
-        }
-        $date_where = ! empty( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
-
-        $count = (int) $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(do.order_id) as count
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    p.post_status != 'trash'
-                    {$status_where}
-                    {$customer_where}
-                    {$date_where}", $seller_id
-            )
-        );
-
-        Cache::set( $cache_key, $count, $cache_group );
-    }
-
-    return $count;
+    $args['return'] = 'count';
+    return dokan()->order->all( $args );
 }
 
 /**
@@ -895,9 +817,12 @@ function dokan_order_csv_export( $orders, $file = null ) {
 
     fputcsv( $output, $headers );
 
-    foreach ( $orders as $order ) {
-        $line      = array();
-        $the_order = dokan()->order->get( $order->order_id );
+    foreach ( $orders as $the_order ) {
+        $line = array();
+        $the_order = wc_get_order( $the_order );
+        if ( ! $the_order ) {
+            continue;
+        }
 
         foreach ( $headers as $row_key => $label ) {
             switch ( $row_key ) {

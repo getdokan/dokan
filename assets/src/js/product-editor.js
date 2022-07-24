@@ -488,8 +488,8 @@
 
                 var $wrapper           = $(this).closest( 'li.product-attribute-list' );
                 var attribute          = $wrapper.data( 'taxonomy' );
-                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {  
-                    action : 'prompt', 
+                let result             = await dokan_sweetalert( dokan.new_attribute_prompt, {
+                    action : 'prompt',
                     input  :'text'
                 } );
                 var new_attribute_name = result.value;
@@ -505,7 +505,7 @@
 
                     $.post( dokan.ajaxurl, data, function( response ) {
                         if ( response.error ) {
-                            dokan_sweetalert( response.error, { 
+                            dokan_sweetalert( response.error, {
                                 action : 'alert',
                                 icon   : 'warning'
                             } );
@@ -550,6 +550,18 @@
                         Dokan_Editor.loadSelect2();
                         Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
+
+                        if ( "variable" !== $( 'select#product_type' ).val() ) {
+                            let labels = $( 'div.dokan-product-attribute-wrapper label.show_if_variable' );
+
+                            for( let label of labels ) {
+                                let checkBox = $( label ).find('input[type="checkbox"]');
+
+                                if ( checkBox.length > 0 && checkBox[0].getAttribute('name')?.startsWith('attribute_variation[') ) {
+                                    $( label ).hide();
+                                }
+                            }
+                        }
                     }
 
                     self.closest('.dokan-attribute-type').find('span.dokan-attribute-spinner').addClass('dokan-hide');
@@ -565,9 +577,9 @@
                 evt.stopPropagation();
                 evt.preventDefault();
 
-                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, { 
+                const isRemoved = await dokan_sweetalert( dokan.remove_attribute, {
                     action :'confirm',
-                    icon   :'warning' 
+                    icon   :'warning'
                 } );
 
                 if ( 'undefined' !== isRemoved && isRemoved.isConfirmed ) {
@@ -708,7 +720,9 @@
         },
 
         showManageStock: function(e) {
-            if ( $(this).is(':checked') ) {
+            const product_type = $( '#product_type' ).val();
+
+            if ( $(this).is(':checked') && 'external' !== product_type ) {
                 $('.show_if_stock').slideDown('fast');
             } else {
                 $('.show_if_stock').slideUp('fast');

@@ -25,6 +25,7 @@ class Manager {
 				'store_category_menu'   => 'WeDevs\Dokan\Widgets\StoreCategoryMenu',
 				'toprated_products'     => 'WeDevs\Dokan\Widgets\TopratedProducts',
 				'store_open_close'      => 'WeDevs\Dokan\Widgets\StoreOpenClose',
+				'filter_by_attribute'   => 'WeDevs\Dokan\Widgets\FilterByAttributes',
 			]
         );
 

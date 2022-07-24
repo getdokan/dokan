@@ -28,6 +28,7 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_load_progressbar' ), 20 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_store_errors' ), 25 );
         add_action( 'dokan_settings_content', array( $this, 'render_settings_content' ), 10 );
+        add_filter( 'dokan_payment_method_title', [ $this, 'get_method_frontend_title' ], 10, 2 );
     }
 
     /**
@@ -58,8 +59,10 @@ class Settings {
         if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
             $heading          = __( 'Settings', 'dokan-lite' );
             $is_store_setting = true;
-        } elseif ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
-            $heading = __( 'Payment Settings', 'dokan-lite' );
+        } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
+            $heading = __( 'Payment Method', 'dokan-lite' );
+            $slug    = str_replace( 'payment-manage-', '', $wp->query_vars['settings'] );
+            $heading = $this->get_payment_heading( $slug, $heading );
         } else {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
@@ -147,14 +150,14 @@ class Settings {
             }
         }
 
-        if ( isset( $wp->query_vars['settings'] ) && 'payment' == $wp->query_vars['settings'] ) {
+        if ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
                 dokan_get_template_part('global/dokan-error', '', array(
                     'deleted' => false,
                     'message' => __( 'You have no permission to view this page', 'dokan-lite' )
                 ) );
             } else {
-                $this->load_payment_content();
+                $this->load_payment_content( substr( $wp->query_vars['settings'], 7 ) );
             }
         }
 
@@ -186,18 +189,119 @@ class Settings {
      *
      * @since 2.4
      *
+     * @param string $slug_suffix
+     *
      * @return void
      */
-    public function load_payment_content() {
-        $methods      = dokan_withdraw_get_active_methods();
-        $currentuser  = dokan_get_current_user_id();
-        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
+    public function load_payment_content( $slug_suffix ) {
+        $payment_methods = dokan_withdraw_get_active_methods();
 
-        dokan_get_template_part( 'settings/payment', '', array(
-            'methods'      => $methods,
-            'current_user' => $currentuser,
+        // methods which are inactive in Dokan > Settings > Withdraw Options has a empty value so filter them out
+        $payment_methods = array_filter( $payment_methods, function ( $value ) {
+            return ! empty( $value );
+        } );
+
+        //no payment method is active, show informative message
+        if ( empty( $payment_methods ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
+                ]
+            );
+            return;
+        }
+
+        $payment_method_ids = array_keys( $payment_methods );
+        $seller_id          = dokan_get_current_user_id();
+
+        $seller_connected_payment_method_ids = array_filter(
+            $payment_method_ids,
+            function ( $payment_method_id ) use( $seller_id ) {
+                return $this->is_seller_connected( $payment_method_id, $seller_id );
+            }
+        );
+
+        $seller_disconnected_payment_method_ids = array_diff( $payment_method_ids, $seller_connected_payment_method_ids );
+        $seller_disconnected_payment_methods    = $this->get_payment_methods( $seller_disconnected_payment_method_ids );
+        $seller_connected_payment_methods       = $this->get_payment_methods( $seller_connected_payment_method_ids );
+
+        /*
+         * If we are requesting a single payment method page (to edit or for first time setup)
+         * then we have the corresponding payment method key in the url.
+         */
+        $method_key   = str_replace( '-manage-', '', $slug_suffix );
+        $is_edit_mode = false;
+
+        /*
+         * If payment method key has /edit suffix then we are trying to edit the method,
+         * otherwise we are doing a initial setup for that payment method.
+         */
+        if ( false !== stripos( $method_key, '-edit' ) ) {
+            $is_edit_mode = true;
+            $method_key   = str_replace( '-edit', '', $method_key ); // removing '/edit' suffix to get payment method key
+        }
+
+        $profile_info = get_user_meta( $seller_id, 'dokan_profile_settings', true );
+
+        if ( $is_edit_mode && 'bank' === $method_key ) {
+            $profile_info['is_edit_mode'] = $is_edit_mode;
+        }
+
+        // Template arguments
+        $args = [
+            'current_user' => $seller_id,
             'profile_info' => $profile_info,
-        ) );
+        ];
+
+        if ( empty( $method_key ) ) { // payment method list page arguments
+            $args = array_merge(
+                $args,
+                [
+                    'methods'        => $seller_connected_payment_methods,
+                    'unused_methods' => $seller_disconnected_payment_methods,
+                ]
+            );
+
+            // Show the payment method list template
+            dokan_get_template_part( 'settings/payment', '', $args );
+            return;
+        }
+
+        // Get the single payment method for the $method_key
+        $method = dokan_withdraw_get_method( $method_key );
+        $args   = array_merge(
+            $args,
+            [
+                'method'     => $method,
+                'method_key' => $method_key,
+            ]
+        );
+
+        if ( isset( $_GET['status'] ) && isset( $_GET['message'] ) ) {
+            $connect_status = sanitize_text_field( wp_unslash( $_GET['status'] ) );
+            $status_message = wp_kses_post( wp_unslash( $_GET['message'] ) );
+
+            $args['connect_status'] = $connect_status;
+            $args['status_message'] = $status_message;
+        }
+
+        if ( ! in_array( $method_key, $payment_method_ids, true ) || empty( $method ) || ! isset( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => __( 'Invalid withdraw method. Please contact site admin', 'dokan-lite' ),
+                ]
+            );
+            return;
+        }
+
+        // Show the single payment method page
+        dokan_get_template_part( 'settings/payment', 'manage', $args );
     }
 
     /**
@@ -255,12 +359,14 @@ class Settings {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
 
-                $ajax_validate = $this->payment_validate();
+                $ajax_validate = apply_filters( 'dokan_bank_payment_validation_error', $this->payment_validate() );
                 break;
+            default:
+                $ajax_validate = new WP_Error( 'form_id_not_matched', __( 'Failed to process data, invalid submission', 'dokan-lite' ) );
         }
 
         if ( is_wp_error( $ajax_validate ) ) {
-            wp_send_json_error( $ajax_validate->get_error_message() );
+            wp_send_json_error( $ajax_validate->get_error_messages() );
         }
 
         // we are good to go
@@ -451,11 +557,49 @@ class Settings {
 
         $error = new WP_Error();
 
-        if ( ! empty( $post_data['setting_paypal_email'] ) ) {
-            $email = sanitize_email( $post_data['setting_paypal_email'] );
+        if ( ! empty( $post_data['settings']['paypal'] ) && isset( $post_data['settings']['paypal']['email'] ) ) {
+            $email = sanitize_email( $post_data['settings']['paypal']['email'] );
 
-            if ( empty( $email ) ) {
+            if ( isset( $post_data['settings']['paypal']['disconnect'] ) ) {
+                $post_data['settings']['paypal']['email'] = '';
+            } elseif ( empty( $email ) ) {
                 $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
+            }
+        }
+
+        if ( ! empty( $post_data['settings']['skrill'] ) && isset( $post_data['settings']['skrill']['email'] ) ) {
+            $email = sanitize_email( $post_data['settings']['skrill']['email'] );
+
+            if ( isset( $post_data['settings']['skrill']['disconnect'] ) ) {
+                $post_data['settings']['skrill']['email'] = '';
+            } elseif ( empty( $email ) ) {
+                $error->add( 'dokan_email', __( 'Invalid email', 'dokan-lite' ) );
+            }
+        }
+
+        if ( ! empty( $post_data['settings']['bank'] ) ) {
+            $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_name'] ) ) {
+                $error->add( 'dokan_bank_ac_name', __( 'Account holder name is required', 'dokan-lite' ) );
+            }
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_number'] ) ) {
+                $error->add( 'dokan_bank_ac_number', __( 'Account number is required', 'dokan-lite' ) );
+            }
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['routing_number'] ) ) {
+                $error->add( 'dokan_bank_ac_routing_number', __( 'Routing number is required', 'dokan-lite' ) );
+            }
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_type'] ) ) {
+                $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
+            } else if ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
+                $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
+            }
+
+            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['declaration'] ) ) {
+                $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
         }
 
@@ -475,7 +619,7 @@ class Settings {
     function insert_settings_info() {
         $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
-        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : array();
+        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : [];
         $post_data               = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['_wpnonce'] ) ) {
@@ -487,7 +631,7 @@ class Settings {
             // update profile settings info
             $social         = $post_data['settings']['social'];
             $social_fields  = dokan_get_social_profile_fields();
-            $dokan_settings = array( 'social' => array() );
+            $dokan_settings = [ 'social' => [] ];
 
             if ( is_array( $social ) ) {
                 foreach ( $social as $key => $value ) {
@@ -502,72 +646,85 @@ class Settings {
             $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
 
             if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
-                $default_locations = array(
+                $default_locations = [
                     'latitude'  => '',
                     'longitude' => '',
                     'address'   => '',
-                );
+                ];
             }
 
-            $find_address      = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['find_address'] ) : $default_locations['address'];
-            $default_location  = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-            $location          = ! empty( $post_data['find_address'] ) ? sanitize_text_field( $post_data['location'] ) : $default_location;
+            $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
+            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+            $location         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
+            $dokan_days       = dokan_get_translated_days();
+            $dokan_store_time = [];
 
-            // update store setttings info
-            $dokan_settings = array(
+            // Get & set 7 days opening & closing time for update dokan store time.
+            foreach ( $dokan_days as $day_key => $day ) {
+                $opening_time = isset( $_POST['opening_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['opening_time'][ $day_key ] ) ) : '';
+                $closing_time = isset( $_POST['closing_time'][ $day_key ] ) ? wc_clean( wp_unslash( $_POST['closing_time'][ $day_key ] ) ) : '';
+                $store_status = ! empty( $_POST[ $day_key ]['working_status'] ) ? sanitize_text_field( wp_unslash( $_POST[ $day_key ]['working_status'] ) ) : 'close';
+
+                // If open or closing time is array then return from here.
+                if ( is_array( $opening_time ) || is_array( $closing_time ) ) {
+                    continue;
+                }
+
+                // Check & make 12 hours format data for save.
+                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
+                $opening_time      = $opening_time ? $opening_time->format( 'g:i a' ) : '';
+
+                // Check & make 12 hours format data for save.
+                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
+                $closing_timestamp = $closing_time ? $closing_time->getTimestamp() : $closing_time;
+                $closing_time      = $closing_time ? $closing_time->format( 'g:i a' ) : '';
+
+                // If our opening time is less than closing time.
+                if ( $opening_timestamp > $closing_timestamp ) {
+                    $user_data    = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings', true );
+                    $opening_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['opening_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['opening_time'] : '';
+                    $closing_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['closing_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['closing_time'] : '';
+                }
+
+                // If pass null value or our store is not open then our store will be close.
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
+                    $dokan_store_time[ $day_key ] = [
+                        'status'       => 'close',
+                        'opening_time' => [],
+                        'closing_time' => [],
+                    ];
+
+                    continue;
+                }
+
+                // Get and set current day's data for update dokan store time. Make dokan store time data here.
+                $dokan_store_time[ $day_key ] = [
+                    'status'       => $store_status,
+                    'opening_time' => ( array ) $opening_time,
+                    'closing_time' => ( array ) $closing_time,
+                ];
+            }
+
+            // Update store settings info.
+            $dokan_settings = [
                 'store_name'               => sanitize_text_field( $post_data['dokan_store_name'] ),
                 'store_ppp'                => absint( $post_data['dokan_store_ppp'] ),
                 'address'                  => isset( $post_data['dokan_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_address'] ) : $prev_dokan_settings['address'],
                 'location'                 => $location,
                 'find_address'             => $find_address,
                 'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
-                'phone'                    => sanitize_text_field( $post_data['setting_phone'] ),
-                'show_email'               => sanitize_text_field( $post_data['setting_show_email'] ),
-                'show_more_ptab'           => sanitize_text_field( $post_data['setting_show_more_ptab'] ),
+                'phone'                    => isset( $post_data['setting_phone'] ) ? sanitize_text_field( $post_data['setting_phone'] ) : 'no',
+                'show_email'               => isset( $post_data['setting_show_email'] ) ? sanitize_text_field( $post_data['setting_show_email'] ) :'no',
+                'show_more_ptab'           => isset( $post_data['setting_show_more_ptab'] ) ? sanitize_text_field( $post_data['setting_show_more_ptab'] ) : 'no',
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
-                'dokan_store_time'         => array(
-                    'sunday'               => array(
-                        'status'           => isset( $post_data['sunday_on_off'] ) && 'open' == $post_data['sunday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['sunday_opening_time'] ) ? sanitize_text_field( $post_data['sunday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['sunday_closing_time'] ) ? sanitize_text_field( $post_data['sunday_closing_time'] ) : '',
-                    ),
-                    'monday'               => array(
-                        'status'           => isset( $post_data['monday_on_off'] ) && 'open' == $post_data['monday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['monday_opening_time'] ) ? sanitize_text_field( $post_data['monday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['monday_closing_time'] ) ? sanitize_text_field( $post_data['monday_closing_time'] ) : '',
-                    ),
-                    'tuesday'              => array(
-                        'status'           => isset( $post_data['tuesday_on_off'] ) && 'open' == $post_data['tuesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['tuesday_opening_time'] ) ? sanitize_text_field( $post_data['tuesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['tuesday_closing_time'] ) ? sanitize_text_field( $post_data['tuesday_closing_time'] ) : '',
-                    ),
-                    'wednesday'            => array(
-                        'status'           => isset( $post_data['wednesday_on_off'] ) && 'open' == $post_data['wednesday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['wednesday_opening_time'] ) ? sanitize_text_field( $post_data['wednesday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['wednesday_closing_time'] ) ? sanitize_text_field( $post_data['wednesday_closing_time'] ) : '',
-                    ),
-                    'thursday'             => array(
-                        'status'           => isset( $post_data['thursday_on_off'] ) && 'open' == $post_data['thursday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['thursday_opening_time'] ) ? sanitize_text_field( $post_data['thursday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['thursday_closing_time'] ) ? sanitize_text_field( $post_data['thursday_closing_time'] ) : '',
-                    ),
-                    'friday'               => array(
-                        'status'           => isset( $post_data['friday_on_off'] ) && 'open' == $post_data['friday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['friday_opening_time'] ) ? sanitize_text_field( $post_data['friday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['friday_closing_time'] ) ? sanitize_text_field( $post_data['friday_closing_time'] ) : '',
-                    ),
-                    'saturday'             => array(
-                        'status'           => isset( $post_data['saturday_on_off'] ) && 'open' == $post_data['saturday_on_off'] ? 'open' : 'close',
-                        'opening_time'     => isset( $post_data['saturday_opening_time'] ) ? sanitize_text_field( $post_data['saturday_opening_time'] ) : '',
-                        'closing_time'     => isset( $post_data['saturday_closing_time'] ) ? sanitize_text_field( $post_data['saturday_closing_time'] ) : '',
-                    ),
-                ),
+                'dokan_store_time'         => apply_filters( 'dokan_store_time', $dokan_store_time ),
                 'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
                 'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
-            );
+            ];
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
@@ -575,13 +732,13 @@ class Settings {
 
             //update payment settings info
             $dokan_settings = array(
-                'payment' => array(),
+                'payment' => $prev_dokan_settings['payment'],
             );
 
             if ( isset( $post_data['settings']['bank'] ) ) {
                 $bank = $post_data['settings']['bank'];
 
-                $dokan_settings['payment']['bank'] = array(
+                $dokan_settings['payment']['bank'] = [
                     'ac_name'        => sanitize_text_field( $bank['ac_name'] ),
                     'ac_number'      => sanitize_text_field( $bank['ac_number'] ),
                     'bank_name'      => sanitize_text_field( $bank['bank_name'] ),
@@ -589,19 +746,15 @@ class Settings {
                     'routing_number' => sanitize_text_field( $bank['routing_number'] ),
                     'iban'           => sanitize_text_field( $bank['iban'] ),
                     'swift'          => sanitize_text_field( $bank['swift'] ),
-                );
+                    'ac_type'        => sanitize_text_field( $bank['ac_type'] ),
+                    'declaration'    => isset( $bank['declaration'] ) ? sanitize_text_field( $bank['declaration'] ) : '',
+                ];
             }
 
-            if ( isset( $post_data['settings']['paypal'] ) ) {
-                $dokan_settings['payment']['paypal'] = array(
+            if ( isset( $post_data['settings']['paypal']['email'] ) ) {
+                $dokan_settings['payment']['paypal'] = [
                     'email' => sanitize_email( $post_data['settings']['paypal']['email'] ),
-                );
-            }
-
-            if ( isset( $post_data['settings']['skrill'] ) ) {
-                $dokan_settings['payment']['skrill'] = array(
-                    'email' => sanitize_email( $post_data['settings']['skrill']['email'] ),
-                );
+                ];
             }
         }
 
@@ -633,5 +786,150 @@ class Settings {
         );
 
         return apply_filters( 'dokan_category', $dokan_category );
+    }
+
+    /**
+     * Get proper heading for payments of vendor dashboard payment settings
+     *
+     * @since 3.4.3
+     *
+     * @param string $slug
+     * @param string $heading
+     *
+     * @return string
+     */
+    private function get_payment_heading( $slug, $heading ) {
+        switch ( $slug ) {
+            case 'bank':
+            case 'bank-edit':
+                $heading = __( 'Bank Account Settings', 'dokan-lite' );
+                break;
+
+            case 'paypal':
+            case 'paypal-edit':
+                $heading = __( 'Paypal Settings', 'dokan-lite' );
+                break;
+        }
+
+        /**
+         * To allow new payment extension give their own heading
+         *
+         * @since 3.4.3
+         *
+         * @param string $heading previous heading
+         */
+        $heading = apply_filters( "dokan_withdraw_method_settings_title", $heading, $slug );
+
+        return $heading;
+    }
+
+    /**
+     * Check if a seller is connected to a payment method
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param $payment_method_id
+     * @param $seller_id
+     *
+     * @return bool
+     */
+    public function is_seller_connected( $payment_method_id, $seller_id ) {
+        $is_connected     = false;
+        $store_settings   = get_user_meta( $seller_id, 'dokan_profile_settings', true );
+        $payment_settings = ! isset( $store_settings['payment'] ) || ! isset( $store_settings['payment'][ $payment_method_id ] ) ? [] : $store_settings['payment'][ $payment_method_id ];
+        $required_fields  = []; // Holds the required fields that should be empty for connection
+
+        switch ( $payment_method_id ) {
+            case 'bank':
+                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type', 'declaration' ];
+                break;
+
+            case 'paypal':
+                $required_fields = [ 'email' ];
+                break;
+        }
+
+        /**
+         * To allow modifying the required fields for a payment method.
+         *
+         * @since 3.5.1
+         *
+         * @param array  $required_fields
+         * @param string $payment_method_id
+         * @param int    $seller_id
+         */
+        $required_fields = apply_filters( 'dokan_payment_settings_required_fields', $required_fields, $payment_method_id, $seller_id );
+
+        // Check all the required fields have values
+        if ( ! empty( $payment_settings ) && is_array( $payment_settings ) ) {
+            $is_connected = true;
+
+            foreach ( $payment_settings as $field => $value ) {
+                if ( ! in_array( $field, $required_fields, true ) ) {
+                    continue;
+                }
+
+                if ( empty( $value ) || ( 'email' === $field && ! is_email( $value ) ) ) {
+                    $is_connected = false;
+                    break;
+                }
+            }
+        }
+
+        /**
+         * Get if user with id $seller_id is connected to the payment method having $payment_method_id
+         *
+         * @since DOKAN_PRO_SINCE
+         *
+         * @param bool   $is_connected
+         * @param string $payment_method_id
+         * @param int    $seller_id
+         */
+        return apply_filters( 'dokan_is_seller_connected_to_payment_method', $is_connected, $payment_method_id, $seller_id );
+    }
+
+    /**
+     * Get payment method details from the method keys
+     *
+     * @since 3.4.3
+     *
+     * @param $method_keys
+     *
+     * @return array
+     */
+    private function get_payment_methods( $method_keys ) {
+        $methods = [];
+
+        foreach ( $method_keys as $method_key ) {
+            $cur_method = dokan_withdraw_get_method( $method_key );
+
+            if ( ! empty( $cur_method ) ) {
+                //remove the 'Dokan' prefix from method title
+                $method_title = $cur_method['title'];
+                if ( 0 === stripos( $method_title, 'Dokan ' ) ) {
+                    $method_title = substr( $method_title, 6 );
+                    $cur_method['title'] = $method_title;
+                }
+
+                $methods[ $method_key ] = $cur_method;
+            }
+        }
+
+        return $methods;
+    }
+
+    /**
+     * Get Method title to show in frontend
+     *
+     * @since 3.6.1
+     *
+     * @return string
+     */
+    public function get_method_frontend_title( $title, $method ) {
+        if ( 0 === stripos( $title, 'Dokan ' ) ) {
+            return substr( $title, 6 );
+        }
+
+        return $title;
     }
 }

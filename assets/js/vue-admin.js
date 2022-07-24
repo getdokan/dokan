@@ -6,69 +6,11 @@ dokanWebpack([0],[
 module.exports = jQuery;
 
 /***/ }),
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(49);
-/* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(122);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(121)
-}
-var normalizeComponent = __webpack_require__(0)
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "src/admin/components/UpgradeBanner.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75a73b30", Component.options)
-  } else {
-    hotAPI.reload("data-v-75a73b30", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
-
-
-/***/ }),
-/* 4 */,
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(10);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(32);
 var disposed = false
@@ -120,14 +62,71 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__ = __webpack_require__(53);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__ = __webpack_require__(135);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(134)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UpgradeBanner_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75a73b30_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UpgradeBanner_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/UpgradeBanner.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75a73b30", Component.options)
+  } else {
+    hotAPI.reload("data-v-75a73b30", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(19);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["Line"],
@@ -198,35 +197,11 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(58);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_color_src_components_Sketch_vue__ = __webpack_require__(64);
 //
 //
 //
@@ -255,8 +230,8 @@ if (false) {(function () {
   props: {
     value: {
       type: String,
-      required: true,
-      default: ''
+      default: '',
+      required: true
     },
     format: {
       type: String,
@@ -275,19 +250,44 @@ if (false) {(function () {
     },
     disableAlpha: {
       type: Boolean,
-      required: false,
-      default: true
+      default: true,
+      required: false
     },
     disableFields: {
       type: Boolean,
-      required: false,
-      default: true
+      default: true,
+      required: false
+    },
+    customData: {
+      type: Object,
+      required: true
+    },
+    itemKey: {
+      type: String,
+      required: true
     }
   },
   data: function data() {
     return {
-      showColorPicker: false
+      isPicked: false,
+      prevColor: '',
+      showColorPicker: false,
+      selectedColor: ''
     };
+  },
+  watch: {
+    customData: {
+      handler: function handler() {
+        this.showColorPicker = this.customData.show_pallete;
+
+        if (!this.showColorPicker) {
+          this.updateColor({
+            hex: this.prevColor
+          });
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     updateColor: function updateColor(colors) {
@@ -295,12 +295,36 @@ if (false) {(function () {
 
       if (colors[this.format]) {
         color = colors[this.format];
+        this.selectedColor = color;
       }
 
       this.$emit('input', color);
+      this.$emit('custom-change', color);
     },
     toggleColorPicker: function toggleColorPicker() {
-      this.showColorPicker = !this.showColorPicker;
+      this.prevColor = this.value;
+      var data = {
+        key: this.itemKey,
+        values: this.customData
+      };
+
+      if (!this.isPicked) {
+        this.updateColor({
+          hex: this.prevColor
+        });
+      }
+
+      this.$emit('toggleColorPicker', data);
+    },
+    setLastColor: function setLastColor(color) {
+      var data = {
+        key: this.itemKey,
+        values: this.customData
+      };
+      this.updateColor({
+        hex: color
+      });
+      this.$emit('toggleColorPicker', data);
     },
     setHexColor: function setHexColor(color) {
       this.updateColor({
@@ -311,15 +335,50 @@ if (false) {(function () {
 });
 
 /***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'Switches',
+  props: {
+    enabled: {
+      type: Boolean,
+      // String, Number, Boolean, Function, Object, Array
+      required: true,
+      default: false
+    },
+    value: {
+      type: [String, Number]
+    }
+  },
+  data: function data() {
+    return {};
+  },
+  methods: {
+    trigger: function trigger(e) {
+      this.$emit('input', e.target.checked, e.target.value);
+    }
+  }
+});
+
+/***/ }),
 /* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_debounce__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_Switches_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UploadImage_vue__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_PasswordGenerator_vue__ = __webpack_require__(25);
 //
 //
 //
@@ -704,41 +763,6 @@ if (false) {(function () {
 //
 //
 //
-/* harmony default export */ __webpack_exports__["a"] = ({
-  name: 'Switches',
-  props: {
-    enabled: {
-      type: Boolean,
-      // String, Number, Boolean, Function, Object, Array
-      required: true,
-      default: false
-    },
-    value: {
-      type: [String, Number]
-    }
-  },
-  data: function data() {
-    return {};
-  },
-  methods: {
-    trigger: function trigger(e) {
-      this.$emit('input', e.target.checked, e.target.value);
-    }
-  }
-});
-
-/***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -955,7 +979,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1038,7 +1062,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1219,11 +1243,11 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Switches_vue__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_multiselect__);
 //
@@ -1448,23 +1472,25 @@ if (false) {(function () {
 });
 
 /***/ }),
+/* 16 */,
 /* 17 */,
 /* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
 /* 22 */,
-/* 23 */
+/* 23 */,
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(35);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(33)
+  __webpack_require__(34)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1510,13 +1536,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(36);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1562,12 +1588,17 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 25 */,
 /* 26 */
+/***/ (function(module, exports) {
+
+module.exports = moment;
+
+/***/ }),
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Chart_vue__ = __webpack_require__(8);
 /* unused harmony namespace reexport */
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -1614,17 +1645,17 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(9);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(30);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(28)
+  __webpack_require__(29)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1670,13 +1701,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1692,12 +1723,30 @@ var render = function() {
         "button",
         {
           staticClass: "button color-picker-button",
-          style: { backgroundColor: _vm.value },
           attrs: { type: "button" },
           on: { click: _vm.toggleColorPicker }
         },
-        [_c("span", [_vm._v(_vm._s(_vm.__("Select Color", "dokan-lite")))])]
+        [
+          _c("div", {
+            staticClass: "color",
+            style: { backgroundColor: _vm.value }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "dashicons dashicons-arrow-down-alt2" })
+        ]
       ),
+      _vm._v(" "),
+      _vm.showColorPicker
+        ? _c("sketch", {
+            attrs: {
+              value: _vm.value,
+              "preset-colors": _vm.presetColors,
+              "disable-alpha": _vm.disableAlpha,
+              "disable-fields": _vm.disableFields
+            },
+            on: { input: _vm.updateColor }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _vm.showColorPicker && _vm.format === "hex"
         ? _c("input", {
@@ -1714,42 +1763,22 @@ var render = function() {
       _vm._v(" "),
       _vm.showColorPicker
         ? _c("div", { staticClass: "button-group" }, [
-            _c(
-              "button",
-              {
-                staticClass: "button button-small",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.updateColor({})
-                  }
+            _c("button", {
+              staticClass: "button button-small dashicons dashicons-no-alt",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.setLastColor(_vm.prevColor)
                 }
-              },
-              [_vm._v(_vm._s(_vm.__("Clear", "dokan-lite")))]
-            ),
+              }
+            }),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "button button-small",
-                attrs: { type: "button" },
-                on: { click: _vm.toggleColorPicker }
-              },
-              [_vm._v(_vm._s(_vm.__("Close", "dokan-lite")))]
-            )
+            _c("button", {
+              staticClass: "button button-small dashicons dashicons-saved",
+              attrs: { type: "button" },
+              on: { click: _vm.toggleColorPicker }
+            })
           ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showColorPicker
-        ? _c("sketch", {
-            attrs: {
-              value: _vm.value,
-              "preset-colors": _vm.presetColors,
-              "disable-alpha": _vm.disableAlpha,
-              "disable-fields": _vm.disableFields
-            },
-            on: { input: _vm.updateColor }
-          })
         : _vm._e()
     ],
     1
@@ -1767,13 +1796,50 @@ if (false) {
 }
 
 /***/ }),
-/* 30 */
+/* 31 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("label", { staticClass: "switch tips" }, [
+    _c("input", {
+      staticClass: "toogle-checkbox",
+      attrs: { type: "checkbox" },
+      domProps: { checked: _vm.enabled, value: _vm.value },
+      on: { change: _vm.trigger }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "slider round" })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
+  }
+}
+
+/***/ }),
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(11);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(37);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1819,50 +1885,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 32 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("label", { staticClass: "switch tips" }, [
-    _c("input", {
-      staticClass: "toogle-checkbox",
-      attrs: { type: "checkbox" },
-      domProps: { checked: _vm.enabled, value: _vm.value },
-      on: { change: _vm.trigger }
-    }),
-    _vm._v(" "),
-    _c("span", { staticClass: "slider round" })
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-aa8ad7dc", esExports)
-  }
-}
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 34 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1907,7 +1936,7 @@ if (false) {
 }
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1980,7 +2009,7 @@ if (false) {
 }
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2477,17 +2506,17 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(40);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(38)
+  __webpack_require__(39)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2533,13 +2562,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2814,17 +2843,17 @@ if (false) {
 }
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(43);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(41)
+  __webpack_require__(42)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -2870,13 +2899,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3467,11 +3496,14 @@ if (false) {
 }
 
 /***/ }),
-/* 43 */,
 /* 44 */,
 /* 45 */,
 /* 46 */,
-/* 47 */
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3487,12 +3519,12 @@ if (false) {
 });
 
 /***/ }),
-/* 48 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Chart_vue__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -3701,10 +3733,26 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3835,8 +3883,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
   data: function data() {
     return {
       show: dokan.showPromoBanner,
-      upgradeURL: dokan.urls.upgradeToPro,
-      features: [this.__('Table rate shipping', 'dokan-lite'), this.__('Vendor Reviews', 'dokan-lite'), this.__('Product Subscriptions', 'dokan-lite'), this.__('Auction', 'dokan-lite'), this.__('Delivery Time', 'dokan-lite')]
+      upgradeURL: dokan.urls.upgradeToPro
     };
   },
   computed: {
@@ -3853,13 +3900,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
+//
+//
+//
+//
 //
 //
 //
@@ -4256,6 +4307,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         }
       }
     },
+    getPaymentTitle: function getPaymentTitle(method, data) {
+      var title = data.method_title;
+
+      if (data.details[method] !== undefined && 'dokan_custom' === method) {
+        var _data$details$method$;
+
+        title = (_data$details$method$ = data.details[method].method) !== null && _data$details$method$ !== void 0 ? _data$details$method$ : '';
+      }
+
+      return dokan.hooks.applyFilters('dokan_get_payment_title', title, method, data);
+    },
     getPaymentDetails: function getPaymentDetails(method, data) {
       var details = '—';
 
@@ -4286,6 +4348,10 @@ var AdminNotice = dokan_get_lib('AdminNotice');
           if (data.bank.hasOwnProperty('swift')) {
             details += '<p>' + this.sprintf(this.__('Swift Code: %s', 'dokan-lite'), data.bank.swift) + '</p>';
           }
+        } else if ('dokan_custom' === method) {
+          var _data$method$value;
+
+          details = (_data$method$value = data[method].value) !== null && _data$method$value !== void 0 ? _data$method$value : '';
         }
       }
 
@@ -4416,14 +4482,14 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__ = __webpack_require__(144);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_slick_carousel_slick_slick_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_slick__ = __webpack_require__(147);
 //
 //
 //
@@ -5300,17 +5366,17 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 52 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProCta_vue__ = __webpack_require__(57);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1ccc06d3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProCta_vue__ = __webpack_require__(143);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(129)
+  __webpack_require__(142)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -5356,7 +5422,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 53 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5395,11 +5461,11 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 54 */
+/* 58 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -5455,13 +5521,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 55 */
+/* 59 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -5725,15 +5791,34 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 56 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__ = __webpack_require__(144);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_Fields_vue__ = __webpack_require__(158);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_SettingsBanner_vue__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5819,14 +5904,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
 
 
-
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Settings',
   components: {
-    Fields: __WEBPACK_IMPORTED_MODULE_0_admin_components_Fields_vue__["a" /* default */],
+    Fields: __WEBPACK_IMPORTED_MODULE_2_admin_components_Fields_vue__["a" /* default */],
     Loading: Loading,
-    SettingsBanner: __WEBPACK_IMPORTED_MODULE_1_admin_components_SettingsBanner_vue__["a" /* default */],
-    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_2_admin_components_UpgradeBanner_vue__["a" /* default */],
+    SettingsBanner: __WEBPACK_IMPORTED_MODULE_3_admin_components_SettingsBanner_vue__["a" /* default */],
+    UpgradeBanner: __WEBPACK_IMPORTED_MODULE_4_admin_components_UpgradeBanner_vue__["a" /* default */],
     AdminNotice: AdminNotice
   },
   data: function data() {
@@ -5845,7 +5929,10 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       validationErrors: [],
       hasPro: dokan.hasPro ? true : false,
       searchText: '',
-      awaitingSearch: false
+      awaitingSearch: false,
+      withdrawMethods: {},
+      isSaveConfirm: false,
+      dokanAssetsUrl: dokan.urls.assetsUrl
     };
   },
   computed: {
@@ -5872,20 +5959,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       var activetab = '';
       this.currentTab = section.id;
       this.requiredFields = [];
+      this.$refs.settingsWrapper.scrollIntoView({
+        behavior: 'smooth'
+      });
 
       if (typeof localStorage != 'undefined') {
         localStorage.setItem("activetab", this.currentTab);
       }
-    },
-    showSectionTitle: function showSectionTitle(fields) {
-      return !_.findWhere(fields, {
-        type: 'sub_section'
-      });
-    },
-    sectionTitle: function sectionTitle(index) {
-      return _.findWhere(this.settingSections, {
-        id: index
-      }).title;
     },
     fetchSettingValues: function fetchSettingValues() {
       var self = this,
@@ -5909,13 +5989,14 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                   self.settingValues[section][field] = self.settingFields[section][field].default;
                 }
               } else {
-                self.settingValues[section][field] = resp.data[section][field];
+                self.settingValues[section] = resp.data[section];
               }
             });
           });
           self.settingValues = jQuery.extend({}, self.settingValues);
           self.showLoading = false;
           self.isLoaded = true;
+          self.setWithdrawMethods();
         }
       });
     },
@@ -5935,44 +6016,149 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       file_frame.open();
     },
     saveSettings: function saveSettings(fieldData, section) {
-      if (!this.formIsValid(section)) {
-        return;
-      }
+      var _this = this;
 
-      var self = this,
-          data = {
-        action: 'dokan_save_settings',
-        nonce: dokan.nonce,
-        settingsData: fieldData,
-        section: section
-      };
-      self.showLoading = true;
-      jQuery.post(dokan.ajaxurl, data).done(function (response) {
-        var settings = response.data.settings;
-        self.isSaved = true;
-        self.isUpdated = true;
-        self.message = response.data.message;
-        self.settingValues[settings.name] = settings.value;
-        var option;
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var consent, self, data;
+        return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (_this.formIsValid(section)) {
+                  _context.next = 2;
+                  break;
+                }
 
-        for (option in fieldData) {
-          var fieldName = "".concat(section, ".").concat(option);
+                return _context.abrupt("return");
 
-          if (self.refreshable_props[fieldName]) {
-            window.location.reload();
-            break;
+              case 2:
+                if (!('dokan_withdraw' === section)) {
+                  _context.next = 9;
+                  break;
+                }
+
+                _context.next = 5;
+                return _this.setPaymentChangeAnnouncementAction(fieldData, section);
+
+              case 5:
+                consent = _context.sent;
+                fieldData.send_announcement_for_payment_change = false;
+
+                if ('value' in consent && consent.value === true) {
+                  fieldData.send_announcement_for_payment_change = _this.getDifference(_this.withdrawMethods, fieldData.withdraw_methods);
+                }
+
+                _this.withdrawMethods = fieldData.withdraw_methods;
+
+              case 9:
+                self = _this, data = {
+                  action: 'dokan_save_settings',
+                  nonce: dokan.nonce,
+                  settingsData: fieldData,
+                  section: section
+                };
+                self.showLoading = true;
+                jQuery.post(dokan.ajaxurl, data).done(function (response) {
+                  var settings = response.data.settings;
+                  self.isSaved = true;
+                  self.isUpdated = true;
+                  self.message = response.data.message;
+                  self.settingValues[settings.name] = settings.value;
+                  var option;
+
+                  for (option in fieldData) {
+                    var fieldName = "".concat(section, ".").concat(option);
+
+                    if (self.refreshable_props[fieldName]) {
+                      window.location.reload();
+                      break;
+                    }
+                  }
+
+                  self.validationErrors = [];
+                }).fail(function (jqXHR) {
+                  self.validationErrors = jqXHR.responseJSON.data.errors;
+                }).always(function () {
+                  self.showLoading = false;
+                });
+
+                _this.$refs.settingsWrapper.scrollIntoView({
+                  behavior: 'smooth'
+                });
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
+        }, _callee);
+      }))();
+    },
+    setWithdrawMethods: function setWithdrawMethods() {
+      if ('withdraw_methods' in this.settingValues.dokan_withdraw) {
+        this.withdrawMethods = this.settingValues.dokan_withdraw.withdraw_methods;
+      }
+    },
+    setPaymentChangeAnnouncementAction: function setPaymentChangeAnnouncementAction(fieldData, section) {
+      var _this2 = this;
 
-        self.validationErrors = [];
-      }).fail(function (jqXHR) {
-        self.validationErrors = jqXHR.responseJSON.data.errors;
-      }).always(function () {
-        self.showLoading = false;
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var diff;
+        return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(!('withdraw_methods' in fieldData) || 'dokan_withdraw' !== section)) {
+                  _context2.next = 2;
+                  break;
+                }
+
+                return _context2.abrupt("return", Promise.resolve({
+                  value: false
+                }));
+
+              case 2:
+                diff = _this2.getDifference(_this2.withdrawMethods, fieldData.withdraw_methods);
+
+                if (!(Object.keys(diff).length === 0)) {
+                  _context2.next = 5;
+                  break;
+                }
+
+                return _context2.abrupt("return", Promise.resolve({
+                  value: false
+                }));
+
+              case 5:
+                return _context2.abrupt("return", _this2.$swal({
+                  title: _this2.__('Withdraw Method Changed', 'dokan-lite'),
+                  text: _this2.__('Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite'),
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: _this2.__('Save & send announcement', 'dokan-lite'),
+                  cancelButtonText: _this2.__('Save only', 'dokan-lite')
+                }));
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    getDifference: function getDifference(objA, objB) {
+      var keys = Object.keys(objB);
+      var difference = {};
+      keys.forEach(function (key) {
+        if ('' !== objA[key] && '' === objB[key]) {
+          difference[key] = key;
+        }
       });
+      return difference;
     },
     formIsValid: function formIsValid(section) {
-      var _this = this;
+      var _this3 = this;
 
       var allFields = Object.keys(this.settingFields);
       var requiredFields = this.requiredFields;
@@ -5983,7 +6169,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       allFields.forEach(function (fields, index) {
         if (section === fields) {
-          var sectionFields = _this.settingFields[fields];
+          var sectionFields = _this3.settingFields[fields];
           Object.values(sectionFields).forEach(function (field) {
             var subFields = field.fields;
 
@@ -6006,15 +6192,15 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       this.errors = [];
       requiredFields.forEach(function (field) {
-        Object.values(_this.settingValues).forEach(function (value) {
+        Object.values(_this3.settingValues).forEach(function (value) {
           if (field in value && value[field].length < 1) {
-            if (!_this.errors.includes(field)) {
-              _this.errors.push(field); // If flat or percentage commission is set. Remove the required field.
+            if (!_this3.errors.includes(field)) {
+              _this3.errors.push(field); // If flat or percentage commission is set. Remove the required field.
 
 
               if ('flat' === value['commission_type'] || 'percentage' === value['commission_type']) {
-                _this.errors = _this.arrayRemove(_this.errors, 'admin_percentage');
-                _this.errors = _this.arrayRemove(_this.errors, 'additional_fee');
+                _this3.errors = _this3.arrayRemove(_this3.errors, 'admin_percentage');
+                _this3.errors = _this3.arrayRemove(_this3.errors, 'additional_fee');
               }
             }
           }
@@ -6051,7 +6237,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return true;
     },
     searchInSettings: function searchInSettings(input) {
-      var _this2 = this;
+      var _this4 = this;
 
       if (!this.validateBlankSearch()) {
         return;
@@ -6059,18 +6245,18 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       if (!this.awaitingSearch) {
         setTimeout(function () {
-          var searchText = _this2.$refs.searchInSettings.value.toLowerCase();
+          var searchText = _this4.$refs.searchInSettings.value.toLowerCase();
 
-          _this2.doSearch(searchText);
+          _this4.doSearch(searchText);
 
-          _this2.awaitingSearch = false;
+          _this4.awaitingSearch = false;
         }, 1000);
       }
 
       this.awaitingSearch = true;
     },
     doSearch: function doSearch(searchText) {
-      var _this3 = this;
+      var _this5 = this;
 
       var self = this;
       var settingFields = {};
@@ -6102,7 +6288,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       Object.keys(dokan.settings_sections).forEach(function (section, index) {
         if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
           if (!currentTab) {
-            _this3.changeTab(dokan.settings_sections[section]);
+            _this5.changeTab(dokan.settings_sections[section]);
 
             currentTab = 1;
           }
@@ -6113,52 +6299,64 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       self.settingFields = settingFields;
       self.settingSections = settingSections;
     },
-    handleDataClearCheckboxEvent: function handleDataClearCheckboxEvent() {
-      var self = this;
-      __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.data_clear_on_uninstall').on('change', "#dokan_general\\[data_clear_on_uninstall\\]", function (e) {
-        if (__WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).is(':checked')) {
-          self.$swal({
-            title: self.__('Are you sure?', 'dokan-lite'),
-            type: 'warning',
-            html: self.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
-            showCancelButton: true,
-            confirmButtonText: self.__('Okay', 'dokan-lite'),
-            cancelButtonText: self.__('Cancel', 'dokan-lite')
-          }).then(function (response) {
-            if (response.dismiss) {
-              self.settingValues.dokan_general.data_clear_on_uninstall = 'off';
-            }
-          });
-        }
+    scrollToTop: function scrollToTop() {
+      this.$refs.settingsWrapper.scrollIntoView({
+        behavior: 'smooth'
       });
+    },
+    handleScroll: function handleScroll() {
+      if (this.$route.name === 'Settings' && this.$refs.backToTop) {
+        this.$refs.backToTop.style.transform = window.scrollY > document.body.scrollHeight - 800 ? 'scale(1)' : 'scale(0)';
+      }
     }
   },
   created: function created() {
+    var _this6 = this;
+
     this.fetchSettingValues();
     this.currentTab = 'dokan_general';
 
-    if (typeof localStorage != 'undefined') {
+    if (typeof localStorage !== 'undefined') {
       this.currentTab = localStorage.getItem("activetab") ? localStorage.getItem("activetab") : 'dokan_general';
     }
 
+    this.$root.$on('onFieldSwitched', function (value, fieldName) {
+      if ('on' === value && 'dokan_general' in _this6.settingValues && 'data_clear_on_uninstall' === fieldName) {
+        Swal.fire({
+          icon: 'warning',
+          html: _this6.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
+          title: _this6.__('Are you sure?', 'dokan-lite'),
+          showCancelButton: true,
+          cancelButtonText: _this6.__('Cancel', 'dokan-lite'),
+          confirmButtonText: _this6.__('Okay', 'dokan-lite')
+        }).then(function (response) {
+          if (response.dismiss) {
+            _this6.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+
+            _this6.$emit('switcHandler', 'data_clear_on_uninstall', _this6.settingValues.dokan_general.data_clear_on_uninstall);
+          }
+        });
+      }
+    });
     this.settingSections = dokan.settings_sections;
     this.settingFields = dokan.settings_fields;
-  },
-  updated: function updated() {
-    this.handleDataClearCheckboxEvent();
+    window.addEventListener('scroll', this.handleScroll);
   }
 });
 
 /***/ }),
-/* 57 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(147);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__ = __webpack_require__(160);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_slicedToArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_Switches_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SocialFields_vue__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__FieldHeading_vue__ = __webpack_require__(186);
 
 
 
@@ -6576,31 +6774,61 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
-//
 
+
+
+
+var Mapbox = dokan_get_lib('Mapbox');
 var TextEditor = dokan_get_lib('TextEditor');
 var GoogleMaps = dokan_get_lib('GoogleMaps');
-var Mapbox = dokan_get_lib('Mapbox');
 var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'Fields',
   components: {
-    colorPicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__["a" /* default */],
+    Mapbox: Mapbox,
+    Switches: __WEBPACK_IMPORTED_MODULE_3_admin_components_Switches_vue__["a" /* default */],
     TextEditor: TextEditor,
     GoogleMaps: GoogleMaps,
-    Mapbox: Mapbox,
+    colorPicker: __WEBPACK_IMPORTED_MODULE_2_admin_components_ColorPicker_vue__["a" /* default */],
+    FieldHeading: __WEBPACK_IMPORTED_MODULE_5__FieldHeading_vue__["a" /* default */],
+    SocialFields: __WEBPACK_IMPORTED_MODULE_4__SocialFields_vue__["a" /* default */],
     RefreshSettingOptions: RefreshSettingOptions
   },
-  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors'],
+  props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
   data: function data() {
     return {
+      hideMap: false,
+      checked: this.isChecked(),
+      expandSocials: false,
       repeatableItem: {},
-      hideMap: false
+      repeatableTime: [],
+      singleColorPicker: {
+        default: this.fieldData.default,
+        label: '',
+        show_pallete: false
+      },
+      yourStringTimeValue: '',
+      customFieldComponents: dokan.hooks.applyFilters('getDokanCustomFieldComponents', [])
     };
   },
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('hasError', function (key) {
+      _this.hasValidationError(key);
+    });
+    this.$root.$on('getError', function (key) {
+      _this.getValidationErrorMessage(key);
+    });
+    this.$parent.$on('switcHandler', function (fieldKey, value) {
+      if (_this.fieldData.name === fieldKey) {
+        _this.checked = value;
+      }
+    });
+  },
   computed: {
-    shoudShow: function shoudShow() {
-      var shoudShow = true;
+    shouldShow: function shouldShow(e) {
+      var shouldShow = true;
 
       if (this.fieldData.show_if) {
         var conditions = this.fieldData.show_if;
@@ -6626,48 +6854,55 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
           switch (operator) {
             case 'greater_than':
               if (!(dependencyValue > value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'greater_than_equal':
               if (!(dependencyValue >= value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'less_than':
               if (!(dependencyValue < value)) {
-                shoudShow = false;
+                shouldShow = false;
               }
 
               break;
 
             case 'less_than':
               if (!(dependencyValue <= value)) {
-                shoudShow = false;
+                shouldShow = false;
+              }
+
+              break;
+
+            case 'contains':
+              if (!Object.values(dependencyValue).includes(value)) {
+                shouldShow = false;
               }
 
               break;
 
             case 'equal':
             default:
-              if (dependencyValue != value) {
-                shoudShow = false;
+              if (dependencyValue !== value) {
+                shouldShow = false;
               }
 
               break;
           }
 
-          if (!shoudShow) {
+          if (!shouldShow) {
             break;
           }
         }
       }
 
-      return shoudShow;
+      return shouldShow;
     },
     mapApiSource: function mapApiSource() {
       var _this$allSettingsValu, _this$allSettingsValu2;
@@ -6683,10 +6918,10 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
       }), this.fieldValue[this.fieldData.name]);
 
       location = {
-        latitude: parseFloat(location.latitude),
-        longitude: parseFloat(location.longitude),
+        zoom: parseInt(location.zoom),
         address: "".concat(location.address),
-        zoom: parseInt(location.zoom)
+        latitude: parseFloat(location.latitude),
+        longitude: parseFloat(location.longitude)
       };
       return location;
     },
@@ -6709,6 +6944,9 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
   methods: {
     containCommonFields: function containCommonFields(type) {
       return _.contains([undefined, 'text', 'email', 'url', 'phone', 'time'], type);
+    },
+    setCheckedValue: function setCheckedValue(checked, value) {
+      this.fieldValue[this.fieldData.name][value] = checked ? value : '';
     },
     addItem: function addItem(type, name) {
       this.fieldValue[name] = this.fieldValue[name] || [];
@@ -6747,6 +6985,39 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
     onUpdateMap: function onUpdateMap(payload) {
       this.fieldValue[this.fieldData.name] = _objectSpread(_objectSpread({}, this.mapLocation), payload);
     },
+    isSocialChecked: function isSocialChecked() {
+      return !this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
+    },
+    thisSomeEvent: function thisSomeEvent(value) {
+      console.log('hello priting...', value);
+    },
+    isSwitchOptionChecked: function isSwitchOptionChecked(optionKey) {
+      if ('multicheck' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] && this.fieldValue[this.fieldData.name][optionKey] === optionKey;
+      } else if ('radio' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] && this.fieldValue[this.fieldData.name] === optionKey;
+      }
+
+      return false;
+    },
+    expandSocial: function expandSocial() {
+      this.expandSocials = !this.expandSocials;
+    },
+    getSocialValue: function getSocialValue(optionValue) {
+      this.fieldValue[optionValue.name] = this.fieldValue[optionValue.name] ? this.fieldValue[optionValue.name] : '';
+    },
+    isChecked: function isChecked() {
+      return !this.fieldValue[this.fieldData.name] ? this.fieldData.default : this.fieldValue[this.fieldData.name];
+    },
+    onToggleSwitch: function onToggleSwitch(status, key) {
+      if ('isChecked' !== key) {
+        return;
+      }
+
+      this.checked = status ? 'on' : 'off';
+      this.fieldValue[this.fieldData.name] = status ? 'on' : 'off';
+      this.$root.$emit('onFieldSwitched', this.fieldValue[this.fieldData.name], this.fieldData.name);
+    },
     hasError: function hasError(key) {
       var errors = this.errors;
 
@@ -6780,20 +7051,135 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
         }
       });
       return errorMessage;
+    },
+    toggleColorPicker: function toggleColorPicker(data) {
+      if (this.fieldData.name === data.key) {
+        this.singleColorPicker.show_pallete = !data.values.show_pallete;
+      } else {
+        this.singleColorPicker.show_pallete = false;
+      }
+    },
+    setCustomColor: function setCustomColor(value, key) {
+      if (!key) {
+        return;
+      }
+
+      this.fieldData[key] = value;
     }
   }
 });
 
 /***/ }),
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
 /* 62 */,
 /* 63 */,
 /* 64 */,
 /* 65 */,
-/* 66 */
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  props: {
+    fieldData: {
+      type: Object,
+      required: true
+    },
+    fieldValue: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    isSocialOptionChecked: function isSocialOptionChecked(optionKey) {
+      if ('radio' === this.fieldData.type) {
+        return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
+      }
+
+      return false;
+    }
+  }
+});
+
+/***/ }),
+/* 73 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'FieldHeading',
+  props: ['fieldData']
+});
+
+/***/ }),
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6826,12 +7212,12 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 });
 
 /***/ }),
-/* 67 */
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(180);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AddVendor_vue__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_components_UpgradeBanner_vue__ = __webpack_require__(4);
 //
 //
 //
@@ -7023,7 +7409,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return parseInt(page);
     },
     sortBy: function sortBy() {
-      return this.$route.query.orderby || 'registered';
+      return this.$route.query.orderby || 'ID';
     },
     sortOrder: function sortOrder() {
       return this.$route.query.order || 'desc';
@@ -7196,13 +7582,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 });
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__VendorAccountFields_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__VendorAddressFields_vue__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__VendorPaymentFields_vue__ = __webpack_require__(41);
 //
 //
 //
@@ -7427,11 +7813,315 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_papaparse__);
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'DummyData',
+  data: function data() {
+    return {
+      errorMsg: '',
+      csvFileUrl: dokan.urls.dummy_data,
+      progress: 0,
+      dummyData: [],
+      loading: true,
+      allVendors: [],
+      allProducts: [],
+      done: false,
+      statusLoader: true,
+      vendorsDataToRemove: ['sku', 'status', 'catalog_visibility', 'short_description', 'date_on_sale_from', 'date_on_sale_to', 'tax_status', 'tax_class', 'stock_status', 'manage_stock', 'stock_quantity', 'children', 'backorders', 'sold_individually', 'reviews_allowed', 'purchase_note', 'sale_price', 'regular_price', 'category_ids', 'tag_ids', 'shipping_class_id', 'raw_image_id', 'raw_gallery_image_ids', 'download_limit', 'download_expiry', 'parent_id', 'grouped_products', 'upsell_ids', 'cross_sell_ids', 'product_url', 'button_text', 'menu_order', 'virtual', 'downloadable', 'status', 'attribute_1_name', 'attribute_1_value', 'attribute_1_visible', 'attribute_1_global', 'attribute_2_name', 'attribute_2_value', 'attribute_2_visible', 'attribute_2_global', '_wpcom_is_markdown', 'download1_name', 'download_1_url', 'download_2_name', 'download_2_url', 'vendor'],
+      productsDataToRemove: ['email', 'password', 'store_name', 'social', 'payment', 'phone', 'show_email', 'address', 'location', 'banner', 'icon', 'gravatar', 'show_more_tpab', 'show_ppp', 'enable_tnc', 'store_tnc', 'show_min_order_discount', 'store_seo', 'dokan_store_time', 'enabled', 'trusted', 'attribute_1_name', 'attribute_1_value', 'attribute_1_visible', 'attribute_1_global', 'attribute_2_name', 'attribute_2_value', 'attribute_2_visible', 'attribute_2_global']
+    };
+  },
+  created: function created() {
+    this.loadImportStatus();
+    this.loadCsvFile();
+  },
+  methods: {
+    // Loads and sets if import already successfully.
+    loadImportStatus: function loadImportStatus() {
+      this.statusLoader = true;
+      var self = this;
+      dokan.api.get("/dummy-data/status", {
+        'nonce': dokan.nonce
+      }).done(function (response, status, xhr) {
+        if (response.import_status == 'yes') {
+          self.done = true;
+        }
+
+        self.statusLoader = false;
+      }).fail(function (jqXHR) {
+        var message = window.dokan_handle_ajax_error(jqXHR);
+
+        if (message) {
+          swal.fire(message, '', 'error');
+        }
+      });
+    },
+    // Resets data states
+    resetDataState: function resetDataState() {
+      this.dummyData = [];
+      this.allVendors = [];
+      this.allProducts = [];
+    },
+    // Loads csv file and parse csv data.
+    loadCsvFile: function loadCsvFile() {
+      var self = this;
+      self.loading = true;
+      self.resetDataState();
+      jQuery.ajax({
+        type: 'GET',
+        url: this.csvFileUrl,
+        data: {},
+        success: function success(data) {
+          Object(__WEBPACK_IMPORTED_MODULE_2_papaparse__["parse"])(data, {
+            header: true,
+            complete: function complete(results) {
+              self.loading = false;
+              self.dummyData = results.data;
+              self.loadCsvData();
+            }
+          });
+          self.loading = false;
+        }
+      });
+    },
+    // Lodes and sates vendor and products data.
+    loadCsvData: function loadCsvData() {
+      var _this = this;
+
+      this.dummyData.forEach(function (item) {
+        if ('vendor' === item.type) {
+          _this.allVendors.push(_this.formatVendorData(item));
+        } else {
+          _this.allProducts.push(_this.formatProductData(item));
+        }
+      });
+    },
+    // Request ajax to import data to database.
+    requestToImport: function requestToImport(data) {
+      var self = this;
+      dokan.api.post("/dummy-data/import", data).done(function (response, status, xhr) {
+        self.handleImport(response.vendor_index);
+        self.updateProgress(response.vendor_index);
+      }).fail(function (jqXHR) {
+        var message = window.dokan_handle_ajax_error(jqXHR);
+
+        if (message) {
+          swal.fire(message, '', 'error');
+        }
+      });
+    },
+    // Run importer button handler.
+    importBtnHandler: function importBtnHandler() {
+      this.handleImport();
+    },
+    // Updates progress bar progress.
+    updateProgress: function updateProgress(numVendorSucceed) {
+      this.progress = 100 * numVendorSucceed / this.allVendors.length;
+    },
+    // Requrests to server.
+    handleImport: function handleImport() {
+      var vendor_index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var vendorData = this.allVendors[vendor_index];
+
+      if (!vendorData || undefined == vendorData) {
+        this.loading = false;
+        this.done = true;
+        return;
+      }
+
+      var data = {
+        nonce: dokan.nonce,
+        vendor_data: vendorData,
+        vendor_products: this.getVendorProducts(vendorData.id),
+        vendor_index: vendor_index,
+        total_vendors: this.allVendors.length
+      };
+      this.loading = true;
+      this.requestToImport(data);
+    },
+    // Formats data for vendor removing products data
+    formatVendorData: function formatVendorData(data) {
+      this.vendorsDataToRemove.forEach(function (item) {
+        delete data[item];
+      });
+      return data;
+    },
+    // Formats products data removing vendors data.
+    formatProductData: function formatProductData(data) {
+      data.raw_attributes = [{
+        name: data.attribute_1_name,
+        value: data.attribute_1_value.split(','),
+        visible: data.attribute_1_visible,
+        taxonomy: data.attribute_1_global
+      }, {
+        name: data.attribute_2_name,
+        value: data.attribute_2_value.split(','),
+        visible: data.attribute_2_visible,
+        taxonomy: data.attribute_2_global
+      }];
+      data.manage_stock = Boolean(data.manage_stock);
+      this.productsDataToRemove.forEach(function (item) {
+        delete data[item];
+      });
+      return data;
+    },
+    // Returns single vendors products from all products array.
+    getVendorProducts: function getVendorProducts(vendorId) {
+      return this.allProducts.filter(function (item) {
+        return item.vendor == vendorId;
+      });
+    },
+    // Reset import state.
+    resetToImport: function resetToImport() {
+      this.errorMsg = '';
+      this.progress = 0;
+      this.loading = false;
+      this.done = false;
+    },
+    // Request to server to clear dummy data from this site.
+    clearAllDummyData: function clearAllDummyData() {
+      var _this2 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var self, answer;
+        return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                self = _this2;
+                _context.next = 3;
+                return dokan_sweetalert("Are you sure? You want to remove all dummy data!", {
+                  action: 'confirm',
+                  icon: 'warning'
+                });
+
+              case 3:
+                answer = _context.sent;
+
+                if ('undefined' !== answer && answer.isConfirmed) {
+                  self.loading = true;
+                  dokan.api.delete("/dummy-data/clear", {
+                    'nonce': dokan.nonce
+                  }).done(function (response, status, xhr) {
+                    dokan_sweetalert('', {
+                      toast: true,
+                      icon: 'success',
+                      title: response.message,
+                      animation: false,
+                      position: 'bottom-right',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      timerProgressBar: true,
+                      didOpen: function didOpen(toast) {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                      }
+                    });
+                    self.resetToImport();
+                  }).fail(function (jqXHR) {
+                    var message = window.dokan_handle_ajax_error(jqXHR);
+
+                    if (message) {
+                      swal.fire(message, '', 'error');
+                    }
+                  });
+                }
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    // Returns woocommerce admin products list page url.
+    getProductsPageUrl: function getProductsPageUrl() {
+      return "".concat(dokan.urls.adminRoot, "edit.php?post_type=product");
+    }
+  }
+});
+
+/***/ }),
+/* 78 */,
+/* 79 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ProCta_vue__ = __webpack_require__(56);
 //
 //
 //
@@ -7574,11 +8264,11 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 70 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_ModuleUpgradePopup_vue__ = __webpack_require__(207);
 //
 //
 //
@@ -7811,10 +8501,78 @@ var Loading = dokan_get_lib('Loading');
 });
 
 /***/ }),
-/* 71 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -7861,34 +8619,857 @@ var Loading = dokan_get_lib('Loading');
   methods: {
     closePopup: function closePopup() {
       this.$emit('toggle', false);
-    },
-    openPopup: function openPopup() {
-      this.$emit('toggle', true);
-    }
-  },
-  computed: {
-    headerImage: function headerImage() {
-      return "".concat(dokan.urls.assetsUrl, "/images/dokan-upgrade-popup-header.svg");
-    },
-    bonusImage: function bonusImage() {
-      return "".concat(dokan.urls.assetsUrl, "/images/dokan-upgrade-popup-bonus.svg");
     }
   }
 });
 
 /***/ }),
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */,
-/* 83 */,
+/* 82 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var ListTable = dokan_get_lib('ListTable');
+var Multiselect = dokan_get_lib('Multiselect');
+var Debounce = dokan_get_lib('debounce');
+var DateRangePicker = dokan_get_lib('DateRangePicker');
+var AdminNotice = dokan_get_lib('AdminNotice');
+var Currency = dokan_get_lib('Currency');
+var CardFunFact = dokan_get_lib('CardFunFact');
+var swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'button button-primary',
+    cancelButton: 'button button-secondary'
+  },
+  buttonsStyling: false
+});
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'ReverseWithdrawal',
+  components: {
+    Currency: Currency,
+    ListTable: ListTable,
+    Multiselect: Multiselect,
+    Debounce: Debounce,
+    swal: swal,
+    DateRangePicker: DateRangePicker,
+    AdminNotice: AdminNotice,
+    CardFunFact: CardFunFact
+  },
+  data: function data() {
+    return {
+      transactionData: [],
+      loading: false,
+      clearingFilters: false,
+      counts: {
+        debit: 0,
+        credit: 0,
+        balance: 0,
+        total_transactions: 0,
+        total_vendors: 0
+      },
+      dateTimePickerFormat: _objectSpread({
+        format: dokan_get_daterange_picker_format().toLowerCase()
+      }, dokan_helper.daterange_picker_local),
+      dateRangePickerRanges: {
+        'Today': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate()],
+        'Last 30 Days': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(29, 'days').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate()],
+        'This Month': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().endOf('month').toDate()],
+        'Last Month': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(1, 'month').startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(1, 'month').endOf('month').toDate()],
+        'This Year': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().month(0).startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().month(11).endOf('month').toDate()],
+        'Last Year': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().month(0).subtract(1, 'year').startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().month(11).subtract(1, 'year').endOf('month').toDate()]
+      },
+      totalPages: 1,
+      perPage: 20,
+      totalItems: 0,
+      showCb: true,
+      notFound: this.__('No transaction found.', 'dokan-lite'),
+      columns: {
+        'store_name': {
+          label: this.__('Stores', 'dokan-lite')
+        },
+        'balance': {
+          label: this.__('Balance', 'dokan-lite')
+        },
+        'last_payment_date': {
+          label: this.__('Last Payment Date', 'dokan-lite')
+        }
+      },
+      actions: [],
+      filter: {
+        stores: this.getDefaultStore(),
+        selected_store: this.getDefaultStore()[0],
+        transaction_date: {
+          startDate: '',
+          endDate: ''
+        }
+      }
+    };
+  },
+  created: function created() {
+    this.setDefaultTransactionDate();
+    this.fetchStoreLists();
+    this.fetchBalances();
+  },
+  mounted: function mounted() {
+    this.mountToolTips();
+  },
+  updated: function updated() {
+    this.mountToolTips();
+  },
+  filters: {
+    getFormattedDate: function getFormattedDate(date) {
+      return date ? __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate(dokan_get_i18n_date_format(), new Date(date)) : '';
+    }
+  },
+  computed: {
+    getCurrentPage: function getCurrentPage() {
+      return this.$route.query.page ? parseInt(this.$route.query.page) : 1;
+    },
+    getSortBy: function getSortBy() {
+      var _this$$route$query$or;
+
+      return (_this$$route$query$or = this.$route.query.orderby) !== null && _this$$route$query$or !== void 0 ? _this$$route$query$or : 'added';
+    },
+    getSortOrder: function getSortOrder() {
+      var _this$$route$query$or2;
+
+      return (_this$$route$query$or2 = this.$route.query.order) !== null && _this$$route$query$or2 !== void 0 ? _this$$route$query$or2 : 'desc';
+    },
+    filterStoreID: function filterStoreID() {
+      return this.filter.selected_store ? this.filter.selected_store.id : 0;
+    },
+    filterTransactionDate: function filterTransactionDate() {
+      var data = {
+        from: '',
+        to: ''
+      };
+
+      if (!this.filter.transaction_date.startDate || !this.filter.transaction_date.endDate) {
+        return data;
+      }
+
+      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.startDate);
+      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.endDate); // fix from param
+
+      if (data.from === data.to) {
+        data.from = '';
+      }
+
+      return data;
+    },
+    bulkActions: function bulkActions() {
+      return [];
+    }
+  },
+  watch: {
+    '$route.query.page': function $routeQueryPage() {
+      this.fetchBalances();
+    },
+    '$route.query.orderby': function $routeQueryOrderby() {
+      this.fetchBalances();
+    },
+    '$route.query.order': function $routeQueryOrder() {
+      this.fetchBalances();
+    },
+    'filter.selected_store': function filterSelected_store() {
+      // added this condition to avoid multiple fetchBalances call
+      if (!this.clearingFilters && !this.loading) {
+        this.fetchBalances();
+      }
+    },
+    'filter.transaction_date.startDate': function filterTransaction_dateStartDate() {
+      // added this condition to avoid multiple fetchBalances call
+      if (!this.clearingFilters && !this.loading) {
+        this.fetchBalances();
+      }
+    }
+  },
+  methods: {
+    updatedCounts: function updatedCounts(xhr) {
+      var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4, _xhr$getResponseHeade5;
+
+      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
+      this.counts.total_vendors = parseInt((_xhr$getResponseHeade5 = xhr.getResponseHeader('X-Status-Total-Vendors')) !== null && _xhr$getResponseHeade5 !== void 0 ? _xhr$getResponseHeade5 : 0);
+    },
+    updatePagination: function updatePagination(xhr) {
+      var _xhr$getResponseHeade6, _xhr$getResponseHeade7;
+
+      this.totalPages = parseInt((_xhr$getResponseHeade6 = xhr.getResponseHeader('X-WP-TotalPages')) !== null && _xhr$getResponseHeade6 !== void 0 ? _xhr$getResponseHeade6 : 0);
+      this.totalItems = parseInt((_xhr$getResponseHeade7 = xhr.getResponseHeader('X-WP-Total')) !== null && _xhr$getResponseHeade7 !== void 0 ? _xhr$getResponseHeade7 : 0);
+    },
+    resetCounts: function resetCounts() {
+      this.counts.debit = 0;
+      this.counts.credit = 0;
+      this.counts.balance = 0;
+      this.counts.total_transactions = 0;
+      this.counts.total_vendors = 0;
+      this.totalPages = 0;
+      this.totalItems = 0;
+    },
+    // clear filter
+    clearFilters: function clearFilters() {
+      this.clearingFilters = true;
+      this.filter.selected_store = this.getDefaultStore()[0];
+      this.setDefaultTransactionDate();
+      this.clearingFilters = false;
+      this.fetchBalances();
+    },
+    getDefaultStore: function getDefaultStore() {
+      return [{
+        id: 0,
+        name: this.__('All Stores', 'dokan-lite')
+      }];
+    },
+    // filter by stores
+    fetchStoreLists: Debounce(function () {
+      var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var self = this;
+      dokan.api.get('/reverse-withdrawal/stores', {
+        paged: 1,
+        search: search
+      }).done(function (response) {
+        self.filter.stores = self.getDefaultStore().concat(response);
+      }).fail(function (jqXHR) {
+        self.filter.stores = self.getDefaultStore();
+      });
+    }, 300),
+    getDefaultTransactionDate: function getDefaultTransactionDate() {
+      var today = __WEBPACK_IMPORTED_MODULE_2_moment___default()().endOf('today').hour(23).minute(59).second(59).toDate();
+
+      return {
+        startDate: today,
+        endDate: today
+      };
+    },
+    setDefaultTransactionDate: function setDefaultTransactionDate() {
+      var transaction_date = this.getDefaultTransactionDate();
+      this.filter.transaction_date.startDate = transaction_date.startDate;
+      this.filter.transaction_date.endDate = transaction_date.endDate;
+
+      if (this.$refs.picker) {
+        this.$refs.picker.togglePicker(false);
+      }
+    },
+    fetchBalances: function fetchBalances() {
+      this.loading = true;
+      var self = this;
+      var data = {
+        per_page: self.perPage,
+        page: self.getCurrentPage,
+        orderby: self.getSortBy,
+        order: self.getSortOrder,
+        trn_date: self.filterTransactionDate
+      };
+
+      if (self.filterStoreID) {
+        data.vendor_id = self.filterStoreID;
+      }
+
+      dokan.api.get('/reverse-withdrawal/stores-balance', data).done(function (response, status, xhr) {
+        self.transactionData = response;
+        self.updatedCounts(xhr);
+        self.updatePagination(xhr);
+      }).always(function () {
+        self.loading = false;
+      }).fail(function (jqXHR) {
+        self.transactionData = [];
+        self.resetCounts();
+        var message = self.renderApiError(jqXHR);
+
+        if (message) {
+          self.showErrorAlert(message);
+        }
+      });
+    },
+    goToPage: function goToPage(page) {
+      this.$router.push({
+        name: 'ReverseWithdrawal',
+        query: {
+          page: page
+        }
+      });
+    },
+    doSort: function doSort(column, order) {
+      this.$router.push({
+        name: 'ReverseWithdrawal',
+        query: {
+          page: 1,
+          orderby: column,
+          order: order
+        }
+      });
+    },
+    orderUrl: function orderUrl(id) {
+      return dokan.urls.adminRoot + 'post.php?post=' + id + '&action=edit';
+    },
+    vendorUrl: function vendorUrl(id) {
+      return dokan.urls.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+    },
+    productUrl: function productUrl(id) {
+      return dokan.urls.adminRoot + 'post.php?post=' + id + '&action=edit';
+    },
+    mountToolTips: function mountToolTips() {
+      __WEBPACK_IMPORTED_MODULE_1_jquery___default()('.tips').tooltip();
+    },
+    moment: function moment(date) {
+      return __WEBPACK_IMPORTED_MODULE_2_moment___default()(date);
+    },
+    showErrorAlert: function showErrorAlert(message) {
+      var self = this;
+      swal.fire(self.__('Something went wrong', 'dokan-lite'), message, 'error');
+    },
+    renderApiError: function renderApiError(jqXHR) {
+      var message = '';
+
+      if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+        message = jqXHR.responseJSON.message;
+      } else if (jqXHR.responseJSON && jqXHR.responseJSON.data && jqXHR.responseJSON.data.message) {
+        message = jqXHR.responseJSON.data.message;
+      } else if (jqXHR.responseText) {
+        message = jqXHR.responseText;
+      }
+
+      return message;
+    }
+  }
+});
+
+/***/ }),
+/* 83 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var ListTable = dokan_get_lib('ListTable');
+var Multiselect = dokan_get_lib('Multiselect');
+var Debounce = dokan_get_lib('debounce');
+var DateRangePicker = dokan_get_lib('DateRangePicker');
+var AdminNotice = dokan_get_lib('AdminNotice');
+var Currency = dokan_get_lib('Currency');
+var CardFunFact = dokan_get_lib('CardFunFact');
+var swal = Swal.mixin({
+  customClass: {
+    confirmButton: 'button button-primary',
+    cancelButton: 'button button-secondary'
+  },
+  buttonsStyling: false
+});
+/* harmony default export */ __webpack_exports__["a"] = ({
+  name: 'ReverseWithdrawalTransactions',
+  components: {
+    Currency: Currency,
+    ListTable: ListTable,
+    Multiselect: Multiselect,
+    Debounce: Debounce,
+    swal: swal,
+    DateRangePicker: DateRangePicker,
+    AdminNotice: AdminNotice,
+    CardFunFact: CardFunFact
+  },
+  data: function data() {
+    return {
+      storeDetails: {},
+      transactionData: [],
+      loading: false,
+      clearingFilters: false,
+      counts: {
+        debit: 0,
+        credit: 0,
+        total_transaction: 0
+      },
+      dateTimePickerFormat: _objectSpread({
+        format: dokan_get_daterange_picker_format().toLowerCase()
+      }, dokan_helper.daterange_picker_local),
+      dateRangePickerRanges: {
+        'Today': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate()],
+        'Last 30 Days': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(29, 'days').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().toDate()],
+        'This Month': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().endOf('month').toDate()],
+        'Last Month': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(1, 'month').startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(1, 'month').endOf('month').toDate()],
+        'This Year': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().month(0).startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().month(11).endOf('month').toDate()],
+        'Last Year': [__WEBPACK_IMPORTED_MODULE_2_moment___default()().month(0).subtract(1, 'year').startOf('month').toDate(), __WEBPACK_IMPORTED_MODULE_2_moment___default()().month(11).subtract(1, 'year').endOf('month').toDate()]
+      },
+      totalPages: 1,
+      perPage: 100,
+      totalItems: 0,
+      showCb: true,
+      notFound: this.__('No transaction found.', 'dokan-lite'),
+      columns: {
+        'trn_id': {
+          label: this.__('Transaction ID', 'dokan-lite')
+        },
+        'trn_date': {
+          label: this.__('Date', 'dokan-lite')
+        },
+        'trn_type': {
+          label: this.__('Transaction Type', 'dokan-lite')
+        },
+        'note': {
+          label: this.__('Note', 'dokan-lite')
+        },
+        'debit': {
+          label: this.__('Debit', 'dokan-lite')
+        },
+        'credit': {
+          label: this.__('Credit', 'dokan-lite')
+        },
+        'balance': {
+          label: this.__('Balance', 'dokan-lite')
+        }
+      },
+      actions: [],
+      filter: {
+        transaction_date: {
+          startDate: '',
+          endDate: ''
+        }
+      }
+    };
+  },
+  created: function created() {
+    this.setDefaultTransactionDate();
+    this.fetchTransactions();
+  },
+  mounted: function mounted() {
+    this.fetchStoreDetails();
+    this.mountToolTips();
+    this.scrollToTop();
+  },
+  updated: function updated() {
+    this.mountToolTips();
+  },
+  filters: {
+    getFormattedDate: function getFormattedDate(date) {
+      return date ? __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate(dokan_get_i18n_date_format(), new Date(date)) : '';
+    }
+  },
+  computed: {
+    ID: function ID() {
+      return this.$route.params.store_id;
+    },
+    getCurrentPage: function getCurrentPage() {
+      return this.$route.query.page ? parseInt(this.$route.query.page) : 1;
+    },
+    getSortBy: function getSortBy() {
+      var _this$$route$query$or;
+
+      return (_this$$route$query$or = this.$route.query.orderby) !== null && _this$$route$query$or !== void 0 ? _this$$route$query$or : 'added';
+    },
+    getSortOrder: function getSortOrder() {
+      var _this$$route$query$or2;
+
+      return (_this$$route$query$or2 = this.$route.query.order) !== null && _this$$route$query$or2 !== void 0 ? _this$$route$query$or2 : 'desc';
+    },
+    filterTransactionDate: function filterTransactionDate() {
+      var data = {};
+
+      if (!this.filter.transaction_date.startDate || !this.filter.transaction_date.endDate) {
+        return data;
+      }
+
+      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
+      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+      return data;
+    },
+    bulkActions: function bulkActions() {
+      return [];
+    }
+  },
+  watch: {
+    '$route.query.page': function $routeQueryPage() {
+      this.fetchTransactions();
+    },
+    '$route.query.orderby': function $routeQueryOrderby() {
+      this.fetchTransactions();
+    },
+    '$route.query.order': function $routeQueryOrder() {
+      this.fetchTransactions();
+    },
+    'filter.transaction_date.startDate': function filterTransaction_dateStartDate() {
+      // added this condition to avoid multiple fetchBalances call
+      if (!this.clearingFilters && !this.loading) {
+        this.fetchTransactions();
+      }
+    }
+  },
+  methods: {
+    updatedCounts: function updatedCounts(xhr) {
+      var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4;
+
+      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
+    },
+    updatePagination: function updatePagination(xhr) {
+      var _xhr$getResponseHeade5, _xhr$getResponseHeade6;
+
+      this.totalPages = parseInt((_xhr$getResponseHeade5 = xhr.getResponseHeader('X-WP-TotalPages')) !== null && _xhr$getResponseHeade5 !== void 0 ? _xhr$getResponseHeade5 : 0);
+      this.totalItems = parseInt((_xhr$getResponseHeade6 = xhr.getResponseHeader('X-WP-Total')) !== null && _xhr$getResponseHeade6 !== void 0 ? _xhr$getResponseHeade6 : 0);
+    },
+    resetCounts: function resetCounts() {
+      this.counts.debit = 0;
+      this.counts.credit = 0;
+      this.counts.balance = 0;
+      this.counts.total_transaction = 0;
+    },
+    resetPagination: function resetPagination() {
+      this.totalPages = 0;
+      this.totalItems = 0;
+    },
+    // clear filter
+    clearFilters: function clearFilters() {
+      this.clearingFilters = true;
+      this.setDefaultTransactionDate();
+      this.fetchTransactions();
+      this.clearingFilters = false;
+    },
+    getDefaultTransactionDate: function getDefaultTransactionDate() {
+      return {
+        startDate: __WEBPACK_IMPORTED_MODULE_2_moment___default()().subtract(29, 'days').hour(0).minute(0).second(0).toDate(),
+        endDate: __WEBPACK_IMPORTED_MODULE_2_moment___default()().hour(23).minute(59).second(59).toDate()
+      };
+    },
+    setDefaultTransactionDate: function setDefaultTransactionDate() {
+      var default_transaction_date = this.getDefaultTransactionDate();
+      this.filter.transaction_date.startDate = default_transaction_date.startDate;
+      this.filter.transaction_date.endDate = default_transaction_date.endDate;
+
+      if (this.$refs.picker) {
+        this.$refs.picker.togglePicker(false);
+      }
+    },
+    goToPage: function goToPage(page) {
+      this.$router.push({
+        name: 'ReverseWithdrawalTransactions',
+        query: {
+          page: page
+        }
+      });
+    },
+    fetchTransactions: function fetchTransactions() {
+      this.loading = true;
+      var self = this;
+      var data = {
+        orderby: self.getSortBy,
+        order: self.getSortOrder,
+        vendor_id: self.ID,
+        trn_date: self.filterTransactionDate,
+        per_page: -1
+      };
+      dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data).done(function (response, status, xhr) {
+        self.transactionData = response;
+        self.updatedCounts(xhr);
+        self.updatePagination(xhr);
+      }).always(function () {
+        self.loading = false;
+      }).fail(function (jqXHR) {
+        self.transactionData = [];
+        self.resetPagination();
+        var message = dokan_handle_ajax_error(jqXHR);
+
+        if (message) {
+          self.showErrorAlert(message);
+        }
+      });
+    },
+    fetchStoreDetails: function fetchStoreDetails() {
+      var self = this;
+      dokan.api.get('/stores/' + self.ID).done(function (response, status, xhr) {
+        self.storeDetails = response;
+      }).always(function () {}).fail(function (jqXHR) {
+        self.storeDetails = {};
+        var message = dokan_handle_ajax_error(jqXHR);
+
+        if (message) {
+          self.showErrorAlert(message);
+        }
+      });
+    },
+    doSort: function doSort(column, order) {
+      this.$router.push({
+        name: 'ReverseWithdrawalTransactions',
+        query: {
+          page: 1,
+          orderby: column,
+          order: order
+        }
+      });
+    },
+    reverseWithdrawalUrl: function reverseWithdrawalUrl(id) {
+      return dokan.urls.adminRoot + 'admin.php?page=dokan#/reverse-withdrawal';
+    },
+    orderUrl: function orderUrl(id) {
+      return dokan.urls.adminRoot + 'post.php?post=' + id + '&action=edit';
+    },
+    vendorUrl: function vendorUrl(id) {
+      return dokan.urls.adminRoot + 'admin.php?page=dokan#/vendors/' + id;
+    },
+    productUrl: function productUrl(id) {
+      return dokan.urls.adminRoot + 'post.php?post=' + id + '&action=edit';
+    },
+    mountToolTips: function mountToolTips() {
+      __WEBPACK_IMPORTED_MODULE_1_jquery___default()('.tips').tooltip();
+    },
+    moment: function moment(date) {
+      return __WEBPACK_IMPORTED_MODULE_2_moment___default()(date);
+    },
+    showErrorAlert: function showErrorAlert(message) {
+      var self = this;
+      swal.fire(self.__('Something went wrong', 'dokan-lite'), message, 'error');
+    },
+    scrollToTop: function scrollToTop() {
+      window.scrollTo(0, 0);
+    }
+  }
+});
+
+/***/ }),
 /* 84 */,
 /* 85 */,
 /* 86 */,
@@ -7915,14 +9496,27 @@ var Loading = dokan_get_lib('Loading');
 /* 107 */,
 /* 108 */,
 /* 109 */,
-/* 110 */
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(111);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(114);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App_vue__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__ = __webpack_require__(217);
 
 
 
@@ -7958,17 +9552,17 @@ new Vue({
 Object(__WEBPACK_IMPORTED_MODULE_2__utils_admin_menu_fix__["a" /* default */])('dokan');
 
 /***/ }),
-/* 111 */
+/* 124 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_App_vue__ = __webpack_require__(51);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_3a030f38_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_App_vue__ = __webpack_require__(126);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(112)
+  __webpack_require__(125)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8014,13 +9608,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 112 */
+/* 125 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 113 */
+/* 126 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8051,21 +9645,27 @@ if (false) {
 }
 
 /***/ }),
-/* 114 */
+/* 127 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_typeof__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(116);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(127);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(136);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__ = __webpack_require__(139);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__ = __webpack_require__(142);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__ = __webpack_require__(184);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__ = __webpack_require__(187);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_admin_pages_Dashboard_vue__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_admin_pages_Withdraw_vue__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__ = __webpack_require__(149);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__ = __webpack_require__(155);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_admin_pages_DummyData_vue__ = __webpack_require__(199);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_admin_pages_VendorCapabilities_vue__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_admin_pages_ProModules_vue__ = __webpack_require__(205);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawal_vue__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_admin_pages_ReverseWithdrawalTransactions_vue__ = __webpack_require__(214);
+
+
+
 
 
 
@@ -8086,8 +9686,11 @@ dokan_add_route(__WEBPACK_IMPORTED_MODULE_3_admin_pages_Premium_vue__["a" /* def
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_5_admin_pages_ChangeLog_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_4_admin_pages_Help_vue__["a" /* default */]);
 dokan_add_route(__WEBPACK_IMPORTED_MODULE_6_admin_pages_Settings_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_VendorCapabilities_vue__["a" /* default */]);
-dokan_add_route(__WEBPACK_IMPORTED_MODULE_9_admin_pages_ProModules_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_9_admin_pages_VendorCapabilities_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_10_admin_pages_ProModules_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_8_admin_pages_DummyData_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_11_admin_pages_ReverseWithdrawal_vue__["a" /* default */]);
+dokan_add_route(__WEBPACK_IMPORTED_MODULE_12_admin_pages_ReverseWithdrawalTransactions_vue__["a" /* default */]); // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 
 if (!dokan.hasPro || VersionCompare(dokan.proVersion, '2.9.14', '>')) {
   dokan_add_route(__WEBPACK_IMPORTED_MODULE_7_admin_pages_Vendors_vue__["a" /* default */]);
@@ -8125,18 +9728,18 @@ parseRouteComponent(dokan.routes);
 }));
 
 /***/ }),
-/* 115 */,
-/* 116 */
+/* 128 */,
+/* 129 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Dashboard_vue__ = __webpack_require__(52);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_219ffca0_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Dashboard_vue__ = __webpack_require__(136);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(117)
+  __webpack_require__(130)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -8182,22 +9785,22 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 117 */
+/* 130 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 118 */,
-/* 119 */,
-/* 120 */,
-/* 121 */
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 122 */
+/* 135 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8206,23 +9809,25 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.show && _vm.showUpgrade
-    ? _c("div", { staticClass: "dokan-promo-banner notice" }, [
+    ? _c("div", { staticClass: "dokan-promo-banner" }, [
         _c("div", { staticClass: "thumbnail" }, [
           _c(
             "svg",
             {
               attrs: {
+                width: "219",
+                height: "146",
                 viewBox: "0 0 219 146",
                 fill: "none",
                 xmlns: "http://www.w3.org/2000/svg"
               }
             },
             [
-              _c("g", { attrs: { filter: "url(#filter0_d_72_951)" } }, [
+              _c("g", { attrs: { filter: "url(#filter0_d_248_61)" } }, [
                 _c("rect", {
                   attrs: {
-                    x: "38.7048",
-                    y: "24.5641",
+                    x: "38.7051",
+                    y: "24.564",
                     width: "122.83",
                     height: "92.5357",
                     rx: "2.75404",
@@ -8234,15 +9839,15 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M38.7048 27.3181C38.7048 25.7971 39.9379 24.5641 41.4589 24.5641H158.781C160.302 24.5641 161.535 25.7971 161.535 27.3181V34.4786H38.7048V27.3181Z",
+                    "M38.7051 27.318C38.7051 25.797 39.9381 24.564 41.4591 24.564H158.781C160.302 24.564 161.535 25.797 161.535 27.318V34.4785H38.7051V27.318Z",
                   fill: "#5165FF"
                 }
               }),
               _vm._v(" "),
               _c("circle", {
                 attrs: {
-                  cx: "46.1408",
-                  cy: "29.7967",
+                  cx: "46.1409",
+                  cy: "29.7966",
                   r: "1.37702",
                   fill: "#FF2323"
                 }
@@ -8250,8 +9855,8 @@ var render = function() {
               _vm._v(" "),
               _c("circle", {
                 attrs: {
-                  cx: "51.098",
-                  cy: "29.7967",
+                  cx: "51.0982",
+                  cy: "29.7966",
                   r: "1.37702",
                   fill: "#FF9A23"
                 }
@@ -8259,8 +9864,8 @@ var render = function() {
               _vm._v(" "),
               _c("circle", {
                 attrs: {
-                  cx: "56.0553",
-                  cy: "29.7967",
+                  cx: "56.0555",
+                  cy: "29.7966",
                   r: "1.37702",
                   fill: "#3FD826"
                 }
@@ -8268,8 +9873,8 @@ var render = function() {
               _vm._v(" "),
               _c("rect", {
                 attrs: {
-                  x: "48.6194",
-                  y: "42.7407",
+                  x: "48.6196",
+                  y: "42.7406",
                   width: "58.9364",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8280,8 +9885,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "56.511",
+                  x: "48.6196",
+                  y: "56.5109",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8292,8 +9897,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "62.019",
+                  x: "48.6196",
+                  y: "62.0189",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8304,8 +9909,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "67.5271",
+                  x: "48.6196",
+                  y: "67.527",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8316,8 +9921,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "73.0352",
+                  x: "48.6196",
+                  y: "73.035",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8328,8 +9933,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "78.5432",
+                  x: "48.6196",
+                  y: "78.5431",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8340,8 +9945,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "84.0514",
+                  x: "48.6196",
+                  y: "84.0513",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8352,8 +9957,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "89.5593",
+                  x: "48.6196",
+                  y: "89.5592",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8364,8 +9969,8 @@ var render = function() {
               _c("rect", {
                 attrs: {
                   opacity: "0.2",
-                  x: "48.6194",
-                  y: "95.0675",
+                  x: "48.6196",
+                  y: "95.0674",
                   width: "103.001",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8375,8 +9980,8 @@ var render = function() {
               _vm._v(" "),
               _c("rect", {
                 attrs: {
-                  x: "48.6194",
-                  y: "46.5963",
+                  x: "48.6196",
+                  y: "46.5962",
                   width: "25.888",
                   height: "1.65242",
                   rx: "0.826212",
@@ -8386,7 +9991,7 @@ var render = function() {
               _vm._v(" "),
               _c("rect", {
                 attrs: {
-                  x: "48.6194",
+                  x: "48.6196",
                   y: "102.779",
                   width: "21.4815",
                   height: "4.95727",
@@ -8401,7 +10006,7 @@ var render = function() {
                   cx: "165.911",
                   cy: "71.0891",
                   r: "48.0891",
-                  fill: "url(#paint0_linear_72_951)",
+                  fill: "url(#paint0_linear_248_61)",
                   "fill-opacity": "0.08"
                 }
               }),
@@ -8412,7 +10017,7 @@ var render = function() {
                   cx: "165.911",
                   cy: "71.0891",
                   r: "42.9732",
-                  fill: "url(#paint1_linear_72_951)",
+                  fill: "url(#paint1_linear_248_61)",
                   "fill-opacity": "0.08"
                 }
               }),
@@ -8423,18 +10028,18 @@ var render = function() {
                   cx: "165.911",
                   cy: "71.0892",
                   r: "38.3689",
-                  fill: "url(#paint2_linear_72_951)",
+                  fill: "url(#paint2_linear_248_61)",
                   "fill-opacity": "0.09"
                 }
               }),
               _vm._v(" "),
-              _c("g", { attrs: { filter: "url(#filter1_d_72_951)" } }, [
+              _c("g", { attrs: { filter: "url(#filter1_d_248_61)" } }, [
                 _c("circle", {
                   attrs: {
-                    cx: "165.911",
+                    cx: "166.253",
                     cy: "71.0891",
                     r: "33.2531",
-                    fill: "url(#paint3_linear_72_951)"
+                    fill: "url(#paint3_linear_248_61)"
                   }
                 })
               ]),
@@ -8442,7 +10047,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M159.755 57.3334L159.751 58H156.026V51.9546H159.751V52.6212H156.844V54.6293H159.199V55.2705H156.844V57.3334H159.755ZM161.312 54.3466C161.405 54.2426 161.503 54.1483 161.607 54.064C161.711 53.9796 161.821 53.9079 161.936 53.8488C162.054 53.7869 162.178 53.7405 162.307 53.7096C162.44 53.6759 162.582 53.659 162.734 53.659C162.967 53.659 163.172 53.6984 163.349 53.7771C163.529 53.853 163.679 53.9627 163.797 54.1062C163.918 54.2468 164.009 54.4169 164.071 54.6166C164.133 54.8163 164.164 55.0371 164.164 55.279V58H163.409V55.279C163.409 54.9555 163.334 54.7052 163.185 54.528C163.039 54.348 162.815 54.258 162.514 54.258C162.292 54.258 162.084 54.3115 161.89 54.4183C161.699 54.5252 161.521 54.6701 161.358 54.8529V58H160.603V53.7265H161.055C161.161 53.7265 161.228 53.7785 161.253 53.8826L161.312 54.3466ZM166.101 53.7265V58.3164C166.101 58.488 166.079 58.6469 166.034 58.7931C165.989 58.9422 165.917 59.0715 165.818 59.1812C165.72 59.2909 165.593 59.3767 165.439 59.4386C165.287 59.5033 165.104 59.5356 164.89 59.5356C164.8 59.5356 164.717 59.5286 164.641 59.5145C164.565 59.5004 164.49 59.4793 164.414 59.4512L164.443 59.0462C164.449 59.0209 164.459 59.0012 164.473 58.9872C164.484 58.9759 164.501 58.9689 164.523 58.9661C164.546 58.9633 164.575 58.9619 164.612 58.9619C164.646 58.9647 164.689 58.9661 164.743 58.9661C164.962 58.9661 165.118 58.914 165.211 58.81C165.304 58.7087 165.35 58.5442 165.35 58.3164V53.7265H166.101ZM166.257 52.3849C166.257 52.4581 166.242 52.527 166.211 52.5917C166.183 52.6535 166.143 52.7098 166.093 52.7604C166.045 52.8082 165.989 52.8462 165.924 52.8743C165.859 52.9024 165.79 52.9165 165.717 52.9165C165.644 52.9165 165.575 52.9024 165.51 52.8743C165.449 52.8462 165.394 52.8082 165.346 52.7604C165.298 52.7098 165.26 52.6535 165.232 52.5917C165.204 52.527 165.19 52.4581 165.19 52.3849C165.19 52.3118 165.204 52.2429 165.232 52.1782C165.26 52.1107 165.298 52.0531 165.346 52.0053C165.394 51.9546 165.449 51.9153 165.51 51.8871C165.575 51.859 165.644 51.845 165.717 51.845C165.79 51.845 165.859 51.859 165.924 51.8871C165.989 51.9153 166.045 51.9546 166.093 52.0053C166.143 52.0531 166.183 52.1107 166.211 52.1782C166.242 52.2429 166.257 52.3118 166.257 52.3849ZM169.136 53.659C169.448 53.659 169.73 53.711 169.98 53.8151C170.23 53.9191 170.444 54.0668 170.621 54.258C170.798 54.4493 170.933 54.6813 171.026 54.9541C171.122 55.2241 171.17 55.5264 171.17 55.8611C171.17 56.1986 171.122 56.5024 171.026 56.7724C170.933 57.0424 170.798 57.273 170.621 57.4642C170.444 57.6555 170.23 57.8031 169.98 57.9072C169.73 58.0084 169.448 58.0591 169.136 58.0591C168.821 58.0591 168.537 58.0084 168.284 57.9072C168.034 57.8031 167.82 57.6555 167.643 57.4642C167.466 57.273 167.329 57.0424 167.234 56.7724C167.141 56.5024 167.094 56.1986 167.094 55.8611C167.094 55.5264 167.141 55.2241 167.234 54.9541C167.329 54.6813 167.466 54.4493 167.643 54.258C167.82 54.0668 168.034 53.9191 168.284 53.8151C168.537 53.711 168.821 53.659 169.136 53.659ZM169.136 57.4727C169.558 57.4727 169.873 57.332 170.081 57.0508C170.289 56.7667 170.393 56.3716 170.393 55.8654C170.393 55.3563 170.289 54.9597 170.081 54.6757C169.873 54.3916 169.558 54.2496 169.136 54.2496C168.923 54.2496 168.735 54.2862 168.575 54.3593C168.418 54.4324 168.286 54.5379 168.179 54.6757C168.075 54.8135 167.996 54.9836 167.942 55.1861C167.892 55.3858 167.866 55.6122 167.866 55.8654C167.866 56.3716 167.971 56.7667 168.179 57.0508C168.39 57.332 168.709 57.4727 169.136 57.4727ZM175.677 53.7265L173.294 59.2614C173.269 59.3176 173.236 59.3626 173.197 59.3964C173.16 59.4301 173.103 59.447 173.024 59.447H172.467L173.247 57.7511L171.484 53.7265H172.134C172.198 53.7265 172.249 53.7434 172.286 53.7771C172.325 53.808 172.352 53.8432 172.366 53.8826L173.509 56.5741C173.554 56.6922 173.592 56.816 173.623 56.9453C173.662 56.8131 173.704 56.688 173.749 56.5699L174.859 53.8826C174.876 53.8376 174.904 53.801 174.943 53.7729C174.986 53.742 175.032 53.7265 175.083 53.7265H175.677Z",
+                    "M161.113 57.209H157.627V54.7871H160.933V54.0059H157.627V51.7451H161.113V50.9541H156.748V58H161.113V57.209ZM162.144 58H162.993V55.0117C162.993 54.1523 163.516 53.5859 164.316 53.5859C165.098 53.5859 165.483 54.0352 165.483 54.8555V58H166.333V54.7041C166.333 53.5518 165.688 52.834 164.575 52.834C163.789 52.834 163.247 53.1855 162.964 53.7324H162.944V52.9219H162.144V58ZM168.311 52.9219H167.461V58.2588C167.461 58.8252 167.261 59.0352 166.709 59.0352C166.704 59.0352 166.587 59.0352 166.577 59.0352V59.7432C166.587 59.748 166.724 59.748 166.738 59.748C167.822 59.748 168.311 59.2793 168.311 58.249V52.9219ZM167.886 52.0674C168.179 52.0674 168.418 51.8281 168.418 51.54C168.418 51.2471 168.179 51.0127 167.886 51.0127C167.598 51.0127 167.358 51.2471 167.358 51.54C167.358 51.8281 167.598 52.0674 167.886 52.0674ZM171.562 58.0879C172.964 58.0879 173.911 57.0771 173.911 55.4609C173.911 53.8398 172.964 52.834 171.562 52.834C170.156 52.834 169.209 53.8398 169.209 55.4609C169.209 57.0771 170.156 58.0879 171.562 58.0879ZM171.562 57.3408C170.664 57.3408 170.073 56.6572 170.073 55.4609C170.073 54.2646 170.664 53.5811 171.562 53.5811C172.461 53.5811 173.047 54.2646 173.047 55.4609C173.047 56.6572 172.461 57.3408 171.562 57.3408ZM175.044 59.8994C175.962 59.8994 176.382 59.543 176.816 58.3564L178.813 52.9219H177.92L176.514 57.1504H176.499L175.093 52.9219H174.185L176.06 58.0049L175.942 58.3613C175.747 58.9521 175.483 59.1816 175.01 59.1816C174.902 59.1816 174.771 59.1768 174.678 59.1572V59.8701C174.771 59.8896 174.941 59.8994 175.044 59.8994Z",
                   fill: "white"
                 }
               }),
@@ -8450,22 +10055,22 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M162.358 88.9794C162.358 89.4322 162.286 89.8485 162.142 90.2282C161.999 90.605 161.796 90.9299 161.535 91.2027C161.273 91.4755 160.958 91.6878 160.59 91.8397C160.224 91.9888 159.819 92.0633 159.375 92.0633C158.931 92.0633 158.526 91.9888 158.16 91.8397C157.794 91.6878 157.481 91.4755 157.219 91.2027C156.958 90.9299 156.755 90.605 156.612 90.2282C156.468 89.8485 156.397 89.4322 156.397 88.9794C156.397 88.5266 156.468 88.1118 156.612 87.7349C156.755 87.3552 156.958 87.029 157.219 86.7562C157.481 86.4806 157.794 86.2668 158.16 86.1149C158.526 85.9631 158.931 85.8871 159.375 85.8871C159.819 85.8871 160.224 85.9631 160.59 86.1149C160.958 86.2668 161.273 86.4806 161.535 86.7562C161.796 87.029 161.999 87.3552 162.142 87.7349C162.286 88.1118 162.358 88.5266 162.358 88.9794ZM161.518 88.9794C161.518 88.6082 161.467 88.2749 161.366 87.9796C161.265 87.6843 161.121 87.4354 160.936 87.2329C160.75 87.0276 160.525 86.8701 160.261 86.7604C159.996 86.6507 159.701 86.5959 159.375 86.5959C159.052 86.5959 158.758 86.6507 158.493 86.7604C158.229 86.8701 158.002 87.0276 157.814 87.2329C157.628 87.4354 157.485 87.6843 157.384 87.9796C157.282 88.2749 157.232 88.6082 157.232 88.9794C157.232 89.3507 157.282 89.6839 157.384 89.9793C157.485 90.2717 157.628 90.5207 157.814 90.726C158.002 90.9285 158.229 91.0845 158.493 91.1942C158.758 91.3011 159.052 91.3545 159.375 91.3545C159.701 91.3545 159.996 91.3011 160.261 91.1942C160.525 91.0845 160.75 90.9285 160.936 90.726C161.121 90.5207 161.265 90.2717 161.366 89.9793C161.467 89.6839 161.518 89.3507 161.518 88.9794ZM164.347 86.6212V88.7347H166.832V89.4013H164.347V92H163.528V85.9546H167.254V86.6212H164.347ZM169.118 86.6212V88.7347H171.602V89.4013H169.118V92H168.299V85.9546H172.024V86.6212H169.118Z",
+                    "M159.657 85.8369C157.66 85.8369 156.41 87.2432 156.41 89.4795C156.41 91.7158 157.66 93.1172 159.657 93.1172C161.654 93.1172 162.904 91.7158 162.904 89.4795C162.904 87.2432 161.654 85.8369 159.657 85.8369ZM159.657 86.6475C161.098 86.6475 162.001 87.7412 162.001 89.4795C162.001 91.2129 161.098 92.3066 159.657 92.3066C158.217 92.3066 157.313 91.2129 157.313 89.4795C157.313 87.7412 158.217 86.6475 159.657 86.6475ZM164.877 93V89.9482H167.997V89.167H164.877V86.7451H168.275V85.9541H163.998V93H164.877ZM170.16 93V89.9482H173.28V89.167H170.16V86.7451H173.559V85.9541H169.281V93H170.16Z",
                   fill: "white"
                 }
               }),
               _vm._v(" "),
-              _c("g", { attrs: { filter: "url(#filter2_d_72_951)" } }, [
+              _c("g", { attrs: { filter: "url(#filter2_d_248_61)" } }, [
                 _c("path", {
                   attrs: {
                     d:
-                      "M148.98 68.4417C149.078 67.7745 149.265 67.193 149.54 66.6972C149.822 66.2014 150.168 65.7882 150.578 65.4576C150.994 65.1271 151.468 64.8822 152.001 64.7231C152.534 64.5578 153.106 64.4752 153.718 64.4752C154.379 64.4752 154.967 64.5701 155.481 64.7598C155.995 64.9434 156.43 65.1944 156.785 65.5127C157.14 65.831 157.409 66.2014 157.593 66.6237C157.776 67.04 157.868 67.4807 157.868 67.9459C157.868 68.3683 157.825 68.7417 157.74 69.0661C157.654 69.3844 157.525 69.6629 157.354 69.9016C157.189 70.1342 156.981 70.3332 156.73 70.4985C156.485 70.6576 156.203 70.7923 155.885 70.9025C157.366 71.4228 158.107 72.4328 158.107 73.9325C158.107 74.6425 157.978 75.2608 157.721 75.7872C157.464 76.3136 157.118 76.7513 156.684 77.1002C156.255 77.4491 155.756 77.7123 155.187 77.8898C154.618 78.0612 154.024 78.1469 153.406 78.1469C152.769 78.1469 152.203 78.0796 151.707 77.9449C151.211 77.8041 150.771 77.5899 150.385 77.3022C149.999 77.0084 149.66 76.635 149.366 76.182C149.078 75.729 148.827 75.1904 148.613 74.566L149.88 74.0518C150.211 73.9233 150.517 73.8896 150.798 73.9508C151.08 74.012 151.282 74.1528 151.404 74.3732C151.68 74.8812 151.97 75.2516 152.276 75.4842C152.589 75.7107 152.953 75.8239 153.369 75.8239C153.687 75.8239 153.963 75.7719 154.195 75.6678C154.434 75.5576 154.63 75.4199 154.783 75.2546C154.942 75.0832 155.062 74.8904 155.141 74.6762C155.221 74.4619 155.261 74.2446 155.261 74.0243C155.261 73.7366 155.239 73.4795 155.196 73.253C155.16 73.0204 155.049 72.8215 154.866 72.6562C154.682 72.4909 154.404 72.3654 154.03 72.2797C153.663 72.1879 153.149 72.142 152.488 72.142V70.1771C153.045 70.1771 153.495 70.1342 153.837 70.0485C154.18 69.9628 154.443 69.8465 154.627 69.6996C154.817 69.5466 154.942 69.363 155.003 69.1487C155.065 68.9345 155.095 68.6988 155.095 68.4417C155.095 67.9153 154.967 67.5113 154.71 67.2297C154.459 66.942 154.073 66.7982 153.553 66.7982C153.13 66.7982 152.772 66.9114 152.478 67.1379C152.191 67.3583 151.992 67.6337 151.882 67.9643C151.753 68.3009 151.585 68.5244 151.377 68.6345C151.169 68.7447 150.872 68.7692 150.486 68.708L148.98 68.4417ZM169.108 71.3065C169.108 72.4756 168.983 73.4887 168.732 74.3456C168.481 75.2026 168.132 75.9127 167.685 76.4758C167.244 77.039 166.718 77.4583 166.106 77.7337C165.5 78.0092 164.842 78.1469 164.132 78.1469C163.422 78.1469 162.764 78.0092 162.158 77.7337C161.558 77.4583 161.037 77.039 160.597 76.4758C160.156 75.9127 159.81 75.2026 159.559 74.3456C159.314 73.4887 159.192 72.4756 159.192 71.3065C159.192 70.1373 159.314 69.1242 159.559 68.2673C159.81 67.4103 160.156 66.7002 160.597 66.1371C161.037 65.5739 161.558 65.1577 162.158 64.8884C162.764 64.6129 163.422 64.4752 164.132 64.4752C164.842 64.4752 165.5 64.6129 166.106 64.8884C166.718 65.1577 167.244 65.5739 167.685 66.1371C168.132 66.7002 168.481 67.4103 168.732 68.2673C168.983 69.1242 169.108 70.1373 169.108 71.3065ZM166.17 71.3065C166.17 70.3821 166.112 69.6262 165.996 69.0385C165.879 68.4448 165.723 67.9796 165.527 67.6429C165.338 67.3062 165.12 67.0767 164.875 66.9543C164.631 66.8257 164.383 66.7614 164.132 66.7614C163.881 66.7614 163.633 66.8257 163.388 66.9543C163.149 67.0767 162.935 67.3062 162.745 67.6429C162.562 67.9796 162.412 68.4448 162.295 69.0385C162.185 69.6262 162.13 70.3821 162.13 71.3065C162.13 72.2369 162.185 72.9959 162.295 73.5835C162.412 74.1712 162.562 74.6364 162.745 74.9792C162.935 75.3158 163.149 75.5485 163.388 75.677C163.633 75.7994 163.881 75.8606 164.132 75.8606C164.383 75.8606 164.631 75.7994 164.875 75.677C165.12 75.5485 165.338 75.3158 165.527 74.9792C165.723 74.6364 165.879 74.1712 165.996 73.5835C166.112 72.9959 166.17 72.2369 166.17 71.3065ZM176.51 67.8633C176.51 68.353 176.421 68.7998 176.244 69.2038C176.066 69.6078 175.831 69.9567 175.537 70.2505C175.243 70.5382 174.9 70.7617 174.509 70.9208C174.123 71.08 173.719 71.1595 173.297 71.1595C172.831 71.1595 172.403 71.08 172.011 70.9208C171.625 70.7617 171.289 70.5382 171.001 70.2505C170.72 69.9567 170.499 69.6078 170.34 69.2038C170.181 68.7998 170.101 68.353 170.101 67.8633C170.101 67.3552 170.181 66.8961 170.34 66.486C170.499 66.0698 170.72 65.7147 171.001 65.4209C171.289 65.1271 171.625 64.9006 172.011 64.7414C172.403 64.5762 172.831 64.4935 173.297 64.4935C173.762 64.4935 174.19 64.5762 174.582 64.7414C174.98 64.9006 175.32 65.1271 175.601 65.4209C175.889 65.7147 176.112 66.0698 176.271 66.486C176.431 66.8961 176.51 67.3552 176.51 67.8633ZM174.325 67.8633C174.325 67.5511 174.297 67.294 174.242 67.092C174.193 66.8839 174.123 66.7186 174.031 66.5962C173.939 66.4738 173.829 66.3881 173.701 66.3391C173.578 66.2901 173.443 66.2656 173.297 66.2656C173.15 66.2656 173.015 66.2901 172.893 66.3391C172.77 66.3881 172.666 66.4738 172.58 66.5962C172.495 66.7186 172.427 66.8839 172.378 67.092C172.329 67.294 172.305 67.5511 172.305 67.8633C172.305 68.1571 172.329 68.4019 172.378 68.5978C172.427 68.7937 172.495 68.9498 172.58 69.0661C172.666 69.1824 172.77 69.265 172.893 69.314C173.015 69.363 173.15 69.3875 173.297 69.3875C173.443 69.3875 173.578 69.363 173.701 69.314C173.829 69.265 173.939 69.1824 174.031 69.0661C174.123 68.9498 174.193 68.7937 174.242 68.5978C174.297 68.4019 174.325 68.1571 174.325 67.8633ZM180.715 65.0444C180.807 64.9404 180.921 64.8455 181.055 64.7598C181.19 64.668 181.377 64.6221 181.615 64.6221H183.69L173.609 77.596C173.517 77.7123 173.401 77.8102 173.26 77.8898C173.125 77.9633 172.96 78 172.764 78H170.634L180.715 65.0444ZM184.205 74.8598C184.205 75.3495 184.116 75.7994 183.938 76.2095C183.761 76.6135 183.525 76.9625 183.231 77.2563C182.937 77.544 182.595 77.7674 182.203 77.9265C181.817 78.0857 181.413 78.1653 180.991 78.1653C180.526 78.1653 180.097 78.0857 179.705 77.9265C179.32 77.7674 178.983 77.544 178.695 77.2563C178.414 76.9625 178.194 76.6135 178.034 76.2095C177.875 75.7994 177.796 75.3495 177.796 74.8598C177.796 74.3518 177.875 73.8927 178.034 73.4825C178.194 73.0663 178.414 72.7113 178.695 72.4175C178.983 72.1236 179.32 71.8971 179.705 71.738C180.097 71.5727 180.526 71.4901 180.991 71.4901C181.456 71.4901 181.885 71.5727 182.276 71.738C182.674 71.8971 183.014 72.1236 183.296 72.4175C183.583 72.7113 183.807 73.0663 183.966 73.4825C184.125 73.8927 184.205 74.3518 184.205 74.8598ZM182.019 74.8598C182.019 74.5538 181.992 74.2997 181.937 74.0977C181.888 73.8896 181.817 73.7243 181.725 73.6019C181.634 73.4795 181.523 73.3938 181.395 73.3448C181.272 73.2958 181.138 73.2714 180.991 73.2714C180.844 73.2714 180.709 73.2958 180.587 73.3448C180.464 73.3938 180.36 73.4795 180.275 73.6019C180.189 73.7243 180.122 73.8896 180.073 74.0977C180.024 74.2997 179.999 74.5538 179.999 74.8598C179.999 75.1536 180.024 75.3985 180.073 75.5944C180.122 75.7902 180.189 75.9463 180.275 76.0626C180.36 76.1789 180.464 76.2616 180.587 76.3105C180.709 76.3595 180.844 76.384 180.991 76.384C181.138 76.384 181.272 76.3595 181.395 76.3105C181.523 76.2616 181.634 76.1789 181.725 76.0626C181.817 75.9463 181.888 75.7902 181.937 75.5944C181.992 75.3985 182.019 75.1536 182.019 74.8598Z",
+                      "M149.708 73.6738H151.268C152.344 73.6738 152.98 74.176 152.98 75.0188C152.98 75.8527 152.308 76.4086 151.304 76.4086C150.192 76.4086 149.51 75.8796 149.483 75.0188H145.861C145.986 77.655 148.085 79.3587 151.223 79.3587C154.657 79.3587 156.845 77.8254 156.845 75.4044C156.845 73.638 155.599 72.5171 153.698 72.3109V72.2392C155.258 71.9612 156.397 70.8314 156.397 69.2712C156.397 67.0834 154.46 65.7025 151.402 65.7025C148.219 65.7025 146.112 67.4151 146.103 70.0065H149.528C149.528 69.1008 150.219 68.4732 151.241 68.4732C152.281 68.4732 152.9 68.9753 152.9 69.7913C152.9 70.6162 152.281 71.1273 151.286 71.1273H149.708V73.6738ZM163.83 79.3587C167.327 79.3587 169.524 76.7583 169.524 72.4902C169.524 68.1863 167.3 65.6935 163.83 65.6935C160.36 65.6935 158.127 68.1952 158.127 72.4992C158.127 76.7763 160.333 79.3587 163.83 79.3587ZM163.83 76.4355C162.772 76.4355 162.001 75.1623 162.001 72.4992C162.001 69.8271 162.772 68.6167 163.83 68.6167C164.888 68.6167 165.65 69.8271 165.65 72.4992C165.65 75.1623 164.888 76.4355 163.83 76.4355ZM176.939 69.2174C176.939 67.0565 175.729 65.7294 173.756 65.7294C171.783 65.7294 170.573 67.0565 170.573 69.2174C170.573 71.3784 171.783 72.7054 173.756 72.7054C175.729 72.7054 176.939 71.3784 176.939 69.2174ZM173.756 70.6252C173.38 70.6252 173.155 70.0961 173.155 69.1905C173.155 68.2849 173.38 67.7559 173.756 67.7559C174.133 67.7559 174.357 68.2849 174.357 69.1905C174.357 70.0961 174.133 70.6252 173.756 70.6252ZM175.146 79L179.665 72.7951L184.57 66.0612H181.79L177.415 72.0688L172.366 79H175.146ZM186.363 75.7451C186.363 73.5842 185.153 72.2571 183.18 72.2571C181.207 72.2571 179.997 73.5842 179.997 75.7451C179.997 77.9061 181.207 79.2331 183.18 79.2331C185.153 79.2331 186.363 77.9061 186.363 75.7451ZM183.18 77.1529C182.803 77.1529 182.579 76.6238 182.579 75.7182C182.579 74.8126 182.803 74.2836 183.18 74.2836C183.557 74.2836 183.781 74.8126 183.781 75.7182C183.781 76.6238 183.557 77.1529 183.18 77.1529Z",
                     fill: "white"
                   }
                 })
               ]),
               _vm._v(" "),
-              _c("g", { attrs: { filter: "url(#filter3_d_72_951)" } }, [
+              _c("g", { attrs: { filter: "url(#filter3_d_248_61)" } }, [
                 _c("rect", {
                   attrs: {
                     x: "19",
@@ -8489,7 +10094,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M46.011 47.7439C47.488 48.2694 47.5371 49.4676 48.1425 50.5578C47.9011 50.6184 47.6557 50.6614 47.4081 50.6867C46.0418 50.6867 46.814 48.6253 44.7736 48.289V50.6867C44.7736 50.6867 43.4843 50.6867 43.4843 50.0421V43.0465C43.4843 43.0465 44.7736 43.0465 44.7736 43.6911V47.2982C45.3579 47.2086 45.6845 46.7727 46.1301 45.9305C46.3193 45.5732 46.6906 45.4442 47.0816 45.4442C47.3198 45.4489 47.556 45.489 47.7823 45.5634C47.24 46.3061 46.9036 47.3865 46.011 47.7439Z",
+                    "M46.011 47.7439C47.4881 48.2694 47.5371 49.4676 48.1425 50.5578C47.9012 50.6184 47.6557 50.6614 47.4082 50.6867C46.0419 50.6867 46.814 48.6253 44.7736 48.289V50.6867C44.7736 50.6867 43.4844 50.6867 43.4844 50.0421V43.0465C43.4844 43.0465 44.7736 43.0465 44.7736 43.6911V47.2982C45.358 47.2086 45.6845 46.7727 46.1302 45.9305C46.3193 45.5732 46.6907 45.4442 47.0817 45.4442C47.3199 45.4489 47.556 45.489 47.7824 45.5634C47.24 46.3061 46.9037 47.3865 46.011 47.7439Z",
                   fill: "#4D4D4F"
                 }
               }),
@@ -8497,7 +10102,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M51.6206 47.0307C51.6206 46.6733 51.4216 46.3566 50.6593 46.3566C49.8269 46.3566 49.0743 46.6369 49.0743 47.4777C48.7856 47.0909 48.6974 46.784 48.6974 46.5164C48.6974 45.6545 49.8563 45.3953 50.6691 45.3953C52.1251 45.3953 52.8987 46.0091 52.8987 47.0895V50.712C52.6603 50.5991 52.3985 50.5448 52.1349 50.5537C51.6402 50.5537 51.1441 50.7317 50.5794 50.7317C49.5592 50.7317 48.5586 50.3547 48.5586 49.1761C48.5586 47.3277 51.2142 47.8126 51.6206 47.0307ZM51.65 48.041C51.4216 48.5666 49.8367 48.2793 49.8367 49.1621C49.8367 49.6078 50.1632 49.8362 50.7279 49.8362C51.044 49.8362 51.357 49.7753 51.65 49.6568V48.041Z",
+                    "M51.6206 47.0307C51.6206 46.6733 51.4216 46.3566 50.6592 46.3566C49.8268 46.3566 49.0743 46.6369 49.0743 47.4777C48.7856 47.0909 48.6973 46.784 48.6973 46.5164C48.6973 45.6545 49.8563 45.3953 50.669 45.3953C52.1251 45.3953 52.8986 46.0091 52.8986 47.0895V50.712C52.6603 50.5991 52.3984 50.5448 52.1349 50.5537C51.6402 50.5537 51.1441 50.7317 50.5794 50.7317C49.5592 50.7317 48.5586 50.3547 48.5586 49.1761C48.5586 47.3277 51.2142 47.8126 51.6206 47.0307ZM51.65 48.041C51.4216 48.5666 49.8366 48.2793 49.8366 49.1621C49.8366 49.6078 50.1632 49.8362 50.7279 49.8362C51.0439 49.8362 51.357 49.7753 51.65 49.6568V48.041Z",
                   fill: "#4D4D4F"
                 }
               }),
@@ -8505,7 +10110,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M57.2092 47.1792C57.2092 46.6537 56.9612 46.3566 56.2577 46.3566C55.9389 46.3599 55.622 46.4071 55.316 46.4967V50.6868C55.316 50.6868 54.0281 50.6868 54.0281 50.0422V45.3953C54.3061 45.5298 54.6106 45.6007 54.9194 45.6027C55.4057 45.6027 55.8611 45.3953 56.3964 45.3953C57.4166 45.3953 58.4985 45.7414 58.4985 47.0307V50.6868C58.4985 50.6868 57.2106 50.6672 57.2106 50.0422L57.2092 47.1792Z",
+                    "M57.2093 47.1792C57.2093 46.6537 56.9613 46.3566 56.2578 46.3566C55.9389 46.3599 55.6221 46.4071 55.3161 46.4967V50.6868C55.3161 50.6868 54.0282 50.6868 54.0282 50.0422V45.3953C54.3062 45.5298 54.6106 45.6007 54.9195 45.6027C55.4057 45.6027 55.8612 45.3953 56.3965 45.3953C57.4167 45.3953 58.4986 45.7414 58.4986 47.0307V50.6868C58.4986 50.6868 57.2107 50.6672 57.2107 50.0422L57.2093 47.1792Z",
                   fill: "#4D4D4F"
                 }
               }),
@@ -8513,7 +10118,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M29.8406 42.6191C29.8406 42.6191 34.4371 42.2814 34.4371 46.2486C34.4371 50.2159 33.2221 51.0133 32.1571 51.2641C32.1571 51.2641 36.5882 52.332 36.5882 46.7503C36.5882 41.1687 30.9365 41.9745 29.8406 42.6191Z",
+                    "M29.8406 42.6191C29.8406 42.6191 34.4371 42.2814 34.4371 46.2486C34.4371 50.2159 33.2221 51.0133 32.157 51.2641C32.157 51.2641 36.5881 52.332 36.5881 46.7503C36.5881 41.1687 30.9364 41.9745 29.8406 42.6191Z",
                   fill: "#F2634D"
                 }
               }),
@@ -8521,7 +10126,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M33.578 49.3681C33.578 49.3681 33.1352 50.9082 31.7899 51.103C30.4446 51.2978 30.2021 50.5719 29.2674 50.6209C29.2568 50.522 29.266 50.422 29.2945 50.3267C29.323 50.2314 29.3702 50.1427 29.4333 50.0658C29.4965 49.989 29.5743 49.9255 29.6623 49.8791C29.7503 49.8327 29.8466 49.8042 29.9457 49.7955C30.701 49.6932 32.115 49.8922 33.0553 49.298C33.0553 49.298 33.6159 49.0065 33.721 48.865L33.578 49.3681Z",
+                    "M33.5781 49.3681C33.5781 49.3681 33.1352 50.9082 31.7899 51.103C30.4446 51.2978 30.2022 50.5719 29.2675 50.6209C29.2568 50.522 29.266 50.422 29.2945 50.3267C29.323 50.2314 29.3702 50.1427 29.4333 50.0658C29.4965 49.989 29.5743 49.9255 29.6623 49.8791C29.7503 49.8327 29.8466 49.8042 29.9457 49.7955C30.7011 49.6932 32.115 49.8922 33.0554 49.298C33.0554 49.298 33.6159 49.0065 33.721 48.865L33.5781 49.3681Z",
                   fill: "#F2634D"
                 }
               }),
@@ -8529,7 +10134,7 @@ var render = function() {
               _c("path", {
                 attrs: {
                   d:
-                    "M29.7705 42.8966V44.8066V49.5615C29.8166 49.549 29.8634 49.5397 29.9107 49.5334C30.1755 49.505 30.4417 49.491 30.7081 49.4914C30.9883 49.4914 31.2868 49.4802 31.5895 49.4536V47.2086C31.5895 46.4644 31.5433 45.7021 31.5895 44.9664C31.6149 44.7457 31.7 44.5361 31.8355 44.36C31.9711 44.184 32.152 44.0482 32.3589 43.9672C32.5253 43.9058 32.7028 43.8801 32.8798 43.892C33.0568 43.9038 33.2293 43.9528 33.3861 44.0359C32.3334 43.2799 31.0664 42.8807 29.7705 42.8966Z",
+                    "M29.7705 42.8966V44.8066V49.5615C29.8165 49.549 29.8634 49.5397 29.9106 49.5334C30.1755 49.505 30.4417 49.491 30.708 49.4914C30.9883 49.4914 31.2868 49.4802 31.5895 49.4536V47.2086C31.5895 46.4644 31.5432 45.7021 31.5895 44.9664C31.6149 44.7457 31.7 44.5361 31.8355 44.36C31.971 44.184 32.152 44.0482 32.3588 43.9672C32.5252 43.9058 32.7028 43.8801 32.8798 43.892C33.0568 43.9038 33.2293 43.9528 33.386 44.0359C32.3334 43.2799 31.0664 42.8807 29.7705 42.8966Z",
                   fill: "#F2634D"
                 }
               }),
@@ -8541,9 +10146,9 @@ var render = function() {
                     "filter",
                     {
                       attrs: {
-                        id: "filter0_d_72_951",
-                        x: "1.43337",
-                        y: "0.796776",
+                        id: "filter0_d_248_61",
+                        x: "1.43361",
+                        y: "0.796654",
                         width: "197.373",
                         height: "167.079",
                         filterUnits: "userSpaceOnUse",
@@ -8588,7 +10193,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in2: "BackgroundImageFix",
-                          result: "effect1_dropShadow_72_951"
+                          result: "effect1_dropShadow_248_61"
                         }
                       }),
                       _vm._v(" "),
@@ -8596,7 +10201,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in: "SourceGraphic",
-                          in2: "effect1_dropShadow_72_951",
+                          in2: "effect1_dropShadow_248_61",
                           result: "shape"
                         }
                       })
@@ -8608,8 +10213,8 @@ var render = function() {
                     "filter",
                     {
                       attrs: {
-                        id: "filter1_d_72_951",
-                        x: "113.302",
+                        id: "filter1_d_248_61",
+                        x: "113.644",
                         y: "28.4061",
                         width: "105.219",
                         height: "105.219",
@@ -8655,7 +10260,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in2: "BackgroundImageFix",
-                          result: "effect1_dropShadow_72_951"
+                          result: "effect1_dropShadow_248_61"
                         }
                       }),
                       _vm._v(" "),
@@ -8663,7 +10268,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in: "SourceGraphic",
-                          in2: "effect1_dropShadow_72_951",
+                          in2: "effect1_dropShadow_248_61",
                           result: "shape"
                         }
                       })
@@ -8675,11 +10280,11 @@ var render = function() {
                     "filter",
                     {
                       attrs: {
-                        id: "filter2_d_72_951",
-                        x: "134.629",
-                        y: "64.1312",
-                        width: "63.5586",
-                        height: "41.6571",
+                        id: "filter2_d_248_61",
+                        x: "131.878",
+                        y: "65.3495",
+                        width: "68.4692",
+                        height: "41.6322",
                         filterUnits: "userSpaceOnUse",
                         "color-interpolation-filters": "sRGB"
                       }
@@ -8723,7 +10328,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in2: "BackgroundImageFix",
-                          result: "effect1_dropShadow_72_951"
+                          result: "effect1_dropShadow_248_61"
                         }
                       }),
                       _vm._v(" "),
@@ -8731,7 +10336,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in: "SourceGraphic",
-                          in2: "effect1_dropShadow_72_951",
+                          in2: "effect1_dropShadow_248_61",
                           result: "shape"
                         }
                       })
@@ -8743,7 +10348,7 @@ var render = function() {
                     "filter",
                     {
                       attrs: {
-                        id: "filter3_d_72_951",
+                        id: "filter3_d_248_61",
                         x: "0.094183",
                         y: "29.7392",
                         width: "88.0471",
@@ -8791,7 +10396,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in2: "BackgroundImageFix",
-                          result: "effect1_dropShadow_72_951"
+                          result: "effect1_dropShadow_248_61"
                         }
                       }),
                       _vm._v(" "),
@@ -8799,7 +10404,7 @@ var render = function() {
                         attrs: {
                           mode: "normal",
                           in: "SourceGraphic",
-                          in2: "effect1_dropShadow_72_951",
+                          in2: "effect1_dropShadow_248_61",
                           result: "shape"
                         }
                       })
@@ -8811,7 +10416,7 @@ var render = function() {
                     "linearGradient",
                     {
                       attrs: {
-                        id: "paint0_linear_72_951",
+                        id: "paint0_linear_248_61",
                         x1: "216.161",
                         y1: "71.332",
                         x2: "122.442",
@@ -8837,7 +10442,7 @@ var render = function() {
                     "linearGradient",
                     {
                       attrs: {
-                        id: "paint1_linear_72_951",
+                        id: "paint1_linear_248_61",
                         x1: "218.051",
                         y1: "74.8431",
                         x2: "133.515",
@@ -8863,7 +10468,7 @@ var render = function() {
                     "linearGradient",
                     {
                       attrs: {
-                        id: "paint2_linear_72_951",
+                        id: "paint2_linear_248_61",
                         x1: "212.38",
                         y1: "71.3321",
                         x2: "133.245",
@@ -8889,10 +10494,10 @@ var render = function() {
                     "linearGradient",
                     {
                       attrs: {
-                        id: "paint3_linear_72_951",
-                        x1: "165.911",
+                        id: "paint3_linear_248_61",
+                        x1: "166.253",
                         y1: "28.3761",
-                        x2: "165.911",
+                        x2: "166.253",
                         y2: "104.342",
                         gradientUnits: "userSpaceOnUse"
                       }
@@ -8915,7 +10520,16 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "content" }, [
           _c("div", { staticClass: "details" }, [
-            _c("h3", [_vm._v(_vm._s(_vm.__("Dokan Premium", "dokan-lite")))]),
+            _c("h3", [
+              _vm._v(_vm._s(_vm.__("Dokan Premium", "dokan-lite")) + " "),
+              _c("span", { staticClass: "dokan-offer" }, [
+                _vm._v(_vm._s(_vm.__("Enjoy", "dokan-lite")) + " "),
+                _c("span", { staticClass: "penchant-off" }, [
+                  _vm._v(_vm._s(_vm.__("30%", "dokan-lite")))
+                ]),
+                _vm._v(_vm._s(_vm.__("OFF", "dokan-lite")))
+              ])
+            ]),
             _vm._v(" "),
             _c("p", [
               _vm._v(
@@ -8929,38 +10543,63 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "features" },
-            [
-              _vm._l(_vm.features, function(feature) {
-                return _c("label", { key: feature }, [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(feature) +
-                      "\n                "
-                  ),
-                  _c("span")
-                ])
-              }),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  attrs: {
-                    target: "_blank",
-                    href: "https://wedevs.com/dokan/modules"
-                  }
-                },
-                [
-                  _vm._v(
-                    _vm._s(_vm.__("See All Premium Modules", "dokan-lite"))
-                  )
-                ]
-              )
-            ],
-            2
-          )
+          _c("div", { staticClass: "features" }, [
+            _c("label", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Table rate shipping", "dokan-lite")) +
+                  "\n                "
+              ),
+              _c("span")
+            ]),
+            _vm._v(" "),
+            _c("label", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Vendor Reviews", "dokan-lite")) +
+                  "\n                "
+              ),
+              _c("span")
+            ]),
+            _vm._v(" "),
+            _c("label", { staticClass: "hidden-sm" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Product Subscriptions", "dokan-lite")) +
+                  "\n                "
+              ),
+              _c("span")
+            ]),
+            _vm._v(" "),
+            _c("label", { staticClass: "hidden-sm" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Auction", "dokan-lite")) +
+                  "\n                "
+              ),
+              _c("span")
+            ]),
+            _vm._v(" "),
+            _c("label", { staticClass: "hidden-sm" }, [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Delivery Time", "dokan-lite")) +
+                  "\n                "
+              ),
+              _c("span")
+            ]),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                attrs: {
+                  target: "_blank",
+                  href: "https://wedevs.com/dokan/modules"
+                }
+              },
+              [_vm._v(_vm._s(_vm.__("See All Premium Modules", "dokan-lite")))]
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "btn-upgrade" }, [
@@ -9004,7 +10643,7 @@ if (false) {
 }
 
 /***/ }),
-/* 123 */
+/* 136 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9501,17 +11140,17 @@ if (false) {
 }
 
 /***/ }),
-/* 124 */
+/* 137 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Withdraw_vue__ = __webpack_require__(54);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_62373ea4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Withdraw_vue__ = __webpack_require__(139);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(125)
+  __webpack_require__(138)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -9557,13 +11196,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 125 */
+/* 138 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 126 */
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9817,6 +11456,21 @@ var render = function() {
                 }
               },
               {
+                key: "method_title",
+                fn: function(data) {
+                  return [
+                    _c("div", {
+                      staticClass: "method_title_inner",
+                      domProps: {
+                        innerHTML: _vm._s(
+                          _vm.getPaymentTitle(data.row.method, data.row)
+                        )
+                      }
+                    })
+                  ]
+                }
+              },
+              {
                 key: "method_details",
                 fn: function(data) {
                   return [
@@ -9981,6 +11635,7 @@ var render = function() {
             _vm._v(" "),
             _vm._v(" "),
             _vm._v(" "),
+            _vm._v(" "),
             _c("template", { slot: "filters" }, [
               _c("select", {
                 staticStyle: { width: "190px" },
@@ -10026,17 +11681,17 @@ if (false) {
 }
 
 /***/ }),
-/* 127 */
+/* 140 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Premium_vue__ = __webpack_require__(55);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b38fd83a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Premium_vue__ = __webpack_require__(148);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(128)
+  __webpack_require__(141)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10082,19 +11737,19 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 128 */
+/* 141 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 129 */
+/* 142 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 130 */
+/* 143 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10184,11 +11839,11 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */,
-/* 132 */,
-/* 133 */,
-/* 134 */,
-/* 135 */
+/* 144 */,
+/* 145 */,
+/* 146 */,
+/* 147 */,
+/* 148 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10777,17 +12432,17 @@ if (false) {
 }
 
 /***/ }),
-/* 136 */
+/* 149 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Help_vue__ = __webpack_require__(58);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_c289d136_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Help_vue__ = __webpack_require__(151);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(137)
+  __webpack_require__(150)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10833,13 +12488,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 137 */
+/* 150 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 138 */
+/* 151 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10912,17 +12567,17 @@ if (false) {
 }
 
 /***/ }),
-/* 139 */
+/* 152 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ChangeLog_vue__ = __webpack_require__(59);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_254fdb80_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ChangeLog_vue__ = __webpack_require__(154);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(140)
+  __webpack_require__(153)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -10968,13 +12623,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 140 */
+/* 153 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 141 */
+/* 154 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11469,17 +13124,17 @@ if (false) {
 }
 
 /***/ }),
-/* 142 */
+/* 155 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Settings_vue__ = __webpack_require__(60);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_e4dc4572_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Settings_vue__ = __webpack_require__(192);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(143)
+  __webpack_require__(156)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11525,23 +13180,24 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 143 */
+/* 156 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 144 */
+/* 157 */,
+/* 158 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Fields_vue__ = __webpack_require__(61);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_a96ce32e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Fields_vue__ = __webpack_require__(188);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(145)
+  __webpack_require__(159)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -11587,26 +13243,12 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 145 */
+/* 159 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 146 */,
-/* 147 */,
-/* 148 */,
-/* 149 */,
-/* 150 */,
-/* 151 */,
-/* 152 */,
-/* 153 */,
-/* 154 */,
-/* 155 */,
-/* 156 */,
-/* 157 */,
-/* 158 */,
-/* 159 */,
 /* 160 */,
 /* 161 */,
 /* 162 */,
@@ -11620,7 +13262,70 @@ if (false) {(function () {
 /* 170 */,
 /* 171 */,
 /* 172 */,
-/* 173 */
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SocialFields_vue__ = __webpack_require__(72);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d90d6894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SocialFields_vue__ = __webpack_require__(185);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SocialFields_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_d90d6894_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SocialFields_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/SocialFields.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d90d6894", Component.options)
+  } else {
+    hotAPI.reload("data-v-d90d6894", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11628,791 +13333,189 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.shoudShow
-    ? _c(
-        "tr",
-        { class: [_vm.id, "dokan-settings-field-type-" + _vm.fieldData.type] },
-        [
-          "sub_section" === _vm.fieldData.type
-            ? [
-                _c(
-                  "th",
+  return _c("fieldset", [
+    _c("div", { staticClass: "html_contents" }, [
+      _c("h3", { staticClass: "field_heading", attrs: { scope: "row" } }, [
+        _vm._v(
+          "\n            " + _vm._s(_vm.fieldData.label) + "\n            "
+        ),
+        _vm.fieldData.tooltip
+          ? _c("span", [
+              _c("i", {
+                directives: [
                   {
-                    staticClass: "dokan-settings-sub-section-title",
-                    attrs: { colspan: "2" }
-                  },
-                  [_c("label", [_vm._v(_vm._s(_vm.fieldData.label))])]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.containCommonFields(_vm.fieldData.type)
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    (_vm.fieldData.type || "text") === "checkbox"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: "checkbox"
-                          },
-                          domProps: {
-                            checked: Array.isArray(
-                              _vm.fieldValue[_vm.fieldData.name]
-                            )
-                              ? _vm._i(
-                                  _vm.fieldValue[_vm.fieldData.name],
-                                  null
-                                ) > -1
-                              : _vm.fieldValue[_vm.fieldData.name]
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.fieldValue[_vm.fieldData.name],
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a.concat([$$v])
-                                    )
-                                } else {
-                                  $$i > -1 &&
-                                    _vm.$set(
-                                      _vm.fieldValue,
-                                      _vm.fieldData.name,
-                                      $$a
-                                        .slice(0, $$i)
-                                        .concat($$a.slice($$i + 1))
-                                    )
-                                }
-                              } else {
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $$c
-                                )
-                              }
-                            }
-                          }
-                        })
-                      : (_vm.fieldData.type || "text") === "radio"
-                      ? _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: "radio"
-                          },
-                          domProps: {
-                            checked: _vm._q(
-                              _vm.fieldValue[_vm.fieldData.name],
-                              null
-                            )
-                          },
-                          on: {
-                            change: function($event) {
-                              return _vm.$set(
-                                _vm.fieldValue,
-                                _vm.fieldData.name,
-                                null
-                              )
-                            }
-                          }
-                        })
-                      : _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.fieldValue[_vm.fieldData.name],
-                              expression: "fieldValue[fieldData.name]"
-                            }
-                          ],
-                          staticClass: "regular-text",
-                          class: [
-                            {
-                              "dokan-input-validation-error": _vm.hasValidationError(
-                                _vm.fieldData.name
-                              )
-                            },
-                            _vm.fieldData.class
-                          ],
-                          attrs: {
-                            id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            name:
-                              _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                            type: _vm.fieldData.type || "text"
-                          },
-                          domProps: {
-                            value: _vm.fieldValue[_vm.fieldData.name]
-                          },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.$set(
-                                _vm.fieldValue,
-                                _vm.fieldData.name,
-                                $event.target.value
-                              )
-                            }
-                          }
-                        }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "number" === _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      class: [
-                        {
-                          "dokan-input-validation-error": _vm.hasValidationError(
-                            _vm.fieldData.name
-                          )
-                        },
-                        _vm.fieldData.class
-                      ],
-                      attrs: {
-                        type: "number",
-                        min: _vm.fieldData.min,
-                        max: _vm.fieldData.max,
-                        step: _vm.fieldData.step,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "price" == _vm.fieldData.type &&
-          _vm.allSettingsValues.dokan_selling &&
-          "combine" !== _vm.allSettingsValues.dokan_selling.commission_type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      class: {
-                        wc_input_decimal:
-                          _vm.allSettingsValues.dokan_selling.commission_type ==
-                          "percentage",
-                        wc_input_price:
-                          _vm.allSettingsValues.dokan_selling.commission_type ==
-                          "flat"
-                      },
-                      attrs: {
-                        type: "text",
-                        min: _vm.fieldData.min,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "combine" == _vm.fieldData.type &&
-          _vm.haveCondition(_vm.fieldData) &&
-          _vm.fieldData.condition.type == "show" &&
-          _vm.checkConditionLogic(_vm.fieldData, _vm.fieldValue)
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data combine-tips-style" }),
-                _vm._v(" "),
-                _c("td", { staticClass: "percent_fee" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value:
-                          _vm.fieldValue[_vm.fieldData.fields.percent_fee.name],
-                        expression:
-                          "fieldValue[fieldData.fields.percent_fee.name]"
-                      }
-                    ],
-                    staticClass: "wc_input_decimal regular-text",
-                    attrs: {
-                      type: "text",
-                      id:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.name +
-                        "]" +
-                        "[" +
-                        "percent_fee" +
-                        "]",
-                      name:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.fields.percent_fee.name +
-                        "]"
-                    },
-                    domProps: {
-                      value:
-                        _vm.fieldValue[_vm.fieldData.fields.percent_fee.name]
-                    },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.fields.percent_fee.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  }),
-                  _vm._v("\n            " + _vm._s("%") + "\n        ")
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "fixed_fee" }, [
-                  _vm._v("\n            " + _vm._s("+") + "\n            "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value:
-                          _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name],
-                        expression:
-                          "fieldValue[fieldData.fields.fixed_fee.name]"
-                      }
-                    ],
-                    staticClass: "wc_input_price regular-text",
-                    attrs: {
-                      type: "text",
-                      id:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.name +
-                        "]" +
-                        "[" +
-                        "fixed_fee" +
-                        "]",
-                      name:
-                        _vm.sectionId +
-                        "[" +
-                        _vm.fieldData.fields.fixed_fee.name +
-                        "]"
-                    },
-                    domProps: {
-                      value: _vm.fieldValue[_vm.fieldData.fields.fixed_fee.name]
-                    },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.fieldValue,
-                          _vm.fieldData.fields.fixed_fee.name,
-                          $event.target.value
-                        )
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _vm.hasError(_vm.fieldData.fields.percent_fee.name) &&
-                _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.__(
-                              "Both percentage and fixed fee is required.",
-                              "dokan-lite"
-                            )
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.getError(_vm.fieldData.fields.percent_fee.label)
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
-                  ? _c("p", { staticClass: "dokan-error combine-commission" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(
-                            _vm.getError(_vm.fieldData.fields.fixed_fee.label)
-                          ) +
-                          "\n        "
-                      )
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("p", {
-                  staticClass: "description",
-                  domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+                    name: "tooltip",
+                    rawName: "v-tooltip",
+                    value: _vm.fieldData.tooltip,
+                    expression: "fieldData.tooltip"
+                  }
+                ],
+                staticClass: "dashicons dashicons-editor-help tips",
+                attrs: { title: _vm.fieldData.tooltip }
+              })
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("p", {
+        staticClass: "field_desc",
+        domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+      })
+    ]),
+    _vm._v(" "),
+    _vm.fieldData.url || _vm.fieldData.type !== "html"
+      ? _c(
+          "div",
+          {
+            staticClass: "fields",
+            class: [_vm.fieldData.type === "radio" ? "radio_fields" : ""]
+          },
+          [
+            _vm.fieldData.url
+              ? _c("input", {
+                  staticClass: "regular-text large",
+                  attrs: { disabled: "", type: "text" },
+                  domProps: { value: _vm.fieldData.url }
                 })
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "textarea" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "checkbox" && _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text large",
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.fieldValue[_vm.fieldData.name])
+                      ? _vm._i(_vm.fieldValue[_vm.fieldData.name], null) > -1
+                      : _vm.fieldValue[_vm.fieldData.name]
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.fieldValue[_vm.fieldData.name],
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.fieldValue,
+                              _vm.fieldData.name,
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.fieldValue,
+                              _vm.fieldData.name,
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$c)
+                      }
+                    }
+                  }
+                })
+              : _vm.fieldData.type === "radio" && _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text large",
+                  attrs: { type: "radio" },
+                  domProps: {
+                    checked: _vm._q(_vm.fieldValue[_vm.fieldData.name], null)
+                  },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.fieldValue, _vm.fieldData.name, null)
+                    }
+                  }
+                })
+              : _vm.fieldData.type === "text"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "regular-text large",
+                  attrs: { type: _vm.fieldData.type },
+                  domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.fieldValue,
+                        _vm.fieldData.name,
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "textarea"
+              ? _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldValue[_vm.fieldData.name],
+                      expression: "fieldValue[fieldData.name]"
+                    }
+                  ],
+                  staticClass: "large",
+                  domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.fieldValue,
+                        _vm.fieldData.name,
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.fieldData.type === "radio"
+              ? _vm._l(_vm.fieldData.options, function(optionVal, optionKey) {
+                  return _c(
                     "label",
                     {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
+                      key: optionKey,
+                      class: _vm.isSocialOptionChecked(optionKey)
+                        ? "checked"
                         : ""
-                    ]
-                  },
-                  [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      attrs: {
-                        type: "textarea",
-                        rows: _vm.fieldData.rows,
-                        cols: _vm.fieldData.cols,
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.hasValidationError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(
-                                _vm.getValidationErrorMessage(
-                                  _vm.fieldData.name
-                                )
-                              ) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "checkbox" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
                     },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("fieldset", [
-                      _c(
-                        "label",
-                        {
-                          attrs: {
-                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                          }
-                        },
-                        [
-                          _c("input", {
+                    [
+                      _c("span", { staticClass: "dashicons dashicons-yes" }),
+                      _vm._v(" "),
+                      _vm.fieldData.type === "checkbox"
+                        ? _c("input", {
                             directives: [
                               {
                                 name: "model",
@@ -12421,36 +13524,26 @@ var render = function() {
                                 expression: "fieldValue[fieldData.name]"
                               }
                             ],
-                            staticClass: "checkbox",
-                            attrs: {
-                              type: "checkbox",
-                              id:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              "true-value": "on",
-                              "false-value": "off"
-                            },
+                            staticClass: "radio",
+                            attrs: { name: optionKey, type: "checkbox" },
                             domProps: {
+                              value: optionKey,
                               checked: Array.isArray(
                                 _vm.fieldValue[_vm.fieldData.name]
                               )
                                 ? _vm._i(
                                     _vm.fieldValue[_vm.fieldData.name],
-                                    null
+                                    optionKey
                                   ) > -1
-                                : _vm._q(
-                                    _vm.fieldValue[_vm.fieldData.name],
-                                    "on"
-                                  )
+                                : _vm.fieldValue[_vm.fieldData.name]
                             },
                             on: {
                               change: function($event) {
                                 var $$a = _vm.fieldValue[_vm.fieldData.name],
                                   $$el = $event.target,
-                                  $$c = $$el.checked ? "on" : "off"
+                                  $$c = $$el.checked ? true : false
                                 if (Array.isArray($$a)) {
-                                  var $$v = null,
+                                  var $$v = optionKey,
                                     $$i = _vm._i($$a, $$v)
                                   if ($$el.checked) {
                                     $$i < 0 &&
@@ -12478,15 +13571,974 @@ var render = function() {
                                 }
                               }
                             }
+                          })
+                        : _vm.fieldData.type === "radio"
+                        ? _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "radio",
+                            attrs: { name: optionKey, type: "radio" },
+                            domProps: {
+                              value: optionKey,
+                              checked: _vm._q(
+                                _vm.fieldValue[_vm.fieldData.name],
+                                optionKey
+                              )
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  optionKey
+                                )
+                              }
+                            }
+                          })
+                        : _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "radio",
+                            attrs: {
+                              name: optionKey,
+                              type: _vm.fieldData.type
+                            },
+                            domProps: {
+                              value: optionKey,
+                              value: _vm.fieldValue[_vm.fieldData.name]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
                           }),
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(_vm.fieldData.desc) +
-                              "\n                "
-                          )
-                        ]
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(optionVal) +
+                          "\n            "
                       )
+                    ]
+                  )
+                })
+              : _vm._e()
+          ],
+          2
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d90d6894", esExports)
+  }
+}
+
+/***/ }),
+/* 186 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FieldHeading_vue__ = __webpack_require__(73);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_929c9450_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FieldHeading_vue__ = __webpack_require__(187);
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_FieldHeading_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_929c9450_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_FieldHeading_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/components/FieldHeading.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-929c9450", Component.options)
+  } else {
+    hotAPI.reload("data-v-929c9450", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 187 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "field_data" }, [
+    _c("h3", { staticClass: "field_heading", attrs: { scope: "row" } }, [
+      _vm._v("\n        " + _vm._s(_vm.fieldData.label) + "\n        "),
+      _vm.fieldData.icon_class ? _c("span") : _vm._e(),
+      _vm._v(" "),
+      _vm.fieldData.tooltip || _vm.fieldData.field_icon
+        ? _c("span", [
+            _c("i", {
+              directives: [
+                {
+                  name: "tooltip",
+                  rawName: "v-tooltip",
+                  value: _vm.fieldData.tooltip
+                    ? _vm.fieldData.tooltip
+                    : _vm.fieldData.field_icon,
+                  expression:
+                    "fieldData.tooltip ? fieldData.tooltip : fieldData.field_icon"
+                }
+              ],
+              staticClass: "tips",
+              class: [
+                { "dashicons dashicons-editor-help": _vm.fieldData.tooltip },
+                { "fas fa-exclamation-triangle": _vm.fieldData.field_icon }
+              ],
+              attrs: {
+                title: _vm.fieldData.tooltip
+                  ? _vm.fieldData.tooltip
+                  : _vm.fieldData.field_icon
+              }
+            })
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("p", {
+      staticClass: "field_desc",
+      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-929c9450", esExports)
+  }
+}
+
+/***/ }),
+/* 188 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.shouldShow
+    ? _c(
+        "div",
+        { class: [_vm.id, "dokan-settings-field-type-" + _vm.fieldData.type] },
+        [
+          "sub_section" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "dokan-settings-sub-section",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("h3", { staticClass: "sub-section-title" }, [
+                      _vm._v(_vm._s(_vm.fieldData.label))
                     ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "sub-section-description" }, [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(_vm.fieldData.description) +
+                          "\n            "
+                      )
+                    ])
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.containCommonFields(_vm.fieldData.type)
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field" }, [
+                          (_vm.fieldData.type || "text") === "checkbox"
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium",
+                                class: [
+                                  {
+                                    "dokan-input-validation-error": _vm.hasValidationError(
+                                      _vm.fieldData.name
+                                    )
+                                  },
+                                  _vm.fieldData.class
+                                ],
+                                attrs: {
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  type: "checkbox"
+                                },
+                                domProps: {
+                                  checked: Array.isArray(
+                                    _vm.fieldValue[_vm.fieldData.name]
+                                  )
+                                    ? _vm._i(
+                                        _vm.fieldValue[_vm.fieldData.name],
+                                        null
+                                      ) > -1
+                                    : _vm.fieldValue[_vm.fieldData.name]
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a =
+                                        _vm.fieldValue[_vm.fieldData.name],
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = null,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          _vm.$set(
+                                            _vm.fieldValue,
+                                            _vm.fieldData.name,
+                                            $$a.concat([$$v])
+                                          )
+                                      } else {
+                                        $$i > -1 &&
+                                          _vm.$set(
+                                            _vm.fieldValue,
+                                            _vm.fieldData.name,
+                                            $$a
+                                              .slice(0, $$i)
+                                              .concat($$a.slice($$i + 1))
+                                          )
+                                      }
+                                    } else {
+                                      _vm.$set(
+                                        _vm.fieldValue,
+                                        _vm.fieldData.name,
+                                        $$c
+                                      )
+                                    }
+                                  }
+                                }
+                              })
+                            : (_vm.fieldData.type || "text") === "radio"
+                            ? _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium",
+                                class: [
+                                  {
+                                    "dokan-input-validation-error": _vm.hasValidationError(
+                                      _vm.fieldData.name
+                                    )
+                                  },
+                                  _vm.fieldData.class
+                                ],
+                                attrs: {
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  type: "radio"
+                                },
+                                domProps: {
+                                  checked: _vm._q(
+                                    _vm.fieldValue[_vm.fieldData.name],
+                                    null
+                                  )
+                                },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      null
+                                    )
+                                  }
+                                }
+                              })
+                            : _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium",
+                                class: [
+                                  {
+                                    "dokan-input-validation-error": _vm.hasValidationError(
+                                      _vm.fieldData.name
+                                    )
+                                  },
+                                  _vm.fieldData.class
+                                ],
+                                attrs: {
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  type: _vm.fieldData.type || "text"
+                                },
+                                domProps: {
+                                  value: _vm.fieldValue[_vm.fieldData.name]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "number" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field" }, [
+                          _c(
+                            "label",
+                            {
+                              attrs: {
+                                for:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              }
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium",
+                                class: [
+                                  {
+                                    "dokan-input-validation-error": _vm.hasValidationError(
+                                      _vm.fieldData.name
+                                    )
+                                  },
+                                  _vm.fieldData.class
+                                ],
+                                attrs: {
+                                  type: "number",
+                                  min: _vm.fieldData.min,
+                                  max: _vm.fieldData.max,
+                                  step: _vm.fieldData.step,
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]"
+                                },
+                                domProps: {
+                                  value: _vm.fieldValue[_vm.fieldData.name]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "price" === _vm.fieldData.type &&
+          _vm.allSettingsValues.dokan_selling &&
+          "combine" !== _vm.allSettingsValues.dokan_selling.commission_type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field" }, [
+                          _c(
+                            "label",
+                            {
+                              attrs: {
+                                for:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              }
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium",
+                                class: {
+                                  wc_input_decimal:
+                                    _vm.allSettingsValues.dokan_selling
+                                      .commission_type == "percentage",
+                                  wc_input_price:
+                                    _vm.allSettingsValues.dokan_selling
+                                      .commission_type == "flat"
+                                },
+                                attrs: {
+                                  type: "text",
+                                  min: _vm.fieldData.min,
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]"
+                                },
+                                domProps: {
+                                  value: _vm.fieldValue[_vm.fieldData.name]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
+                                )
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "combine" === _vm.fieldData.type &&
+          _vm.haveCondition(_vm.fieldData) &&
+          _vm.fieldData.condition.type == "show" &&
+          _vm.checkConditionLogic(_vm.fieldData, _vm.fieldValue)
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field combine_fields" }, [
+                          _c("div", { staticClass: "percent_fee" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value:
+                                    _vm.fieldValue[
+                                      _vm.fieldData.fields.percent_fee.name
+                                    ],
+                                  expression:
+                                    "fieldValue[fieldData.fields.percent_fee.name]"
+                                }
+                              ],
+                              staticClass:
+                                "wc_input_decimal regular-text medium",
+                              attrs: {
+                                type: "text",
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]" +
+                                  "[" +
+                                  "percent_fee" +
+                                  "]",
+                                name:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.fields.percent_fee.name +
+                                  "]"
+                              },
+                              domProps: {
+                                value:
+                                  _vm.fieldValue[
+                                    _vm.fieldData.fields.percent_fee.name
+                                  ]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.fields.percent_fee.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s("%") +
+                                "\n                    "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "fixed_fee" }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s("+") +
+                                "\n                        "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value:
+                                    _vm.fieldValue[
+                                      _vm.fieldData.fields.fixed_fee.name
+                                    ],
+                                  expression:
+                                    "fieldValue[fieldData.fields.fixed_fee.name]"
+                                }
+                              ],
+                              staticClass: "wc_input_price regular-text medium",
+                              attrs: {
+                                type: "text",
+                                id:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.name +
+                                  "]" +
+                                  "[" +
+                                  "fixed_fee" +
+                                  "]",
+                                name:
+                                  _vm.sectionId +
+                                  "[" +
+                                  _vm.fieldData.fields.fixed_fee.name +
+                                  "]"
+                              },
+                              domProps: {
+                                value:
+                                  _vm.fieldValue[
+                                    _vm.fieldData.fields.fixed_fee.name
+                                  ]
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.fields.fixed_fee.name,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.fields.percent_fee.name) &&
+                    _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.__(
+                                    "Both percentage and fixed fee is required.",
+                                    "dokan-lite"
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm.hasError(_vm.fieldData.fields.percent_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.getError(
+                                    _vm.fieldData.fields.percent_fee.label
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm.hasError(_vm.fieldData.fields.fixed_fee.name)
+                      ? _c(
+                          "p",
+                          { staticClass: "dokan-error combine-commission" },
+                          [
+                            _vm._v(
+                              "\n                " +
+                                _vm._s(
+                                  _vm.getError(
+                                    _vm.fieldData.fields.fixed_fee.label
+                                  )
+                                ) +
+                                "\n            "
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "textarea" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field" }, [
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "regular-text medium",
+                            attrs: {
+                              type: "textarea",
+                              rows: _vm.fieldData.rows,
+                              cols: _vm.fieldData.cols,
+                              id:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
+                              name:
+                                _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                            },
+                            domProps: {
+                              value: _vm.fieldValue[_vm.fieldData.name]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.fieldValue,
+                                  _vm.fieldData.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e(),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
@@ -12506,42 +14558,12 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
-          "multicheck" == _vm.fieldData.type
+          "switcher" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -12552,132 +14574,33 @@ var render = function() {
                     _c(
                       "fieldset",
                       [
-                        _vm._l(_vm.fieldData.options, function(
-                          optionVal,
-                          optionKey
-                        ) {
-                          return [
-                            _c(
-                              "label",
-                              {
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field" }, [
+                          _c(
+                            "label",
+                            {
+                              attrs: {
+                                for:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              }
+                            },
+                            [
+                              _c("switches", {
                                 attrs: {
-                                  for:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]"
-                                }
-                              },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value:
-                                        _vm.fieldValue[_vm.fieldData.name][
-                                          optionKey
-                                        ],
-                                      expression:
-                                        "fieldValue[fieldData.name][optionKey]"
-                                    }
-                                  ],
-                                  staticClass: "checkbox",
-                                  attrs: {
-                                    type: "checkbox",
-                                    id:
-                                      _vm.sectionId +
-                                      "[" +
-                                      _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    name:
-                                      _vm.sectionId +
-                                      "[" +
-                                      _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    "true-value": optionKey,
-                                    "false-value": ""
-                                  },
-                                  domProps: {
-                                    checked: Array.isArray(
-                                      _vm.fieldValue[_vm.fieldData.name][
-                                        optionKey
-                                      ]
-                                    )
-                                      ? _vm._i(
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                          null
-                                        ) > -1
-                                      : _vm._q(
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                          optionKey
-                                        )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a =
-                                          _vm.fieldValue[_vm.fieldData.name][
-                                            optionKey
-                                          ],
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? optionKey : ""
-                                      if (Array.isArray($$a)) {
-                                        var $$v = null,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            _vm.$set(
-                                              _vm.fieldValue[
-                                                _vm.fieldData.name
-                                              ],
-                                              optionKey,
-                                              $$a.concat([$$v])
-                                            )
-                                        } else {
-                                          $$i > -1 &&
-                                            _vm.$set(
-                                              _vm.fieldValue[
-                                                _vm.fieldData.name
-                                              ],
-                                              optionKey,
-                                              $$a
-                                                .slice(0, $$i)
-                                                .concat($$a.slice($$i + 1))
-                                            )
-                                        }
-                                      } else {
-                                        _vm.$set(
-                                          _vm.fieldValue[_vm.fieldData.name],
-                                          optionKey,
-                                          $$c
-                                        )
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(optionVal) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c("br")
-                          ]
-                        })
+                                  enabled: _vm.checked === "on" ? true : false,
+                                  value: "isChecked"
+                                },
+                                on: { input: _vm.onToggleSwitch }
+                              })
+                            ],
+                            1
+                          )
+                        ])
                       ],
-                      2
+                      1
                     ),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
@@ -12698,52 +14621,12 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
-          "select" == _vm.fieldData.type
+          "multicheck" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
-                    class: [
-                      "combine" === _vm.fieldData.type
-                        ? "tooltips-data combine-tips-style"
-                        : "tooltips-data"
-                    ]
-                  },
-                  [
-                    _vm.fieldData.tooltip
-                      ? _c("span", [
-                          _c("i", {
-                            directives: [
-                              {
-                                name: "tooltip",
-                                rawName: "v-tooltip",
-                                value: _vm.fieldData.tooltip,
-                                expression: "fieldData.tooltip"
-                              }
-                            ],
-                            staticClass: "dashicons dashicons-editor-help tips",
-                            attrs: { title: _vm.fieldData.tooltip }
-                          })
-                        ])
-                      : _vm._e()
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -12751,147 +14634,277 @@ var render = function() {
                     ]
                   },
                   [
-                    !_vm.fieldData.grouped
-                      ? _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
-                                )
-                              }
-                            }
-                          },
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "field multicheck_fields" },
                           [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
-                                  }
-                                })
-                              : _vm._e(),
-                            _vm._v(" "),
                             _vm._l(_vm.fieldData.options, function(
                               optionVal,
                               optionKey
                             ) {
-                              return _c("option", {
-                                domProps: {
-                                  value: optionKey,
-                                  innerHTML: _vm._s(optionVal)
-                                }
-                              })
+                              return [
+                                _c(
+                                  "div",
+                                  { key: optionKey },
+                                  [
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(optionVal) +
+                                        "\n                            "
+                                    ),
+                                    _c("switches", {
+                                      attrs: {
+                                        enabled: _vm.isSwitchOptionChecked(
+                                          optionKey
+                                        ),
+                                        value: optionKey
+                                      },
+                                      on: { input: _vm.setCheckedValue }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
                             })
                           ],
                           2
                         )
-                      : _c(
-                          "select",
-                          {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.fieldValue[_vm.fieldData.name],
-                                expression: "fieldValue[fieldData.name]"
-                              }
-                            ],
-                            staticClass: "regular",
-                            attrs: {
-                              name:
-                                _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                              id: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$selectedVal = Array.prototype.filter
-                                  .call($event.target.options, function(o) {
-                                    return o.selected
-                                  })
-                                  .map(function(o) {
-                                    var val = "_value" in o ? o._value : o.value
-                                    return val
-                                  })
-                                _vm.$set(
-                                  _vm.fieldValue,
-                                  _vm.fieldData.name,
-                                  $event.target.multiple
-                                    ? $$selectedVal
-                                    : $$selectedVal[0]
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasValidationError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(
+                                _vm.getValidationErrorMessage(
+                                  _vm.fieldData.name
                                 )
-                              }
-                            }
-                          },
+                              ) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "select" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "field" },
                           [
-                            _vm.fieldData.placeholder
-                              ? _c("option", {
-                                  attrs: { value: "", disabled: "" },
-                                  domProps: {
-                                    innerHTML: _vm._s(_vm.fieldData.placeholder)
+                            !_vm.fieldData.grouped
+                              ? _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value:
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                        expression: "fieldValue[fieldData.name]"
+                                      }
+                                    ],
+                                    staticClass: "regular medium",
+                                    attrs: {
+                                      name:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "]",
+                                      id:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "]"
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.fieldValue,
+                                          _vm.fieldData.name,
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm.fieldData.placeholder
+                                      ? _c("option", {
+                                          attrs: { value: "" },
+                                          domProps: {
+                                            innerHTML: _vm._s(
+                                              _vm.fieldData.placeholder
+                                            )
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.fieldData.options, function(
+                                      optionVal,
+                                      optionKey
+                                    ) {
+                                      return _c("option", {
+                                        key: optionKey,
+                                        domProps: {
+                                          value: optionKey,
+                                          innerHTML: _vm._s(optionVal)
+                                        }
+                                      })
+                                    })
+                                  ],
+                                  2
+                                )
+                              : _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value:
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                        expression: "fieldValue[fieldData.name]"
+                                      }
+                                    ],
+                                    staticClass: "regular medium",
+                                    attrs: {
+                                      name:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "]",
+                                      id:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "]"
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.fieldValue,
+                                          _vm.fieldData.name,
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm.fieldData.placeholder
+                                      ? _c("option", {
+                                          attrs: { value: "", disabled: "" },
+                                          domProps: {
+                                            innerHTML: _vm._s(
+                                              _vm.fieldData.placeholder
+                                            )
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.fieldData.options, function(
+                                      optionGroup,
+                                      optionGroupKey
+                                    ) {
+                                      return _c(
+                                        "optgroup",
+                                        {
+                                          key: optionGroupKey,
+                                          attrs: {
+                                            label: optionGroup.group_label
+                                          }
+                                        },
+                                        _vm._l(
+                                          optionGroup.group_values,
+                                          function(option, optionKey) {
+                                            return _c("option", {
+                                              key: optionKey,
+                                              domProps: {
+                                                value: option.value,
+                                                innerHTML: _vm._s(option.label)
+                                              }
+                                            })
+                                          }
+                                        ),
+                                        0
+                                      )
+                                    })
+                                  ],
+                                  2
+                                ),
+                            _vm._v(" "),
+                            _vm.fieldData.refresh_options
+                              ? _c("RefreshSettingOptions", {
+                                  attrs: {
+                                    field: _vm.fieldData,
+                                    section: _vm.sectionId,
+                                    "toggle-loading-state":
+                                      _vm.toggleLoadingState
                                   }
                                 })
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm._l(_vm.fieldData.options, function(
-                              optionGroup
-                            ) {
-                              return _c(
-                                "optgroup",
-                                { attrs: { label: optionGroup.group_label } },
-                                _vm._l(optionGroup.group_values, function(
-                                  option
-                                ) {
-                                  return _c("option", {
-                                    domProps: {
-                                      value: option.value,
-                                      innerHTML: _vm._s(option.label)
-                                    }
-                                  })
-                                }),
-                                0
-                              )
-                            })
+                              : _vm._e()
                           ],
-                          2
-                        ),
-                    _vm._v(" "),
-                    _vm.fieldData.refresh_options
-                      ? _c("RefreshSettingOptions", {
-                          attrs: {
-                            section: _vm.sectionId,
-                            field: _vm.fieldData,
-                            "toggle-loading-state": _vm.toggleLoadingState
-                          }
-                        })
-                      : _vm._e(),
+                          1
+                        )
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     _vm.hasValidationError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
@@ -12905,37 +14918,18 @@ var render = function() {
                               "\n            "
                           )
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
+                      : _vm._e()
+                  ]
                 )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "file" == _vm.fieldData.type
+          "file" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -12943,566 +14937,178 @@ var render = function() {
                     ]
                   },
                   [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.fieldValue[_vm.fieldData.name],
-                          expression: "fieldValue[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text wpsa-url",
-                      attrs: {
-                        type: "text",
-                        id: _vm.sectionId + "[" + _vm.fieldData.name + "]",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.fieldValue[_vm.fieldData.name] },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.fieldValue,
-                            _vm.fieldData.name,
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("input", {
-                      staticClass: "button wpsa-browse",
-                      attrs: { type: "button", value: "Choose File" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.$emit(
-                            "openMedia",
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field add_files" }, [
+                          _c(
+                            "label",
                             {
-                              sectionId: _vm.sectionId,
-                              name: _vm.fieldData.name
+                              attrs: {
+                                for:
+                                  _vm.sectionId + "[" + _vm.fieldData.name + "]"
+                              }
                             },
-                            $event
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "color" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _c("color-picker", {
-                      model: {
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        callback: function($$v) {
-                          _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
-                        },
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "html" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ]
-                  },
-                  [
-                    _vm.hasError(_vm.fieldData.name)
-                      ? _c("p", { staticClass: "dokan-error" }, [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.getError(_vm.fieldData.label)) +
-                              "\n            "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "warning" == _vm.fieldData.type
-            ? [
-                _c(
-                  "th",
-                  {
-                    staticClass: "dokan-setting-warning",
-                    attrs: { scope: "row", colspan: "2" }
-                  },
-                  [
-                    _c("div", { staticClass: "error" }, [
-                      _c(
-                        "p",
-                        {
-                          attrs: {
-                            for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                          }
-                        },
-                        [
-                          _c(
-                            "span",
-                            { staticClass: "dokan-setting-warning-label" },
                             [
-                              _c("span", {
-                                staticClass: "dashicons dashicons-warning"
+                              _c("input", {
+                                staticClass: "button wpsa-browse",
+                                attrs: { type: "button", value: "Choose File" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.$emit(
+                                      "openMedia",
+                                      {
+                                        sectionId: _vm.sectionId,
+                                        name: _vm.fieldData.name
+                                      },
+                                      $event
+                                    )
+                                  }
+                                }
                               }),
-                              _vm._v(" " + _vm._s(_vm.fieldData.label))
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.fieldValue[_vm.fieldData.name],
+                                    expression: "fieldValue[fieldData.name]"
+                                  }
+                                ],
+                                staticClass: "regular-text medium wpsa-url",
+                                attrs: {
+                                  type: "text",
+                                  id:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]",
+                                  name:
+                                    _vm.sectionId +
+                                    "[" +
+                                    _vm.fieldData.name +
+                                    "]"
+                                },
+                                domProps: {
+                                  value: _vm.fieldValue[_vm.fieldData.name]
+                                },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.fieldValue,
+                                      _vm.fieldData.name,
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
                             ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            { staticClass: "dokan-setting-warning-msg" },
-                            [_vm._v(_vm._s(_vm.fieldData.desc))]
                           )
-                        ]
-                      )
-                    ])
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
                   ]
-                ),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" })
+                )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "radio" == _vm.fieldData.type
+          "color" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
-                        : "",
-                      "dokan-settings-field-type-radio"
+                        : ""
                     ]
                   },
                   [
                     _c(
                       "fieldset",
                       [
-                        _vm._l(_vm.fieldData.options, function(
-                          optionVal,
-                          optionKey
-                        ) {
-                          return [
-                            _c(
-                              "label",
-                              {
-                                attrs: {
-                                  for:
-                                    _vm.sectionId +
-                                    "[" +
-                                    _vm.fieldData.name +
-                                    "][" +
-                                    optionKey +
-                                    "]"
-                                }
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "field" },
+                          [
+                            _c("color-picker", {
+                              attrs: {
+                                itemKey: _vm.fieldData.name,
+                                customData: _vm.singleColorPicker
                               },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.fieldValue[_vm.fieldData.name],
-                                      expression: "fieldValue[fieldData.name]"
-                                    }
-                                  ],
-                                  staticClass: "radio",
-                                  attrs: {
-                                    type: "radio",
-                                    id:
-                                      _vm.sectionId +
-                                      "[" +
-                                      _vm.fieldData.name +
-                                      "][" +
-                                      optionKey +
-                                      "]",
-                                    name: optionKey
-                                  },
-                                  domProps: {
-                                    value: optionKey,
-                                    checked: _vm._q(
-                                      _vm.fieldValue[_vm.fieldData.name],
-                                      optionKey
-                                    )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      return _vm.$set(
-                                        _vm.fieldValue,
-                                        _vm.fieldData.name,
-                                        optionKey
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(
-                                  " " +
-                                    _vm._s(optionVal) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ]
-                        })
+                              on: {
+                                "custom-change": function(e) {
+                                  return _vm.setCustomColor(
+                                    e,
+                                    _vm.fieldData.name
+                                  )
+                                },
+                                toggleColorPicker: _vm.toggleColorPicker
+                              },
+                              model: {
+                                value: _vm.fieldValue[_vm.fieldData.name],
+                                callback: function($$v) {
+                                  _vm.$set(
+                                    _vm.fieldValue,
+                                    _vm.fieldData.name,
+                                    $$v
+                                  )
+                                },
+                                expression: "fieldValue[fieldData.name]"
+                              }
+                            })
+                          ],
+                          1
+                        )
                       ],
-                      2
+                      1
                     ),
                     _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ]
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "wpeditor" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ],
-                    attrs: { width: "72%" }
-                  },
-                  [
-                    _c("text-editor", {
-                      model: {
-                        value: _vm.fieldValue[_vm.fieldData.name],
-                        callback: function($$v) {
-                          _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
-                        },
-                        expression: "fieldValue[fieldData.name]"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
-                )
-              ]
-            : _vm._e(),
-          _vm._v(" "),
-          "repeatable" == _vm.fieldData.type
-            ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }, [
-                  _vm.fieldData.tooltip
-                    ? _c("span", [
-                        _c("i", {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.fieldData.tooltip,
-                              expression: "fieldData.tooltip"
-                            }
-                          ],
-                          staticClass: "dashicons dashicons-editor-help tips",
-                          attrs: { title: _vm.fieldData.tooltip }
-                        })
-                      ])
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  {
-                    class: [
-                      _vm.fieldData.content_class
-                        ? _vm.fieldData.content_class
-                        : ""
-                    ],
-                    attrs: { width: "72%" }
-                  },
-                  [
-                    _c(
-                      "ul",
-                      { staticClass: "dokan-settings-repeatable-list" },
-                      _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
-                        optionVal,
-                        optionKey
-                      ) {
-                        return _vm.fieldValue[_vm.fieldData.name]
-                          ? _c("li", [
-                              _vm._v(
-                                "\n                    " +
-                                  _vm._s(optionVal.value) +
-                                  " "
-                              ),
-                              !optionVal.must_use
-                                ? _c("span", {
-                                    staticClass:
-                                      "dashicons dashicons-no-alt remove-item",
-                                    on: {
-                                      click: function($event) {
-                                        $event.preventDefault()
-                                        return _vm.removeItem(
-                                          optionKey,
-                                          _vm.fieldData.name
-                                        )
-                                      }
-                                    }
-                                  })
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _c("span", {
-                                staticClass: "repeatable-item-description",
-                                domProps: { innerHTML: _vm._s(optionVal.desc) }
-                              })
-                            ])
-                          : _vm._e()
-                      }),
-                      0
-                    ),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.repeatableItem[_vm.fieldData.name],
-                          expression: "repeatableItem[fieldData.name]"
-                        }
-                      ],
-                      staticClass: "regular-text",
-                      attrs: { type: "text" },
-                      domProps: {
-                        value: _vm.repeatableItem[_vm.fieldData.name]
-                      },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.repeatableItem,
-                            _vm.fieldData.name,
-                            $event.target.value
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
                           )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "button dokan-repetable-add-item-btn",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.addItem(
-                              _vm.fieldData.type,
-                              _vm.fieldData.name
-                            )
-                          }
-                        }
-                      },
-                      [_vm._v("+")]
-                    ),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
+                        ])
+                      : _vm._e()
                   ]
                 )
               ]
             : _vm._e(),
           _vm._v(" "),
-          "radio_image" == _vm.fieldData.type
+          "html" === _vm.fieldData.type
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -13511,14 +15117,409 @@ var render = function() {
                   },
                   [
                     _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "warning" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c("fieldset", [
+                      _c("div", { staticClass: "field_data" }, [
+                        _c(
+                          "h3",
+                          {
+                            staticClass:
+                              "field_heading dokan-setting-warning error",
+                            attrs: { scope: "row" }
+                          },
+                          [
+                            _c(
+                              "span",
+                              { staticClass: "dokan-setting-warning-label" },
+                              [
+                                _c("span", {
+                                  staticClass: "dashicons dashicons-warning"
+                                }),
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(_vm.fieldData.label) +
+                                    "\n                        "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("span", {
+                              staticClass: "field_desc",
+                              domProps: {
+                                innerHTML: _vm._s(_vm.fieldData.desc)
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ])
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "radio" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "field radio_fields" },
+                          [
+                            _vm._l(_vm.fieldData.options, function(
+                              optionVal,
+                              optionKey
+                            ) {
+                              return [
+                                _c(
+                                  "label",
+                                  {
+                                    key: optionKey,
+                                    class: _vm.isSwitchOptionChecked(optionKey)
+                                      ? "checked"
+                                      : "",
+                                    attrs: {
+                                      for:
+                                        _vm.sectionId +
+                                        "[" +
+                                        _vm.fieldData.name +
+                                        "][" +
+                                        optionKey +
+                                        "]"
+                                    }
+                                  },
+                                  [
+                                    _c("span", {
+                                      staticClass: "dashicons dashicons-yes"
+                                    }),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value:
+                                            _vm.fieldValue[_vm.fieldData.name],
+                                          expression:
+                                            "fieldValue[fieldData.name]"
+                                        }
+                                      ],
+                                      staticClass: "radio",
+                                      attrs: {
+                                        type: "radio",
+                                        name: optionKey,
+                                        id:
+                                          _vm.sectionId +
+                                          "[" +
+                                          _vm.fieldData.name +
+                                          "][" +
+                                          optionKey +
+                                          "]"
+                                      },
+                                      domProps: {
+                                        value: optionKey,
+                                        checked: _vm._q(
+                                          _vm.fieldValue[_vm.fieldData.name],
+                                          optionKey
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.fieldValue,
+                                            _vm.fieldData.name,
+                                            optionKey
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(optionVal) +
+                                        "\n                        "
+                                    )
+                                  ]
+                                )
+                              ]
+                            })
+                          ],
+                          2
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.hasError(_vm.fieldData.name)
+                      ? _c("p", { staticClass: "dokan-error" }, [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.getError(_vm.fieldData.label)) +
+                              "\n            "
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "wpeditor" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
                       "div",
-                      { staticClass: "radio-image-container" },
+                      { staticClass: "field editor_field" },
+                      [
+                        _c("text-editor", {
+                          domProps: {
+                            innerHTML: _vm._s(_vm.fieldData.default)
+                          },
+                          model: {
+                            value: _vm.fieldValue[_vm.fieldData.name],
+                            callback: function($$v) {
+                              _vm.$set(_vm.fieldValue, _vm.fieldData.name, $$v)
+                            },
+                            expression: "fieldValue[fieldData.name]"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "repeatable" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "field repeatable_fields" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.repeatableItem[_vm.fieldData.name],
+                                expression: "repeatableItem[fieldData.name]"
+                              }
+                            ],
+                            staticClass: "regular-text medium",
+                            attrs: { type: "text" },
+                            domProps: {
+                              value: _vm.repeatableItem[_vm.fieldData.name]
+                            },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.repeatableItem,
+                                  _vm.fieldData.name,
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass:
+                                "button dokan-repetable-add-item-btn",
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.addItem(
+                                    _vm.fieldData.type,
+                                    _vm.fieldData.name
+                                  )
+                                }
+                              }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons dashicons-plus-alt2"
+                              })
+                            ]
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "dokan-settings-repeatable-list" },
+                      [
+                        _vm._l(_vm.fieldValue[_vm.fieldData.name], function(
+                          optionVal,
+                          optionKey
+                        ) {
+                          return [
+                            _vm.fieldValue[_vm.fieldData.name]
+                              ? _c("li", { key: optionKey }, [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(optionVal.value) +
+                                      "\n                        "
+                                  ),
+                                  !optionVal.must_use
+                                    ? _c("span", {
+                                        staticClass:
+                                          "dashicons dashicons-no-alt remove-item",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.removeItem(
+                                              optionKey,
+                                              _vm.fieldData.name
+                                            )
+                                          }
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("span", {
+                                    staticClass: "repeatable-item-description",
+                                    domProps: {
+                                      innerHTML: _vm._s(optionVal.desc)
+                                    }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          "radio_image" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field radio-image-container" },
                       [
                         _vm._l(_vm.fieldData.options, function(image, name) {
                           return [
                             _c(
                               "label",
                               {
+                                key: name,
                                 staticClass: "radio-image",
                                 class: {
                                   active:
@@ -13568,8 +15569,9 @@ var render = function() {
                                       staticClass: "dashicons dashicons-yes"
                                     }),
                                     _vm._v(
-                                      " " +
-                                        _vm._s(_vm.__("Active", "dokan-lite"))
+                                      "\n                            " +
+                                        _vm._s(_vm.__("Active", "dokan-lite")) +
+                                        "\n                        "
                                     )
                                   ]
                                 ),
@@ -13615,25 +15617,12 @@ var render = function() {
               ]
             : _vm._e(),
           _vm._v(" "),
-          "gmap" == _vm.fieldData.type && !_vm.hideMap
+          "gmap" === _vm.fieldData.type && !_vm.hideMap
             ? [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "label",
-                    {
-                      attrs: {
-                        for: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fieldData.label))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "tooltips-data" }),
-                _vm._v(" "),
                 _c(
-                  "td",
+                  "div",
                   {
+                    staticClass: "field_contents",
                     class: [
                       _vm.fieldData.content_class
                         ? _vm.fieldData.content_class
@@ -13641,37 +15630,54 @@ var render = function() {
                     ]
                   },
                   [
-                    _c("input", {
-                      attrs: {
-                        type: "hidden",
-                        name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
-                      },
-                      domProps: { value: _vm.mapLocation }
-                    }),
-                    _vm._v(" "),
-                    _vm.mapApiSource === "mapbox"
-                      ? _c("Mapbox", {
-                          attrs: {
-                            accessToken: _vm.mapboxAccessToken,
-                            location: _vm.mapLocation,
-                            width: "100%",
-                            height: "300px"
-                          },
-                          on: {
-                            hideMap: _vm.onHideMap,
-                            updateMap: _vm.onUpdateMap
-                          }
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
                         })
-                      : _c("GoogleMaps", {
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field gmap-field" },
+                      [
+                        _c("input", {
                           attrs: {
-                            apiKey: _vm.googleMapApiKey,
-                            location: _vm.mapLocation
+                            type: "hidden",
+                            name: _vm.sectionId + "[" + _vm.fieldData.name + "]"
                           },
-                          on: {
-                            hideMap: _vm.onHideMap,
-                            updateMap: _vm.onUpdateMap
-                          }
+                          domProps: { value: _vm.mapLocation }
                         }),
+                        _vm._v(" "),
+                        _vm.mapApiSource === "mapbox"
+                          ? _c("Mapbox", {
+                              attrs: {
+                                width: "100%",
+                                height: "300px",
+                                location: _vm.mapLocation,
+                                accessToken: _vm.mapboxAccessToken
+                              },
+                              on: {
+                                hideMap: _vm.onHideMap,
+                                updateMap: _vm.onUpdateMap
+                              }
+                            })
+                          : _c("GoogleMaps", {
+                              attrs: {
+                                location: _vm.mapLocation,
+                                apiKey: _vm.googleMapApiKey
+                              },
+                              on: {
+                                hideMap: _vm.onHideMap,
+                                updateMap: _vm.onUpdateMap
+                              }
+                            })
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     _vm.hasError(_vm.fieldData.name)
                       ? _c("p", { staticClass: "dokan-error" }, [
@@ -13681,16 +15687,134 @@ var render = function() {
                               "\n            "
                           )
                         ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("p", {
-                      staticClass: "description",
-                      domProps: { innerHTML: _vm._s(_vm.fieldData.desc) }
-                    })
-                  ],
-                  1
+                      : _vm._e()
+                  ]
                 )
               ]
+            : _vm._e(),
+          _vm._v(" "),
+          "social" === _vm.fieldData.type
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "field_contents",
+                    class: [
+                      _vm.fieldData.content_class
+                        ? _vm.fieldData.content_class
+                        : ""
+                    ]
+                  },
+                  [
+                    _c(
+                      "fieldset",
+                      [
+                        _c("FieldHeading", {
+                          attrs: { fieldData: _vm.fieldData }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "field scl_fields" },
+                      [
+                        _c("div", { staticClass: "scl_header" }, [
+                          _c("div", { staticClass: "scl_contents" }, [
+                            _c("div", { staticClass: "scl_icon" }, [
+                              _c("img", {
+                                attrs: {
+                                  src: _vm.fieldData.icon_url,
+                                  alt: _vm.fieldData.label
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "scl_desc" }, [
+                              _vm._v(_vm._s(_vm.fieldData.social_desc))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "expand_btn",
+                              on: { click: _vm.expandSocial }
+                            },
+                            [
+                              _c("span", {
+                                staticClass: "dashicons",
+                                class: [
+                                  !this.expandSocials
+                                    ? "dashicons-arrow-down-alt2"
+                                    : "dashicons-arrow-up-alt2"
+                                ]
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.fieldData, function(fields, index) {
+                          return [
+                            _vm.expandSocials && fields.social_field
+                              ? _c(
+                                  "div",
+                                  { key: index, staticClass: "scl_info" },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        class: [
+                                          { scl_html: fields.type === "html" },
+                                          { scl_text: fields.type !== "html" },
+                                          fields.content_class
+                                            ? fields.content_class
+                                            : ""
+                                        ]
+                                      },
+                                      [
+                                        _c("SocialFields", {
+                                          attrs: {
+                                            fieldData: fields,
+                                            fieldValue: _vm.fieldValue
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
+                          ]
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.customFieldComponents
+            ? _vm._l(_vm.customFieldComponents, function(
+                settingsComponent,
+                index
+              ) {
+                return _c(settingsComponent, {
+                  key: index,
+                  tag: "component",
+                  attrs: {
+                    sectionId: _vm.sectionId,
+                    fieldData: _vm.fieldData,
+                    fieldValue: _vm.fieldValue,
+                    assetsUrl: _vm.dokanAssetsUrl,
+                    validationErrors: _vm.validationErrors,
+                    toggleLoadingState: _vm.toggleLoadingState
+                  },
+                  on: { "some-event": _vm.thisSomeEvent }
+                })
+              })
             : _vm._e()
         ],
         2
@@ -13709,17 +15833,17 @@ if (false) {
 }
 
 /***/ }),
-/* 174 */
+/* 189 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_SettingsBanner_vue__ = __webpack_require__(74);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b725e442_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_SettingsBanner_vue__ = __webpack_require__(191);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(175)
+  __webpack_require__(190)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -13765,13 +15889,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 175 */
+/* 190 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 176 */
+/* 191 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13834,11 +15958,11 @@ var render = function() {
           },
           [
             _vm._v(
-              "\n            " +
+              "\r\n            " +
                 _vm._s(
                   _vm.__("Check Out All Vendor Functionalities", "dokan-lite")
                 ) +
-                "\n        "
+                "\r\n        "
             )
           ]
         )
@@ -13859,7 +15983,7 @@ if (false) {
 }
 
 /***/ }),
-/* 177 */
+/* 192 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13921,220 +16045,293 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "dokan-settings-wrap" }, [
-            _c(
-              "div",
-              { staticClass: "nav-tab-wrapper" },
-              [
-                _c("div", { staticClass: "search-box" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.searchText,
-                        expression: "searchText"
-                      }
-                    ],
-                    ref: "searchInSettings",
-                    staticClass: "dokan-admin-search-settings",
-                    attrs: { type: "text", placeholder: "Search e.g. vendor" },
-                    domProps: { value: _vm.searchText },
-                    on: {
-                      input: [
-                        function($event) {
-                          if ($event.target.composing) {
-                            return
+          _c(
+            "div",
+            { ref: "settingsWrapper", staticClass: "dokan-settings-wrap" },
+            [
+              _c("div", { staticClass: "nav-tab-wrapper" }, [
+                _c(
+                  "div",
+                  { staticClass: "nab-section" },
+                  [
+                    _c("div", { staticClass: "search-box" }, [
+                      _c("label", {
+                        staticClass: "dashicons dashicons-search",
+                        attrs: { for: "dokan-admin-search" }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.searchText,
+                            expression: "searchText"
                           }
-                          _vm.searchText = $event.target.value
-                        },
-                        _vm.searchInSettings
-                      ]
-                    }
-                  }),
-                  _vm._v(" "),
-                  "" !== _vm.searchText
-                    ? _c("span", {
-                        staticClass: "dashicons dashicons-no-alt",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.clearSearch.apply(null, arguments)
-                          }
-                        }
-                      })
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.settingSections, function(section) {
-                  return [
-                    _c(
-                      "a",
-                      {
-                        class: [
-                          "nav-tab",
-                          _vm.currentTab === section.id ? "nav-tab-active" : ""
                         ],
-                        attrs: { href: "#" },
+                        ref: "searchInSettings",
+                        staticClass: "dokan-admin-search-settings",
+                        attrs: {
+                          type: "text",
+                          id: "dokan-admin-search",
+                          placeholder: _vm.__(
+                            "Search e.g. vendor",
+                            "dokan-lite"
+                          )
+                        },
+                        domProps: { value: _vm.searchText },
                         on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.changeTab(section)
-                          }
+                          input: [
+                            function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.searchText = $event.target.value
+                            },
+                            _vm.searchInSettings
+                          ]
                         }
-                      },
-                      [
-                        _c("span", {
-                          staticClass: "dashicons",
-                          class: section.icon
-                        }),
-                        _vm._v(
-                          " " + _vm._s(section.title) + "\n                    "
+                      }),
+                      _vm._v(" "),
+                      "" !== _vm.searchText
+                        ? _c("span", {
+                            staticClass: "dashicons dashicons-no-alt",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clearSearch.apply(null, arguments)
+                              }
+                            }
+                          })
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(_vm.settingSections, function(section) {
+                      return [
+                        _c(
+                          "div",
+                          {
+                            key: section.id,
+                            class: [
+                              "nav-tab",
+                              _vm.currentTab === section.id
+                                ? "nav-tab-active"
+                                : ""
+                            ],
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.changeTab(section)
+                              }
+                            }
+                          },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: section.icon_url,
+                                alt: section.settings_title
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "nav-content" }, [
+                              _c("div", { staticClass: "nav-title" }, [
+                                _vm._v(_vm._s(section.title))
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "nav-description" }, [
+                                _vm._v(_vm._s(section.description))
+                              ])
+                            ])
+                          ]
                         )
                       ]
-                    )
-                  ]
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "metabox-holder" },
-              [
-                _vm._l(_vm.settingFields, function(fields, index) {
-                  return _vm.isLoaded
-                    ? [
-                        _vm.currentTab === index
-                          ? _c(
-                              "div",
-                              { staticClass: "group", attrs: { id: index } },
-                              [
-                                _c(
-                                  "form",
-                                  {
-                                    attrs: {
-                                      method: "post",
-                                      action: "options.php"
-                                    }
-                                  },
-                                  [
-                                    _c("input", {
+                    })
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "metabox-holder" },
+                [
+                  _vm._l(_vm.settingSections, function(section) {
+                    return _vm.currentTab === section.id
+                      ? _c("fieldset", { staticClass: "settings-header" }, [
+                          _c("div", { staticClass: "settings-content" }, [
+                            _c("h2", { staticClass: "settings-title" }, [
+                              _vm._v(_vm._s(section.settings_title))
+                            ]),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "settings-description" }, [
+                              _vm._v(_vm._s(section.settings_description))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          section.document_link
+                            ? _c(
+                                "div",
+                                { staticClass: "settings-document-button" },
+                                [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "doc-link",
                                       attrs: {
-                                        type: "hidden",
-                                        name: "option_page"
-                                      },
-                                      domProps: { value: index }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      attrs: {
-                                        type: "hidden",
-                                        name: "action",
-                                        value: "update"
+                                        href: section.document_link,
+                                        target: "_blank"
                                       }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("table", { staticClass: "form-table" }, [
-                                      _vm.showSectionTitle(fields)
-                                        ? _c("thead", [
-                                            _c(
-                                              "tr",
-                                              {
-                                                staticClass:
-                                                  "dokan-settings-field-type-sub_section"
-                                              },
-                                              [
-                                                _c(
-                                                  "th",
-                                                  {
-                                                    staticClass:
-                                                      "dokan-settings-sub-section-title",
-                                                    attrs: { colspan: "2" }
-                                                  },
-                                                  [
-                                                    _c("label", [
-                                                      _vm._v(
-                                                        _vm._s(
-                                                          _vm.sectionTitle(
-                                                            index
-                                                          )
-                                                        )
-                                                      )
-                                                    ])
-                                                  ]
-                                                )
-                                              ]
-                                            )
-                                          ])
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _c(
-                                        "tbody",
-                                        _vm._l(fields, function(
-                                          field,
-                                          fieldId
-                                        ) {
-                                          return _c("Fields", {
-                                            key: fieldId,
-                                            attrs: {
-                                              "section-id": index,
-                                              id: fieldId,
-                                              "field-data": field,
-                                              "field-value":
-                                                _vm.settingValues[index],
-                                              "all-settings-values":
-                                                _vm.settingValues,
-                                              errors: _vm.errors,
-                                              validationErrors:
-                                                _vm.validationErrors,
-                                              "toggle-loading-state":
-                                                _vm.toggleLoadingState
-                                            },
-                                            on: { openMedia: _vm.showMedia }
-                                          })
-                                        }),
-                                        1
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.__("Documentation", "dokan-lite")
+                                        )
                                       )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "submit" }, [
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ])
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.settingFields, function(fields, index) {
+                    return _vm.isLoaded
+                      ? [
+                          _vm.currentTab === index
+                            ? _c(
+                                "div",
+                                {
+                                  key: index,
+                                  staticClass: "group",
+                                  attrs: { id: index }
+                                },
+                                [
+                                  _c(
+                                    "form",
+                                    {
+                                      attrs: {
+                                        method: "post",
+                                        action: "options.php"
+                                      }
+                                    },
+                                    [
                                       _c("input", {
-                                        staticClass: "button button-primary",
                                         attrs: {
-                                          type: "submit",
-                                          name: "submit",
-                                          id: "submit",
-                                          value: "Save Changes"
+                                          type: "hidden",
+                                          name: "option_page"
                                         },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.saveSettings(
-                                              _vm.settingValues[index],
-                                              index
-                                            )
-                                          }
+                                        domProps: { value: index }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("input", {
+                                        attrs: {
+                                          type: "hidden",
+                                          name: "action",
+                                          value: "update"
                                         }
-                                      })
-                                    ])
-                                  ]
-                                )
-                              ]
-                            )
-                          : _vm._e()
-                      ]
-                    : _vm._e()
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm.showLoading
-              ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
-              : _vm._e()
-          ])
+                                      }),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-table" }, [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "dokan-settings-fields"
+                                          },
+                                          _vm._l(fields, function(
+                                            field,
+                                            fieldId
+                                          ) {
+                                            return _c("Fields", {
+                                              key: fieldId,
+                                              attrs: {
+                                                "section-id": index,
+                                                id: fieldId,
+                                                "field-data": field,
+                                                "field-value":
+                                                  _vm.settingValues[index],
+                                                "all-settings-values":
+                                                  _vm.settingValues,
+                                                errors: _vm.errors,
+                                                validationErrors:
+                                                  _vm.validationErrors,
+                                                "toggle-loading-state":
+                                                  _vm.toggleLoadingState,
+                                                dokanAssetsUrl:
+                                                  _vm.dokanAssetsUrl
+                                              },
+                                              on: { openMedia: _vm.showMedia }
+                                            })
+                                          }),
+                                          1
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("p", { staticClass: "submit" }, [
+                                        _c("input", {
+                                          staticClass: "button button-primary",
+                                          attrs: {
+                                            type: "submit",
+                                            name: "submit",
+                                            id: "submit",
+                                            value: "Save Changes"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.saveSettings(
+                                                _vm.settingValues[index],
+                                                index
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ]
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ]
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "tooltip",
+                          rawName: "v-tooltip",
+                          value: _vm.__("Back to top", "dokan-lite"),
+                          expression: "__( 'Back to top', 'dokan-lite' )"
+                        }
+                      ],
+                      ref: "backToTop",
+                      staticClass: "back-to-top tips",
+                      attrs: { title: _vm.__("Back to top", "dokan-lite") },
+                      on: { click: _vm.scrollToTop }
+                    },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src: _vm.dokanAssetsUrl + "/images/up-arrow.svg",
+                          alt: _vm.__("Dokan Back to Top Button", "dokan-lite")
+                        }
+                      })
+                    ]
+                  )
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _vm.showLoading
+                ? _c("div", { staticClass: "loading" }, [_c("loading")], 1)
+                : _vm._e()
+            ]
+          )
         ],
         1
       ),
@@ -14156,17 +16353,17 @@ if (false) {
 }
 
 /***/ }),
-/* 178 */
+/* 193 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Vendors_vue__ = __webpack_require__(75);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(183);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f81b8092_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Vendors_vue__ = __webpack_require__(198);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(179)
+  __webpack_require__(194)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -14212,23 +16409,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 179 */
+/* 194 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 180 */
+/* 195 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AddVendor_vue__ = __webpack_require__(76);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_75e0fcd5_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AddVendor_vue__ = __webpack_require__(197);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(181)
+  __webpack_require__(196)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -14274,13 +16471,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 181 */
+/* 196 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 182 */
+/* 197 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14420,7 +16617,7 @@ if (false) {
 }
 
 /***/ }),
-/* 183 */
+/* 198 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14749,17 +16946,263 @@ if (false) {
 }
 
 /***/ }),
-/* 184 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DummyData_vue__ = __webpack_require__(77);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33b27104_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DummyData_vue__ = __webpack_require__(201);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(185)
+  __webpack_require__(200)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-33b27104"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DummyData_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_33b27104_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DummyData_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/DummyData.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-33b27104", Component.options)
+  } else {
+    hotAPI.reload("data-v-33b27104", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 200 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 201 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", [_vm._v(_vm._s(_vm.__("Import dummy data", "dokan-lite")))]),
+    _vm._v(" "),
+    !_vm.statusLoader
+      ? _c("div", { staticClass: "dokan-importer-wrapper" }, [
+          _c("ol", { staticClass: "dokan-importer-progress-steps" }, [
+            _c("li", { staticClass: "active" }, [
+              _vm._v(_vm._s(_vm.__("Import", "dokan-lite")))
+            ]),
+            _vm._v(" "),
+            _c("li", { class: _vm.done ? "active" : "" }, [
+              _vm._v(_vm._s(_vm.__("Done!", "dokan-lite")))
+            ])
+          ]),
+          _vm._v(" "),
+          "" != _vm.errorMsg
+            ? _c("div", { staticClass: "error inline" }, [
+                _c("p", [_vm._v(_vm._s(_vm.errorMsg))])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.done
+            ? _c("div", { staticClass: "dokan-importer" }, [
+                _c("header", [
+                  _c("h2", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.__(
+                          "Import dummy vendors and products",
+                          "dokan-lite"
+                        )
+                      )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.__(
+                          "This tool allows you to import vendor and some products for vendors to your marketplace.",
+                          "dokan-lite"
+                        )
+                      )
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("section", [
+                  _c("div", [
+                    _c("progress", {
+                      staticClass: "dokan-dummy-data-progress-bar",
+                      attrs: { max: "100" },
+                      domProps: { value: _vm.progress }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "dokan-importer-action" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "dokan-import-continue-btn",
+                      class: _vm.loading ? "is-loading" : "",
+                      attrs: { disabled: _vm.loading },
+                      on: { click: _vm.importBtnHandler }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Run the importer", "dokan-lite")))]
+                  )
+                ])
+              ])
+            : _c("div", { staticClass: "dokan-importer" }, [
+                _c("section", { staticClass: "import-done" }, [
+                  _c(
+                    "svg",
+                    {
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        viewBox: "0 0 512 512",
+                        width: "100",
+                        height: "100"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z",
+                          fill: "#1BAC9E"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.__("Import complete!", "dokan-lite")) +
+                        "\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "links" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: { name: "Vendors", query: { status: "all" } },
+                            exact: ""
+                          }
+                        },
+                        [_vm._v(_vm._s(_vm.__("View vendors", "dokan-lite")))]
+                      ),
+                      _vm._v("\n                     \n                    "),
+                      _c("a", { attrs: { href: _vm.getProductsPageUrl() } }, [
+                        _vm._v(_vm._s(_vm.__("View products", "dokan-lite")))
+                      ])
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "dokan-importer-action" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "cancel-btn dokan-import-continue-btn",
+                      class: _vm.loading ? "is-busy" : "",
+                      attrs: { disabled: _vm.loading },
+                      on: { click: _vm.clearAllDummyData }
+                    },
+                    [_vm._v(_vm._s(_vm.__("Clear dummy data", "dokan-lite")))]
+                  )
+                ])
+              ])
+        ])
+      : _c("div", { staticClass: "dokan-importer-wrapper" }, [_vm._m(0)])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dokan-importer" }, [
+      _c("header", [
+        _c("span", { staticClass: "loader-title skeleton-loader" }),
+        _vm._v(" "),
+        _c("span", { staticClass: "loader-description skeleton-loader" })
+      ]),
+      _vm._v(" "),
+      _c("section", [
+        _c("div", [
+          _c("span", { staticClass: "loader-loader skeleton-loader" })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "dokan-importer-action" }, [
+        _c("span", { staticClass: "loader-btn skeleton-loader" })
+      ])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-33b27104", esExports)
+  }
+}
+
+/***/ }),
+/* 202 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorCapabilities_vue__ = __webpack_require__(79);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_276be9c2_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorCapabilities_vue__ = __webpack_require__(204);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(203)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -14805,13 +17248,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 185 */
+/* 203 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 186 */
+/* 204 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14936,17 +17379,17 @@ if (false) {
 }
 
 /***/ }),
-/* 187 */
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ProModules_vue__ = __webpack_require__(80);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(192);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_ca20ca84_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ProModules_vue__ = __webpack_require__(210);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(188)
+  __webpack_require__(206)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -14992,23 +17435,23 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 188 */
+/* 206 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 189 */
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(81);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(191);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5ae162ac_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ModuleUpgradePopup_vue__ = __webpack_require__(209);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(190)
+  __webpack_require__(208)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -15054,13 +17497,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 190 */
+/* 208 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 191 */
+/* 209 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15070,78 +17513,549 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "dokan-upgrade-to-pro-wrapper" } }, [
     _vm.showPopup
-      ? _c("div", { attrs: { id: "dokan-upgrade-popup" } }, [
-          _c("div", { staticClass: "modal-content" }, [
-            _c("span", { staticClass: "close", on: { click: _vm.closePopup } }),
-            _vm._v(" "),
-            _c("div", { staticClass: "header" }, [
-              _c("img", {
-                attrs: {
-                  src: _vm.headerImage,
-                  alt: _vm.__("Dokan Upgrade Popup", "dokan-lite")
+      ? _c(
+          "div",
+          {
+            attrs: { id: "dokan-upgrade-popup" },
+            on: {
+              click: function($event) {
+                if ($event.target !== $event.currentTarget) {
+                  return null
                 }
-              }),
-              _vm._v(" "),
-              _c("h1", [
-                _vm._v(_vm._s(_vm.__("Unlock 20+ Modules", "dokan-lite")))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-brand" }, [
-                _vm._v(_vm._s(_vm.__("with Dokan Premium Plans", "dokan-lite")))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-disabled" }, [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(
-                      _vm.__(
-                        "We’re sorry, Dokan Modules are not available on Dokan Lite. Please upgrade to a PRO plan to unlock the modules of your choice.",
-                        "dokan-lite"
+                return _vm.closePopup.apply(null, arguments)
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "body" }, [
+                _c(
+                  "svg",
+                  {
+                    attrs: {
+                      width: "128",
+                      height: "109",
+                      viewBox: "0 0 128 109",
+                      fill: "none",
+                      xmlns: "http://www.w3.org/2000/svg"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M127.502 37.5077C127.406 37.2181 127.141 37.0125 126.827 36.9851L122.568 36.6104L120.884 32.7907C120.76 32.5108 120.477 32.3296 120.163 32.3296C119.848 32.3296 119.566 32.5108 119.441 32.7914L117.757 36.6104L113.497 36.9851C113.184 37.0132 112.92 37.2181 112.823 37.5077C112.726 37.7972 112.815 38.1148 113.052 38.315L116.272 41.0508L115.322 45.1028C115.253 45.4008 115.372 45.7087 115.627 45.8874C115.764 45.9834 115.925 46.0323 116.087 46.0323C116.226 46.0323 116.364 45.9959 116.489 45.9239L120.163 43.7962L123.835 45.9239C124.104 46.0805 124.443 46.0662 124.697 45.8874C124.953 45.7082 125.072 45.4001 125.002 45.1028L124.053 41.0508L127.272 38.3155C127.509 38.1148 127.6 37.7978 127.502 37.5077Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M16.8209 38.1758C16.7105 37.8194 16.4076 37.5663 16.0492 37.5326L11.1816 37.0714L9.25677 32.3703C9.11485 32.0258 8.79162 31.8027 8.4325 31.8027C8.07338 31.8027 7.75015 32.0258 7.60823 32.3711L5.68343 37.0714L0.815005 37.5326C0.457297 37.5671 0.155176 37.8194 0.0441323 38.1758C-0.0669114 38.5321 0.0356399 38.923 0.306237 39.1693L3.98561 42.5365L2.90064 47.5236C2.82125 47.8903 2.95765 48.2694 3.24922 48.4893C3.40594 48.6074 3.5893 48.6676 3.7742 48.6676C3.93362 48.6676 4.09176 48.6228 4.23368 48.5341L8.4325 45.9155L12.6298 48.5341C12.9369 48.7269 13.3241 48.7094 13.615 48.4893C13.9067 48.2687 14.043 47.8895 13.9636 47.5236L12.8786 42.5365L16.558 39.17C16.8286 38.923 16.9319 38.5328 16.8209 38.1758Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M110.124 10.7456C110.062 10.5674 109.891 10.4409 109.69 10.424L106.952 10.1934L105.869 7.84286C105.789 7.67059 105.607 7.55908 105.405 7.55908C105.203 7.55908 105.022 7.67059 104.942 7.84326L103.859 10.1934L101.121 10.424C100.919 10.4413 100.749 10.5674 100.687 10.7456C100.624 10.9238 100.682 11.1192 100.834 11.2424L102.904 12.926L102.294 15.4195C102.249 15.6029 102.326 15.7924 102.49 15.9024C102.578 15.9614 102.681 15.9915 102.785 15.9915C102.875 15.9915 102.964 15.9691 103.044 15.9248L105.405 14.6155L107.766 15.9248C107.939 16.0212 108.157 16.0124 108.321 15.9024C108.485 15.7921 108.561 15.6025 108.517 15.4195L107.906 12.926L109.976 11.2427C110.128 11.1192 110.186 10.9241 110.124 10.7456Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M34.2322 8.63769C34.1701 8.45951 33.9998 8.33297 33.7982 8.31612L31.0601 8.08551L29.9774 5.73495C29.8976 5.56268 29.7158 5.45117 29.5138 5.45117C29.3118 5.45117 29.13 5.56268 29.0501 5.73535L27.9674 8.08551L25.2289 8.31612C25.0277 8.33337 24.8578 8.45951 24.7953 8.63769C24.7329 8.81586 24.7906 9.01129 24.9428 9.13448L27.0124 10.8181L26.4021 13.3116C26.3575 13.495 26.4342 13.6845 26.5982 13.7945C26.6863 13.8535 26.7895 13.8836 26.8935 13.8836C26.9832 13.8836 27.0721 13.8612 27.152 13.8169L29.5138 12.5076L31.8748 13.8169C32.0475 13.9133 32.2653 13.9045 32.429 13.7945C32.593 13.6842 32.6697 13.4946 32.625 13.3116L32.0147 10.8181L34.0844 9.13481C34.2366 9.01129 34.2947 8.8162 34.2322 8.63769Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M36.3471 79.5168C36.3023 79.3832 36.1792 79.2883 36.0337 79.2757L34.0562 79.1027L33.2742 77.3398C33.2166 77.2106 33.0853 77.127 32.9394 77.127C32.7935 77.127 32.6622 77.2106 32.6045 77.3401L31.8226 79.1027L29.8448 79.2757C29.6994 79.2886 29.5767 79.3832 29.5316 79.5168C29.4865 79.6505 29.5282 79.797 29.6381 79.8894L31.1328 81.1521L30.6921 83.0223C30.6598 83.1598 30.7152 83.3019 30.8337 83.3844C30.8973 83.4287 30.9718 83.4513 31.0469 83.4513C31.1117 83.4513 31.1759 83.4345 31.2336 83.4012L32.9394 82.4192L34.6445 83.4012C34.7693 83.4735 34.9266 83.4669 35.0448 83.3844C35.1633 83.3017 35.2186 83.1595 35.1864 83.0223L34.7456 81.1521L36.2404 79.8897C36.3503 79.797 36.3923 79.6507 36.3471 79.5168Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M115.928 67.9221C115.883 67.7885 115.76 67.6936 115.615 67.6809L113.637 67.508L112.855 65.7451C112.798 65.6159 112.666 65.5322 112.52 65.5322C112.375 65.5322 112.243 65.6159 112.186 65.7454L111.404 67.508L109.426 67.6809C109.281 67.6939 109.158 67.7885 109.113 67.9221C109.068 68.0557 109.109 68.2023 109.219 68.2947L110.714 69.5574L110.273 71.4276C110.241 71.5651 110.296 71.7072 110.415 71.7897C110.478 71.834 110.553 71.8566 110.628 71.8566C110.693 71.8566 110.757 71.8397 110.815 71.8065L112.52 70.8245L114.226 71.8065C114.35 71.8788 114.508 71.8722 114.626 71.7897C114.744 71.707 114.8 71.5648 114.767 71.4276L114.327 69.5574L115.821 68.295C115.931 68.2023 115.973 68.056 115.928 67.9221Z",
+                        fill: "#FFC107"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("g", { attrs: { filter: "url(#filter0_d_1098_419)" } }, [
+                      _c("circle", {
+                        attrs: {
+                          cx: "65.5727",
+                          cy: "47.0224",
+                          r: "35.0473",
+                          fill: "url(#paint0_linear_1098_419)"
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        "fill-rule": "evenodd",
+                        "clip-rule": "evenodd",
+                        d:
+                          "M73.2509 40.3179C73.2509 35.8737 69.6482 32.271 65.204 32.271C60.7598 32.271 57.1571 35.8737 57.1571 40.3179V44.2984H56.5271C54.9772 44.2984 53.7207 45.5549 53.7207 47.1048V58.5595C53.7207 60.1094 54.9772 61.3659 56.5271 61.3659H74.11C75.6599 61.3659 76.9164 60.1094 76.9164 58.5595V47.1048C76.9164 45.5549 75.6599 44.2984 74.11 44.2984H59.3335V40.4324L59.3345 40.3196C59.3947 37.1295 61.9995 34.5619 65.204 34.5619C68.4462 34.5619 71.0745 37.1902 71.0745 40.4324L71.0745 40.5756H73.2509V40.3179ZM65.3185 50.9994C66.4098 50.9994 67.2944 51.884 67.2944 52.9753C67.2944 53.9393 66.6042 54.742 65.6909 54.9162L65.6908 57.7863C65.6908 57.9919 65.5241 58.1585 65.3185 58.1585C65.1129 58.1585 64.9462 57.9919 64.9462 57.7863L64.9464 54.9163C64.033 54.7422 63.3426 53.9394 63.3426 52.9753C63.3426 51.884 64.2272 50.9994 65.3185 50.9994Z",
+                        fill: "white"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "defs",
+                      [
+                        _c(
+                          "filter",
+                          {
+                            attrs: {
+                              id: "filter0_d_1098_419",
+                              x: "11.5524",
+                              y: "0.90753",
+                              width: "108.041",
+                              height: "108.041",
+                              filterUnits: "userSpaceOnUse",
+                              "color-interpolation-filters": "sRGB"
+                            }
+                          },
+                          [
+                            _c("feFlood", {
+                              attrs: {
+                                "flood-opacity": "0",
+                                result: "BackgroundImageFix"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("feColorMatrix", {
+                              attrs: {
+                                in: "SourceAlpha",
+                                type: "matrix",
+                                values:
+                                  "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                                result: "hardAlpha"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("feOffset", { attrs: { dy: "7.90541" } }),
+                            _vm._v(" "),
+                            _c("feGaussianBlur", {
+                              attrs: { stdDeviation: "9.48649" }
+                            }),
+                            _vm._v(" "),
+                            _c("feComposite", {
+                              attrs: { in2: "hardAlpha", operator: "out" }
+                            }),
+                            _vm._v(" "),
+                            _c("feColorMatrix", {
+                              attrs: {
+                                type: "matrix",
+                                values:
+                                  "0 0 0 0 0.743854 0 0 0 0 0.925 0 0 0 0 0.850411 0 0 0 1 0"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("feBlend", {
+                              attrs: {
+                                mode: "normal",
+                                in2: "BackgroundImageFix",
+                                result: "effect1_dropShadow_1098_419"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("feBlend", {
+                              attrs: {
+                                mode: "normal",
+                                in: "SourceGraphic",
+                                in2: "effect1_dropShadow_1098_419",
+                                result: "shape"
+                              }
+                            })
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "linearGradient",
+                          {
+                            attrs: {
+                              id: "paint0_linear_1098_419",
+                              x1: "65.5727",
+                              y1: "11.9751",
+                              x2: "65.5727",
+                              y2: "82.0697",
+                              gradientUnits: "userSpaceOnUse"
+                            }
+                          },
+                          [
+                            _c("stop", { attrs: { "stop-color": "#01CB70" } }),
+                            _vm._v(" "),
+                            _c("stop", {
+                              attrs: { offset: "1", "stop-color": "#1CE385" }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "unlock" }, [
+                  _vm._v(_vm._s(_vm.__("Unlock", "dokan-lite")))
+                ]),
+                _vm._v(" "),
+                _c("h1", [_vm._v(_vm._s(_vm.__("20+ Modules", "dokan-lite")))]),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-brand" }, [
+                  _vm._v(
+                    _vm._s(_vm.__("with Dokan Premium Plans", "dokan-lite"))
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", {
+                  staticClass: "upgrade-text",
+                  domProps: {
+                    innerHTML: _vm._s(
+                      _vm.sprintf(
+                        _vm.__(
+                          "We’re sorry %s Dokan Modules are not available on %s. Please upgrade to a PRO plan to unlock the modules of your choice.",
+                          "dokan-lite"
+                        ),
+                        "<br>",
+                        "<strong>Dokan Lite</strong>"
                       )
-                    ) +
-                    "\n                "
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "body" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "button",
-                  attrs: {
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    href: _vm.upgradeURL
-                  }
-                },
-                [_vm._v(_vm._s(_vm.__("Upgrade to Pro", "dokan-lite")))]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "promo-card" }, [
-                _c("img", {
-                  attrs: {
-                    src: _vm.bonusImage,
-                    alt: _vm.__("Dokan Upgrade Promo", "dokan-lite")
+                    )
                   }
                 }),
                 _vm._v(" "),
-                _c("p", [
-                  _vm._v(
-                    _vm._s(
-                      _vm.__(
-                        "Bonus: Dokan Lite users get 30% off regular price. Click on the link above to obtain the coupon & apply it during checkout.",
-                        "dokan-lite"
-                      )
-                    )
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("span", [
                 _c(
                   "a",
                   {
+                    staticClass: "upgrade-button",
+                    attrs: {
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                      href: _vm.upgradeURL
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.__("Upgrade to Pro", "dokan-lite")))]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "promo-card" }, [
+                  _c(
+                    "svg",
+                    {
+                      attrs: {
+                        width: "318",
+                        height: "181",
+                        viewBox: "0 0 318 181",
+                        fill: "none",
+                        xmlns: "http://www.w3.org/2000/svg"
+                      }
+                    },
+                    [
+                      _c("rect", {
+                        attrs: {
+                          width: "318",
+                          height: "181",
+                          rx: "10",
+                          fill: "url(#paint0_linear_1061_678)"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M69.7623 78.1796C19.6582 89.3268 8.33272 60.917 0 47.3061V10C0 4.47715 4.47714 0 9.99999 0H308C313.523 0 318 4.47716 318 10V122C287.77 58.7592 226.42 82.2094 166.516 91.1265C119.684 98.098 114.527 68.2204 69.7623 78.1796Z",
+                          fill: "#7867FF",
+                          "fill-opacity": "0.1"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M50.6582 112H54.5068C56.6055 112 57.8496 110.968 57.8496 109.238V109.225C57.8496 107.926 56.9951 107.003 55.6484 106.832V106.723C56.5986 106.552 57.3506 105.622 57.3506 104.604V104.59C57.3506 103.086 56.2432 102.136 54.4316 102.136H50.6582V112ZM54.1719 103.223C55.3955 103.223 56.1064 103.804 56.1064 104.802V104.815C56.1064 105.854 55.3477 106.388 53.8574 106.388H51.8887V103.223H54.1719ZM54.2061 107.447C55.7783 107.447 56.585 108.028 56.585 109.163V109.177C56.585 110.312 55.8057 110.913 54.3223 110.913H51.8887V107.447H54.2061ZM62.7373 112.13C64.8359 112.13 66.1348 110.681 66.1348 108.322V108.309C66.1348 105.943 64.8359 104.501 62.7373 104.501C60.6387 104.501 59.3398 105.943 59.3398 108.309V108.322C59.3398 110.681 60.6387 112.13 62.7373 112.13ZM62.7373 111.077C61.3428 111.077 60.5566 110.059 60.5566 108.322V108.309C60.5566 106.565 61.3428 105.554 62.7373 105.554C64.1318 105.554 64.918 106.565 64.918 108.309V108.322C64.918 110.059 64.1318 111.077 62.7373 111.077ZM67.9805 112H69.1699V107.639C69.1699 106.347 69.915 105.554 71.0908 105.554C72.2666 105.554 72.8135 106.189 72.8135 107.516V112H74.0029V107.229C74.0029 105.479 73.0801 104.501 71.4258 104.501C70.3389 104.501 69.6484 104.959 69.2793 105.738H69.1699V104.631H67.9805V112ZM78.624 112.13C79.7041 112.13 80.4492 111.686 80.8115 110.899H80.9209V112H82.1104V104.631H80.9209V108.992C80.9209 110.284 80.2305 111.077 78.9316 111.077C77.7559 111.077 77.2773 110.441 77.2773 109.115V104.631H76.0879V109.402C76.0879 111.146 76.9492 112.13 78.624 112.13ZM86.8613 112.13C88.5361 112.13 89.8145 111.221 89.8145 109.908V109.895C89.8145 108.842 89.1445 108.24 87.7568 107.905L86.6221 107.632C85.7539 107.42 85.3848 107.105 85.3848 106.606V106.593C85.3848 105.943 86.0273 105.492 86.9023 105.492C87.791 105.492 88.3652 105.896 88.5225 106.477H89.6914C89.5273 105.273 88.4541 104.501 86.9092 104.501C85.3438 104.501 84.168 105.424 84.168 106.647V106.654C84.168 107.714 84.79 108.315 86.1709 108.644L87.3125 108.917C88.2217 109.136 88.5977 109.484 88.5977 109.983V109.997C88.5977 110.667 87.8936 111.139 86.9023 111.139C85.959 111.139 85.3711 110.735 85.1729 110.12H83.9561C84.0928 111.337 85.2207 112.13 86.8613 112.13ZM92.6309 106.777C93.123 106.777 93.5195 106.374 93.5195 105.889C93.5195 105.396 93.123 105 92.6309 105C92.1455 105 91.7422 105.396 91.7422 105.889C91.7422 106.374 92.1455 106.777 92.6309 106.777ZM92.6309 112.068C93.123 112.068 93.5195 111.665 93.5195 111.18C93.5195 110.688 93.123 110.291 92.6309 110.291C92.1455 110.291 91.7422 110.688 91.7422 111.18C91.7422 111.665 92.1455 112.068 92.6309 112.068ZM99.9043 112H103.288C106.221 112 107.943 110.175 107.943 107.071V107.058C107.943 103.961 106.214 102.136 103.288 102.136H99.9043V112ZM101.135 110.893V103.243H103.206C105.394 103.243 106.686 104.665 106.686 107.071V107.085C106.686 109.484 105.407 110.893 103.206 110.893H101.135ZM112.954 112.13C115.053 112.13 116.352 110.681 116.352 108.322V108.309C116.352 105.943 115.053 104.501 112.954 104.501C110.855 104.501 109.557 105.943 109.557 108.309V108.322C109.557 110.681 110.855 112.13 112.954 112.13ZM112.954 111.077C111.56 111.077 110.773 110.059 110.773 108.322V108.309C110.773 106.565 111.56 105.554 112.954 105.554C114.349 105.554 115.135 106.565 115.135 108.309V108.322C115.135 110.059 114.349 111.077 112.954 111.077ZM118.266 112H119.455V109.204L120.146 108.534L122.907 112H124.404L120.979 107.728L124.192 104.631H122.75L119.564 107.851H119.455V101.705H118.266V112ZM127.617 112.13C128.608 112.13 129.381 111.699 129.846 110.913H129.955V112H131.145V106.955C131.145 105.424 130.14 104.501 128.342 104.501C126.77 104.501 125.648 105.28 125.457 106.436L125.45 106.477H126.64L126.646 106.456C126.838 105.882 127.419 105.554 128.301 105.554C129.401 105.554 129.955 106.046 129.955 106.955V107.625L127.843 107.755C126.127 107.857 125.156 108.616 125.156 109.929V109.942C125.156 111.282 126.216 112.13 127.617 112.13ZM126.373 109.915V109.901C126.373 109.17 126.865 108.773 127.986 108.705L129.955 108.582V109.252C129.955 110.305 129.073 111.098 127.863 111.098C127.009 111.098 126.373 110.66 126.373 109.915ZM133.318 112H134.508V107.639C134.508 106.347 135.253 105.554 136.429 105.554C137.604 105.554 138.151 106.189 138.151 107.516V112H139.341V107.229C139.341 105.479 138.418 104.501 136.764 104.501C135.677 104.501 134.986 104.959 134.617 105.738H134.508V104.631H133.318V112ZM145.582 112H151.57V110.893H146.812V102.136H145.582V112ZM154.018 103.209C154.469 103.209 154.838 102.84 154.838 102.389C154.838 101.938 154.469 101.568 154.018 101.568C153.566 101.568 153.197 101.938 153.197 102.389C153.197 102.84 153.566 103.209 154.018 103.209ZM153.416 112H154.605V104.631H153.416V112ZM159.466 112.055C159.698 112.055 159.924 112.027 160.156 111.986V110.975C159.938 110.995 159.821 111.002 159.609 111.002C158.844 111.002 158.543 110.653 158.543 109.785V105.615H160.156V104.631H158.543V102.724H157.312V104.631H156.15V105.615H157.312V110.086C157.312 111.494 157.948 112.055 159.466 112.055ZM164.832 112.13C166.568 112.13 167.621 111.146 167.874 110.147L167.888 110.093H166.698L166.671 110.154C166.473 110.599 165.857 111.07 164.859 111.07C163.547 111.07 162.706 110.182 162.672 108.657H167.977V108.192C167.977 105.991 166.76 104.501 164.757 104.501C162.754 104.501 161.455 106.06 161.455 108.336V108.343C161.455 110.653 162.727 112.13 164.832 112.13ZM164.75 105.561C165.837 105.561 166.644 106.251 166.767 107.707H162.692C162.822 106.306 163.656 105.561 164.75 105.561ZM176.228 112.13C177.308 112.13 178.053 111.686 178.415 110.899H178.524V112H179.714V104.631H178.524V108.992C178.524 110.284 177.834 111.077 176.535 111.077C175.359 111.077 174.881 110.441 174.881 109.115V104.631H173.691V109.402C173.691 111.146 174.553 112.13 176.228 112.13ZM184.465 112.13C186.14 112.13 187.418 111.221 187.418 109.908V109.895C187.418 108.842 186.748 108.24 185.36 107.905L184.226 107.632C183.357 107.42 182.988 107.105 182.988 106.606V106.593C182.988 105.943 183.631 105.492 184.506 105.492C185.395 105.492 185.969 105.896 186.126 106.477H187.295C187.131 105.273 186.058 104.501 184.513 104.501C182.947 104.501 181.771 105.424 181.771 106.647V106.654C181.771 107.714 182.394 108.315 183.774 108.644L184.916 108.917C185.825 109.136 186.201 109.484 186.201 109.983V109.997C186.201 110.667 185.497 111.139 184.506 111.139C183.562 111.139 182.975 110.735 182.776 110.12H181.56C181.696 111.337 182.824 112.13 184.465 112.13ZM192.271 112.13C194.008 112.13 195.061 111.146 195.313 110.147L195.327 110.093H194.138L194.11 110.154C193.912 110.599 193.297 111.07 192.299 111.07C190.986 111.07 190.146 110.182 190.111 108.657H195.416V108.192C195.416 105.991 194.199 104.501 192.196 104.501C190.193 104.501 188.895 106.06 188.895 108.336V108.343C188.895 110.653 190.166 112.13 192.271 112.13ZM192.189 105.561C193.276 105.561 194.083 106.251 194.206 107.707H190.132C190.262 106.306 191.096 105.561 192.189 105.561ZM197.262 112H198.451V107.434C198.451 106.354 199.258 105.636 200.393 105.636C200.652 105.636 200.878 105.663 201.124 105.704V104.549C201.008 104.528 200.755 104.501 200.529 104.501C199.531 104.501 198.841 104.952 198.561 105.725H198.451V104.631H197.262V112ZM204.986 112.13C206.661 112.13 207.939 111.221 207.939 109.908V109.895C207.939 108.842 207.27 108.24 205.882 107.905L204.747 107.632C203.879 107.42 203.51 107.105 203.51 106.606V106.593C203.51 105.943 204.152 105.492 205.027 105.492C205.916 105.492 206.49 105.896 206.647 106.477H207.816C207.652 105.273 206.579 104.501 205.034 104.501C203.469 104.501 202.293 105.424 202.293 106.647V106.654C202.293 107.714 202.915 108.315 204.296 108.644L205.438 108.917C206.347 109.136 206.723 109.484 206.723 109.983V109.997C206.723 110.667 206.019 111.139 205.027 111.139C204.084 111.139 203.496 110.735 203.298 110.12H202.081C202.218 111.337 203.346 112.13 204.986 112.13ZM216.758 114.598C218.768 114.598 220.039 113.545 220.039 111.897V104.631H218.85V105.848H218.768C218.316 105.014 217.51 104.501 216.471 104.501C214.543 104.501 213.354 105.998 213.354 108.062V108.076C213.354 110.141 214.536 111.617 216.443 111.617C217.455 111.617 218.289 111.159 218.754 110.346H218.863V111.836C218.863 112.923 218.077 113.545 216.758 113.545C215.698 113.545 215.042 113.148 214.912 112.588L214.905 112.581H213.675L213.661 112.588C213.846 113.798 214.98 114.598 216.758 114.598ZM216.703 110.564C215.336 110.564 214.57 109.539 214.57 108.076V108.062C214.57 106.6 215.336 105.554 216.703 105.554C218.063 105.554 218.891 106.6 218.891 108.062V108.076C218.891 109.539 218.07 110.564 216.703 110.564ZM225.262 112.13C226.998 112.13 228.051 111.146 228.304 110.147L228.317 110.093H227.128L227.101 110.154C226.902 110.599 226.287 111.07 225.289 111.07C223.977 111.07 223.136 110.182 223.102 108.657H228.406V108.192C228.406 105.991 227.189 104.501 225.187 104.501C223.184 104.501 221.885 106.06 221.885 108.336V108.343C221.885 110.653 223.156 112.13 225.262 112.13ZM225.18 105.561C226.267 105.561 227.073 106.251 227.196 107.707H223.122C223.252 106.306 224.086 105.561 225.18 105.561ZM232.87 112.055C233.103 112.055 233.328 112.027 233.561 111.986V110.975C233.342 110.995 233.226 111.002 233.014 111.002C232.248 111.002 231.947 110.653 231.947 109.785V105.615H233.561V104.631H231.947V102.724H230.717V104.631H229.555V105.615H230.717V110.086C230.717 111.494 231.353 112.055 232.87 112.055ZM242.304 112.13C244.402 112.13 245.701 110.681 245.701 108.322V108.309C245.701 105.943 244.402 104.501 242.304 104.501C240.205 104.501 238.906 105.943 238.906 108.309V108.322C238.906 110.681 240.205 112.13 242.304 112.13ZM242.304 111.077C240.909 111.077 240.123 110.059 240.123 108.322V108.309C240.123 106.565 240.909 105.554 242.304 105.554C243.698 105.554 244.484 106.565 244.484 108.309V108.322C244.484 110.059 243.698 111.077 242.304 111.077ZM248.039 112H249.229V105.615H250.903V104.631H249.229V103.845C249.229 103.038 249.57 102.621 250.418 102.621C250.63 102.621 250.828 102.628 250.972 102.655V101.705C250.726 101.657 250.466 101.637 250.179 101.637C248.777 101.637 248.039 102.341 248.039 103.811V104.631H246.815V105.615H248.039V112ZM253.111 112H254.301V105.615H255.976V104.631H254.301V103.845C254.301 103.038 254.643 102.621 255.49 102.621C255.702 102.621 255.9 102.628 256.044 102.655V101.705C255.798 101.657 255.538 101.637 255.251 101.637C253.85 101.637 253.111 102.341 253.111 103.811V104.631H251.888V105.615H253.111V112ZM260.385 112.13C262.121 112.13 263.174 111.146 263.427 110.147L263.44 110.093H262.251L262.224 110.154C262.025 110.599 261.41 111.07 260.412 111.07C259.1 111.07 258.259 110.182 258.225 108.657H263.529V108.192C263.529 105.991 262.312 104.501 260.31 104.501C258.307 104.501 257.008 106.06 257.008 108.336V108.343C257.008 110.653 258.279 112.13 260.385 112.13ZM260.303 105.561C261.39 105.561 262.196 106.251 262.319 107.707H258.245C258.375 106.306 259.209 105.561 260.303 105.561ZM265.375 112H266.564V107.434C266.564 106.354 267.371 105.636 268.506 105.636C268.766 105.636 268.991 105.663 269.237 105.704V104.549C269.121 104.528 268.868 104.501 268.643 104.501C267.645 104.501 266.954 104.952 266.674 105.725H266.564V104.631H265.375V112ZM30.335 133H31.5244L33.165 127.299H33.2744L34.9219 133H36.1182L38.1826 125.631H37L35.5508 131.523H35.4414L33.7939 125.631H32.666L31.0186 131.523H30.9092L29.46 125.631H28.2705L30.335 133ZM40.3838 124.209C40.835 124.209 41.2041 123.84 41.2041 123.389C41.2041 122.938 40.835 122.568 40.3838 122.568C39.9326 122.568 39.5635 122.938 39.5635 123.389C39.5635 123.84 39.9326 124.209 40.3838 124.209ZM39.7822 133H40.9717V125.631H39.7822V133ZM45.832 133.055C46.0645 133.055 46.29 133.027 46.5225 132.986V131.975C46.3037 131.995 46.1875 132.002 45.9756 132.002C45.21 132.002 44.9092 131.653 44.9092 130.785V126.615H46.5225V125.631H44.9092V123.724H43.6787V125.631H42.5166V126.615H43.6787V131.086C43.6787 132.494 44.3145 133.055 45.832 133.055ZM48.3682 133H49.5576V128.639C49.5576 127.347 50.3027 126.554 51.4785 126.554C52.6543 126.554 53.2012 127.189 53.2012 128.516V133H54.3906V128.229C54.3906 126.479 53.4678 125.501 51.8135 125.501C50.7266 125.501 50.0361 125.959 49.667 126.738H49.5576V122.705H48.3682V133ZM60.4814 133H61.6709V128.434C61.6709 127.354 62.4775 126.636 63.6123 126.636C63.8721 126.636 64.0977 126.663 64.3438 126.704V125.549C64.2275 125.528 63.9746 125.501 63.749 125.501C62.751 125.501 62.0605 125.952 61.7803 126.725H61.6709V125.631H60.4814V133ZM68.6162 133.13C70.3525 133.13 71.4053 132.146 71.6582 131.147L71.6719 131.093H70.4824L70.4551 131.154C70.2568 131.599 69.6416 132.07 68.6436 132.07C67.3311 132.07 66.4902 131.182 66.4561 129.657H71.7607V129.192C71.7607 126.991 70.5439 125.501 68.541 125.501C66.5381 125.501 65.2393 127.06 65.2393 129.336V129.343C65.2393 131.653 66.5107 133.13 68.6162 133.13ZM68.5342 126.561C69.6211 126.561 70.4277 127.251 70.5508 128.707H66.4766C66.6064 127.306 67.4404 126.561 68.5342 126.561ZM76.6416 135.598C78.6514 135.598 79.9229 134.545 79.9229 132.897V125.631H78.7334V126.848H78.6514C78.2002 126.014 77.3936 125.501 76.3545 125.501C74.4268 125.501 73.2373 126.998 73.2373 129.062V129.076C73.2373 131.141 74.4199 132.617 76.3271 132.617C77.3389 132.617 78.1729 132.159 78.6377 131.346H78.7471V132.836C78.7471 133.923 77.9609 134.545 76.6416 134.545C75.582 134.545 74.9258 134.148 74.7959 133.588L74.7891 133.581H73.5586L73.5449 133.588C73.7295 134.798 74.8643 135.598 76.6416 135.598ZM76.5869 131.564C75.2197 131.564 74.4541 130.539 74.4541 129.076V129.062C74.4541 127.6 75.2197 126.554 76.5869 126.554C77.9473 126.554 78.7744 127.6 78.7744 129.062V129.076C78.7744 130.539 77.9541 131.564 76.5869 131.564ZM84.6055 133.13C85.6855 133.13 86.4307 132.686 86.793 131.899H86.9023V133H88.0918V125.631H86.9023V129.992C86.9023 131.284 86.2119 132.077 84.9131 132.077C83.7373 132.077 83.2588 131.441 83.2588 130.115V125.631H82.0693V130.402C82.0693 132.146 82.9307 133.13 84.6055 133.13ZM90.3818 133H91.5713V122.705H90.3818V133ZM95.8779 133.13C96.8691 133.13 97.6416 132.699 98.1064 131.913H98.2158V133H99.4053V127.955C99.4053 126.424 98.4004 125.501 96.6025 125.501C95.0303 125.501 93.9092 126.28 93.7178 127.436L93.7109 127.477H94.9004L94.9072 127.456C95.0986 126.882 95.6797 126.554 96.5615 126.554C97.6621 126.554 98.2158 127.046 98.2158 127.955V128.625L96.1035 128.755C94.3877 128.857 93.417 129.616 93.417 130.929V130.942C93.417 132.282 94.4766 133.13 95.8779 133.13ZM94.6338 130.915V130.901C94.6338 130.17 95.126 129.773 96.2471 129.705L98.2158 129.582V130.252C98.2158 131.305 97.334 132.098 96.124 132.098C95.2695 132.098 94.6338 131.66 94.6338 130.915ZM101.579 133H102.769V128.434C102.769 127.354 103.575 126.636 104.71 126.636C104.97 126.636 105.195 126.663 105.441 126.704V125.549C105.325 125.528 105.072 125.501 104.847 125.501C103.849 125.501 103.158 125.952 102.878 126.725H102.769V125.631H101.579V133ZM110.849 135.461H112.038V131.838H112.147C112.551 132.624 113.433 133.13 114.444 133.13C116.317 133.13 117.534 131.633 117.534 129.322V129.309C117.534 127.012 116.311 125.501 114.444 125.501C113.419 125.501 112.599 125.986 112.147 126.807H112.038V125.631H110.849V135.461ZM114.171 132.077C112.831 132.077 112.011 131.024 112.011 129.322V129.309C112.011 127.606 112.831 126.554 114.171 126.554C115.518 126.554 116.317 127.593 116.317 129.309V129.322C116.317 131.038 115.518 132.077 114.171 132.077ZM119.394 133H120.583V128.434C120.583 127.354 121.39 126.636 122.524 126.636C122.784 126.636 123.01 126.663 123.256 126.704V125.549C123.14 125.528 122.887 125.501 122.661 125.501C121.663 125.501 120.973 125.952 120.692 126.725H120.583V125.631H119.394V133ZM125.354 124.209C125.806 124.209 126.175 123.84 126.175 123.389C126.175 122.938 125.806 122.568 125.354 122.568C124.903 122.568 124.534 122.938 124.534 123.389C124.534 123.84 124.903 124.209 125.354 124.209ZM124.753 133H125.942V125.631H124.753V133ZM131.199 133.13C132.97 133.13 133.961 132.18 134.262 130.847L134.275 130.771L133.1 130.778L133.086 130.819C132.812 131.64 132.184 132.077 131.192 132.077C129.88 132.077 129.032 130.99 129.032 129.295V129.281C129.032 127.62 129.866 126.554 131.192 126.554C132.252 126.554 132.908 127.142 133.093 127.866L133.1 127.887H134.282L134.275 127.846C134.057 126.533 132.983 125.501 131.192 125.501C129.128 125.501 127.815 126.991 127.815 129.281V129.295C127.815 131.633 129.135 133.13 131.199 133.13ZM139.026 133.13C140.763 133.13 141.815 132.146 142.068 131.147L142.082 131.093H140.893L140.865 131.154C140.667 131.599 140.052 132.07 139.054 132.07C137.741 132.07 136.9 131.182 136.866 129.657H142.171V129.192C142.171 126.991 140.954 125.501 138.951 125.501C136.948 125.501 135.649 127.06 135.649 129.336V129.343C135.649 131.653 136.921 133.13 139.026 133.13ZM138.944 126.561C140.031 126.561 140.838 127.251 140.961 128.707H136.887C137.017 127.306 137.851 126.561 138.944 126.561ZM143.716 135.509H144.598L145.671 131.619H144.311L143.716 135.509ZM154.134 133.13C155.125 133.13 155.897 132.699 156.362 131.913H156.472V133H157.661V127.955C157.661 126.424 156.656 125.501 154.858 125.501C153.286 125.501 152.165 126.28 151.974 127.436L151.967 127.477H153.156L153.163 127.456C153.354 126.882 153.936 126.554 154.817 126.554C155.918 126.554 156.472 127.046 156.472 127.955V128.625L154.359 128.755C152.644 128.857 151.673 129.616 151.673 130.929V130.942C151.673 132.282 152.732 133.13 154.134 133.13ZM152.89 130.915V130.901C152.89 130.17 153.382 129.773 154.503 129.705L156.472 129.582V130.252C156.472 131.305 155.59 132.098 154.38 132.098C153.525 132.098 152.89 131.66 152.89 130.915ZM162.303 133.13C163.383 133.13 164.128 132.686 164.49 131.899H164.6V133H165.789V125.631H164.6V129.992C164.6 131.284 163.909 132.077 162.61 132.077C161.435 132.077 160.956 131.441 160.956 130.115V125.631H159.767V130.402C159.767 132.146 160.628 133.13 162.303 133.13ZM170.629 133.055C170.861 133.055 171.087 133.027 171.319 132.986V131.975C171.101 131.995 170.984 132.002 170.772 132.002C170.007 132.002 169.706 131.653 169.706 130.785V126.615H171.319V125.631H169.706V123.724H168.476V125.631H167.313V126.615H168.476V131.086C168.476 132.494 169.111 133.055 170.629 133.055ZM176.016 133.13C178.114 133.13 179.413 131.681 179.413 129.322V129.309C179.413 126.943 178.114 125.501 176.016 125.501C173.917 125.501 172.618 126.943 172.618 129.309V129.322C172.618 131.681 173.917 133.13 176.016 133.13ZM176.016 132.077C174.621 132.077 173.835 131.059 173.835 129.322V129.309C173.835 127.565 174.621 126.554 176.016 126.554C177.41 126.554 178.196 127.565 178.196 129.309V129.322C178.196 131.059 177.41 132.077 176.016 132.077ZM181.259 133H182.448V128.434C182.448 127.395 183.18 126.554 184.144 126.554C185.073 126.554 185.675 127.121 185.675 127.996V133H186.864V128.263C186.864 127.326 187.541 126.554 188.566 126.554C189.605 126.554 190.104 127.094 190.104 128.181V133H191.294V127.907C191.294 126.362 190.453 125.501 188.949 125.501C187.931 125.501 187.09 126.014 186.693 126.793H186.584C186.242 126.027 185.545 125.501 184.547 125.501C183.583 125.501 182.886 125.959 182.558 126.752H182.448V125.631H181.259V133ZM195.464 133.13C196.455 133.13 197.228 132.699 197.692 131.913H197.802V133H198.991V127.955C198.991 126.424 197.986 125.501 196.188 125.501C194.616 125.501 193.495 126.28 193.304 127.436L193.297 127.477H194.486L194.493 127.456C194.685 126.882 195.266 126.554 196.147 126.554C197.248 126.554 197.802 127.046 197.802 127.955V128.625L195.689 128.755C193.974 128.857 193.003 129.616 193.003 130.929V130.942C193.003 132.282 194.062 133.13 195.464 133.13ZM194.22 130.915V130.901C194.22 130.17 194.712 129.773 195.833 129.705L197.802 129.582V130.252C197.802 131.305 196.92 132.098 195.71 132.098C194.855 132.098 194.22 131.66 194.22 130.915ZM203.783 133.055C204.016 133.055 204.241 133.027 204.474 132.986V131.975C204.255 131.995 204.139 132.002 203.927 132.002C203.161 132.002 202.86 131.653 202.86 130.785V126.615H204.474V125.631H202.86V123.724H201.63V125.631H200.468V126.615H201.63V131.086C201.63 132.494 202.266 133.055 203.783 133.055ZM206.88 124.209C207.331 124.209 207.7 123.84 207.7 123.389C207.7 122.938 207.331 122.568 206.88 122.568C206.429 122.568 206.06 122.938 206.06 123.389C206.06 123.84 206.429 124.209 206.88 124.209ZM206.278 133H207.468V125.631H206.278V133ZM212.725 133.13C214.495 133.13 215.486 132.18 215.787 130.847L215.801 130.771L214.625 130.778L214.611 130.819C214.338 131.64 213.709 132.077 212.718 132.077C211.405 132.077 210.558 130.99 210.558 129.295V129.281C210.558 127.62 211.392 126.554 212.718 126.554C213.777 126.554 214.434 127.142 214.618 127.866L214.625 127.887H215.808L215.801 127.846C215.582 126.533 214.509 125.501 212.718 125.501C210.653 125.501 209.341 126.991 209.341 129.281V129.295C209.341 131.633 210.66 133.13 212.725 133.13ZM219.567 133.13C220.559 133.13 221.331 132.699 221.796 131.913H221.905V133H223.095V127.955C223.095 126.424 222.09 125.501 220.292 125.501C218.72 125.501 217.599 126.28 217.407 127.436L217.4 127.477H218.59L218.597 127.456C218.788 126.882 219.369 126.554 220.251 126.554C221.352 126.554 221.905 127.046 221.905 127.955V128.625L219.793 128.755C218.077 128.857 217.106 129.616 217.106 130.929V130.942C217.106 132.282 218.166 133.13 219.567 133.13ZM218.323 130.915V130.901C218.323 130.17 218.815 129.773 219.937 129.705L221.905 129.582V130.252C221.905 131.305 221.023 132.098 219.813 132.098C218.959 132.098 218.323 131.66 218.323 130.915ZM225.337 133H226.526V122.705H225.337V133ZM228.878 133H230.067V122.705H228.878V133ZM232.979 135.584C234.285 135.584 234.894 135.105 235.502 133.451L238.38 125.631H237.129L235.112 131.694H235.003L232.979 125.631H231.708L234.436 133.007L234.299 133.444C234.032 134.292 233.622 134.6 232.945 134.6C232.781 134.6 232.597 134.593 232.453 134.565V135.543C232.617 135.57 232.822 135.584 232.979 135.584ZM245.913 133.13C246.904 133.13 247.677 132.699 248.142 131.913H248.251V133H249.44V127.955C249.44 126.424 248.436 125.501 246.638 125.501C245.065 125.501 243.944 126.28 243.753 127.436L243.746 127.477H244.936L244.942 127.456C245.134 126.882 245.715 126.554 246.597 126.554C247.697 126.554 248.251 127.046 248.251 127.955V128.625L246.139 128.755C244.423 128.857 243.452 129.616 243.452 130.929V130.942C243.452 132.282 244.512 133.13 245.913 133.13ZM244.669 130.915V130.901C244.669 130.17 245.161 129.773 246.282 129.705L248.251 129.582V130.252C248.251 131.305 247.369 132.098 246.159 132.098C245.305 132.098 244.669 131.66 244.669 130.915ZM251.614 135.461H252.804V131.838H252.913C253.316 132.624 254.198 133.13 255.21 133.13C257.083 133.13 258.3 131.633 258.3 129.322V129.309C258.3 127.012 257.076 125.501 255.21 125.501C254.185 125.501 253.364 125.986 252.913 126.807H252.804V125.631H251.614V135.461ZM254.937 132.077C253.597 132.077 252.776 131.024 252.776 129.322V129.309C252.776 127.606 253.597 126.554 254.937 126.554C256.283 126.554 257.083 127.593 257.083 129.309V129.322C257.083 131.038 256.283 132.077 254.937 132.077ZM260.159 135.461H261.349V131.838H261.458C261.861 132.624 262.743 133.13 263.755 133.13C265.628 133.13 266.845 131.633 266.845 129.322V129.309C266.845 127.012 265.621 125.501 263.755 125.501C262.729 125.501 261.909 125.986 261.458 126.807H261.349V125.631H260.159V135.461ZM263.481 132.077C262.142 132.077 261.321 131.024 261.321 129.322V129.309C261.321 127.606 262.142 126.554 263.481 126.554C264.828 126.554 265.628 127.593 265.628 129.309V129.322C265.628 131.038 264.828 132.077 263.481 132.077ZM268.772 133H269.962V122.705H268.772V133ZM272.874 124.209C273.325 124.209 273.694 123.84 273.694 123.389C273.694 122.938 273.325 122.568 272.874 122.568C272.423 122.568 272.054 122.938 272.054 123.389C272.054 123.84 272.423 124.209 272.874 124.209ZM272.272 133H273.462V125.631H272.272V133ZM278.712 133.13C280.448 133.13 281.501 132.146 281.754 131.147L281.768 131.093H280.578L280.551 131.154C280.353 131.599 279.737 132.07 278.739 132.07C277.427 132.07 276.586 131.182 276.552 129.657H281.856V129.192C281.856 126.991 280.64 125.501 278.637 125.501C276.634 125.501 275.335 127.06 275.335 129.336V129.343C275.335 131.653 276.606 133.13 278.712 133.13ZM278.63 126.561C279.717 126.561 280.523 127.251 280.646 128.707H276.572C276.702 127.306 277.536 126.561 278.63 126.561ZM286.423 133.13C287.448 133.13 288.269 132.645 288.72 131.824H288.829V133H290.019V122.705H288.829V126.793H288.72C288.316 126.007 287.435 125.501 286.423 125.501C284.55 125.501 283.333 126.998 283.333 129.309V129.322C283.333 131.619 284.557 133.13 286.423 133.13ZM286.696 132.077C285.35 132.077 284.55 131.038 284.55 129.322V129.309C284.55 127.593 285.35 126.554 286.696 126.554C288.036 126.554 288.856 127.606 288.856 129.309V129.322C288.856 131.024 288.036 132.077 286.696 132.077ZM122.203 155.055C122.436 155.055 122.661 155.027 122.894 154.986V153.975C122.675 153.995 122.559 154.002 122.347 154.002C121.581 154.002 121.28 153.653 121.28 152.785V148.615H122.894V147.631H121.28V145.724H120.05V147.631H118.888V148.615H120.05V153.086C120.05 154.494 120.686 155.055 122.203 155.055ZM127.59 155.13C129.688 155.13 130.987 153.681 130.987 151.322V151.309C130.987 148.943 129.688 147.501 127.59 147.501C125.491 147.501 124.192 148.943 124.192 151.309V151.322C124.192 153.681 125.491 155.13 127.59 155.13ZM127.59 154.077C126.195 154.077 125.409 153.059 125.409 151.322V151.309C125.409 149.565 126.195 148.554 127.59 148.554C128.984 148.554 129.771 149.565 129.771 151.309V151.322C129.771 153.059 128.984 154.077 127.59 154.077ZM139.785 155.13C141.556 155.13 142.547 154.18 142.848 152.847L142.861 152.771L141.686 152.778L141.672 152.819C141.398 153.64 140.77 154.077 139.778 154.077C138.466 154.077 137.618 152.99 137.618 151.295V151.281C137.618 149.62 138.452 148.554 139.778 148.554C140.838 148.554 141.494 149.142 141.679 149.866L141.686 149.887H142.868L142.861 149.846C142.643 148.533 141.569 147.501 139.778 147.501C137.714 147.501 136.401 148.991 136.401 151.281V151.295C136.401 153.633 137.721 155.13 139.785 155.13ZM144.673 155H145.862V150.639C145.862 149.347 146.607 148.554 147.783 148.554C148.959 148.554 149.506 149.189 149.506 150.516V155H150.695V150.229C150.695 148.479 149.772 147.501 148.118 147.501C147.031 147.501 146.341 147.959 145.972 148.738H145.862V144.705H144.673V155ZM155.856 155.13C157.593 155.13 158.646 154.146 158.898 153.147L158.912 153.093H157.723L157.695 153.154C157.497 153.599 156.882 154.07 155.884 154.07C154.571 154.07 153.73 153.182 153.696 151.657H159.001V151.192C159.001 148.991 157.784 147.501 155.781 147.501C153.778 147.501 152.479 149.06 152.479 151.336V151.343C152.479 153.653 153.751 155.13 155.856 155.13ZM155.774 148.561C156.861 148.561 157.668 149.251 157.791 150.707H153.717C153.847 149.306 154.681 148.561 155.774 148.561ZM163.861 155.13C165.632 155.13 166.623 154.18 166.924 152.847L166.938 152.771L165.762 152.778L165.748 152.819C165.475 153.64 164.846 154.077 163.854 154.077C162.542 154.077 161.694 152.99 161.694 151.295V151.281C161.694 149.62 162.528 148.554 163.854 148.554C164.914 148.554 165.57 149.142 165.755 149.866L165.762 149.887H166.944L166.938 149.846C166.719 148.533 165.646 147.501 163.854 147.501C161.79 147.501 160.478 148.991 160.478 151.281V151.295C160.478 153.633 161.797 155.13 163.861 155.13ZM168.749 155H169.938V152.204L170.629 151.534L173.391 155H174.888L171.463 150.728L174.676 147.631H173.233L170.048 150.851H169.938V144.705H168.749V155ZM178.969 155.13C181.067 155.13 182.366 153.681 182.366 151.322V151.309C182.366 148.943 181.067 147.501 178.969 147.501C176.87 147.501 175.571 148.943 175.571 151.309V151.322C175.571 153.681 176.87 155.13 178.969 155.13ZM178.969 154.077C177.574 154.077 176.788 153.059 176.788 151.322V151.309C176.788 149.565 177.574 148.554 178.969 148.554C180.363 148.554 181.149 149.565 181.149 151.309V151.322C181.149 153.059 180.363 154.077 178.969 154.077ZM186.68 155.13C187.76 155.13 188.505 154.686 188.867 153.899H188.977V155H190.166V147.631H188.977V151.992C188.977 153.284 188.286 154.077 186.987 154.077C185.812 154.077 185.333 153.441 185.333 152.115V147.631H184.144V152.402C184.144 154.146 185.005 155.13 186.68 155.13ZM195.006 155.055C195.238 155.055 195.464 155.027 195.696 154.986V153.975C195.478 153.995 195.361 154.002 195.149 154.002C194.384 154.002 194.083 153.653 194.083 152.785V148.615H195.696V147.631H194.083V145.724H192.853V147.631H191.69V148.615H192.853V153.086C192.853 154.494 193.488 155.055 195.006 155.055ZM198.444 155.068C198.937 155.068 199.333 154.665 199.333 154.18C199.333 153.688 198.937 153.291 198.444 153.291C197.959 153.291 197.556 153.688 197.556 154.18C197.556 154.665 197.959 155.068 198.444 155.068Z",
+                          fill: "white"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "g",
+                        { attrs: { filter: "url(#filter0_d_1061_678)" } },
+                        [
+                          _c("path", {
+                            attrs: {
+                              d:
+                                "M133.607 56.5262C139.149 56.5262 142.849 53.6156 142.849 49.3072V49.2743C142.849 46.0512 140.547 44.0121 137.011 43.6832V43.5845C139.79 43.009 141.961 41.085 141.961 38.125V38.0921C141.961 34.3099 138.672 31.7446 133.574 31.7446C128.592 31.7446 125.254 34.5073 124.908 38.7499L124.892 38.9472H129.463L129.48 38.7992C129.677 36.8259 131.239 35.5597 133.574 35.5597C135.91 35.5597 137.274 36.7766 137.274 38.7499V38.7828C137.274 40.7068 135.663 42.0223 133.163 42.0223H130.516V45.5578H133.229C136.107 45.5578 137.801 46.8076 137.801 49.0769V49.1098C137.801 51.116 136.14 52.5302 133.607 52.5302C131.042 52.5302 129.348 51.2147 129.134 49.3729L129.118 49.192H124.366L124.382 49.4058C124.711 53.6485 128.246 56.5262 133.607 56.5262ZM156.235 56.6084C162.105 56.6084 165.657 51.8067 165.657 44.1436V44.1107C165.657 36.4312 162.105 31.6624 156.235 31.6624C150.381 31.6624 146.812 36.4312 146.812 44.1107V44.1436C146.812 51.8067 150.381 56.6084 156.235 56.6084ZM156.235 52.6782C153.439 52.6782 151.844 49.5045 151.844 44.1436V44.1107C151.844 38.7334 153.439 35.5926 156.235 35.5926C159.047 35.5926 160.642 38.7334 160.642 44.1107V44.1436C160.642 49.5045 159.047 52.6782 156.235 52.6782ZM175.475 45.2783C178.961 45.2783 181.082 42.713 181.082 38.6019V38.5854C181.082 34.4744 178.961 31.9255 175.475 31.9255C172.005 31.9255 169.867 34.4744 169.867 38.5854V38.6019C169.867 42.713 172.005 45.2783 175.475 45.2783ZM179.125 56L195.093 32.2708H191.294L175.327 56H179.125ZM175.475 42.6472C174.044 42.6472 173.238 41.1837 173.238 38.6019V38.5854C173.238 35.9872 174.044 34.5566 175.475 34.5566C176.922 34.5566 177.727 35.9872 177.727 38.5854V38.6019C177.727 41.1837 176.922 42.6472 175.475 42.6472ZM194.928 56.3453C198.414 56.3453 200.536 53.78 200.536 49.6689V49.6525C200.536 45.5414 198.414 42.9925 194.928 42.9925C191.458 42.9925 189.321 45.5414 189.321 49.6525V49.6689C189.321 53.78 191.458 56.3453 194.928 56.3453ZM194.928 53.7142C193.498 53.7142 192.692 52.2507 192.692 49.6689V49.6525C192.692 47.0543 193.498 45.6236 194.928 45.6236C196.375 45.6236 197.181 47.0543 197.181 49.6525V49.6689C197.181 52.2507 196.375 53.7142 194.928 53.7142Z",
+                              fill: "white"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M55.2031 48H60.4414V47.0508H56.2578V44.1445H60.2246V43.207H56.2578V40.4941H60.4414V39.5449H55.2031V48ZM62.2227 48H63.2422V44.2617C63.2422 43.1543 63.8809 42.4746 64.8887 42.4746C65.8965 42.4746 66.3652 43.0195 66.3652 44.1562V48H67.3848V43.9102C67.3848 42.4102 66.5938 41.5723 65.1758 41.5723C64.2441 41.5723 63.6523 41.9648 63.3359 42.6328H63.2422V41.6836H62.2227V48ZM69.7578 40.4648C70.1445 40.4648 70.4609 40.1484 70.4609 39.7617C70.4609 39.375 70.1445 39.0586 69.7578 39.0586C69.3711 39.0586 69.0547 39.375 69.0547 39.7617C69.0547 40.1484 69.3711 40.4648 69.7578 40.4648ZM68.3281 50.168C69.6523 50.168 70.2676 49.6113 70.2676 48.3105V41.6836H69.248V48.3281C69.248 49.0254 68.9902 49.2656 68.3047 49.2656H68.1523V50.168H68.3281ZM74.791 48.1113C76.5898 48.1113 77.7031 46.8691 77.7031 44.8477V44.8359C77.7031 42.8086 76.5898 41.5723 74.791 41.5723C72.9922 41.5723 71.8789 42.8086 71.8789 44.8359V44.8477C71.8789 46.8691 72.9922 48.1113 74.791 48.1113ZM74.791 47.209C73.5957 47.209 72.9219 46.3359 72.9219 44.8477V44.8359C72.9219 43.3418 73.5957 42.4746 74.791 42.4746C75.9863 42.4746 76.6602 43.3418 76.6602 44.8359V44.8477C76.6602 46.3359 75.9863 47.209 74.791 47.209ZM79.5898 50.2148C80.709 50.2148 81.2305 49.8047 81.752 48.3867L84.2188 41.6836H83.1465L81.418 46.8809H81.3242L79.5898 41.6836H78.5L80.8379 48.0059L80.7207 48.3809C80.4922 49.1074 80.1406 49.3711 79.5605 49.3711C79.4199 49.3711 79.2617 49.3652 79.1387 49.3418V50.1797C79.2793 50.2031 79.4551 50.2148 79.5898 50.2148ZM89.0703 48H90.125V44.3379H93.8691V43.4004H90.125V40.4941H94.2031V39.5449H89.0703V48ZM95.8672 48H96.8867V39.1758H95.8672V48ZM100.578 48.1113C101.428 48.1113 102.09 47.7422 102.488 47.0684H102.582V48H103.602V43.6758C103.602 42.3633 102.74 41.5723 101.199 41.5723C99.8516 41.5723 98.8906 42.2402 98.7266 43.2305L98.7207 43.2656H99.7402L99.7461 43.248C99.9102 42.7559 100.408 42.4746 101.164 42.4746C102.107 42.4746 102.582 42.8965 102.582 43.6758V44.25L100.771 44.3613C99.3008 44.4492 98.4688 45.0996 98.4688 46.2246V46.2363C98.4688 47.3848 99.377 48.1113 100.578 48.1113ZM99.5117 46.2129V46.2012C99.5117 45.5742 99.9336 45.2344 100.895 45.1758L102.582 45.0703V45.6445C102.582 46.5469 101.826 47.2266 100.789 47.2266C100.057 47.2266 99.5117 46.8516 99.5117 46.2129ZM107.709 48.0469C107.908 48.0469 108.102 48.0234 108.301 47.9883V47.1211C108.113 47.1387 108.014 47.1445 107.832 47.1445C107.176 47.1445 106.918 46.8457 106.918 46.1016V42.5273H108.301V41.6836H106.918V40.0488H105.863V41.6836H104.867V42.5273H105.863V46.3594C105.863 47.5664 106.408 48.0469 107.709 48.0469Z",
+                          fill: "#0C0071"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "g",
+                        { attrs: { filter: "url(#filter1_d_1061_678)" } },
+                        [
+                          _c("rect", {
+                            attrs: {
+                              x: "216",
+                              y: "34.1777",
+                              width: "48",
+                              height: "20",
+                              rx: "10",
+                              fill: "#573CFF"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M232.513 48.1942C234.867 48.1942 236.295 46.5089 236.295 43.881V43.8696C236.295 41.2302 234.855 39.5621 232.513 39.5621C230.182 39.5621 228.731 41.2245 228.731 43.8696V43.881C228.731 46.5146 230.148 48.1942 232.513 48.1942ZM232.513 47.2459C230.799 47.2459 229.782 45.9205 229.782 43.881V43.8696C229.782 41.8129 230.834 40.5104 232.513 40.5104C234.198 40.5104 235.244 41.8129 235.244 43.8696V43.881C235.244 45.9205 234.204 47.2459 232.513 47.2459ZM238.078 48H239.106V44.4294H242.756V43.5154H239.106V40.6818H243.082V39.7563H238.078V48ZM244.773 48H245.801V44.4294H249.452V43.5154H245.801V40.6818H249.778V39.7563H244.773V48Z",
+                          fill: "white"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          opacity: "0.3",
+                          d:
+                            "M107.399 17.3745C103.071 13.4067 97.5458 18.8781 101.18 23.0547",
+                          stroke: "#FF00F5",
+                          "stroke-width": "1.72065",
+                          "stroke-miterlimit": "10",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M229.162 77.0844C226.678 76.4391 225.753 79.6327 225.299 81.4364C225.039 82.4955 224.714 83.5876 224 84.3984",
+                          stroke: "#00FFC2",
+                          "stroke-width": "1.72065",
+                          "stroke-miterlimit": "10",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M103.555 82.1191C105.333 79.408 101.942 77.0254 99.9777 75.752C98.8197 75.0126 97.6617 74.191 97 72.9997",
+                          stroke: "#FFE600",
+                          "stroke-width": "1.72065",
+                          "stroke-miterlimit": "10",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M228.334 20.7854C228.097 19.5881 227.386 18.4985 226.411 17.8124C225.437 17.1263 224.172 16.8573 223 17.0725",
+                          stroke: "#64E3FF",
+                          "stroke-width": "1.72065",
+                          "stroke-miterlimit": "10",
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "defs",
+                        [
+                          _c(
+                            "filter",
+                            {
+                              attrs: {
+                                id: "filter0_d_1061_678",
+                                x: "118.378",
+                                y: "31.6626",
+                                width: "88.1453",
+                                height: "39.9138",
+                                filterUnits: "userSpaceOnUse",
+                                "color-interpolation-filters": "sRGB"
+                              }
+                            },
+                            [
+                              _c("feFlood", {
+                                attrs: {
+                                  "flood-opacity": "0",
+                                  result: "BackgroundImageFix"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feColorMatrix", {
+                                attrs: {
+                                  in: "SourceAlpha",
+                                  type: "matrix",
+                                  values:
+                                    "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                                  result: "hardAlpha"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feOffset", { attrs: { dy: "8.9808" } }),
+                              _vm._v(" "),
+                              _c("feGaussianBlur", {
+                                attrs: { stdDeviation: "2.9936" }
+                              }),
+                              _vm._v(" "),
+                              _c("feColorMatrix", {
+                                attrs: {
+                                  type: "matrix",
+                                  values:
+                                    "0 0 0 0 0.192851 0 0 0 0 0.0922663 0 0 0 0 0.512993 0 0 0 0.278409 0"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feBlend", {
+                                attrs: {
+                                  mode: "normal",
+                                  in2: "BackgroundImageFix",
+                                  result: "effect1_dropShadow_1061_678"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feBlend", {
+                                attrs: {
+                                  mode: "normal",
+                                  in: "SourceGraphic",
+                                  in2: "effect1_dropShadow_1061_678",
+                                  result: "shape"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "filter",
+                            {
+                              attrs: {
+                                id: "filter1_d_1061_678",
+                                x: "209",
+                                y: "34.1777",
+                                width: "62",
+                                height: "35",
+                                filterUnits: "userSpaceOnUse",
+                                "color-interpolation-filters": "sRGB"
+                              }
+                            },
+                            [
+                              _c("feFlood", {
+                                attrs: {
+                                  "flood-opacity": "0",
+                                  result: "BackgroundImageFix"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feColorMatrix", {
+                                attrs: {
+                                  in: "SourceAlpha",
+                                  type: "matrix",
+                                  values:
+                                    "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0",
+                                  result: "hardAlpha"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feOffset", { attrs: { dy: "8" } }),
+                              _vm._v(" "),
+                              _c("feGaussianBlur", {
+                                attrs: { stdDeviation: "3.5" }
+                              }),
+                              _vm._v(" "),
+                              _c("feComposite", {
+                                attrs: { in2: "hardAlpha", operator: "out" }
+                              }),
+                              _vm._v(" "),
+                              _c("feColorMatrix", {
+                                attrs: {
+                                  type: "matrix",
+                                  values:
+                                    "0 0 0 0 0.0507051 0 0 0 0 0 0 0 0 0 0.470833 0 0 0 0.11 0"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feBlend", {
+                                attrs: {
+                                  mode: "normal",
+                                  in2: "BackgroundImageFix",
+                                  result: "effect1_dropShadow_1061_678"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("feBlend", {
+                                attrs: {
+                                  mode: "normal",
+                                  in: "SourceGraphic",
+                                  in2: "effect1_dropShadow_1061_678",
+                                  result: "shape"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "linearGradient",
+                            {
+                              attrs: {
+                                id: "paint0_linear_1061_678",
+                                x1: "0",
+                                y1: "0",
+                                x2: "0",
+                                y2: "181",
+                                gradientUnits: "userSpaceOnUse"
+                              }
+                            },
+                            [
+                              _c("stop", {
+                                attrs: { "stop-color": "#D0CAFD" }
+                              }),
+                              _vm._v(" "),
+                              _c("stop", {
+                                attrs: { offset: "1", "stop-color": "#7463FF" }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "already-updated",
                     attrs: {
                       target: "_blank",
                       rel: "noopener noreferrer",
@@ -15151,10 +18065,38 @@ var render = function() {
                   },
                   [_vm._v(_vm._s(_vm.__("Already upgraded?", "dokan-lite")))]
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "close", on: { click: _vm.closePopup } },
+                [
+                  _c(
+                    "svg",
+                    {
+                      attrs: {
+                        width: "10",
+                        height: "10",
+                        viewBox: "0 0 10 10",
+                        fill: "none",
+                        xmlns: "http://www.w3.org/2000/svg"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M6.18849 5.00002L9.75385 1.43465C10.082 1.10645 10.082 0.574344 9.75385 0.246195C9.42566 -0.0820022 8.89359 -0.0820022 8.5654 0.246195L4.99998 3.81161L1.43457 0.246148C1.10637 -0.0820492 0.574308 -0.0820492 0.246112 0.246148C-0.0820373 0.574344 -0.0820373 1.10645 0.246112 1.4346L3.81153 4.99998L0.246112 8.5654C-0.0820373 8.89359 -0.0820373 9.4257 0.246112 9.75385C0.574308 10.082 1.10637 10.082 1.43457 9.75385L4.99998 6.18843L8.5654 9.75385C8.89355 10.082 9.42566 10.082 9.75385 9.75385C10.082 9.42566 10.082 8.89359 9.75385 8.5654L6.18849 5.00002Z",
+                          fill: "#95A5A6"
+                        }
+                      })
+                    ]
+                  )
+                ]
+              )
             ])
-          ])
-        ])
+          ]
+        )
       : _vm._e()
   ])
 }
@@ -15170,7 +18112,7 @@ if (false) {
 }
 
 /***/ }),
-/* 192 */
+/* 210 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15336,7 +18278,873 @@ if (false) {
 }
 
 /***/ }),
-/* 193 */
+/* 211 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawal_vue__ = __webpack_require__(82);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36e64dc3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawal_vue__ = __webpack_require__(213);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(212)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawal_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_36e64dc3_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawal_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/ReverseWithdrawal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-36e64dc3", Component.options)
+  } else {
+    hotAPI.reload("data-v-36e64dc3", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 212 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 213 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "dokan-reverse-withdrawal" },
+    [
+      _c("h1", { staticClass: "wp-heading-inline" }, [
+        _vm._v(
+          "\n        " +
+            _vm._s(_vm.__("Reverse Withdrawal", "dokan-lite")) +
+            "\n    "
+        )
+      ]),
+      _vm._v(" "),
+      _c("AdminNotice"),
+      _vm._v(" "),
+      _c("hr", { staticClass: "wp-header-end" }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "dokan-reverse-withdrawal-fact-card" },
+        [
+          _c("CardFunFact", {
+            attrs: {
+              count: _vm.counts.credit,
+              icon: "fas fa-comments-dollar",
+              is_currency: "",
+              title: _vm.__("Total Collected", "dokan-lite")
+            }
+          }),
+          _vm._v(" "),
+          _c("CardFunFact", {
+            attrs: {
+              count: _vm.counts.balance,
+              icon: "fas fa-coins",
+              is_currency: "",
+              title: _vm.__("Remaining Balance", "dokan-lite")
+            }
+          }),
+          _vm._v(" "),
+          _c("CardFunFact", {
+            attrs: {
+              count: _vm.counts.total_transactions,
+              icon: "fas fa-info",
+              title: _vm.__("Total Transactions", "dokan-lite")
+            }
+          }),
+          _vm._v(" "),
+          _c("CardFunFact", {
+            attrs: {
+              count: _vm.counts.total_vendors,
+              icon: "fas fa-users",
+              title: _vm.__("Total Vendors", "dokan-lite")
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { attrs: { id: "dokan_reverse_withdrawal_list_table" } },
+        [
+          _c(
+            "list-table",
+            {
+              attrs: {
+                columns: _vm.columns,
+                loading: _vm.loading,
+                rows: _vm.transactionData,
+                actions: _vm.actions,
+                "show-cb": false,
+                "total-items": _vm.totalItems,
+                "bulk-actions": _vm.bulkActions,
+                "total-pages": _vm.totalPages,
+                "per-page": _vm.perPage,
+                "current-page": _vm.getCurrentPage,
+                "not-found": this.__("No transaction found.", "dokan-lite"),
+                "sort-by": _vm.getSortBy,
+                "sort-order": _vm.getSortOrder
+              },
+              on: { sort: _vm.doSort, pagination: _vm.goToPage },
+              scopedSlots: _vm._u([
+                {
+                  key: "store_name",
+                  fn: function(data) {
+                    return [
+                      _c("strong", [
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href:
+                                "?page=dokan#/reverse-withdrawal/store/" +
+                                data.row.vendor_id
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(
+                                data.row.store_name
+                                  ? data.row.store_name
+                                  : _vm.__("(no name)", "dokan-lite")
+                              )
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "balance",
+                  fn: function(data) {
+                    return [
+                      data.row.balance === ""
+                        ? _c("div", [_vm._v("--")])
+                        : data.row.balance >= 0
+                        ? _c("currency", {
+                            attrs: { amount: data.row.balance }
+                          })
+                        : data.row.balance < 0
+                        ? _c(
+                            "div",
+                            { staticClass: "negative-balance" },
+                            [
+                              _vm._v("\n                    ( "),
+                              _c("currency", {
+                                attrs: { amount: data.row.balance * -1 }
+                              }),
+                              _vm._v(" )\n                ")
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                },
+                {
+                  key: "last_payment_date",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(data.row.last_payment_date) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                }
+              ])
+            },
+            [
+              _vm._v(" "),
+              _vm._v(" "),
+              _vm._v(" "),
+              _c("template", { slot: "filters" }, [
+                _c(
+                  "span",
+                  { staticClass: "form-group" },
+                  [
+                    _c("multiselect", {
+                      attrs: {
+                        placeholder: this.__("Filter by store", "dokan-lite"),
+                        options: _vm.filter.stores,
+                        "track-by": "id",
+                        label: "name",
+                        "internal-search": false,
+                        "clear-on-select": false,
+                        "allow-empty": false,
+                        multiselect: false,
+                        searchable: true,
+                        showLabels: false
+                      },
+                      on: { "search-change": _vm.fetchStoreLists },
+                      model: {
+                        value: _vm.filter.selected_store,
+                        callback: function($$v) {
+                          _vm.$set(_vm.filter, "selected_store", $$v)
+                        },
+                        expression: "filter.selected_store"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.filter.selected_store.id
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "button",
+                            staticStyle: {
+                              "line-height": "0",
+                              padding: "0 5px",
+                              "margin-right": "5px"
+                            },
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.filter.selected_store = _vm.getDefaultStore()[0]
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "dashicons dashicons-no" })]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  { staticClass: "form-group" },
+                  [
+                    _c("date-range-picker", {
+                      ref: "picker",
+                      staticClass: "mr-5",
+                      attrs: {
+                        "locale-data": this.dateTimePickerFormat,
+                        singleDatePicker: false,
+                        showDropdowns: true,
+                        autoApply: false,
+                        ranges: this.dateRangePickerRanges
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "input",
+                          fn: function(picker) {
+                            return [
+                              _vm.filter.transaction_date.startDate
+                                ? _c("span", [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm._f("getFormattedDate")(
+                                          _vm.filter.transaction_date.startDate
+                                        )
+                                      ) +
+                                        " - " +
+                                        _vm._s(
+                                          _vm._f("getFormattedDate")(
+                                            _vm.filter.transaction_date.endDate
+                                          )
+                                        )
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              !_vm.filter.transaction_date.startDate
+                                ? _c(
+                                    "span",
+                                    { staticClass: "date-range-placeholder" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.__(
+                                            "Filter by expire date",
+                                            "dokan-lite"
+                                          )
+                                        )
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ]
+                          }
+                        },
+                        {
+                          key: "footer",
+                          fn: function(data) {
+                            return _c("div", { staticClass: "drp-buttons" }, [
+                              _c("span", { staticClass: "drp-selected" }, [
+                                _vm._v(_vm._s(data.rangeText))
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "cancelBtn btn btn-sm btn-secondary",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.setDefaultTransactionDate()
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.__("Cancel", "dokan-lite")))]
+                              ),
+                              _vm._v(" "),
+                              !data.in_selection
+                                ? _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "applyBtn btn btn-sm btn-success",
+                                      attrs: { type: "button" },
+                                      on: { click: data.clickApply }
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(_vm.__("Apply", "dokan-lite"))
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ])
+                          }
+                        }
+                      ]),
+                      model: {
+                        value: _vm.filter.transaction_date,
+                        callback: function($$v) {
+                          _vm.$set(_vm.filter, "transaction_date", $$v)
+                        },
+                        expression: "filter.transaction_date"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "form-group" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "button action",
+                      on: { click: this.clearFilters }
+                    },
+                    [_vm._v(_vm._s(this.__("Clear", "dokan-lite")))]
+                  )
+                ])
+              ])
+            ],
+            2
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-36e64dc3", esExports)
+  }
+}
+
+/***/ }),
+/* 214 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(83);
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6b51ff90_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawalTransactions_vue__ = __webpack_require__(216);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(215)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ReverseWithdrawalTransactions_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6b51ff90_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ReverseWithdrawalTransactions_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "src/admin/pages/ReverseWithdrawalTransactions.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b51ff90", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b51ff90", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component.exports);
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 216 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "dokan-reverse-withdrawal-transactions" }, [
+    _c("h1", { staticClass: "wp-heading-inline" }, [
+      _vm._v(
+        "\n        " +
+          _vm._s(_vm.__("Reverse Withdrawal", "dokan-lite")) +
+          "\n        "
+      ),
+      _c(
+        "a",
+        { staticClass: "button", attrs: { href: this.reverseWithdrawalUrl() } },
+        [_vm._v("← " + _vm._s(_vm.__("Go Back", "dokan-lite")))]
+      )
+    ]),
+    _vm._v(" "),
+    _c("hr", { staticClass: "wp-header-end" }),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "dokan-reverse-withdrawal-fact-card" },
+      [
+        _c("CardFunFact", {
+          attrs: {
+            icon: "fas fa-user",
+            title: _vm.storeDetails.store_name
+              ? _vm.storeDetails.store_name
+              : ""
+          }
+        }),
+        _vm._v(" "),
+        _c("CardFunFact", {
+          attrs: {
+            count: _vm.counts.credit,
+            icon: "fas fa-comments-dollar",
+            is_currency: "",
+            title: _vm.__("Total Collected", "dokan-lite")
+          }
+        }),
+        _vm._v(" "),
+        _c("CardFunFact", {
+          attrs: {
+            count: _vm.counts.balance,
+            icon: "fas fa-coins",
+            is_currency: "",
+            title: _vm.__("Remaining Balance", "dokan-lite")
+          }
+        }),
+        _vm._v(" "),
+        _c("CardFunFact", {
+          attrs: {
+            count: _vm.counts.total_transactions,
+            icon: "fas fa-info",
+            title: _vm.__("Total Transactions", "dokan-lite")
+          }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { attrs: { id: "dokan_reverse_withdrawal_transactions_list_table" } },
+      [
+        _c(
+          "list-table",
+          {
+            attrs: {
+              columns: _vm.columns,
+              loading: _vm.loading,
+              rows: _vm.transactionData,
+              actions: _vm.actions,
+              "show-cb": false,
+              "total-items": _vm.totalItems,
+              "bulk-actions": _vm.bulkActions,
+              "total-pages": _vm.totalPages,
+              "per-page": _vm.perPage,
+              "current-page": _vm.getCurrentPage,
+              "not-found": this.__("No transaction found.", "dokan-lite"),
+              "sort-by": _vm.getSortBy,
+              "sort-order": _vm.getSortOrder
+            },
+            on: { sort: _vm.doSort, pagination: _vm.goToPage },
+            scopedSlots: _vm._u(
+              [
+                {
+                  key: "trn_id",
+                  fn: function(data) {
+                    return data.row.trn_id !== "--"
+                      ? [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: data.row.trn_url,
+                                target: "_blank"
+                              }
+                            },
+                            [_vm._v(_vm._s(data.row.trn_id))]
+                          )
+                        ]
+                      : undefined
+                  }
+                },
+                {
+                  key: "trn_date",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(data.row.trn_date) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                },
+                {
+                  key: "trn_type",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(data.row.trn_type) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                },
+                {
+                  key: "note",
+                  fn: function(data) {
+                    return [
+                      _vm._v(
+                        "\n                " +
+                          _vm._s(data.row.note) +
+                          "\n            "
+                      )
+                    ]
+                  }
+                },
+                {
+                  key: "debit",
+                  fn: function(data) {
+                    return [
+                      data.row.debit === ""
+                        ? _c("div", [_vm._v("--")])
+                        : data.row.debit >= 0
+                        ? _c("currency", { attrs: { amount: data.row.debit } })
+                        : data.row.debit < 0
+                        ? _c(
+                            "div",
+                            { staticClass: "negative-balance" },
+                            [
+                              _vm._v("\n                    ( "),
+                              _c("currency", {
+                                attrs: { amount: data.row.debit * -1 }
+                              }),
+                              _vm._v(" )\n                ")
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                },
+                {
+                  key: "credit",
+                  fn: function(data) {
+                    return [
+                      data.row.credit === ""
+                        ? _c("div", [_vm._v("--")])
+                        : data.row.credit >= 0
+                        ? _c("currency", { attrs: { amount: data.row.credit } })
+                        : data.row.credit < 0
+                        ? _c(
+                            "div",
+                            { staticClass: "negative-balance" },
+                            [
+                              _vm._v("\n                    ( "),
+                              _c("currency", {
+                                attrs: { amount: data.row.credit * -1 }
+                              }),
+                              _vm._v(" )\n                ")
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                },
+                {
+                  key: "balance",
+                  fn: function(data) {
+                    return [
+                      data.row.balance === ""
+                        ? _c("div", [_vm._v("--")])
+                        : data.row.balance >= 0
+                        ? _c("currency", {
+                            attrs: { amount: data.row.balance }
+                          })
+                        : data.row.balance < 0
+                        ? _c(
+                            "div",
+                            { staticClass: "negative-balance" },
+                            [
+                              _vm._v("\n                    ( "),
+                              _c("currency", {
+                                attrs: { amount: data.row.balance * -1 }
+                              }),
+                              _vm._v(" )\n                ")
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                }
+              ],
+              null,
+              true
+            )
+          },
+          [
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _vm._v(" "),
+            _c("template", { slot: "filters" }, [
+              _c(
+                "span",
+                { staticClass: "form-group" },
+                [
+                  _c("date-range-picker", {
+                    ref: "picker",
+                    staticClass: "mr-5",
+                    attrs: {
+                      "locale-data": this.dateTimePickerFormat,
+                      singleDatePicker: false,
+                      timePicker: false,
+                      timePicker24Hour: false,
+                      showWeekNumbers: false,
+                      showDropdowns: true,
+                      autoApply: false,
+                      ranges: this.dateRangePickerRanges,
+                      linkedCalendars: true,
+                      opens: "right"
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "input",
+                        fn: function(picker) {
+                          return [
+                            _vm.filter.transaction_date.startDate
+                              ? _c("span", [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm._f("getFormattedDate")(
+                                        _vm.filter.transaction_date.startDate
+                                      )
+                                    ) +
+                                      " - " +
+                                      _vm._s(
+                                        _vm._f("getFormattedDate")(
+                                          _vm.filter.transaction_date.endDate
+                                        )
+                                      )
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            !_vm.filter.transaction_date.startDate
+                              ? _c(
+                                  "span",
+                                  { staticClass: "date-range-placeholder" },
+                                  [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.__(
+                                          "Filter by expire date",
+                                          "dokan-lite"
+                                        )
+                                      )
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
+                          ]
+                        }
+                      },
+                      {
+                        key: "footer",
+                        fn: function(data) {
+                          return _c("div", { staticClass: "drp-buttons" }, [
+                            _c("span", { staticClass: "drp-selected" }, [
+                              _vm._v(_vm._s(data.rangeText))
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "cancelBtn btn btn-sm btn-secondary",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.setDefaultTransactionDate()
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(_vm.__("Cancel", "dokan-lite")))]
+                            ),
+                            _vm._v(" "),
+                            !data.in_selection
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "applyBtn btn btn-sm btn-success",
+                                    attrs: { type: "button" },
+                                    on: { click: data.clickApply }
+                                  },
+                                  [
+                                    _vm._v(
+                                      _vm._s(_vm.__("Apply", "dokan-lite"))
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
+                          ])
+                        }
+                      }
+                    ]),
+                    model: {
+                      value: _vm.filter.transaction_date,
+                      callback: function($$v) {
+                        _vm.$set(_vm.filter, "transaction_date", $$v)
+                      },
+                      expression: "filter.transaction_date"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("span", { staticClass: "form-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "button action",
+                    on: { click: this.clearFilters }
+                  },
+                  [_vm._v(_vm._s(this.__("Clear", "dokan-lite")))]
+                )
+              ])
+            ])
+          ],
+          2
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b51ff90", esExports)
+  }
+}
+
+/***/ }),
+/* 217 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15372,4 +19180,4 @@ function menuFix(slug) {
 /* harmony default export */ __webpack_exports__["a"] = (menuFix);
 
 /***/ })
-],[110]);
+],[123]);

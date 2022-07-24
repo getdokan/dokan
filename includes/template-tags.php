@@ -7,6 +7,8 @@
  * @package dokan
  */
 
+use WeDevs\Dokan\Vendor\Vendor;
+
 if ( ! function_exists( 'dokan_content_nav' ) ) :
 
     /**
@@ -212,6 +214,7 @@ function dokan_order_listing_status_filter() {
     $canceled_order_url   = array();
     $refund_order_url     = array();
     $failed_order_url     = array();
+    $filter_nonce         = wp_create_nonce( 'seller-order-filter-nonce' );
     ?>
 
     <ul class="list-inline order-statuses-filter">
@@ -223,7 +226,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all' ) );
+                $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all', 'seller_order_filter_nonce' => $filter_nonce ) );
                 $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
             ?>
             <a href="<?php echo esc_url( $all_order_url ); ?>">
@@ -242,7 +245,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $complete_order_url = array_merge( array( 'order_status' => 'wc-completed' ), $date_filter );
+                $complete_order_url = array_merge( array( 'order_status' => 'wc-completed', 'seller_order_filter_nonce' => $filter_nonce ), $date_filter );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
                 <?php
@@ -260,7 +263,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing' ) );
+                $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $processing_order_url, $orders_url ) ); ?>">
                 <?php
@@ -278,7 +281,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold' ) );
+                $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $on_hold_order_url, $orders_url ) ); ?>">
                 <?php
@@ -296,7 +299,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending' ) );
+                $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $pending_order_url, $orders_url ) ); ?>">
                 <?php
@@ -314,7 +317,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled' ) );
+                $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $canceled_order_url, $orders_url ) ); ?>">
                 <?php
@@ -332,7 +335,7 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded' ) );
+                $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
                 <?php
@@ -351,7 +354,7 @@ function dokan_order_listing_status_filter() {
                 );
             }
 
-                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed' ) );
+                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed', 'seller_order_filter_nonce' => $filter_nonce ) );
             ?>
             <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
                 <?php
@@ -384,21 +387,21 @@ function dokan_get_dashboard_nav() {
     $urls = array(
         'dashboard' => array(
             'title'      => __( 'Dashboard', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-tachometer"></i>',
+            'icon'       => '<i class="fas fa-tachometer-alt"></i>',
             'url'        => dokan_get_navigation_url(),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
         ),
         'products' => array(
             'title'      => __( 'Products', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-briefcase"></i>',
+            'icon'       => '<i class="fas fa-briefcase"></i>',
             'url'        => dokan_get_navigation_url( 'products' ),
             'pos'        => 30,
             'permission' => 'dokan_view_product_menu',
         ),
         'orders' => array(
             'title'      => __( 'Orders', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-shopping-cart"></i>',
+            'icon'       => '<i class="fas fa-shopping-cart"></i>',
             'url'        => dokan_get_navigation_url( 'orders' ),
             'pos'        => 50,
             'permission' => 'dokan_view_order_menu',
@@ -406,7 +409,7 @@ function dokan_get_dashboard_nav() {
 
         'withdraw' => array(
             'title'      => __( 'Withdraw', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-upload"></i>',
+            'icon'       => '<i class="fas fa-upload"></i>',
             'url'        => dokan_get_navigation_url( 'withdraw' ),
             'pos'        => 70,
             'permission' => 'dokan_view_withdraw_menu',
@@ -414,8 +417,8 @@ function dokan_get_dashboard_nav() {
     );
 
     $settings = array(
-        'title' => sprintf( '%s <i class="fa fa-angle-right pull-right"></i>', __( 'Settings', 'dokan-lite' ) ),
-        'icon'  => '<i class="fa fa-cog"></i>',
+        'title' => sprintf( '%s <i class="fas fa-angle-right pull-right"></i>', __( 'Settings', 'dokan-lite' ) ),
+        'icon'  => '<i class="fas fa-cog"></i>',
         'url'   => dokan_get_navigation_url( 'settings/store' ),
         'pos'   => 200,
     );
@@ -423,20 +426,20 @@ function dokan_get_dashboard_nav() {
     $settings_sub = array(
         'back' => array(
             'title' => __( 'Back to Dashboard', 'dokan-lite' ),
-            'icon'  => '<i class="fa fa-long-arrow-left"></i>',
+            'icon'  => '<i class="fas fa-long-arrow-alt-left"></i>',
             'url'   => dokan_get_navigation_url(),
             'pos'   => 10,
         ),
         'store' => array(
             'title'      => __( 'Store', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-university"></i>',
+            'icon'       => '<i class="fas fa-university"></i>',
             'url'        => dokan_get_navigation_url( 'settings/store' ),
             'pos'        => 30,
             'permission' => 'dokan_view_store_settings_menu',
         ),
         'payment' => array(
             'title'      => __( 'Payment', 'dokan-lite' ),
-            'icon'       => '<i class="fa fa-credit-card"></i>',
+            'icon'       => '<i class="far fa-credit-card"></i>',
             'url'        => dokan_get_navigation_url( 'settings/payment' ),
             'pos'        => 50,
             'permission' => 'dokan_view_store_payment_menu',
@@ -536,7 +539,11 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     if ( isset( $active_menu_parts[1] )
             && ( $active_menu_parts[1] === $settings_key || $active_menu_parts[0] === $settings_key )
             && isset( $nav_menu[ $settings_key ]['sub'] )
-            && ( array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) || array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) )
+            && (
+                array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
+                ( isset( $active_menu_parts[2] ) && array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ) ||
+                ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) // special case when submenu is payment
+            )
     ) {
         $urls        = $nav_menu[ $settings_key ]['sub'];
         $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
@@ -556,14 +563,14 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $urls as $key => $item ) {
-        $class = ( $active_menu === $key ) ? 'active ' . $key : $key;
+        $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key; // checking starts with the key
         $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
-            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) . '" target="_blank"><i class="fa fa-external-link"></i></a>
-            <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fa fa-user"></i></a>
-            <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fa fa-power-off"></i></a>
+            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) . '" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fas fa-user"></i></a>
+            <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fas fa-power-off"></i></a>
         </li>';
 
     $menu .= apply_filters( 'dokan_dashboard_nav_common_link', $common_links );
@@ -595,7 +602,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
-        if ( $vendor instanceof \WeDevs\Dokan\Vendor\Vendor ) {
+        if ( $vendor instanceof Vendor ) {
             $categories = $vendor->get_store_categories();
             $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
             echo '<ul>';
@@ -608,6 +615,130 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
     }
 
 endif;
+if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
+
+    /**
+     * Store category menu for a store
+     *
+     * @since 3.5.0
+     *
+     * @param int    $seller_id
+     * @param array  $taxonomy
+     * @param string $query_type
+     *
+     * @return void
+     */
+    function dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type ) {
+        ?>
+    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+        <?php
+        $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
+        $vendor    = dokan()->vendor->get( $seller_id );
+        $store_url = dokan_get_store_url( $seller_id );
+
+        if ( $vendor instanceof Vendor ) {
+            $terms = $vendor->get_vendor_used_terms_list( $seller_id, $taxonomy );
+
+            echo '<ul>';
+            $_chosen_attributes = dokan_get_chosen_taxonomy_attributes();
+            foreach ( $terms as $term ) {
+                $current_values = isset( $_chosen_attributes[ $taxonomy ]['terms'] ) ? $_chosen_attributes[ $taxonomy ]['terms'] : [];
+                $option_is_set  = in_array( $term->slug, $current_values, true );
+                $filter_name    = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
+                // phpcs:ignore
+                $current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( wp_unslash( $_GET[ $filter_name ] ) ) ) : array();
+
+                if ( ! in_array( $term->slug, $current_filter, true ) ) {
+                    $current_filter[] = $term->slug;
+                }
+
+                $link = remove_query_arg( $filter_name, $store_url );
+                // Add current filters to URL.
+                foreach ( $current_filter as $key => $value ) {
+                    // Exclude query arg for current term archive term.
+                    if ( $value === dokan_get_current_term_slug() ) {
+                        unset( $current_filter[ $key ] );
+                    }
+
+                    // Exclude self so filter can be unset on click.
+                    if ( $option_is_set && $value === $term->slug ) {
+                        unset( $current_filter[ $key ] );
+                    }
+                }
+
+                if ( ! empty( $current_filter ) ) {
+                    asort( $current_filter );
+                    $link = add_query_arg( $filter_name, implode( ',', $current_filter ), $link );
+
+                    // Add Query type Arg to URL.
+                    if ( 'or' === $query_type && ! ( 1 === count( $current_filter ) && $option_is_set ) ) {
+                        $link = add_query_arg( 'query_type_' . wc_attribute_taxonomy_slug( $taxonomy ), 'or', $link );
+                    }
+                    $link = str_replace( '%2C', ',', $link );
+                }
+
+                $checked = '';
+                if ( $option_is_set ) {
+                    $checked = 'checked';
+                }
+
+                echo '
+                <li class="parent-cat-wrap">
+                    <a href=' . esc_url( $link ) . '> <input style="pointer-events: none;" type="checkbox" ' . $checked . '> &nbsp;' . $term->name . ' <span style="float: right" class="count">(' . $term->count . ')</span> </a>
+                </li>';
+            }
+            echo '</ul>';
+        }
+        ?>
+    </div>
+        <?php
+    }
+
+endif;
+/**
+ * Return the currently viewed term slug.
+ *
+ * @return int
+ */
+function dokan_get_current_term_slug() {
+    return absint( is_tax() ? get_queried_object()->slug : 0 );
+}
+
+/**
+ * Get chosen taxonomy attributes.
+ *
+ * @since 3.5.0
+ *
+ * @return array
+ */
+function dokan_get_chosen_taxonomy_attributes() {
+    $attributes = [];
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
+    if ( empty( $_GET ) ) {
+        return $attributes;
+    }
+
+    foreach ( $_GET as $key => $value ) {
+        if ( 0 !== strpos( $key, 'filter_' ) ) {
+            continue;
+        }
+
+        $attribute    = wc_sanitize_taxonomy_name( str_replace( 'filter_', '', $key ) );
+        $taxonomy     = wc_attribute_taxonomy_name( $attribute );
+        $filter_terms = ! empty( $value ) ? explode( ',', wc_clean( wp_unslash( $value ) ) ) : [];
+
+        if ( empty( $filter_terms ) || ! taxonomy_exists( $taxonomy ) || ! wc_attribute_taxonomy_id_by_name( $attribute ) ) {
+            continue;
+        }
+
+        // phpcs:ignore
+        $query_type                            = ! empty( $_GET['query_type_' . $attribute] ) && in_array(  $_GET['query_type_' . $attribute], [ 'and', 'or' ], true ) ? wc_clean( wp_unslash( $_GET['query_type_' . $attribute] ) ) : '';
+        $attributes[ $taxonomy ]['terms']      = array_map( 'sanitize_title', $filter_terms ); // Ensures correct encoding.
+        $attributes[ $taxonomy ]['query_type'] = $query_type ? $query_type : 'and';
+    }
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
+    return $attributes;
+}
 
 function dokan_seller_reg_form_fields() {
     $postdata   = wc_clean( $_POST ); //phpcs:ignore

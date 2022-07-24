@@ -4,10 +4,402 @@
  */
 $changelog = [
     [
-        'version'  => 'Version 3.3.5',
-        'released' => '2021-12-15',
+        'version'  => 'Version 3.6.2',
+        'released' => '2022-07-15',
         'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added dummy data import feature for Dokan',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Multistep category modal for product add and edit page under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added \'Back To Top\' button & fix some design broken issue under Dokan admin settings page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.1',
+        'released' => '2022-06-30',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added disconnect button to payment methods',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed \'Dokan\' Prefix from the payment method name under vendor dashboard payment settings page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new setting to change Vendor Setup Wizard welcome message under Dokan General Settings page.',
+                    'description' => '',
+                ],
+            ],
             'Fix'         => [
+                [
+                    'title'       => 'Fixed some empty method names in Payment Methods section of Vendor Dashboard > Withdraw',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed incorrect alignment of withdraw method title in Dokan setup wizard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Store breadcrumb URL redirecting to 404 page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.0',
+        'released' => '2022-06-14',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new filter named ‘dokan_bank_payment_validation_error’ so that payment validation errors can be filtered.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Entirely redesigned Dokan Admin Settings page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'WPML translated endpoints not working in payment settings page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.5.1',
+        'released' => '2022-05-31',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added Reverse Withdrawal feature.',
+                    'description' => 'Kindly read the <a href="https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/" target="_blank">documentation</a> for more details.',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Improved UI of Payment settings page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Correctly determine the vendor a product belongs to, so the "dokan_get_vendor_by_product" filter hook is called. ',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed a fatal error while changing product types to Simple > Variable > External/Affiliate > Group Product',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changing dokan vendor dashboard page slug gives 404 error',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.5.0',
+        'released' => '2022-05-18',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a new product attributes widget, by which users/customers will be able to search products by vendors used attributes.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Fixed vendor store settings page phone number validation js console error.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Payment settings page 404 if dashboard url slug is changed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.3',
+        'released' => '2022-04-26',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added option to select a default payment method',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Updated design for the payment settings page of vendor dashboard to separate the management of different payment methods',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Store Contact Form widget submits the contact form directly instead of ajax submission',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Stop sending new order emails to selected recipients (including admin) when the New Order email is disabled in WooCommerce Settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some validation logic under vendor dashboard payment settings page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.2',
+        'released' => '2022-04-13',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed switching product type from variable to external doesn\'t remove product stock management options',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed store order by latest inconsistency',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.1',
+        'released' => '2022-03-18',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Introduced two new filter hooks dokan_shipping_fee_recipient and dokan_tax_fee_recipient',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Remove unnecessary error_log codes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Promotional notice cache expiration date is set to one day',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error on store closet time widget if store open/close time wasn’t set',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated jQuery form validate library from v1.11.0 to v1.19.3',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed popup not appearing after clicking withdraw button under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product table css fix for error class',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.4.0',
+        'released' => '2022-03-08',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Stop loading unnecessary style and script files on every page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added random as store list orderby parameter',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan store shortcode orderby parameter now reflect store filter',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Store open/close time hover feature wasn’t working for specific single store page templates',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Variable products stock status wasn’t updating by quick edit from vendor dashboard, now has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed Dokan conflict with WP Project Manager',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store product per page value wasn’t saving, now has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed fatal error while getting store open close time under single store page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove background process files from database if file doesn’t exists on server due to server migration',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.9',
+        'released' => '2022-02-28',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added new theme customizer settings to set default order by filter for store listing page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added seller information under single product page, also added an admin setting entry to enable/disable this feature',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display store open/close time list on hover under single store page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Added post_date_gmt and post_modified_gmt fields data when creating a product from frontend dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Create order API with coupon lines data giving fatal error',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.8',
+        'released' => '2022-02-17',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Store open close time widget wasn\'t working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.7',
+        'released' => '2022-02-03',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Added Featured, Latest, Best Selling and Top Rated Product sections under single store page',
+                    'description' => 'Now admin/vendor will be able to add multiple product sections under single store page. Kindly visit <a href="https://wedevs.com/docs/dokan/tutorials/how-to-create-product-sections-in-single-store-page" target="_blank">documentation</a> page to learn more about this feature.',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Updated UI for Withdraw menu',
+                    'description' => 'Withdraw page design has been updated.',
+                ],
+                [
+                    'title'       => 'Added Dokan upgrader to change dokan_withdraw table details column null',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added per_page and page param support on store products rest api',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated design for Upgrade to PRO popup',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated FontAwesome library from V4.7 to V5.15',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated chartjs library',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'fixed a css issue under Select2 library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Make Hello text translatable under product published email template',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a warning under single store page if store slug was invalid',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'prevent recursion while loading template if $name param is not empty',
+                    'description' => 'It was causing template to load multiple times if only store.php file was copied to theme folder, now has been fixed',
+                ],
+                [
+                    'title'       => 'When setting bulk regular prices from the vendor dashboard in a variable product the product stock status becomes out of stock. This issue has been fixed now.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.6',
+        'released' => '2022-01-10',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'CSS class added for styling order details page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Item meta is not being deleted from the order details page of the WordPress dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Showing Vendor Name instead of vendor id on the order details page of WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed conflict with Siteground Optimizer plugin.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.3.5',
+        'released' => '2021-12-23',
+        'changes'  => [
+            'Fix' => [
                 [
                     'title'       => 'Fatal error while creating new vendor.',
                     'description' => '',
@@ -23,7 +415,7 @@ $changelog = [
         'version'  => 'Version 3.3.4',
         'released' => '2021-12-15',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Asset loading issue for admin notices',
                     'description' => '',
@@ -35,7 +427,7 @@ $changelog = [
         'version'  => 'Version 3.3.3',
         'released' => '2021-12-15',
         'changes'  => [
-            'New' => [
+            'New'         => [
                 [
                     'title'       => 'Added what’s New page for Dokan',
                     'description' => '',
