@@ -924,7 +924,7 @@ class Vendor {
                 $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $this->id ) ), $review_text );
             }
             $stars = wc_get_rating_html( $rating['rating'], $rating['count'] );
-            $html = '<span class="text">' . $review_text . '</span>' . $stars;
+            $html = '<span class="text">' . $review_text . '</span>' . '<span class="seller-rating">' . $stars . '</span>';
         }
 
         if ( ! $display ) {
