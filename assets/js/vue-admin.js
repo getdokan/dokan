@@ -15958,11 +15958,11 @@ var render = function() {
           },
           [
             _vm._v(
-              "\r\n            " +
+              "\n            " +
                 _vm._s(
                   _vm.__("Check Out All Vendor Functionalities", "dokan-lite")
                 ) +
-                "\r\n        "
+                "\n        "
             )
           ]
         )

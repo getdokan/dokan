@@ -1,30 +1,6 @@
 <?php
 global $woocommerce;
 
-$seller_id           = dokan_get_current_user_id();
-$limit               = 10;
-$customer_id         = isset( $_GET['customer_id'] ) ? sanitize_key( $_GET['customer_id'] ) : null;
-$order_status        = isset( $_GET['order_status'] ) ? sanitize_key( $_GET['order_status'] ) : 'all';
-$paged               = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
-$order_date          = isset( $_GET['order_date'] ) ? sanitize_key( $_GET['order_date'] ) : null;
-$allow_shipment      = dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' );
-$wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? true : false;
-
-$order_statuses = apply_filters( 'dokan_bulk_order_statuses', [
-    '-1'            => __( 'Bulk Actions', 'dokan-lite' ),
-    'wc-on-hold'    => __( 'Change status to on-hold', 'dokan-lite' ),
-    'wc-processing' => __( 'Change status to processing', 'dokan-lite' ),
-    'wc-completed'  => __( 'Change status to completed', 'dokan-lite' ),
-] );
-
-$user_orders  = dokan()->vendor->get( $seller_id )->get_orders( [
-    'customer_id' => $customer_id,
-    'status'      => $order_status,
-    'paged'       => $paged,
-    'limit'       => $limit,
-    'date'        => $order_date,
-] );
-
 if ( $user_orders ) {
     ?>
     <form id="order-filter" method="POST" class="dokan-form-inline">
@@ -33,7 +9,7 @@ if ( $user_orders ) {
                 <label for="bulk-order-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                 <select name="status" id="bulk-order-action-selector" class="dokan-form-control chosen">
-                    <?php foreach ( $order_statuses as $key => $value ) { ?>
+                    <?php foreach ( $bulk_order_statuses as $key => $value ) { ?>
                         <option class="bulk-order-status" value="<?php echo esc_attr( $key ); ?>"><?php echo esc_attr( $value ); ?></option>
                     <?php } ?>
                 </select>
@@ -194,29 +170,9 @@ if ( $user_orders ) {
     </form>
 
     <?php
-    $order_count = dokan_get_seller_orders_number( [
-        'seller_id'   => $seller_id,
-        'status'      => $order_status,
-        'customer_id' => $customer_id,
-        'date'        => $order_date,
-    ] );
-
     // if date is selected then calculate number_of_pages accordingly otherwise calculate number_of_pages =  ( total_orders / limit );
-    $num_of_pages = ceil( $order_count / $limit );
-
-    $base_url  = dokan_get_navigation_url( 'orders' );
-
     if ( $num_of_pages > 1 ) {
         echo '<div class="pagination-wrap">';
-        $page_links = paginate_links( [
-            'current'   => $paged,
-            'total'     => $num_of_pages,
-            'base'      => $base_url . '%_%',
-            'format'    => '?pagenum=%#%',
-            'add_args'  => false,
-            'type'      => 'array',
-        ] );
-
         echo "<ul class='pagination'>\n\t<li>";
         echo join( "</li>\n\t<li>", $page_links );
         echo "</li>\n</ul>\n";
@@ -234,10 +190,42 @@ if ( $user_orders ) {
 
 <script>
     (function($){
-        $(document).ready(function(){
-            $('.datepicker').datepicker({
-                dateFormat: 'yy-m-d'
-            });
+        //vendor dashboard -> orders
+        const dokan_dashboard_orders = {
+            localeData: {
+                format: dokan_get_daterange_picker_format(),
+                ...dokan_helper.daterange_picker_local
+            },
+            init() {
+                this.init_datepicker();
+            },
+            init_datepicker() {
+                const order_filter_date_range = $('#order_filter_date_range');
+
+                order_filter_date_range.daterangepicker({
+                    autoUpdateInput: false,
+                    locale: this.localeData,
+                });
+
+                order_filter_date_range.on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format(dokan_dashboard_orders.localeData.format) + ' - ' + picker.endDate.format(dokan_dashboard_orders.localeData.format));
+
+                    // Set the value for date range fields to send backend
+                    $("#order_filter_start_date").val(picker.startDate.format('YYYY-MM-DD'));
+                    $("#order_filter_end_date").val(picker.endDate.format('YYYY-MM-DD'));
+                });
+
+                order_filter_date_range.on('cancel.daterangepicker', function () {
+                    $(this).val('');
+
+                    $("#order_filter_start_date").val('');
+                    $("#order_filter_end_date").val('');
+                });
+            },
+        };
+        $(function(){
+            // DOM Ready - Let's invoke the init method
+            dokan_dashboard_orders.init();
         });
     })(jQuery);
 </script>
