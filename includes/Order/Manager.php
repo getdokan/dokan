@@ -16,7 +16,7 @@ class Manager {
      * Get all orders
      *
      * @since 3.0.0
-     * @since DOKAN_SINCE rewritten to include filters
+     * @since 3.6.3 rewritten to include filters
      *
      * @return WP_Error|int[]|\WC_Order[]
      */
@@ -625,7 +625,7 @@ class Manager {
     /**
      * This will check if given var is empty or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.3
      *
      * @param mixed $var
      *

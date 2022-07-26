@@ -610,37 +610,4 @@ jQuery(function($) {
             });
         }
     });
-
-    //vendor dashboard -> orders
-    const dokan_dashboard_orders = {
-        localeData: {
-            format: dokan_get_daterange_picker_format(),
-            ...dokan_helper.daterange_picker_local
-        },
-        init() {
-            const order_filter_date_range = $('#order_filter_date_range');
-
-            order_filter_date_range.daterangepicker({
-                autoUpdateInput: false,
-                locale: this.localeData,
-            });
-
-            order_filter_date_range.on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format(dokan_dashboard_orders.localeData.format) + ' - ' + picker.endDate.format(dokan_dashboard_orders.localeData.format));
-
-                // Set the value for date range fields to send backend
-                $("#order_filter_start_date").val(picker.startDate.format('YYYY-MM-DD'));
-                $("#order_filter_end_date").val(picker.endDate.format('YYYY-MM-DD'));
-            });
-
-            order_filter_date_range.on('cancel.daterangepicker', function () {
-                $(this).val('');
-
-                $("#order_filter_start_date").val('');
-                $("#order_filter_end_date").val('');
-            });
-        }
-    };
-
-    dokan_dashboard_orders.init();
 })(jQuery);

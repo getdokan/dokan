@@ -55,7 +55,7 @@ class Orders {
     /**
      * Render the order details page
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.3
      */
     public function order_details_content() {
         if ( ! isset( $_GET['order_id'] ) ) {
@@ -81,7 +81,7 @@ class Orders {
      * Get Order Main Content
      *
      * @since 2.4
-     * @since DOKAN_SINCE Moved order details content to a different function
+     * @since 3.6.3 Moved order details content to a different function
      *
      * @return void
      */
@@ -259,7 +259,7 @@ class Orders {
         /**
          * Just after exporting the csv file
          *
-         * @since DOKAN_SINCE
+         * @since 3.6.3
          * use $_POST superglobal to access post data
          */
         do_action( 'dokan_before_handle_order_export', $user_orders, $query_args );
@@ -275,7 +275,7 @@ class Orders {
     /**
      * Add a specific class to the body of Vendor Dashboard Orders page to apply css into the select2 input box
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.3
      *
      * @param array $classes
      *
@@ -292,7 +292,7 @@ class Orders {
     /**
      * Add Pagination information into template arguments
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.3
      *
      * @param int $limit
      * @param int $page

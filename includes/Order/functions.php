@@ -42,7 +42,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
 /**
  * Get all the orders from a specific seller
  *
- * @since DOKAN_SINCE Rewritten whole method
+ * @since 3.6.3 Rewritten whole method
  *
  * @global object $wpdb
  * @param int $seller_id
