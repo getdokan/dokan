@@ -97,12 +97,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/composer-installer.git",
-                "reference": "a1b6e4e5afa0ba70a12d16bbb3cf429841438209"
+                "reference": "04f4e8f6716241cb9200774ff73cb99fbb81e09a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/a1b6e4e5afa0ba70a12d16bbb3cf429841438209",
-                "reference": "a1b6e4e5afa0ba70a12d16bbb3cf429841438209",
+                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/04f4e8f6716241cb9200774ff73cb99fbb81e09a",
+                "reference": "04f4e8f6716241cb9200774ff73cb99fbb81e09a",
                 "shasum": ""
             },
             "require": {
@@ -168,7 +168,7 @@
                 "issues": "https://github.com/PHPCSStandards/composer-installer/issues",
                 "source": "https://github.com/PHPCSStandards/composer-installer"
             },
-            "time": "2022-04-18T16:14:00+00:00"
+            "time": "2022-06-26T10:27:07+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -1852,12 +1852,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "96b0866e57b00a91efb608d1938d9505c06b3fb9"
+                "reference": "f3a83428055642b09d14ec216ceae7107817c117"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/96b0866e57b00a91efb608d1938d9505c06b3fb9",
-                "reference": "96b0866e57b00a91efb608d1938d9505c06b3fb9",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/f3a83428055642b09d14ec216ceae7107817c117",
+                "reference": "f3a83428055642b09d14ec216ceae7107817c117",
                 "shasum": ""
             },
             "require": {
@@ -1901,7 +1901,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-05-18T05:35:53+00:00"
+            "time": "2022-06-27T22:52:37+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2187,5 +2187,5 @@
     "platform-overrides": {
         "php": "7.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

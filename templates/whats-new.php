@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.6.3',
+        'released' => '2022-07-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added search by order id filter for vendor dashboard Orders page',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added DateRange filter for vendor dashboard Orders page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.6.2',
         'released' => '2022-07-15',
         'changes'  => [
