@@ -841,7 +841,7 @@ class Settings {
 
         switch ( $payment_method_id ) {
             case 'bank':
-                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type', 'declaration' ];
+                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type' ];
                 break;
 
             case 'paypal':
