@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WeDevs\Dokan\Cache;
+use WP_Error;
 
 /**
  * Order Management API
@@ -15,58 +16,240 @@ class Manager {
      * Get all orders
      *
      * @since 3.0.0
+     * @since 3.6.3 rewritten to include filters
      *
-     * @return void
+     * @return WP_Error|int[]|\WC_Order[]
      */
     public function all( $args = [] ) {
-        global $wpdb;
-
         $default = [
-            'seller_id'   => dokan_get_current_user_id(),
-            'customer_id' => null,
+            'seller_id'   => 0,
+            'customer_id' => 0,
+            'order_id'    => 0,
             'status'      => 'all',
+            'order_date'  => '', // only for backward compatibility, will be removed in future, if date is passed in args, it will be ignored
+            'date'        => [
+                'from' => '',
+                'to'   => '',
+            ],
+            'search'      => '',
+            'include'    => [],
+            'exclude'    => [],
+            'order_by'    => 'post_date',
+            'order'       => 'DESC',
             'paged'       => 1,
             'limit'       => 10,
-            'date'        => null,
+            'return'      => 'objects', // objects, ids, count
         ];
 
         $args = wp_parse_args( $args, $default );
 
-        $offset      = ( $args['paged'] - 1 ) * $args['limit'];
-        $cache_group = "seller_order_data_{$args['seller_id']}";
+        global $wpdb;
+
+        $fields     = '';
+        $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
+        $where      = '';
+        $groupby    = '';
+        $orderby    = '';
+        $limits     = '';
+        $query_args = [ 1, 1 ];
+
+        // determine which fields to return
+        if ( in_array( $args['return'], [ 'objects', 'ids' ], true ) ) {
+            $fields = 'do.order_id';
+        } elseif ( in_array( $args['return'], [ 'count' ], true ) ) {
+            $fields = 'COUNT(do.order_id) AS count';
+        }
+
+        // now apply filtering on the fields
+        // filter by seller id
+        if ( ! $this->is_empty( $args['seller_id'] ) ) {
+            $seller_ids = implode( "','", array_map( 'absint', (array) $args['seller_id'] ) );
+            $where      .= " AND do.seller_id IN ('$seller_ids')";
+        }
+
+        // filter customer id
+        if ( ! $this->is_empty( $args['customer_id'] ) ) {
+            $join         .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+            $customer_ids = implode( "','", array_map( 'absint', (array) $args['customer_id'] ) );
+            $where        .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ('$customer_ids')";
+        }
+
+        // filter order id
+        if ( ! $this->is_empty( $args['order_id'] ) ) {
+            $order_ids = implode( "','", array_map( 'absint', (array) $args['order_id'] ) );
+            $where     .= " AND do.order_id IN ('$order_ids')";
+        }
+
+        // filter status
+        if ( ! $this->is_empty( $args['status'] ) && 'all' !== $args['status'] ) {
+            $status = implode( "','", array_map( 'sanitize_text_field', (array) $args['status'] ) );
+            $where  .= " AND do.order_status IN ('$status')";
+        }
+
+        // include order ids
+        if ( ! $this->is_empty( $args['include'] ) ) {
+            $include = implode( "','", array_map( 'absint', (array) $args['include'] ) );
+            $where   .= " AND do.order_id IN ('$include')";
+        }
+
+        // exclude order ids
+        if ( ! $this->is_empty( $args['exclude'] ) ) {
+            $exclude = implode( "','", array_map( 'absint', (array) $args['exclude'] ) );
+            $where   .= " AND do.order_id NOT IN ('$exclude')";
+        }
+
+        // date filter
+        $date_from = false;
+        $date_to   = false;
+        // check if start date is set
+        if ( ! $this->is_empty( $args['date']['from'] ) ) {
+            // convert date string to object
+            $date_from = dokan_current_datetime()->modify( $args['date']['from'] );
+        }
+
+        // check if end date is set
+        if ( ! $this->is_empty( $args['date']['to'] ) ) {
+            // convert date string to object
+            $date_to = dokan_current_datetime()->modify( $args['date']['to'] );
+        }
+
+        //swap dates if start date is after end date
+        $date_filter_applied = false;
+        if ( $date_from && $date_to ) {
+            $date_filter_applied = true;
+            // fix start and end date
+            if ( $date_from > $date_to ) {
+                $date_from    = $date_from->format( 'Y-m-d' );
+                $date_to      = $date_to->format( 'Y-m-d' );
+                $args['date'] = [
+                    'from' => $date_to,
+                    'to'   => $date_from,
+                ];
+            }
+            $where        .= ' AND DATE( p.post_date ) BETWEEN %s AND %s';
+            $query_args[] = $args['date']['from'];
+            $query_args[] = $args['date']['to'];
+            // if only start date is set
+        } elseif ( $date_from ) {
+            $date_filter_applied = true;
+            $where        .= ' AND DATE( p.post_date ) >= %s';
+            $query_args[] = $date_from->format( 'Y-m-d' );
+            // if only end date is set
+        } elseif ( $date_to ) {
+            $date_filter_applied = true;
+            $where        .= ' AND DATE( p.post_date ) <= %s';
+            $query_args[] = $date_to->format( 'Y-m-d' );
+            // if only single date is set
+        } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
+            $date_filter_applied = true;
+            $where        .= ' AND DATE( p.post_date ) = %s';
+            $query_args[] = $args['date'];
+        }
+
+        // backward compatibility for old filter
+        if ( ! $this->is_empty( $args['order_date'] ) && ! $date_filter_applied ) {
+            $order_date = dokan_current_datetime()->modify( $args['order_date'] );
+            if ( $order_date ) {
+                $where        .= ' AND DATE( p.post_date ) = %s';
+                $query_args[] = $order_date->format( 'Y-m-d' );
+            }
+        }
+
+        // filter by search parameter
+        if ( ! $this->is_empty( $args['search'] ) ) {
+            $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+            $where        .= ' AND p.post_title LIKE %s';
+            $query_args[] = $search;
+        }
+
+        // fix order by parameter
+        if ( ! in_array( strtoupper( $args['order'] ), [ 'ASC', 'DESC' ], true ) ) {
+            $args['order'] = 'DESC';
+        }
+
+        // fix order by parameter
+        $supported_order_by = [
+            'post_date'    => 'p.post_date',
+            'id'           => 'do.id',
+            'order_id'     => 'do.order_id',
+            'seller_id'    => 'do.seller_id',
+            'order_status' => 'do.order_status',
+        ];
+        if ( ! empty( $args['orderby'] ) && array_key_exists( $args['orderby'], $supported_order_by ) ) {
+            $orderby = "ORDER BY {$supported_order_by[ $args['orderby'] ]} {$args['order']}"; //no need for prepare, we've already whitelisted the parameters
+
+            //second order by in case of similar value on first order by field
+            if ( 'order_id' !== $args['order_by'] ) {
+                $orderby .= ", do.order_id {$args['order']}";
+            }
+        }
+
+        // pagination param
+        if ( ! empty( $args['limit'] ) && - 1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
+            $limit  = absint( $args['limit'] );
+            $page   = absint( $args['paged'] );
+            $page   = $page > 0 ? $page : 1;
+            $offset = ( $page - 1 ) * $limit;
+
+            $limits       = 'LIMIT %d, %d';
+            $query_args[] = $offset;
+            $query_args[] = $limit;
+        }
+
+        $cache_group = 'seller_order_data';
         $cache_key   = 'seller_orders_all_' . md5( wp_json_encode( $args ) ); // Use all arguments to create a hash used as cache key
+        if ( is_numeric( $args['seller_id'] ) ) {
+            $cache_group = "seller_order_data_{$args['seller_id']}";
+        } elseif ( ! $this->is_empty( $args['seller_id'] ) && 1 === count( $args['seller_id'] ) ) {
+            $cache_group = "seller_order_data_{$args['seller_id'][0]}";
+        }
 
         $orders = Cache::get( $cache_key, $cache_group );
 
-        if ( false === $orders ) {
-            $join         = $args['customer_id'] ? "LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id" : '';
-            $where        = $args['customer_id'] ? sprintf( "pm.meta_key = '_customer_user' AND pm.meta_value = %d AND", $args['customer_id'] ) : '';
-            $status_where = ( $args['status'] == 'all' ) ? '' : $wpdb->prepare( ' AND order_status = %s', $args['status'] );
-            $date_query   = ( $args['date'] ) ? $wpdb->prepare( ' AND DATE( p.post_date ) = %s', $args['date'] ) : '';
-
-            $orders = $wpdb->get_results(
+        if ( 'count' === $args['return'] && false === $orders ) {
+            // get count of entries
+            // @codingStandardsIgnoreStart
+            $orders = (int) $wpdb->get_var(
                 $wpdb->prepare(
-                    "SELECT do.order_id, p.post_date
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                {$join}
-                WHERE
-                    do.seller_id = %d AND
-                    {$where}
-                    p.post_status != 'trash'
-                    {$date_query}
-                    {$status_where}
-                GROUP BY do.order_id
-                ORDER BY p.post_date DESC
-                LIMIT %d, %d", $args['seller_id'], $offset, $args['limit']
+                    "SELECT $fields FROM {$wpdb->prefix}dokan_orders AS do $join WHERE %d=%d $where",
+                    $query_args
                 )
             );
 
-            $orders = array_map(
-                function( $order_data ) {
-                    return $this->get( $order_data->order_id );
-                }, $orders
+            // check for query error
+            if ( ! empty( $wpdb->last_error ) ) {
+                return new WP_Error( 'order_manager_db_error', $wpdb->last_error, $wpdb->last_query );
+            }
+
+            // @codingStandardsIgnoreEnd
+            Cache::set( $cache_key, $orders, $cache_group );
+        } elseif ( in_array( $args['return'], [ 'objects', 'ids' ], true ) && false === $orders ) {
+            // @codingStandardsIgnoreStart
+            $orders = $wpdb->get_col(
+                $wpdb->prepare(
+                    "SELECT $fields FROM {$wpdb->prefix}dokan_orders AS do $join WHERE %d=%d $where $groupby $orderby $limits",
+                    $query_args
+                )
             );
+            // @codingStandardsIgnoreEnd
+
+            // check for query error
+            if ( ! empty( $wpdb->last_error ) ) {
+                return new WP_Error( 'order_manager_db_error', $wpdb->last_error, $wpdb->last_query );
+            }
+
+            if ( 'objects' === $args['return'] ) {
+                $order_objects = [];
+                foreach ( $orders as $order_id ) {
+                    $order = $this->get( $order_id );
+                    if ( $order ) {
+                        // only send legit order object, this will prevent some fatal error in case order object is not found
+                        $order_objects[] = $order;
+                    }
+                }
+                $orders = $order_objects;
+                unset( $order_objects );
+            }
 
             Cache::set( $cache_key, $orders, $cache_group );
         }
@@ -79,7 +262,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return bool|\WC_Order|\WC_Order_Refund
      */
     public function get( $id ) {
         return wc_get_order( $id );
@@ -99,25 +282,25 @@ class Manager {
 
         $bill_ship = array(
             'billing_country',
-			'billing_first_name',
-			'billing_last_name',
-			'billing_company',
+            'billing_first_name',
+            'billing_last_name',
+            'billing_company',
             'billing_address_1',
-			'billing_address_2',
-			'billing_city',
-			'billing_state',
-			'billing_postcode',
+            'billing_address_2',
+            'billing_city',
+            'billing_state',
+            'billing_postcode',
             'billing_email',
-			'billing_phone',
-			'shipping_country',
-			'shipping_first_name',
-			'shipping_last_name',
+            'billing_phone',
+            'shipping_country',
+            'shipping_first_name',
+            'shipping_last_name',
             'shipping_company',
-			'shipping_address_1',
-			'shipping_address_2',
-			'shipping_city',
+            'shipping_address_1',
+            'shipping_address_2',
+            'shipping_city',
             'shipping_state',
-			'shipping_postcode',
+            'shipping_postcode',
         );
 
         try {
@@ -217,9 +400,9 @@ class Manager {
     /**
      * Create tax line items
      *
-     * @param  \WC_Order $order
-     * @param  \WC_Order $parent_order
-     * @param  array $products
+     * @param \WC_Order $order
+     * @param \WC_Order $parent_order
+     * @param array $products
      *
      * @return void
      */
@@ -237,12 +420,12 @@ class Manager {
             $item = new \WC_Order_Item_Tax();
             $item->set_props(
                 array(
-					'rate_id'            => $tax->get_rate_id(),
-					'label'              => $tax->get_label(),
-					'compound'           => $tax->get_compound(),
-					'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
-					'tax_total'          => $tax_total,
-					'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
+                    'rate_id'            => $tax->get_rate_id(),
+                    'label'              => $tax->get_label(),
+                    'compound'           => $tax->get_compound(),
+                    'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
+                    'tax_total'          => $tax_total,
+                    'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
                 )
             );
 
@@ -285,6 +468,7 @@ class Manager {
         // bail out if no shipping methods found
         if ( ! $shipping_method ) {
             dokan_log( sprintf( '#%d - No shipping method found. Aborting.', $order->get_id() ) );
+
             return;
         }
 
@@ -295,10 +479,10 @@ class Manager {
 
             $item->set_props(
                 array(
-					'method_title' => $shipping_method->get_name(),
-					'method_id'    => $shipping_method->get_method_id(),
-					'total'        => $shipping_method->get_total(),
-					'taxes'        => $shipping_method->get_taxes(),
+                    'method_title' => $shipping_method->get_name(),
+                    'method_id'    => $shipping_method->get_method_id(),
+                    'total'        => $shipping_method->get_total(),
+                    'taxes'        => $shipping_method->get_taxes(),
                 )
             );
 
@@ -327,8 +511,8 @@ class Manager {
      */
     public function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids = array_map(
-            function( $item ) {
+        $product_ids  = array_map(
+            function ( $item ) {
                 return $item->get_product_id();
             }, $products
         );
@@ -350,15 +534,15 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                  apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
                     array(
-						'code'         => $item->get_code(),
-						'discount'     => $item->get_discount(),
-						'discount_tax' => $item->get_discount_tax(),
+                        'code'         => $item->get_code(),
+                        'discount'     => $item->get_discount(),
+                        'discount_tax' => $item->get_discount_tax(),
                     )
                 );
 
@@ -391,7 +575,7 @@ class Manager {
             $args = array(
                 'post_parent' => $parent_order_id,
                 'post_type'   => 'shop_order',
-                'numberposts' => -1,
+                'numberposts' => - 1,
                 'post_status' => 'any',
             );
 
@@ -436,5 +620,27 @@ class Manager {
         }
 
         dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
+    }
+
+    /**
+     * This will check if given var is empty or not.
+     *
+     * @since 3.6.3
+     *
+     * @param mixed $var
+     *
+     * @return bool
+     */
+    protected function is_empty( $var ) {
+        if ( empty( $var ) ) {
+            return true;
+        }
+
+        // if var is an array, check if it's empty or not
+        if ( is_array( $var ) && isset( $var[0] ) && intval( $var[0] ) === 0 ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\ProductCategory;
 /**
  * Product category helper class.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  */
 class Helper {
 
     /**
      * Returns 'true' if category type selection for Products is single, 'false' if type is multiple
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return boolean
      */
@@ -23,7 +23,7 @@ class Helper {
     /**
      * Returns products category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param integer $post_id
      *
@@ -89,7 +89,7 @@ class Helper {
     /**
      * Set all ancestors to a product from chosen product categories
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param int $post_id
      * @param array $chosen_categories
@@ -121,7 +121,7 @@ class Helper {
     /**
      * Get category ancestors HTML;
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @param integer $term
      *

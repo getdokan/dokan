@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.6.1",
+  "version": "3.6.3",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
-    "axios": "^0.21.4",
-    "axios-cache-adapter": "^2.7.3",
     "debounce": "^1.2.1",
     "papaparse": "^5.3.2",
     "vue": "^2.6.14",

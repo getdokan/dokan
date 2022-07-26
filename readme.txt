@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 5.4
-Tested up to: 6.0
+Tested up to: 6.0.1
 WC requires at least: 5.0.0
-WC tested up to: 6.6.1
+WC tested up to: 6.7.0
 Requires PHP: 7.0
-Stable tag: 3.6.1
+Stable tag: 3.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -313,7 +313,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.6.0 ( Jun 14, 2022 ) =
+= v3.6.3 ( Jul 26, 2022 ) =
+
+- **update:** Added DateRange filter for vendor dashboard Orders page
+- **new:** Added search by order id filter for vendor dashboard Orders page
+
+= v3.6.2 ( Jul 15, 2022 ) =
+
+- **new:** Added dummy data import feature for Dokan
+- **update:** Multistep category modal for product add and edit page under vendor dashboard
+- **update:** Added 'Back To Top' button & fix some design broken issue under Dokan admin settings page.
+
+= v3.6.1 ( Jun 30, 2022 ) =
 
 - **fix:** Fixed some empty method names in Payment Methods section of Vendor Dashboard > Withdraw
 - **fix:** Fixed incorrect alignment of withdraw method title in Dokan setup wizard

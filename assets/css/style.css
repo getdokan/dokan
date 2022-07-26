@@ -2063,7 +2063,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li {
   margin: 0;
-  border-bottom: 1px solid #454545;
   position: relative;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a {
@@ -2090,7 +2089,6 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   width: 33.333333%;
   padding: 6% 13%;
   float: left;
-  border-right: 1px solid #454545;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:hover {
   background: #f05025;
@@ -2601,6 +2599,70 @@ div.media-sidebar a.edit-attachment {
 .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach {
   padding: 10px 7px;
 }
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left {
+  width: 66%!important;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group button,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group a,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group input,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group select,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group .select2-container {
+  height: 35px !important;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group button .select2-selection--single,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group a .select2-selection--single,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group input .select2-selection--single,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group select .select2-selection--single,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group .select2-container .select2-selection--single {
+  height: 35px !important;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group button {
+  margin-right: 5px;
+  border: none !important;
+  padding: 3px 10px !important;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group input,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group select,
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group .select2-container {
+  width: calc(33% - 54px) !important;
+  margin-right: 5px;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group a {
+  display: flex;
+  align-items: center;
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group a .fa {
+  margin-right: 3px;
+}
+@media screen and (max-width: 576px) {
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group select,
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group .select2-container,
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group input {
+    width: 100% !important;
+    margin-right: 0;
+  }
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group select:not(:last-child),
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group .select2-container:not(:last-child),
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left .dokan-form-group input:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}
+.dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-right {
+  width: 33%!important;
+}
+@media screen and (max-width: 768px) {
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-left {
+    width: 100%!important;
+  }
+  .dokan-orders-content .dokan-orders-area .dokan-order-filter-serach .dokan-right {
+    width: 100%!important;
+  }
+}
 .dokan-orders-content .dokan-orders-area td.thumb img {
   padding: 2px;
   margin: 0;
@@ -2713,6 +2775,9 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-orders-content .dokan-orders-area .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
   min-height: 27px;
+}
+.vendor-dashboard-orders-page .select2-search__field {
+  min-width: auto !important;
 }
 .dokan-product-listing .dokan-product-listing-area {
   padding: 0px 15px;

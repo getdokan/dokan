@@ -9,7 +9,7 @@ use WeDevs\Dokan\Cache;
  *
  * Manage all caches for product category related functionalities.
  *
- * @since DOKAN_SINCE
+ * @since 3.6.2
  *
  * @see \WeDevs\Dokan\Cache
  */
@@ -24,7 +24,7 @@ class ProductCategoryCache {
     /**
      * Delete product category cache
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.2
      *
      * @return void
      */
