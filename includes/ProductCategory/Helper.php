@@ -50,7 +50,6 @@ class Helper {
             return $data;
         }
 
-
         // get product terms
         $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'all' ] );
 
