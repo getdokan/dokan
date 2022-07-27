@@ -50,11 +50,33 @@ class Helper {
             return $data;
         }
 
-        // no store chosen cat was found on database, in that case we need to generate chosen cat from existing categories
-        $all_parents = [];
 
         // get product terms
         $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'all' ] );
+
+        $chosen_cat = self::generate_chosen_categories( $terms );
+
+        // check if single category is selected, in that case get the first item
+        $data['chosen_cat'] = $is_single ? [ reset( $chosen_cat ) ] : $chosen_cat;
+        if ( ! empty( $data['chosen_cat'] ) ) {
+            self::set_object_terms_from_chosen_categories( $post_id, $data['chosen_cat'] );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Generates chosen categories from categories/terms array
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param object $terms
+     *
+     * @return array
+     */
+    public static function generate_chosen_categories( $terms ) {
+        // no store chosen cat was found on database, in that case we need to generate chosen cat from existing categories
+        $all_parents = [];
 
         // If multiple category is selected, choose the common parents child as chosen category.
         foreach ( $terms as $term ) {
@@ -77,13 +99,7 @@ class Helper {
 
         $chosen_cat = array_values( $chosen_cat );
 
-        // check if single category is selected, in that case get the first item
-        $data['chosen_cat'] = $is_single ? [ reset( $chosen_cat ) ] : $chosen_cat;
-        if ( ! empty( $data['chosen_cat'] ) ) {
-            self::set_object_terms_from_chosen_categories( $post_id, $data['chosen_cat'] );
-        }
-
-        return $data;
+        return $chosen_cat;
     }
 
     /**

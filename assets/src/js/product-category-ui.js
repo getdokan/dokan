@@ -8,6 +8,7 @@
     let categoriesState   = [];
     let searchResultState = [];
     let inputHolder       = '';
+    let selectedFrom      = 0;
     let selectedCatId     = '';
 
     var ProductCategory = {
@@ -41,7 +42,9 @@
 
         initModal() {
             inputHolder   = $( this ).data( 'dokansclevel' );
+            selectedFrom  = $( this ).data( 'selectfor' );
             let chosenCat = $( this ).siblings( ".dokan-cat-inputs-holder" ).find( ".dokan_chosen_product_cat" );
+            $(this).parent().attr('data-activate', 'yes');
 
             ProductCategory.openModal( chosenCat );
         },
@@ -88,10 +91,15 @@
         },
 
         chooseCatButton() {
-            if ( $(`.dokan_chosen_product_cat_${selectedCatId}`).length ) {
+            let category_box = `.dokan-select-product-category-container.dokan_select_cat_for_${selectedFrom}_${inputHolder}[data-activate='yes']`;
+            let cat_exists_in_list = $(category_box).parent().children( '.dokan-select-product-category-container' ).children( '.dokan-cat-inputs-holder' ).find(`.dokan_chosen_product_cat_${selectedCatId}`).length;
+
+            if ( cat_exists_in_list ) {
                 dokan_sweetalert( dokan_product_category_data.i18n.duplicate_category, { icon: 'warning', } );
                 return;
             }
+
+            $(category_box).attr('data-activate', 'no');
 
             ProductCategory.setCatName( ProductCategory.getSelectedLabel() );
             ProductCategory.setCatId( selectedCatId );
@@ -160,6 +168,8 @@
 
         hideCategoryModal() {
             modal.css( 'display', 'none' );
+
+            $('.dokan-select-product-category-container').attr('data-activate', 'no');
         },
 
         loadAllParentCategories() {
@@ -336,9 +346,12 @@
         },
 
         setCatId( id ) {
-            let ui = `<input type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
+            let category_box = `.dokan-select-product-category-container.dokan_select_cat_for_${selectedFrom}_${inputHolder}`;
 
-            $( `.dokan-cih-level-${ inputHolder }` ).html( ui );
+            let ui = `<input data-field-name="chosen_product_cat" type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
+            ui += `<input type="hidden" name="chosen_product_cat_bulk[]" value="${ id }"></input>`;
+
+            $(category_box).children( `.dokan-cih-level-${ inputHolder }` ).html( ui );
         },
 
         setCatName( name ) {
@@ -346,17 +359,20 @@
         },
 
         addANewCatBox() {
-            let lastCatElement = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' ).length;
-            let lastCat = $( '.dokan-add-new-cat-box .dokan-select-product-category-container' )[lastCatElement-1];
-            let boxCounter = $(lastCat).find('#dokan-category-open-modal').data('dokansclevel') + 1;
+            let addCatBtn      = $( this )[0];
+            let from           = $( addCatBtn ).data( 'selectfor' );
+            selectedFrom       = from;
+            let lastCatElement = $(this).parent().siblings('.dokan-add-new-cat-box').children('.dokan-select-product-category-container').length;
+            let lastCat        = $(this).parent().siblings('.dokan-add-new-cat-box').children('.dokan-select-product-category-container')[lastCatElement-1];
+            let boxCounter     = $(lastCat).find('#dokan-category-open-modal').data('dokansclevel') + 1;
 
             if ( isNaN( boxCounter ) ) {
                 boxCounter = 0;
             }
 
             let html = `
-                <div class="dokan-select-product-category-container">
-                    <div class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal">
+                <div data-activate="no" class="dokan-select-product-category-container dokan_select_cat_for_${from}_${boxCounter}">
+                    <div class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="${ boxCounter }" id="dokan-category-open-modal" data-selectfor="${from}">
                         <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-${ boxCounter }">- ${dokan_product_category_data.i18n.select_a_category} -</span>
                         <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
                     </div>
@@ -369,7 +385,7 @@
                 </div>
                 `;
 
-            $( '.dokan-add-new-cat-box' ).append( html );
+            $( `.cat_box_for_${from}` ).append( html );
         },
 
         findCategory( id ) {

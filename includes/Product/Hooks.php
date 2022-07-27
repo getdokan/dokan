@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\ProductCategory\Helper;
+
 /**
 * Admin Hooks
 *
@@ -22,6 +24,10 @@ class Hooks {
         add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 10, 2 );
         add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
         add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
+        add_action( 'woocommerce_product_quick_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
 
         // Init Product Cache Class
         new VendorStoreInfo();
@@ -239,4 +245,61 @@ class Hooks {
         exit;
     }
 
+    /**
+     * Triggers when admin quick edits products or bulk edit products from admin panel.
+     * we are auto selecting all category ancestors here.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param object $product
+     *
+     * @return void
+     */
+    public function update_category_data_for_bulk_and_quick_edit( $product ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $get_data = wp_unslash( $_REQUEST );
+
+        if ( ! isset( $get_data['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $get_data['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product->get_id() );
+    }
+
+    /**
+     * Triggers when admin saves/edits products.
+     * we are auto selecting all category ancestors here.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id
+     *
+     * @return void
+     */
+    public function update_category_data_for_new_and_update_product( $product_id ) {
+        if ( ! is_admin() ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
+    }
+
+    /**
+     * Gets chosen categories and updated product categories.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id
+     *
+     * @return void
+     */
+    private function update_product_categories( $product_id ) {
+        $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'all' ] );
+        $chosen_categories = Helper::generate_chosen_categories( $terms );
+
+        Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+    }
 }
