@@ -554,9 +554,12 @@ class Settings {
                 $general_site_options,
                 $general_vendor_store_options
             ),
-            'dokan_selling'    => array_merge(
-                $selling_option_commission,
-                $selling_option_vendor_capability
+            'dokan_selling'    => apply_filters(
+                'dokan_settings_selling_options',
+                array_merge(
+                    $selling_option_commission,
+                    $selling_option_vendor_capability
+                )
             ),
             'dokan_withdraw'   => [
                 'withdraw_methods'    => [
