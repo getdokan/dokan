@@ -346,22 +346,16 @@ class Rewrites {
 
             $query->set( 'tax_query', apply_filters( 'dokan_store_tax_query', $tax_query ) );
 
-            if ( isset( $_GET['product_name'] ) && ! empty( $_GET['product_name'] ) ) {
+            if ( ! empty( $_GET['product_name'] ) ) { //phpcs:ignore
                 $product_name = wc_clean( wp_unslash( $_GET['product_name'] ) ); //phpcs:ignore
-
                 $query->set( 's', $product_name );
             }
 
             // set orderby param
-            if ( isset( $_GET['product_orderby'] ) && ! empty( $_GET['product_orderby'] ) ) {
-                $orderby  = wc_clean( wp_unslash( $_GET['product_orderby'] ) ); //phpcs:ignore
-                $ordering = $this->get_catalog_ordering_args( $orderby );
+            $ordering = $this->get_catalog_ordering_args();
 
-                $query->set( 'orderby', $ordering['orderby'] );
-                $query->set( 'order', $ordering['order'] );
-            } else {
-                $query->set( 'orderby', 'post_date ID' );
-            }
+            $query->set( 'orderby', $ordering['orderby'] );
+            $query->set( 'order', $ordering['order'] );
         }
     }
 
