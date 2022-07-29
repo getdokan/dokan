@@ -51,7 +51,7 @@ class Helper {
         }
 
         // get product terms
-        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'all' ] );
+        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'ids' ] );
 
         $chosen_cat = self::generate_chosen_categories( $terms );
 
@@ -78,13 +78,13 @@ class Helper {
         $all_parents = [];
 
         // If multiple category is selected, choose the common parents child as chosen category.
-        foreach ( $terms as $term ) {
-            $all_ancestors = get_ancestors( $term->term_id, 'product_cat' );
-            $old_parent    = empty( $all_ancestors ) ? $term->term_id : end( $all_ancestors );
+        foreach ( $terms as $term_id ) {
+            $all_ancestors = get_ancestors( $term_id, 'product_cat' );
+            $old_parent    = empty( $all_ancestors ) ? $term_id : end( $all_ancestors );
 
             if ( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < count( $all_ancestors ) ) {
                 $all_parents[ $old_parent ]['size']   = count( $all_ancestors );
-                $all_parents[ $old_parent ]['child']  = $term->term_id;
+                $all_parents[ $old_parent ]['child']  = $term_id;
             }
         }
 

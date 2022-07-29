@@ -260,9 +260,7 @@ class Hooks {
             return;
         }
 
-        $get_data = wp_unslash( $_REQUEST );
-
-        if ( ! isset( $get_data['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $get_data['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
+        if ( ! isset( $_REQUEST['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
             return;
         }
 
@@ -297,7 +295,7 @@ class Hooks {
      * @return void
      */
     private function update_product_categories( $product_id ) {
-        $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'all' ] );
+        $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
         $chosen_categories = Helper::generate_chosen_categories( $terms );
 
         Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
