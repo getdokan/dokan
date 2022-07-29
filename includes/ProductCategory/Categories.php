@@ -82,6 +82,43 @@ class Categories {
     }
 
     /**
+     * Get all the parents of a category.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $category_id
+     *
+     * @return array
+     */
+    public function get_parents( $category_id ) {
+        return isset( $this->categories[ $category_id ] ) && $this->categories[ $category_id ]['parents']
+        ? $this->categories[ $category_id ]['parents'] : [];
+    }
+
+    /**
+     * Returns the top patent id of a category.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $category_id
+     *
+     * @return int
+     */
+    public function get_topmost_parent( $category_id ) {
+        $category_id = $category_id;
+        // check if category id is set
+        if ( ! isset( $this->categories[ $category_id ] ) ) {
+            return 0;
+        }
+
+        if ( 0 === intval( $this->categories[ $category_id ]['parent_id'] ) ) {
+            return intval( $this->categories[ $category_id ]['term_id'] );
+        }
+
+        return $this->get_topmost_parent( $this->categories[ $category_id ]['parent_id'] );
+    }
+
+    /**
      * This method will prepare category data
      *
      * @since 3.6.2
