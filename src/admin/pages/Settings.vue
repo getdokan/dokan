@@ -286,7 +286,7 @@
             },
             setWithdrawMethods() {
                 if ( 'withdraw_methods' in this.settingValues.dokan_withdraw ) {
-                    this.withdrawMethods = this.settingValues.dokan_withdraw.withdraw_methods;
+                    this.withdrawMethods = {...this.settingValues.dokan_withdraw.withdraw_methods};
                 }
             },
 
@@ -308,6 +308,8 @@
                     showCancelButton: true,
                     confirmButtonText: this.__('Save & send announcement', 'dokan-lite'),
                     cancelButtonText: this.__( 'Save only', 'dokan-lite' ),
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
                 });
             },
 
