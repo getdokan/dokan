@@ -395,7 +395,7 @@ class Rewrites {
         $args    = array(
             'orderby'  => $orderby,
             'order'    => ( 'DESC' === $order ) ? 'DESC' : 'ASC',
-            'meta_key' => '',
+            'meta_key' => '', // @codingStandardsIgnoreLine
         );
 
         switch ( $orderby ) {
@@ -414,17 +414,15 @@ class Rewrites {
                 $args['order']   = 'DESC';
                 break;
             case 'rand':
-                $args['orderby'] = 'rand';
+                $args['orderby'] = 'rand'; // @codingStandardsIgnoreLine
                 break;
             case 'date':
                 $args['orderby'] = 'date ID';
                 $args['order']   = ( 'ASC' === $order ) ? 'ASC' : 'DESC';
                 break;
             case 'price':
-                add_filter( 'posts_clauses', [ $this, 'order_by_price_asc_post_clauses' ] );
-                break;
-            case 'price-desc':
-                add_filter( 'posts_clauses', [ $this, 'order_by_price_desc_post_clauses' ] );
+                $callback = 'DESC' === $order ? 'order_by_price_desc_post_clauses' : 'order_by_price_asc_post_clauses';
+                add_filter( 'posts_clauses', [ $this, $callback ] );
                 break;
             case 'popularity':
                 add_filter( 'posts_clauses', [ $this, 'order_by_popularity_post_clauses' ] );
