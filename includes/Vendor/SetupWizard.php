@@ -370,7 +370,7 @@ class SetupWizard extends DokanSetupWizard {
         $store_info = $this->store_info;
         ?>
         <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
-        <form method="post">
+        <form method="post" novalidate>
             <table class="form-table">
                 <?php
 				foreach ( $methods as $method_key ) {
