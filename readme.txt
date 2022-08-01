@@ -7,7 +7,7 @@ Tested up to: 6.0.1
 WC requires at least: 5.0.0
 WC tested up to: 6.7.0
 Requires PHP: 7.0
-Stable tag: 3.6.2
+Stable tag: 3.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.6.3 ( Jul 26, 2022 ) =
+
+- **update:** Added DateRange filter for vendor dashboard Orders page
+- **new:** Added search by order id filter for vendor dashboard Orders page
 
 = v3.6.2 ( Jul 15, 2022 ) =
 

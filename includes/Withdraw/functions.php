@@ -123,9 +123,7 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_paypal( $store_settings ) {
-    global $current_user;
-
-    $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email; ?>
+    $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : ''; ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <div class="dokan-input-group">
@@ -155,9 +153,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_skrill( $store_settings ) {
-    global $current_user;
-
-    $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : $current_user->user_email;
+    $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : '';
     ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">

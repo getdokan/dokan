@@ -429,7 +429,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment', 'dokan-date-range-picker' ],
                 'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
@@ -609,10 +609,13 @@ class Assets {
                 wp_enqueue_script( 'dokan-tooltip' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
-                wp_enqueue_script( 'dokan-vendor-registration' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
             }
+        }
+
+        if ( is_account_page() && ! is_user_logged_in() ) {
+            wp_enqueue_script( 'dokan-vendor-registration' );
         }
 
         // Scripts for contact form widget google recaptcha
@@ -627,8 +630,6 @@ class Assets {
                 wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
-
-        wp_enqueue_script( 'dokan-login-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
@@ -750,6 +751,7 @@ class Assets {
                 ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
             ) {
                 wp_enqueue_style( 'dokan-timepicker' );
+                wp_enqueue_style( 'dokan-date-range-picker' );
             }
         }
 
@@ -763,6 +765,7 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
+            wp_enqueue_script( 'dokan-date-range-picker' );
 
             wp_enqueue_script( 'dokan-tooltip' );
 

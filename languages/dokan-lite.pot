@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.6.2\n"
+"Project-Id-Version: Dokan 3.6.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-07-15 03:35:18+00:00\n"
+"POT-Creation-Date: 2022-07-26 06:52:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: dokan.php:480 includes/Admin/AdminBar.php:81 includes/Admin/Menu.php:67
 #: includes/Dashboard/Templates/Settings.php:60
-#: includes/Dashboard/Templates/Settings.php:67 includes/template-tags.php:419
+#: includes/Dashboard/Templates/Settings.php:67 includes/template-tags.php:420
 #: src/admin/pages/Settings.vue:4
 msgid "Settings"
 msgstr ""
@@ -108,7 +108,7 @@ msgid "Invalid ID."
 msgstr ""
 
 #: includes/Abstracts/DokanRESTController.php:193
-#: includes/REST/OrderController.php:681
+#: includes/REST/OrderController.php:684
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -122,13 +122,13 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:54 includes/Admin/Menu.php:45
 #: includes/Admin/Settings.php:603 includes/Install/Installer.php:173
-#: includes/template-tags.php:388 src/admin/pages/Dashboard.vue:3
+#: includes/template-tags.php:389 src/admin/pages/Dashboard.vue:3
 msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:63 includes/Admin/Menu.php:34
 #: includes/Admin/Menu.php:46 includes/Admin/SetupWizard.php:160
-#: includes/functions.php:2964 includes/template-tags.php:410
+#: includes/functions.php:2964 includes/template-tags.php:411
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
@@ -537,18 +537,18 @@ msgstr ""
 
 #: includes/Admin/Settings.php:383 includes/Admin/SetupWizard.php:524
 #: includes/Dashboard/Templates/Dashboard.php:101
-#: includes/Order/functions.php:560 templates/dashboard/orders-widget.php:26
+#: includes/Order/functions.php:482 templates/dashboard/orders-widget.php:26
 msgid "Completed"
 msgstr ""
 
 #: includes/Admin/Settings.php:384 includes/Admin/SetupWizard.php:530
 #: includes/Dashboard/Templates/Dashboard.php:111
-#: includes/Order/functions.php:575 templates/dashboard/orders-widget.php:36
-#: templates/orders/listing.php:151
+#: includes/Order/functions.php:497 templates/dashboard/orders-widget.php:36
+#: templates/orders/listing.php:127
 msgid "Processing"
 msgstr ""
 
-#: includes/Admin/Settings.php:385 includes/Order/functions.php:570
+#: includes/Admin/Settings.php:385 includes/Order/functions.php:492
 msgid "On-hold"
 msgstr ""
 
@@ -1063,7 +1063,7 @@ msgid "Introduction"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:150 includes/Vendor/SetupWizard.php:75
-#: includes/template-tags.php:433
+#: includes/template-tags.php:434
 msgid "Store"
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgstr ""
 
 #: includes/Admin/SetupWizardNoWC.php:176
 #: includes/ReverseWithdrawal/Helper.php:69 includes/Vendor/SetupWizard.php:80
-#: includes/template-tags.php:440
+#: includes/template-tags.php:441
 msgid "Payment"
 msgstr ""
 
@@ -1555,7 +1555,7 @@ msgstr ""
 msgid "Email sent successfully!"
 msgstr ""
 
-#: includes/Ajax.php:419 templates/orders/details.php:298
+#: includes/Ajax.php:419 templates/orders/details.php:296
 msgid "Delete note"
 msgstr ""
 
@@ -1583,9 +1583,8 @@ msgstr ""
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
-#: includes/Ajax.php:781 templates/orders/date-export.php:23
+#: includes/Ajax.php:781
 #. translators: 1. Customer name, 2. Customer ID, 3: Customer email
-#. translators: 1: user display name 2: user ID 3: user email
 msgid "%1$s"
 msgstr ""
 
@@ -1655,7 +1654,7 @@ msgstr ""
 
 #: includes/Assets.php:660 src/admin/main.js:27
 #: src/admin/pages/ReverseWithdrawalTransactions.vue:100
-#: templates/orders/listing.php:44 templates/products/products-listing.php:89
+#: templates/orders/listing.php:20 templates/products/products-listing.php:89
 #: templates/store-lists-filter.php:84
 msgid "Apply"
 msgstr ""
@@ -1809,49 +1808,49 @@ msgstr ""
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:873
+#: includes/Assets.php:875
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:874
+#: includes/Assets.php:876
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:875
+#: includes/Assets.php:877
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:876
+#: includes/Assets.php:878
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:877 includes/woo-views/html-product-download.php:8
+#: includes/Assets.php:879 includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:878
+#: includes/Assets.php:880
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:879
+#: includes/Assets.php:881
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:880
+#: includes/Assets.php:882
 msgid ""
 "Warning! This product will not have any variations if this option is not "
 "checked."
 msgstr ""
 
-#: includes/Assets.php:881
+#: includes/Assets.php:883
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:882
+#: includes/Assets.php:884
 msgid "Remove this attribute?"
 msgstr ""
 
-#: includes/Assets.php:891
+#: includes/Assets.php:893
 #. translators: %d: max linked variation.
 msgid ""
 "Are you sure you want to link all variations? This will create a new "
@@ -1859,190 +1858,190 @@ msgid ""
 "(max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:892
+#: includes/Assets.php:894
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:893
+#: includes/Assets.php:895
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:894
+#: includes/Assets.php:896
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:895
+#: includes/Assets.php:897
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:896
+#: includes/Assets.php:898
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:897
+#: includes/Assets.php:899
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:898
+#: includes/Assets.php:900
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:899
+#: includes/Assets.php:901
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:900
+#: includes/Assets.php:902
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:901
+#: includes/Assets.php:903
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:902
+#: includes/Assets.php:904
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:903
+#: includes/Assets.php:905
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:904
+#: includes/Assets.php:906
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:905
+#: includes/Assets.php:907
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:906
+#: includes/Assets.php:908
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:907
+#: includes/Assets.php:909
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:908
+#: includes/Assets.php:910
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:909
+#: includes/Assets.php:911
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
-#: includes/Assets.php:911 includes/Assets.php:1088
+#: includes/Assets.php:913 includes/Assets.php:1090
 #. translators: %s: decimal
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
-#: includes/Assets.php:913 includes/Assets.php:1090
+#: includes/Assets.php:915 includes/Assets.php:1092
 #. translators: %s: price decimal separator
 msgid ""
 "Please enter with one monetary decimal point (%s) without thousand "
 "separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:914 includes/Assets.php:1091
+#: includes/Assets.php:916 includes/Assets.php:1093
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:915 includes/Assets.php:1092
+#: includes/Assets.php:917 includes/Assets.php:1094
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:916 includes/Assets.php:1093
+#: includes/Assets.php:918 includes/Assets.php:1095
 msgid ""
 "This product has produced sales and may be linked to existing orders. Are "
 "you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:917 includes/Assets.php:1094
+#: includes/Assets.php:919 includes/Assets.php:1096
 msgid ""
 "This action cannot be reversed. Are you sure you wish to erase personal "
 "data from the selected orders?"
 msgstr ""
 
-#: includes/Assets.php:927
+#: includes/Assets.php:929
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/Assets.php:928
+#: includes/Assets.php:930
 msgid "Choose Image"
 msgstr ""
 
-#: includes/Assets.php:929
+#: includes/Assets.php:931
 msgid "Product title is required"
 msgstr ""
 
-#: includes/Assets.php:930
+#: includes/Assets.php:932
 msgid "Product category is required"
 msgstr ""
 
-#: includes/Assets.php:931
+#: includes/Assets.php:933
 msgid "Product created successfully"
 msgstr ""
 
-#: includes/Assets.php:935
+#: includes/Assets.php:937
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:936
+#: includes/Assets.php:938
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:937
+#: includes/Assets.php:939
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:938
+#: includes/Assets.php:940
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:939
+#: includes/Assets.php:941
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:940
+#: includes/Assets.php:942
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:941
+#: includes/Assets.php:943
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:942
+#: includes/Assets.php:944
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:943
+#: includes/Assets.php:945
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:944
+#: includes/Assets.php:946
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:945
+#: includes/Assets.php:947
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:946
+#: includes/Assets.php:948
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Assets.php:947
+#: includes/Assets.php:949
 msgid "Calculating"
 msgstr ""
 
-#: includes/Assets.php:948
+#: includes/Assets.php:950
 msgid "OK"
 msgstr ""
 
-#: includes/Assets.php:949 includes/Product/functions.php:310
+#: includes/Assets.php:951 includes/Product/functions.php:310
 #: src/admin/components/AdminNotice.vue:158
 #: src/admin/pages/ReverseWithdrawalTransactions.vue:99
-#: templates/my-orders.php:83 templates/orders/details.php:204
+#: templates/my-orders.php:83 templates/orders/details.php:202
 #: templates/products/new-product-single.php:221
 #: templates/products/new-product.php:170
 #: templates/products/tmpl-add-product-popup.php:69
@@ -2056,17 +2055,17 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/Assets.php:950
+#: includes/Assets.php:952
 msgid "Attribute Name"
 msgstr ""
 
-#: includes/Assets.php:952
+#: includes/Assets.php:954
 msgid ""
 "Are you sure? You have uploaded banner but didn't click the Update Settings "
 "button!"
 msgstr ""
 
-#: includes/Assets.php:953 templates/settings/header.php:20
+#: includes/Assets.php:955 templates/settings/header.php:20
 #: templates/settings/payment-manage.php:45
 #: templates/settings/store-form.php:301
 msgid "Update Settings"
@@ -2192,13 +2191,13 @@ msgid "Pending"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:116
-#: includes/Order/functions.php:585 src/admin/pages/Withdraw.vue:25
+#: includes/Order/functions.php:507 src/admin/pages/Withdraw.vue:25
 #: templates/dashboard/orders-widget.php:41
 msgid "Cancelled"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:121
-#: includes/Order/functions.php:580 templates/dashboard/orders-widget.php:46
+#: includes/Order/functions.php:502 templates/dashboard/orders-widget.php:46
 msgid "Refunded"
 msgstr ""
 
@@ -2206,8 +2205,29 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: includes/Dashboard/Templates/Orders.php:71
+#: includes/Dashboard/Templates/Orders.php:75
 msgid "You have no permission to view this order"
+msgstr ""
+
+#: includes/Dashboard/Templates/Orders.php:97
+msgid "Nonce verification failed!"
+msgstr ""
+
+#: includes/Dashboard/Templates/Orders.php:117
+#: includes/Dashboard/Templates/Products.php:215 src/admin/main.js:25
+msgid "Bulk Actions"
+msgstr ""
+
+#: includes/Dashboard/Templates/Orders.php:118
+msgid "Change status to on-hold"
+msgstr ""
+
+#: includes/Dashboard/Templates/Orders.php:119
+msgid "Change status to processing"
+msgstr ""
+
+#: includes/Dashboard/Templates/Orders.php:120
+msgid "Change status to completed"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:198
@@ -2215,11 +2235,6 @@ msgstr ""
 #: includes/Dashboard/Templates/Settings.php:157
 #: includes/Shortcodes/Dashboard.php:29 templates/global/no-permission.php:53
 msgid "You have no permission to view this page"
-msgstr ""
-
-#: includes/Dashboard/Templates/Products.php:215 src/admin/main.js:25
-#: templates/orders/listing.php:14
-msgid "Bulk Actions"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:216
@@ -2879,144 +2894,144 @@ msgstr ""
 msgid "Stock levels reduced:"
 msgstr ""
 
-#: includes/Order/functions.php:565
+#: includes/Order/functions.php:487
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/Order/functions.php:590
+#: includes/Order/functions.php:512
 msgid "Failed"
 msgstr ""
 
-#: includes/Order/functions.php:842
+#: includes/Order/functions.php:764
 msgid "Order No"
 msgstr ""
 
-#: includes/Order/functions.php:843 templates/orders/details.php:22
+#: includes/Order/functions.php:765 templates/orders/details.php:20
 msgid "Order Items"
 msgstr ""
 
-#: includes/Order/functions.php:844
+#: includes/Order/functions.php:766
 msgid "Shipping method"
 msgstr ""
 
-#: includes/Order/functions.php:845
+#: includes/Order/functions.php:767
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/Order/functions.php:846
+#: includes/Order/functions.php:768
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:847 templates/orders/listing.php:55
-#: templates/orders/listing.php:86
+#: includes/Order/functions.php:769 templates/orders/listing.php:31
+#: templates/orders/listing.php:62
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:848
+#: includes/Order/functions.php:770
 msgid "Earnings"
 msgstr ""
 
-#: includes/Order/functions.php:849 includes/REST/OrderController.php:102
+#: includes/Order/functions.php:771 includes/REST/OrderController.php:102
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:850
+#: includes/Order/functions.php:772
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:851
+#: includes/Order/functions.php:773
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:852
+#: includes/Order/functions.php:774
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:853
+#: includes/Order/functions.php:775
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:854
+#: includes/Order/functions.php:776
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:855
+#: includes/Order/functions.php:777
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:856
+#: includes/Order/functions.php:778
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:857
+#: includes/Order/functions.php:779
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:858
+#: includes/Order/functions.php:780
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:859
+#: includes/Order/functions.php:781
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:860
+#: includes/Order/functions.php:782
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:861
+#: includes/Order/functions.php:783
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:862
+#: includes/Order/functions.php:784
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:863
+#: includes/Order/functions.php:785
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:864
+#: includes/Order/functions.php:786
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:865
+#: includes/Order/functions.php:787
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:866
+#: includes/Order/functions.php:788
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:867
+#: includes/Order/functions.php:789
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:868
+#: includes/Order/functions.php:790
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:869
+#: includes/Order/functions.php:791
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:870
+#: includes/Order/functions.php:792
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:871
+#: includes/Order/functions.php:793
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:872
+#: includes/Order/functions.php:794
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:873
+#: includes/Order/functions.php:795
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:874
+#: includes/Order/functions.php:796
 msgid "Customer Note"
 msgstr ""
 
@@ -3411,7 +3426,7 @@ msgid "Delete all variations"
 msgstr ""
 
 #: includes/Product/functions.php:215 templates/my-orders.php:29
-#: templates/orders/listing.php:57 templates/orders/listing.php:92
+#: templates/orders/listing.php:33 templates/orders/listing.php:68
 #: templates/products/products-listing-row.php:58
 #: templates/products/products-listing.php:100 templates/sub-orders.php:42
 #: templates/withdraw/pending-request-listing-dashboard.php:21
@@ -3535,7 +3550,7 @@ msgstr[1] ""
 msgid "Expand"
 msgstr ""
 
-#: includes/Product/functions.php:321 templates/orders/details.php:361
+#: includes/Product/functions.php:321 templates/orders/details.php:359
 #: templates/settings/store-form.php:55
 msgid "Close"
 msgstr ""
@@ -3582,7 +3597,7 @@ msgid "Edit"
 msgstr ""
 
 #: includes/Product/functions.php:503 templates/my-orders.php:88
-#: templates/orders/listing.php:169 templates/sub-orders.php:82
+#: templates/orders/listing.php:145 templates/sub-orders.php:82
 msgid "View"
 msgstr ""
 
@@ -3702,7 +3717,7 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: includes/REST/AdminReportController.php:150 includes/template-tags.php:402
+#: includes/REST/AdminReportController.php:150 includes/template-tags.php:403
 #: templates/dashboard/orders-widget.php:15
 msgid "Orders"
 msgstr ""
@@ -3712,13 +3727,13 @@ msgid "Vendors products data."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:170
-#: includes/REST/OrderController.php:860
+#: includes/REST/OrderController.php:863
 #: includes/REST/ProductController.php:1779
 msgid "Unique identifier for the resource."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:176
-#: includes/REST/OrderController.php:1209
+#: includes/REST/OrderController.php:1212
 #: includes/REST/ProductController.php:1785
 msgid "Product name."
 msgstr ""
@@ -4186,45 +4201,45 @@ msgid "Menu order, used to custom sort products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:749
-#: includes/REST/OrderController.php:1170
-#: includes/REST/OrderController.php:1282
-#: includes/REST/OrderController.php:1373
-#: includes/REST/OrderController.php:1459
-#: includes/REST/OrderController.php:1557
-#: includes/REST/OrderController.php:1615
+#: includes/REST/OrderController.php:1173
+#: includes/REST/OrderController.php:1285
+#: includes/REST/OrderController.php:1376
+#: includes/REST/OrderController.php:1462
+#: includes/REST/OrderController.php:1560
+#: includes/REST/OrderController.php:1618
 #: includes/REST/ProductController.php:2356
 msgid "Meta data."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:756
-#: includes/REST/OrderController.php:1177
-#: includes/REST/OrderController.php:1289
-#: includes/REST/OrderController.php:1380
-#: includes/REST/OrderController.php:1466
-#: includes/REST/OrderController.php:1564
-#: includes/REST/OrderController.php:1622
+#: includes/REST/OrderController.php:1180
+#: includes/REST/OrderController.php:1292
+#: includes/REST/OrderController.php:1383
+#: includes/REST/OrderController.php:1469
+#: includes/REST/OrderController.php:1567
+#: includes/REST/OrderController.php:1625
 #: includes/REST/ProductController.php:2363
 msgid "Meta ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:762
-#: includes/REST/OrderController.php:1183
-#: includes/REST/OrderController.php:1295
-#: includes/REST/OrderController.php:1386
-#: includes/REST/OrderController.php:1472
-#: includes/REST/OrderController.php:1570
-#: includes/REST/OrderController.php:1628
+#: includes/REST/OrderController.php:1186
+#: includes/REST/OrderController.php:1298
+#: includes/REST/OrderController.php:1389
+#: includes/REST/OrderController.php:1475
+#: includes/REST/OrderController.php:1573
+#: includes/REST/OrderController.php:1631
 #: includes/REST/ProductController.php:2369
 msgid "Meta key."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:767
-#: includes/REST/OrderController.php:1188
-#: includes/REST/OrderController.php:1300
-#: includes/REST/OrderController.php:1391
-#: includes/REST/OrderController.php:1477
-#: includes/REST/OrderController.php:1575
-#: includes/REST/OrderController.php:1633
+#: includes/REST/OrderController.php:1191
+#: includes/REST/OrderController.php:1303
+#: includes/REST/OrderController.php:1394
+#: includes/REST/OrderController.php:1480
+#: includes/REST/OrderController.php:1578
+#: includes/REST/OrderController.php:1636
 #: includes/REST/ProductController.php:2374
 msgid "Meta value."
 msgstr ""
@@ -4366,390 +4381,390 @@ msgstr ""
 msgid "Invalid order"
 msgstr ""
 
-#: includes/REST/OrderController.php:527 includes/REST/OrderController.php:631
-#: includes/REST/OrderController.php:662
+#: includes/REST/OrderController.php:530 includes/REST/OrderController.php:634
+#: includes/REST/OrderController.php:665
 msgid "You have no permission to view this notes"
 msgstr ""
 
-#: includes/REST/OrderController.php:531 includes/REST/OrderController.php:594
-#: includes/REST/OrderController.php:635 includes/REST/OrderController.php:666
+#: includes/REST/OrderController.php:534 includes/REST/OrderController.php:597
+#: includes/REST/OrderController.php:638 includes/REST/OrderController.php:669
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:583
+#: includes/REST/OrderController.php:586
 #: includes/REST/ProductController.php:295
 #. translators: %s: product
 msgid "Cannot create existing %s."
 msgstr ""
 
-#: includes/REST/OrderController.php:590
+#: includes/REST/OrderController.php:593
 msgid "You have no permission to create this notes"
 msgstr ""
 
-#: includes/REST/OrderController.php:601
+#: includes/REST/OrderController.php:604
 msgid "Cannot create order note, please try again."
 msgstr ""
 
-#: includes/REST/OrderController.php:641 includes/REST/OrderController.php:672
+#: includes/REST/OrderController.php:644 includes/REST/OrderController.php:675
 msgid "Invalid resource ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:866
+#: includes/REST/OrderController.php:869
 msgid "Parent order ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:871
+#: includes/REST/OrderController.php:874
 msgid "Orders belongs to specific seller"
 msgstr ""
 
-#: includes/REST/OrderController.php:876
+#: includes/REST/OrderController.php:879
 msgid "Order number."
 msgstr ""
 
-#: includes/REST/OrderController.php:882
+#: includes/REST/OrderController.php:885
 msgid "Order key."
 msgstr ""
 
-#: includes/REST/OrderController.php:888
+#: includes/REST/OrderController.php:891
 msgid "Shows where the order was created."
 msgstr ""
 
-#: includes/REST/OrderController.php:894
+#: includes/REST/OrderController.php:897
 msgid "Version of WooCommerce which last updated the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:900
+#: includes/REST/OrderController.php:903
 msgid "Order status."
 msgstr ""
 
-#: includes/REST/OrderController.php:907
+#: includes/REST/OrderController.php:910
 msgid "Currency the order was created with, in ISO format."
 msgstr ""
 
-#: includes/REST/OrderController.php:914
+#: includes/REST/OrderController.php:917
 msgid "The date the order was created, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:921
+#: includes/REST/OrderController.php:924
 msgid "The date the order was created, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:927
+#: includes/REST/OrderController.php:930
 msgid "The date the order was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:933
+#: includes/REST/OrderController.php:936
 msgid "The date the order was last modified, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:939
+#: includes/REST/OrderController.php:942
 msgid "Total discount amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:945
+#: includes/REST/OrderController.php:948
 msgid "Total discount tax amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:951
+#: includes/REST/OrderController.php:954
 msgid "Total shipping amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:957
+#: includes/REST/OrderController.php:960
 msgid "Total shipping tax amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:963
+#: includes/REST/OrderController.php:966
 msgid "Sum of line item taxes only."
 msgstr ""
 
-#: includes/REST/OrderController.php:969
+#: includes/REST/OrderController.php:972
 msgid "Grand total."
 msgstr ""
 
-#: includes/REST/OrderController.php:975
+#: includes/REST/OrderController.php:978
 msgid "Sum of all taxes."
 msgstr ""
 
-#: includes/REST/OrderController.php:981
+#: includes/REST/OrderController.php:984
 msgid "True the prices included tax during checkout."
 msgstr ""
 
-#: includes/REST/OrderController.php:987
+#: includes/REST/OrderController.php:990
 msgid "User ID who owns the order. 0 for guests."
 msgstr ""
 
-#: includes/REST/OrderController.php:993
+#: includes/REST/OrderController.php:996
 msgid "Customer's IP address."
 msgstr ""
 
-#: includes/REST/OrderController.php:999
+#: includes/REST/OrderController.php:1002
 msgid "User agent of the customer."
 msgstr ""
 
-#: includes/REST/OrderController.php:1005
+#: includes/REST/OrderController.php:1008
 msgid "Note left by customer during checkout."
 msgstr ""
 
-#: includes/REST/OrderController.php:1010
+#: includes/REST/OrderController.php:1013
 msgid "Billing address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1015
-#: includes/REST/OrderController.php:1078
+#: includes/REST/OrderController.php:1018
+#: includes/REST/OrderController.php:1081
 msgid "First name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1020
-#: includes/REST/OrderController.php:1083
+#: includes/REST/OrderController.php:1023
+#: includes/REST/OrderController.php:1086
 msgid "Last name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1025
-#: includes/REST/OrderController.php:1088
+#: includes/REST/OrderController.php:1028
+#: includes/REST/OrderController.php:1091
 msgid "Company name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1030
-#: includes/REST/OrderController.php:1093
+#: includes/REST/OrderController.php:1033
+#: includes/REST/OrderController.php:1096
 #: templates/admin-setup-wizard/step-store-wc-fields.php:37
 msgid "Address line 1"
 msgstr ""
 
-#: includes/REST/OrderController.php:1035
-#: includes/REST/OrderController.php:1098
+#: includes/REST/OrderController.php:1038
+#: includes/REST/OrderController.php:1101
 #: templates/admin-setup-wizard/step-store-wc-fields.php:44
 msgid "Address line 2"
 msgstr ""
 
-#: includes/REST/OrderController.php:1040
-#: includes/REST/OrderController.php:1103
+#: includes/REST/OrderController.php:1043
+#: includes/REST/OrderController.php:1106
 msgid "City name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1045
-#: includes/REST/OrderController.php:1108
+#: includes/REST/OrderController.php:1048
+#: includes/REST/OrderController.php:1111
 msgid "ISO code or name of the state, province or district."
 msgstr ""
 
-#: includes/REST/OrderController.php:1050
-#: includes/REST/OrderController.php:1113
+#: includes/REST/OrderController.php:1053
+#: includes/REST/OrderController.php:1116
 msgid "Postal code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1055
-#: includes/REST/OrderController.php:1118
+#: includes/REST/OrderController.php:1058
+#: includes/REST/OrderController.php:1121
 msgid "Country code in ISO 3166-1 alpha-2 format."
 msgstr ""
 
-#: includes/REST/OrderController.php:1060
+#: includes/REST/OrderController.php:1063
 msgid "Email address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1066
+#: includes/REST/OrderController.php:1069
 msgid "Phone number."
 msgstr ""
 
-#: includes/REST/OrderController.php:1073
+#: includes/REST/OrderController.php:1076
 msgid "Shipping address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1125
+#: includes/REST/OrderController.php:1128
 msgid "Payment method ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1130
+#: includes/REST/OrderController.php:1133
 msgid "Payment method title."
 msgstr ""
 
-#: includes/REST/OrderController.php:1135
+#: includes/REST/OrderController.php:1138
 msgid "Unique transaction ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1140
+#: includes/REST/OrderController.php:1143
 msgid "The date the order was paid, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:1146
+#: includes/REST/OrderController.php:1149
 msgid "The date the order was paid, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:1152
+#: includes/REST/OrderController.php:1155
 msgid "The date the order was completed, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:1158
+#: includes/REST/OrderController.php:1161
 msgid "The date the order was completed, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:1164
+#: includes/REST/OrderController.php:1167
 msgid "MD5 hash of cart items to ensure orders are not modified."
 msgstr ""
 
-#: includes/REST/OrderController.php:1196
+#: includes/REST/OrderController.php:1199
 msgid "Line items data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1203
-#: includes/REST/OrderController.php:1331
-#: includes/REST/OrderController.php:1409
-#: includes/REST/OrderController.php:1495
-#: includes/REST/OrderController.php:1593
+#: includes/REST/OrderController.php:1206
+#: includes/REST/OrderController.php:1334
+#: includes/REST/OrderController.php:1412
+#: includes/REST/OrderController.php:1498
+#: includes/REST/OrderController.php:1596
 msgid "Item ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1214
+#: includes/REST/OrderController.php:1217
 msgid "Product ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1219
+#: includes/REST/OrderController.php:1222
 msgid "Variation ID, if applicable."
 msgstr ""
 
-#: includes/REST/OrderController.php:1224
+#: includes/REST/OrderController.php:1227
 msgid "Quantity ordered."
 msgstr ""
 
-#: includes/REST/OrderController.php:1229
+#: includes/REST/OrderController.php:1232
 msgid "Tax class of product."
 msgstr ""
 
-#: includes/REST/OrderController.php:1234
+#: includes/REST/OrderController.php:1237
 msgid "Line subtotal (before discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1239
+#: includes/REST/OrderController.php:1242
 msgid "Line subtotal tax (before discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1245
-#: includes/REST/OrderController.php:1425
-#: includes/REST/OrderController.php:1517
+#: includes/REST/OrderController.php:1248
+#: includes/REST/OrderController.php:1428
+#: includes/REST/OrderController.php:1520
 msgid "Line total (after discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1250
-#: includes/REST/OrderController.php:1430
-#: includes/REST/OrderController.php:1522
+#: includes/REST/OrderController.php:1253
+#: includes/REST/OrderController.php:1433
+#: includes/REST/OrderController.php:1525
 msgid "Line total tax (after discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1256
-#: includes/REST/OrderController.php:1436
-#: includes/REST/OrderController.php:1528
+#: includes/REST/OrderController.php:1259
+#: includes/REST/OrderController.php:1439
+#: includes/REST/OrderController.php:1531
 msgid "Line taxes."
 msgstr ""
 
-#: includes/REST/OrderController.php:1264
-#: includes/REST/OrderController.php:1343
-#: includes/REST/OrderController.php:1444
-#: includes/REST/OrderController.php:1536
+#: includes/REST/OrderController.php:1267
+#: includes/REST/OrderController.php:1346
+#: includes/REST/OrderController.php:1447
+#: includes/REST/OrderController.php:1539
 msgid "Tax rate ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1269
-#: includes/REST/OrderController.php:1450
-#: includes/REST/OrderController.php:1542
+#: includes/REST/OrderController.php:1272
+#: includes/REST/OrderController.php:1453
+#: includes/REST/OrderController.php:1545
 msgid "Tax total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1274
-#: includes/REST/OrderController.php:1548
+#: includes/REST/OrderController.php:1277
+#: includes/REST/OrderController.php:1551
 msgid "Tax subtotal."
 msgstr ""
 
-#: includes/REST/OrderController.php:1308
+#: includes/REST/OrderController.php:1311
 msgid "Product SKU."
 msgstr ""
 
-#: includes/REST/OrderController.php:1314
+#: includes/REST/OrderController.php:1317
 msgid "Product price."
 msgstr ""
 
-#: includes/REST/OrderController.php:1323
+#: includes/REST/OrderController.php:1326
 msgid "Tax lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1337
+#: includes/REST/OrderController.php:1340
 msgid "Tax rate code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1349
+#: includes/REST/OrderController.php:1352
 msgid "Tax rate label."
 msgstr ""
 
-#: includes/REST/OrderController.php:1355
+#: includes/REST/OrderController.php:1358
 msgid "Show if is a compound tax rate."
 msgstr ""
 
-#: includes/REST/OrderController.php:1361
+#: includes/REST/OrderController.php:1364
 msgid "Tax total (not including shipping taxes)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1367
+#: includes/REST/OrderController.php:1370
 msgid "Shipping tax total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1402
+#: includes/REST/OrderController.php:1405
 msgid "Shipping lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1415
+#: includes/REST/OrderController.php:1418
 msgid "Shipping method name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1420
+#: includes/REST/OrderController.php:1423
 msgid "Shipping method ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1488
+#: includes/REST/OrderController.php:1491
 msgid "Fee lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1501
+#: includes/REST/OrderController.php:1504
 msgid "Fee name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1506
+#: includes/REST/OrderController.php:1509
 msgid "Tax class of fee."
 msgstr ""
 
-#: includes/REST/OrderController.php:1511
+#: includes/REST/OrderController.php:1514
 msgid "Tax status of fee."
 msgstr ""
 
-#: includes/REST/OrderController.php:1586
+#: includes/REST/OrderController.php:1589
 msgid "Coupons line data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1599
+#: includes/REST/OrderController.php:1602
 msgid "Coupon code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1604
+#: includes/REST/OrderController.php:1607
 msgid "Discount total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1609
+#: includes/REST/OrderController.php:1612
 msgid "Discount total tax."
 msgstr ""
 
-#: includes/REST/OrderController.php:1644
+#: includes/REST/OrderController.php:1647
 msgid "List of refunds."
 msgstr ""
 
-#: includes/REST/OrderController.php:1652
+#: includes/REST/OrderController.php:1655
 msgid "Refund ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1658
+#: includes/REST/OrderController.php:1661
 msgid "Refund reason."
 msgstr ""
 
-#: includes/REST/OrderController.php:1664
+#: includes/REST/OrderController.php:1667
 msgid "Refund total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1673
+#: includes/REST/OrderController.php:1676
 msgid ""
 "Define if the order is paid. It will set the status to processing and "
 "reduce stock items."
@@ -5366,7 +5381,7 @@ msgstr ""
 msgid "We need to update your install to the latest version"
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:45 templates/orders/details.php:202
+#: includes/Upgrade/AdminNotice.php:45 templates/orders/details.php:200
 msgid "Update"
 msgstr ""
 
@@ -5606,7 +5621,7 @@ msgid "Dokan: Store Product Category Menu"
 msgstr ""
 
 #: includes/Widgets/StoreCategoryMenu.php:36
-#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:842
+#: includes/Widgets/StoreCategoryMenu.php:80 includes/template-tags.php:843
 msgid "Store Product Category"
 msgstr ""
 
@@ -5619,7 +5634,7 @@ msgid "Dokan: Store Contact Form"
 msgstr ""
 
 #: includes/Widgets/StoreContactForm.php:42
-#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:881
+#: includes/Widgets/StoreContactForm.php:119 includes/template-tags.php:882
 msgid "Contact Vendor"
 msgstr ""
 
@@ -5632,7 +5647,7 @@ msgid "Dokan: Store Location"
 msgstr ""
 
 #: includes/Widgets/StoreLocation.php:42 includes/Widgets/StoreLocation.php:103
-#: includes/template-tags.php:855
+#: includes/template-tags.php:856
 msgid "Store Location"
 msgstr ""
 
@@ -5645,7 +5660,7 @@ msgid "Dokan: Store Opening Closing Time Widget"
 msgstr ""
 
 #: includes/Widgets/StoreOpenClose.php:41
-#: includes/Widgets/StoreOpenClose.php:112 includes/template-tags.php:868
+#: includes/Widgets/StoreOpenClose.php:112 includes/template-tags.php:869
 msgid "Store Time"
 msgstr ""
 
@@ -5828,7 +5843,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: includes/functions.php:1286 includes/template-tags.php:395
+#: includes/functions.php:1286 includes/template-tags.php:396
 #: src/admin/pages/Dashboard.vue:54 templates/dashboard/products-widget.php:16
 msgid "Products"
 msgstr ""
@@ -6111,8 +6126,8 @@ msgid "Report"
 msgstr ""
 
 #: includes/functions.php:2961 templates/dashboard/big-counter-widget.php:29
-#: templates/my-orders.php:27 templates/orders/details.php:22
-#: templates/orders/listing.php:54 templates/orders/listing.php:77
+#: templates/my-orders.php:27 templates/orders/details.php:20
+#: templates/orders/listing.php:30 templates/orders/listing.php:53
 #: templates/sub-orders.php:40
 msgid "Order"
 msgstr ""
@@ -6208,61 +6223,61 @@ msgstr ""
 msgid "Product successfully deleted"
 msgstr ""
 
-#: includes/template-tags.php:234
+#: includes/template-tags.php:235
 #: templates/products/listing-status-filter.php:13
 #. translators: %d : order count total
 msgid "All (%d)"
 msgstr ""
 
-#: includes/template-tags.php:252
+#: includes/template-tags.php:253
 #. translators: %d : order count completed status
 msgid "Completed (%d)"
 msgstr ""
 
-#: includes/template-tags.php:270
+#: includes/template-tags.php:271
 #. translators: %d : order count processing status
 msgid "Processing (%d)"
 msgstr ""
 
-#: includes/template-tags.php:288
+#: includes/template-tags.php:289
 #. translators: %d : order count on hold status
 msgid "On-hold (%d)"
 msgstr ""
 
-#: includes/template-tags.php:306
+#: includes/template-tags.php:307
 #. translators: %d : order count pending status
 msgid "Pending (%d)"
 msgstr ""
 
-#: includes/template-tags.php:324
+#: includes/template-tags.php:325
 #. translators: %d : order count cancelled status
 msgid "Cancelled (%d)"
 msgstr ""
 
-#: includes/template-tags.php:342
+#: includes/template-tags.php:343
 #. translators: %d : order count refunded status
 msgid "Refunded (%d)"
 msgstr ""
 
-#: includes/template-tags.php:361
+#: includes/template-tags.php:362
 #. translators: %d : order count failed status
 msgid "Failed (%d)"
 msgstr ""
 
-#: includes/template-tags.php:427
+#: includes/template-tags.php:428
 msgid "Back to Dashboard"
 msgstr ""
 
-#: includes/template-tags.php:570 templates/settings/header.php:14
+#: includes/template-tags.php:571 templates/settings/header.php:14
 #: templates/store-lists-loop.php:92
 msgid "Visit Store"
 msgstr ""
 
-#: includes/template-tags.php:571 templates/global/header-menu.php:48
+#: includes/template-tags.php:572 templates/global/header-menu.php:48
 msgid "Edit Account"
 msgstr ""
 
-#: includes/template-tags.php:572
+#: includes/template-tags.php:573
 msgid "Log out"
 msgstr ""
 
@@ -6526,7 +6541,7 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: src/admin/main.js:24 templates/orders/listing.php:33
+#: src/admin/main.js:24 templates/orders/listing.php:9
 #: templates/products/products-listing.php:78
 msgid "Select bulk action"
 msgstr ""
@@ -7111,8 +7126,8 @@ msgid "Filter by expire date"
 msgstr ""
 
 #: src/admin/pages/ReverseWithdrawalTransactions.vue:181
-#: templates/my-orders.php:28 templates/orders/listing.php:59
-#: templates/orders/listing.php:117
+#: templates/my-orders.php:28 templates/orders/listing.php:35
+#: templates/orders/listing.php:93
 #: templates/products/products-listing-row.php:127
 #: templates/products/products-listing.php:110
 #: templates/reverse-withdrawal/transaction-listing.php:17
@@ -7247,7 +7262,7 @@ msgstr ""
 msgid "Dokan Capability"
 msgstr ""
 
-#: src/admin/pages/VendorCapabilities.vue:54 templates/orders/details.php:102
+#: src/admin/pages/VendorCapabilities.vue:54 templates/orders/details.php:100
 msgid "Coupons"
 msgstr ""
 
@@ -7525,7 +7540,7 @@ msgstr ""
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:3
 msgid ""
 "Thanks for choosing Dokan to power your online marketplace! This quick "
-"setup wizard will help you configure the basic settings.\r\n"
+"setup wizard will help you configure the basic settings.\n"
 "        <strong>This setup wizard is completely optional and shouldn't take "
 "longer than three minutes.</strong>"
 msgstr ""
@@ -7698,7 +7713,7 @@ msgid ""
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:21
-#: templates/orders/listing.php:56 templates/orders/listing.php:89
+#: templates/orders/listing.php:32 templates/orders/listing.php:65
 #: templates/products/products-listing-row.php:91
 #: templates/products/products-listing.php:107
 msgid "Earning"
@@ -8058,11 +8073,11 @@ msgstr ""
 msgid "My Account"
 msgstr ""
 
-#: templates/global/header-menu.php:50 templates/orders/details.php:129
+#: templates/global/header-menu.php:50 templates/orders/details.php:127
 msgid "Billing Address"
 msgstr ""
 
-#: templates/global/header-menu.php:51 templates/orders/details.php:144
+#: templates/global/header-menu.php:51 templates/orders/details.php:142
 msgid "Shipping Address"
 msgstr ""
 
@@ -8156,137 +8171,154 @@ msgstr ""
 msgid "No orders found!"
 msgstr ""
 
-#: templates/orders/date-export.php:35
-msgid "Filter by Date"
-msgstr ""
-
-#: templates/orders/date-export.php:36
+#: templates/orders/date-export.php:16
 msgid "Filter by registered customer"
 msgstr ""
 
-#: templates/orders/date-export.php:39 templates/products/listing-filter.php:61
+#: templates/orders/date-export.php:20
+msgid "Search Orders"
+msgstr ""
+
+#: templates/orders/date-export.php:22
+#: templates/reverse-withdrawal/filters.php:10
+msgid "Select Date Range"
+msgstr ""
+
+#: templates/orders/date-export.php:23
+msgid "Start Date"
+msgstr ""
+
+#: templates/orders/date-export.php:24
+msgid "End Date"
+msgstr ""
+
+#: templates/orders/date-export.php:27 templates/products/listing-filter.php:61
 #: templates/reverse-withdrawal/filters.php:15
 #: templates/store-lists-filter.php:42
 msgid "Filter"
 msgstr ""
 
-#: templates/orders/date-export.php:50
+#: templates/orders/date-export.php:28
+msgid "Reset"
+msgstr ""
+
+#: templates/orders/date-export.php:40
 msgid "Export All"
 msgstr ""
 
-#: templates/orders/date-export.php:51
+#: templates/orders/date-export.php:41
 msgid "Export Filtered"
 msgstr ""
 
-#: templates/orders/details.php:7
+#: templates/orders/details.php:5
 msgid "This is not yours, I swear!"
 msgstr ""
 
-#: templates/orders/details.php:33
+#: templates/orders/details.php:31
 msgid "Item"
 msgstr ""
 
-#: templates/orders/details.php:37
+#: templates/orders/details.php:35
 msgid "Qty"
 msgstr ""
 
-#: templates/orders/details.php:39
+#: templates/orders/details.php:37
 msgid "Totals"
 msgstr ""
 
-#: templates/orders/details.php:135
+#: templates/orders/details.php:133
 msgid "No billing address set."
 msgstr ""
 
-#: templates/orders/details.php:150
+#: templates/orders/details.php:148
 msgid "No shipping address set."
 msgstr ""
 
-#: templates/orders/details.php:161
+#: templates/orders/details.php:159
 msgid "Downloadable Product Permission"
 msgstr ""
 
-#: templates/orders/details.php:176
+#: templates/orders/details.php:174
 msgid "General Details"
 msgstr ""
 
-#: templates/orders/details.php:180
+#: templates/orders/details.php:178
 msgid "Order Status:"
 msgstr ""
 
-#: templates/orders/details.php:184
+#: templates/orders/details.php:182
 msgid "&nbsp; Edit"
 msgstr ""
 
-#: templates/orders/details.php:210
+#: templates/orders/details.php:208
 msgid "Order Date:"
 msgstr ""
 
-#: templates/orders/details.php:214
+#: templates/orders/details.php:212
 msgid "Earning From Order:"
 msgstr ""
 
-#: templates/orders/details.php:221
+#: templates/orders/details.php:219
 msgid "Customer:"
 msgstr ""
 
-#: templates/orders/details.php:234
+#: templates/orders/details.php:232
 msgid "Email:"
 msgstr ""
 
-#: templates/orders/details.php:238
+#: templates/orders/details.php:236
 msgid "Phone:"
 msgstr ""
 
-#: templates/orders/details.php:242
+#: templates/orders/details.php:240
 msgid "Customer IP:"
 msgstr ""
 
-#: templates/orders/details.php:258
+#: templates/orders/details.php:256
 msgid "Customer Note:"
 msgstr ""
 
-#: templates/orders/details.php:271
+#: templates/orders/details.php:269
 msgid "Order Notes"
 msgstr ""
 
-#: templates/orders/details.php:296
+#: templates/orders/details.php:294
 msgid "added %s ago"
 msgstr ""
 
-#: templates/orders/details.php:305
+#: templates/orders/details.php:303
 msgid "There are no notes for this order yet."
 msgstr ""
 
-#: templates/orders/details.php:314
+#: templates/orders/details.php:312
 msgid "Add note"
 msgstr ""
 
-#: templates/orders/details.php:322
+#: templates/orders/details.php:320
 msgid "Customer note"
 msgstr ""
 
-#: templates/orders/details.php:323
+#: templates/orders/details.php:321
 msgid "Private note"
 msgstr ""
 
-#: templates/orders/details.php:331
+#: templates/orders/details.php:329
 msgid "Add Note"
 msgstr ""
 
-#: templates/orders/details.php:338 templates/orders/details.php:347
+#: templates/orders/details.php:336 templates/orders/details.php:345
 msgid "Tracking Number"
 msgstr ""
 
-#: templates/orders/details.php:342
+#: templates/orders/details.php:340
 msgid "Shipping Provider Name / URL"
 msgstr ""
 
-#: templates/orders/details.php:352
+#: templates/orders/details.php:350
 msgid "Date Shipped"
 msgstr ""
 
-#: templates/orders/details.php:360
+#: templates/orders/details.php:358
 msgid "Add Tracking Details"
 msgstr ""
 
@@ -8298,58 +8330,46 @@ msgstr ""
 msgid "Grant Access"
 msgstr ""
 
-#: templates/orders/listing.php:15
-msgid "Change status to on-hold"
-msgstr ""
-
-#: templates/orders/listing.php:16
-msgid "Change status to processing"
-msgstr ""
-
-#: templates/orders/listing.php:17
-msgid "Change status to completed"
-msgstr ""
-
-#: templates/orders/listing.php:58 templates/orders/listing.php:95
+#: templates/orders/listing.php:34 templates/orders/listing.php:71
 msgid "Customer"
 msgstr ""
 
-#: templates/orders/listing.php:61 templates/sub-orders.php:44
+#: templates/orders/listing.php:37 templates/sub-orders.php:44
 msgid "Shipment"
 msgstr ""
 
-#: templates/orders/listing.php:64 templates/orders/listing.php:141
+#: templates/orders/listing.php:40 templates/orders/listing.php:117
 #: templates/products/downloadable.php:37
 msgid "Action"
 msgstr ""
 
-#: templates/orders/listing.php:79 templates/orders/listing.php:81
+#: templates/orders/listing.php:55 templates/orders/listing.php:57
 msgid "Order %s"
 msgstr ""
 
-#: templates/orders/listing.php:112
+#: templates/orders/listing.php:88
 msgid "Guest"
 msgstr ""
 
-#: templates/orders/listing.php:120
+#: templates/orders/listing.php:96
 #: templates/products/products-listing-row.php:133
 msgid "Unpublished"
 msgstr ""
 
-#: templates/orders/listing.php:127
+#: templates/orders/listing.php:103
 #: templates/products/products-listing-row.php:153
 msgid "%s ago"
 msgstr ""
 
-#: templates/orders/listing.php:136 templates/sub-orders.php:69
+#: templates/orders/listing.php:112 templates/sub-orders.php:69
 msgid "Shipping Status"
 msgstr ""
 
-#: templates/orders/listing.php:160
+#: templates/orders/listing.php:136
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:230
+#: templates/orders/listing.php:186
 msgid "No orders found"
 msgstr ""
 
@@ -8872,10 +8892,6 @@ msgstr ""
 msgid "Create & add new"
 msgstr ""
 
-#: templates/reverse-withdrawal/filters.php:10
-msgid "Select Date Range"
-msgstr ""
-
 #: templates/reverse-withdrawal/reverse-balance.php:16
 msgid "Reverse Pay Balance: "
 msgstr ""
@@ -9192,7 +9208,7 @@ msgstr ""
 #: templates/sub-orders.php:31
 msgid ""
 "This order has products from multiple vendors. So we divided this order "
-"into multiple vendor orders.\r\n"
+"into multiple vendor orders.\n"
 "    Each order will be handled by their respective vendor independently."
 msgstr ""
 
