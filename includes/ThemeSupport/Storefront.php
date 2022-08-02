@@ -71,7 +71,7 @@ class Storefront {
         }
 
         // Check if dokan pro elementor module activated and the current page is dokan single store page or elementor edit page.
-        if ( function_exists( 'dokan_elementor' ) && ! dokan_elementor()->missing_dependencies() && ( dokan_is_store_page() || dokan_elementor()->is_edit_or_preview_mode() ) ) {
+        if ( function_exists( 'dokan_elementor' ) && method_exists( dokan_elementor(), 'missing_dependencies' ) && ! dokan_elementor()->missing_dependencies() && ( dokan_is_store_page() || dokan_elementor()->is_edit_or_preview_mode() ) ) {
             $style .= '@media(min-width: 768px) { .elementor-widget-container .dokan-store-product-section li.product.type-product.status-publish { width: 30.3%; float: left; margin-right: 4.3%; } }';
         }
 
