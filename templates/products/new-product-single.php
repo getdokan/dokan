@@ -254,7 +254,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <?php
                                         do_action( 'dokan_product_edit_after_pricing', $post, $post_id );
 
-                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', Helper::get_saved_products_category( $post_id ) );
+                                        $data = Helper::get_saved_products_category( $post_id );
+                                        $data['from'] = 'edit_product';
+
+                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
                                     ?>
 
                                     <div class="dokan-form-group">

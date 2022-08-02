@@ -96,7 +96,11 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 <div class="dokan-clearfix"></div>
                 <div class="product-full-container">
 
-                    <?php dokan_get_template_part( 'products/dokan-category-header-ui', '', Helper::get_saved_products_category() ); ?>
+                    <?php
+                        $data = Helper::get_saved_products_category();
+                        $data['from'] = 'new_product_popup';
+                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
+                    ?>
 
                     <div class="dokan-form-group">
                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
