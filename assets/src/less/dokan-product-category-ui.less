@@ -77,6 +77,33 @@
         padding: 19px 45px;
         overflow: auto;
 
+        @media ( max-width: 800px ) {
+            width: 100%;
+            padding: 5px 0px;
+
+            .dokan-product-category-modal-body{
+
+                .dokan-single-categories-container {
+                    height: 180px;
+                }
+            }
+        }
+        @media ( max-width: 900px ) {
+
+            .dokan-product-category-modal-body{
+
+                .dokan-category-search-container{
+
+                    .dokan-cat-search-input{
+                        width: 60% !important;
+                    }
+                    .dokan-cat-search-text-limit{
+                        width: 30% !important;
+                    }
+                }
+            }
+        }
+
         .dokan-product-category-modal-body {
             padding: 2px 16px;
             border-bottom: 1px solid #E2E2E2;
@@ -400,29 +427,4 @@
 .dokan-cat-highlight {
     background-color: #ffff00;
     margin-right: -3px !important;
-}
-
-@media only screen and ( max-width:800px ) {
-
-    .dokan-product-category-modal-content {
-        width: 100%;
-        padding: 19px 10px;
-
-        .dokan-product-category-modal-body{
-
-            .dokan-single-categories-container {
-                height: 180px;
-            }
-
-            .dokan-category-search-container{
-
-                .dokan-cat-search-input{
-                    width: 60%;
-                }
-                .dokan-cat-search-text-limit{
-                    width: 30%;
-                }
-            }
-        }
-    }
 }

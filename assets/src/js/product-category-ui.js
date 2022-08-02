@@ -205,7 +205,7 @@
             let categories = ProductCategory.getCategoriesWithParentId( termId, catlevel + 1 );
             categoriesState.push( categories );
             ProductCategory.updateCategoryUi();
-            ProductCategory.scrollTo( catlevel - 1 );
+            ProductCategory.scrollTo( catlevel );
         },
 
         updateSearchResultUi() {
