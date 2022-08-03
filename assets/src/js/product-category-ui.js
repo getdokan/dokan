@@ -99,11 +99,11 @@
                 return;
             }
 
-            $(category_box).attr('data-activate', 'no');
-
-            ProductCategory.setCatName( ProductCategory.getSelectedLabel() );
-            ProductCategory.setCatId( selectedCatId );
+            ProductCategory.setCatName( ProductCategory.getSelectedLabel(), $( category_box ) );
+            ProductCategory.setCatId( selectedCatId, $( category_box ) );
             ProductCategory.hideCategoryModal();
+
+            $(category_box).attr('data-activate', 'no');
         },
 
         setCatUiBasedOnOneCat: function( catId, category ) {
@@ -345,17 +345,15 @@
             $( '#dokan-single-categories' ).animate( { scrollLeft: `${ left ? '+' : '-' }=350px` }, 800 );
         },
 
-        setCatId( id ) {
-            let category_box = `.dokan-select-product-category-container.dokan_select_cat_for_${selectedFrom}_${inputHolder}`;
-
+        setCatId( id, category_box ) {
             let ui = `<input data-field-name="chosen_product_cat" type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_${id}" name="chosen_product_cat[]" value="${ id }"></input>`;
             ui += `<input type="hidden" name="chosen_product_cat_bulk[]" value="${ id }"></input>`;
 
-            $(category_box).children( `.dokan-cih-level-${ inputHolder }` ).html( ui );
+            category_box.children( `.dokan-cih-level-${ inputHolder }` ).html( ui );
         },
 
-        setCatName( name ) {
-            $( `.dokan-ssct-level-${ inputHolder }` ).html( name );
+        setCatName( name, category_box ) {
+            category_box.children( '.dokan-select-product-category' ).children( `.dokan-ssct-level-${ inputHolder }` ).html( name );
         },
 
         addANewCatBox() {
@@ -385,7 +383,7 @@
                 </div>
                 `;
 
-            $( `.cat_box_for_${from}` ).append( html );
+                $(this).parent().parent().children(`.cat_box_for_${from}`).append( html );
         },
 
         findCategory( id ) {
