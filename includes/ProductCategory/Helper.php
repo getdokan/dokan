@@ -149,10 +149,15 @@ class Helper {
         $html          = '';
 
         foreach ( $all_parents as $index => $value ) {
-            $label = '<span class="dokan-selected-category-product">' . get_term_field( 'name', $value, 'product_cat' ) . '</span><span class="dokan-selected-category-icon"><i class="fas fa-chevron-right"></i></span>';
+            $name = get_term_field( 'name', $value, 'product_cat' );
+            $name = is_wp_error( $name ) ? '' : $name;
+            $label = '<span class="dokan-selected-category-product">' . $name . '</span><span class="dokan-selected-category-icon"><i class="fas fa-chevron-right"></i></span>';
             $html .= $label;
         }
-        $html .= '<span class="dokan-selected-category-product dokan-cat-selected">' . get_term_field( 'name', $term, 'product_cat' ) . '</span>';
+
+        $name = get_term_field( 'name', $term, 'product_cat' );
+        $name = is_wp_error( $name ) ? '' : $name;
+        $html .= '<span class="dokan-selected-category-product dokan-cat-selected">' . $name . '</span>';
 
         return $html;
     }
