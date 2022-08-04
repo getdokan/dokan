@@ -379,6 +379,7 @@ final class WeDevs_Dokan {
         $this->container['product_sections']    = new \WeDevs\Dokan\ProductSections\Manager();
         $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
         $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
+        $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
