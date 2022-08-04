@@ -78,7 +78,9 @@ class Settings {
                 </div>
             </div>
         <?php endif; ?>
-        <?php if ( Helper::hide_add_to_cart_button_option_is_enabled_by_admin() ) : ?>
+        <?php
+        if ( Helper::hide_add_to_cart_button_option_is_enabled_by_admin() ) :
+            ?>
             <script type="text/javascript">
                 (function ($) {
                     $(document).ready(function () {
@@ -94,8 +96,7 @@ class Settings {
                     });
                 })(jQuery);
             </script>
-
-        <?php
+            <?php
         endif;
     }
 
