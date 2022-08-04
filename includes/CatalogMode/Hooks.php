@@ -45,9 +45,8 @@ class Hooks {
             return $purchasable;
         }
 
-        // filter to use from other plugins
-        $purchasable = apply_filters( 'dokan_catalog_mode_hide_add_to_cart_button', $purchasable, $product );
-        if ( false === $purchasable ) {
+        // filter to use from other plugins, return no if you don't want to apply catalog mode rules
+        if ( 'no' === apply_filters( 'dokan_catalog_mode_hide_add_to_cart_button', 'yes', $product, $purchasable ) ) {
             return $purchasable;
         }
 
@@ -87,9 +86,8 @@ class Hooks {
             return $price;
         }
 
-        // filter to use from other plugins
-        $price = apply_filters( 'dokan_catalog_mode_hide_product_price', $price, $product );
-        if ( empty( $price ) ) {
+        // filter to use from other plugins, return no if you don't want to hide product price
+        if ( 'no' === apply_filters( 'dokan_catalog_mode_hide_product_price', 'yes', $product, $price ) ) {
             return $price;
         }
 
