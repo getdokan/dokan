@@ -21,9 +21,9 @@ use WeDevs\Dokan\CatalogMode\Helper;
     <div class="dokan-section-heading">
         <h2>
             <i class="fas fa-cart-arrow-down"></i>
-            <?php esc_html_e( 'Catalog Mode', 'dokan' ); ?>
+            <?php esc_html_e( 'Catalog Mode', 'dokan-lite' ); ?>
         </h2>
-        <p><?php esc_html_e( 'Enable/Disable Catalog Mode for this product', 'dokan' ); ?></p>
+        <p><?php esc_html_e( 'Enable/Disable Catalog Mode for this product', 'dokan-lite' ); ?></p>
         <a href="#" class="dokan-section-toggle">
             <i class="fas fa-sort-down fa-flip-vertical" aria-hidden="true"></i>
         </a>
@@ -35,14 +35,14 @@ use WeDevs\Dokan\CatalogMode\Helper;
             <label for="catalog_mode_hide_add_to_cart_button" style="display: block;">
                 <input type="checkbox" id="catalog_mode_hide_add_to_cart_button" value="on" name="catalog_mode[hide_add_to_cart_button]"
                     <?php checked( $saved_data['hide_add_to_cart_button'], 'on' ); ?> />
-                <span> <?php esc_html_e( 'Check to remove Add to Cart option from your products.', 'dokan' ); ?></span>
+                <span> <?php esc_html_e( 'Check to remove Add to Cart option from your products.', 'dokan-lite' ); ?></span>
             </label>
         <?php endif; ?>
         <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
             <label for="catalog_mode_hide_product_price" style="display: <?php echo 'on' === $saved_data['hide_add_to_cart_button'] ? 'none' : 'block'; ?>;">
                 <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
                     <?php checked( $saved_data['hide_product_price'], 'on' ); ?> />
-                <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan' ); ?></span>
+                <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
             </label>
         <?php endif; ?>
         <div class="dokan-clearfix"></div>

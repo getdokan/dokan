@@ -44,8 +44,8 @@ class ProductBulkEdit {
         return dokan_array_insert_after(
             $bulk_statuses,
             [
-                'enable_catalog_mode'  => __( 'Enable Catalog Mode', 'dokan' ),
-                'disable_catalog_mode' => __( 'Disable Catalog Mode', 'dokan' ),
+                'enable_catalog_mode'  => __( 'Enable Catalog Mode', 'dokan-lite' ),
+                'disable_catalog_mode' => __( 'Disable Catalog Mode', 'dokan-lite' ),
             ],
             count( $bulk_statuses ) - 1
         );
@@ -130,7 +130,7 @@ class ProductBulkEdit {
                     'deleted' => true,
                     'message' => sprintf(
                     // translators: %d is product count.
-                        _n( '%d product has been successfully updated.', '%d products have been successfully updated.', $count, 'dokan' ),
+                        _n( '%d product has been successfully updated.', '%d products have been successfully updated.', $count, 'dokan-lite' ),
                         number_format_i18n( $count )
                     ),
                 ]
@@ -139,7 +139,7 @@ class ProductBulkEdit {
             dokan_get_template_part(
                 'global/dokan-error', '', [
                     'deleted' => true,
-                    'message' => __( 'No product data has been updated.', 'dokan' ),
+                    'message' => __( 'No product data has been updated.', 'dokan-lite' ),
                 ]
             );
         }

@@ -55,12 +55,12 @@ class Settings {
         <?php if ( Helper::hide_add_to_cart_button_option_is_enabled_by_admin() ) : ?>
             <div class="dokan-form-group">
                 <label class="dokan-w3 dokan-control-label"
-                        for="catalog_mode_hide_add_to_cart_button"><?php esc_html_e( 'Remove Add to Cart Button', 'dokan' ); ?></label>
+                        for="catalog_mode_hide_add_to_cart_button"><?php esc_html_e( 'Remove Add to Cart Button', 'dokan-lite' ); ?></label>
                 <div class="dokan-w5 dokan-text-left">
                     <label for="catalog_mode_hide_add_to_cart_button">
                         <input type="checkbox" id="catalog_mode_hide_add_to_cart_button" value="on" name="catalog_mode[hide_add_to_cart_button]"
                             <?php checked( $hide_add_to_cart, 'on' ); ?> />
-                        <span> <?php esc_html_e( 'Check to remove Add to Cart option from your products.', 'dokan' ); ?></span>
+                        <span> <?php esc_html_e( 'Check to remove Add to Cart option from your products.', 'dokan-lite' ); ?></span>
                     </label>
                 </div>
             </div>
@@ -68,12 +68,12 @@ class Settings {
         <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
             <div class="dokan-form-group">
                 <label class="dokan-w3 dokan-control-label"
-                        for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan' ); ?></label>
+                        for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan-lite' ); ?></label>
                 <div class="dokan-w5 dokan-text-left">
                     <label for="catalog_mode_hide_product_price">
                         <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
                                 <?php checked( $hide_price, 'on' ); ?> />
-                        <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan' ); ?></span>
+                        <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
                     </label>
                 </div>
             </div>
