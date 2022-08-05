@@ -569,7 +569,14 @@ class Assets {
 
         // Load category ui css in product add, edit and list page.
         global $wp;
-        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) { // phpcs:ignore
+        if (
+            ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) )
+            || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) )
+            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) )
+            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['booking'] ) )
+            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-auction-product'] ) )
+            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['auction'] ) )
+        ) { // phpcs:ignore
             wp_enqueue_style( 'dokan-product-category-ui-css' );
             wp_enqueue_script( 'product-category-ui' );
 
