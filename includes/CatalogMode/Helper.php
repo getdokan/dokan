@@ -112,7 +112,11 @@ class Helper {
 
         $store_info = dokan_get_store_info( $vendor_id );
 
-        return isset( $store_info['catalog_mode'] ) ? $store_info['catalog_mode'] : $defaults;
+        return apply_filters(
+            'dokan_catalog_mode_vendor_settings',
+            isset( $store_info['catalog_mode'] ) ? $store_info['catalog_mode'] : $defaults,
+            $vendor_id
+        );
     }
 
     /**
