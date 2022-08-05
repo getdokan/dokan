@@ -38,7 +38,7 @@
 <?php if ( ! $is_single ) : ?>
     <div class="dokan-form-group dokan-add-more-single-cat-container">
         <div class="dokan-single-cat-add-btn" data-selectfor="<?php echo esc_attr( $from ); ?>">
-            <span><?php esc_html_e( '+ Add new category', 'dokan' ); ?></span>
+            <span><?php esc_html_e( '+ Add new category', 'dokan-lite' ); ?></span>
         </div>
     </div>
 <?php endif; ?>
