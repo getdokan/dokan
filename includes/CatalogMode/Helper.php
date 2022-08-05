@@ -123,10 +123,12 @@ class Helper {
      * @return string[]
      */
     public static function get_defaults() {
-        return [
-            'hide_add_to_cart_button' => 'off',
-            'hide_product_price'      => 'off',
-        ];
+        return apply_filters(
+            'dokan_catalog_mode_default_vendor_settings', [
+                'hide_add_to_cart_button' => 'off',
+                'hide_product_price'      => 'off',
+            ]
+        );
     }
 
     /**
