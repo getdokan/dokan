@@ -64,20 +64,19 @@ class Settings {
                     </label>
                 </div>
             </div>
-        <?php endif; ?>
-        <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
             <div class="catalog_mode_extra_section">
-                <div class="dokan-form-group">
-                    <label class="dokan-w3 dokan-control-label"
-                            for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan-lite' ); ?></label>
-                    <div class="dokan-w5 dokan-text-left">
-                        <label for="catalog_mode_hide_product_price">
-                            <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
+                <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
+                    <div class="dokan-form-group">
+                        <label class="dokan-w3 dokan-control-label" for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan-lite' ); ?></label>
+                        <div class="dokan-w5 dokan-text-left">
+                            <label for="catalog_mode_hide_product_price">
+                                <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
                                     <?php checked( $hide_price, 'on' ); ?> />
-                            <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
-                        </label>
+                                <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
+                            </label>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
                 <?php do_action( 'dokan_catalog_mode_extra_settings_section', $user_id, $store_settings['catalog_mode'] ); ?>
             </div>
         <?php endif; ?>
