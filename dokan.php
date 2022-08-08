@@ -314,6 +314,11 @@ final class WeDevs_Dokan {
         require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
         require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( ! function_exists( 'dokan_pro' ) ) {
+            require_once DOKAN_INC_DIR . '/reports.php';
+        }
+
         require_once DOKAN_INC_DIR . '/Order/functions.php';
         require_once DOKAN_INC_DIR . '/Product/functions.php';
         require_once DOKAN_INC_DIR . '/Withdraw/functions.php';

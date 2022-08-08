@@ -484,6 +484,7 @@ class OrderController extends DokanRESTController {
         // Add SKU and PRICE to products.
         if ( is_callable( array( $item, 'get_product' ) ) ) {
             $data['sku']   = $item->get_product() ? $item->get_product()->get_sku() : null;
+            $data['image'] = wp_get_attachment_image_url( $item->get_product()->get_image_id() ) ? wp_get_attachment_image_url( $item->get_product()->get_image_id(), 'full' ) : wc_placeholder_img_src();
             $data['price'] = (float) ( $item->get_total() / max( 1, $item->get_quantity() ) );
         }
 
