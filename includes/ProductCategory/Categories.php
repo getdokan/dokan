@@ -129,11 +129,24 @@ class Categories {
         global $wpdb;
 
         // get all categories
+        $table  = $wpdb->prefix . 'terms';
+        $fields = "terms.term_id, terms.name, tax.parent AS parent_id";
+        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax
+                ON terms.term_id = tax.term_id";
+        $where  = " AND tax.taxonomy = 'product_cat'";
+
+        $wpml_exists      = function_exists( 'wpml_get_current_language' );
+        $current_language = apply_filters( 'wpml_current_language', NULL );
+
+        if ( $wpml_exists && NULL !== $current_language ) {
+            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr
+                    ON terms.term_id = tr.element_id";
+            $where .= " AND tr.language_code = '{$current_language}'
+                    AND tr.element_type = 'tax_product_cat'";
+        }
+
         $categories = $wpdb->get_results(
-            "SELECT terms.term_id, terms.name, tax.parent AS parent_id FROM `{$wpdb->prefix}terms` AS terms
-            INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax
-            ON terms.term_id = tax.term_id
-            WHERE tax.taxonomy = 'product_cat'",
+            "SELECT $fields FROM $table AS terms $join WHERE 1=1 $where",
             OBJECT_K
         );
 
