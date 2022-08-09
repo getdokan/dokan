@@ -25,12 +25,12 @@ class Categories {
 
         $this->categories = Cache::get_transient( $transient_key );
 
-        // if ( false === $this->categories ) {
+        if ( false === $this->categories ) {
             //calculate category data
             $this->get_categories();
             // set category data to cache
             Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
-        // }
+        }
 
         if ( $ret ) {
             return $this->categories;
