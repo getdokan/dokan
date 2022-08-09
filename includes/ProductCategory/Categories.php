@@ -25,12 +25,12 @@ class Categories {
 
         $this->categories = Cache::get_transient( $transient_key );
 
-        if ( false === $this->categories ) {
+        // if ( false === $this->categories ) {
             //calculate category data
             $this->get_categories();
             // set category data to cache
             Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
-        }
+        // }
 
         if ( $ret ) {
             return $this->categories;
@@ -130,26 +130,25 @@ class Categories {
 
         // get all categories
         $table  = $wpdb->prefix . 'terms';
-        $fields = "terms.term_id, terms.name, tax.parent AS parent_id";
-        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax
-                ON terms.term_id = tax.term_id";
+        $fields = 'terms.term_id, terms.name, tax.parent AS parent_id';
+        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax ON terms.term_id = tax.term_id";
         $where  = " AND tax.taxonomy = 'product_cat'";
 
         $wpml_exists      = function_exists( 'wpml_get_current_language' );
-        $current_language = apply_filters( 'wpml_current_language', NULL );
+        $current_language = apply_filters( 'wpml_current_language', null );
 
         // If wpml plugin exists and current language is not NULL then get categories as language set.
-        if ( $wpml_exists && NULL !== $current_language ) {
-            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr
-                    ON terms.term_id = tr.element_id";
-            $where .= " AND tr.language_code = '{$current_language}'
-                    AND tr.element_type = 'tax_product_cat'";
+        if ( $wpml_exists && null !== $current_language ) {
+            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
+            $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
         }
 
+        // @codingStandardsIgnoreStart
         $categories = $wpdb->get_results(
-            "SELECT $fields FROM $table AS terms $join WHERE 1=1 $where",
+            $wpdb->prepare( "SELECT $fields FROM $table AS terms $join WHERE %d=%d $where", 1, 1 ),
             OBJECT_K
         );
+        // @codingStandardsIgnoreEnd
 
         if ( empty( $categories ) ) {
             $this->categories = [];
