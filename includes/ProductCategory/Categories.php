@@ -138,6 +138,7 @@ class Categories {
         $wpml_exists      = function_exists( 'wpml_get_current_language' );
         $current_language = apply_filters( 'wpml_current_language', NULL );
 
+        // If wpml plugin exists and current language is not NULL then get categories as language set.
         if ( $wpml_exists && NULL !== $current_language ) {
             $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr
                     ON terms.term_id = tr.element_id";
