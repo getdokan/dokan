@@ -6,6 +6,12 @@
  */
 ?>
 
+<?php if ( isset( $status_message ) && ! empty( $status_message ) ) : ?>
+<div class="dokan-alert <?php echo ( 'success' === $connect_status ) ? 'dokan-alert-success' : 'dokan-alert-danger'; ?>">
+    <?php echo wp_kses_post( $status_message ); ?>
+</div>
+<?php endif; ?>
+
 <a href="<?php echo esc_url_raw( dokan_get_navigation_url( 'settings/payment' ) ); ?>">
     &larr; <?php esc_html_e( 'Back', 'dokan-lite' ); ?>
 </a>
@@ -35,7 +41,7 @@
 
     if ( 'bank' !== $method_key ) : ?>
         <div class="dokan-form-group">
-            <div class="dokan-w4 ajax_prev dokan-text-left">
+            <div class="dokan-w4 ajax_prev save dokan-text-left">
                 <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
             </div>
         </div>

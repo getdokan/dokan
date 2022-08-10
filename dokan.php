@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.6.0
+ * Version: 3.6.4
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 6.5.1
+ * WC tested up to: 6.8.0
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.6.0';
+    public $version = '3.6.4';
 
     /**
      * Instance of self
@@ -341,6 +341,7 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Withdraw\Hooks();
         new \WeDevs\Dokan\Order\Hooks();
         new \WeDevs\Dokan\Product\Hooks();
+        new \WeDevs\Dokan\ProductCategory\Hooks();
         new \WeDevs\Dokan\Vendor\Hooks();
         new \WeDevs\Dokan\Upgrade\Hooks();
         new \WeDevs\Dokan\Vendor\UserSwitch();
@@ -377,6 +378,8 @@ final class WeDevs_Dokan {
         $this->container['upgrades']            = new \WeDevs\Dokan\Upgrade\Manager();
         $this->container['product_sections']    = new \WeDevs\Dokan\ProductSections\Manager();
         $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
+        $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
+        $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {

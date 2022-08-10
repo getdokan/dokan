@@ -18,6 +18,78 @@
 
         .dokan-order-filter-serach {
             padding:10px 7px;
+
+            .dokan-left {
+                width: 66%!important;
+
+                .dokan-form-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+
+                    @element_height: 35px;
+                    button,
+                    a,
+                    input,
+                    select,
+                    .select2-container {
+                        height: @element_height !important;
+
+                        .select2-selection--single {
+                          height: @element_height !important;
+                        }
+                    }
+
+                    button {
+                        margin-right: 5px;
+                        border: none !important;
+                        padding: 3px 10px !important;
+                    }
+
+                    input,
+                    select,
+                    .select2-container {
+                        width: calc(33% - 54px) !important;
+                        margin-right: 5px;
+                    }
+
+                    a {
+                        display: flex;
+                        align-items: center;
+
+                        .fa {
+                            margin-right: 3px;
+                        }
+                    }
+
+                    @media screen and ( max-width: 576px ) {
+                        select,
+                        .select2-container,
+                        input {
+                            width: 100% !important;
+                            margin-right: 0;
+
+                            &:not(:last-child){
+                                margin-bottom: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .dokan-right {
+                width: 33%!important;
+            };
+
+            @media screen and ( max-width: 768px ) {
+                .dokan-left {
+                    width: 100%!important;
+                }
+
+                .dokan-right {
+                    width: 100%!important;
+                }
+            }
         }
 
         td {
@@ -209,5 +281,11 @@
             min-height: 27px;
         }
 
+    }
+}
+
+.vendor-dashboard-orders-page {
+    .select2-search__field {
+        min-width: auto !important;
     }
 }
