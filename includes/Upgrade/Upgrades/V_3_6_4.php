@@ -9,7 +9,7 @@ class V_3_6_4 extends DokanUpgrader {
     /**
      * Remove unfiltered_html capabilities from vendor roles
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */

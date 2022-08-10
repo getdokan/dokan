@@ -9,7 +9,7 @@ use WeDevs\Dokan\CatalogMode\Helper;
  *
  * This class will be responsible for admin settings of Catalog Mode feature
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode\Dashboard
  */
@@ -17,7 +17,7 @@ class Settings {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -37,7 +37,7 @@ class Settings {
     /**
      * This method will render settings fields for Catalog Mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param array $store_settings
      * @param int   $user_id
@@ -109,7 +109,7 @@ class Settings {
     /**
      * This method will save settings fields for Catalog Mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int   $store_id
      * @param array $dokan_settings
