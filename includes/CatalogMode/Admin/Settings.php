@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\CatalogMode\Admin;
  *
  * This class will be responsible for admin settings of Catalog Mode feature
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode\Admin
  */
@@ -15,7 +15,7 @@ class Settings {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -26,7 +26,7 @@ class Settings {
     /**
      * This method will register catalog mode settings section under Selling Options settings section
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param array $selling_options
      *

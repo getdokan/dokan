@@ -7,7 +7,7 @@ use WeDevs\Dokan\CatalogMode\Helper;
 /**
  * ProductBulkEdit class
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode\Dashboard
  */
@@ -15,7 +15,7 @@ class ProductBulkEdit {
     /**
      * Class Constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      */
     public function __construct() {
         if ( ! Helper::is_enabled_by_admin() ) {
@@ -30,7 +30,7 @@ class ProductBulkEdit {
     /**
      * Add bulk edit status.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param array $bulk_statuses previous status.
      *
@@ -54,7 +54,7 @@ class ProductBulkEdit {
     /**
      * This method will enable/disable catalog mode feature for the selected products.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -110,7 +110,7 @@ class ProductBulkEdit {
     /**
      * This method will display a message to the vendor if the product update was successful via bulk edit.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $type string
      *

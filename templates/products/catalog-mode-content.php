@@ -1,6 +1,6 @@
 <?php
 /**
- * @since DOKAN_SINCE
+ * @since 3.6.4
  *
  * @var $product_id int
  * @var $saved_data array

@@ -16,7 +16,7 @@ class Categories {
     /**
      * This method will return all the categories
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void|array
      */
@@ -55,7 +55,7 @@ class Categories {
     /**
      * Get Children of a parent category
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $parent_id
      *
@@ -84,7 +84,7 @@ class Categories {
     /**
      * Get all the parents of a category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $category_id
      *
@@ -98,7 +98,7 @@ class Categories {
     /**
      * Returns the top patent id of a category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $category_id
      *
