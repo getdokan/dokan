@@ -45,7 +45,11 @@ class Settings {
      * @return void
      */
     public function render_settings_fields( $user_id, $store_settings ) {
-        $defaults         = Helper::get_defaults();
+        // get default store settings
+        $defaults = Helper::get_defaults();
+        if ( ! isset( $store_settings['catalog_mode'] ) ) {
+            $store_settings['catalog_mode'] = $defaults;
+        }
         $hide_add_to_cart = ! empty( $store_settings['catalog_mode']['hide_add_to_cart_button'] )
             ? $store_settings['catalog_mode']['hide_add_to_cart_button'] : $defaults['hide_add_to_cart_button'];
         $hide_price       = ! empty( $store_settings['catalog_mode']['hide_product_price'] )
