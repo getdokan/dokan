@@ -622,8 +622,9 @@ function dokan_store_product_catalog_orderby() {
     }
 
     $orderby_options = array(
-        'orderby'  => $orderby,
-        'catalogs' => $catalog_orderby_options,
+        'show_default_orderby'    => $show_default_orderby,
+        'orderby'                 => $orderby,
+        'catalogs'                => $catalog_orderby_options,
     );
 
     return $orderby_options;

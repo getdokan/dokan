@@ -841,7 +841,7 @@ class Settings {
 
         switch ( $payment_method_id ) {
             case 'bank':
-                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type', 'declaration' ];
+                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type' ];
                 break;
 
             case 'paypal':
@@ -864,12 +864,11 @@ class Settings {
         if ( ! empty( $payment_settings ) && is_array( $payment_settings ) ) {
             $is_connected = true;
 
-            foreach ( $payment_settings as $field => $value ) {
-                if ( ! in_array( $field, $required_fields, true ) ) {
-                    continue;
-                }
-
-                if ( empty( $value ) || ( 'email' === $field && ! is_email( $value ) ) ) {
+            foreach ( $required_fields as $required_field ) {
+                if ( empty( $payment_settings[ $required_field ] ) ) {
+                    $is_connected = false;
+                    break;
+                } elseif ( 'email' === $required_field && ! is_email( $payment_settings[ $required_field ] ) ) {
                     $is_connected = false;
                     break;
                 }

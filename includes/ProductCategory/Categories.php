@@ -14,13 +14,13 @@ class Categories {
     private $categories = [];
 
     /**
-     * This method will return category data
+     * This method will return all the categories
      *
-     * @sience 3.6.2
+     * @since 3.6.4
      *
-     * @return array
+     * @return void|array
      */
-    public function get() {
+    public function get_all_categories( $ret = false ) {
         $transient_key = function_exists( 'wpml_get_current_language' ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
 
         $this->categories = Cache::get_transient( $transient_key );
@@ -32,7 +32,90 @@ class Categories {
             Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
         }
 
-        return $this->categories;
+        if ( $ret ) {
+            return $this->categories;
+        }
+    }
+
+    /**
+     * This method will return category data
+     *
+     * @sience 3.6.2
+     *
+     * @return array
+     */
+    public function get() {
+        // check if categories are already loaded
+        if ( empty( $this->categories ) ) {
+            $this->get_all_categories();
+        }
+        return apply_filters( 'dokan_multistep_product_categories', $this->categories );
+    }
+
+    /**
+     * Get Children of a parent category
+     *
+     * @since 3.6.4
+     *
+     * @param int $parent_id
+     *
+     * @return int[]
+     */
+    public function get_children( $parent_id ) {
+        $children = [];
+        // check if parent id is valid
+        if ( ! isset( $this->categories[ $parent_id ] ) ) {
+            return $children;
+        }
+
+        // check if children exist
+        if ( empty( $this->categories[ $parent_id ]['children'] ) ) {
+            return $children;
+        }
+
+        $children = $this->categories[ $parent_id ]['children'];
+        // recursively get children of children
+        foreach ( $this->categories[ $parent_id ]['children'] as $child_id ) {
+            $children = array_merge( $children, $this->get_children( $child_id ) );
+        }
+        return $children;
+    }
+
+    /**
+     * Get all the parents of a category.
+     *
+     * @since 3.6.4
+     *
+     * @param int $category_id
+     *
+     * @return array
+     */
+    public function get_parents( $category_id ) {
+        return isset( $this->categories[ $category_id ] ) && $this->categories[ $category_id ]['parents']
+        ? $this->categories[ $category_id ]['parents'] : [];
+    }
+
+    /**
+     * Returns the top patent id of a category.
+     *
+     * @since 3.6.4
+     *
+     * @param int $category_id
+     *
+     * @return int
+     */
+    public function get_topmost_parent( $category_id ) {
+        $category_id = $category_id;
+        // check if category id is set
+        if ( ! isset( $this->categories[ $category_id ] ) ) {
+            return 0;
+        }
+
+        if ( 0 === intval( $this->categories[ $category_id ]['parent_id'] ) ) {
+            return intval( $this->categories[ $category_id ]['term_id'] );
+        }
+
+        return $this->get_topmost_parent( $this->categories[ $category_id ]['parent_id'] );
     }
 
     /**
