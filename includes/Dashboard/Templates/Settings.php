@@ -1298,6 +1298,88 @@ class Settings {
             'tab'       => 'advanced',
             'editable'  => false,
         );
+
+        $fields = array();
+        $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
+
+        if ( isset( $customizer_settings['featured'] ) && 'off' === $customizer_settings['featured'] ) {
+            $fields[] = array(
+                'id'        => 'featured',
+                'title'     => __( 'Show featured products section', 'dokan-lite' ),
+                'desc'      => __( 'Show featured products section', 'dokan-lite' ),
+                'icon'      => '',
+                'type'      => 'checkbox',
+                'default'   => 'yes',
+                'options'   => array(
+                    'yes' => __( 'Yes', 'dokan-lite' ),
+                    'no'  => __( 'No', 'dokan-lite' ),
+                ),
+                'parent_id' => 'product_sections',
+            );
+        }
+
+        if ( isset( $customizer_settings['latest'] ) && 'off' === $customizer_settings['latest'] ) {
+            $fields[] = array(
+                'id'        => 'latest',
+                'title'     => __( 'Show latest products section', 'dokan-lite' ),
+                'desc'      => __( 'Show latest products section', 'dokan-lite' ),
+                'icon'      => '',
+                'type'      => 'checkbox',
+                'default'   => 'yes',
+                'options'   => array(
+                    'yes' => __( 'Yes', 'dokan-lite' ),
+                    'no'  => __( 'No', 'dokan-lite' ),
+                ),
+                'parent_id' => 'product_sections',
+            );
+        }
+
+        if ( isset( $customizer_settings['best_selling'] ) && 'off' === $customizer_settings['best_selling'] ) {
+            $fields[] = array(
+                'id'        => 'best_selling',
+                'title'     => __( 'Show best selling products section', 'dokan-lite' ),
+                'desc'      => __( 'Show best selling products section', 'dokan-lite' ),
+                'icon'      => '',
+                'type'      => 'checkbox',
+                'default'   => 'yes',
+                'options'   => array(
+                    'yes' => __( 'Yes', 'dokan-lite' ),
+                    'no'  => __( 'No', 'dokan-lite' ),
+                ),
+                'parent_id' => 'product_sections',
+            );
+        }
+
+        if ( isset( $customizer_settings['top_rated'] ) && 'off' === $customizer_settings['top_rated'] ) {
+            $fields[] = array(
+                'id'        => 'top_rated',
+                'title'     => __( 'Show top rated products section', 'dokan-lite' ),
+                'desc'      => __( 'Show top rated products section', 'dokan-lite' ),
+                'icon'      => '',
+                'type'      => 'checkbox',
+                'default'   => 'yes',
+                'options'   => array(
+                    'yes' => __( 'Yes', 'dokan-lite' ),
+                    'no'  => __( 'No', 'dokan-lite' ),
+                ),
+                'parent_id' => 'product_sections',
+            );
+        }
+
+        $fields = apply_filters( 'dokan_vendor_settings_api_product_section_fields', $fields );
+        $product_display_card[] = array(
+            'id'        => 'product_section',
+            'title'     => __( 'Store Page Product Section', 'dokan-lite' ),
+            'desc'      => '',
+            'info'      => [],
+            'icon'      => '',
+            'type'      => 'section',
+            'parent_id' => 'store',
+            'tab'       => 'advance',
+            'card'      => 'product_display',
+            'fields'    => $fields,
+        );
+
         $product_display_card[] = array(
             'id'        => 'show_more_ptab',
             'title'     => __( 'Show More Product tab', 'dokan-lite' ),
