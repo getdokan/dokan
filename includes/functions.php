@@ -3249,7 +3249,7 @@ function dokan_is_store_open( $user_id ) {
 
     // check if status is closed
     if ( empty( $dokan_store_times[ $today ] ) || ( isset( $dokan_store_times[ $today ]['status'] ) && 'close' === $dokan_store_times[ $today ]['status'] ) ) {
-        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times, $user_id );
     }
 
     // Get store opening time.
@@ -3267,7 +3267,7 @@ function dokan_is_store_open( $user_id ) {
     $closing_time = ! empty( $closing_time ) ? $current_time->modify( $closing_time ) : false;
 
     if ( empty( $opening_time ) || empty( $closing_time ) ) {
-        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times );
+        return apply_filters( 'dokan_is_store_open', false, $today, $dokan_store_times, $user_id );
     }
 
     // Check vendor picked time and current time for show store open.
@@ -3275,7 +3275,7 @@ function dokan_is_store_open( $user_id ) {
         $store_open = true;
     }
 
-    return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times );
+    return apply_filters( 'dokan_is_store_open', $store_open, $today, $dokan_store_times, $user_id );
 }
 
 /**

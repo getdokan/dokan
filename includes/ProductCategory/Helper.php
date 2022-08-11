@@ -50,20 +50,41 @@ class Helper {
             return $data;
         }
 
+        // get product terms
+        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'ids' ] );
+
+        $chosen_cat = self::generate_chosen_categories( $terms );
+
+        // check if single category is selected, in that case get the first item
+        $data['chosen_cat'] = $is_single ? [ reset( $chosen_cat ) ] : $chosen_cat;
+        if ( ! empty( $data['chosen_cat'] ) ) {
+            self::set_object_terms_from_chosen_categories( $post_id, $data['chosen_cat'] );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Generates chosen categories from categories/terms array
+     *
+     * @since 3.6.4
+     *
+     * @param object $terms
+     *
+     * @return array
+     */
+    public static function generate_chosen_categories( $terms ) {
         // no store chosen cat was found on database, in that case we need to generate chosen cat from existing categories
         $all_parents = [];
 
-        // get product terms
-        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'all' ] );
-
         // If multiple category is selected, choose the common parents child as chosen category.
-        foreach ( $terms as $term ) {
-            $all_ancestors = get_ancestors( $term->term_id, 'product_cat' );
-            $old_parent    = empty( $all_ancestors ) ? $term->term_id : end( $all_ancestors );
+        foreach ( $terms as $term_id ) {
+            $all_ancestors = get_ancestors( $term_id, 'product_cat' );
+            $old_parent    = empty( $all_ancestors ) ? $term_id : end( $all_ancestors );
 
             if ( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < count( $all_ancestors ) ) {
                 $all_parents[ $old_parent ]['size']   = count( $all_ancestors );
-                $all_parents[ $old_parent ]['child']  = $term->term_id;
+                $all_parents[ $old_parent ]['child']  = $term_id;
             }
         }
 
@@ -77,13 +98,7 @@ class Helper {
 
         $chosen_cat = array_values( $chosen_cat );
 
-        // check if single category is selected, in that case get the first item
-        $data['chosen_cat'] = $is_single ? [ reset( $chosen_cat ) ] : $chosen_cat;
-        if ( ! empty( $data['chosen_cat'] ) ) {
-            self::set_object_terms_from_chosen_categories( $post_id, $data['chosen_cat'] );
-        }
-
-        return $data;
+        return $chosen_cat;
     }
 
     /**
@@ -134,10 +149,15 @@ class Helper {
         $html          = '';
 
         foreach ( $all_parents as $index => $value ) {
-            $label = '<span class="dokan-selected-category-product">' . get_term_field( 'name', $value, 'product_cat' ) . '</span><span class="dokan-selected-category-icon"><i class="fas fa-chevron-right"></i></span>';
+            $name = get_term_field( 'name', $value, 'product_cat' );
+            $name = is_wp_error( $name ) ? '' : $name;
+            $label = '<span class="dokan-selected-category-product">' . $name . '</span><span class="dokan-selected-category-icon"><i class="fas fa-chevron-right"></i></span>';
             $html .= $label;
         }
-        $html .= '<span class="dokan-selected-category-product dokan-cat-selected">' . get_term_field( 'name', $term, 'product_cat' ) . '</span>';
+
+        $name = get_term_field( 'name', $term, 'product_cat' );
+        $name = is_wp_error( $name ) ? '' : $name;
+        $html .= '<span class="dokan-selected-category-product dokan-cat-selected">' . $name . '</span>';
 
         return $html;
     }
