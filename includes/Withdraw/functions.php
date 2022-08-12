@@ -186,6 +186,20 @@ function dokan_withdraw_method_bank( $store_settings ) {
         'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
+    $args['required_fields'] = apply_filters(
+        'dokan_bank_payment_required_fields',
+        [
+            'account_name'   => true,
+            'account_type'   => true,
+            'account_number' => true,
+            'routing_number' => true,
+            'bank_name'      => false,
+            'bank_addr'      => false,
+            'iban'           => false,
+            'swift_code'     => false,
+        ]
+    );
+
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
 }
 
