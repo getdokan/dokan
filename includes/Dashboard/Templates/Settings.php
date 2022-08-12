@@ -943,24 +943,24 @@ class Settings {
      * @return array
      */
     public function add_vendor_store_settings( $settings ) {
-        $general_tab = array();
+        $general_tab   = array();
         $general_tab[] = array(
             'id'        => 'general',
             'title'     => __( 'General', 'dokan-lite' ),
             'desc'      => __( 'The general store settings.', 'dokan-lite' ),
             'icon'      => '<i class="fa fa-shopping-cart"></i>',
-            'info'      => [],
+            'info'      => array(),
             'type'      => 'tab',
             'parent_id' => 'store',
         );
 
-        $branding_card = array();
+        $branding_card   = array();
         $branding_card[] = array(
             'id'        => 'branding',
             'title'     => __( 'Branding', 'dokan-lite' ),
             'desc'      => __( 'Branding your store.', 'dokan-lite' ),
-            'info'      => [],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'info'      => array(),
+            'icon'      => 'dokan-icon-banner',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'general',
@@ -970,7 +970,7 @@ class Settings {
             'id'        => 'banner',
             'title'     => __( 'Store Banner', 'dokan-lite' ),
             'desc'      => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-picture-o"></i>',
+            'icon'      => '',
             'type'      => 'image',
             'parent_id' => 'store',
             'tab'       => 'general',
@@ -980,7 +980,7 @@ class Settings {
             'id'        => 'gravatar',
             'title'     => __( 'Store Gravatar', 'dokan-lite' ),
             'desc'      => __( 'Upload a profile image for your store', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-picture-o"></i>',
+            'icon'      => '',
             'type'      => 'image',
             'parent_id' => 'store',
             'tab'       => 'general',
@@ -990,24 +990,24 @@ class Settings {
         $branding_card = apply_filters( 'dokan_vendor_settings_api_branding_card', $branding_card );
         array_push( $general_tab, ...$branding_card );
 
-        $business_info_card = array();
+        $business_info_card   = array();
         $business_info_card[] = array(
             'id'        => 'business_info',
             'title'     => __( 'Business Info', 'dokan-lite' ),
             'desc'      => __( 'Lorem Ipsum is simply dummy text', 'dokan-lite' ),
-            'info'      => [
-                [
+            'info'      => array(
+                array(
                     'text' => __( 'Docs', 'dokan-lite' ),
                     'url'  => '#',
-                    'icon' => '<i class="fa fa-external-link"></i>',
-                ],
-                [
+                    'icon' => 'dokan-icon-doc',
+                ),
+                array(
                     'text' => __( 'Video Guide', 'dokan-lite' ),
                     'url'  => '#',
-                    'icon' => '<i class="fa fa-video"></i>',
-                ],
-            ],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+                    'icon' => 'dokan-icon-video',
+                ),
+            ),
+            'icon'      => 'dokan-icon-inventory',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'general',
@@ -1016,7 +1016,7 @@ class Settings {
             'id'        => 'store_name',
             'title'     => __( 'Store Name', 'dokan-lite' ),
             'desc'      => __( 'The name of your store.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'icon'      => '',
             'type'      => 'text',
             'parent_id' => 'store',
             'tab'       => 'general',
@@ -1029,15 +1029,13 @@ class Settings {
         $general_tab = apply_filters( 'dokan_vendor_settings_api_general_tab', $general_tab );
         array_push( $settings, ...$general_tab );
 
-
-
         $store_details_tab = array();
         $store_details_tab[] = array(
             'id'        => 'store_details',
             'title'     => __( 'Store Details', 'dokan-lite' ),
             'desc'      => __( 'The store details settings.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
-            'info'      => [],
+            'icon'      => '',
+            'info'      => array(),
             'type'      => 'tab',
             'parent_id' => 'store',
         );
@@ -1047,8 +1045,8 @@ class Settings {
             'id'        => 'location_contact',
             'title'     => __( 'Location and Contact details', 'dokan-lite' ),
             'desc'      => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
-            'info'      => [],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'info'      => array(),
+            'icon'      => 'dokan-icon-location',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1058,7 +1056,7 @@ class Settings {
             'id'        => 'phone',
             'title'     => __( 'Phone', 'dokan-lite' ),
             'desc'      => __( 'Enter your store phone', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-mobile"></i>',
+            'icon'      => 'dokan-icon-phone',
             'type'      => 'text',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1068,7 +1066,7 @@ class Settings {
             'id'        => 'address',
             'title'     => __( 'Address', 'dokan-lite' ),
             'desc'      => __( 'Your store address', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-map-marker"></i>',
+            'icon'      => 'dokan-icon-location',
             'type'      => 'section',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1121,7 +1119,7 @@ class Settings {
                     'title'     => __( 'State', 'dokan-lite' ),
                     'desc'      => __( 'State or state code', 'dokan-lite' ),
                     'icon'      => '',
-                    'type'      => 'select', // TODO: Add correct dropdown options for states
+                    'type'      => 'select',
                     'options'   => array( '' => __( 'Select a state&hellip;', 'dokan-lite' ) ) + WC()->countries->get_allowed_country_states(),
                     'parent_id' => 'address',
                 ),
@@ -1131,7 +1129,7 @@ class Settings {
             'id'        => 'location',
             'title'     => __( 'Store Location', 'dokan-lite' ),
             'desc'      => __( 'Store Location GPS coordinate.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-map-marked"></i>',
+            'icon'      => '',
             'type'      => 'text',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1141,7 +1139,7 @@ class Settings {
             'id'        => 'find_address',
             'title'     => __( 'Store Address', 'dokan-lite' ),
             'desc'      => __( 'Store Address', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-map"></i>',
+            'icon'      => '',
             'type'      => 'text',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1156,8 +1154,8 @@ class Settings {
             'id'        => 'store_weekly_timing',
             'title'     => __( 'Store Weekly Timing', 'dokan-lite' ),
             'desc'      => __( 'Set your convenient time according to business needs.', 'dokan-lite' ),
-            'info'      => [],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'info'      => array(),
+            'icon'      => 'dokan-icon-clock',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'store_details',
@@ -1280,8 +1278,8 @@ class Settings {
             'id'        => 'advanced',
             'title'     => __( 'Advanced', 'dokan-lite' ),
             'desc'      => __( 'The advanced store settings.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
-            'info'      => [],
+            'icon'      => '',
+            'info'      => array(),
             'type'      => 'tab',
             'parent_id' => 'store',
         );
@@ -1291,8 +1289,8 @@ class Settings {
             'id'        => 'product_display',
             'title'     => __( 'Product Display', 'dokan-lite' ),
             'desc'      => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
-            'info'      => [],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'info'      => array(),
+            'icon'      => 'dokan-icon-products',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'advanced',
@@ -1399,7 +1397,7 @@ class Settings {
             'id'        => 'show_email',
             'title'     => __( 'Show Email', 'dokan-lite' ),
             'desc'      => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-envelope-o"></i>',
+            'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'no',
             'options'   => array(
@@ -1430,7 +1428,7 @@ class Settings {
             'title'     => __( 'Terms and Conditions', 'dokan-lite' ),
             'desc'      => __( 'Seller can close his store by giving a message to customer. ', 'dokan-lite' ),
             'info'      => [],
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'icon'      => 'dokan-icon-policy',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'advanced',
