@@ -249,7 +249,7 @@ class Hooks {
      * Triggers when admin quick edits products or bulk edit products from admin panel.
      * we are auto selecting all category ancestors here.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param object $product
      *
@@ -271,7 +271,7 @@ class Hooks {
      * Triggers when admin saves/edits products.
      * we are auto selecting all category ancestors here.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $product_id
      *
@@ -288,7 +288,7 @@ class Hooks {
     /**
      * Gets chosen categories and updated product categories.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $product_id
      *

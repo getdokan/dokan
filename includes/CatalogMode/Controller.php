@@ -14,7 +14,7 @@ use WeDevs\Dokan\CatalogMode\Dashboard\Settings as VendorSettings;
  * This class will include all the related files required for Catalog Mode feature and will work as an entry point for
  * all the hooks.
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode
  */
@@ -25,7 +25,7 @@ class Controller {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -36,7 +36,7 @@ class Controller {
     /**
      * This method will load all the required files
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */

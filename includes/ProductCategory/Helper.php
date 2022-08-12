@@ -67,7 +67,7 @@ class Helper {
     /**
      * Generates chosen categories from categories/terms array
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param object $terms
      *

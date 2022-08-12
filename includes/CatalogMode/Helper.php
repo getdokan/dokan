@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\CatalogMode;
  *
  * This class will be responsible to include all the helper methods required for Catalog Mode feature.
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode
  */
@@ -15,7 +15,7 @@ class Helper {
     /**
      * Check if admin settings is enabled for catalog mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -26,7 +26,7 @@ class Helper {
     /**
      * Check if hide price settings is enabled for admin
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -37,7 +37,7 @@ class Helper {
     /**
      * Check if hide add to cart settings is enabled for admin
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -48,7 +48,7 @@ class Helper {
     /**
      * Check if admin settings is enabled for catalog mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -63,7 +63,7 @@ class Helper {
     /**
      * Check if hide price settings is enabled for admin
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -80,7 +80,7 @@ class Helper {
     /**
      * Check if hide add to cart settings is enabled for admin
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return bool
      */
@@ -97,7 +97,7 @@ class Helper {
     /**
      * This method will return catalog mode saved settings data for a vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $vendor_id
      *
@@ -122,7 +122,7 @@ class Helper {
     /**
      * This method will return default settings for catalog mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return string[]
      */
@@ -138,7 +138,7 @@ class Helper {
     /**
      * This method will check if catalog mode data is set for a product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $product int|\WC_Product
      *
@@ -154,7 +154,7 @@ class Helper {
     /**
      * This method will return catalog mode data for a product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $product int|\WC_Product
      *

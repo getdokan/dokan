@@ -34,7 +34,6 @@ class V_2_7_6 extends DokanUpgrader {
             'delete_posts'              => true,
             'manage_categories'         => true,
             'moderate_comments'         => true,
-            'unfiltered_html'           => true,
             'upload_files'              => true,
             'edit_shop_orders'          => true,
             'edit_product'              => true,

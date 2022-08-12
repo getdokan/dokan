@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\CatalogMode;
  *
  * This class will load hooks related to frontend
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode
  */
@@ -15,7 +15,7 @@ class Hooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class Hooks {
     /**
      * This method will hide add to cart button for products if enabled by vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $purchasable bool
      * @param $product     \WC_Product
@@ -68,7 +68,7 @@ class Hooks {
     /**
      * This method will hide product price if enabled by vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $price
      * @param $product
