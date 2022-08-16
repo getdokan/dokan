@@ -18,9 +18,6 @@ class MultiStepCategories {
         add_action( 'dokan_before_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
         add_action( 'dokan_before_new_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
         add_action( 'dokan_before_listing_product', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_new_product_before_product_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_edit_product_before_product_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_edit_auction_product_content_before', array( $this, 'load_add_category_modal' ), 10 );
     }
 
     /**
@@ -36,13 +33,9 @@ class MultiStepCategories {
          * Because without those page we don't need to load category modal.
          */
         global $wp;
-
         if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) )
         || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) )
-        || ( isset( $wp->query_vars['booking'] ) && $wp->query_vars['booking'] === 'new-product' )
-        || ( isset( $wp->query_vars['booking'] ) && $wp->query_vars['booking'] === 'edit' )
-        || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-auction-product'] ) )
-        || ( isset( $wp->query_vars['auction'] ) )
+        || ( isset( $wp->query_vars['new-product'] ) )
         ) {
             dokan_get_template_part( 'products/dokan-category-ui', '', array() );
         }
