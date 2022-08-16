@@ -3,9 +3,9 @@
 namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 
 class Assets {
 
