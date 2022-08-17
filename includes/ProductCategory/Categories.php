@@ -134,11 +134,10 @@ class Categories {
         $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax ON terms.term_id = tax.term_id";
         $where  = " AND tax.taxonomy = 'product_cat'";
 
-        $wpml_exists      = function_exists( 'wpml_get_current_language' );
-        $current_language = apply_filters( 'wpml_current_language', null );
+        // If wpml plugin exists then get categories as language set.
+        if ( function_exists( 'wpml_get_current_language' ) ) {
+            $current_language = wpml_get_current_language();
 
-        // If wpml plugin exists and current language is not NULL then get categories as language set.
-        if ( $wpml_exists && null !== $current_language ) {
             $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
             $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
         }
