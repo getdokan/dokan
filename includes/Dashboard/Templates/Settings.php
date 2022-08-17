@@ -578,24 +578,17 @@ class Settings {
         }
 
         if ( ! empty( $post_data['settings']['bank'] ) ) {
+            $payment_fields = dokan_bank_payment_required_fields();
             $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
 
-            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_name'] ) ) {
-                $error->add( 'dokan_bank_ac_name', __( 'Account holder name is required', 'dokan-lite' ) );
-            }
+            foreach ( $payment_fields as $key => $payment_field ) {
+                if ( ! $is_disconnect && ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
+                    $error->add( 'dokan_bank_' . $key, $payment_field );
+                }
 
-            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_number'] ) ) {
-                $error->add( 'dokan_bank_ac_number', __( 'Account number is required', 'dokan-lite' ) );
-            }
-
-            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['routing_number'] ) ) {
-                $error->add( 'dokan_bank_ac_routing_number', __( 'Routing number is required', 'dokan-lite' ) );
-            }
-
-            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_type'] ) ) {
-                $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
-            } else if ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
-                $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
+                if ( ! $is_disconnect && ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
+                    $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
+                }
             }
 
             if ( ! $is_disconnect && empty( $post_data['settings']['bank']['declaration'] ) ) {

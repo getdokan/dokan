@@ -186,21 +186,33 @@ function dokan_withdraw_method_bank( $store_settings ) {
         'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
-    $args['required_fields'] = apply_filters(
-        'dokan_bank_payment_required_fields',
-        [
-            'account_name'   => true,
-            'account_type'   => true,
-            'account_number' => true,
-            'routing_number' => true,
-            'bank_name'      => false,
-            'bank_addr'      => false,
-            'iban'           => false,
-            'swift_code'     => false,
-        ]
-    );
+    $args['required_fields'] = dokan_bank_payment_required_fields();
 
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
+}
+
+/**
+ * Returns vendors bank payment require fields.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
+function dokan_bank_payment_required_fields() {
+    // Make sure the required fields array key must be same as input fields name.
+    return apply_filters(
+        'dokan_bank_payment_required_fields',
+        [
+            'ac_name'        => __( 'Account holder name is required', 'dokan-lite' ),
+            'ac_type'        => __( 'Please select account type', 'dokan-lite' ),
+            'ac_number'      => __( 'Account number is required', 'dokan-lite' ),
+            'routing_number' => __( 'Routing number is required', 'dokan-lite' ),
+            'bank_name'      => '',
+            'bank_addr'      => 'olease',
+            'iban'           => '',
+            'swift'          => '',
+        ]
+    );
 }
 
 /**
