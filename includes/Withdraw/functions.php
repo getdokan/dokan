@@ -195,7 +195,6 @@ function dokan_withdraw_method_bank( $store_settings ) {
             $args['connected'] = false;
             break;
         }
-
     }
 
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
