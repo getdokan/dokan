@@ -12,7 +12,6 @@
  * @var array  $required_fields
  * @var array  $connected
  */
-$required_fields = [];
 ?>
 
 <div class="dokan-bank-settings-template">
@@ -135,7 +134,6 @@ $required_fields = [];
             <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
         </a>
         <input type="hidden" name="dokan_update_payment_settings">
-        <?php var_dump( $connected ); ?>
         <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo $connected ? '' : 'dokan-hide'; ?>" type="submit" name="settings[bank][disconnect]">
             <?php esc_html_e( 'Disconnect', 'dokan-lite' ); ?>
         </button>
