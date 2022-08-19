@@ -584,9 +584,7 @@ class Settings {
             foreach ( $payment_fields as $key => $payment_field ) {
                 if ( ! $is_disconnect && ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
                     $error->add( 'dokan_bank_' . $key, $payment_field );
-                }
-
-                if ( ! $is_disconnect && ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
+                } else if ( ! $is_disconnect && ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
                     $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
                 }
             }
@@ -834,7 +832,9 @@ class Settings {
 
         switch ( $payment_method_id ) {
             case 'bank':
-                $required_fields = [ 'ac_name', 'ac_number', 'routing_number', 'ac_type' ];
+                $required_fields = array_keys( array_filter( dokan_bank_payment_required_fields(), function ( $field ) {
+                    return ! empty( $field );
+                } ) );
                 break;
 
             case 'paypal':

@@ -1,16 +1,18 @@
 <?php
 /**
- * @var string $account_name
- * @var string $account_type
+ * @var string $ac_name
+ * @var string $ac_type
  * @var string $routing_number
- * @var string $account_number
+ * @var string $ac_number
  * @var string $bank_name
  * @var string $bank_addr
  * @var string $iban
- * @var string $swift_code
+ * @var string $swift
  * @var string $save_or_add_btn_text
  * @var array  $required_fields
+ * @var array  $connected
  */
+$required_fields = [];
 ?>
 
 <div class="dokan-bank-settings-template">
@@ -20,7 +22,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $account_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_name'] ) ? '' : 'required'; ?> >
+            <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $ac_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_name'] ) ? '' : 'required'; ?> >
         </div>
     </div>
 
@@ -31,9 +33,9 @@
 
         <div class="dokan-w10">
             <select id='ac_type' name="settings[bank][ac_type]" class="dokan-form-control" <?php echo empty( $required_fields['ac_type'] ) ? '' : 'required'; ?>>
-                <option value="" <?php selected( '', $account_type ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
-                <option value="personal" <?php selected( 'personal', $account_type ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
-                <option value="business" <?php selected( 'business', $account_type ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
+                <option value="" <?php selected( '', $ac_type ); ?> > <?php esc_html_e( 'Please Select...', 'dokan-lite' ); ?> </option>
+                <option value="personal" <?php selected( 'personal', $ac_type ); ?> > <?php esc_html_e( 'Personal', 'dokan-lite' ); ?> </option>
+                <option value="business" <?php selected( 'business', $ac_type ); ?> > <?php esc_html_e( 'Business', 'dokan-lite' ); ?> </option>
             </select>
         </div>
     </div>
@@ -43,7 +45,7 @@
             <label><?php esc_html_e( 'Account Number', 'dokan-lite' ); ?> </label>
         </div>
         <div class="dokan-w10">
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $account_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Account number', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_number'] ) ? '' : 'required'; ?>>
+            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $ac_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Account number', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_number'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -93,7 +95,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input value="<?php echo esc_attr( $swift_code ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['swift'] ) ? '' : 'required'; ?>>
+            <input value="<?php echo esc_attr( $swift ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['swift'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -133,7 +135,8 @@
             <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
         </a>
         <input type="hidden" name="dokan_update_payment_settings">
-        <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo ! empty( $account_name ) ? '' : 'dokan-hide'; ?>" type="submit" name="settings[bank][disconnect]">
+        <?php var_dump( $connected ); ?>
+        <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo $connected ? '' : 'dokan-hide'; ?>" type="submit" name="settings[bank][disconnect]">
             <?php esc_html_e( 'Disconnect', 'dokan-lite' ); ?>
         </button>
     </div>

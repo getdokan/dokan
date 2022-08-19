@@ -175,18 +175,28 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  */
 function dokan_withdraw_method_bank( $store_settings ) {
     $args = [
-        'account_name'         => isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '',
-        'account_number'       => isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '',
+        'ac_name'              => isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '',
+        'ac_number'            => isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '',
         'bank_name'            => isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '',
         'bank_addr'            => isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '',
         'routing_number'       => isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '',
         'iban'                 => isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '',
-        'swift_code'           => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
-        'account_type'         => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
+        'swift'                => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
+        'ac_type'              => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
         'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
     $args['required_fields'] = dokan_bank_payment_required_fields();
+
+    foreach ( $args['required_fields'] as $key => $required_field ) {
+        if ( ( ! empty( $required_field ) && ! empty( $args[ $key ] ) ) || empty( $required_field ) ) {
+            $args['connected'] = true;
+        } else {
+            $args['connected'] = false;
+            break;
+        }
+
+    }
 
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
 }
@@ -208,7 +218,7 @@ function dokan_bank_payment_required_fields() {
             'ac_number'      => __( 'Account number is required', 'dokan-lite' ),
             'routing_number' => __( 'Routing number is required', 'dokan-lite' ),
             'bank_name'      => '',
-            'bank_addr'      => 'olease',
+            'bank_addr'      => '',
             'iban'           => '',
             'swift'          => '',
         ]
