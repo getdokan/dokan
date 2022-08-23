@@ -107,7 +107,8 @@
         },
 
         setCatUiBasedOnOneCat: function( catId, category ) {
-            ProductCategory.disableDoneBtn( category.children.length > 0 );
+            let disable = undefined !== category.children.length && category.children.length > 0
+            ProductCategory.disableDoneBtn( disable );
 
             let allUl = [ ...category.parents ];
             let selectedInUls = [ ...category.parents ];
