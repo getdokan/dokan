@@ -92,13 +92,45 @@
             }
         }
 
-        td.thumb img {
-            padding: 2px;
-            margin: 0;
-            border: 1px solid #dfdfdf;
-            vertical-align: middle;
-            width: 46px;
-            height: auto;
+        td {
+            &.dokan-order-action {
+                gap: 5px;
+                width: 100%;
+                display: grid;
+                grid-gap: 5px;
+                flex-direction: column;
+                grid-template-columns: repeat(3, 1fr);
+
+                .wpo_wcpdf {
+                    border: 1px solid transparent;
+                    padding: 5px 10px;
+                    border-color: #ccc;
+                    border-radius: 3px;
+                    background-color: #fff;
+
+                    img {
+                        width: 22px !important;
+                    }
+                }
+            }
+
+            img {
+                padding: 2px;
+                margin: 0;
+                border: 1px solid #dfdfdf;
+                vertical-align: middle;
+                width: 46px;
+                height: auto;
+            }
+
+            a {
+                color: #6d6d6d;
+                transition: 0.2s linear;
+
+                &:hover {
+                    color: #000;
+                }
+            }
         }
 
         table.table.order-items {
@@ -161,12 +193,17 @@
                 padding: 0 5px;
                 border-right: 1px solid @borderColor;
 
+                a {
+                    color: #6d6d6d;
+                    transition: 0.2s linear;
+                }
+
                 &:last-child {
                     border-right: none;
                 }
 
                 &.active a {
-                    color: #999;
+                    color: #000;
                 }
             }
         }
