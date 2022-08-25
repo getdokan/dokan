@@ -5,9 +5,9 @@
 **Requires at least:** 5.4  
 **Tested up to:** 6.0.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 6.8.0  
+**WC tested up to:** 6.8.2  
 **Requires PHP:** 7.0  
-**Stable tag:** 3.6.4  
+**Stable tag:** 3.6.5  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.6.5 ( Aug 25, 2022 ) ###
+
+- **fix:** [WPML] Added WPML support for the multistep product category.
+- **fix:** Order REST API endpoint displays other vendors orders.
 
 ### v3.6.4 ( Aug 10, 2022 ) ###
 

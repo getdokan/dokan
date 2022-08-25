@@ -66,7 +66,7 @@ $product_type  = isset( $get_data['product_type'] ) ? $get_data['product_type'] 
 
     <form method="get" class="dokan-form-inline dokan-w5 dokan-product-search-form">
 
-        <button type="submit" name="product_listing_search" value="ok" class="dokan-btn"><?php esc_html_e( 'Search', 'dokan-lite' ); ?></button>
+        <button type="submit" name="product_listing_search" value="ok" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Search', 'dokan-lite' ); ?></button>
 
         <?php wp_nonce_field( 'dokan_product_search', 'dokan_product_search_nonce' ); ?>
 
