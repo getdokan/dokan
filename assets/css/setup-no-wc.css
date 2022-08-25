@@ -63,8 +63,7 @@ body {
 .wc-setup .wc-setup-actions .button-primary {
   background-color: #bb77ae;
   border-color: #a36597;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #a36597;
-  text-shadow: 0 -1px 1px #a36597, 1px 0 1px #a36597, 0 1px 1px #a36597, -1px 0 1px #a36597;
+  text-shadow: none;
   margin: 0;
   opacity: 1;
 }
@@ -292,15 +291,13 @@ body {
   color: #fff;
   background: #f2624d;
   border-color: #f2624d;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #f2624d;
-  text-shadow: 0 -1px 1px #f2624d, 1px 0 1px #f2624d, 0 1px 1px #f2624d, -1px 0 1px #f2624d;
+  text-shadow: none;
 }
 .wc-setup .wc-setup-actions .button-primary:hover,
 .wc-setup .wc-setup-actions .button-primary:active,
 .wc-setup .wc-setup-actions .button-primary:focus {
   background-color: #ef381d;
   border-color: #ef381d;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #ef381d;
 }
 .wc-setup .wc-setup-content a {
   color: #f2624d;

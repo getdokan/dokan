@@ -7,6 +7,7 @@ use WC_REST_Exception;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
+use WP_REST_Request;
 use WP_REST_Response;
 
 /**
@@ -410,12 +411,11 @@ abstract class DokanRESTController extends WP_REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @param  object $response
-     * @param  object $request
-     * @param  array $items
+     * @param  WP_REST_Response $response
+     * @param  WP_REST_Request $request
      * @param  int $total_items
      *
-     * @return object
+     * @return WP_REST_Response
      */
     public function format_collection_response( $response, $request, $total_items ) {
         if ( $total_items === 0 ) {
