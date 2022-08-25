@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\REST;
 
 use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
@@ -414,7 +416,8 @@ class OrderController extends DokanRESTController {
      * Get a collection of posts.
      *
      * @param WP_REST_Request $request Full details about the request.
-     * @return WP_Error|WP_REST_Response
+     *
+     * @return WP_REST_Response
      */
     public function get_items( $request ) {
         $args = [
@@ -423,6 +426,7 @@ class OrderController extends DokanRESTController {
             'limit'       => $request['per_page'],
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
+            'seller_id'   => dokan_get_current_user_id(),
         ];
 
         $orders = dokan()->order->all( $args );

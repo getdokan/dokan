@@ -46,10 +46,7 @@ class Categories {
      */
     public function get() {
         // check if categories are already loaded
-        if ( empty( $this->categories ) ) {
-            $this->get_all_categories();
-        }
-        return apply_filters( 'dokan_multistep_product_categories', $this->categories );
+        return apply_filters( 'dokan_multistep_product_categories', $this->get_all_categories( true ) );
     }
 
     /**

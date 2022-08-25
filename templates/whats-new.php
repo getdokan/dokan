@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.6.5',
+        'released' => '2022-08-25',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => '[WPML] Added WPML support for the multistep product category.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Order REST API endpoint displays other vendors orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.6.4',
         'released' => '2022-08-10',
         'changes'  => [
