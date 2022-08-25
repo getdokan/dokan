@@ -175,8 +175,8 @@ class Manager {
             'seller_id'    => 'do.seller_id',
             'order_status' => 'do.order_status',
         ];
-        if ( ! empty( $args['orderby'] ) && array_key_exists( $args['orderby'], $supported_order_by ) ) {
-            $orderby = "ORDER BY {$supported_order_by[ $args['orderby'] ]} {$args['order']}"; //no need for prepare, we've already whitelisted the parameters
+        if ( ! empty( $args['order_by'] ) && array_key_exists( $args['order_by'], $supported_order_by ) ) {
+            $orderby = "ORDER BY {$supported_order_by[ $args['order_by'] ]} {$args['order']}"; //no need for prepare, we've already whitelisted the parameters
 
             //second order by in case of similar value on first order by field
             if ( 'order_id' !== $args['order_by'] ) {

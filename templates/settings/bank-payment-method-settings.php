@@ -95,7 +95,7 @@
     </div>
 
     <div class="dokan-form-group dokan-text-left">
-        <input id="declaration" name="settings[bank][declaration]" checked type="checkbox" required/>
+        <input id="declaration" name="settings[bank][declaration]" checked type="checkbox"/>
         <label for="declaration">
             <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
         </label>

@@ -6,14 +6,6 @@
       visibility: hidden;
       font-size: 12px;
       color: #ccc;
-
-      .delete a {
-        color: #a05;
-
-        &:hover {
-          color: red;
-        }
-      }
     }
 
     tr:hover .row-actions {
@@ -115,6 +107,25 @@
 
       td {
         vertical-align: top;
+
+        &.column-primary,
+        .row-actions {
+          a {
+            color: #6d6d6d;
+
+            &:hover {
+              color: #000;
+            }
+          }
+
+          .delete {
+            a {
+              &:hover {
+                color: red;
+              }
+            }
+          }
+        }
       }
 
       p {
