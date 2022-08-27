@@ -225,7 +225,7 @@ button.dokan-close {
   display: block;
   font-size: 14px;
   min-height: 26px;
-  line-height: 26px;
+  line-height: 20px;
   vertical-align: middle;
   width: 100%;
   margin: 0;
@@ -4506,6 +4506,8 @@ div.media-sidebar a.edit-attachment {
   background: #fff;
   width: 80px;
   height: 80px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery .profile-info-head .profile-img.profile-img-square img {
   background-color: #fff;
