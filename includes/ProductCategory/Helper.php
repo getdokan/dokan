@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\ProductCategory;
 
+use WeDevs\Dokan\ProductCategory\Categories;
+
 /**
  * Product category helper class.
  *
@@ -160,5 +162,31 @@ class Helper {
         $html .= '<span class="dokan-selected-category-product dokan-cat-selected">' . $name . '</span>';
 
         return $html;
+    }
+
+    /**
+     * Enqueue styles and scripts and localize for dokan multi-step category.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function enqueue_and_localize_dokan_multistep_category() {
+        wp_enqueue_style( 'dokan-product-category-ui-css' );
+        wp_enqueue_script( 'product-category-ui' );
+
+        $categories = new Categories();
+        $all_categories = $categories->get();
+
+        $data = [
+            'categories' => $all_categories,
+            'is_single'  => self::product_category_selection_is_single(),
+            'i18n'       => [
+                'select_a_category' => __( 'Select a category', 'dokan-lite' ),
+                'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
+            ],
+        ];
+
+        wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
     }
 }

@@ -4,7 +4,6 @@ namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
-use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 
 class Assets {
@@ -569,28 +568,8 @@ class Assets {
 
         // Load category ui css in product add, edit and list page.
         global $wp;
-        if (
-            ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) )
-            || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) )
-            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) )
-            || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products-search'] ) )
-        ) { // phpcs:ignore
-            wp_enqueue_style( 'dokan-product-category-ui-css' );
-            wp_enqueue_script( 'product-category-ui' );
-
-            $categories = new Categories();
-            $all_categories = $categories->get();
-
-            $data = [
-                'categories' => $all_categories,
-                'is_single'  => CategoryHelper::product_category_selection_is_single(),
-                'i18n'       => [
-                    'select_a_category' => __( 'Select a category', 'dokan-lite' ),
-                    'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
-                ],
-            ];
-
-            wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) { // phpcs:ignore
+            CategoryHelper::enqueue_and_localize_dokan_multistep_category();
         }
 
         // store and my account page
