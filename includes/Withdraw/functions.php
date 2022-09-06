@@ -190,9 +190,12 @@ function dokan_withdraw_method_bank( $store_settings ) {
     $args['connected'] = false;
 
     // Getting only the required fields.
-    $required_fields = array_filter( $args['required_fields'], function ( $field ) {
-        return ! empty( $field );
-    } );
+    $required_fields = array_filter(
+        $args['required_fields'],
+        function ( $field ) {
+            return ! empty( $field );
+        }
+    );
 
     // If any required field is empty connected is false and
     // by default it is false because if there are no require field then the account is not connected.
@@ -216,7 +219,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
  * @return array
  */
 function dokan_bank_payment_required_fields() {
-    $required_fields =  apply_filters(
+    $required_fields = apply_filters(
         'dokan_bank_payment_required_fields',
         [
             'ac_name'        => __( 'Account holder name is required', 'dokan-lite' ),
@@ -232,7 +235,7 @@ function dokan_bank_payment_required_fields() {
     $fields = array_filter(
         $required_fields,
         function( $key ) use ( $available ) {
-            return in_array($key, $available);
+            return in_array( $key, $available, true );
         },
         ARRAY_FILTER_USE_KEY
     );
