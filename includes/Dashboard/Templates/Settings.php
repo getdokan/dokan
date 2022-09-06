@@ -577,19 +577,23 @@ class Settings {
             }
         }
 
-        if ( ! empty( $post_data['settings']['bank'] ) ) {
+        $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
+        if ( ! empty( $post_data['settings']['bank'] ) && ! $is_disconnect ) {
             $payment_fields = dokan_bank_payment_required_fields();
-            $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
 
+            /**
+             * Here we are validating the bank payment required fields.
+             * If the payment field is required and the payment field from post data is given. And if the filed in account type and the given value is personal or business.
+             */
             foreach ( $payment_fields as $key => $payment_field ) {
-                if ( ! $is_disconnect && ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
+                if ( ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
                     $error->add( 'dokan_bank_' . $key, $payment_field );
-                } else if ( ! $is_disconnect && ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
+                } else if ( ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
                     $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
                 }
             }
 
-            if ( ! $is_disconnect && empty( $post_data['settings']['bank']['declaration'] ) ) {
+            if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
                 $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
         }
@@ -832,9 +836,7 @@ class Settings {
 
         switch ( $payment_method_id ) {
             case 'bank':
-                $required_fields = array_keys( array_filter( dokan_bank_payment_required_fields(), function ( $field ) {
-                    return ! empty( $field );
-                } ) );
+                $required_fields = array_keys( dokan_bank_payment_required_fields() );
                 break;
 
             case 'paypal':
@@ -854,7 +856,7 @@ class Settings {
         $required_fields = apply_filters( 'dokan_payment_settings_required_fields', $required_fields, $payment_method_id, $seller_id );
 
         // Check all the required fields have values
-        if ( ! empty( $payment_settings ) && is_array( $payment_settings ) ) {
+        if ( ! empty( $payment_settings ) && is_array( $payment_settings ) && ! empty( $required_fields ) ) {
             $is_connected = true;
 
             foreach ( $required_fields as $required_field ) {
