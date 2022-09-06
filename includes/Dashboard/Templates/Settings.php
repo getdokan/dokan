@@ -582,8 +582,9 @@ class Settings {
             $payment_fields = dokan_bank_payment_required_fields();
 
             /**
-             * Here we are validating the bank payment required fields.
-             * If the payment field is required and the payment field from post data is given. And if the filed in account type and the given value is personal or business.
+             * Here we are validating the bank payment required fields,
+             * if the payment field is required and the payment field from post data is given.
+             * And if the filed in account type and the given value is personal or business.
              */
             foreach ( $payment_fields as $key => $payment_field ) {
                 if ( ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
