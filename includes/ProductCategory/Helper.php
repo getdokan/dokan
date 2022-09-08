@@ -194,7 +194,7 @@ class Helper {
 
         return $html;
     }
-    
+
     /**
      * Enqueue styles and scripts and localize for dokan multi-step category.
      *
@@ -220,7 +220,7 @@ class Helper {
 
         wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
     }
-    
+
     /**
      * Returns the chosen category of a product.
      *
