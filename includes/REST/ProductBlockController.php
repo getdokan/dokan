@@ -64,13 +64,13 @@ class ProductBlockController extends ProductController {
         $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
         return apply_filters(
-            'dokan_rest_api_get_product_data',
+            'dokan_rest_get_product_block_data',
             [
                 'general' => [
                     'name'                => $product->get_title( $context ),
                     'slug'                => $product->get_slug( $context ),
                     'price'               => $product->get_price(),
-                    'product_type'        => $product->get_type(),
+                    'type'                => $product->get_type(),
                     'downloadable'        => $product->is_downloadable(),
                     'virtual'             => $product->is_virtual(),
                     'regular_price'       => $product->get_regular_price( $context ),
@@ -105,7 +105,8 @@ class ProductBlockController extends ProductController {
                     'reviews_allowed' => $product->get_reviews_allowed( $context ),
                 ],
             ],
-            $product_id
+            $product,
+            $context,
         );
     }
 }
