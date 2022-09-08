@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\ProductCategory;
 
+use WeDevs\Dokan\ProductCategory\Categories;
+
 /**
  * Product category helper class.
  *
@@ -65,6 +67,23 @@ class Helper {
     }
 
     /**
+     * Fotomat's chosen cates for generate chosen cats.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param  array $all_children
+     * @param  array $all_ancestors
+     *
+     * @return array
+     */
+    private static function get_formatted_chosen_cat( $all_children, $all_ancestors ) {
+        return [
+            'children'  => $all_children,
+            'ancestors' => $all_ancestors,
+        ];
+    }
+
+    /**
      * Generates chosen categories from categories/terms array
      *
      * @since 3.6.4
@@ -74,31 +93,45 @@ class Helper {
      * @return array
      */
     public static function generate_chosen_categories( $terms ) {
-        // no store chosen cat was found on database, in that case we need to generate chosen cat from existing categories
         $all_parents = [];
 
-        // If multiple category is selected, choose the common parents child as chosen category.
         foreach ( $terms as $term_id ) {
             $all_ancestors = get_ancestors( $term_id, 'product_cat' );
+            $all_children  = get_term_children( $term_id, 'product_cat' );
             $old_parent    = empty( $all_ancestors ) ? $term_id : end( $all_ancestors );
 
-            if ( ! array_key_exists( $old_parent, $all_parents ) || $all_parents[ $old_parent ]['size'] < count( $all_ancestors ) ) {
-                $all_parents[ $old_parent ]['size']   = count( $all_ancestors );
-                $all_parents[ $old_parent ]['child']  = $term_id;
+            // If current terms most old parent is not in the $all_parents array.
+            if ( ! array_key_exists( $old_parent, $all_parents ) ) {
+                $all_parents[ $old_parent ][ $term_id ] = self::get_formatted_chosen_cat( $all_children, $all_ancestors );
+            } else {
+                foreach ( $all_parents[ $old_parent ] as $item_id => $item ) {
+                    $existing_chosen       = array_merge( [ $item_id ], $item['children'] );
+                    $current_chosen        = array_merge( [ $term_id ], $all_children );
+                    $common_children_count = count( array_intersect( $existing_chosen, $current_chosen ) );
+
+                    // If current term and saved chosen cat terms are same blood line category and current term,
+                    // has more ancestors means current term is more youngest term.
+                    if ( $common_children_count > 0 && count( $all_ancestors ) > count( $item['ancestors'] ) ) {
+                        unset( $all_parents[ $old_parent ][ $item_id ] );
+
+                        $all_parents[ $old_parent ][ $term_id ] = self::get_formatted_chosen_cat( $all_children, $all_ancestors );
+                        // If current term and saved chosen cat terms are same blood line category but not the youngest child.
+                    } elseif ( $common_children_count > 0 && count( $all_ancestors ) < count( $item['ancestors'] ) ) {
+                        break;
+                    } elseif ( $common_children_count < 1 ) {
+                        $all_parents[ $old_parent ][ $term_id ] = self::get_formatted_chosen_cat( $all_children, $all_ancestors );
+                    }
+                }
             }
         }
 
-        // get chosen cat from $all_parennts
-        $chosen_cat = array_map(
-            function ( $value ) {
-                return $value['child'];
-            },
-            $all_parents
-        );
+        // Extracting out the chosen categories.
+        $chosen_cats = [];
+        foreach ( $all_parents as $parent ) {
+            $chosen_cats = array_merge( $chosen_cats, array_keys( $parent ) );
+        }
 
-        $chosen_cat = array_values( $chosen_cat );
-
-        return $chosen_cat;
+        return $chosen_cats;
     }
 
     /**
@@ -161,7 +194,33 @@ class Helper {
 
         return $html;
     }
+    
+    /**
+     * Enqueue styles and scripts and localize for dokan multi-step category.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function enqueue_and_localize_dokan_multistep_category() {
+        wp_enqueue_style( 'dokan-product-category-ui-css' );
+        wp_enqueue_script( 'product-category-ui' );
 
+        $categories = new Categories();
+        $all_categories = $categories->get();
+
+        $data = [
+            'categories' => $all_categories,
+            'is_single'  => self::product_category_selection_is_single(),
+            'i18n'       => [
+                'select_a_category' => __( 'Select a category', 'dokan-lite' ),
+                'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
+            ],
+        ];
+
+        wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
+    }
+    
     /**
      * Returns the chosen category of a product.
      *
