@@ -103,6 +103,9 @@
             ProductCategory.setCatId( selectedCatId, $( category_box ) );
             ProductCategory.hideCategoryModal();
 
+            // Any one can use this hook and do anything after any category is selected.
+            wp.hooks.doAction( 'dokan_selected_multistep_category', selectedCatId );
+
             $(category_box).attr('data-activate', 'no');
         },
 
