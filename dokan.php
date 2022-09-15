@@ -365,6 +365,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
+        $this->container['product_block']       = new \WeDevs\Dokan\Blocks\ProductBlock();
         $this->container['pageview']            = new \WeDevs\Dokan\PageViews();
         $this->container['seller_wizard']       = new \WeDevs\Dokan\Vendor\SetupWizard();
         $this->container['core']                = new \WeDevs\Dokan\Core();
