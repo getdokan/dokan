@@ -161,18 +161,11 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
 
     $start_date_to_time = $now->modify( $start_date );
     $end_date_to_time   = $now->modify( $end_date );
+    $chart_interval     = dokan_get_interval_between_dates( $start_date_to_time, $end_date_to_time, $group_by );
 
     if ( $group_by === 'day' ) {
-        $chart_interval = ceil( max( 0, ( $end_date_to_time->getTimestamp() - $start_date_to_time->getTimestamp() ) / ( 60 * 60 * 24 ) ) );
-        $barwidth       = 60 * 60 * 24 * 1000;
+        $barwidth = 60 * 60 * 24 * 1000;
     } else {
-        $chart_interval = 0;
-        $min_date       = $start_date_to_time;
-
-        while ( ( $min_date = $min_date->modify( '+1 MONTH' ) ) <= $end_date_to_time ) { // phpcs:ignore
-            $chart_interval ++;
-        }
-
         $barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 
@@ -274,7 +267,7 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                             position: "bottom",
                             tickColor: 'transparent',
                             mode: "time",
-                            timeformat: "<?php if ( $group_by === 'day' ) echo '%d %b'; else echo '%b'; ?>",
+                            timeformat: "<?php echo ( $group_by === 'day' ) ? '%d %b' : '%b'; ?>",
                             monthNames: <?php echo wp_json_encode( array_values( $wp_locale->month_abbrev ) ); ?>,
                             tickLength: 1,
                             minTickSize: [1, "<?php echo ( esc_attr( $group_by ) === 'year' ) ? 'month' : esc_attr( $group_by ); ?>"],
@@ -416,22 +409,15 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
     $date_where         = '';
     $start_date_to_time = strtotime( $start_date );
     $end_date_to_time   = strtotime( $end_date );
+    $chart_interval     = dokan_get_interval_between_dates( $start_date_to_time, $end_date_to_time, $group_by );
 
     if ( $group_by === 'day' ) {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
         $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
-        $chart_interval = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
         $barwidth       = 60 * 60 * 24 * 1000;
     } else {
         $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
-        $chart_interval = 0;
-        $min_date       = $start_date_to_time;
-
-        while ( ( $min_date = strtotime( '+1 MONTH', $min_date ) ) <= $end_date_to_time ) { // phpcs:ignore
-            $chart_interval ++;
-        }
-
-        $barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
+        $barwidth       = 60 * 60 * 24 * 7 * 4 * 1000;
     }
 
     $left_join  = apply_filters( 'dokan_report_left_join', $date_where );
@@ -548,8 +534,8 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                         position: "bottom",
                         tickColor: 'transparent',
                         mode: "time",
-                        timeformat: "<?php if ( $group_by == 'day' ) echo '%d %b'; else echo '%b'; ?>",
-                        monthNames: <?php echo json_encode( array_values( $wp_locale->month_abbrev ) ); ?>,
+                        timeformat: "<?php echo ( $group_by === 'day' ) ? '%d %b' : '%b'; ?>",
+                        monthNames: <?php echo wp_json_encode( array_values( $wp_locale->month_abbrev ) ); ?>,
                         tickLength: 1,
                         minTickSize: [1, "<?php echo esc_attr( $group_by ); ?>"],
                         font: {

@@ -257,8 +257,9 @@ if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
 	 * @return void
 	 */
 	function dokan_dashboard_sales_overview() {
-		$start_date = date( 'Y-m-01', current_time( 'timestamp' ) );
-		$end_date   = date( 'Y-m-d', strtotime( 'midnight', current_time( 'timestamp' ) ) );
+        $now        = dokan_current_datetime();
+        $start_date = $now->modify( 'first day of this month' )->modify( 'today' )->format( 'Y-m-d' );
+        $end_date   = $now->modify( 'today' )->modify( 'Y-m-d' );
 
 		dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 	}
@@ -273,30 +274,25 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 	 *
 	 * @since 1.0
 	 *
-	 * @global type $wp_locale
-	 * @param type $start_date
-	 * @param type $end_date
-	 * @param type $group_by
+	 * @param string $start_date
+	 * @param string $end_date
+	 * @param string $group_by
+     *
+     * @return void
 	 */
 	function dokan_sales_overview_chart_data( $start_date, $end_date, $group_by ) {
 		global $wp_locale;
 
-		$start_date_to_time = strtotime( $start_date );
-		$end_date_to_time   = strtotime( $end_date );
+        $now                = dokan_current_datetime();
+		$start_date_to_time = $now->modify( $start_date )->getTimestamp();
+		$end_date_to_time   = $now->modify( $end_date )->getTimestamp();
+        $chart_interval     = dokan_get_interval_between_dates( $start_date_to_time, $end_date_to_time, $group_by );
 
-		if ( $group_by == 'day' ) {
+		if ( $group_by === 'day' ) {
 			$group_by_query       = 'YEAR(post_date), MONTH(post_date), DAY(post_date)';
-			$chart_interval       = ceil( max( 0, ( $end_date_to_time - $start_date_to_time ) / ( 60 * 60 * 24 ) ) );
 			$barwidth             = 60 * 60 * 24 * 1000;
 		} else {
 			$group_by_query = 'YEAR(post_date), MONTH(post_date)';
-			$chart_interval = 0;
-			$min_date             = $start_date_to_time;
-
-			while ( ( $min_date   = strtotime( '+1 MONTH', $min_date ) ) <= $end_date_to_time ) {
-				$chart_interval ++;
-			}
-
 			$barwidth = 60 * 60 * 24 * 7 * 4 * 1000;
 		}
 
