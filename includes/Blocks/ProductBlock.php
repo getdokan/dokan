@@ -22,7 +22,8 @@ class ProductBlock {
         return apply_filters(
             'dokan_get_product_block_configurations',
             [
-                'statuses' => apply_filters(
+                'enable_popup' => 'off' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ),
+                'statuses'     => apply_filters(
                     'dokan_post_status',
                     [
                         'publish' => __( 'Online', 'dokan-lite' ),
