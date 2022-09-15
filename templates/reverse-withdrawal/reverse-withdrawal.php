@@ -9,8 +9,8 @@
 
         <?php
             /**
-             *  dokan_dashboard_content_before hook
-             *  dokan_withdraw_content_before hook
+             *  Adding dokan_dashboard_content_before hook
+             *  Adding dokan_withdraw_content_before hook
              *
              *  @hooked get_dashboard_side_navigation
              *
@@ -25,7 +25,7 @@
             <?php
 
                 /**
-                 *  dokan_reverse_withdrawal_content_inside_before hook
+                 *  Adding dokan_reverse_withdrawal_content_inside_before hook
                  *
                  *  @since 3.5.1
                  */
@@ -36,7 +36,7 @@
 
                 <?php
                     /**
-                     * dokan_reverse_withdrawal_header_render hook
+                     * Adding dokan_reverse_withdrawal_header_render hook
                      *
                      * @since 3.5.1
                      */
@@ -47,12 +47,7 @@
 
                     <?php
                         /**
-                         * dokan_withdraw_header_render hook
-                         *
-                         * @hooked dokan_render_withdraw_error
-                         * @hooked dokan_withdraw_status_filter
-                         * @hooked dokan_show_seller_balance
-                         * @hooked dokan_withdraw_form_and_listing
+                         * Adding dokan_reverse_withdrawal_content hook
                          *
                          * @since 3.5.1
                          */
@@ -66,7 +61,7 @@
             <?php
 
                 /**
-                 *  dokan_reverse_withdrawal_content_inside_after hook
+                 *  Adding dokan_reverse_withdrawal_content_inside_after hook
                  *
                  *  @since 3.5.1
                  */
@@ -74,9 +69,9 @@
             ?>
         </div><!-- .dokan-dashboard-content -->
 
-         <?php
+        <?php
             /**
-             *  dokan_dashboard_content_after hook
+             *  Adding dokan_dashboard_content_after hook
              *  dokan_reverse_withdrawal_content_after hook
              *
              *  @since 3.5.1

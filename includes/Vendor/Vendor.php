@@ -907,7 +907,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return void|string
      */
     public function get_readable_rating( $display = true ) {
         $rating = $this->get_rating( $this->id );

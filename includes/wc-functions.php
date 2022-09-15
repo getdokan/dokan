@@ -223,6 +223,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         $date_to       = (string) isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '';
         $regular_price = (string) isset( $data['_regular_price'] ) ? wc_clean( $data['_regular_price'] ) : '';
         $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
+        $now           = dokan_current_datetime();
 
         update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
@@ -232,21 +233,21 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
         update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
 
         if ( $date_to && ! $date_from ) {
-            $date_from = date( 'Y-m-d' ); // phpcs:ignore
-            update_post_meta( $post_id, '_sale_price_dates_from', strtotime( $date_from ) );
+            $date_from = $now->format( 'Y-m-d' );
+            update_post_meta( $post_id, '_sale_price_dates_from', $now->getTimestamp() );
         }
 
         // Update price if on sale
         if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
-        } elseif ( '' !== $sale_price && $date_from && strtotime( $date_from ) <= strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+        } elseif ( '' !== $sale_price && $date_from && $now->modify( $date_from )->getTimestamp() <= $now->getTimestamp() ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
         } else {
             update_post_meta( $post_id, '_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
         }
 
         //update product price if date to is smaller than current date
-        if ( $date_to && strtotime( $date_to ) < strtotime( 'NOW', current_time( 'timestamp' ) ) ) {
+        if ( $date_to && $now->modify( $date_to )->getTimestamp() < $now->getTimestamp() ) {
             update_post_meta( $post_id, '_price', $regular_price );
         }
     }
@@ -645,12 +646,13 @@ function dokan_get_top_rated_products( $per_page = 8, $seller_id = '', $page = 1
  *
  * Shown on homepage
  *
- * @param type $per_page
- * @param type $paged
+ * @param int $per_page
+ * @param int $paged
+ * @param int $seller_id
  *
  * @return \WP_Query
  */
-function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = '' ) {
+function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = 0 ) {
     // Get products on sale
     $product_ids_on_sale = wc_get_product_ids_on_sale();
 
@@ -687,8 +689,8 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = ''
  *
  * Total = SUM(net_amount) - SUM(withdraw)
  *
- * @param type $seller_id
- * @param type $formatted
+ * @param int $seller_id
+ * @param bool $formatted
  *
  * @return mixed
  * @global WPDB $wpdb
@@ -703,10 +705,8 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
  * Get Seller Earned amount
  *
  * @param int $seller_id
- *
  * @param boolean $formatted
- *
- * @param type string
+ * @param string $on_date
  *
  * @since 2.5.4
  *
@@ -725,10 +725,9 @@ function dokan_get_seller_earnings( $seller_id, $formatted = true, $on_date = ''
 /**
  * Get seller rating
  *
- * @param type $seller_id
+ * @param int $seller_id
  *
- * @return type
- * @global WPDB $wpdb
+ * @return array
  */
 function dokan_get_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
@@ -741,7 +740,7 @@ function dokan_get_seller_rating( $seller_id ) {
  *
  * @param int $seller_id
  *
- * @return void
+ * @return string
  */
 function dokan_get_readable_seller_rating( $seller_id ) {
     $vendor = dokan()->vendor->get( $seller_id );
@@ -760,7 +759,7 @@ function dokan_get_readable_seller_rating( $seller_id ) {
  *
  * @param array $attr
  *
- * @return array
+ * @return void
  */
 function dokan_exclude_child_customer_receipt( &$phpmailer ) {
     $subject = $phpmailer->Subject; ////phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
@@ -840,15 +839,7 @@ function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) 
  * @return void
  */
 function dokan_save_account_details() {
-    $_server = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
-
-    if ( 'POST' !== strtoupper( $_server ) ) {
-        return;
-    }
-
-    $postdata = wp_unslash( $_POST );
-
-    if ( empty( $postdata['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $postdata['_wpnonce'] ), 'dokan_save_account_details' ) ) {
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan_save_account_details' ) ) {
         return;
     }
 
@@ -862,12 +853,12 @@ function dokan_save_account_details() {
         return;
     }
 
-    $account_first_name = ! empty( $postdata['account_first_name'] ) ? wc_clean( $postdata['account_first_name'] ) : '';
-    $account_last_name  = ! empty( $postdata['account_last_name'] ) ? wc_clean( $postdata['account_last_name'] ) : '';
-    $account_email      = ! empty( $postdata['account_email'] ) ? sanitize_email( $postdata['account_email'] ) : '';
-    $pass_cur           = ! empty( $postdata['password_current'] ) ? $postdata['password_current'] : '';
-    $pass1              = ! empty( $postdata['password_1'] ) ? $postdata['password_1'] : '';
-    $pass2              = ! empty( $postdata['password_2'] ) ? $postdata['password_2'] : '';
+    $account_first_name = ! empty( $_POST['account_first_name'] ) ? wc_clean( wp_unslash( $_POST['account_first_name'] ) ) : '';
+    $account_last_name  = ! empty( $_POST['account_last_name'] ) ? wc_clean( wp_unslash( $_POST['account_last_name'] ) ) : '';
+    $account_email      = ! empty( $_POST['account_email'] ) ? sanitize_email( wp_unslash( $_POST['account_email'] ) ) : '';
+    $pass_cur           = ! empty( $_POST['password_current'] ) ? wp_unslash( $_POST['password_current'] ) : ''; // phpcs:ignore
+    $pass1              = ! empty( $_POST['password_1'] ) ? wp_unslash( $_POST['password_1'] ) : ''; // phpcs:ignore
+    $pass2              = ! empty( $_POST['password_2'] ) ? wp_unslash( $_POST['password_2'] ) : ''; // phpcs:ignore
     $save_pass          = true;
 
     $user->first_name = $account_first_name;
@@ -947,7 +938,7 @@ function dokan_save_account_details() {
 add_action( 'template_redirect', 'dokan_save_account_details' );
 
 /**
- * This method will delete vendors best selling product cache after a new order has been made
+ * This method will delete vendors best-selling product cache after a new order has been made
  *
  * @since 3.2.11
  *
@@ -1076,10 +1067,11 @@ add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_v
  * Set More products from seller tab
  * On Single Product Page
  *
+ * @since 2.5
+ *
  * @param array $tabs
  *
- * @since 2.5
- * @return int
+ * @return array
  */
 function dokan_set_more_from_seller_tab( $tabs ) {
     if ( check_more_seller_product_tab() ) {
@@ -1149,7 +1141,7 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
  *
  * @since 2.8.3
  *
- * @return string
+ * @return void
  */
 function dokan_bulk_order_status_change() {
     if ( ! current_user_can( 'dokan_manage_order' ) ) {
@@ -1160,18 +1152,16 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    $postdata = wp_unslash( $_POST );
-
-    if ( ! isset( $postdata['security'] ) || ! wp_verify_nonce( sanitize_key( $postdata['security'] ), 'bulk_order_status_change' ) ) {
+    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'bulk_order_status_change' ) ) {
         return;
     }
 
-    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
+    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
         return;
     }
 
-    $status = sanitize_text_field( $postdata['status'] );
-    $orders = array_map( 'sanitize_text_field', $postdata['bulk_orders'] );
+    $status = sanitize_text_field( wp_unslash( $_POST['status'] ) );
+    $orders = array_map( 'sanitize_text_field', wp_unslash( $_POST['bulk_orders'] ) );
 
     // -1 means bluk action option value
     $excluded_status = [ '-1', 'cancelled', 'refunded' ];
@@ -1202,7 +1192,7 @@ add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
  *
  * @param string $headers
  * @param string $id
- * @param object $order
+ * @param WC_Order $order
  *
  * @return string $headers
  */
@@ -1230,8 +1220,8 @@ add_filter( 'woocommerce_email_headers', 'dokan_add_reply_to_vendor_email_on_wc_
 /**
  * Keep old vendor after duplicate any product
  *
- * @param object $duplicate
- * @param object $product
+ * @param WC_Product $duplicate
+ * @param WC_Product $product
  *
  * @return void
  */
@@ -1251,6 +1241,11 @@ add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_
 
 /**
  * Send email to the vendor/seller when cancel the order
+ *
+ * @param string $recipient
+ * @param WC_Order $order
+ *
+ * @return string
  */
 function send_email_for_order_cancellation( $recipient, $order ) {
     if ( ! $order instanceof \WC_Order ) {

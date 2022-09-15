@@ -30,7 +30,7 @@ class CSV {
      * @return void
      */
     public function export() {
-        $date = date( 'Y-m-d-H-i-s', strtotime( current_time( 'mysql' ) ) );
+        $date = dokan_current_datetime()->format( 'Y-m-d-H-i-s' );
 
         header( 'Content-type: html/csv' );
         header( 'Content-Disposition: attachment; filename="withdraw-' . $date . '.csv"' );

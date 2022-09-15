@@ -35,7 +35,7 @@ class StoreOpenClose extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP );
+            extract( $args, EXTR_SKIP ); // phpcs:ignore
 
             $defaults = array(
                 'title' => __( 'Store Time', 'dokan-lite' ),
@@ -55,11 +55,11 @@ class StoreOpenClose extends WP_Widget {
             $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
             $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 
-            if ( $show_store_open_close != 'on' ) {
+            if ( $show_store_open_close !== 'on' ) {
                 return;
             }
 
-            if ( $dokan_store_time_enabled != 'yes' || empty( $dokan_store_time ) ) {
+            if ( $dokan_store_time_enabled !== 'yes' || empty( $dokan_store_time ) ) {
                 return;
             }
 

@@ -28,7 +28,7 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
-        extract( $args, EXTR_SKIP );
+        extract( $args, EXTR_SKIP ); // phpcs:ignore
 
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 

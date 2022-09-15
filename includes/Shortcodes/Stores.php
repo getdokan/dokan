@@ -42,21 +42,28 @@ class Stores extends DokanShortcode {
         $limit  = $attr['per_page'];
         $offset = ( $paged - 1 ) * $limit;
 
+        // prepare filter data
+        $dokan_seller_search = '';
+        $requested_data = [];
+        // check if nonce verified
+        if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
+            $dokan_seller_search = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( wp_unslash( $_GET['dokan_seller_search'] ) ) : $dokan_seller_search;
+            $requested_data = wc_clean( wp_unslash( $_GET ) );
+        }
+
         $seller_args = array(
             'number' => $limit,
             'offset' => $offset,
             'order'  => 'DESC',
         );
 
-        $_get_data = wp_unslash( $_GET );
-
         // if search is enabled, perform a search
         if ( 'yes' === $attr['search'] ) {
-            if ( ! empty( $_get_data['dokan_seller_search'] ) ) {
-                $seller_args['meta_query'] = [
+            if ( ! empty( $dokan_seller_search ) ) {
+                $seller_args['meta_query'] = [ // phpcs:ignore
                     [
                         'key'     => 'dokan_store_name',
-                        'value'   => wc_clean( $_get_data['dokan_seller_search'] ),
+                        'value'   => $dokan_seller_search,
                         'compare' => 'LIKE',
                     ],
                 ];
@@ -91,7 +98,7 @@ class Stores extends DokanShortcode {
             $seller_args['include'] = explode( ',', $attr['store_id'] );
         }
 
-        $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args, $_GET ) );
+        $sellers = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $seller_args, $requested_data ) );
 
         /**
          * Filter for store listing args
@@ -99,15 +106,16 @@ class Stores extends DokanShortcode {
          * @since 2.4.9
          */
         $template_args = apply_filters(
-            'dokan_store_list_args', array(
-				'sellers'    => $sellers,
-				'limit'      => $limit,
-				'offset'     => $offset,
-				'paged'      => $paged,
-				'image_size' => 'full',
-				'search'     => $attr['search'],
-				'per_row'    => $attr['per_row'],
-            )
+            'dokan_store_list_args', [
+				'sellers'             => $sellers,
+				'limit'               => $limit,
+				'offset'              => $offset,
+				'paged'               => $paged,
+				'image_size'          => 'full',
+				'search'              => $attr['search'],
+				'per_row'             => $attr['per_row'],
+                'dokan_seller_search' => $dokan_seller_search,
+            ]
         );
 
         ob_start();

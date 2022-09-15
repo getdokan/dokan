@@ -4,16 +4,16 @@
  *
  *  Dashboard Big Counter widget template
  *
- *  @since 2.4
+ * @since   2.4
  *
- *  @author weDevs <info@wedevs.com>
+ * @author  weDevs <info@wedevs.com>
  *
- *  @package dokan
+ * @package dokan
  */
 ?>
 <div class="dashboard-widget big-counter">
     <ul class="list-inline">
-         <li>
+        <li>
             <div class="title"><?php esc_html_e( 'Sales', 'dokan-lite' ); ?></div>
             <div class="count"><?php echo wp_kses_post( wc_price( $earning ) ); ?></div>
         </li>
@@ -23,15 +23,15 @@
         </li>
         <li>
             <div class="title"><?php esc_html_e( 'Pageview', 'dokan-lite' ); ?></div>
-            <div class="count"><?php echo esc_html( dokan_number_format( esc_attr( $pageviews ) ) ); ?></div>
+            <div class="count"><?php echo esc_html( dokan_number_format( $pageviews ) ); ?></div>
         </li>
         <li>
             <div class="title"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></div>
             <div class="count">
                 <?php
-                $status = dokan_withdraw_get_active_order_status();
-                $total = 0;
-                foreach ( $status as $order_status ){
+                $status = dokan_withdraw_get_active_order_status(); // phpcs:ignore
+                $total  = 0;
+                foreach ( $status as $order_status ) {
                     if ( ! isset( $orders_count->$order_status ) ) {
                         continue;
                     }

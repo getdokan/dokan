@@ -14,7 +14,7 @@ class Storefront {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_action( 'woocommerce_after_main_content', [ $this, 'remove_sidebar' ], 5 );
         add_filter( 'body_class', [ $this, 'full_width_page' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'reset_style' ] );
@@ -40,7 +40,7 @@ class Storefront {
      */
     public function full_width_page( $classes ) {
         if ( dokan_is_store_page() || dokan_is_seller_dashboard() ) {
-            if ( ! in_array( 'page-template-template-fullwidth-php', $classes ) ) {
+            if ( ! in_array( 'page-template-template-fullwidth-php', $classes, true ) ) {
                 $classes[] = 'page-template-template-fullwidth-php';
             }
         }

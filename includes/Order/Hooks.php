@@ -7,11 +7,11 @@ use Exception;
 /**
  * Admin Hooks
  *
+ * @since   3.0.0
+ *
  * @package dokan
  *
- * @since 3.0.0
- *
- * @author weDevs
+ * @author  weDevs
  */
 class Hooks {
 
@@ -70,12 +70,13 @@ class Hooks {
      *
      * @param $display_key
      *
-     * @return void
+     * @return string
      */
     public function change_order_item_display_meta_key( $display_key ) {
         if ( 'seller_id' === $display_key ) {
             return __( 'Vendor', 'dokan-lite' );
         }
+
         return $display_key;
     }
 
@@ -87,7 +88,7 @@ class Hooks {
      * @param $display_value
      * @param $meta
      *
-     * @return mixed
+     * @return string
      */
     public function change_order_item_display_meta_value( $display_value, $meta ) {
         if ( 'seller_id' === $meta->key ) {
@@ -99,6 +100,7 @@ class Hooks {
 
             return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
         }
+
         return $display_value;
     }
 
@@ -106,11 +108,11 @@ class Hooks {
      * Update the child order status when a parent order status is changed
      *
      * @param integer $order_id
-     * @param string $old_status
-     * @param string $new_status
+     * @param string  $old_status
+     * @param string  $new_status
      *
-     * @return void
      * @global object $wpdb
+     * @return void
      */
     public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
@@ -258,8 +260,8 @@ class Hooks {
      * Mark the parent order as complete when all the child order are completed
      *
      * @param integer $order_id
-     * @param string $old_status
-     * @param string $new_status
+     * @param string  $old_status
+     * @param string  $new_status
      *
      * @return void
      */
@@ -304,9 +306,9 @@ class Hooks {
     /**
      * Split order for vendor
      *
-     * @param $parent_order_id
-     *
      * @since 3.0.0
+     *
+     * @param $parent_order_id
      *
      * @return void
      */
@@ -325,12 +327,12 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @param boolean $valid
-     * @param \WC_Coupon $coupon
+     * @param boolean       $valid
+     * @param \WC_Coupon    $coupon
      * @param \WC_Discounts $discount
      *
-     * @return boolean|Exception
      * @throws Exception
+     * @return boolean|Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon, $discount ) {
         $available_vendors  = [];
@@ -348,7 +350,6 @@ class Hooks {
                 $available_products[] = $item_id;
             }
         }
-
 
         $available_vendors = array_unique( $available_vendors );
 
@@ -475,9 +476,9 @@ class Hooks {
     /**
      * Handle stock level wrong calculation in order notes for suborder
      *
-     * @param $order
-     *
      * @since DOKAN_LITE_SINCE
+     *
+     * @param $order
      *
      * @return void
      */

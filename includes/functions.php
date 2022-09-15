@@ -1764,9 +1764,14 @@ function dokan_prepare_date_query( $from, $to ) {
  * @return array
  */
 function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
+    // get current month report
     $this_month_report_data = dokan_admin_report_data( 'day', '', '', '', $seller_id );
 
-    $this_month_order_total = $this_month_earning_total = $this_month_total_orders = 0;
+    $this_month_order_total   = 0;
+    $this_month_earning_total = 0;
+    $this_month_total_orders  = 0;
+    // get current time
+    $now = dokan_current_datetime();
 
     if ( $this_month_report_data ) {
         foreach ( $this_month_report_data as $row ) {
@@ -1776,8 +1781,18 @@ function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
         }
     }
 
-    $last_month_report_data = dokan_admin_report_data( 'day', '', date( 'Y-m-d', strtotime( 'first day of previous month' ) ), date( 'Y-m-d', strtotime( 'last day of previous month' ) ), $seller_id );
-    $last_month_order_total = $last_month_earning_total = $last_month_total_orders = 0;
+    // get last month report
+    $last_month_report_data = dokan_admin_report_data(
+        'day',
+        '',
+        $now->modify( 'first day of previous month' )->format( 'Y-m-d' ),
+        $now->modify( 'last day of previous month' )->format( 'Y-m-d' ),
+        $seller_id
+    );
+
+    $last_month_order_total   = 0;
+    $last_month_earning_total = 0;
+    $last_month_total_orders  = 0;
 
     if ( $last_month_report_data ) {
         foreach ( $last_month_report_data as $row ) {
@@ -1792,8 +1807,12 @@ function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
         $this_period_data = dokan_admin_report_data( 'day', $date['from_year'], $date['from_full_date'], $date['to_full_date'], $seller_id );
         $last_period_data = dokan_admin_report_data( 'day', $date['last_from_year'], $date['last_from_full_date'], $date['last_to_full_date'], $seller_id );
 
-        $this_period_order_total = $this_period_earning_total = $this_period_total_orders = 0;
-        $last_period_order_total = $last_period_earning_total = $last_period_total_orders = 0;
+        $this_period_order_total   = 0;
+        $this_period_earning_total = 0;
+        $this_period_total_orders  = 0;
+        $last_period_order_total   = 0;
+        $last_period_earning_total = 0;
+        $last_period_total_orders  = 0;
 
         if ( $this_period_data ) {
             foreach ( $this_period_data as $row ) {
@@ -1845,27 +1864,6 @@ function dokan_get_sales_count( $from = null, $to = null, $seller_id = 0 ) {
     ];
 
     return $data;
-
-    // $data = array(
-    //     'this_month_order_total'    => $this_month_order_total,
-    //     'this_month_total_orders'   => $this_month_total_orders,
-    //     'last_month_order_total'    => $last_month_order_total,
-
-    //     'this_month_earning_total'  => $this_month_earning_total,
-    //     'last_month_earning_total'  => $last_month_earning_total,
-    //     'last_month_total_orders'   => $last_month_total_orders,
-
-    //     'sale_parcent_class'        => $sale_percentage['class'],
-    //     'sale_parcent'              => $sale_percentage['parcent'],
-
-    //     'earning_parcent_class'     => $earning_percentage['class'],
-    //     'earning_parcent'           => $earning_percentage['parcent'],
-
-    //     'order_parcent_class'       => $order_percentage['class'],
-    //     'order_parcent'             => $order_percentage['parcent'],
-    // );
-
-    // return $data;
 }
 
 /**
@@ -1881,8 +1879,8 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
     if ( $current_user->ID !== 0 ) {
         $role = reset( $current_user->roles );
 
-        if ( dokan_get_option( 'admin_access', 'dokan_general' ) == 'on' ) {
-            if ( in_array( $role, [ 'seller', 'customer', 'vendor_staff' ] ) ) {
+        if ( dokan_get_option( 'admin_access', 'dokan_general', 'on' ) === 'on' ) {
+            if ( in_array( $role, [ 'seller', 'customer', 'vendor_staff' ], true ) ) {
                 return false;
             }
         }
@@ -1949,9 +1947,8 @@ function dokan_filter_orders_for_current_vendor( $args, $query ) {
 
     if ( ! current_user_can( 'manage_woocommerce' ) ) {
         $vendor_id = dokan_get_current_user_id();
-    } elseif ( ! empty( $_GET['vendor_id'] ) ) {
-        $get       = wp_unslash( $_GET );
-        $vendor_id = absint( $get['vendor_id'] );
+    } elseif ( ! empty( wp_unslash( $_GET['vendor_id'] ) ) ) { // phpcs:ignore
+        $vendor_id = absint( wp_unslash( $_GET['vendor_id'] ) ); // phpcs:ignore
     }
 
     if ( ! $vendor_id ) {
@@ -2364,16 +2361,19 @@ function dokan_product_listing_filter() {
  * @return string
  */
 function dokan_product_search_by_sku( $where ) {
-    global $pagenow, $wpdb, $wp;
-
-    $getdata = wp_unslash( $_GET );
-
-    if ( empty( $getdata['product_search_name'] ) || ! isset( $getdata['dokan_product_search_nonce'] ) || ! wp_verify_nonce( sanitize_key( $getdata['dokan_product_search_nonce'] ), 'dokan_product_search' ) ) {
+    // nonce checking
+    if ( ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) ) {
         return $where;
     }
 
+    if ( empty( $_GET['product_search_name'] ) ) {
+        return $where;
+    }
+
+    global $wpdb;
+
     $search_ids = [];
-    $terms      = explode( ',', wc_clean( $getdata['product_search_name'] ) );
+    $terms      = explode( ',', wc_clean( wp_unslash( $_GET['product_search_name'] ) ) );
 
     foreach ( $terms as $term ) {
         if ( is_numeric( $term ) ) {
@@ -2387,14 +2387,14 @@ function dokan_product_search_by_sku( $where ) {
 
         $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE %s", $like ) );
 
-        if ( $sku_to_id && sizeof( $sku_to_id ) > 0 ) {
+        if ( $sku_to_id && count( $sku_to_id ) > 0 ) {
             $search_ids = array_merge( $search_ids, $sku_to_id );
         }
     }
 
     $search_ids = array_filter( array_map( 'absint', $search_ids ) );
 
-    if ( sizeof( $search_ids ) > 0 ) {
+    if ( count( $search_ids ) > 0 ) {
         $where = str_replace( ')))', ") OR ({$wpdb->posts}.ID IN (" . implode( ',', $search_ids ) . '))))', $where );
     }
 
@@ -2646,23 +2646,20 @@ function dokan_get_toc_url( $store_id ) {
  * @since 2.4
  *
  * @param string $redirect_to [url]
- * @param object $user
+ * @param WP_User $user
  *
  * @return string [url]
  */
 function dokan_after_login_redirect( $redirect_to, $user ) {
-    if ( user_can( $user, 'dokandar' ) ) {
-        $seller_dashboard = dokan_get_option( 'dashboard', 'dokan_pages' );
+    // get the redirect url from $_GET
+    if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
+        $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
+    } elseif ( user_can( $user, 'dokandar' ) ) {
+        $seller_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages' );
 
-        if ( $seller_dashboard != -1 ) {
+        if ( $seller_dashboard !== -1 ) {
             $redirect_to = get_permalink( $seller_dashboard );
         }
-    }
-
-    $getdata = wp_unslash( $_GET );
-
-    if ( isset( $getdata['redirect_to'] ) && ! empty( $getdata['redirect_to'] ) ) {
-        $redirect_to = esc_url( $getdata['redirect_to'] );
     }
 
     return $redirect_to;

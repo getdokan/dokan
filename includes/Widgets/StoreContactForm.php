@@ -34,9 +34,9 @@ class StoreContactForm extends WP_Widget {
      *
      * @return void Echoes it's output
      **/
-    function widget( $args, $instance ) {
+    public function widget( $args, $instance ) {
         if ( dokan_is_store_page() || is_product() ) {
-            extract( $args, EXTR_SKIP );
+            extract( $args, EXTR_SKIP ); // phpcs:ignore
 
             $defaults = array(
                 'title' => __( 'Contact Vendor', 'dokan-lite' ),
@@ -67,7 +67,8 @@ class StoreContactForm extends WP_Widget {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
 
-            $username = $email = '';
+            $username = '';
+            $email    = '';
 
             if ( is_user_logged_in() ) {
                 $user     = wp_get_current_user();
@@ -99,7 +100,7 @@ class StoreContactForm extends WP_Widget {
      *
      * @return array The validated and (if necessary) amended settings
      */
-    function update( $new_instance, $old_instance ) {
+    public function update( $new_instance, $old_instance ) {
 
         // update logic goes here
         $updated_instance = $new_instance;
@@ -113,7 +114,7 @@ class StoreContactForm extends WP_Widget {
      *
      * @return void Echoes it's output
      */
-    function form( $instance ) {
+    public function form( $instance ) {
         $instance = wp_parse_args(
             (array) $instance, array(
 				'title' => __( 'Contact Vendor', 'dokan-lite' ),

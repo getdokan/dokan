@@ -28,7 +28,7 @@ class StoreCategoryMenu extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP );
+            extract( $args, EXTR_SKIP ); // phpcs:ignore
 
             echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 

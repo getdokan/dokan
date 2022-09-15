@@ -17,8 +17,8 @@
         'use strict';
 
         var accessToken = '<?php echo esc_attr( $access_token ); ?>';
-        var mapboxId = '<?php echo esc_attr( $map_id ); ?>';
-        var location = <?php echo json_encode( $location ); ?>
+        var mapboxId    = '<?php echo esc_attr( $map_id ); ?>';
+        var location    = <?php echo wp_json_encode( $location ); ?>
 
         mapboxgl.accessToken = accessToken;
 

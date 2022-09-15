@@ -12,18 +12,19 @@ class V_2_7_6 extends DokanUpgrader {
      */
     public static function update_table_structure() {
         global $wpdb;
-
+        // @codingStandardsIgnoreStart
         $wpdb->query(
             "ALTER TABLE `{$wpdb->prefix}dokan_withdraw`
             MODIFY COLUMN ip varchar(50) NOT NULL"
         );
+        // @codingStandardsIgnoreEnd
     }
 
     public static function update_user_capabilities() {
         global $wp_roles;
 
         if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
-            $wp_roles = new WP_Roles();
+            $wp_roles = new WP_Roles(); // phpcs:ignore
         }
 
         $caps = array(

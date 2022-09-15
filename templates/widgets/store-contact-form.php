@@ -2,7 +2,7 @@
 /**
  * Dokan Store Contact Form widget Template
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
@@ -18,11 +18,11 @@
             <input type="email" name="email" value="<?php echo esc_attr( $email ); ?>" placeholder="<?php esc_attr_e( 'you@example.com', 'dokan-lite' ); ?>" class="dokan-form-control" required="required">
         </li>
         <li class="dokan-form-group">
-            <textarea  name="message" maxlength="1000" cols="25" rows="6" value="" placeholder="<?php esc_attr_e( 'Type your messsage...', 'dokan-lite' ); ?>" class="dokan-form-control" required="required"></textarea>
+            <textarea name="message" maxlength="1000" cols="25" rows="6" value="" placeholder="<?php esc_attr_e( 'Type your messsage...', 'dokan-lite' ); ?>" class="dokan-form-control" required="required"></textarea>
         </li>
     </ul>
 
-    <?php do_action( 'dokan_contact_form', $seller_id ) ?>
+    <?php do_action( 'dokan_contact_form', $seller_id ); ?>
 
     <?php wp_nonce_field( 'dokan_contact_seller', 'dokan_contact_seller_nonce' ); ?>
     <input type="hidden" name="dokan_recaptcha_token" class="dokan_recaptcha_token">

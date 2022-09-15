@@ -21,7 +21,7 @@ class Settings {
      *
      * @return void
      */
-    function __construct() {
+    public function __construct() {
         add_action( 'dokan_settings_content_inside_before', array( $this, 'show_enable_seller_message' ) );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_header' ), 10 );
         add_action( 'dokan_settings_content_area_header', array( $this, 'render_settings_help' ), 15 );
@@ -56,7 +56,7 @@ class Settings {
         global $wp;
         $is_store_setting = false;
 
-        if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'store' ) {
+        if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) {
             $heading          = __( 'Settings', 'dokan-lite' );
             $is_store_setting = true;
         } elseif ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
@@ -67,7 +67,12 @@ class Settings {
             $heading = apply_filters( 'dokan_dashboard_settings_heading_title', __( 'Settings', 'dokan-lite' ), $wp->query_vars['settings'] );
         }
 
-        dokan_get_template_part( 'settings/header', '', array( 'heading' => $heading, 'is_store_setting' => $is_store_setting ) );
+        dokan_get_template_part(
+            'settings/header', '', array(
+				'heading' => $heading,
+				'is_store_setting' => $is_store_setting,
+            )
+        );
     }
 
     /**
@@ -82,14 +87,16 @@ class Settings {
 
         $help_text = '';
 
-        if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] == 'payment' ) {
+        if ( isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'payment' ) {
             $help_text = __( 'These are the withdraw methods available for you. Please update your payment information below to submit withdraw requests and get your store payments seamlessly.', 'dokan-lite' );
         }
 
-        if ( $help_text = apply_filters( 'dokan_dashboard_settings_helper_text', $help_text, $wp->query_vars['settings'] ) ) {
-            dokan_get_template_part( 'global/dokan-help', '', array(
-                'help_text' => $help_text
-            ) );
+        if ( $help_text = apply_filters( 'dokan_dashboard_settings_helper_text', $help_text, $wp->query_vars['settings'] ) ) { // phpcs:ignore
+            dokan_get_template_part(
+                'global/dokan-help', '', array(
+					'help_text' => $help_text,
+                )
+            );
         }
     }
 
@@ -122,9 +129,11 @@ class Settings {
             $messages = $validate->get_error_messages();
 
             foreach ( $messages as $message ) {
-                dokan_get_template_part( 'global/dokan-error', '', array(
-                    'message' => $message
-                ) );
+                dokan_get_template_part(
+                    'global/dokan-error', '', array(
+						'message' => $message,
+                    )
+                );
             }
         }
     }
@@ -139,12 +148,14 @@ class Settings {
     public function render_settings_content() {
         global $wp;
 
-        if ( isset( $wp->query_vars['settings'] ) && 'store' == $wp->query_vars['settings'] ) {
+        if ( isset( $wp->query_vars['settings'] ) && 'store' === $wp->query_vars['settings'] ) {
             if ( ! current_user_can( 'dokan_view_store_settings_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array(
-                    'deleted' => false,
-                    'message' => __( 'You have no permission to view this page', 'dokan-lite' )
-                ) );
+                dokan_get_template_part(
+                    'global/dokan-error', '', array(
+						'deleted' => false,
+						'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
+                    )
+                );
             } else {
                 $this->load_store_content();
             }
@@ -152,10 +163,12 @@ class Settings {
 
         if ( isset( $wp->query_vars['settings'] ) && 'payment' === substr( $wp->query_vars['settings'], 0, 7 ) ) {
             if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
-                dokan_get_template_part('global/dokan-error', '', array(
-                    'deleted' => false,
-                    'message' => __( 'You have no permission to view this page', 'dokan-lite' )
-                ) );
+                dokan_get_template_part(
+                    'global/dokan-error', '', array(
+						'deleted' => false,
+						'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
+                    )
+                );
             } else {
                 $this->load_payment_content( substr( $wp->query_vars['settings'], 7 ) );
             }
@@ -176,12 +189,13 @@ class Settings {
         $currentuser  = dokan_get_current_user_id();
         $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
 
-        dokan_get_template_part( 'settings/store-form', '', array(
-            'current_user' => $currentuser,
-            'profile_info' => $profile_info,
-            'validate'     => $validate,
-        ) );
-
+        dokan_get_template_part(
+            'settings/store-form', '', array(
+				'current_user' => $currentuser,
+				'profile_info' => $profile_info,
+				'validate'     => $validate,
+            )
+        );
     }
 
     /**
@@ -197,9 +211,11 @@ class Settings {
         $payment_methods = dokan_withdraw_get_active_methods();
 
         // methods which are inactive in Dokan > Settings > Withdraw Options has a empty value so filter them out
-        $payment_methods = array_filter( $payment_methods, function ( $value ) {
-            return ! empty( $value );
-        } );
+        $payment_methods = array_filter(
+            $payment_methods, function ( $value ) {
+				return ! empty( $value );
+			}
+        );
 
         //no payment method is active, show informative message
         if ( empty( $payment_methods ) ) {
@@ -219,7 +235,7 @@ class Settings {
 
         $seller_connected_payment_method_ids = array_filter(
             $payment_method_ids,
-            function ( $payment_method_id ) use( $seller_id ) {
+            function ( $payment_method_id ) use ( $seller_id ) {
                 return $this->is_seller_connected( $payment_method_id, $seller_id );
             }
         );
@@ -311,13 +327,13 @@ class Settings {
      *
      * @return void
      */
-    function ajax_settings() {
-
+    public function ajax_settings() {
         if ( ! dokan_is_user_seller( get_current_user_id() ) ) {
             wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
         if ( ! isset( $_POST['_wpnonce'] ) ) {
+            // there can be multiple nonce action, so we are validating nonce later on
             wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
         }
 
@@ -325,7 +341,7 @@ class Settings {
 
         $post_data['dokan_update_profile'] = '';
 
-        switch ( $post_data['form_id'] ) { // WPCS: CSRF ok.
+        switch ( sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) ) { // WPCS: CSRF ok.
             case 'profile-form':
                 if ( ! current_user_can( 'dokan_view_store_social_menu' ) ) {
                     wp_send_json_error( __( 'Pemission denied social', 'dokan-lite' ) );
@@ -370,13 +386,15 @@ class Settings {
         }
 
         // we are good to go
-        $save_data = $this->insert_settings_info();
+        $this->insert_settings_info();
 
         $success_msg = __( 'Your information has been saved successfully', 'dokan-lite' );
 
-        $data = apply_filters( 'dokan_ajax_settings_response', array(
-            'msg' => $success_msg,
-        ) );
+        $data = apply_filters(
+            'dokan_ajax_settings_response', array(
+				'msg' => $success_msg,
+            )
+        );
 
         wp_send_json_success( $data );
     }
@@ -387,7 +405,6 @@ class Settings {
      * @return void
      */
     function validate() {
-
         $post_data = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['dokan_update_profile'] ) ) {
@@ -407,7 +424,6 @@ class Settings {
         }
 
         if ( isset( $post_data['setting_category'] ) ) {
-
             if ( ! is_array( $post_data['setting_category'] ) || ! count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
@@ -429,7 +445,7 @@ class Settings {
             'country',
         );
 
-        if ( $post_data['dokan_address']['state'] != 'N/A' ) {
+        if ( $post_data['dokan_address']['state'] !== 'N/A' ) {
             $required_fields[] = 'state';
         }
 
@@ -453,7 +469,6 @@ class Settings {
      * @return bool|WP_Error
      */
     function profile_validate() {
-
         $post_data = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['dokan_update_profile_settings'] ) ) {
@@ -467,7 +482,6 @@ class Settings {
         $error = new WP_Error();
 
         if ( isset( $post_data['setting_category'] ) ) {
-
             if ( ! is_array( $post_data['setting_category'] ) || ! count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
@@ -493,8 +507,7 @@ class Settings {
      *
      * @return bool|WP_Error
      */
-    function store_validate() {
-
+    public function store_validate() {
         $post_data = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['dokan_update_store_settings'] ) ) {
@@ -514,7 +527,6 @@ class Settings {
         }
 
         if ( isset( $_POST['setting_category'] ) ) {
-
             if ( ! is_array( $_POST['setting_category'] ) || ! count( $post_data['setting_category'] ) ) {
                 $error->add( 'dokan_type', __( 'Store type required', 'dokan-lite' ) );
             }
@@ -533,18 +545,16 @@ class Settings {
         }
 
         return true;
-
     }
 
     /**
-     * validate payment settings
+     * Validate payment settings
      *
      * @since 2.4
      *
      * @return bool|WP_Error
      */
-    function payment_validate() {
-
+    public function payment_validate() {
         $post_data = wp_unslash( $_POST );
 
         if ( ! isset( $post_data['dokan_update_payment_settings'] ) ) {
@@ -594,7 +604,7 @@ class Settings {
 
             if ( ! $is_disconnect && empty( $post_data['settings']['bank']['ac_type'] ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Please select account type', 'dokan-lite' ) );
-            } else if ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ] ) ) {
+            } elseif ( ! $is_disconnect && ! in_array( $post_data['settings']['bank']['ac_type'], [ 'personal', 'business' ], true ) ) {
                 $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
             }
 
@@ -608,7 +618,6 @@ class Settings {
         }
 
         return true;
-
     }
 
     /**
@@ -616,7 +625,7 @@ class Settings {
      *
      * @return void
      */
-    function insert_settings_info() {
+    public function insert_settings_info() {
         $store_id                = dokan_get_current_user_id();
         $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
         $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : [];
@@ -640,9 +649,7 @@ class Settings {
                     }
                 }
             }
-
         } elseif ( wp_verify_nonce( sanitize_key( $post_data['_wpnonce'] ), 'dokan_store_settings_nonce' ) ) {
-
             $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
 
             if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
@@ -701,8 +708,8 @@ class Settings {
                 // Get and set current day's data for update dokan store time. Make dokan store time data here.
                 $dokan_store_time[ $day_key ] = [
                     'status'       => $store_status,
-                    'opening_time' => ( array ) $opening_time,
-                    'closing_time' => ( array ) $closing_time,
+                    'opening_time' => (array) $opening_time,
+                    'closing_time' => (array) $closing_time,
                 ];
             }
 
@@ -715,19 +722,18 @@ class Settings {
                 'find_address'             => $find_address,
                 'banner'                   => isset( $post_data['dokan_banner'] ) ? absint( $post_data['dokan_banner'] ) : 0,
                 'phone'                    => isset( $post_data['setting_phone'] ) ? sanitize_text_field( $post_data['setting_phone'] ) : 'no',
-                'show_email'               => isset( $post_data['setting_show_email'] ) ? sanitize_text_field( $post_data['setting_show_email'] ) :'no',
+                'show_email'               => isset( $post_data['setting_show_email'] ) ? sanitize_text_field( $post_data['setting_show_email'] ) : 'no',
                 'show_more_ptab'           => isset( $post_data['setting_show_more_ptab'] ) ? sanitize_text_field( $post_data['setting_show_more_ptab'] ) : 'no',
                 'gravatar'                 => isset( $post_data['dokan_gravatar'] ) ? absint( $post_data['dokan_gravatar'] ) : 0,
-                'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' == $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
+                'enable_tnc'               => isset( $post_data['dokan_store_tnc_enable'] ) && 'on' === $post_data['dokan_store_tnc_enable'] ? 'on' : 'off',
                 'store_tnc'                => isset( $post_data['dokan_store_tnc'] ) ? wp_kses_post( $post_data['dokan_store_tnc'] ) : '',
                 'dokan_store_time'         => apply_filters( 'dokan_store_time', $dokan_store_time ),
-                'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' == $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
+                'dokan_store_time_enabled' => isset( $post_data['dokan_store_time_enabled'] ) && 'yes' === $post_data['dokan_store_time_enabled'] ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $post_data['dokan_store_open_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_open_notice'] ) : '',
                 'dokan_store_close_notice' => isset( $post_data['dokan_store_close_notice'] ) ? sanitize_textarea_field( $post_data['dokan_store_close_notice'] ) : '',
             ];
 
             update_user_meta( $store_id, 'dokan_store_name', $dokan_settings['store_name'] );
-
         } elseif ( wp_verify_nonce( sanitize_key( $post_data['_wpnonce'] ), 'dokan_payment_settings_nonce' ) ) {
 
             //update payment settings info
@@ -778,7 +784,7 @@ class Settings {
      *
      * @return array
      */
-    function get_dokan_categories() {
+    public function get_dokan_categories() {
         $dokan_category = array(
             'book'       => __( 'Book', 'dokan-lite' ),
             'dress'      => __( 'Dress', 'dokan-lite' ),
@@ -818,7 +824,7 @@ class Settings {
          *
          * @param string $heading previous heading
          */
-        $heading = apply_filters( "dokan_withdraw_method_settings_title", $heading, $slug );
+        $heading = apply_filters( 'dokan_withdraw_method_settings_title', $heading, $slug );
 
         return $heading;
     }

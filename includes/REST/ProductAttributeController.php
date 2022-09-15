@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WC_REST_Product_Attributes_V1_Controller;
 use WP_Error;
+use WP_REST_Request;
 
 class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controller {
 
@@ -29,17 +30,11 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
     protected $attribute = '';
 
     /**
-     * Register the routes for product attributes.
-     */
-    public function register_routes() {
-        parent::register_routes();
-    }
-
-    /**
      * Check if a given request has access to read the attributes.
      *
      * @param  WP_REST_Request $request Full details about the request.
-     * @return WP_Error|boolean
+     *
+     * @return bool
      */
     public function get_items_permissions_check( $request ) {
         return current_user_can( 'dokandar' );
@@ -49,7 +44,8 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * Check if a given request has access to create a attribute.
      *
      * @param  WP_REST_Request $request Full details about the request.
-     * @return WP_Error|boolean
+     *
+     * @return bool
      */
     public function create_item_permissions_check( $request ) {
         return current_user_can( 'dokan_add_product' );
@@ -59,7 +55,8 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * Check if a given request has access to read a attribute.
      *
      * @param  WP_REST_Request $request Full details about the request.
-     * @return WP_Error|boolean
+     *
+     * @return WP_Error|bool
      */
     public function get_item_permissions_check( $request ) {
         if ( ! $this->get_taxonomy( $request ) ) {
@@ -73,7 +70,8 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * Check if a given request has access to update a attribute.
      *
      * @param  WP_REST_Request $request Full details about the request.
-     * @return WP_Error|boolean
+     *
+     * @return WP_Error|bool
      */
     public function update_item_permissions_check( $request ) {
         if ( ! $this->get_taxonomy( $request ) ) {
@@ -87,7 +85,8 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * Check if a given request has access to delete a attribute.
      *
      * @param  WP_REST_Request $request Full details about the request.
-     * @return WP_Error|boolean
+     *
+     * @return WP_Error|bool
      */
     public function delete_item_permissions_check( $request ) {
         if ( ! $this->get_taxonomy( $request ) ) {

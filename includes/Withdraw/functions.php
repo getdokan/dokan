@@ -15,7 +15,7 @@ function dokan_withdraw_register_methods() {
             'title'    => __( 'PayPal', 'dokan-lite' ),
             'callback' => 'dokan_withdraw_method_paypal',
         ],
-        'bank' => [
+        'bank'   => [
             'title'    => __( 'Bank Transfer', 'dokan-lite' ),
             'callback' => 'dokan_withdraw_method_bank',
         ],
@@ -100,7 +100,7 @@ function dokan_withdraw_get_method( $method_key ) {
 /**
  * Get title from a withdraw method
  *
- * @param string $method_key
+ * @param string      $method_key
  * @param object|null $request //@since 3.3.7
  *
  * @return string
@@ -118,9 +118,10 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
 /**
  * Callback for PayPal in store settings
  *
+ * @param array    $store_settings
+ *
  * @global WP_User $current_user
  *
- * @param array $store_settings
  */
 function dokan_withdraw_method_paypal( $store_settings ) {
     $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : ''; ?>
@@ -133,14 +134,14 @@ function dokan_withdraw_method_paypal( $store_settings ) {
         </div>
     </div>
     <?php if ( dokan_is_seller_dashboard() ) : ?>
-    <div class="dokan-form-group">
-        <div class="dokan-w8">
-            <input name="dokan_update_payment_settings" type="hidden">
-            <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo empty( $email ) ? 'dokan-hide' : ''; ?>" type="submit" name="settings[paypal][disconnect]">
-                <?php esc_attr_e( 'Disconnect', 'dokan-lite' ); ?>
-            </button>
+        <div class="dokan-form-group">
+            <div class="dokan-w8">
+                <input name="dokan_update_payment_settings" type="hidden">
+                <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo empty( $email ) ? 'dokan-hide' : ''; ?>" type="submit" name="settings[paypal][disconnect]">
+                    <?php esc_attr_e( 'Disconnect', 'dokan-lite' ); ?>
+                </button>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
     <?php
 }
@@ -148,9 +149,10 @@ function dokan_withdraw_method_paypal( $store_settings ) {
 /**
  * Callback for Skrill in store settings
  *
+ * @param array    $store_settings
+ *
  * @global WP_User $current_user
  *
- * @param array $store_settings
  */
 function dokan_withdraw_method_skrill( $store_settings ) {
     $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : '';
@@ -169,9 +171,10 @@ function dokan_withdraw_method_skrill( $store_settings ) {
 /**
  * Callback for Bank in store settings
  *
+ * @param array    $store_settings
+ *
  * @global WP_User $current_user
  *
- * @param array $store_settings
  */
 function dokan_withdraw_method_bank( $store_settings ) {
     $args = [
@@ -311,11 +314,12 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
             break;
         case 'bank':
             // translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
-            $method_info = empty( $payment_methods[ $method_key ]['ac_number'] ) ? $no_information : sprintf( __( '- %1$s - %2$s - ****%3$s', 'dokan-lite' ), $payment_methods[ $method_key ]['ac_name'], $payment_methods[ $method_key ]['bank_name'], substr( $payment_methods[ $method_key ]['ac_number'], -4 ) );
+            $method_info = empty( $payment_methods[ $method_key ]['ac_number'] ) ? $no_information : sprintf( __( '- %1$s - %2$s - ****%3$s', 'dokan-lite' ), $payment_methods[ $method_key ]['ac_name'], $payment_methods[ $method_key ]['bank_name'], substr( $payment_methods[ $method_key ]['ac_number'], - 4 ) );
             break;
         default:
             $method_info = '';
     }
+
     return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key );
 }
 
@@ -398,7 +402,7 @@ function dokan_withdraw_get_withdrawable_active_methods() {
 function dokan_is_withdraw_method_enabled( $method_id ) {
     $payment_methods = dokan_withdraw_get_active_methods();
 
-    return is_array( $payment_methods ) &&
-        array_key_exists( $method_id, $payment_methods ) &&
-        ! empty( $payment_methods[ $method_id ] );
+    return is_array( $payment_methods )
+            && array_key_exists( $method_id, $payment_methods )
+            && ! empty( $payment_methods[ $method_id ] );
 }

@@ -36,7 +36,7 @@ class StoreLocation extends WP_Widget {
      */
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP );
+            extract( $args, EXTR_SKIP ); // phpcs:ignore
 
             $defaults = array(
                 'title' => __( 'Store Location', 'dokan-lite' ),
@@ -57,7 +57,7 @@ class StoreLocation extends WP_Widget {
             if ( ! empty( $title ) ) {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
-            do_action( 'dokan-store-widget-before-map', get_query_var( 'author' ) );
+            do_action( 'dokan_store_widget_before_map', $store_info );
 
             dokan_get_template_part(
                 'widgets/store-map', '', array(
@@ -66,7 +66,7 @@ class StoreLocation extends WP_Widget {
                 )
             );
 
-            do_action( 'dokan-store-widget-after-map', get_query_var( 'author' ) );
+            do_action( 'dokan_store_widget_after_map', $store_info );
 
             echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }

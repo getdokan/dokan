@@ -246,7 +246,7 @@ class Ajax {
         $order_id     = intval( $_POST['order_id'] );
         $product_ids  = array_filter( array_map( 'absint', (array) wp_unslash( $_POST['product_ids'] ) ) );
         $loop         = intval( $_POST['loop'] );
-        $file_counter = 0;
+        $file_count   = 1;
         $order        = dokan()->order->get( $order_id );
 
         foreach ( $product_ids as $product_id ) {
@@ -263,17 +263,11 @@ class Ajax {
 
                     if ( $inserted_id ) {
                         $download = new \WC_Customer_Download( $inserted_id );
-                        $loop ++;
-                        $file_counter ++;
-
-                        if ( $file->get_name() ) {
-                            $file_count = $file->get_name();
-                        } else {
-                            /* translators: numeric number of files */
-                            $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
-                        }
 
                         include dirname( __DIR__ ) . '/templates/orders/order-download-permission-html.php';
+
+                        $loop ++;
+                        $file_count ++;
                     }
                 }
             }

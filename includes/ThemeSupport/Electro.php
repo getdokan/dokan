@@ -14,7 +14,7 @@ class Electro {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_action( 'wp_enqueue_scripts', [ $this, 'store_listing_style' ], 100 );
     }
 

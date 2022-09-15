@@ -176,14 +176,16 @@ function dokan_product_dashboard_errors() {
 }
 
 function dokan_product_listing_status_filter() {
-    $_get_data = wp_unslash( $_GET ); //phpcs:ignore
-
     $permalink         = dokan_get_navigation_url( 'products' );
-    $status_class      = isset( $_get_data['post_status'] ) ? $_get_data['post_status'] : 'all';
+    $status_class      = 'all';
     $post_counts       = dokan_count_posts( 'product', dokan_get_current_user_id() );
     $instock_counts    = dokan_count_stock_posts( 'product', dokan_get_current_user_id(), 'instock' );
     $outofstock_counts = dokan_count_stock_posts( 'product', dokan_get_current_user_id(), 'outofstock' );
     $statuses          = dokan_get_post_status();
+
+    if ( isset( $_GET['_post_status_count_nonce'], $_GET['post_status'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_post_status_count_nonce'] ) ), 'product_status_counter_nonce' ) ) {
+        $status_class = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
+    }
 
     dokan_get_template_part(
         'products/listing-status-filter', '', array(
@@ -198,13 +200,11 @@ function dokan_product_listing_status_filter() {
 }
 
 function dokan_order_listing_status_filter() {
-    $_get_data = wp_unslash( $_GET ); //phpcs:ignore
-
     $orders_url = dokan_get_navigation_url( 'orders' );
 
-    $status_class         = isset( $_get_data['order_status'] ) ? $_get_data['order_status'] : 'all';
+    $status_class         = 'all';
     $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
-    $order_date           = ( isset( $_get_data['order_date'] ) ) ? $_get_data['order_date'] : '';
+    $order_date           = '';
     $date_filter          = array();
     $all_order_url        = array();
     $complete_order_url   = array();
@@ -215,6 +215,11 @@ function dokan_order_listing_status_filter() {
     $refund_order_url     = array();
     $failed_order_url     = array();
     $filter_nonce         = wp_create_nonce( 'seller-order-filter-nonce' );
+
+    if ( isset( $_GET['seller_order_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) {
+        $status_class = isset( $_GET['order_status'] ) ? sanitize_text_field( wp_unslash( $_GET['order_status'] ) ) : $status_class;
+        $order_date   = isset( $_GET['order_date'] ) ? sanitize_text_field( wp_unslash( $_GET['order_date'] ) ) : $order_date;
+    }
     ?>
 
     <ul class="list-inline order-statuses-filter">
@@ -226,13 +231,13 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all', 'seller_order_filter_nonce' => $filter_nonce ) );
-                $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
+            $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
+            $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
             ?>
             <a href="<?php echo esc_url( $all_order_url ); ?>">
                 <?php
                 // translators: %d : order count total
-                printf( esc_html__( 'All (%d)', 'dokan-lite' ), esc_attr( $orders_counts->total ) );
+                printf( esc_html__( 'All (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->total ) );
                 ?>
                 </span>
             </a>
@@ -245,12 +250,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $complete_order_url = array_merge( array( 'order_status' => 'wc-completed', 'seller_order_filter_nonce' => $filter_nonce ), $date_filter );
+            $complete_order_url = array_merge( array( 'order_status' => 'wc-completed', 'seller_order_filter_nonce' => $filter_nonce ), $date_filter ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count completed status
-                printf( esc_html__( 'Completed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-completed'} ) );
+                printf( esc_html__( 'Completed (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-completed'} ) );
                 ?>
                 </span>
             </a>
@@ -263,12 +268,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $processing_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count processing status
-                printf( esc_html__( 'Processing (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-processing'} ) );
+                printf( esc_html__( 'Processing (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-processing'} ) );
                 ?>
                 </span>
             </a>
@@ -281,12 +286,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $on_hold_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count on hold status
-                printf( esc_html__( 'On-hold (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-on-hold'} ) );
+                printf( esc_html__( 'On-hold (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-on-hold'} ) );
                 ?>
                 </span>
             </a>
@@ -299,12 +304,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $pending_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count pending status
-                printf( esc_html__( 'Pending (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-pending'} ) );
+                printf( esc_html__( 'Pending (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-pending'} ) );
                 ?>
                 </span>
             </a>
@@ -317,12 +322,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $canceled_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count cancelled status
-                printf( esc_html__( 'Cancelled (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-cancelled'} ) );
+                printf( esc_html__( 'Cancelled (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-cancelled'} ) );
                 ?>
                 </span>
             </a>
@@ -335,12 +340,12 @@ function dokan_order_listing_status_filter() {
                     'dokan_order_filter' => 'Filter',
                 );
             }
-                $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count refunded status
-                printf( esc_html__( 'Refunded (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-refunded'} ) );
+                printf( esc_html__( 'Refunded (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-refunded'} ) );
                 ?>
                 </span>
             </a>
@@ -354,12 +359,12 @@ function dokan_order_listing_status_filter() {
                 );
             }
 
-                $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed', 'seller_order_filter_nonce' => $filter_nonce ) );
+            $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
             ?>
             <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
                 <?php
                 // translators: %d : order count failed status
-                printf( esc_html__( 'Failed (%d)', 'dokan-lite' ), esc_attr( $orders_counts->{'wc-failed'} ) );
+                printf( esc_html__( 'Failed (%d)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-failed'} ) );
                 ?>
                 </span>
             </a>

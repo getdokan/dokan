@@ -135,7 +135,10 @@ module.exports = function(grunt) {
             'node_modules/*',
             'assets/*',
             'tests/*',
-            'bin/*'
+            'bin/*',
+            'vendor/*',
+            '.github/*',
+            '.php_cs',
           ],
           mainFile: 'dokan.php',
           domainPath: '/languages/',

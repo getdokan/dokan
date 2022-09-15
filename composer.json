@@ -16,11 +16,11 @@
     "jakeasmith/http_build_url": "^1"
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "dev-master",
-    "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+    "wp-coding-standards/wpcs": "dev-develop",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "tareq1988/wp-php-cs-fixer": "dev-master",
     "phpcompatibility/phpcompatibility-wp": "dev-master",
-    "phpunit/phpunit": ">=5.7.27"
+    "phpunit/phpunit": ">=6.5.14"
   },
   "config": {
     "platform": {
@@ -37,10 +37,13 @@
   },
   "scripts": {
     "phpcs": [
-      "phpcs -p -s"
+      "vendor/bin/phpcs -p -s"
+    ],
+    "phpcs:report": [
+      "vendor/bin/phpcs --report-file='phpcs-report.txt'"
     ],
     "phpcbf": [
-      "phpcbf -p"
+      "vendor/bin/phpcbf -p"
     ]
   }
 }

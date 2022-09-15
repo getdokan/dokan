@@ -1,7 +1,7 @@
 <template>
     <div id="lite-modules">
         <div class="dokan-modules-wrap">
-            <h1>{{ __( 'Modules', 'dokan' ) }}</h1>
+            <h1>{{ __( 'Modules', 'dokan-lite' ) }}</h1>
 
             <div class="module-content">
                 <div class="wp-list-table widefat dokan-modules">
@@ -30,7 +30,7 @@
                                 </div>
 
                                 <div class="card-footer">
-                                    <a :href="module.docLink" target="_blank">{{ __( 'Documentation', 'dokan' ) }}</a>
+                                    <a :href="module.docLink" target="_blank">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
 
                     <template v-else>
                         <div id="message" class="notice notice-info">
-                            <p><strong>{{ __( 'No modules found.', 'dokan' ) }}</strong></p>
+                            <p><strong>{{ __( 'No modules found.', 'dokan-lite' ) }}</strong></p>
                         </div>
                     </template>
                 </div>

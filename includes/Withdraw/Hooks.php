@@ -32,8 +32,8 @@ class Hooks {
      *
      * @since 3.3.7
      *
-     * @param string $title
-     * @param string $method_key
+     * @param string      $title
+     * @param string      $method_key
      * @param object|null $request
      *
      * @return string
@@ -52,6 +52,7 @@ class Hooks {
                 }
             }
         }
+
         return $title;
     }
 
@@ -82,18 +83,18 @@ class Hooks {
         if ( empty( $balance_result ) ) {
             $wpdb->insert(
                 $wpdb->dokan_vendor_balance,
-                array(
-                    'vendor_id'     => $withdraw->get_user_id(),
-                    'trn_id'        => $withdraw->get_id(),
-                    'trn_type'      => 'dokan_withdraw',
-                    'perticulars'   => 'Approve withdraw request',
-                    'debit'         => 0,
-                    'credit'        => $withdraw->get_amount(),
-                    'status'        => 'approved',
-                    'trn_date'      => $withdraw->get_date(),
-                    'balance_date'  => current_time( 'mysql' ),
-                ),
-                array(
+                [
+                    'vendor_id'    => $withdraw->get_user_id(),
+                    'trn_id'       => $withdraw->get_id(),
+                    'trn_type'     => 'dokan_withdraw',
+                    'perticulars'  => 'Approve withdraw request',
+                    'debit'        => 0,
+                    'credit'       => $withdraw->get_amount(),
+                    'status'       => 'approved',
+                    'trn_date'     => $withdraw->get_date(),
+                    'balance_date' => dokan_current_datetime()->format( 'Y-m-d H:i:s' ),
+                ],
+                [
                     '%d',
                     '%d',
                     '%s',
@@ -103,7 +104,7 @@ class Hooks {
                     '%s',
                     '%s',
                     '%s',
-                )
+                ]
             );
         }
     }
@@ -116,7 +117,7 @@ class Hooks {
      * @return void
      */
     public function ajax_handle_withdraw_request() {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'dokan_withdraw' ) ) {
+        if ( ! isset( $_POST['_handle_withdraw_request'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_handle_withdraw_request'] ), 'dokan_withdraw' ) ) {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
         }
 
@@ -149,11 +150,11 @@ class Hooks {
             wp_send_json_error( esc_html__( 'Negative withdraw amount is not permitted.', 'dokan-lite' ) );
         }
 
-        $args = array(
+        $args = [
             'user_id' => $user_id,
             'amount'  => $amount,
             'method'  => $method,
-        );
+        ];
 
         $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
 
@@ -161,14 +162,14 @@ class Hooks {
             wp_send_json_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
         }
 
-        $data = array(
+        $data = [
             'user_id' => $user_id,
             'amount'  => $amount,
             'status'  => dokan()->withdraw->get_status_code( 'pending' ),
             'method'  => $method,
             'ip'      => dokan_get_client_ip(),
             'note'    => '',
-        );
+        ];
 
         $withdraw = dokan()->withdraw->create( $data );
 

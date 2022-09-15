@@ -119,22 +119,26 @@
                 dokan.ajaxurl,
                 {
                     action: 'dokan_handle_withdraw_request',
-                    nonce: nonce,
+                    _handle_withdraw_request: nonce,
                     amount: amount,
                     method: method,
                 },
-                ( response ) => {
+                async ( response ) => {
                     if ( response.success ) {
-                        dokan_sweetalert( response.data, {
+                        await dokan_sweetalert( response.data, {
                             position: 'bottom-end',
                             toast: true,
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 2000,
                             timerProgressBar: true,
+                            didOpen: (toast) => {
+                              setTimeout( function() {
+                                form.unblock();
+                                window.location.reload();
+                              }, 2000);
+                            }
                         } );
-                        form.unblock();
-                        window.location.reload();
                     } else {
                         dokan_sweetalert( '', {
                             icon: 'error',
