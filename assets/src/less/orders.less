@@ -18,15 +18,119 @@
 
         .dokan-order-filter-serach {
             padding:10px 7px;
+
+            .dokan-left {
+                width: 66%!important;
+
+                .dokan-form-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+
+                    @element_height: 35px;
+                    button,
+                    a,
+                    input,
+                    select,
+                    .select2-container {
+                        height: @element_height !important;
+
+                        .select2-selection--single {
+                          height: @element_height !important;
+                        }
+                    }
+
+                    button {
+                        margin-right: 5px;
+                        border: none !important;
+                        padding: 3px 10px !important;
+                    }
+
+                    input,
+                    select,
+                    .select2-container {
+                        width: calc(33% - 54px) !important;
+                        margin-right: 5px;
+                    }
+
+                    a {
+                        display: flex;
+                        align-items: center;
+
+                        .fa {
+                            margin-right: 3px;
+                        }
+                    }
+
+                    @media screen and ( max-width: 576px ) {
+                        select,
+                        .select2-container,
+                        input {
+                            width: 100% !important;
+                            margin-right: 0;
+
+                            &:not(:last-child){
+                                margin-bottom: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .dokan-right {
+                width: 33%!important;
+            };
+
+            @media screen and ( max-width: 768px ) {
+                .dokan-left {
+                    width: 100%!important;
+                }
+
+                .dokan-right {
+                    width: 100%!important;
+                }
+            }
         }
 
-        td.thumb img {
-            padding: 2px;
-            margin: 0;
-            border: 1px solid #dfdfdf;
-            vertical-align: middle;
-            width: 46px;
-            height: auto;
+        td {
+            &.dokan-order-action {
+                gap: 5px;
+                width: 100%;
+                display: grid;
+                grid-gap: 5px;
+                flex-direction: column;
+                grid-template-columns: repeat(3, 1fr);
+
+                .wpo_wcpdf {
+                    border: 1px solid transparent;
+                    padding: 5px 10px;
+                    border-color: #ccc;
+                    border-radius: 3px;
+                    background-color: #fff;
+
+                    img {
+                        width: 22px !important;
+                    }
+                }
+            }
+
+            img {
+                padding: 2px;
+                margin: 0;
+                border: 1px solid #dfdfdf;
+                vertical-align: middle;
+                width: 46px;
+                height: auto;
+            }
+
+            a {
+                color: #6d6d6d;
+                transition: 0.2s linear;
+
+                &:hover {
+                    color: #000;
+                }
+            }
         }
 
         table.table.order-items {
@@ -89,12 +193,17 @@
                 padding: 0 5px;
                 border-right: 1px solid @borderColor;
 
+                a {
+                    color: #6d6d6d;
+                    transition: 0.2s linear;
+                }
+
                 &:last-child {
                     border-right: none;
                 }
 
                 &.active a {
-                    color: #999;
+                    color: #000;
                 }
             }
         }
@@ -172,5 +281,11 @@
             min-height: 27px;
         }
 
+    }
+}
+
+.vendor-dashboard-orders-page {
+    .select2-search__field {
+        min-width: auto !important;
     }
 }

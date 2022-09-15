@@ -123,9 +123,7 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_paypal( $store_settings ) {
-    global $current_user;
-
-    $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : $current_user->user_email; ?>
+    $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : ''; ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
             <div class="dokan-input-group">
@@ -134,6 +132,16 @@ function dokan_withdraw_method_paypal( $store_settings ) {
             </div>
         </div>
     </div>
+    <?php if ( dokan_is_seller_dashboard() ) : ?>
+    <div class="dokan-form-group">
+        <div class="dokan-w8">
+            <input name="dokan_update_payment_settings" type="hidden">
+            <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo empty( $email ) ? 'dokan-hide' : ''; ?>" type="submit" name="settings[paypal][disconnect]">
+                <?php esc_attr_e( 'Disconnect', 'dokan-lite' ); ?>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
     <?php
 }
 
@@ -145,9 +153,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
  * @param array $store_settings
  */
 function dokan_withdraw_method_skrill( $store_settings ) {
-    global $current_user;
-
-    $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : $current_user->user_email;
+    $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : '';
     ?>
     <div class="dokan-form-group">
         <div class="dokan-w8">
@@ -374,10 +380,25 @@ function dokan_withdraw_get_withdrawable_active_methods() {
             'dokan_withdraw_withdrawable_payment_methods',
             [
                 'paypal',
-                'dokan_custom',
                 'bank',
-                'skrill',
             ]
         )
     );
+}
+
+/**
+ * Check if a withdrawal method is enabled in Dokan > Settings > Withdraw options
+ *
+ * @since 3.6.1
+ *
+ * @param string $method_id The method id of withdraw method
+ *
+ * @retun bool
+ */
+function dokan_is_withdraw_method_enabled( $method_id ) {
+    $payment_methods = dokan_withdraw_get_active_methods();
+
+    return is_array( $payment_methods ) &&
+        array_key_exists( $method_id, $payment_methods ) &&
+        ! empty( $payment_methods[ $method_id ] );
 }

@@ -95,7 +95,7 @@
     </div>
 
     <div class="dokan-form-group dokan-text-left">
-        <input id="declaration" name="settings[bank][declaration]" checked type="checkbox" required/>
+        <input id="declaration" name="settings[bank][declaration]" checked type="checkbox"/>
         <label for="declaration">
             <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
         </label>
@@ -119,12 +119,16 @@
 
     <?php if ( ! isset( $_GET['page'] ) || 'dokan-seller-setup' !== $_GET['page'] ) : ?>
     <div class="bottom-actions">
-        <button class="ajax_prev dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
+        <button class="ajax_prev save dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
             <?php echo esc_html( $save_or_add_btn_text ); ?>
         </button>
         <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>">
             <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
         </a>
+        <input type="hidden" name="dokan_update_payment_settings">
+        <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo ! empty( $account_name ) ? '' : 'dokan-hide'; ?>" type="submit" name="settings[bank][disconnect]">
+            <?php esc_html_e( 'Disconnect', 'dokan-lite' ); ?>
+        </button>
     </div>
     <?php endif; ?>
 </div>

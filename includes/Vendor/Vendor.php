@@ -923,13 +923,8 @@ class Vendor {
             if ( function_exists( 'dokan_get_review_url' ) ) {
                 $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $this->id ) ), $review_text );
             }
-            $html = '<span class="seller-rating">
-                        <span title=" '. esc_attr( $text ) . '" class="star-rating" itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
-                            <span class="width" style="width: ' . $width . '%"></span>
-                            <span style=""><strong itemprop="ratingValue">' . $rating['rating'] . '</strong></span>
-                        </span>
-                    </span>
-                    <span class="text">' . $review_text . '</span>';
+            $stars = wc_get_rating_html( $rating['rating'], $rating['count'] );
+            $html = '<span class="text">' . $review_text . '</span>' . '<span class="seller-rating">' . $stars . '</span>';
         }
 
         if ( ! $display ) {
@@ -1236,6 +1231,15 @@ class Vendor {
      */
     public function set_bank_ac_name( $value ) {
         $this->set_payment_prop( 'ac_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank ac type
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_type( $value ) {
+        $this->set_payment_prop( 'ac_type', 'bank', wc_clean( $value ) );
     }
 
     /**

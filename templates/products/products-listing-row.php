@@ -171,5 +171,4 @@
         ?>
         </div>
     </td>
-    <td class="diviader"></td>
 </tr>

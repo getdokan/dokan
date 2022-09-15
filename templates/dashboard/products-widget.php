@@ -16,7 +16,7 @@
         <i class="fas fa-briefcase" aria-hidden="true"></i> <?php esc_html_e( 'Products', 'dokan-lite' ); ?>
 
         <span class="pull-right">
-            <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>"><?php esc_html_e( '+ Add new product', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( dokan_get_navigation_url( 'products' ) ); ?>"><?php esc_html_e( '+ Add new product', 'dokan-lite' ); ?></a>
         </span>
     </div>
 

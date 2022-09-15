@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\REST;
 
 use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
@@ -414,21 +416,26 @@ class OrderController extends DokanRESTController {
      * Get a collection of posts.
      *
      * @param WP_REST_Request $request Full details about the request.
-     * @return WP_Error|WP_REST_Response
+     *
+     * @return WP_REST_Response
      */
     public function get_items( $request ) {
-        $limit        = $request['per_page'];
-        $paged        = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-        $offset       = ( $paged - 1 ) * $limit;
+        $args = [
+            'status'      => $request['status'],
+            'order_date'  => $request['order_date'],
+            'limit'       => $request['per_page'],
+            'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
+            'customer_id' => $request['customer_id'],
+            'seller_id'   => dokan_get_current_user_id(),
+        ];
 
-        $orders = dokan_get_seller_orders( $request['seller_id'], $request['status'], $request['order_date'], $limit, $offset, $request['customer_id'] );
+        $orders = dokan()->order->all( $args );
 
         $data_objects = array();
         $total_orders = 0;
 
         if ( ! empty( $orders ) ) {
-            foreach ( $orders as $order ) {
-                $wc_order       = $this->get_object( $order->order_id );
+            foreach ( $orders as $wc_order ) {
                 $data           = $this->prepare_data_for_response( $wc_order, $request );
                 $data_objects[] = $this->prepare_response_for_collection( $data );
             }

@@ -89,7 +89,8 @@
                                     {{ __( 'We\'re constantly developing new features, stay up-to-date by subscribing to our newsletter.', 'dokan-lite' ) }}
                                 </p>
                                 <div class="form-wrap">
-                                    <input type="email" v-model="subscribe.email" required placeholder="Your Email Address" @keyup.enter="emailSubscribe()">
+                                    <input type="text" :placeholder="__( 'Your Name', 'dokan-lite' )" v-model="subscribe.full_name" />
+                                    <input type="email" v-model="subscribe.email" :placeholder="__( 'Your Email Address', 'dokan-lite' )" @keyup.enter="emailSubscribe()">
                                     <button class="button" @click="emailSubscribe()">{{ __( 'Subscribe', 'dokan-lite' ) }}</button>
                                 </div>
                             </template>
@@ -147,7 +148,8 @@ export default {
             subscribe: {
                 success: false,
                 loading: false,
-                email: ''
+                email: '',
+                full_name: '',
             },
             hasPro: dokan.hasPro ? true : false
         }
@@ -188,25 +190,27 @@ export default {
         },
 
         emailSubscribe() {
-            let action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=0d176bb256&c=?';
-
             if ( ! this.validEmail(this.subscribe.email) ) {
                 return;
             }
 
+            let action = 'https://api.getwemail.io/v1/embed/subscribe/8da67b42-c367-4ad3-ae70-5cf63635a832';
             this.subscribe.loading = true;
 
-            jQuery.ajax({
-                url: action,
+            let options = {
+                type: 'POST',
+                url:  action,
                 data: {
-                    EMAIL: this.subscribe.email,
-                    'group[3555][8]': '1'
+                    email: this.subscribe.email,
+                    full_name: this.subscribe.full_name,
+                    tag: '8e0ae2bb-e838-4ec8-9aa1-c9e5dd96fe34'
                 },
-                type: 'GET',
-                dataType: 'json',
-                cache: false,
-                contentType: "application/json; charset=utf-8",
-            }).always(response => {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+            };
+
+            wp.ajax.send( options, options.data ).always( (response) => {
                 this.subscribe.success = true;
                 this.subscribe.loading = false;
             });

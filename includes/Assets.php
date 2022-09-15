@@ -4,6 +4,7 @@ namespace WeDevs\Dokan;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
+use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 
 class Assets {
 
@@ -181,6 +182,11 @@ class Assets {
                 'component' => 'Vendors',
             ],
             [
+                'path'      => '/dummy-data',
+                'name'      => 'DummyData',
+                'component' => 'DummyData',
+            ],
+            [
                 'path'      => '/vendor-capabilities',
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
@@ -290,6 +296,14 @@ class Assets {
             'dokan-wp-version-before-5-3' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
+            ],
+            'dokan-global-admin-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
+            ],
+            'dokan-product-category-ui-css' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
             'dokan-reverse-withdrawal' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
@@ -414,7 +428,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment', 'dokan-date-range-picker' ],
                 'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [
@@ -467,6 +481,11 @@ class Assets {
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
+            ],
+            'product-category-ui' => [
+                'src'     => $asset_url . '/js/product-category-ui.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
         ];
 
@@ -547,6 +566,12 @@ class Assets {
             $this->dokan_dashboard_scripts();
         }
 
+        // Load category ui css in product add, edit and list page.
+        global $wp;
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) { // phpcs:ignore
+            CategoryHelper::enqueue_and_localize_dokan_multistep_category();
+        }
+
         // store and my account page
         if (
             dokan_is_store_page()
@@ -568,10 +593,13 @@ class Assets {
                 wp_enqueue_script( 'dokan-tooltip' );
                 wp_enqueue_script( 'dokan-form-validate' );
                 wp_enqueue_script( 'speaking-url' );
-                wp_enqueue_script( 'dokan-vendor-registration' );
                 wp_enqueue_script( 'dokan-script' );
                 wp_enqueue_script( 'dokan-select2-js' );
             }
+        }
+
+        if ( is_account_page() && ! is_user_logged_in() ) {
+            wp_enqueue_script( 'dokan-vendor-registration' );
         }
 
         // Scripts for contact form widget google recaptcha
@@ -586,8 +614,6 @@ class Assets {
                 wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
-
-        wp_enqueue_script( 'dokan-login-form-popup' );
 
         do_action( 'dokan_enqueue_scripts' );
     }
@@ -643,7 +669,7 @@ class Assets {
                         __( 'December', 'dokan-lite' ),
                     ],
                 ],
-			]
+            ]
         );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
@@ -696,7 +722,8 @@ class Assets {
             if (
                 isset( $wp->query_vars['products'] ) ||
                 isset( $wp->query_vars['withdraw'] ) ||
-                isset( $wp->query_vars['withdraw-requests'] )
+                isset( $wp->query_vars['withdraw-requests'] ) ||
+                isset( $wp->query_vars['products-search'] )
             ) {
                 wp_enqueue_style( 'dokan-magnific-popup' );
             }
@@ -709,6 +736,7 @@ class Assets {
                 ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
             ) {
                 wp_enqueue_style( 'dokan-timepicker' );
+                wp_enqueue_style( 'dokan-date-range-picker' );
             }
         }
 
@@ -722,6 +750,7 @@ class Assets {
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'post' );
+            wp_enqueue_script( 'dokan-date-range-picker' );
 
             wp_enqueue_script( 'dokan-tooltip' );
 
@@ -1031,6 +1060,7 @@ class Assets {
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'    => dokan_pro_buynow_url(),
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                 ],
                 'states'                 => WC()->countries->get_allowed_country_states(),
                 'countries'              => WC()->countries->get_allowed_countries(),
