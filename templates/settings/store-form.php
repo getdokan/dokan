@@ -87,7 +87,7 @@
                 <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
                     <i class="fas fa-cloud-upload-alt"></i>
 
-                    <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
+                    <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                     <p class="help-block">
                         <?php
                         /**
@@ -496,7 +496,7 @@
 
                 if (
                     // Allow: backspace, delete, tab, escape, enter etc.
-                    $.inArray(e.keyCode, [46, 48, 53, 57, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
+                    $.inArray(e.keyCode, [8, 9, 13, 27, 46, 48, 53, 57, 59, 61, 91, 107, 109, 110, 169, 173, 187, 189, 190]) !== -1 ||
                     // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
                     //Allow Ctrl+v
@@ -516,7 +516,7 @@
 
                 // Ensure that it is a number and stop the keypress.
                 if ( isNaN( Number(e.key) ) ) {
-                    e.preventDefault(); 
+                    e.preventDefault();
                 }
             });
         });

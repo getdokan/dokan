@@ -103,11 +103,15 @@
             ProductCategory.setCatId( selectedCatId, $( category_box ) );
             ProductCategory.hideCategoryModal();
 
+            // Any one can use this hook and do anything after any category is selected.
+            wp.hooks.doAction( 'dokan_selected_multistep_category', selectedCatId );
+
             $(category_box).attr('data-activate', 'no');
         },
 
         setCatUiBasedOnOneCat: function( catId, category ) {
-            ProductCategory.disableDoneBtn( category.children.length > 0 );
+            let disable = undefined !== category.children.length && category.children.length > 0
+            ProductCategory.disableDoneBtn( disable );
 
             let allUl = [ ...category.parents ];
             let selectedInUls = [ ...category.parents ];

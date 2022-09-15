@@ -110,7 +110,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       $(category_box).attr('data-activate', 'no');
     },
     setCatUiBasedOnOneCat: function setCatUiBasedOnOneCat(catId, category) {
-      ProductCategory.disableDoneBtn(category.children.length > 0);
+      var disable = undefined !== category.children.length && category.children.length > 0;
+      ProductCategory.disableDoneBtn(disable);
 
       var allUl = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray___default()(category.parents);
 

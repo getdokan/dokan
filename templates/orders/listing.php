@@ -158,7 +158,6 @@ if ( $user_orders ) {
                                 ?>
                             </td>
                         <?php } ?>
-                        <td class="diviader"></td>
                     </tr>
 
                 <?php
