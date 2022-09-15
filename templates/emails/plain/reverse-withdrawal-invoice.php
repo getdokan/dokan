@@ -13,7 +13,6 @@
  * @var $seller_info \WeDevs\Dokan\Vendor\Vendor
  * @var $due_status  array
  * @var $data        array
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -61,4 +60,3 @@ if ( ! empty( $additional_content ) ) {
 }
 
 echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );
-?>

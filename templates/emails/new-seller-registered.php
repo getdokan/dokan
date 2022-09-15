@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Email_New_Seller
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -13,7 +13,6 @@
  * @var $seller_info \WeDevs\Dokan\Vendor\Vendor
  * @var $due_status array
  * @var $data array
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

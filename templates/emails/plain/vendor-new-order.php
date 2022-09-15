@@ -6,7 +6,6 @@
  *
  * @class       VendorNewOrder
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
