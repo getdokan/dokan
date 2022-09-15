@@ -39,7 +39,10 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     </li>
 </ul>
 <p>
-    <?php echo wp_kses_post( sprintf( __( 'To edit vendor access and details <a href="%s">Click Here</a>', 'dokan-lite' ), esc_url( $data['seller_edit'] ) ) ); ?>
+    <?php
+    // translators: 1) seller edit url
+    echo wp_kses_post( sprintf( __( 'To edit vendor access and details <a href="%s">Click Here</a>', 'dokan-lite' ), esc_url( $data['seller_edit'] ) ) );
+    ?>
 </p>
 
 <?php

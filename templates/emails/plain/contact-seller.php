@@ -28,7 +28,7 @@ echo "\n\n----------------------------------------\n\n";
 /**
  * Show user-defined additional content - this is set in each email's settings.
  */
-if ( $additional_content ) {
+if ( ! empty( $additional_content ) ) {
     echo esc_html( wp_strip_all_tags( wptexturize( $additional_content ) ) );
     echo "\n\n----------------------------------------\n\n";
 }
