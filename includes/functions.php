@@ -2355,7 +2355,16 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
  * @since 2.1
  */
 function dokan_product_listing_filter() {
-    dokan_get_template_part( 'products/listing-filter' );
+    $template_args = [
+        'product_types'       => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan' ) ] ),
+        'product_cat'         => ! empty( $_REQUEST['product_cat'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_cat'] ) ) : '-1',
+        'product_search_name' => ! empty( $_REQUEST['product_search_name'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_search_name'] ) ) : '',
+        'date'                => ! empty( $_REQUEST['date'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['date'] ) ) : '',
+        'product_type'        => ! empty( $_REQUEST['product_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_type'] ) ) : '',
+        'filter_by_other'     => ! empty( $_REQUEST['filter_by_other'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['filter_by_other'] ) ) : '',
+    ];
+
+    dokan_get_template_part( 'products/listing-filter', '', $template_args );
 }
 
 /**
