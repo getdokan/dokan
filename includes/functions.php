@@ -4095,6 +4095,31 @@ function dokan_get_interval_between_dates( $start_date, $end_date, $group_by = '
     return $group_by === 'day' ? $date_interval->days : $date_interval->m;
 }
 
+if ( ! function_exists( 'dokan_date_time_format' ) ) {
+
+    /**
+     * Format date time string to WC format
+     *
+     * @since 2.6.8
+     * @since DOKAN_SINCE This method was moved from wc-functions.php
+     *
+     * @param boolean $date_only
+     *
+     * @param string  $time
+     *
+     * @return string
+     */
+    function dokan_date_time_format( $time, $date_only = false ) {
+        $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
+
+        if ( $date_only ) {
+            return date_i18n( wc_date_format(), strtotime( $time ) );
+        }
+
+        return date_i18n( $format, strtotime( $time ) );
+    }
+}
+
 /**
  * Get threshold day for a user
  *

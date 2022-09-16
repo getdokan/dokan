@@ -5,7 +5,7 @@
  *
  * @access public
  *
- * @param int $post_id
+ * @param int   $post_id
  * @param array $data
  *
  * @return void
@@ -313,6 +313,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
             try {
                 wc_update_product_stock_status( $post_id, $stock_status );
             } catch ( Exception $ex ) {
+                dokan_log( 'product stock update exception' );
             }
         }
 
@@ -413,9 +414,11 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
  * Grant downloadable file access to any newly added files on any existing.
  * orders for this product that have previously been granted downloadable file access.
  *
- * @param int $product_id product identifier
- * @param int $variation_id optional product variation identifier
+ * @param int   $product_id         product identifier
+ * @param int   $variation_id       optional product variation identifier
  * @param array $downloadable_files newly set files
+ *
+ * @return void
  */
 function dokan_process_product_file_download_paths( $product_id, $variation_id, $downloadable_files ) {
     global $wpdb;
@@ -468,7 +471,6 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
  * @param int $order_id
  *
  * @return int
- * @global WPDB $wpdb
  */
 function dokan_sub_order_get_total_coupon( $order_id ) {
     global $wpdb;
@@ -492,9 +494,9 @@ function dokan_sub_order_get_total_coupon( $order_id ) {
 /**
  * Change seller display name to store name
  *
- * @param string $display_name
- *
  * @since 2.4.10 [Change seller display name to store name]
+ *
+ * @param string $display_name
  *
  * @return string $display_name
  */
@@ -506,8 +508,6 @@ function dokan_seller_displayname( $display_name ) {
 
     return $display_name;
 }
-
-//add_filter( 'pre_user_display_name', 'dokan_seller_displayname' );
 
 /**
  * Get featured products
@@ -537,7 +537,7 @@ function dokan_get_featured_products( $per_page = 9, $seller_id = '', $page = 1 
 }
 
 /**
- * Get latest products
+ * Get the latest products
  *
  * Shown on homepage
  *
@@ -562,7 +562,7 @@ function dokan_get_latest_products( $per_page = 9, $seller_id = '', $page = 1 ) 
 }
 
 /**
- * Get best selling products
+ * Get best-selling products
  *
  * Shown on homepage
  *
@@ -601,8 +601,8 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page 
  * Check More product from Seller tab is active or not.
  *
  * @since 2.5
+ *
  * @return boolean
- * @global object $post
  */
 function check_more_seller_product_tab() {
     global $post;
@@ -689,11 +689,10 @@ function dokan_get_on_sale_products( $per_page = 10, $paged = 1, $seller_id = 0 
  *
  * Total = SUM(net_amount) - SUM(withdraw)
  *
- * @param int $seller_id
+ * @param int  $seller_id
  * @param bool $formatted
  *
- * @return mixed
- * @global WPDB $wpdb
+ * @return float|string float if formatted is false, string otherwise
  */
 function dokan_get_seller_balance( $seller_id, $formatted = true ) {
     $vendor = dokan()->vendor->get( $seller_id );
@@ -704,11 +703,12 @@ function dokan_get_seller_balance( $seller_id, $formatted = true ) {
 /**
  * Get Seller Earned amount
  *
- * @param int $seller_id
- * @param boolean $formatted
- * @param string $on_date
- *
  * @since 2.5.4
+ *
+ * @param boolean $formatted
+ * @param string  $on_date
+ *
+ * @param int     $seller_id
  *
  * @return float|null
  */
@@ -816,12 +816,11 @@ add_filter( 'woocommerce_dashboard_status_widget_sales_query', 'dokan_filter_woo
 /**
  * Woocommerce Admin dashboard Sales Report Synced with Dokan Dashboard report
  *
+ * @since  2.4.3
+ *
  * @param array $query
  *
- * @since 2.4.3
- *
- * @return $query
- * @global WPDB $wpdb
+ * @return array
  */
 function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) {
     global $wpdb;
@@ -966,6 +965,7 @@ function dokan_clear_best_selling_product_category_cache( $order_id ) {
     delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
     delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
 }
+
 add_action( 'woocommerce_new_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
 add_action( 'woocommerce_update_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
 
@@ -986,12 +986,12 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
     // get associated product id with this category
     $args = [
         'status'   => 'publish',
-        'limit'    => -1,
+        'limit'    => - 1,
         'return'   => 'ids',
-        'category' => array( $term->slug ),
+        'category' => [ $term->slug ],
     ];
 
-    $query = new WC_Product_Query( $args );
+    $query    = new WC_Product_Query( $args );
     $products = $query->get_products();
 
     if ( empty( $products ) ) {
@@ -999,7 +999,7 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
     }
 
     global $wpdb;
-    $products = implode( ',', $products );
+    $products   = implode( ',', $products );
     $seller_ids = $wpdb->get_col( "SELECT DISTINCT post_author from {$wpdb->posts} WHERE ID in ($products)" ); // phpcs:ignore
 
     foreach ( $seller_ids as $seller_id ) {
@@ -1013,35 +1013,12 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
         delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
     }
 }
+
 add_action( 'edit_product_cat', 'dokan_clear_edit_product_category_cache', 10, 1 );
 add_action( 'pre_delete_term', 'dokan_clear_edit_product_category_cache', 10, 1 );
 
-if ( ! function_exists( 'dokan_date_time_format' ) ) {
-
-    /**
-     * Format date time string to WC format
-     *
-     * @param string $time
-     * @param boolean $date_only
-     *
-     * @since 2.6.8
-     *
-     * @return string
-     */
-    function dokan_date_time_format( $time, $date_only = false ) {
-        $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
-
-        if ( $date_only ) {
-            return date_i18n( wc_date_format(), strtotime( $time ) );
-        }
-
-        return date_i18n( $format, strtotime( $time ) );
-    }
-}
-
 /**
- * Remove banner when without banner layout
- * selected for profile
+ * Remove banner when without banner layout selected for profile
  *
  * @param array $progress_values
  *
@@ -1064,8 +1041,7 @@ function dokan_split_profile_completion_value( $progress_values ) {
 add_filter( 'dokan_profile_completion_values', 'dokan_split_profile_completion_value', 10 );
 
 /**
- * Set More products from seller tab
- * On Single Product Page
+ * Set More products from seller tab on Single Product Page
  *
  * @since 2.5
  *
@@ -1090,11 +1066,11 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
 /**
  *  Show more products from current seller
  *
- * @param int $seller_id
- * @param int $posts_per_page
- *
  * @since 2.5
  * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ *
+ * @param int     $seller_id
+ * @param int     $posts_per_page
  *
  * @global object $product
  * @global object $post
@@ -1190,8 +1166,8 @@ add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
 /**
  * Add vendor email on customers note mail replay to
  *
- * @param string $headers
- * @param string $id
+ * @param string   $headers
+ * @param string   $id
  * @param WC_Order $order
  *
  * @return string $headers
@@ -1242,7 +1218,7 @@ add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_
 /**
  * Send email to the vendor/seller when cancel the order
  *
- * @param string $recipient
+ * @param string   $recipient
  * @param WC_Order $order
  *
  * @return string
@@ -1255,8 +1231,8 @@ function send_email_for_order_cancellation( $recipient, $order ) {
     // get the order id from order object
     $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
 
-    $seller_info      = get_userdata( $seller_id );
-    $seller_email     = $seller_info->user_email;
+    $seller_info  = get_userdata( $seller_id );
+    $seller_email = $seller_info->user_email;
 
     // if admin email & seller email is same
     if ( false === strpos( $recipient, $seller_email ) ) {
@@ -1266,4 +1242,4 @@ function send_email_for_order_cancellation( $recipient, $order ) {
     return $recipient;
 }
 
-add_filter("woocommerce_email_recipient_cancelled_order", 'send_email_for_order_cancellation', 10, 2);
+add_filter( 'woocommerce_email_recipient_cancelled_order', 'send_email_for_order_cancellation', 10, 2 );

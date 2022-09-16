@@ -765,7 +765,7 @@ class Vendor {
     /**
      * Get vendor total earnings
      *
-     * @return float
+     * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
         global $wpdb;
