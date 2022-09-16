@@ -185,9 +185,31 @@ class Products {
      * @return void
      */
     public function render_new_product_template( $query_vars ) {
-        if ( isset( $query_vars['new-product'] ) && ! dokan()->is_pro_exists() ) {
-            dokan_get_template_part( 'products/new-product' );
+        if ( ! isset( $query_vars['new-product'] ) || dokan()->is_pro_exists() ) {
+            return;
         }
+
+        $tenplate_args = [
+            'created_product'        => ! empty( $_REQUEST['created_product'] ) ? intval( $_REQUEST['created_product'] ) : null,
+            'feat_image_id'          => ! empty( $_REQUEST['feat_image_id'] ) ? intval( $_REQUEST['feat_image_id'] ) : '',
+            'regular_price'          => ! empty( $_REQUEST['_regular_price'] ) ? floatval( $_REQUEST['_regular_price'] ) : '',
+            'sale_price'             => ! empty( $_REQUEST['_sale_price'] ) ? floatval( $_REQUEST['_sale_price'] ) : '',
+            'sale_price_date_from'   => ! empty( $_REQUEST['_sale_price_dates_from'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_from'] ) ) : '',
+            'sale_price_date_to'     => ! empty( $_REQUEST['_sale_price_dates_to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_to'] ) ) : '',
+            'post_content'           => ! empty( $_REQUEST['post_content'] ) ? wp_kses_post( wp_unslash( $_REQUEST['post_content'] ) ) : '',
+            'post_excerpt'           => ! empty( $_REQUEST['post_excerpt'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['post_excerpt'] ) ) : '',
+            'product_images'         => ! empty( $_REQUEST['product_image_gallery'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_image_gallery'] ) ) : '',
+            'post_title'             => ! empty( $_REQUEST['post_title'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['post_title'] ) ) : '',
+            'terms'                  => ! empty( $_REQUEST['product_tag'] ) ? floatval( $_REQUEST['product_tag'] ) : '',
+            'saved_product_cat_data' => array_merge( (array) Helper::get_saved_products_category(), [ 'from' => 'new_product' ] ),
+            'currency_symbol'        => get_woocommerce_currency_symbol(),
+            'is_seller_enabled'      => dokan_is_seller_enabled( get_current_user_id() ),
+            'can_sell_product'       => apply_filters( 'dokan_can_post', true ),
+            'can_create_tags'        => 'on' === dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' ),
+            'show_add_new_button'    => ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1,
+        ];
+
+        dokan_get_template_part( 'products/new-product', '', $tenplate_args );
     }
 
     /**

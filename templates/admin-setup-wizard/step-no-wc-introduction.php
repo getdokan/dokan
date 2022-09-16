@@ -37,7 +37,7 @@
                 __( 'Please note that %1$sWooCommerce%2$s is necessary for Dokan to work but the current PHP version does not meet minimum requirements for WooCommerce. %3$sPlease learn more about updating PHP%2$s', 'dokan-lite' ),
                 '<a href="https://wordpress.org/plugins/woocommerce" target="_blank" rel="noopener">',
                 '</a>',
-                '<a href="https://wordpress.org/support/update-php/" target="_blank" rel="noopener">',
+                '<a href="https://wordpress.org/support/update-php/" target="_blank" rel="noopener">'
             ),
             [
                 'a' => [
