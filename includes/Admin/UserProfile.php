@@ -48,7 +48,7 @@ class UserProfile {
     /**
      * Add fields to user profile
      *
-     * @param WP_User $user
+     * @param \WP_User $user
      *
      * @return void|false
      */
@@ -479,11 +479,11 @@ class UserProfile {
 
                 // Allow: backspace, delete, tab, escape, enter and .
                 if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 109, 110, 173, 189, 190]) !== -1 ||
-                     // Allow: Ctrl+A
+                    // Allow: Ctrl+A
                     (e.keyCode == 65 && e.ctrlKey === true) ||
-                     // Allow: home, end, left, right
+                    // Allow: home, end, left, right
                     (e.keyCode >= 35 && e.keyCode <= 39)) {
-                         // let it happen, don't do anything
+                        // let it happen, don't do anything
                         return;
                 }
 

@@ -73,7 +73,7 @@ class Hooks {
 
         if ( WC_VERSION > '3.2.6' ) {
             // Remove seller, suborder column if seller is viewing his own product
-            if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+            if ( ! current_user_can( 'manage_woocommerce' ) || ( ! empty( $_GET['author'] ) ) ) { // phpcs:ignore
                 unset( $columns['suborder'] );
                 unset( $columns['seller'] );
             }
@@ -82,7 +82,7 @@ class Hooks {
         }
 
         // Remove seller, suborder column if seller is viewing his own product
-        if ( ! current_user_can( 'manage_woocommerce' ) || ( isset( $_GET['author'] ) && ! empty( $_GET['author'] ) ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) || ( ! empty( $_GET['author'] ) ) ) { // phpcs:ignore
             unset( $existing_columns['suborder'] );
             unset( $existing_columns['seller'] );
         }
@@ -154,7 +154,7 @@ class Hooks {
     /**
      * Adds css classes on admin shop order table
      *
-     * @global WP_Post $post
+     * @global \WP_Post $post
      *
      * @param array $classes
      * @param int $post_id
@@ -168,13 +168,13 @@ class Hooks {
             return $classes;
         }
 
-        $vendor_id = isset( $_GET['vendor_id'] ) ? sanitize_text_field( wp_unslash( $_GET['vendor_id'] ) ) : '';
+        $vendor_id = isset( $_GET['vendor_id'] ) ? absint( wp_unslash( $_GET['vendor_id'] ) ) : 0; // phpcs:ignore
 
         if ( $vendor_id ) {
             return $classes;
         }
 
-        if ( $post->post_type == 'shop_order' && $post->post_parent != 0 ) {
+        if ( $post->post_type === 'shop_order' && $post->post_parent !== 0 ) {
             $classes[] = 'sub-order parent-' . $post->post_parent;
         }
 
@@ -259,7 +259,7 @@ class Hooks {
     public function admin_on_trash_order( $post_id ) {
         $post = get_post( $post_id );
 
-        if ( 'shop_order' == $post->post_type && 0 == $post->post_parent ) {
+        if ( 'shop_order' === $post->post_type && 0 === $post->post_parent ) {
             $sub_orders = get_children(
                 array(
 					'post_parent' => $post_id,
@@ -276,14 +276,14 @@ class Hooks {
     }
 
     /**
-     * Untrash sub orders when parent orders are untrashed
+     * Un-trash sub orders when parent orders are un-trashed
      *
      * @param int $post_id
      */
     public function admin_on_untrash_order( $post_id ) {
         $post = get_post( $post_id );
 
-        if ( 'shop_order' == $post->post_type && 0 == $post->post_parent ) {
+        if ( 'shop_order' === $post->post_type && 0 === $post->post_parent ) {
             global $wpdb;
 
             $suborder_ids = $wpdb->get_col(
@@ -306,7 +306,7 @@ class Hooks {
     public function admin_on_delete_order( $post_id ) {
         $post = get_post( $post_id );
 
-        if ( 'shop_order' == $post->post_type ) {
+        if ( 'shop_order' === $post->post_type ) {
             dokan_delete_sync_order( $post_id );
 
             $sub_orders = get_children(
@@ -327,12 +327,12 @@ class Hooks {
     /**
      * Show a toggle button to toggle all the sub orders
      *
-     * @global WP_Query $wp_query
+     * @global \WP_Query $wp_query
      */
     public function admin_shop_order_toggle_sub_orders() {
         global $wp_query;
 
-        if ( isset( $wp_query->query['post_type'] ) && 'shop_order' == $wp_query->query['post_type'] ) {
+        if ( isset( $wp_query->query['post_type'] ) && 'shop_order' === $wp_query->query['post_type'] ) {
             echo '<button class="toggle-sub-orders button">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
         }
     }
@@ -340,11 +340,11 @@ class Hooks {
     /**
      * Send notification to the seller once a product is published from pending
      *
-     * @param WP_Post $post
+     * @param \WP_Post $post
      * @return void
      */
     public function send_notification_on_product_publish( $post ) {
-        if ( $post->post_type != 'product' ) {
+        if ( $post->post_type !== 'product' ) {
             return;
         }
 
@@ -395,7 +395,7 @@ class Hooks {
                 <?php endforeach ?>
             <?php endif ?>
         </select>
-         <?php
+        <?php
     }
 
 
@@ -408,7 +408,7 @@ class Hooks {
      */
     public function override_product_author_by_admin( $product_id, $post ) {
         $product          = wc_get_product( $product_id );
-        $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? intval( $_POST['dokan_product_author_override'] ) : 0; // WPCS: CSRF ok.
+        $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? intval( wp_unslash( $_POST['dokan_product_author_override'] ) ) : 0; // phpcs:ignore
 
         if ( ! $posted_vendor_id ) {
             return;
