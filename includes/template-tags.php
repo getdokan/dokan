@@ -746,16 +746,16 @@ function dokan_get_chosen_taxonomy_attributes() {
 }
 
 function dokan_seller_reg_form_fields() {
-    $postdata   = wc_clean( $_POST ); //phpcs:ignore
-    $role       = isset( $postdata['role'] ) ? $postdata['role'] : 'customer';
+    $data       = dokan_get_seller_registration_form_data();
+    $role       = isset( $data['role'] ) ? $data['role'] : 'customer';
     $role_style = ( $role === 'customer' ) ? 'display:none' : '';
 
     dokan_get_template_part(
-        'global/seller-registration-form', '', array(
-            'postdata' => $postdata,
-            'role' => $role,
+        'global/seller-registration-form', '', [
+            'data'       => $data,
+            'role'       => $role,
             'role_style' => $role_style,
-        )
+        ]
     );
 }
 
@@ -886,4 +886,40 @@ function dokan_store_contact_widget() {
     if ( dokan()->widgets->is_exists( 'store_contact_form' ) && 'on' === dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) ) {
         the_widget( dokan()->widgets->store_contact_form, [ 'title' => __( 'Contact Vendor', 'dokan-lite' ) ], $args );
     }
+}
+
+/**
+ * Get Dokan seller registration form data
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return string[]
+ */
+function dokan_get_seller_registration_form_data() {
+    // prepare form data
+    $data = [
+        'fname'    => '',
+        'lname'    => '',
+        'username' => '',
+        'email'    => '',
+        'phone'    => '',
+        'password' => '',
+        'shopname' => '',
+        'shopurl'  => '',
+    ];
+    // check if user submitted data
+    if ( isset( $_POST['woocommerce-register-nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ), 'woocommerce-register' ) ) {
+        $data = [
+            'fname'    => isset( $_POST['fname'] ) ? sanitize_text_field( wp_unslash( $_POST['fname'] ) ) : '',
+            'lname'    => isset( $_POST['lname'] ) ? sanitize_text_field( wp_unslash( $_POST['lname'] ) ) : '',
+            'username' => isset( $_POST['username'] ) ? sanitize_user( wp_unslash( $_POST['username'] ) ) : '',
+            'email'    => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+            'phone'    => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+            'password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', // phpcs:ignore
+            'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
+            'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',
+        ];
+    }
+
+    return $data;
 }

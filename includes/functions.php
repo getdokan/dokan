@@ -4384,3 +4384,17 @@ function is_tweleve_hour_format() {
     // Check if current setup format is 12 hour format.
     return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
 }
+
+/**
+ * Sanitize phone number.
+ * Allows only numbers and "+" (plus sign) "." (full stop) "(" ")" "-".
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $phone Phone number.
+ *
+ * @return string
+ */
+function dokan_sanitize_phone_number( $phone ) {
+    return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+}
