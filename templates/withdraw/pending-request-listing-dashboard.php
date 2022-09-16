@@ -2,13 +2,13 @@
 /**
  * Dokan Withdraw Pending Request Listing Template for dashboard
  *
- * @since 3.3.1
+ * @since   3.3.1
  *
  * @package dokan
  */
 
 if ( $withdraw_requests ) :
-?>
+    ?>
     <div class="dokan-clearfix dokan-panel-inner-container">
         <div class="dokan-w12">
             <strong><?php esc_html_e( 'Pending Requests', 'dokan-lite' ); ?></strong>
@@ -56,5 +56,5 @@ if ( $withdraw_requests ) :
             </table>
         </div>
     </div>
-<?php
+    <?php
 endif;

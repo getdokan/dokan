@@ -2,13 +2,13 @@
 /**
  * Dokan Withdraw Pending Request Listing Template
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
 
 if ( $withdraw_requests ) :
-?>
+    ?>
     <table class="dokan-table dokan-table-striped">
         <tr>
             <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
@@ -26,10 +26,12 @@ if ( $withdraw_requests ) :
                 <td><?php echo esc_html( dokan_format_datetime( $request->date ) ); ?></td>
                 <td>
                     <?php
-                    $url = add_query_arg( array(
-                        'dokan_handle_withdraw_request' => 'cancel',
-                        'id'     => $request->id
-                    ), dokan_get_navigation_url( 'withdraw-requests' ) );
+                    $url = add_query_arg(
+                        [
+							'dokan_handle_withdraw_request' => 'cancel',
+							'id'                            => $request->id,
+						], dokan_get_navigation_url( 'withdraw-requests' )
+                    );
                     ?>
                     <a href="<?php echo esc_url( wp_nonce_url( $url, 'dokan_cancel_withdraw' ) ); ?>">
                         <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
@@ -37,11 +39,11 @@ if ( $withdraw_requests ) :
                 </td>
                 <td>
                     <?php
-                        if ( $request->status == 0 ) {
-                            echo '<span class="label label-danger">' . esc_html__( 'Pending Review', 'dokan-lite' ) . '</span>';
-                        } elseif ( $request->status == 1 ) {
-                            echo '<span class="label label-warning">' . esc_html__( 'Accepted', 'dokan-lite' ) . '</span>';
-                        }
+                    if ( $request->status === 0 ) {
+                        echo '<span class="label label-danger">' . esc_html__( 'Pending Review', 'dokan-lite' ) . '</span>';
+                    } elseif ( $request->status === 1 ) {
+                        echo '<span class="label label-warning">' . esc_html__( 'Accepted', 'dokan-lite' ) . '</span>';
+                    }
                     ?>
                 </td>
             </tr>
@@ -50,7 +52,7 @@ if ( $withdraw_requests ) :
 
     </table>
 
-<?php else: ?>
+<?php else : ?>
     <table class="dokan-table dokan-table-striped">
         <tr>
             <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
@@ -64,7 +66,7 @@ if ( $withdraw_requests ) :
             <td colspan="5"><?php esc_html_e( 'No pending withdraw request', 'dokan-lite' ); ?></td>
         </tr>
     </table>
-    <?php
+	<?php
 endif;
 
 

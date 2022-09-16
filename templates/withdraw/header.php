@@ -2,7 +2,7 @@
 /**
  * Dokan Dashboard Withdra Header Template
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
