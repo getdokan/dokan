@@ -18,15 +18,18 @@
                     <tfoot>
                         <tr>
                             <th colspan="3">
-                                <a href="#" class="insert-file-row dokan-btn dokan-btn-sm dokan-btn-success" data-row="<?php
-                                    $file = array(
-                                        'file' => '',
-                                        'name' => ''
-                                    );
-                                    ob_start();
-                                    include DOKAN_INC_DIR . '/woo-views/html-product-download.php';
-                                    echo esc_attr( ob_get_clean() );
-                                ?>"><?php esc_html_e( 'Add File', 'dokan-lite' ); ?></a>
+                                <?php
+                                $file = [
+                                    'file' => '',
+                                    'name' => '',
+                                ];
+                                ob_start();
+                                include DOKAN_INC_DIR . '/woo-views/html-product-download.php';
+                                $row_html = ob_get_clean();
+                                ?>
+                                <a href="#" class="insert-file-row dokan-btn dokan-btn-sm dokan-btn-success" data-row="<?php echo esc_attr( $row_html ); ?>">
+                                    <?php esc_html_e( 'Add File', 'dokan-lite' ); ?>
+                                </a>
                             </th>
                         </tr>
                     </tfoot>

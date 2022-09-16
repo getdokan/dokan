@@ -29,14 +29,15 @@
             <div class="title"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></div>
             <div class="count">
                 <?php
-                $status = dokan_withdraw_get_active_order_status(); // phpcs:ignore
-                $total  = 0;
-                foreach ( $status as $order_status ) {
-                    if ( ! isset( $orders_count->$order_status ) ) {
-                        continue;
-                    }
-                    $total += $orders_count->$order_status;
-                }
+                $order_statuses = dokan_withdraw_get_active_order_status();
+                $total          = 0;
+
+                foreach ( $order_statuses as $order_status ) :
+                    if ( isset( $orders_count->$order_status ) ) :
+                        $total += $orders_count->$order_status;
+                    endif;
+                endforeach;
+
                 echo esc_html( number_format_i18n( $total, 0 ) );
                 ?>
             </div>
