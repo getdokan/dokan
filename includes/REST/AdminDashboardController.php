@@ -123,9 +123,7 @@ class AdminDashboardController extends DokanRESTAdminController {
             if ( $show_summary ) {
                 $summary = $desc;
 
-                /*
-                * Changing existing [...] to [&hellip;].
-                */
+                //Changing existing [...] to [&hellip;]. // phpcs:ignore
                 if ( '[...]' === substr( $summary, -5 ) ) {
                     $summary = substr( $summary, 0, -5 ) . '[&hellip;]';
                 }

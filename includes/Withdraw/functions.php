@@ -103,7 +103,7 @@ function dokan_withdraw_get_method( $method_key ) {
  * @param string      $method_key
  * @param object|null $request //@since 3.3.7
  *
- * @return string
+ * @return string|void
  */
 function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     $registered = dokan_withdraw_register_methods();
@@ -120,8 +120,7 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
  *
  * @param array    $store_settings
  *
- * @global WP_User $current_user
- *
+ * @return void
  */
 function dokan_withdraw_method_paypal( $store_settings ) {
     $email = isset( $store_settings['payment']['paypal']['email'] ) ? esc_attr( $store_settings['payment']['paypal']['email'] ) : ''; ?>
@@ -151,8 +150,7 @@ function dokan_withdraw_method_paypal( $store_settings ) {
  *
  * @param array    $store_settings
  *
- * @global WP_User $current_user
- *
+ * @return void
  */
 function dokan_withdraw_method_skrill( $store_settings ) {
     $email = isset( $store_settings['payment']['skrill']['email'] ) ? esc_attr( $store_settings['payment']['skrill']['email'] ) : '';
@@ -173,8 +171,7 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  *
  * @param array    $store_settings
  *
- * @global WP_User $current_user
- *
+ * @return void
  */
 function dokan_withdraw_method_bank( $store_settings ) {
     $args = [
@@ -260,7 +257,7 @@ function dokan_withdraw_get_active_order_status() {
 /**
  * Get comma seperated value from "dokan_withdraw_get_active_order_status()" return array
  *
- * @param array array
+ * @return string
  */
 function dokan_withdraw_get_active_order_status_in_comma() {
     $order_status = dokan_withdraw_get_active_order_status();

@@ -12,13 +12,14 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
      * @see Walker::$db_fields
      * @var array
      */
-    var $db_fields = array(
+    public $db_fields = array(
         'parent' => 'parent',
         'id'     => 'term_id',
     );
 
     public function __construct( $post_id ) {
         $this->post_id = $post_id;
+        parent::__construct( $post_id );
     }
 
 
@@ -44,7 +45,7 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         }
 
-        if ( $category->term_id == $args['selected'] ) {
+        if ( (int) $category->term_id === (int) $args['selected'] ) {
             $output .= ' selected="selected"';
         }
 

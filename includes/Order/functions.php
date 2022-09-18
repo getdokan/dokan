@@ -710,7 +710,7 @@ function dokan_order_csv_export( $orders, $file = null ) {
     $statuses = wc_get_order_statuses();
 
     $resource = ( $file === null ) ? 'php://output' : $file;
-    $output   = fopen( $resource, 'w' );
+    $output   = fopen( $resource, 'w' ); // phpcs:ignore
 
     fputcsv( $output, $headers );
 
@@ -840,7 +840,7 @@ function dokan_order_csv_export( $orders, $file = null ) {
         fputcsv( $output, $line );
     }
 
-    fclose( $output );
+    fclose( $output ); // phpcs:ignore
 }
 
 /**
