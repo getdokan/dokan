@@ -117,7 +117,7 @@
 
     <p class="bottom-note"><?php esc_html_e( 'This Payment method will become available in 3 days.', 'dokan-lite' ); ?></p>
 
-    <?php if ( ! isset( $_GET['page'] ) || 'dokan-seller-setup' !== sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : ?>
+    <?php if ( ! isset( $_GET['page'] ) || 'dokan-seller-setup' !== sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : // phpcs:ignore ?>
         <div class="bottom-actions">
             <button class="ajax_prev save dokan-btn dokan-btn-theme" type="submit" name="dokan_update_payment_settings">
                 <?php echo esc_html( $save_or_add_btn_text ); ?>

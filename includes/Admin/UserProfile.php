@@ -543,46 +543,43 @@ class UserProfile {
             return;
         }
 
-        $post_data = wp_unslash( $_POST );
-
-        if ( ! isset( $post_data['dokan_update_user_profile_info_nonce'] ) || ! wp_verify_nonce( sanitize_key( $post_data['dokan_update_user_profile_info_nonce'] ), 'dokan_update_user_profile_info' ) ) {
+        if ( ! isset( $_POST['dokan_update_user_profile_info_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_update_user_profile_info_nonce'] ) ), 'dokan_update_user_profile_info' ) ) {
             return;
         }
 
-        if ( ! isset( $post_data['dokan_enable_selling'] ) ) {
+        if ( ! isset( $_POST['dokan_enable_selling'] ) ) {
             return;
         }
 
-        $selling         = sanitize_text_field( $post_data['dokan_enable_selling'] );
-        $publishing      = sanitize_text_field( $post_data['dokan_publish'] );
-        $percentage      = isset( $post_data['dokan_admin_percentage'] ) && $post_data['dokan_admin_percentage'] !== '' ? $post_data['dokan_admin_percentage'] : '';
-        $percentage_type = empty( $post_data['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( $post_data['dokan_admin_percentage_type'] );
-        $feature_seller  = sanitize_text_field( $post_data['dokan_feature'] );
+        $selling         = sanitize_text_field( wp_unslash( $_POST['dokan_enable_selling'] ) );
+        $publishing      = isset( $_POST['dokan_publish'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_publish'] ) ) : '';
+        $percentage      = isset( $_POST['dokan_admin_percentage'] ) && $_POST['dokan_admin_percentage'] !== '' ? sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage'] ) ) : '';
+        $percentage_type = empty( $_POST['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage_type'] ) );
+        $feature_seller  = isset( $_POST['dokan_feature'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_feature'] ) ) : '';
         $store_settings  = dokan_get_store_info( $user_id );
 
-        $social         = $post_data['dokan_social'];
-        $social_fields  = dokan_get_social_profile_fields();
-
-        $store_settings['banner']     = intval( $post_data['dokan_banner'] );
-        $store_settings['store_name'] = sanitize_text_field( $post_data['dokan_store_name'] );
-        $store_settings['address']    = isset( $post_data['dokan_store_address'] ) ? array_map( 'sanitize_text_field', $post_data['dokan_store_address'] ) : array();
-        $store_settings['phone']      = sanitize_text_field( $post_data['dokan_store_phone'] );
+        $store_settings['banner']     = isset( $_POST['dokan_banner'] ) ? intval( $_POST['dokan_banner'] ) : '';
+        $store_settings['store_name'] = isset( $_POST['dokan_store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_name'] ) ) : '';
+        $store_settings['address']    = isset( $_POST['dokan_store_address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['dokan_store_address'] ) ) : [];
+        $store_settings['phone']      = isset( $_POST['dokan_store_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_phone'] ) ) : '';
 
         // social settings
-        if ( is_array( $social ) ) {
-            foreach ( $social as $key => $value ) {
-                if ( isset( $social_fields[ $key ] ) ) {
-                    $store_settings['social'][ $key ] = esc_url_raw( $social[ $key ] );
-                }
+        $social        = isset( $_POST['dokan_social'] ) ? array_map( 'esc_url_raw', (array) wp_unslash( $_POST['dokan_social'] ) ) : [];
+        $social_fields = dokan_get_social_profile_fields();
+        foreach ( $social as $key => $value ) {
+            if ( isset( $social_fields[ $key ] ) ) {
+                $store_settings['social'][ $key ] = $social[ $key ];
             }
         }
 
-        wp_update_user(
-            array(
-				'ID'            => $user_id,
-				'user_nicename' => sanitize_title( $post_data['dokan_store_url'] ),
-            )
-        );
+        if ( isset( $_POST['dokan_store_url'] ) ) {
+            wp_update_user(
+                array(
+                    'ID'            => $user_id,
+                    'user_nicename' => sanitize_title( wp_unslash( $_POST['dokan_store_url'] ) ),
+                )
+            );
+        }
 
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
         update_user_meta( $user_id, 'dokan_enable_selling', $selling );

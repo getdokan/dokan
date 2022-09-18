@@ -196,7 +196,6 @@ class Customizer {
                 'capability'           => $this->capability,
                 'sanitize_callback'    => [ $this, 'bool_to_string' ],
                 'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
-                // 'transport'            => 'postMessage',
             ]
         );
 
@@ -218,7 +217,6 @@ class Customizer {
                 'capability'           => $this->capability,
                 'sanitize_callback'    => [ $this, 'bool_to_string' ],
                 'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
-                // 'transport'            => 'postMessage',
             ]
         );
 
@@ -240,7 +238,6 @@ class Customizer {
                 'capability'           => $this->capability,
                 'sanitize_callback'    => [ $this, 'bool_to_string' ],
                 'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
-                // 'transport'            => 'postMessage',
             ]
         );
 

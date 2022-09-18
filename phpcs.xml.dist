@@ -21,6 +21,7 @@
     <exclude-pattern>*.twig</exclude-pattern>
     <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>*.scss</exclude-pattern>
+    <exclude-pattern>languages/*</exclude-pattern>
 
     <!-- How to scan -->
     <!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
@@ -128,5 +129,8 @@
                 <element value="wc_clean"/>
             </property>
         </properties>
+    </rule>
+    <rule ref="Squiz.PHP.CommentedOutCode.Found">
+            <severity>0</severity>
     </rule>
 </ruleset>

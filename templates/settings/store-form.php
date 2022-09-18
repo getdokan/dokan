@@ -28,21 +28,6 @@ $dokan_category = isset( $profile_info['dokan_category'] ) ? $profile_info['doka
 $enable_tnc     = isset( $profile_info['enable_tnc'] ) ? $profile_info['enable_tnc'] : '';
 $store_tnc      = isset( $profile_info['store_tnc'] ) ? $profile_info['store_tnc'] : '';
 
-if ( is_wp_error( $validate ) ) {
-    $posted_data = wp_unslash( $_POST );
-
-    $storename       = sanitize_text_field( $posted_data['dokan_store_name'] );
-    $map_location    = sanitize_text_field( $posted_data['location'] );
-    $map_address     = sanitize_text_field( $posted_data['find_address'] );
-    $posted_address  = sanitize_text_field( $posted_data['dokan_address'] );
-    $address_street1 = sanitize_text_field( $posted_address['street_1'] );
-    $address_street2 = sanitize_text_field( $posted_address['street_2'] );
-    $address_city    = sanitize_text_field( $posted_address['city'] );
-    $address_zip     = sanitize_text_field( $posted_address['zip'] );
-    $address_country = sanitize_text_field( $posted_address['country'] );
-    $address_state   = sanitize_text_field( $posted_address['state'] );
-}
-
 $dokan_appearance         = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
 $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 $dokan_days               = dokan_get_translated_days();

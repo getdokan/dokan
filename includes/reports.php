@@ -259,7 +259,7 @@ if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
 	function dokan_dashboard_sales_overview() {
         $now        = dokan_current_datetime();
         $start_date = $now->modify( 'first day of this month' )->modify( 'today' )->format( 'Y-m-d' );
-        $end_date   = $now->modify( 'today' )->modify( 'Y-m-d' );
+        $end_date   = $now->modify( 'today' )->format( 'Y-m-d' );
 
 		dokan_sales_overview_chart_data( $start_date, $end_date, 'day' );
 	}

@@ -114,10 +114,10 @@ if ( 'layout3' === $profile_layout ) {
                                             [
                                                 'dokan_store_times' => $dokan_store_times,
                                                 'today'             => $today,
-                                                'dokan_days'        => dokan_get_translated_days(),
-                                                'current_time'      => $current_time,
-                                                'times_heading'     => __( 'Weekly Store Timing', 'dokan-lite' ),
-                                                'closed_status'     => __( 'CLOSED', 'dokan-lite' ),
+                                                'dokan_days' => dokan_get_translated_days(),
+                                                'current_time' => $current_time,
+                                                'times_heading' => __( 'Weekly Store Timing', 'dokan-lite' ),
+                                                'closed_status' => __( 'CLOSED', 'dokan-lite' ),
                                             ]
                                         );
                                         ?>

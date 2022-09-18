@@ -24,7 +24,7 @@
                                     'name' => '',
                                 ];
                                 ob_start();
-                                include DOKAN_INC_DIR . '/woo-views/html-product-download.php';
+                                require DOKAN_INC_DIR . '/woo-views/html-product-download.php';
                                 $row_html = ob_get_clean();
                                 ?>
                                 <a href="#" class="insert-file-row dokan-btn dokan-btn-sm dokan-btn-success" data-row="<?php echo esc_attr( $row_html ); ?>">

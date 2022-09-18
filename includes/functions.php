@@ -878,17 +878,8 @@ function dokan_get_product_types( $status = '' ) {
  * @return string
  */
 function dokan_posted_input( $key, $array = false ) {
-    //todo: need to remove this method
-    $postdata = wp_unslash( $_POST ); // WPCS: CSRF ok.
-
-    // If array value is submitted return array
-    if ( $array && isset( $postdata[ $key ] ) ) {
-        return $postdata[ $key ];
-    }
-
-    $value = isset( $postdata[ $key ] ) ? trim( $postdata[ $key ] ) : ''; // WPCS: CSRF ok.
-
-    return esc_attr( $value );
+    wc_deprecated_function( 'dokan_posted_input', '3.6.6' );
+    return '';
 }
 
 /**
@@ -899,11 +890,8 @@ function dokan_posted_input( $key, $array = false ) {
  * @return string
  */
 function dokan_posted_textarea( $key ) {
-    // todo: remove this method
-    $postdata = wp_unslash( $_POST ); // WPCS: CSRF ok.
-    $value    = isset( $postdata[ $key ] ) ? trim( $postdata[ $key ] ) : ''; // WPCS: CSRF ok.
-
-    return esc_textarea( $value );
+    wc_deprecated_function( 'dokan_posted_textarea', '3.6.6' );
+    return '';
 }
 
 /**
