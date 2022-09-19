@@ -16,7 +16,7 @@
          *  @since 2.4
          */
         do_action( 'dokan_dashboard_content_before' );
-	?>
+    ?>
 
         <div class="dokan-dashboard-content dokan-product-listing">
 
@@ -36,20 +36,15 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_query = false;
-
-                    if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) :
-                        $product_listing_args = [
-                            'author'            => dokan_get_current_user_id(),
-                            'posts_per_page'    => 1,
-                            'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
-                        ];
-                        $product_query = dokan()->product->all( $product_listing_args );
-                    endif;
-
+                    $product_listing_args = [
+                        'author'            => dokan_get_current_user_id(),
+                        'posts_per_page'    => 1,
+                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                    ];
+                    $product_query = dokan()->product->all( $product_listing_args );
 
                     if ( $product_query && $product_query->have_posts() ) {
-						?>
+                        ?>
 
                         <div class="product-listing-top dokan-clearfix">
                             <?php dokan_product_listing_status_filter(); ?>
@@ -118,14 +113,13 @@
                                     <tbody>
                                     <?php do_action( 'dokan_product_list_before_table_body_start' ); ?>
                                         <?php
-                                        $pagenum        = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
                                         $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
 
                                         $args = array(
                                             'posts_per_page' => 15,
-                                            'paged'          => $pagenum,
+                                            'paged'          => 1,
                                             'author'         => dokan_get_current_user_id(),
                                             'post_status'    => $post_statuses,
                                             'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
@@ -138,48 +132,54 @@
                                             ),
                                         );
 
-                                        if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $post_statuses, true ) ) {
-                                            $args['post_status'] = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
-                                        }
+                                        if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
+                                            if ( isset( $_GET['pagenum'] ) ) {
+                                                $args['paged'] = absint( $_GET['pagenum'] );
+                                            }
 
-                                        if ( isset( $_GET['date'] ) && $_GET['date'] !== 0 ) {
-                                            $args['m'] = sanitize_text_field( wp_unslash( $_GET['date'] ) );
-                                        }
+                                            if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $post_statuses, true ) ) {
+                                                $args['post_status'] = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
+                                            }
 
-                                        if ( isset( $_GET['product_cat'] ) && $_GET['product_cat'] !== -1 ) {
-                                            $args['tax_query'][] = array(
-                                                'taxonomy' => 'product_cat',
-                                                'field' => 'id',
-                                                'terms' => intval( $_GET['product_cat'] ),
-                                                'include_children' => false,
-                                            );
-                                        }
+                                            if ( isset( $_GET['date'] ) && $_GET['date'] !== 0 ) {
+                                                $args['m'] = sanitize_text_field( wp_unslash( $_GET['date'] ) );
+                                            }
 
-                                        if ( ! empty( $_GET['product_type'] ) ) {
-                                            $product_type = sanitize_text_field( wp_unslash( $_GET['product_type'] ) );
-                                            if ( array_key_exists( $product_type, $product_types ) ) {
-                                                $args['tax_query'][] = [
-                                                    'taxonomy' => 'product_type',
-                                                    'field'    => 'slug',
-                                                    'terms'    => $product_type,
-                                                ];
+                                            if ( isset( $_GET['product_cat'] ) && $_GET['product_cat'] !== -1 ) {
+                                                $args['tax_query'][] = array(
+                                                    'taxonomy' => 'product_cat',
+                                                    'field' => 'id',
+                                                    'terms' => intval( $_GET['product_cat'] ),
+                                                    'include_children' => false,
+                                                );
+                                            }
+
+                                            if ( ! empty( $_GET['product_type'] ) ) {
+                                                $product_type = sanitize_text_field( wp_unslash( $_GET['product_type'] ) );
+                                                if ( array_key_exists( $product_type, $product_types ) ) {
+                                                    $args['tax_query'][] = [
+                                                        'taxonomy' => 'product_type',
+                                                        'field'    => 'slug',
+                                                        'terms'    => $product_type,
+                                                    ];
+                                                }
+                                            }
+
+                                            if ( ! empty( $_GET['product_search_name'] ) ) {
+                                                $args['s'] = sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) );
+                                            }
+
+                                            if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $stock_statuses, true ) ) {
+                                                $args['meta_query'][] = array(
+                                                    'key' => '_stock_status',
+                                                    'value' => sanitize_text_field( wp_unslash( $_GET['post_status'] ) ),
+                                                    'compare' => '=',
+                                                );
                                             }
                                         }
 
-                                        if ( ! empty( $_GET['product_search_name'] ) ) {
-                                            $args['s'] = sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) );
-                                        }
-
-                                        if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $stock_statuses, true ) ) {
-                                            $args['meta_query'][] = array(
-                                                'key'     => '_stock_status',
-                                                'value'   => sanitize_text_field( wp_unslash( $_GET['post_status'] ) ),
-                                                'compare' => '=',
-                                            );
-                                        }
-
                                         $original_post = $post;
-                                        $product_args  = apply_filters( 'dokan_pre_product_listing_args', $args, $_GET );
+                                        $product_args  = apply_filters( 'dokan_pre_product_listing_args', $args, [] );
                                         $product_query = dokan()->product->all( apply_filters( 'dokan_product_listing_arg', $product_args ) );
 
                                         if ( $product_query->have_posts() ) {
@@ -203,7 +203,7 @@
                                                 do_action( 'dokan_product_list_table_after_row', $product, $post );
                                             }
                                         } else {
-											?>
+                                            ?>
                                             <tr>
                                                 <td colspan="11"><?php esc_html_e( 'No product found', 'dokan-lite' ); ?></td>
                                             </tr>
@@ -223,14 +223,14 @@
                             echo '<div class="pagination-wrap">';
                             $page_links = paginate_links(
                                 array(
-									'current'   => $pagenum,
-									'total'     => $product_query->max_num_pages,
-									'base'      => $base_url . '%_%',
-									'format'    => '?pagenum=%#%',
-									'add_args'  => false,
-									'type'      => 'array',
-									'prev_text' => __( '&laquo; Previous', 'dokan-lite' ),
-									'next_text' => __( 'Next &raquo;', 'dokan-lite' ),
+                                    'current'   => $pagenum,
+                                    'total'     => $product_query->max_num_pages,
+                                    'base'      => $base_url . '%_%',
+                                    'format'    => '?pagenum=%#%',
+                                    'add_args'  => false,
+                                    'type'      => 'array',
+                                    'prev_text' => __( '&laquo; Previous', 'dokan-lite' ),
+                                    'next_text' => __( 'Next &raquo;', 'dokan-lite' ),
                                 )
                             );
 
@@ -240,9 +240,9 @@
                             echo '</div>';
                         }
                         ?>
-						<?php
+                        <?php
                     } else {
-						?>
+                        ?>
                         <div class="dokan-dashboard-product-listing-wrapper dokan-dashboard-not-product-found">
                             <img src="<?php echo esc_url( plugins_url( 'assets/images/no-product-found.svg', DOKAN_FILE ) ); ?>" alt="dokan setup" class="no-product-found-icon">
                             <h4 class="dokan-blank-product-message">
@@ -273,16 +273,16 @@
 
                 <?php
 
-				/**
-				 *  Adding dokan_dashboard_content_before hook
-				 *
-				 *  @hooked get_dashboard_side_navigation
-				 *
-				 *  @since 2.4
-				 */
-				do_action( 'dokan_dashboard_content_inside_after' );
-				do_action( 'dokan_after_listing_product' );
-				?>
+                /**
+                 *  Adding dokan_dashboard_content_before hook
+                 *
+                 *  @hooked get_dashboard_side_navigation
+                 *
+                 *  @since 2.4
+                 */
+                do_action( 'dokan_dashboard_content_inside_after' );
+                do_action( 'dokan_after_listing_product' );
+                ?>
 
         </div><!-- #primary .content-area -->
 
