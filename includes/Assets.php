@@ -356,7 +356,7 @@ class Assets {
                 'version' => time(),
             ],
             'dokan-chart' => [
-                'src'       => $asset_url . '/vendors/chart/Chart.min.js',
+                'src'       => $asset_url . '/vendors/chart/chart.min.js',
                 'deps'      => [ 'moment', 'jquery' ],
             ],
             'dokan-tabs' => [
