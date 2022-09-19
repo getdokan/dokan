@@ -36,14 +36,21 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_listing_args = [
+                    $disable_product_popup = 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
+                    $new_product_url       = add_query_arg(
+                        [
+                            '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
+                        ],
+                        dokan_get_navigation_url( 'new-product' )
+                    );
+                    $product_listing_args  = [
                         'author'            => dokan_get_current_user_id(),
                         'posts_per_page'    => 1,
                         'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
                     ];
                     $product_query = dokan()->product->all( $product_listing_args );
 
-                    if ( $product_query && $product_query->have_posts() ) {
+                    if ( $product_query->have_posts() ) {
                         ?>
 
                         <div class="product-listing-top dokan-clearfix">
@@ -52,7 +59,7 @@
                             <?php if ( dokan_is_seller_enabled( dokan_get_current_user_id() ) ) : ?>
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ) : ?>
-                                        <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                        <a href="<?php echo esc_url( $new_product_url ); ?>" class="dokan-btn dokan-btn-theme <?php echo $disable_product_popup ? '' : 'dokan-add-new-product'; ?>">
                                             <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
@@ -256,7 +263,7 @@
 
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ) : ?>
-                                        <a href="<?php echo esc_url( dokan_get_navigation_url( 'new-product' ) ); ?>" class="dokan-btn dokan-btn-theme <?php echo ( 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ) ) ? '' : 'dokan-add-new-product'; ?>">
+                                        <a href="<?php echo esc_url( $new_product_url ); ?>" class="dokan-btn dokan-btn-theme <?php echo $disable_product_popup ? '' : 'dokan-add-new-product'; ?>">
                                             <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
