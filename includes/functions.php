@@ -1090,8 +1090,9 @@ function dokan_edit_product_url( $product ) {
 
     $url = add_query_arg(
         [
-            'product_id' => $product->get_id(),
-            'action'     => 'edit',
+            'product_id'                => $product->get_id(),
+            'action'                    => 'edit',
+            '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
         ],
         dokan_get_navigation_url( 'products' )
     );

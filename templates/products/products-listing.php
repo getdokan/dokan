@@ -145,7 +145,7 @@
                                                 $args['m'] = sanitize_text_field( wp_unslash( $_GET['date'] ) );
                                             }
 
-                                            if ( isset( $_GET['product_cat'] ) && $_GET['product_cat'] !== -1 ) {
+                                            if ( isset( $_GET['product_cat'] ) && intval( $_GET['product_cat'] ) !== -1 ) {
                                                 $args['tax_query'][] = array(
                                                     'taxonomy' => 'product_cat',
                                                     'field' => 'id',
