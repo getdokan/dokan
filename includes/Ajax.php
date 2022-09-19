@@ -583,18 +583,16 @@ class Ajax {
             wp_send_json_error();
         }
 
-        $posted_data = wp_unslash( $_POST );
-
-        $post_id = isset( $posted_data['id'] ) ? absint( $posted_data['id'] ) : 0;
+        $post_id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 
         check_ajax_referer( 'image_editor-' . $post_id, 'nonce' );
 
-        $crop_details = isset( $posted_data['cropDetails'] ) ? $posted_data['cropDetails'] : '';
+        $crop_details = isset( $_POST['cropDetails'] ) ? array_map( 'absint', wp_unslash( $_POST['cropDetails'] ) ) : [];
 
         $dimensions = $this->get_header_dimensions(
             [
-                'height' => absint( $crop_details['height'] ),
-                'width'  => absint( $crop_details['width'] ),
+                'height' => $crop_details['height'],
+                'width'  => $crop_details['width'],
             ]
         );
 
@@ -602,10 +600,10 @@ class Ajax {
 
         $cropped = wp_crop_image(
             $attachment_id,
-            absint( $crop_details['x1'] ),
-            absint( $crop_details['y1'] ),
-            absint( $crop_details['width'] ),
-            absint( $crop_details['height'] ),
+            $crop_details['x1'],
+            $crop_details['y1'],
+            $crop_details['width'],
+            $crop_details['height'],
             absint( $dimensions['dst_width'] ),
             absint( $dimensions['dst_height'] )
         );
@@ -907,9 +905,7 @@ class Ajax {
     public static function login_user() {
         check_ajax_referer( 'dokan_reviews' );
 
-        $post_data = wp_unslash( $_POST );
-
-        parse_str( $post_data['form_data'], $form_data );
+        parse_str( $_POST['form_data'], $form_data ); // phpcs:ignore
 
         $user_login    = isset( $form_data['dokan_login_form_username'] ) ? sanitize_text_field( $form_data['dokan_login_form_username'] ) : null;
         $user_password = isset( $form_data['dokan_login_form_password'] ) ? sanitize_text_field( $form_data['dokan_login_form_password'] ) : null;
@@ -1002,13 +998,11 @@ class Ajax {
             wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
         }
 
-        $post_data = wp_unslash( $_POST );
-
-        if ( empty( $post_data['id'] ) ) {
+        if ( empty( $_POST['id'] ) ) {
             wp_send_json_error( __( 'id param is required', 'dokan-lite' ), 400 );
         }
 
-        $ids = explode( ',', $post_data['id'] );
+        $ids = explode( ',', sanitize_text_field( wp_unslash( $_POST['id'] ) ) );
 
         $args = [
             'ids'    => $ids,
