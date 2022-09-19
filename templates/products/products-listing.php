@@ -36,14 +36,19 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $product_listing_args = [
-                        'author'            => dokan_get_current_user_id(),
-                        'posts_per_page'    => 1,
-                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
-                    ];
-                    $product_query = dokan()->product->all( $product_listing_args );
+                    $product_query = false;
 
-                    if ( $product_query->have_posts() ) {
+                    if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) :
+                        $product_listing_args = [
+                            'author'            => dokan_get_current_user_id(),
+                            'posts_per_page'    => 1,
+                            'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                        ];
+                        $product_query = dokan()->product->all( $product_listing_args );
+                    endif;
+
+
+                    if ( $product_query && $product_query->have_posts() ) {
 						?>
 
                         <div class="product-listing-top dokan-clearfix">
@@ -56,7 +61,7 @@
                                             <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
-                                    <?php endif ?>
+                                    <?php endif; ?>
 
                                     <?php
                                         do_action( 'dokan_after_add_product_btn' );
