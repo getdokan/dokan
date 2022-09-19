@@ -117,14 +117,13 @@
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
                                         $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
-                                        $get_data       = wp_unslash( $_GET );
 
                                         $args = array(
                                             'posts_per_page' => 15,
                                             'paged'          => $pagenum,
                                             'author'         => dokan_get_current_user_id(),
                                             'post_status'    => $post_statuses,
-                                            'tax_query'      => array(
+                                            'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                                                 array(
                                                     'taxonomy' => 'product_type',
                                                     'field'    => 'slug',
@@ -134,45 +133,48 @@
                                             ),
                                         );
 
-                                        if ( isset( $get_data['post_status'] ) && in_array( $get_data['post_status'], $post_statuses, true ) ) {
-                                            $args['post_status'] = $get_data['post_status'];
+                                        if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $post_statuses, true ) ) {
+                                            $args['post_status'] = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
                                         }
 
-                                        if ( isset( $get_data['date'] ) && $get_data['date'] !== 0 ) {
-                                            $args['m'] = $get_data['date'];
+                                        if ( isset( $_GET['date'] ) && $_GET['date'] !== 0 ) {
+                                            $args['m'] = sanitize_text_field( wp_unslash( $_GET['date'] ) );
                                         }
 
-                                        if ( isset( $get_data['product_cat'] ) && $get_data['product_cat'] !== -1 ) {
+                                        if ( isset( $_GET['product_cat'] ) && $_GET['product_cat'] !== -1 ) {
                                             $args['tax_query'][] = array(
                                                 'taxonomy' => 'product_cat',
                                                 'field' => 'id',
-                                                'terms' => (int) $get_data['product_cat'],
+                                                'terms' => intval( $_GET['product_cat'] ),
                                                 'include_children' => false,
                                             );
                                         }
 
-                                        if ( isset( $get_data['product_type'] ) && array_key_exists( $get_data['product_type'], $product_types ) ) {
-                                            $args['tax_query'][] = array(
-                                                'taxonomy' => 'product_type',
-                                                'field'    => 'slug',
-                                                'terms'    => $get_data['product_type'],
-                                            );
+                                        if ( ! empty( $_GET['product_type'] ) ) {
+                                            $product_type = sanitize_text_field( wp_unslash( $_GET['product_type'] ) );
+                                            if ( array_key_exists( $product_type, $product_types ) ) {
+                                                $args['tax_query'][] = [
+                                                    'taxonomy' => 'product_type',
+                                                    'field'    => 'slug',
+                                                    'terms'    => $product_type,
+                                                ];
+                                            }
                                         }
 
-                                        if ( isset( $get_data['product_search_name'] ) && ! empty( $get_data['product_search_name'] ) ) {
-                                            $args['s'] = $get_data['product_search_name'];
+                                        if ( ! empty( $_GET['product_search_name'] ) ) {
+                                            $args['s'] = sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) );
                                         }
 
-                                        if ( isset( $get_data['post_status'] ) && in_array( $get_data['post_status'], $stock_statuses, true ) ) {
+                                        if ( isset( $_GET['post_status'] ) && in_array( $_GET['post_status'], $stock_statuses, true ) ) {
                                             $args['meta_query'][] = array(
                                                 'key'     => '_stock_status',
-                                                'value'   => $get_data['post_status'],
+                                                'value'   => sanitize_text_field( wp_unslash( $_GET['post_status'] ) ),
                                                 'compare' => '=',
                                             );
                                         }
 
                                         $original_post = $post;
-                                        $product_args  = apply_filters( 'dokan_pre_product_listing_args', $args, $get_data );
+                                        $product_args  = apply_filters( 'dokan_pre_product_listing_args', $args, $_GET );
                                         $product_query = dokan()->product->all( apply_filters( 'dokan_product_listing_arg', $product_args ) );
 
                                         if ( $product_query->have_posts() ) {
