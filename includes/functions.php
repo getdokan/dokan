@@ -2337,7 +2337,7 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
     $date = 0;
     // get date from url
     if ( isset( $_GET['_product_listing_filter_nonce'], $_GET['date'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
-        $date = sanitize_text_field( wp_unslash( $_GET['date'] ) );
+        $date = intval( wp_unslash( $_GET['date'] ) );
     }
     ?>
     <select name="date" id="filter-by-date" class="dokan-form-control">
@@ -2372,17 +2372,17 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
 function dokan_product_listing_filter() {
     $template_args = [
         'product_types'       => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
-        'product_cat'         => '-1',
+        'product_cat'         => -1,
         'product_search_name' => '',
-        'date'                => '',
+        'date'                => 0,
         'product_type'        => '',
         'filter_by_other'     => '',
     ];
 
     if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
-        $template_args['product_cat']         = ! empty( $_GET['product_cat'] ) ? sanitize_text_field( wp_unslash( $_GET['product_cat'] ) ) : '-1';
+        $template_args['product_cat']         = ! empty( $_GET['product_cat'] ) ? intval( wp_unslash( $_GET['product_cat'] ) ) : -1;
         $template_args['product_search_name'] = ! empty( $_GET['product_search_name'] ) ? sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) ) : '';
-        $template_args['date']                = ! empty( $_GET['date'] ) ? sanitize_text_field( wp_unslash( $_GET['date'] ) ) : '';
+        $template_args['date']                = ! empty( $_GET['date'] ) ? intval( wp_unslash( $_GET['date'] ) ) : '';
         $template_args['product_type']        = ! empty( $_GET['product_type'] ) ? sanitize_text_field( wp_unslash( $_GET['product_type'] ) ) : '';
         $template_args['filter_by_other']     = ! empty( $_GET['filter_by_other'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_by_other'] ) ) : '';
     }
