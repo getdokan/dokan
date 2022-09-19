@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         $text = sprintf( esc_html__( '%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$s activate WooCommerce &raquo;%6$s', 'dokan-lite' ), '<strong>', '</strong>', '<a href="https://wordpress.org/plugins/woocommerce/">', '</a>', '<a href="' . esc_url( $install_url ) . '">', '</a>' );
                     }
                     ?>
-                    <div><?php echo $text; ?></div>
+                    <div><?php echo wp_kses_post( $text ); ?></div>
                 </div>
             </div>
         </div>

@@ -36,7 +36,7 @@
                         $exact_time = 'current_time';
                     }
                     ?>
-                    <span class="store-open <?php echo $exact_time; ?>" href="#">
+                    <span class="store-open <?php echo esc_attr( $exact_time ); ?>" href="#">
                         <?php
                         echo esc_html(
                             $formatted_opening_time->format( wc_time_format() ) . ' - ' .

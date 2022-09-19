@@ -28,9 +28,7 @@ class StoreCategoryMenu extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP ); // phpcs:ignore
-
-            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             $defaults = array(
                 'title' => __( 'Store Product Category', 'dokan-lite' ),
@@ -47,7 +45,7 @@ class StoreCategoryMenu extends WP_Widget {
 
             dokan_store_category_menu( $seller_id, $title );
 
-            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
         do_action( 'dokan_widget_store_categories_render', $args, $instance, $this );

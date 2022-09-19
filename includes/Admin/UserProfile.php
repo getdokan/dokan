@@ -105,7 +105,7 @@ class UserProfile {
                     <th><?php esc_html_e( 'Banner', 'dokan-lite' ); ?></th>
                     <td>
                         <div class="dokan-banner">
-                            <div class="image-wrap<?php echo $banner ? '' : ' dokan-hide'; ?>">
+                            <div class="image-wrap<?php echo esc_attr( $banner ) ? '' : ' dokan-hide'; ?>">
                                 <?php $banner_url = $banner ? wp_get_attachment_url( $banner ) : ''; ?>
                                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner ); ?>" name="dokan_banner">
                                 <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">

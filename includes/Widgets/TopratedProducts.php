@@ -28,8 +28,6 @@ class TopratedProducts extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        extract( $args, EXTR_SKIP ); // phpcs:ignore
-
         $title         = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $no_of_product = isset( $instance['no_of_product'] ) ? $instance['no_of_product'] : 8;
         $show_rating   = isset( $instance['show_rating'] ) ? $instance['show_rating'] : false;

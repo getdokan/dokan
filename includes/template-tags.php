@@ -112,7 +112,7 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
             $start_page = 1;
         }
 
-        echo $before . '<div class="dokan-pagination-container"><ul class="dokan-pagination">';
+        echo wp_kses_post( $before ) . '<div class="dokan-pagination-container"><ul class="dokan-pagination">';
         if ( $paged > 1 ) {
             $first_page_text = '&laquo;';
             echo '<li class="prev"><a href="' . esc_url( get_pagenum_link() ) . '" title="First">' . esc_html( $first_page_text ) . '</a></li>';
@@ -142,7 +142,7 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
             echo '<li class="next"><a href="' . esc_url( get_pagenum_link( $max_page ) ) . '" title="Last">' . esc_html( $last_page_text ) . '</a></li>';
         }
 
-        echo '</ul></div>' . $after . ''; //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo '</ul></div>' . wp_kses_post( $after );
     }
 
 endif;

@@ -158,7 +158,7 @@
 </script>
 
 <style>
-    #<?php echo $map_id; ?> {
+    #<?php echo esc_js( $map_id ); ?> {
         width: 100%;
         height: 300px;
     }

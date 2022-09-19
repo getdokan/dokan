@@ -36,8 +36,6 @@ class StoreContactForm extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() || is_product() ) {
-            extract( $args, EXTR_SKIP ); // phpcs:ignore
-
             $defaults = array(
                 'title' => __( 'Contact Vendor', 'dokan-lite' ),
             );
@@ -61,7 +59,7 @@ class StoreContactForm extends WP_Widget {
 
             $store_info = dokan_get_store_info( $seller_id );
 
-            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             if ( ! empty( $title ) ) {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -85,7 +83,7 @@ class StoreContactForm extends WP_Widget {
                 )
             );
 
-            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
         do_action( 'dokan_widget_store_contact_form_render', $args, $instance, $this );
