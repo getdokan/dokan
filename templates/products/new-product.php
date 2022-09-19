@@ -2,18 +2,64 @@
 
 use WeDevs\Dokan\ProductCategory\Helper;
 
-$created_product        = ! empty( $_REQUEST['created_product'] ) ? intval( $_REQUEST['created_product'] ) : null;
-$feat_image_id          = ! empty( $_REQUEST['feat_image_id'] ) ? intval( $_REQUEST['feat_image_id'] ) : '';
-$regular_price          = ! empty( $_REQUEST['_regular_price'] ) ? floatval( $_REQUEST['_regular_price'] ) : '';
-$sale_price             = ! empty( $_REQUEST['_sale_price'] ) ? floatval( $_REQUEST['_sale_price'] ) : '';
-$sale_price_date_from   = ! empty( $_REQUEST['_sale_price_dates_from'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_from'] ) ) : '';
-$sale_price_date_to     = ! empty( $_REQUEST['_sale_price_dates_to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_to'] ) ) : '';
-$post_content           = ! empty( $_REQUEST['post_content'] ) ? wp_kses_post( wp_unslash( $_REQUEST['post_content'] ) ) : '';
-$post_excerpt           = ! empty( $_REQUEST['post_excerpt'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['post_excerpt'] ) ) : '';
-$product_images         = ! empty( $_REQUEST['product_image_gallery'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_image_gallery'] ) ) : '';
-$post_title             = ! empty( $_REQUEST['post_title'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['post_title'] ) ) : '';
-$terms                  = ! empty( $_REQUEST['product_tag'] ) ? array_map( 'intval', (array) wp_unslash( $_REQUEST['product_tag'] ) ) : '';
-$currency_symbol        = get_woocommerce_currency_symbol();
+$created_product      = null;
+$feat_image_id        = null;
+$regular_price        = 0;
+$sale_price           = 0;
+$sale_price_date_from = '';
+$sale_price_date_to   = '';
+$post_content         = '';
+$post_excerpt         = '';
+$product_images       = '';
+$post_title           = '';
+$terms                = [];
+$currency_symbol      = get_woocommerce_currency_symbol();
+
+if ( isset( $_REQUEST['_dokan_add_product_nonce'] ) && wp_verify_nonce( sanitize_key( $_REQUEST['_dokan_add_product_nonce'] ), 'dokan_add_product_nonce' ) ) {
+    if ( ! empty( $_REQUEST['created_product'] ) ) {
+        $created_product = intval( $_REQUEST['created_product'] );
+    }
+
+    if ( ! empty( $_REQUEST['feat_image_id'] ) ) {
+        $feat_image_id = intval( $_REQUEST['feat_image_id'] );
+    }
+
+    if ( ! empty( $_REQUEST['_regular_price'] ) ) {
+        $regular_price = floatval( $_REQUEST['_regular_price'] );
+    }
+
+    if ( ! empty( $_REQUEST['_sale_price'] ) ) {
+        $sale_price = floatval( $_REQUEST['_sale_price'] );
+    }
+
+    if ( ! empty( $_REQUEST['_sale_price_dates_from'] ) ) {
+        $sale_price_date_from = sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_from'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['_sale_price_dates_to'] ) ) {
+        $sale_price_date_to = sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_to'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['post_content'] ) ) {
+        $post_content = wp_kses_post( wp_unslash( $_REQUEST['post_content'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['post_excerpt'] ) ) {
+        $post_excerpt = sanitize_textarea_field( wp_unslash( $_REQUEST['post_excerpt'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['post_title'] ) ) {
+        $post_title = sanitize_text_field( wp_unslash( $_REQUEST['post_title'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['product_image_gallery'] ) ) {
+        $product_images = sanitize_text_field( wp_unslash( $_REQUEST['product_image_gallery'] ) );
+    }
+
+    if ( ! empty( $_REQUEST['product_tag'] ) ) {
+        $terms = array_map( 'intval', (array) wp_unslash( $_REQUEST['product_tag'] ) );
+    }
+}
 
 /**
  * Action hook to fire before new product wrap.
@@ -70,7 +116,7 @@ do_action( 'dokan_new_product_wrap_before' );
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
 
                         <?php foreach ( dokan()->dashboard->templates->products->get_errors() as $error_msg ) : ?>
-                            <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error_msg ); ?>.<br>
+                            <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo wp_kses_post( $error_msg ); ?>.<br>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -261,7 +307,7 @@ do_action( 'dokan_new_product_wrap_before' );
                                 <?php
                                 wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' );
 
-                                $show_add_new_button    = ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1;
+                                $show_add_new_button = ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1;
 
                                 if ( $show_add_new_button ) :
                                     ?>

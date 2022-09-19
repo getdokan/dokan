@@ -383,7 +383,13 @@ class Products {
                     }
 
                     if ( 'create_and_add_new' === $postdata['add_product'] ) {
-                        $redirect = add_query_arg( [ 'created_product' => $product_id ], dokan_get_navigation_url( 'new-product' ) );
+                        $redirect = add_query_arg(
+                            [
+                                'created_product'          => $product_id,
+                                '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
+                            ],
+                            dokan_get_navigation_url( 'new-product' )
+                        );
                     }
 
                     wp_safe_redirect( apply_filters( 'dokan_add_new_product_redirect', $redirect, $product_id ) );
