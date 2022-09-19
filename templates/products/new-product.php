@@ -1,27 +1,19 @@
 <?php
-/**
- * New product template.
- *
- * @since 2.4
- *
- * @var int    $created_product
- * @var int    $feat_image_id
- * @var float  $sale_price
- * @var float  $regular_price
- * @var bool   $is_seller_enabled
- * @var bool   $can_sell_product
- * @var bool   $can_create_tags
- * @var bool   $show_add_new_button
- * @var string $post_title
- * @var string $post_content
- * @var string $post_excerpt
- * @var string $product_images
- * @var string $sale_price_date_from
- * @var string $sale_price_date_to
- * @var string $currency_symbol
- * @var array  $terms
- * @var array  $saved_product_cat_data
- */
+
+use WeDevs\Dokan\ProductCategory\Helper;
+
+$created_product        = ! empty( $_REQUEST['created_product'] ) ? intval( $_REQUEST['created_product'] ) : null;
+$feat_image_id          = ! empty( $_REQUEST['feat_image_id'] ) ? intval( $_REQUEST['feat_image_id'] ) : '';
+$regular_price          = ! empty( $_REQUEST['_regular_price'] ) ? floatval( $_REQUEST['_regular_price'] ) : '';
+$sale_price             = ! empty( $_REQUEST['_sale_price'] ) ? floatval( $_REQUEST['_sale_price'] ) : '';
+$sale_price_date_from   = ! empty( $_REQUEST['_sale_price_dates_from'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_from'] ) ) : '';
+$sale_price_date_to     = ! empty( $_REQUEST['_sale_price_dates_to'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_sale_price_dates_to'] ) ) : '';
+$post_content           = ! empty( $_REQUEST['post_content'] ) ? wp_kses_post( wp_unslash( $_REQUEST['post_content'] ) ) : '';
+$post_excerpt           = ! empty( $_REQUEST['post_excerpt'] ) ? sanitize_textarea_field( wp_unslash( $_REQUEST['post_excerpt'] ) ) : '';
+$product_images         = ! empty( $_REQUEST['product_image_gallery'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_image_gallery'] ) ) : '';
+$post_title             = ! empty( $_REQUEST['post_title'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['post_title'] ) ) : '';
+$terms                  = ! empty( $_REQUEST['product_tag'] ) ? array_map( 'intval', (array) wp_unslash( $_REQUEST['product_tag'] ) ) : '';
+$currency_symbol        = get_woocommerce_currency_symbol();
 
 /**
  * Action hook to fire before new product wrap.
@@ -102,7 +94,7 @@ do_action( 'dokan_new_product_wrap_before' );
                 <?php endif ?>
 
                 <?php
-                if ( $can_sell_product ) :
+                if ( apply_filters( 'dokan_can_post', true ) ) :
                     $feat_image_url   = '';
                     $hide_instruction = '';
                     $hide_img_wrap    = 'dokan-hide';
@@ -113,7 +105,7 @@ do_action( 'dokan_new_product_wrap_before' );
                         $hide_img_wrap    = '';
                     }
 
-                    if ( $is_seller_enabled ) :
+                    if ( dokan_is_seller_enabled( get_current_user_id() ) ) :
                         ?>
                         <form class="dokan-form-container" method="post">
                             <div class="product-edit-container dokan-clearfix">
@@ -222,7 +214,11 @@ do_action( 'dokan_new_product_wrap_before' );
                                         <textarea name="post_excerpt" id="post-excerpt" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Short description of the product...', 'dokan-lite' ); ?>"><?php echo esc_attr( $post_excerpt ); ?></textarea>
                                     </div>
 
-                                    <?php dokan_get_template_part( 'products/dokan-category-header-ui', '', $saved_product_cat_data ); ?>
+                                    <?php
+                                    $can_create_tags        = 'on' === dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+                                    $saved_product_cat_data = array_merge( (array) Helper::get_saved_products_category(), [ 'from' => 'new_product' ] );
+                                    dokan_get_template_part( 'products/dokan-category-header-ui', '', $saved_product_cat_data );
+                                    ?>
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
@@ -262,8 +258,13 @@ do_action( 'dokan_new_product_wrap_before' );
                             <hr>
 
                             <div class="dokan-form-group dokan-right">
-                                <?php wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' ); ?>
-                                <?php if ( $show_add_new_button ) : ?>
+                                <?php
+                                wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' );
+
+                                $show_add_new_button    = ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1;
+
+                                if ( $show_add_new_button ) :
+                                    ?>
                                     <button type="submit" name="add_product" class="dokan-btn dokan-btn-default" value="create_and_add_new">
                                         <?php esc_attr_e( 'Create & Add New', 'dokan-lite' ); ?>
                                     </button>

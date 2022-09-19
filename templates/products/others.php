@@ -31,7 +31,7 @@
                     <?php endforeach; ?>
                 </select>
             <?php else : ?>
-                <span class="dokan-toggle-selected-display <?php echo esc_attr( $pending_class ); ?>">
+                <span class="dokan-toggle-selected-display <?php echo 'pending' === $post_status ? 'dokan-label dokan-label-warning': ''; ?>">
                     <?php echo esc_html( dokan_get_post_status( $post_status ) ); ?>
                 </span>
             <?php endif; ?>
