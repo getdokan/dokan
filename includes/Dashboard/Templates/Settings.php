@@ -503,7 +503,7 @@ class Settings {
             foreach ( $payment_fields as $key => $payment_field ) {
                 if ( ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
                     $error->add( 'dokan_bank_' . $key, $payment_field );
-                } else if ( ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ] ) ) {
+                } elseif ( ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ], true ) ) {
                     $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
                 }
             }
