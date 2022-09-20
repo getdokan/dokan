@@ -28,31 +28,25 @@
             });
         },
         openRequestWithdrawWindow: () => {
-            let self = $(this),
-                withdrawTemplate = wp.template( 'withdraw-request-popup' );
+            const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
+                modal = $( '#dokan-withdraw-request-popup' ).iziModal();
 
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: withdrawTemplate().trim(),
-                    type: 'inline'
-                },
-                callbacks: {}
-            });
+            modal.iziModal( 'setWidth', 690 );
+            modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setContent', withdrawTemplate().trim() );
+            modal.iziModal( 'open' );
+
             Dokan_Withdraw.init();
         },
         opensScheduleWindow: () => {
-            let self = $(this),
-                scheduleTemplate = wp.template( 'withdraw-schedule-popup' );
+            const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
+                modal = $( '#dokan-withdraw-schedule-popup' ).iziModal();
 
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: scheduleTemplate().trim(),
-                    type: 'inline'
-                },
-                callbacks: {}
-            });
+            modal.iziModal( 'setWidth', 690 );
+            modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setContent', scheduleTemplate().trim() );
+            modal.iziModal( 'open' );
+
             Dokan_Withdraw.init();
         },
         makeDefault: ( e ) => {

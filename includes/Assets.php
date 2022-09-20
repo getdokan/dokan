@@ -249,8 +249,9 @@ class Assets {
             'dokan-fontawesome' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
             ],
-            'dokan-magnific-popup' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/magnific/magnific-popup.css',
+            'dokan-modal' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
             ],
             'dokan-select2-css' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
@@ -363,8 +364,8 @@ class Assets {
                 'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
                 'deps'      => [ 'jquery' ],
             ],
-            'dokan-popup' => [
-                'src'       => $asset_url . '/vendors/magnific/jquery.magnific-popup.min.js',
+            'dokan-modal' => [
+                'src'       => $asset_url . '/vendors/izimodal/iziModal.min.js',
                 'deps'      => [ 'jquery' ],
             ],
             'dokan-tooltip' => [
@@ -455,12 +456,12 @@ class Assets {
             ],
             'dokan-login-form-popup' => [
                 'src'       => $asset_url . '/js/login-form-popup.js',
-                'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
+                'deps'      => [ 'dokan-modal', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
             'dokan-sweetalert2' => [
                 'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
-                'deps'      => [ 'dokan-popup', 'dokan-i18n-jed' ],
+                'deps'      => [ 'dokan-modal', 'dokan-i18n-jed' ],
                 'version'   => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
             'dokan-util-helper' => [
@@ -500,6 +501,7 @@ class Assets {
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
+            wp_enqueue_style( 'dokan-modal' );
             wp_enqueue_style( 'dokan-fontawesome' );
 
             if ( is_rtl() ) {
@@ -722,7 +724,7 @@ class Assets {
                 isset( $wp->query_vars['withdraw-requests'] ) ||
                 isset( $wp->query_vars['products-search'] )
             ) {
-                wp_enqueue_style( 'dokan-magnific-popup' );
+                wp_enqueue_style( 'dokan-modal' );
             }
 
             if (
@@ -775,7 +777,8 @@ class Assets {
                 isset( $wp->query_vars['withdraw'] ) ||
                 isset( $wp->query_vars['withdraw-requests'] )
             ) {
-                wp_enqueue_script( 'dokan-popup' );
+                wp_enqueue_style( 'dokan-modal' );
+                wp_enqueue_script( 'dokan-modal' );
             }
 
             wp_enqueue_script( 'wc-password-strength-meter' );

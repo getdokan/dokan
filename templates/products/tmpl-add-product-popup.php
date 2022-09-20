@@ -6,7 +6,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 ?>
 <script type="text/html" id="tmpl-dokan-add-new-product">
     <div id="dokan-add-new-product-popup" class="white-popup dokan-add-new-product-popup">
-        <h2><i class="fas fa-briefcase">&nbsp;</i>&nbsp;<?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?></h2>
         <?php do_action( 'dokan_new_product_before_product_area' ); ?>
         <form action="" method="post" id="dokan-add-new-product-form">
             <div class="product-form-container">

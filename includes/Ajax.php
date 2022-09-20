@@ -892,7 +892,12 @@ class Ajax {
         dokan_get_template_part( 'login-form/login-form-popup' );
         $popup_html = ob_get_clean();
 
-        wp_send_json_success( $popup_html );
+        wp_send_json_success(
+            [
+                'title' => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
+                'html'  => $popup_html,
+            ]
+        );
     }
 
     /**
