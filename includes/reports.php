@@ -348,7 +348,7 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
     <script type="text/javascript">
         jQuery(function($) {
 
-            var order_data = jQuery.parseJSON( '<?php echo wp_json_encode( $chart_data ); ?>' );
+            var order_data = JSON.parse( '<?php echo wp_json_encode( $chart_data ); ?>' );
             var isRtl = '<?php echo is_rtl() ? '1' : '0'; ?>';
             var series = [
                 {
