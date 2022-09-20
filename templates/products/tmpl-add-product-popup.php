@@ -1,5 +1,6 @@
 <?php
 
+use WeDevs\Dokan\ProductCategory\Helper;
 use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
 ?>
@@ -94,53 +95,12 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                 </div>
                 <div class="dokan-clearfix"></div>
                 <div class="product-full-container">
-                    <?php if ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'single' ): ?>
-                        <div class="dokan-form-group">
-                            <?php
-                            $product_cat = -1;
-                            $category_args =  array(
-                                'show_option_none' => __( '- Select a category -', 'dokan-lite' ),
-                                'hierarchical'     => 1,
-                                'hide_empty'       => 0,
-                                'name'             => 'product_cat',
-                                'id'               => 'product_cat',
-                                'taxonomy'         => 'product_cat',
-                                'orderby'          => 'name',
-                                'title_li'         => '',
-                                'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => '',
-                                'selected'         => $product_cat,
-                                'walker'           => new TaxonomyDropdown()
-                            );
 
-                            wp_dropdown_categories( apply_filters( 'dokan_product_cat_dropdown_args', $category_args ) );
-                        ?>
-                        </div>
-                    <?php elseif ( dokan_get_option( 'product_category_style', 'dokan_selling', 'single' ) == 'multiple' ): ?>
-                        <div class="dokan-form-group">
-                            <?php
-                            $term = array();
-                            include_once DOKAN_LIB_DIR.'/class.taxonomy-walker.php';
-                            $drop_down_category = wp_dropdown_categories(  apply_filters( 'dokan_product_cat_dropdown_args', array(
-                                'show_option_none' => __( '', 'dokan-lite' ),
-                                'hierarchical'     => 1,
-                                'hide_empty'       => 0,
-                                'name'             => 'product_cat[]',
-                                'id'               => 'product_cat',
-                                'taxonomy'         => 'product_cat',
-                                'orderby'          => 'name',
-                                'title_li'         => '',
-                                'class'            => 'product_cat dokan-form-control dokan-select2',
-                                'exclude'          => '',
-                                'selected'         => $term,
-                                'echo'             => 0,
-                                'walker'           => new TaxonomyDropdown()
-                            ) ) );
-
-                            echo str_replace( '<select', '<select data-placeholder="'.__( 'Select product category', 'dokan-lite' ).'" multiple="multiple" ', $drop_down_category ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-                            ?>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                        $data = Helper::get_saved_products_category();
+                        $data['from'] = 'new_product_popup';
+                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
+                    ?>
 
                     <div class="dokan-form-group">
                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>

@@ -19,14 +19,14 @@ class Main {
         global $wp;
 
         $request = $wp->request;
-        $active = explode( '/', $request );
+        $active  = explode( '/', $request );
 
         unset( $active[0] );
 
         if ( $active ) {
             $active_menu = implode( '/', $active );
 
-            if ( $active_menu == 'new-product' ) {
+            if ( $active_menu === 'new-product' ) {
                 $active_menu = 'products';
             }
 

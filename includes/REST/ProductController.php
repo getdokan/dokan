@@ -2,13 +2,19 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WC_Product_Attribute;
-use WC_Product_Download;
-use WC_Product_Factory;
+use WC_Data;
+use WC_Product;
+use WC_Product_Variation;
+use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_REST_Server;
 use WC_Product_Simple;
 use WC_REST_Exception;
-use WP_Error;
-use WP_REST_Server;
+use WC_Product_Factory;
+use WC_Product_Download;
+use WC_Product_Attribute;
+use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
 /**
@@ -246,6 +252,16 @@ class ProductController extends DokanRESTController {
                 ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/multistep-categories', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_multistep_categories' ],
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -253,7 +269,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return \WC_Product|null|false
+     * @return WC_Product|null|false
      */
     public function get_object( $id ) {
         return wc_get_product( $id );
@@ -364,7 +380,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_product_permissions_check() {
         return current_user_can( 'dokan_view_product_menu' );
@@ -375,7 +391,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function create_product_permissions_check() {
         return current_user_can( 'dokan_add_product' );
@@ -386,7 +402,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_single_product_permissions_check() {
         return current_user_can( 'dokandar' );
@@ -397,7 +413,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function update_product_permissions_check() {
         return current_user_can( 'dokan_edit_product' );
@@ -408,7 +424,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function delete_product_permissions_check() {
         return current_user_can( 'dokan_delete_product' );
@@ -419,7 +435,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_product_summary_permissions_check() {
         return current_user_can( 'dokan_view_product_status_report' );
@@ -430,7 +446,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
@@ -448,7 +464,9 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return void
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response|WP_Error
      */
     public function get_related_product( $request ) {
         $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
@@ -473,7 +491,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array|object|WP_Error|\WP_REST_Response
+     * @return array|object|WP_Error|WP_REST_Response
      */
     public function get_top_rated_product( $request ) {
         $result   = dokan_get_top_rated_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -500,7 +518,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_best_selling_product( $request ) {
         $result   = dokan_get_best_selling_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -527,7 +545,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_featured_product( $request ) {
         $result   = dokan_get_featured_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -554,7 +572,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_latest_product( $request ) {
         $result   = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -579,7 +597,7 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare objects query
      *
-     * @param \WeDevs\Dokan\Abstracts\WP_REST_Request $request
+     * @param WP_REST_Request|array $request
      *
      * @return array
      */
@@ -711,10 +729,10 @@ class ProductController extends DokanRESTController {
      * Get product data.
      *
      * @param WC_Product $product Product instance.
-     * @param string $context Request context.
+     * @param WP_REST_Request $request Request context.
      *                            Options: 'view' and 'edit'.
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     protected function prepare_data_for_response( $product, $request ) {
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1496,15 +1514,6 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * Prepare a single product for create or update.
-     *
-     * @param WP_REST_Request $request Request object.
-     * @param bool $creating If is creating a new object.
-     *
-     * @return WP_Error|WC_Data
-     */
-
-    /**
      * Set product images.
      *
      * @param WC_Product $product Product instance.
@@ -1734,6 +1743,20 @@ class ProductController extends DokanRESTController {
         }
 
         return $product;
+    }
+
+    /**
+     * Returns all categories.
+     *
+     * @since 3.6.2
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_multistep_categories() {
+        $categories_controller = new Categories();
+        $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
+
+        return rest_ensure_response( $categories );
     }
 
     /**

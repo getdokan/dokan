@@ -12,7 +12,7 @@ class TwentyTwenty {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_filter( 'body_class', [ $this, 'add_wc_class' ] );
     }
 
@@ -25,7 +25,7 @@ class TwentyTwenty {
      */
     public function add_wc_class( $classes ) {
         if ( dokan_is_store_page() ) {
-            if ( ! in_array( 'woocommerce', $classes ) ) {
+            if ( ! in_array( 'woocommerce', $classes, true ) ) {
                 $classes[] = 'woocommerce';
             }
         }

@@ -28,11 +28,9 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
-        extract( $args, EXTR_SKIP );
-
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
-        echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         if ( ! empty( $title ) ) {
             echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -63,7 +61,7 @@ class ProductCategoryMenu extends WP_Widget {
             </div>
         <?php
 
-        echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**

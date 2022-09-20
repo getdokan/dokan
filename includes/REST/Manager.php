@@ -119,7 +119,7 @@ class Manager {
      *
      * @since  2.9.13
      *
-     * @return data
+     * @return array
      */
     public function populate_admin_commission( $data, $store ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -145,8 +145,8 @@ class Manager {
     /**
      * Send email to admin on adding a new product
      *
-     * @param  WC_Data $object
-     * @param  WP_REST_Request $request
+     * @param  \WC_Data $object
+     * @param  \WP_REST_Request $request
      * @param  Boolean $creating
      *
      * @return void
@@ -208,6 +208,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/StoreSettingController.php'          => '\WeDevs\Dokan\REST\StoreSettingController',
                 DOKAN_DIR . '/includes/REST/AdminNoticeController.php'           => '\WeDevs\Dokan\REST\AdminNoticeController',
                 DOKAN_DIR . '/includes/REST/ChangeLogController.php'             => '\WeDevs\Dokan\REST\ChangeLogController',
+                DOKAN_DIR . '/includes/REST/DummyDataController.php'             => '\WeDevs\Dokan\REST\DummyDataController',
             )
         );
     }

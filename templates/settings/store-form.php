@@ -71,7 +71,6 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
             <i class="fas fa-cloud-upload-alt"></i>
-
             <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
             <p class="help-block">
                 <?php

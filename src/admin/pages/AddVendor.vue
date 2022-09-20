@@ -105,6 +105,7 @@ export default {
                 payment: {
                     bank: {
                         ac_name: '',
+                        ac_type: '',
                         ac_number: '',
                         bank_name: '',
                         bank_addr: '',

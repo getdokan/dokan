@@ -4,6 +4,164 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.6.5',
+        'released' => '2022-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => '[WPML] Added WPML support for the multistep product category.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Order REST API endpoint displays other vendors orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.4',
+        'released' => '2022-08-10',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added Catalog Mode Feature to Dokan',
+                    'description' => 'For detailed information about catalog mode please check <a href="https://wedevs.com/docs/dokan/settings/product-catalog-mode/" target="_blank">here</a>',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Load asset (CSS/JS) files only on required pages',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added $user_id as parameter for filter hook `dokan_is_store_open`',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[security]  Removed unfiltered_html capabilities from vendor user role',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed responsive issue of multistep product category UI',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[WPML] Vendor Dashboard Submenu not loading if translated to another language',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Account Type for bank payment method is missing when admin is creating/editing a vendor',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Paypal shows as connected for new vendors even though it is not connected',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Can\'t skip seller setup wizard\'s Payment step by keeping some fields empty',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed Order By sorting parameters for Orders',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Dashboard Add New Product URL changed to the product list page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Single store page default order by filtering wasn\'t working',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed third store header styling issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'When the admin updates or saves a product from the admin panel multistep product category feature wasn\'t working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.3',
+        'released' => '2022-07-26',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added search by order id filter for vendor dashboard Orders page',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added DateRange filter for vendor dashboard Orders page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.2',
+        'released' => '2022-07-15',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added dummy data import feature for Dokan',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Multistep category modal for product add and edit page under vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added \'Back To Top\' button & fix some design broken issue under Dokan admin settings page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.6.1',
+        'released' => '2022-06-30',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added disconnect button to payment methods',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed \'Dokan\' Prefix from the payment method name under vendor dashboard payment settings page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new setting to change Vendor Setup Wizard welcome message under Dokan General Settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed some empty method names in Payment Methods section of Vendor Dashboard > Withdraw',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed incorrect alignment of withdraw method title in Dokan setup wizard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Store breadcrumb URL redirecting to 404 page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.6.0',
         'released' => '2022-06-14',
         'changes'  => [

@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\REST;
 
 use WC_REST_Product_Attribute_Terms_V1_Controller;
 use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
 
 class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1_Controller {
 
@@ -14,7 +16,7 @@ class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1
      */
     protected $namespace = 'dokan/v1';
 
-     /**
+    /**
      * Check if a given request has access to read the attributes.
      *
      * @param  WP_REST_Request $request Full details about the request.
@@ -36,7 +38,7 @@ class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1
         return current_user_can( 'dokan_add_product' );
     }
 
-     /**
+    /**
      * Check if a given request has access to read a attribute.
      *
      * @param  WP_REST_Request $request Full details about the request.
@@ -75,6 +77,7 @@ class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1
      * Delete a single term from a taxonomy.
      *
      * @param WP_REST_Request $request Full details about the request.
+     *
      * @return WP_REST_Response|WP_Error
      */
     public function delete_item( $request ) {
@@ -98,5 +101,4 @@ class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1
 
         return $response;
     }
-
 }

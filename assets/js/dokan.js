@@ -32,7 +32,7 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                dokan_sweetalert( response.data, { 
+                dokan_sweetalert( response.data, {
                     icon: 'success',
                 } );
             }
@@ -100,7 +100,7 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-                dokan_sweetalert( dokan.i18n_download_access , { 
+                dokan_sweetalert( dokan.i18n_download_access , {
                     icon: 'warning',
                 } );
 
@@ -116,8 +116,8 @@ jQuery(function($) {
 
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        const answer = await dokan_sweetalert( dokan.i18n_download_permission, { 
-            action : 'confirm', 
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, {
+            action : 'confirm',
             icon   : 'warning',
         } );
 
@@ -340,9 +340,9 @@ jQuery(function($) {
 
             do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
-                
-                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, { 
-                    action : 'confirm', 
+
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, {
+                    action : 'confirm',
                     icon   : 'warning',
                 } );
 
@@ -395,7 +395,7 @@ jQuery(function($) {
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? dokan_sweetalert( response.data.message, { 
+                        response.data.message ? dokan_sweetalert( response.data.message, {
                             icon: 'success',
                         } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
@@ -413,7 +413,7 @@ jQuery(function($) {
                                 message.push( data );
                             }
                         }
-                        
+
                         dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
@@ -610,9 +610,7 @@ jQuery(function($) {
             });
         }
     });
-
 })(jQuery);
-
 
 ;(function($){
 
@@ -2246,13 +2244,32 @@ jQuery(function($) {
         form_data =
           self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
-      self.find('.ajax_prev').append('<span class="dokan-loading"> </span>');
+      var isDisconnect = false;
+      var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
+      if (self.find(selectors).length > 0){
+        isDisconnect = true;
+        var nonce = self.find('input[name="_wpnonce"]').val();
+        self.find('input[type=text]').val('');
+        self.find('textarea').val('');
+        self.find('input[type=checkbox]').prop('checked', false);
+        self.find('#ac_type').prop('selectedIndex', 0);
+
+        self.find('input[name="_wpnonce"').val(nonce);
+        form_data = self.serialize() + '&action=dokan_settings&form_id=' + form_id;
+      }
+
+      if (isDisconnect) {
+        self.find('.ajax_prev.disconnect').append('<span class="dokan-loading"> </span>');
+      } else {
+        self.find('.ajax_prev.save').append('<span class="dokan-loading"> </span>');
+      }
+
       $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
         $('.dokan-update-setting-top-button span.dokan-loading').remove();
-        $('html,body').animate({ scrollTop: 100 });
+        $('html,body').animate({ scrollTop: $('.dokan-dashboard-header').offset().top });
 
         if (resp.success) {
           // Harcoded Customization for template-settings function
@@ -2267,6 +2284,13 @@ jQuery(function($) {
 
           if ( dokan && dokan.storeProgressBar ) {
             dokan.storeProgressBar.init();
+          }
+
+          selectors = selectors.replaceAll( 'input', 'button' );
+          if (isDisconnect){
+            self.find(selectors).addClass('dokan-hide');
+          } else {
+            self.find(selectors).removeClass('dokan-hide');
           }
         } else {
           $('.dokan-ajax-response').html(
@@ -2960,6 +2984,7 @@ jQuery(function($) {
     return false;
   }
 }
+
 
 ;(function($) {
     var storeLists = {

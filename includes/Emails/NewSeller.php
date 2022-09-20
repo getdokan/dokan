@@ -143,6 +143,7 @@ class NewSeller extends WC_Email {
             'recipient' => array(
                 'title'         => __( 'Recipient(s)', 'dokan-lite' ),
                 'type'          => 'text',
+                // translators: 1) Email recipients
                 'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
                 'placeholder'   => '',
                 'default'       => '',

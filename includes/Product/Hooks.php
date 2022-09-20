@@ -2,13 +2,15 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\ProductCategory\Helper;
+
 /**
-* Admin Hooks
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Admin Hooks
+ *
+ * @since   3.0.0
+ *
+ * @package dokan
+ */
 class Hooks {
 
     /**
@@ -22,6 +24,10 @@ class Hooks {
         add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 10, 2 );
         add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
         add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
+        add_action( 'woocommerce_product_quick_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
 
         // Init Product Cache Class
         new VendorStoreInfo();
@@ -42,7 +48,7 @@ class Hooks {
 
         global $wpdb;
 
-        $return_result              = array();
+        $return_result              = [];
         $return_result['type']      = 'error';
         $return_result['data_list'] = '<li> ' . __( 'Products not found with this search', 'dokan-lite' ) . ' </li>';
         $output                     = '';
@@ -76,7 +82,7 @@ class Hooks {
             $store_id
         );
 
-        $query_results = $wpdb->get_results( $querystr );
+        $query_results = $wpdb->get_results( $querystr ); // phpcs:ignore
 
         if ( empty( $query_results ) ) {
             echo wp_json_encode( $return_result );
@@ -123,7 +129,7 @@ class Hooks {
                 $output .= '<div class="dokan-ls-product-categories">';
                 foreach ( $categories as $category ) {
                     if ( $category->parent ) {
-                        $parent  = get_term_by( 'id', $category->parent, 'product_cat' );
+                        $parent = get_term_by( 'id', $category->parent, 'product_cat' );
                         $output .= '<span>' . $parent->name . '</span>';
                     }
                     $output .= '<span>' . $category->name . '</span>';
@@ -169,7 +175,8 @@ class Hooks {
         ?>
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
-                <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"  placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off" data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search" placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme" value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
@@ -179,8 +186,8 @@ class Hooks {
                             <option value="<?php echo esc_attr( $id ); ?>" <?php selected( $orderby_options['orderby'], $id ); ?>><?php echo esc_html( $name ); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <?php endif; ?>
-                <input type="hidden" name="paged" value="1" />
+                <?php endif; ?>
+                <input type="hidden" name="paged" value="1"/>
             </form>
         </div>
         <?php
@@ -235,8 +242,63 @@ class Hooks {
             }
         }
 
-        wp_redirect( add_query_arg( array( 'message' => 'product_deleted' ), dokan_get_navigation_url( 'products' ) ) );
+        wp_safe_redirect( add_query_arg( [ 'message' => 'product_deleted' ], dokan_get_navigation_url( 'products' ) ) );
         exit;
     }
 
+    /**
+     * Triggers when admin quick edits products or bulk edit products from admin panel.
+     * we are auto selecting all category ancestors here.
+     *
+     * @since 3.6.4
+     *
+     * @param object $product
+     *
+     * @return void
+     */
+    public function update_category_data_for_bulk_and_quick_edit( $product ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_REQUEST['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product->get_id() );
+    }
+
+    /**
+     * Triggers when admin saves/edits products.
+     * we are auto selecting all category ancestors here.
+     *
+     * @since 3.6.4
+     *
+     * @param int $product_id
+     *
+     * @return void
+     */
+    public function update_category_data_for_new_and_update_product( $product_id ) {
+        if ( ! is_admin() ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
+    }
+
+    /**
+     * Gets chosen categories and updated product categories.
+     *
+     * @since 3.6.4
+     *
+     * @param int $product_id
+     *
+     * @return void
+     */
+    private function update_product_categories( $product_id ) {
+        $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
+        $chosen_categories = Helper::generate_chosen_categories( $terms );
+
+        Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+    }
 }

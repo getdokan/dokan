@@ -205,15 +205,13 @@
             color: #fff;
             background: @dokan-color;
             border-color: @dokan-color;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 @dokan-color;
-            text-shadow: 0 -1px 1px @dokan-color, 1px 0 1px @dokan-color, 0 1px 1px @dokan-color, -1px 0 1px @dokan-color;
+            text-shadow: none;
 
             &:hover,
             &:active,
             &:focus {
                 background-color: @dokan-color-darken;
                 border-color: @dokan-color-darken;
-                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 @dokan-color-darken;
             }
         }
     }
@@ -252,6 +250,10 @@
 
     .wc-wizard-service-name {
         padding-left: 20px;
+
+        p {
+            text-align: left;
+        }
     }
 
     .dokan-wizard-service-enable {

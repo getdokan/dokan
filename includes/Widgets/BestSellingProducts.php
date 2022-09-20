@@ -62,11 +62,11 @@ class BestSellingProducts extends WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     public function form( $instance ) {
-        $title           = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : __( 'Best Selling Product', 'dokan-lite' );
-        $no_of_product   = isset( $instance['no_of_product'] ) ? esc_attr( intval( $instance['no_of_product'] ) ) : 8;
-        $no_of_product   = '-1' === $no_of_product ? '' : $no_of_product;
-        $show_rating     = isset( $instance['show_rating'] ) ? esc_attr( $instance['show_rating'] ) : false;
-        $hide_outofstock = isset( $instance['hide_outofstock'] ) ? esc_attr( $instance['hide_outofstock'] ) : false;
+        $title           = isset( $instance['title'] ) ? sanitize_text_field( $instance['title'] ) : __( 'Best Selling Product', 'dokan-lite' );
+        $no_of_product   = isset( $instance['no_of_product'] ) ? intval( $instance['no_of_product'] ) : 8;
+        $no_of_product   = -1 === $no_of_product ? '' : $no_of_product;
+        $show_rating     = isset( $instance['show_rating'] ) ? sanitize_text_field( $instance['show_rating'] ) : false;
+        $hide_outofstock = isset( $instance['hide_outofstock'] ) ? sanitize_text_field( $instance['hide_outofstock'] ) : false;
         ?>
         <p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
@@ -99,10 +99,10 @@ class BestSellingProducts extends WP_Widget {
      */
     public function update( $new_instance, $old_instance ) {
         $instance                    = [];
-        $instance['title']           = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['no_of_product']   = ( ! empty( $new_instance['no_of_product'] ) && is_numeric( $new_instance['no_of_product'] ) && $new_instance['no_of_product'] > 0 ) ? strip_tags( intval( $new_instance['no_of_product'] ) ) : '8';
-        $instance['show_rating']     = ( ! empty( $new_instance['show_rating'] ) ) ? strip_tags( $new_instance['show_rating'] ) : '';
-        $instance['hide_outofstock'] = ( ! empty( $new_instance['hide_outofstock'] ) ) ? strip_tags( $new_instance['hide_outofstock'] ) : '';
+        $instance['title']           = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
+        $instance['no_of_product']   = ( ! empty( $new_instance['no_of_product'] ) && is_numeric( $new_instance['no_of_product'] ) && $new_instance['no_of_product'] > 0 ) ? intval( $new_instance['no_of_product'] ) : 8;
+        $instance['show_rating']     = ( ! empty( $new_instance['show_rating'] ) ) ? sanitize_text_field( $new_instance['show_rating'] ) : '';
+        $instance['hide_outofstock'] = ( ! empty( $new_instance['hide_outofstock'] ) ) ? sanitize_text_field( $new_instance['hide_outofstock'] ) : '';
 
         return $instance;
     }

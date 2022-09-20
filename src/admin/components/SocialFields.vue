@@ -13,15 +13,16 @@
             <input
                 disabled
                 type='text'
-                class='regular-text'
+                class='regular-text large'
                 v-if="fieldData.url"
                 :value='fieldData.url' />
             <input
-                class="regular-text"
+                class="regular-text large"
                 :type="fieldData.type"
                 v-model="fieldValue[fieldData.name]"
                 v-if="fieldData.type === 'text'" />
             <textarea
+                class="large"
                 v-model="fieldValue[fieldData.name]"
                 v-if="fieldData.type === 'textarea'"
             ></textarea>

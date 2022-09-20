@@ -2,7 +2,7 @@
 /**
  * Dokan Seller Single product tab Template
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
@@ -34,7 +34,7 @@
         <li class="store-address">
             <span><b><?php esc_html_e( 'Address:', 'dokan-lite' ); ?></b></span>
             <span class="details">
-                <?php echo wp_kses_post( dokan_get_seller_address( $author->ID ) ) ?>
+                <?php echo wp_kses_post( dokan_get_seller_address( $author->ID ) ); ?>
             </span>
         </li>
     <?php } ?>

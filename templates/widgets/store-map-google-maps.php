@@ -1,7 +1,7 @@
 <script type="text/javascript">
     jQuery( document ).ready( function ( $ ) {
         try {
-            var location = <?php echo json_encode( $location ); ?>;
+            var location = <?php echo wp_json_encode( $location ); ?>;
 
             var curpoint = new google.maps.LatLng( location.latitude, location.longitude ),
                 $map_area = $( '#dokan-store-location' );

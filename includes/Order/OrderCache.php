@@ -12,7 +12,7 @@ use WeDevs\Dokan\Withdraw\WithdrawCache;
  *
  * @since 3.3.2
  *
- * @see \WeDevs\Dokan\Cache
+ * @see   \WeDevs\Dokan\Cache
  */
 class OrderCache {
 
@@ -32,12 +32,13 @@ class OrderCache {
      *
      * @since 3.3.2
      *
-     * @param int $seller_id
+     * @param int      $seller_id
      * @param int|null $order_id
      *
      * @return void
      */
     public static function delete( $seller_id, $order_id = null ) {
+        Cache::invalidate_group( 'seller_order_data' );
         Cache::invalidate_group( "seller_order_data_{$seller_id}" );
 
         // Remove cached seller_id after an woocommerce order
