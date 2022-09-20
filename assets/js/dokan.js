@@ -876,9 +876,10 @@ jQuery(function($) {
             const productTemplate = wp.template( 'dokan-add-new-product' ),
                 modalElem = $( '#dokan-add-product-popup' ),
                 modal = modalElem.iziModal( {
-                headerColor: '#b11d1db8',
-                width      : 690,
-                onOpening  : () => {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                onOpening   : () => {
                     Dokan_Editor.loadSelect2();
                     Dokan_Editor.bindProductTagDropdown();
 
@@ -3395,6 +3396,7 @@ jQuery(function($) {
 
             modal.iziModal( 'setWidth', 690 );
             modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', withdrawTemplate().trim() );
             modal.iziModal( 'open' );
 
@@ -3406,6 +3408,7 @@ jQuery(function($) {
 
             modal.iziModal( 'setWidth', 690 );
             modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', scheduleTemplate().trim() );
             modal.iziModal( 'open' );
 

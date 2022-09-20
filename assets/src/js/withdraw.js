@@ -33,6 +33,7 @@
 
             modal.iziModal( 'setWidth', 690 );
             modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', withdrawTemplate().trim() );
             modal.iziModal( 'open' );
 
@@ -44,6 +45,7 @@
 
             modal.iziModal( 'setWidth', 690 );
             modal.iziModal( 'setHeaderColor', '#b11d1db8' );
+            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', scheduleTemplate().trim() );
             modal.iziModal( 'open' );
 

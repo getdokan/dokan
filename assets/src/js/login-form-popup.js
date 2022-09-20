@@ -44,9 +44,10 @@
             $( 'body' ).append( '<div id="dokan-modal-login-form-popup"></div>' );
 
             const modal = $( '#dokan-modal-login-form-popup' ).iziModal( {
-                headerColor: '#b11d1db8',
-                width      : 690,
-                onOpened   : () => {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                onOpened    : () => {
                     $( 'body' ).trigger( 'dokan:login_form_popup:opened' );
                 }
             } );

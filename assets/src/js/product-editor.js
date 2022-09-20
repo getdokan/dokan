@@ -262,9 +262,10 @@
             const productTemplate = wp.template( 'dokan-add-new-product' ),
                 modalElem = $( '#dokan-add-product-popup' ),
                 modal = modalElem.iziModal( {
-                headerColor: '#b11d1db8',
-                width      : 690,
-                onOpening  : () => {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                onOpening   : () => {
                     Dokan_Editor.loadSelect2();
                     Dokan_Editor.bindProductTagDropdown();
 
