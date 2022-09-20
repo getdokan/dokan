@@ -6,14 +6,6 @@
       visibility: hidden;
       font-size: 12px;
       color: #ccc;
-
-      .delete a {
-        color: #a05;
-
-        &:hover {
-          color: red;
-        }
-      }
     }
 
     tr:hover .row-actions {
@@ -115,6 +107,25 @@
 
       td {
         vertical-align: top;
+
+        &.column-primary,
+        .row-actions {
+          a {
+            color: #6d6d6d;
+
+            &:hover {
+              color: #000;
+            }
+          }
+
+          .delete {
+            a {
+              &:hover {
+                color: red;
+              }
+            }
+          }
+        }
       }
 
       p {
@@ -1559,7 +1570,11 @@
   }
 }
 .select2-container--open .select2-dropdown--below {
-  margin-top: 5px !important;
+  margin-top: 32px !important;
+}
+
+.select2-container--open .select2-dropdown--above {
+  margin-top: 32px !important;
 }
 
 // style for seller info on product details page

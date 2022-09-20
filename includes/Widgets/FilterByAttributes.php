@@ -51,16 +51,16 @@ class FilterByAttributes extends WP_Widget {
         $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $query_type   = isset( $instance['query_type'] ) ? apply_filters( 'widget_query_type', $instance['query_type'] ) : '';
 
-        echo $args['before_widget'];
+        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title'];
+            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
 
         dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
 
-        echo $args['after_widget'];
+        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
         wp_reset_postdata();
     }

@@ -14,7 +14,7 @@ class Flatsome {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         // page layout fix
         add_action( 'wp_head', [ $this, 'store_page' ] );
         add_action( 'wp_head', [ $this, 'edit_page' ] );

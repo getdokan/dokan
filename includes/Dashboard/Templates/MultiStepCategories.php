@@ -15,9 +15,9 @@ class MultiStepCategories {
      * @since 3.6.2
      */
     public function __construct() {
-        add_action( 'dokan_before_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_before_new_product_content_area', array( $this, 'load_add_category_modal' ), 10 );
-        add_action( 'dokan_before_listing_product', array( $this, 'load_add_category_modal' ), 10 );
+        add_action( 'dokan_before_product_content_area', [ $this, 'load_add_category_modal' ], 10 );
+        add_action( 'dokan_before_new_product_content_area', [ $this, 'load_add_category_modal' ], 10 );
+        add_action( 'dokan_before_listing_product', [ $this, 'load_add_category_modal' ], 10 );
     }
 
     /**
@@ -25,7 +25,7 @@ class MultiStepCategories {
      *
      * @since 3.6.2
      *
-     * @return html
+     * @return void
      */
     public function load_add_category_modal() {
         /**
@@ -33,8 +33,11 @@ class MultiStepCategories {
          * Because without those page we don't need to load category modal.
          */
         global $wp;
-        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) ) || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) || ( dokan_is_seller_dashboard() && isset( $wp->query_vars['new-product'] ) ) ) {
-            dokan_get_template_part( 'products/dokan-category-ui', '', array() );
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) )
+            || ( isset( $wp->query_vars['products'], $_GET['product_id'] ) ) // phpcs:ignore
+            || ( isset( $wp->query_vars['new-product'] ) )
+        ) {
+            dokan_get_template_part( 'products/dokan-category-ui', '', [] );
         }
     }
 }

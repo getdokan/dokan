@@ -2,11 +2,11 @@
 /**
  * Dokan vendor information template on product page
  *
- * @since 3.3.7
+ * @since   3.3.7
  *
  * @param Object $vendor
- * @param Array $store_info
- * @param Array $store_rating
+ * @param Array  $store_info
+ * @param Array  $store_rating
  *
  * @package dokan
  */
@@ -29,7 +29,7 @@
         </div>
         <?php if ( $store_rating['count'] ) : ?>
             <?php // translators: %d reviews count ?>
-            <p class="dokan-ratings-count">(<?php echo sprintf( _n( '%d Review', '%d Reviews', $store_rating['count'], 'dokan-lite' ), $store_rating['count'] ); ?>)</p>
+            <p class="dokan-ratings-count">(<?php echo sprintf( _n( '%d Review', '%d Reviews', $store_rating['count'], 'dokan-lite' ), number_format_i18n( $store_rating['count'] ) ); ?>)</p>
         <?php endif; ?>
     </div>
 </div>

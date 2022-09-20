@@ -4,6 +4,7 @@
  *
  * @param array $item_data
  * @param array $cart_item
+ *
  * @return array
  */
 function dokan_product_seller_info( $item_data, $cart_item ) {
@@ -27,6 +28,7 @@ add_filter( 'woocommerce_get_item_data', 'dokan_product_seller_info', 10, 2 );
  * Adds a seller tab in product single page
  *
  * @param array $tabs
+ *
  * @return array
  */
 function dokan_seller_product_tab( $tabs ) {
@@ -230,7 +232,7 @@ add_action( 'manage_product_posts_custom_column', 'dokan_vendor_quick_edit_data'
 /**
  * Save quick edit data
  *
- * @param object $product
+ * @param WC_Product $product
  *
  * @return void
  */
@@ -239,13 +241,11 @@ function dokan_save_quick_edit_vendor_data( $product ) {
         return;
     }
 
-    $get_data = wp_unslash( $_REQUEST );
-
-    if ( ! isset( $get_data['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $get_data['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
+    if ( ! isset( $_REQUEST['woocommerce_quick_edit_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['woocommerce_quick_edit_nonce'] ), 'woocommerce_quick_edit_nonce' ) ) {
         return;
     }
 
-    $posted_vendor_id = ! empty( $get_data['dokan_product_author_override'] ) ? (int) $get_data['dokan_product_author_override'] : 0;
+    $posted_vendor_id = ! empty( $_REQUEST['dokan_product_author_override'] ) ? (int) $_REQUEST['dokan_product_author_override'] : 0;
 
     if ( ! $posted_vendor_id ) {
         return;

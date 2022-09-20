@@ -12,7 +12,7 @@ class Astra {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_filter( 'astra_page_layout', [ $this, 'remove_sidebar' ] );
     }
 

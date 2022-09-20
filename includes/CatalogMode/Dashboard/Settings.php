@@ -9,7 +9,7 @@ use WeDevs\Dokan\CatalogMode\Helper;
  *
  * This class will be responsible for admin settings of Catalog Mode feature
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode\Dashboard
  */
@@ -17,7 +17,7 @@ class Settings {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -37,7 +37,7 @@ class Settings {
     /**
      * This method will render settings fields for Catalog Mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param array $store_settings
      * @param int   $user_id
@@ -45,7 +45,11 @@ class Settings {
      * @return void
      */
     public function render_settings_fields( $user_id, $store_settings ) {
-        $defaults         = Helper::get_defaults();
+        // get default store settings
+        $defaults = Helper::get_defaults();
+        if ( ! isset( $store_settings['catalog_mode'] ) ) {
+            $store_settings['catalog_mode'] = $defaults;
+        }
         $hide_add_to_cart = ! empty( $store_settings['catalog_mode']['hide_add_to_cart_button'] )
             ? $store_settings['catalog_mode']['hide_add_to_cart_button'] : $defaults['hide_add_to_cart_button'];
         $hide_price       = ! empty( $store_settings['catalog_mode']['hide_product_price'] )
@@ -64,20 +68,19 @@ class Settings {
                     </label>
                 </div>
             </div>
-        <?php endif; ?>
-        <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
             <div class="catalog_mode_extra_section">
-                <div class="dokan-form-group">
-                    <label class="dokan-w3 dokan-control-label"
-                            for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan-lite' ); ?></label>
-                    <div class="dokan-w5 dokan-text-left">
-                        <label for="catalog_mode_hide_product_price">
-                            <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
+                <?php if ( Helper::hide_product_price_option_is_enabled_by_admin() ) : ?>
+                    <div class="dokan-form-group">
+                        <label class="dokan-w3 dokan-control-label" for="catalog_mode_hide_product_price"><?php esc_attr_e( 'Hide Product Price', 'dokan-lite' ); ?></label>
+                        <div class="dokan-w5 dokan-text-left">
+                            <label for="catalog_mode_hide_product_price">
+                                <input type="checkbox" id="catalog_mode_hide_product_price" value="on" name="catalog_mode[hide_product_price]"
                                     <?php checked( $hide_price, 'on' ); ?> />
-                            <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
-                        </label>
+                                <span> <?php esc_html_e( 'Check to hide product price from your products.', 'dokan-lite' ); ?></span>
+                            </label>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
                 <?php do_action( 'dokan_catalog_mode_extra_settings_section', $user_id, $store_settings['catalog_mode'] ); ?>
             </div>
         <?php endif; ?>
@@ -106,7 +109,7 @@ class Settings {
     /**
      * This method will save settings fields for Catalog Mode
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int   $store_id
      * @param array $dokan_settings

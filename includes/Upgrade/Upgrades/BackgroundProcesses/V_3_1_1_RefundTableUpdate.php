@@ -50,7 +50,7 @@ class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
             foreach ( $db_data['fields'] as $field ) {
                 // Check the column.
                 if ( ! check_column( $table_name, $field, $col_type ) ) {
-                    $query = "ALTER TABLE $table_name MODIFY COLUMN $field $col_type";
+                    $query = "ALTER TABLE $table_name MODIFY COLUMN $field $col_type"; // phpcs:ignore
 
                     // set null
                     if ( ! empty( $null ) ) {
@@ -63,7 +63,7 @@ class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
                     }
 
                     // update db field
-                    $q     = $wpdb->query( $query );
+                    $q = $wpdb->query( $query ); // phpcs:ignore
 
                     if ( $wpdb->last_error ) {
                         dokan_log( __( 'Upgrading db fields error: ', 'dokan-lite' ) . __FILE__ . ' ' . __LINE__ . ' ' . $wpdb->last_error );

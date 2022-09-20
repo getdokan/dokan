@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.4
 Tested up to: 6.0.1
 WC requires at least: 5.0.0
-WC tested up to: 6.7.0
+WC tested up to: 6.8.2
 Requires PHP: 7.0
-Stable tag: 3.6.3
+Stable tag: 3.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,28 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.6.5 ( Aug 25, 2022 ) =
+
+- **fix:** [WPML] Added WPML support for the multistep product category.
+- **fix:** Order REST API endpoint displays other vendors orders.
+
+= v3.6.4 ( Aug 10, 2022 ) =
+
+- **new:** Added Catalog Mode Feature to Dokan Doc Link:
+- **update:** Load asset (CSS/JS) files only on required pages
+- **update:** Added $user_id as parameter for filter hook `dokan_is_store_open`
+- **fix:** [security]  Removed unfiltered_html capabilities from vendor user role
+- **fix:** Fixed responsive issue of multistep product category UI.
+- **fix:** [WPML] Vendor Dashboard Submenu not loading if translated to another language
+- **fix:** Account Type for bank payment method is missing when admin is creating/editing a vendor
+- **fix:** Paypal shows as connected for new vendors even though it is not connected
+- **fix:** Can't skip seller setup wizard's Payment step by keeping some fields empty
+- **fix:** Fixed Order By sorting parameters for Orders
+- **fix:** Vendor Dashboard Add New Product URL changed to the product list page
+- **fix:** Single store page default order by filtering wasn't working
+- **fix:** Fixed third store header styling issue
+- **fix:** When the admin updates or saves a product from the admin panel multistep product category feature wasn't working
 
 = v3.6.3 ( Jul 26, 2022 ) =
 

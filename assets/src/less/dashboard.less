@@ -34,6 +34,10 @@ div.media-sidebar a.edit-attachment{
         * {
             box-sizing: border-box;
         }
+
+        a:focus {
+            outline-color: #ff5a40;
+        }
     }
 
     header.dokan-dashboard-header {
@@ -89,6 +93,19 @@ div.media-sidebar a.edit-attachment{
                     i {
                         color: #ccc;
                         padding-right: 5px;
+                    }
+
+                    .pull-right {
+                        float: right;
+
+                        a {
+                            color: #6d6d6d;
+                            transition: .2s linear;
+
+                            &:hover {
+                              color: #000;
+                            }
+                        }
                     }
                 }
 
@@ -150,6 +167,10 @@ div.media-sidebar a.edit-attachment{
                 }
 
                 .list-count {
+                    a {
+                        color: #6d6d6d;
+                    }
+
                     .count {
                         float: right;
                     }
@@ -472,6 +493,22 @@ div.media-sidebar a.edit-attachment{
             p {
                 margin-bottom: 10px;
             }
+        }
+    }
+
+    div.chart-container > div.chart-placeholder > div.legend {
+        table {
+          border-spacing: 0.5em;
+          width: auto;
+          margin: 0;
+          border-collapse: separate;
+
+          td {
+              padding: 0;
+              text-align: left;
+              vertical-align: middle;
+              background: none;
+          }
         }
     }
 }

@@ -5,11 +5,11 @@ dokanWebpack([6],{
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray__ = __webpack_require__(290);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__);
 
 
@@ -25,6 +25,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   var categoriesState = [];
   var searchResultState = [];
   var inputHolder = '';
+  var selectedFrom = 0;
   var selectedCatId = '';
   var ProductCategory = {
     init: function init() {
@@ -44,7 +45,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     initModal: function initModal() {
       inputHolder = $(this).data('dokansclevel');
+      selectedFrom = $(this).data('selectfor');
       var chosenCat = $(this).siblings(".dokan-cat-inputs-holder").find(".dokan_chosen_product_cat");
+      $(this).parent().attr('data-activate', 'yes');
       ProductCategory.openModal(chosenCat);
     },
     removeCatBox: function removeCatBox() {
@@ -91,19 +94,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       ProductCategory.showIndicators(rightIndicator, right);
     },
     chooseCatButton: function chooseCatButton() {
-      if ($(".dokan_chosen_product_cat_".concat(selectedCatId)).length) {
+      var category_box = ".dokan-select-product-category-container.dokan_select_cat_for_".concat(selectedFrom, "_").concat(inputHolder, "[data-activate='yes']");
+      var cat_exists_in_list = $(category_box).parent().children('.dokan-select-product-category-container').children('.dokan-cat-inputs-holder').find(".dokan_chosen_product_cat_".concat(selectedCatId)).length;
+
+      if (cat_exists_in_list) {
         dokan_sweetalert(dokan_product_category_data.i18n.duplicate_category, {
           icon: 'warning'
         });
         return;
       }
 
-      ProductCategory.setCatName(ProductCategory.getSelectedLabel());
-      ProductCategory.setCatId(selectedCatId);
+      ProductCategory.setCatName(ProductCategory.getSelectedLabel(), $(category_box));
+      ProductCategory.setCatId(selectedCatId, $(category_box));
       ProductCategory.hideCategoryModal();
+      $(category_box).attr('data-activate', 'no');
     },
     setCatUiBasedOnOneCat: function setCatUiBasedOnOneCat(catId, category) {
-      ProductCategory.disableDoneBtn(category.children.length > 0);
+      var disable = undefined !== category.children.length && category.children.length > 0;
+      ProductCategory.disableDoneBtn(disable);
 
       var allUl = __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_toConsumableArray___default()(category.parents);
 
@@ -172,6 +180,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     hideCategoryModal: function hideCategoryModal() {
       modal.css('display', 'none');
+      $('.dokan-select-product-category-container').attr('data-activate', 'no');
     },
     loadAllParentCategories: function loadAllParentCategories() {
       categoriesState.push(ProductCategory.getCategoriesWithParentId());
@@ -208,7 +217,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       var categories = ProductCategory.getCategoriesWithParentId(termId, catlevel + 1);
       categoriesState.push(categories);
       ProductCategory.updateCategoryUi();
-      ProductCategory.scrollTo(catlevel - 1);
+      ProductCategory.scrollTo(catlevel);
     },
     updateSearchResultUi: function updateSearchResultUi() {
       var html = '';
@@ -310,24 +319,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         scrollLeft: "".concat(left ? '+' : '-', "=350px")
       }, 800);
     },
-    setCatId: function setCatId(id) {
-      var ui = "<input type=\"hidden\" class=\"dokan_chosen_product_cat dokan_chosen_product_cat_".concat(id, "\" name=\"chosen_product_cat[]\" value=\"").concat(id, "\"></input>");
-      $(".dokan-cih-level-".concat(inputHolder)).html(ui);
+    setCatId: function setCatId(id, category_box) {
+      var ui = "<input data-field-name=\"chosen_product_cat\" type=\"hidden\" class=\"dokan_chosen_product_cat dokan_chosen_product_cat_".concat(id, "\" name=\"chosen_product_cat[]\" value=\"").concat(id, "\"></input>");
+      ui += "<input type=\"hidden\" name=\"chosen_product_cat_bulk[]\" value=\"".concat(id, "\"></input>");
+      category_box.children(".dokan-cih-level-".concat(inputHolder)).html(ui);
     },
-    setCatName: function setCatName(name) {
-      $(".dokan-ssct-level-".concat(inputHolder)).html(name);
+    setCatName: function setCatName(name, category_box) {
+      category_box.children('.dokan-select-product-category').children(".dokan-ssct-level-".concat(inputHolder)).html(name);
     },
     addANewCatBox: function addANewCatBox() {
-      var lastCatElement = $('.dokan-add-new-cat-box .dokan-select-product-category-container').length;
-      var lastCat = $('.dokan-add-new-cat-box .dokan-select-product-category-container')[lastCatElement - 1];
+      var addCatBtn = $(this)[0];
+      var from = $(addCatBtn).data('selectfor');
+      selectedFrom = from;
+      var lastCatElement = $(this).parent().siblings('.dokan-add-new-cat-box').children('.dokan-select-product-category-container').length;
+      var lastCat = $(this).parent().siblings('.dokan-add-new-cat-box').children('.dokan-select-product-category-container')[lastCatElement - 1];
       var boxCounter = $(lastCat).find('#dokan-category-open-modal').data('dokansclevel') + 1;
 
       if (isNaN(boxCounter)) {
         boxCounter = 0;
       }
 
-      var html = "\n                <div class=\"dokan-select-product-category-container\">\n                    <div class=\"dokan-form-group dokan-select-product-category dokan-category-open-modal\" data-dokansclevel=\"".concat(boxCounter, "\" id=\"dokan-category-open-modal\">\n                        <span id=\"dokan_product_cat_res\" class=\"dokan-select-product-category-title dokan-ssct-level-").concat(boxCounter, "\">- ").concat(dokan_product_category_data.i18n.select_a_category, " -</span>\n                        <span class=\"dokan-select-product-category-icon\"><i class=\"fas fa-edit\"></i></span>\n                    </div>\n                        ").concat(!dokan_product_category_data.is_single ? "\n                        <div class=\"dokan-select-product-category-remove-container\">\n                            <span class=\"dokan-select-product-category-remove\"><i class=\"fas fa-times\"></i></span>\n                        </div>" : '', "\n                    <span class=\"dokan-cat-inputs-holder dokan-cih-level-").concat(boxCounter, "\" ></span>\n                </div>\n                ");
-      $('.dokan-add-new-cat-box').append(html);
+      var html = "\n                <div data-activate=\"no\" class=\"dokan-select-product-category-container dokan_select_cat_for_".concat(from, "_").concat(boxCounter, "\">\n                    <div class=\"dokan-form-group dokan-select-product-category dokan-category-open-modal\" data-dokansclevel=\"").concat(boxCounter, "\" id=\"dokan-category-open-modal\" data-selectfor=\"").concat(from, "\">\n                        <span id=\"dokan_product_cat_res\" class=\"dokan-select-product-category-title dokan-ssct-level-").concat(boxCounter, "\">- ").concat(dokan_product_category_data.i18n.select_a_category, " -</span>\n                        <span class=\"dokan-select-product-category-icon\"><i class=\"fas fa-edit\"></i></span>\n                    </div>\n                        ").concat(!dokan_product_category_data.is_single ? "\n                        <div class=\"dokan-select-product-category-remove-container\">\n                            <span class=\"dokan-select-product-category-remove\"><i class=\"fas fa-times\"></i></span>\n                        </div>" : '', "\n                    <span class=\"dokan-cat-inputs-holder dokan-cih-level-").concat(boxCounter, "\" ></span>\n                </div>\n                ");
+      $(this).parent().parent().children(".cat_box_for_".concat(from)).append(html);
     },
     findCategory: function findCategory(id) {
       return dokan_product_category_data.categories[id];

@@ -9,7 +9,7 @@ use WeDevs\Dokan\CatalogMode\Helper;
  *
  * This class will load hooks related to frontend
  *
- * @since   DOKAN_SINCE
+ * @since   3.6.4
  *
  * @package WeDevs\Dokan\CatalogMode
  */
@@ -17,7 +17,7 @@ class Products {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void
      */
@@ -35,7 +35,7 @@ class Products {
     /**
      * This method will render catalog mode section under single product edit page
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $product_id int
      *
@@ -70,7 +70,7 @@ class Products {
     /**
      * This method will save catalog mode section data
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param $product_id int
      *

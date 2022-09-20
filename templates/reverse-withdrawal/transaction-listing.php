@@ -4,13 +4,15 @@
  *
  * @var $transactions array
  */
+
 use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
+
 ?>
 <?php if ( is_wp_error( $transactions ) ) : ?>
     <div class="dokan-alert dokan-alert-danger">
         <strong><?php echo wp_kses_post( $transactions->get_error_message() ); ?></strong>
     </div>
-<?php else: ?>
+<?php else : ?>
     <table class="dokan-table dokan-table-striped">
         <tr>
             <th><?php esc_html_e( 'Transaction ID', 'dokan-lite' ); ?></th>
@@ -26,7 +28,7 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
         $current_balance = 0;
         // get items to be displayed
         $items[] = $transactions['balance'];
-        $items   = ! empty(  $transactions['items'] ) ? array_merge(  $items, $transactions['items'] ) : $items;
+        $items   = ! empty( $transactions['items'] ) ? array_merge( $items, $transactions['items'] ) : $items;
 
         foreach ( $items as $transaction ) {
             $transaction = ReverseWithdrawalHelper::get_formated_transaction_data( $transaction, $current_balance, 'seller' )

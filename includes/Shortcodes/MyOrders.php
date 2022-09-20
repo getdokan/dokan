@@ -15,7 +15,7 @@ class MyOrders extends DokanShortcode {
      */
     public function render_shortcode( $atts ) {
         if ( ! is_user_logged_in() ) {
-            return;
+            return '';
         }
 
         ob_start();

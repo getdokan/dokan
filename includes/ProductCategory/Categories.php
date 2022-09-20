@@ -16,7 +16,7 @@ class Categories {
     /**
      * This method will return all the categories
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @return void|array
      */
@@ -46,16 +46,13 @@ class Categories {
      */
     public function get() {
         // check if categories are already loaded
-        if ( empty( $this->categories ) ) {
-            $this->get_all_categories();
-        }
-        return apply_filters( 'dokan_multistep_product_categories', $this->categories );
+        return apply_filters( 'dokan_multistep_product_categories', $this->get_all_categories( true ) );
     }
 
     /**
      * Get Children of a parent category
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $parent_id
      *
@@ -84,7 +81,7 @@ class Categories {
     /**
      * Get all the parents of a category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $category_id
      *
@@ -98,7 +95,7 @@ class Categories {
     /**
      * Returns the top patent id of a category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.6.4
      *
      * @param int $category_id
      *
@@ -129,13 +126,25 @@ class Categories {
         global $wpdb;
 
         // get all categories
+        $table  = $wpdb->prefix . 'terms';
+        $fields = 'terms.term_id, terms.name, tax.parent AS parent_id';
+        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax ON terms.term_id = tax.term_id";
+        $where  = " AND tax.taxonomy = 'product_cat'";
+
+        // If wpml plugin exists then get categories as language set.
+        if ( function_exists( 'wpml_get_current_language' ) ) {
+            $current_language = wpml_get_current_language();
+
+            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
+            $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
+        }
+
+        // @codingStandardsIgnoreStart
         $categories = $wpdb->get_results(
-            "SELECT terms.term_id, terms.name, tax.parent AS parent_id FROM `{$wpdb->prefix}terms` AS terms
-            INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax
-            ON terms.term_id = tax.term_id
-            WHERE tax.taxonomy = 'product_cat'",
+            $wpdb->prepare( "SELECT $fields FROM $table AS terms $join WHERE %d=%d $where", 1, 1 ),
             OBJECT_K
         );
+        // @codingStandardsIgnoreEnd
 
         if ( empty( $categories ) ) {
             $this->categories = [];
