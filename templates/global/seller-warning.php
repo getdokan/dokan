@@ -2,9 +2,9 @@
 /**
  *  Dokan Seller Enabled/Disabled warning Notice
  *
- *  @since 2.4
+ * @since   2.4
  *
- *  @package dokan
+ * @package dokan
  */
 ?>
 <div class="dokan-alert dokan-alert-warning">

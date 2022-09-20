@@ -32,7 +32,7 @@ class Core {
      *
      * @global string $pagenow
      */
-    function block_admin_access() {
+    public function block_admin_access() {
         global $pagenow, $current_user;
 
         // bail out if we are from WP Cli
@@ -44,8 +44,8 @@ class Core {
         $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
         $user_role   = reset( $current_user->roles );
 
-        if ( ( 'on' == $no_access ) && ( ! in_array( $pagenow, $valid_pages ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ) ) ) {
-            wp_redirect( home_url() );
+        if ( ( 'on' === $no_access ) && ( ! in_array( $pagenow, $valid_pages, true ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ), true ) ) {
+            wp_safe_redirect( home_url() );
             exit;
         }
     }
@@ -65,14 +65,14 @@ class Core {
      *
      * @return string
      */
-    function hide_others_uploads( $where ) {
+    public function hide_others_uploads( $where ) {
         global $pagenow, $wpdb;
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
             return $where;
         }
 
-        if ( ( $pagenow == 'upload.php' || $pagenow == 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
+        if ( ( $pagenow === 'upload.php' || $pagenow === 'media-upload.php' ) && current_user_can( 'dokandar' ) ) {
             $user_id = dokan_get_current_user_id();
 
             $where .= " AND $wpdb->posts.post_author = $user_id";
@@ -88,7 +88,7 @@ class Core {
      *
      * @param array $classes
      */
-    function add_dashboard_template_class( $classes ) {
+    public function add_dashboard_template_class( $classes ) {
         $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
 
         if ( ! $page_id ) {
@@ -119,7 +119,7 @@ class Core {
      *
      * @return string The filtered title.
      */
-    function wp_title( $title, $sep ) {
+    public function wp_title( $title, $sep ) {
         global $paged, $page;
 
         if ( is_feed() ) {
@@ -140,7 +140,8 @@ class Core {
 
             // Add a page number if necessary.
             if ( $paged >= 2 || $page >= 2 ) {
-                $title = "$title $sep " . sprintf( __( 'Page %s', 'dokan-lite' ), max( $paged, $page ) );
+                // translators: 1) page number
+                $title = "$title $sep " . sprintf( __( 'Page %1$s', 'dokan-lite' ), max( $paged, $page ) );
             }
 
             return $title;
@@ -156,7 +157,7 @@ class Core {
      *
      * @return void [redirection]
      */
-    function redirect_if_not_logged_seller() {
+    public function redirect_if_not_logged_seller() {
         global $post;
 
         $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );

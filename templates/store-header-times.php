@@ -5,7 +5,7 @@
     </div>
     <?php
     foreach ( $dokan_days as $day_key => $day ) :
-        $store_info   = ! empty( $dokan_store_times[ $day_key ] ) ? $dokan_store_times[ $day_key ] : [];
+        $store_info = ! empty( $dokan_store_times[ $day_key ] ) ? $dokan_store_times[ $day_key ] : [];
         $store_status = ! empty( $store_info['status'] ) ? $store_info['status'] : 'close';
         ?>
         <div class="store-time-tags">
@@ -27,21 +27,21 @@
                 $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
 
                 // Get formatted times.
-                for ( $index = 0; $index < $times_length; $index++ ) :
+                for ( $index = 0; $index < $times_length; $index ++ ) :
                     $formatted_opening_time = $current_time->modify( $store_info['opening_time'][ $index ] );
                     $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
-                    $exact_time = '';
+                    $exact_time             = '';
 
                     if ( $today === $day_key && $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
                         $exact_time = 'current_time';
                     }
                     ?>
-                    <span class="store-open <?php echo $exact_time; ?>" href="#">
+                    <span class="store-open <?php echo esc_attr( $exact_time ); ?>" href="#">
                         <?php
-                            echo esc_html(
-                                $formatted_opening_time->format( wc_time_format() ) . ' - ' .
-                                $formatted_closing_time->format( wc_time_format() )
-                            );
+                        echo esc_html(
+                            $formatted_opening_time->format( wc_time_format() ) . ' - ' .
+                            $formatted_closing_time->format( wc_time_format() )
+                        );
                         ?>
                     </span>
                 <?php endfor; ?>

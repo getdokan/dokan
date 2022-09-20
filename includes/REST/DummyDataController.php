@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WP_Error;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 
@@ -70,7 +72,7 @@ class DummyDataController extends DokanRESTController {
      *
      * @since 3.6.2
      *
-     * @return array
+     * @return WP_REST_Response|WP_Error
      */
     public function import_dummy_data_status() {
         $status = [
@@ -85,7 +87,7 @@ class DummyDataController extends DokanRESTController {
      *
      * @since 3.6.2
      *
-     * @return array
+     * @return WP_REST_Response|WP_Error
      */
     public function import_dummy_data( $request ) {
         $_post_data = $request->get_params();
@@ -115,7 +117,7 @@ class DummyDataController extends DokanRESTController {
      *
      * @since 3.6.2
      *
-     * @return string
+     * @return WP_REST_Response|WP_Error
      */
     public function clear_dummy_data() {
         $result = dokan()->dummy_data_importer->clear_all_dummy_data();

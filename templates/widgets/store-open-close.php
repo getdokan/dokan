@@ -2,13 +2,13 @@
 /**
  * Dokan Store Open Close Time Widget
  *
- * @since 2.7.3
+ * @since   2.7.3
  *
  * @package dokan
  */
 ?>
 <div class="dokan-store-open-close">
-    <?php foreach( $dokan_days as $day => $value ) : ?>
+    <?php foreach ( $dokan_days as $day => $value ) : ?>
         <?php
         if ( ! isset( $dokan_store_time[ $day ] ) || ( isset( $dokan_store_time[ $day ]['status'] ) && 'close' === $dokan_store_time[ $day ]['status'] ) ) {
             echo sprintf(
@@ -16,7 +16,7 @@
                 esc_attr( $day ),
                 esc_html( ucfirst( dokan_get_translated_days( $day ) ) ),
                 __( 'Off Day', 'dokan-lite' )
-                );
+            );
             continue;
         }
 
@@ -37,12 +37,13 @@
         }
         ?>
 
-        <div class="open-close-day <?php echo esc_attr( $day ) . '-time' ?>">
-            <div class="working-day"><?php echo esc_html( ucfirst( dokan_get_translated_days( $day ) ) ); ?></div> :
+        <div class="open-close-day <?php echo esc_attr( $day ) . '-time'; ?>">
+            <div class="working-day"><?php echo esc_html( ucfirst( dokan_get_translated_days( $day ) ) ); ?></div>
+            :
             <div class="store-times">
                 <?php
                 // Get formatted store times.
-                for ( $index = 0; $index < $times_length; $index++ ) :
+                for ( $index = 0; $index < $times_length; $index ++ ) :
                     if ( empty( $dokan_store_time[ $day ]['opening_time'][ $index ] ) ) {
                         continue;
                     }
@@ -66,18 +67,22 @@
     .dokan-store-open-close .open-close-day {
         display: flex;
     }
-	.dokan-store-open-close .working-day {
+
+    .dokan-store-open-close .working-day {
         width: 100px;
-	}
+    }
+
     .dokan-store-open-close .store-times {
         display: flex;
         flex-direction: column;
         padding-left: 10px;
         white-space: nowrap;
     }
+
     .dokan-store-open-close .open-close-day {
         padding-top: 10px;
     }
+
     .dokan-store-open-close .store-time .separator {
         padding: 0 5px;
     }

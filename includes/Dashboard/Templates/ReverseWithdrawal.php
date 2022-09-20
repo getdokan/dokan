@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
@@ -12,26 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Load Reverse Withdrawal Template
  *
- * @since 3.5.1
+ * @since   3.5.1
  *
  * @package Wedevs\Dokan\Dashboard\Templates
  */
 class ReverseWithdrawal {
     /**
-     * @var int $seller_id
-     *
      * @since 3.5.1
+     *
+     * @var int $seller_id
      */
     protected $seller_id;
 
     /**
-     * @var string[] $transaction_date
-     *
      * @since 3.5.1
+     *
+     * @var string[] $transaction_date
      */
     protected $transaction_date = [
         'from' => '',
-        'to'   => ''
+        'to'   => '',
     ];
 
     /**
@@ -53,7 +54,7 @@ class ReverseWithdrawal {
         $this->seller_id = dokan_get_current_user_id();
 
         // check if current user is vendor
-        if ( ! dokan_is_user_seller( $this->seller_id) ) {
+        if ( ! dokan_is_user_seller( $this->seller_id ) ) {
             return;
         }
 
@@ -100,7 +101,13 @@ class ReverseWithdrawal {
         // get vendor due status
         $due_status = Helper::get_vendor_due_status( $this->seller_id );
         if ( is_wp_error( $due_status ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $due_status->get_error_message() ] );
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => $due_status->get_error_message(),
+                ]
+            );
+
             return;
         }
 
@@ -109,19 +116,26 @@ class ReverseWithdrawal {
             return;
         }
 
-        if (  true === $due_status['status'] && 'immediate' === $due_status['due_date'] ) {
+        if ( true === $due_status['status'] && 'immediate' === $due_status['due_date'] ) {
             // due period is over, we don't need to show any notices on vendor dashboard
             return;
         }
 
         // get formatted error messages
-        $message = sprintf( __( 'You have a reverse withdrawal balance of %1$s to be paid. Please <a href="%2$s">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s', 'dokan-lite' ),
+        $message = sprintf(
+            // translators: 1) reverse withdrawal balance, 2) navigation url, 3) due status, 4) will be taken actions
+            __( 'You have a reverse withdrawal balance of %1$s to be paid. Please <a href="%2$s">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s', 'dokan-lite' ),
             wc_price( $due_status['balance']['payable_amount'] ),
             dokan_get_navigation_url( 'reverse-withdrawal' ),
             $due_status['due_date'],
             Helper::get_formatted_failed_actions()
         );
-        dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
+        dokan_get_template_part(
+            'global/dokan-error', '', [
+                'deleted' => false,
+                'message' => $message,
+            ]
+        );
     }
 
     /**
@@ -138,11 +152,18 @@ class ReverseWithdrawal {
         }
 
         // get formatted error messages
-        $message = sprintf( __( 'Below actions have been taken due to unpaid reverse withdrawal balance: %1$s Kindly <a href="%2$s">pay</a> your due to start selling again.', 'dokan' ),
+        $message = sprintf(
+            // translators: 1) reverse withdrawal failed actions, 2) reverse withdrawal navigation url
+            __( 'Below actions have been taken due to unpaid reverse withdrawal balance: %1$s Kindly <a href="%2$s">pay</a> your due to start selling again.', 'dokan-lite' ),
             Helper::get_formatted_failed_actions_by_vendor( $this->seller_id ),
             dokan_get_navigation_url( 'reverse-withdrawal' )
         );
-        dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $message ] );
+        dokan_get_template_part(
+            'global/dokan-error', '', [
+                'deleted' => false,
+                'message' => $message,
+            ]
+        );
     }
 
     /**
@@ -167,7 +188,13 @@ class ReverseWithdrawal {
         $args = Helper::get_vendor_balance();
 
         if ( is_wp_error( $args ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $args->get_error_message() ] );
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => $args->get_error_message(),
+                ]
+            );
+
             return;
         }
 
@@ -195,15 +222,23 @@ class ReverseWithdrawal {
     public function render_transactions_table() {
         $manager = new ReverseWithdrawalManager();
 
-        $transactions = $manager->get_store_transactions( [
-            'vendor_id' => $this->seller_id,
-            'trn_date'  => $this->get_transaction_date(),
-            'orderby'   => 'added',
-            'order'     => 'DESC',
-        ] );
+        $transactions = $manager->get_store_transactions(
+            [
+                'vendor_id' => $this->seller_id,
+                'trn_date'  => $this->get_transaction_date(),
+                'orderby'   => 'added',
+                'order'     => 'DESC',
+            ]
+        );
 
         if ( is_wp_error( $transactions ) ) {
-            dokan_get_template_part( 'global/dokan-error', '', [ 'deleted' => false, 'message' => $transactions->get_error_message() ] );
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => $transactions->get_error_message(),
+                ]
+            );
+
             return;
         }
 
@@ -213,9 +248,9 @@ class ReverseWithdrawal {
     /**
      * Enqueue Frontend Scripts
      *
-     * @param string $hook
-     *
      * @since 3.5.1
+     *
+     * @param string $hook
      *
      * @return void
      */
@@ -229,7 +264,7 @@ class ReverseWithdrawal {
         // load frontend scripts
         wp_enqueue_script( 'dokan-reverse-withdrawal' );
         wp_enqueue_style( 'dokan-reverse-withdrawal' );
-        wp_enqueue_style( 'dokan-date-range-picker');
+        wp_enqueue_style( 'dokan-date-range-picker' );
     }
 
     /**

@@ -100,8 +100,8 @@ class StoreListsFilter {
         if ( ! empty( $request['stores_orderby'] ) ) {
             $args['orderby'] = wc_clean( $request['stores_orderby'] );
         } elseif ( empty( $args['orderby'] ) ) {
-            $sort_by         = dokan_get_option( 'store_list_sort_by','dokan_appearance', 'most_recent' );
-            $args['orderby'] = ( ! array_key_exists( $sort_by, self::sort_by_options() ) ) ? 'most_recent': $sort_by;
+            $sort_by         = dokan_get_option( 'store_list_sort_by', 'dokan_appearance', 'most_recent' );
+            $args['orderby'] = ( ! array_key_exists( $sort_by, self::sort_by_options() ) ) ? 'most_recent' : $sort_by;
         }
 
         add_action( 'pre_user_query', array( $this, 'filter_user_query' ), 9 );

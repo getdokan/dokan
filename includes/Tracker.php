@@ -41,13 +41,15 @@ class Tracker {
         $this->insights = $client->insights();
 
         $this->insights->add_extra(
-            [
-                'products'      => $this->insights->get_post_count( 'product' ),
-                'orders'        => $this->get_order_count(),
-                'is_pro'        => class_exists( 'Dokan_Pro' ) ? 'Yes' : 'No',
-                'wc_version'    => function_exists( 'WC' ) ? WC()->version : null,
-                'dokan_version' => DOKAN_PLUGIN_VERSION,
-            ]
+            function() {
+                return [
+                    'products'      => $this->insights->get_post_count( 'product' ),
+                    'orders'        => $this->get_order_count(),
+                    'is_pro'        => class_exists( 'Dokan_Pro' ) ? 'Yes' : 'No',
+                    'wc_version'    => function_exists( 'WC' ) ? WC()->version : null,
+                    'dokan_version' => DOKAN_PLUGIN_VERSION,
+                ];
+            }
         );
 
         $this->insights->init_plugin();

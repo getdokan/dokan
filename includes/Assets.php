@@ -355,12 +355,9 @@ class Assets {
                 'deps'    => [ 'dokan-tinymce' ],
                 'version' => time(),
             ],
-            'dokan-moment' => [
-                'src'       => $asset_url . '/vendors/moment/moment.min.js',
-            ],
             'dokan-chart' => [
-                'src'       => $asset_url . '/vendors/chart/Chart.min.js',
-                'deps'      => [ 'dokan-moment', 'jquery' ],
+                'src'       => $asset_url . '/vendors/chart/chart.min.js',
+                'deps'      => [ 'moment', 'jquery' ],
             ],
             'dokan-tabs' => [
                 'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
@@ -389,7 +386,7 @@ class Assets {
             ],
             'dokan-date-range-picker' => [
                 'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
-                'deps'      => [ 'jquery', 'dokan-moment', 'dokan-util-helper' ],
+                'deps'      => [ 'jquery', 'moment', 'dokan-util-helper' ],
             ],
             'dokan-google-recaptcha' => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
@@ -428,7 +425,7 @@ class Assets {
             ],
             'dokan-script' => [
                 'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'dokan-moment', 'dokan-date-range-picker' ],
+                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker' ],
                 'version'   => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor' => [

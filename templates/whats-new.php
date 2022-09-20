@@ -7,7 +7,7 @@ $changelog = [
         'version'  => 'Version 3.6.5',
         'released' => '2022-08-25',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[WPML] Added WPML support for the multistep product category.',
                     'description' => '',

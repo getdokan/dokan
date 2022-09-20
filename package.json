@@ -9,7 +9,7 @@
     "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
-    "makepot": "wpvuei18n makepot",
+    "makepot": "grunt makepot",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "version": "node bin/version-replace"
   },

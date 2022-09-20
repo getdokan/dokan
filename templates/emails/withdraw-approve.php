@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Email_Withdraw_Approved
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
-    <?php esc_html_e( 'Hi '.$data['username'], 'dokan-lite' ); ?>
+    <?php
+    // translators: user name
+    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+    ?>
 </p>
 <p>
     <?php esc_html_e( 'Your withdraw request has been approved, congrats!', 'dokan-lite' ); ?>
@@ -26,7 +28,10 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'Amount : ', 'dokan-lite' ); ?>
     <?php echo wp_kses_post( $data['amount'] ); ?>
     <br>
-    <?php esc_html_e( 'Method : '.$data['method'], 'dokan-lite' ); ?>
+    <?php
+    // translators: 1) withdraw method title
+    echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+    ?>
 </p>
 <p>
     <?php esc_html_e( 'We\'ll transfer this amount to your preferred payment method shortly.', 'dokan-lite' ); ?>
