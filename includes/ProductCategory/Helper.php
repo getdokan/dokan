@@ -33,7 +33,7 @@ class Helper {
      */
     public static function get_saved_products_category( $post_id = 0 ) {
         $is_single           = self::product_category_selection_is_single();
-        $chosen_cat          = get_post_meta( $post_id, 'chosen_product_cat', true );
+        $chosen_cat          = self::get_product_chosen_category( $post_id );
         $default_product_cat = get_term( get_option( 'default_product_cat' ) );
         $data                = [
             'chosen_cat'          => [],
@@ -219,5 +219,18 @@ class Helper {
         ];
 
         wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
+    }
+
+    /**
+     * Returns the chosen category of a product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id
+     *
+     * @return array
+     */
+    public static function get_product_chosen_category( $product_id ) {
+        return get_post_meta( $product_id, 'chosen_product_cat', true );
     }
 }

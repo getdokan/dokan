@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\ProductCategory\Helper;
+
 /**
  * Dokan Commission Class
  *
@@ -346,13 +348,14 @@ class Commission {
      * @return float
      */
     public function get_category_wise_rate( $product_id ) {
-        $terms = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
+        $terms = Helper::get_product_chosen_category( $this->validate_product_id( $product_id ) );
 
-        if ( empty( $terms ) || count( $terms ) > 1 ) {
+        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
+        if ( empty( $terms ) || count( $terms ) > 1 || ! Helper::product_category_selection_is_single() ) {
             return null;
         }
 
-        $term_id = $terms[0]->term_id;
+        $term_id = $terms[0];
         $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true );
 
         return $this->validate_rate( $rate );
