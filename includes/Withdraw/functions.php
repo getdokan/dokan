@@ -175,18 +175,94 @@ function dokan_withdraw_method_skrill( $store_settings ) {
  */
 function dokan_withdraw_method_bank( $store_settings ) {
     $args = [
-        'account_name'         => isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '',
-        'account_number'       => isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '',
+        'ac_name'              => isset( $store_settings['payment']['bank']['ac_name'] ) ? $store_settings['payment']['bank']['ac_name'] : '',
+        'ac_number'            => isset( $store_settings['payment']['bank']['ac_number'] ) ? $store_settings['payment']['bank']['ac_number'] : '',
         'bank_name'            => isset( $store_settings['payment']['bank']['bank_name'] ) ? $store_settings['payment']['bank']['bank_name'] : '',
         'bank_addr'            => isset( $store_settings['payment']['bank']['bank_addr'] ) ? $store_settings['payment']['bank']['bank_addr'] : '',
         'routing_number'       => isset( $store_settings['payment']['bank']['routing_number'] ) ? $store_settings['payment']['bank']['routing_number'] : '',
         'iban'                 => isset( $store_settings['payment']['bank']['iban'] ) ? $store_settings['payment']['bank']['iban'] : '',
-        'swift_code'           => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
-        'account_type'         => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
+        'swift'                => isset( $store_settings['payment']['bank']['swift'] ) ? $store_settings['payment']['bank']['swift'] : '',
+        'ac_type'              => isset( $store_settings['payment']['bank']['ac_type'] ) ? $store_settings['payment']['bank']['ac_type'] : '',
         'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
+    $args['required_fields'] = dokan_bank_payment_required_fields();
+    $args['connected'] = false;
+
+    // If any required field is empty in args, connected is false and
+    // by default it is false because if there are no require field then the account is not connected.
+    foreach ( $args['required_fields'] as $key => $required_field ) {
+        if ( ! empty( $args[ $key ] ) ) {
+            $args['connected'] = true;
+        } else {
+            $args['connected'] = false;
+            break;
+        }
+    }
+
     dokan_get_template_part( 'settings/bank-payment-method-settings', '', $args );
+}
+
+/**
+ * Returns vendors bank payment require fields.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
+function dokan_bank_payment_required_fields() {
+    $required_fields = apply_filters(
+        'dokan_bank_payment_required_fields',
+        [
+            'ac_name'        => __( 'Account holder name is required', 'dokan-lite' ),
+            'ac_type'        => __( 'Please select account type', 'dokan-lite' ),
+            'ac_number'      => __( 'Account number is required', 'dokan-lite' ),
+            'routing_number' => __( 'Routing number is required', 'dokan-lite' ),
+        ]
+    );
+
+    $available = dokan_bank_payment_available_fields();
+
+    // Filtering out all payment fields except dokan bank payment available fields.
+    $fields = array_filter(
+        $required_fields,
+        function( $key ) use ( $available ) {
+            return in_array( $key, $available, true );
+        },
+        ARRAY_FILTER_USE_KEY
+    );
+
+    // Checking if the required field error message is empty, then giving a default message.
+    return array_map(
+        function ( $item ) {
+            if ( empty( $item ) ) {
+                return __( 'This field is required.', 'dokan-lite' );
+            }
+
+            return $item;
+        },
+        $fields
+    );
+}
+
+/**
+ * Available bank payment fields in dokan.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
+function dokan_bank_payment_available_fields() {
+    return [
+        'ac_name',
+        'ac_type',
+        'ac_number',
+        'routing_number',
+        'bank_name',
+        'bank_addr',
+        'iban',
+        'swift',
+    ];
 }
 
 /**
