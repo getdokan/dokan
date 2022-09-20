@@ -41,7 +41,7 @@ class Helper {
         $promos = Cache::get_transient( 'promo_notices' );
 
         if ( false === $promos ) {
-            $promo_notice_url = 'https://raw.githubusercontent.com/weDevsOfficial/dokan-util/master/promotions.json';
+            $promo_notice_url = 'https://dokan.co/wp-json/org/promotions';
             $response         = wp_remote_get( $promo_notice_url, array( 'timeout' => 15 ) );
             $promos           = wp_remote_retrieve_body( $response );
 

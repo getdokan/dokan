@@ -10,7 +10,7 @@ function dokan_admin_get_help() {
     $help_docs = get_transient( 'dokan_help_docs', '[]' );
 
     if ( false === $help_docs ) {
-        $help_url  = 'https://api.bitbucket.org/2.0/snippets/wedevs/oErMz/files/dokan-help.json';
+        $help_url  = 'https://dokan.co/wp-json/org/help';
         $response  = wp_remote_get( $help_url, array( 'timeout' => 15 ) );
         $help_docs = wp_remote_retrieve_body( $response );
 

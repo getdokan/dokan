@@ -197,6 +197,8 @@ module.exports = function(grunt) {
           '!composer.lock',
           '!config.json',
           '!phpcs.xml.dist',
+          '!phpcs.xml',
+          '!phpcs-report.txt',
           '!webpack.config.js',
           '!debug.log',
           '!phpunit.xml',
@@ -215,6 +217,9 @@ module.exports = function(grunt) {
           '!**/*~',
           '!vendor/jakeasmith/http_build_url/*',
           '!vendor/jakeasmith/http_build_url/tests/**',
+          '!vendor/appsero/client/*',
+          '!vendor/bin/**',
+          '!assets/font/flaticon.html',
         ],
         dest: 'build/'
       }
