@@ -259,41 +259,38 @@
         },
 
         openProductPopup: function() {
-            var productTemplate = wp.template( 'dokan-add-new-product' );
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: productTemplate().trim(),
-                    type: 'inline'
+            const productTemplate = wp.template( 'dokan-add-new-product' ),
+                modalElem = $( '#dokan-add-product-popup' ),
+                modal = modalElem.iziModal( {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                onOpening   : () => {
+                    Dokan_Editor.loadSelect2();
+                    Dokan_Editor.bindProductTagDropdown();
+
+                    $( '.sale_price_dates_from, .sale_price_dates_to' ).on( 'focus', function() {
+                        $(this).css( 'z-index', '99999' );
+                    } );
+
+                    $( '.sale_price_dates_fields input' ).datepicker({
+                        defaultDate   : "",
+                        dateFormat    : "yy-mm-dd",
+                        numberOfMonths: 1
+                    } );
+
+                    $( '.tips' ).tooltip();
+
+                    Dokan_Editor.gallery.sortable();
+                    $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
                 },
-                callbacks: {
-                    open: function() {
-                        $(this.content).closest('.mfp-wrap').removeAttr('tabindex');
-                        Dokan_Editor.loadSelect2();
-                        Dokan_Editor.bindProductTagDropdown();
-
-                        $('.sale_price_dates_from, .sale_price_dates_to').on('focus', function() {
-                            $(this).css('z-index', '99999');
-                        });
-
-                        $( ".sale_price_dates_fields input" ).datepicker({
-                            defaultDate: "",
-                            dateFormat: "yy-mm-dd",
-                            numberOfMonths: 1
-                        });
-
-                        $('.tips').tooltip();
-
-                        Dokan_Editor.gallery.sortable();
-
-                        $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
-                    },
-                    close: function() {
-                        product_gallery_frame = undefined;
-                        product_featured_frame = undefined;
-                    }
-                }
-            });
+                onClosed: () => {
+                    product_gallery_frame  = undefined;
+                    product_featured_frame = undefined;
+                },
+            } );
+            modal.iziModal( 'setContent', productTemplate().trim() );
+            modal.iziModal( 'open' );
         },
 
         createNewProduct: function (e) {
@@ -333,11 +330,10 @@
                 if ( resp.success ) {
                     self.removeAttr( 'disabled' );
                     if ( btn_id == 'create_new' ) {
-                        $.magnificPopup.close();
+                        $( '#dokan-add-product-popup' ).iziModal('close');
                         window.location.href = resp.data;
                     } else {
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
-                        $.magnificPopup.close();
                         Dokan_Editor.openProductPopup();
                         $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
 

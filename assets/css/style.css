@@ -5500,6 +5500,12 @@ p.vendor-customer-registration .radio:hover {
 .dokan-popup-content .dokan-popup-error.has-error {
   display: block;
 }
+.iziModal .iziModal-header .iziModal-noSubtitle .iziModal-header-title {
+  font-size: revert;
+}
+.iziModal .iziModal-header-title {
+  font-family: revert;
+}
 #dokan-seller-listing-wrap button {
   margin: unset;
   padding: 6px 12px;
