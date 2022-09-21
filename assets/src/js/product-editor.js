@@ -265,6 +265,7 @@
                 headerColor : '#b11d1db8',
                 overlayColor: 'rgba(0, 0, 0, 0.8)',
                 width       : 690,
+                top         : 32,
                 onOpening   : () => {
                     Dokan_Editor.loadSelect2();
                     Dokan_Editor.bindProductTagDropdown();
@@ -273,7 +274,7 @@
                         $(this).css( 'z-index', '99999' );
                     } );
 
-                    $( '.sale_price_dates_fields input' ).datepicker({
+                    $( '#dokan-add-new-product-popup .sale_price_dates_fields input' ).datepicker({
                         defaultDate   : "",
                         dateFormat    : "yy-mm-dd",
                         numberOfMonths: 1
@@ -287,6 +288,7 @@
                 onClosed: () => {
                     product_gallery_frame  = undefined;
                     product_featured_frame = undefined;
+                  $( '#dokan-add-new-product-popup .sale_price_dates_fields input' ).datepicker( 'destroy' );
                 },
             } );
             modal.iziModal( 'setContent', productTemplate().trim() );
