@@ -335,14 +335,14 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
 
     // Downloadable options
     if ( 'yes' === $is_downloadable ) {
-        $_download_limit = absint( $data['_download_limit'] );
+        $_download_limit = intval( $data['_download_limit'] );
 
-        if ( ! $_download_limit ) {
+        if ( ! $_download_limit || -1 === $_download_limit ) {
             $_download_limit = ''; // 0 or blank = unlimited
         }
 
-        $_download_expiry = absint( $data['_download_expiry'] );
-        if ( ! $_download_expiry ) {
+        $_download_expiry = intval( $data['_download_expiry'] );
+        if ( ! $_download_expiry || -1 === $_download_expiry ) {
             $_download_expiry = ''; // 0 or blank = unlimited
         }
 

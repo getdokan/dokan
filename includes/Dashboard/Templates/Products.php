@@ -33,6 +33,7 @@ class Products {
         add_action( 'dokan_render_new_product_template', [ $this, 'render_new_product_template' ], 10 );
         add_action( 'dokan_render_product_edit_template', [ $this, 'load_product_edit_template' ], 11 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_popup' ], 10 );
+        add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_modal' ], 10 );
         add_action( 'dokan_product_edit_after_title', [ __CLASS__, 'load_download_virtual_template' ], 10, 2 );
         add_action( 'dokan_product_edit_after_main', [ __CLASS__, 'load_inventory_template' ], 5, 2 );
         add_action( 'dokan_product_edit_after_main', [ __CLASS__, 'load_downloadable_template' ], 10, 2 );
@@ -534,6 +535,17 @@ class Products {
 
     public function load_add_new_product_popup() {
         dokan_get_template_part( 'products/tmpl-add-product-popup' );
+    }
+
+    /**
+     * Add new product open modal html
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function load_add_new_product_modal() {
+        dokan_get_template_part( 'products/add-new-product-modal' );
     }
 
     /**
