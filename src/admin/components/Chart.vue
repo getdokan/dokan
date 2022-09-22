@@ -1,5 +1,6 @@
 <script>
 import { Line } from 'vue-chartjs'
+import 'chartjs-adapter-moment';
 
 export default {
     extends: Line,
@@ -10,9 +11,9 @@ export default {
                 responsive: true,
                 maintainAspectRatio: true,
                 scales: {
-                    xAxes: [{
+                    x: {
                         type: 'time',
-                        scaleLabel: {
+                        title: {
                             display: false
                         },
                         gridLines: {
@@ -22,15 +23,15 @@ export default {
                             fontColor: '#aaa',
                             fontSize: 11
                         }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
+                    },
+                    y: {
+                        title: {
                             display: false
                         },
                         ticks: {
                             fontColor: '#aaa'
                         }
-                    }]
+                    }
                 },
                 legend: {
                     position: 'top',
