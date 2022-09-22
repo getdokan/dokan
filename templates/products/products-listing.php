@@ -234,7 +234,9 @@
                                     'total'     => $product_query->max_num_pages,
                                     'base'      => $base_url . '%_%',
                                     'format'    => '?pagenum=%#%',
-                                    'add_args'  => false,
+                                    'add_args'  => [
+                                        '_product_listing_filter_nonce' => wp_create_nonce( 'product_listing_filter' ),
+                                    ],
                                     'type'      => 'array',
                                     'prev_text' => __( '&laquo; Previous', 'dokan-lite' ),
                                     'next_text' => __( 'Next &raquo;', 'dokan-lite' ),
