@@ -2712,7 +2712,7 @@ add_filter( 'woocommerce_login_redirect', 'dokan_after_login_redirect', 1, 2 );
  * @return bool
  */
 function dokan_is_valid_owner( $post_id, $user_id ) {
-    $author = get_post_field( 'post_author', $post_id );
+    $author = (int) get_post_field( 'post_author', $post_id );
 
     if ( $user_id === $author ) {
         return true;
