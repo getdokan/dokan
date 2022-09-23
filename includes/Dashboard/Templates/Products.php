@@ -425,7 +425,7 @@ class Products {
         $errors       = [];
         $post_title   = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
         $post_slug    = ! empty( $_POST['editable-post-name'] ) ? sanitize_title( wp_unslash( $_POST['editable-post-name'] ) ) : '';
-        $post_status  = isset( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : 'pending';
+        $post_status  = isset( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '';
         $post_content = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';
         $post_excerpt = isset( $_POST['post_excerpt'] ) ? wp_kses_post( wp_unslash( $_POST['post_excerpt'] ) ) : '';
 
@@ -436,6 +436,10 @@ class Products {
         $post_id = isset( $_POST['dokan_product_id'] ) ? absint( $_POST['dokan_product_id'] ) : 0;
         if ( ! $post_id ) {
             $errors[] = __( 'No product found!', 'dokan-lite' );
+        }
+
+        if ( empty( $post_status ) ) {
+            $post_status = get_post_status( $post_id );
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {

@@ -24,8 +24,8 @@
                 ?>
 
                 <select id="post_status" class="dokan-form-control" name="post_status">
-                    <?php foreach ( $post_statuses as $post_status => $label ) : ?>
-                        <option value="<?php echo esc_attr( $post_status ); ?>" <?php selected( $post_status, $post_status ); ?>>
+                    <?php foreach ( $post_statuses as $status => $label ) : // phpcs:ignore ?>
+                        <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
                             <?php echo esc_html( $label ); ?>
                         </option>
                     <?php endforeach; ?>
