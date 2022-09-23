@@ -37,12 +37,12 @@ class Assets {
         $vue_localize_script = apply_filters(
             'dokan_promo_notice_localize_script', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'rest' => [
+                'rest'    => [
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
                     'version' => 'dokan/v1',
                 ],
-                'urls'            => [
+                'urls'    => [
                     'assetsUrl' => DOKAN_PLUGIN_ASSEST,
                 ],
             ]
@@ -234,71 +234,71 @@ class Assets {
      */
     public function get_styles() {
         $styles = [
-            'dokan-style' => [
+            'dokan-style'                   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/style.css' ),
             ],
-            'dokan-tinymce' => [
+            'dokan-tinymce'                 => [
                 'src'     => site_url( '/wp-includes/css/editor.css' ),
                 'deps'    => [],
                 'version' => time(),
             ],
-            'jquery-ui' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
+            'jquery-ui'                     => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
             ],
-            'dokan-fontawesome' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
+            'dokan-fontawesome'             => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
             ],
-            'dokan-modal' => [
+            'dokan-modal'                   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
             ],
-            'dokan-select2-css' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
+            'dokan-select2-css'             => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
             ],
-            'dokan-rtl-style' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/rtl.css',
+            'dokan-rtl-style'               => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/css/rtl.css',
             ],
-            'dokan-plugin-list-css' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/plugin.css',
+            'dokan-plugin-list-css'         => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/css/plugin.css',
             ],
-            'dokan-timepicker' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/timepicker/timepicker.min.css',
+            'dokan-timepicker'              => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/timepicker/timepicker.min.css',
             ],
-            'dokan-date-range-picker' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/date-range-picker/daterangepicker.min.css',
+            'dokan-date-range-picker'       => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/date-range-picker/daterangepicker.min.css',
             ],
-            'dokan-admin-css' => [
+            'dokan-admin-css'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ],
-            'dokan-vue-vendor' => [
+            'dokan-vue-vendor'              => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
             ],
-            'dokan-vue-bootstrap' => [
+            'dokan-vue-bootstrap'           => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
                 'deps'    => [ 'dokan-vue-vendor' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
-            'dokan-flaticon' => [
+            'dokan-flaticon'                => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon.css' ),
             ],
-            'dokan-vue-admin' => [
+            'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
                 'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-flaticon' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
-            'dokan-vue-frontend' => [
+            'dokan-vue-frontend'            => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
             ],
-            'dokan-wp-version-before-5-3' => [
+            'dokan-wp-version-before-5-3'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
             ],
-            'dokan-global-admin-css' => [
+            'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
@@ -306,7 +306,7 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-product-category-ui.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
-            'dokan-reverse-withdrawal' => [
+            'dokan-reverse-withdrawal'      => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
             ],
@@ -335,152 +335,168 @@ class Assets {
         }
 
         $scripts = [
-            'jquery-tiptip' => [
-                'src'       => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
-                'deps'      => [ 'jquery' ],
+            'jquery-tiptip'             => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-i18n-jed' => [
-                'src'       => $asset_url . '/vendors/i18n/jed.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-i18n-jed'            => [
+                'src'  => $asset_url . '/vendors/i18n/jed.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-accounting' => [
-                'src'       => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-accounting'          => [
+                'src'  => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-tinymce' => [
-                'src'       => site_url( '/wp-includes/js/tinymce/tinymce.min.js' ),
-                'deps'      => [],
+            'dokan-tinymce'             => [
+                'src'  => site_url( '/wp-includes/js/tinymce/tinymce.min.js' ),
+                'deps' => [],
             ],
-            'dokan-tinymce-plugin' => [
+            'dokan-tinymce-plugin'      => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/tinymce/code/plugin.min.js',
                 'deps'    => [ 'dokan-tinymce' ],
                 'version' => time(),
             ],
-            'dokan-chart' => [
-                'src'       => $asset_url . '/vendors/chart/chart.min.js',
-                'deps'      => [ 'moment', 'jquery' ],
+            'dokan-chart'               => [
+                'src'  => $asset_url . '/vendors/chart/chart.min.js',
+                'deps' => [ 'moment', 'jquery' ],
             ],
-            'dokan-tabs' => [
-                'src'       => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-tabs'                => [
+                'src'  => $asset_url . '/vendors/easytab/jquery.easytabs.min.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-modal' => [
-                'src'       => $asset_url . '/vendors/izimodal/iziModal.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-modal'               => [
+                'src'  => $asset_url . '/vendors/izimodal/iziModal.min.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-tooltip' => [
-                'src'       => $asset_url . '/vendors/tooltips/tooltips.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-tooltip'             => [
+                'src'  => $asset_url . '/vendors/tooltips/tooltips.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-form-validate' => [
-                'src'       => $asset_url . '/vendors/form-validate/form-validate.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-form-validate'       => [
+                'src'  => $asset_url . '/vendors/form-validate/form-validate.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-select2-js' => [
-                'src'       => $asset_url . '/vendors/select2/select2.full.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-select2-js'          => [
+                'src'  => $asset_url . '/vendors/select2/select2.full.min.js',
+                'deps' => [ 'jquery' ],
             ],
-            'dokan-timepicker' => [
+            'dokan-timepicker'          => [
                 'src'       => $asset_url . '/vendors/jquery-ui/timepicker/timepicker.min.js',
                 'deps'      => [ 'jquery' ],
                 'in_footer' => false,
             ],
-            'dokan-date-range-picker' => [
-                'src'       => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
-                'deps'      => [ 'jquery', 'moment', 'dokan-util-helper' ],
+            'dokan-date-range-picker'   => [
+                'src'  => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
+                'deps' => [ 'jquery', 'moment', 'dokan-util-helper' ],
             ],
-            'dokan-google-recaptcha' => [
+            'dokan-google-recaptcha'    => [
                 'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
                 'deps'      => [ 'dokan-util-helper' ],
                 'in_footer' => false,
             ],
 
             // customize scripts
-            'customize-base' => [
-                'src'       => site_url( 'wp-includes/js/customize-base.js' ),
-                'deps'      => [ 'jquery', 'json2', 'underscore' ],
+            'customize-base'            => [
+                'src'  => site_url( 'wp-includes/js/customize-base.js' ),
+                'deps' => [ 'jquery', 'json2', 'underscore' ],
             ],
-            'customize-model' => [
-                'src'       => site_url( 'wp-includes/js/customize-models.js' ),
-                'deps'      => [ 'underscore', 'backbone' ],
+            'customize-model'           => [
+                'src'  => site_url( 'wp-includes/js/customize-models.js' ),
+                'deps' => [ 'underscore', 'backbone' ],
             ],
 
             // Register core scripts
-            'dokan-flot' => [
-                'src'       => $asset_url . '/js/flot-all.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-flot-main'           => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot' . $suffix . '.js',
+                'deps' => [ 'jquery' ],
             ],
-            'speaking-url' => [
-                'src'       => $asset_url . '/js/speakingurl.min.js',
-                'deps'      => [ 'jquery' ],
+            'dokan-flot-resize'         => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize' . $suffix . '.js',
+                'deps' => [ 'dokan-flot-main' ],
             ],
-            'dokan-admin' => [
-                'src'       => $asset_url . '/js/dokan-admin.js',
-                'deps'      => [ 'jquery', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . 'js/dokan-admin.js' ),
+            'dokan-flot-time'           => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.time' . $suffix . '.js',
+                'deps' => [ 'dokan-flot-main' ],
+            ],
+            'dokan-flot-pie'            => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.pie' . $suffix . '.js',
+                'deps' => [ 'dokan-flot-main' ],
+            ],
+            'dokan-flot'                => [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack' . $suffix . '.js',
+                'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time', 'dokan-flot-resize' ],
+            ],
+            'speaking-url'              => [
+                'src'  => $asset_url . '/js/speakingurl.min.js',
+                'deps' => [ 'jquery' ],
+            ],
+            'dokan-admin'               => [
+                'src'     => $asset_url . '/js/dokan-admin.js',
+                'deps'    => [ 'jquery', 'dokan-i18n-jed' ],
+                'version' => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
-                'src'       => $asset_url . '/js/vendor-registration.js',
-                'deps'      => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . 'js/vendor-registration.js' ),
+                'src'     => $asset_url . '/js/vendor-registration.js',
+                'deps'    => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'dokan-i18n-jed' ],
+                'version' => filemtime( $asset_path . 'js/vendor-registration.js' ),
             ],
-            'dokan-script' => [
-                'src'       => $asset_url . '/js/dokan.js',
-                'deps'      => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker' ],
-                'version'   => filemtime( $asset_path . 'js/dokan.js' ),
+            'dokan-script'              => [
+                'src'     => $asset_url . '/js/dokan.js',
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker' ],
+                'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
-            'dokan-vue-vendor' => [
-                'src'       => $asset_url . '/js/vue-vendor.js',
-                'version'   => filemtime( $asset_path . 'js/vue-vendor.js' ),
-                'deps'      => [ 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' ],
+            'dokan-vue-vendor'          => [
+                'src'     => $asset_url . '/js/vue-vendor.js',
+                'version' => filemtime( $asset_path . 'js/vue-vendor.js' ),
+                'deps'    => [ 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' ],
             ],
-            'dokan-vue-bootstrap' => [
-                'src'       => $asset_url . '/js/vue-bootstrap.js',
-                'deps'      => $bootstrap_deps,
-                'version'   => filemtime( $asset_path . 'js/vue-bootstrap.js' ),
+            'dokan-vue-bootstrap'       => [
+                'src'     => $asset_url . '/js/vue-bootstrap.js',
+                'deps'    => $bootstrap_deps,
+                'version' => filemtime( $asset_path . 'js/vue-bootstrap.js' ),
             ],
-            'dokan-vue-admin' => [
-                'src'       => $asset_url . '/js/vue-admin.js',
-                'deps'      => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
-                'version'   => filemtime( $asset_path . 'js/vue-admin.js' ),
+            'dokan-vue-admin'           => [
+                'src'     => $asset_url . '/js/vue-admin.js',
+                'deps'    => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
+                'version' => filemtime( $asset_path . 'js/vue-admin.js' ),
             ],
-            'dokan-vue-frontend' => [
-                'src'       => $asset_url . '/js/vue-frontend.js',
-                'deps'      => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
-                'version'   => filemtime( $asset_path . 'js/vue-frontend.js' ),
+            'dokan-vue-frontend'        => [
+                'src'     => $asset_url . '/js/vue-frontend.js',
+                'deps'    => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
-            'dokan-wp-packages' => [
-                'src'       => $asset_url . '/js/dokan-wp.js',
-                'deps'      => [ 'jquery' ],
-                'version'   => filemtime( $asset_path . 'js/dokan-wp.js' ),
+            'dokan-wp-packages'         => [
+                'src'     => $asset_url . '/js/dokan-wp.js',
+                'deps'    => [ 'jquery' ],
+                'version' => filemtime( $asset_path . 'js/dokan-wp.js' ),
             ],
-            'dokan-login-form-popup' => [
-                'src'       => $asset_url . '/js/login-form-popup.js',
-                'deps'      => [ 'dokan-modal', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . 'js/login-form-popup.js' ),
+            'dokan-login-form-popup'    => [
+                'src'     => $asset_url . '/js/login-form-popup.js',
+                'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
+                'version' => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
-            'dokan-sweetalert2' => [
-                'src'       => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
-                'deps'      => [ 'dokan-modal', 'dokan-i18n-jed' ],
-                'version'   => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
+            'dokan-sweetalert2'         => [
+                'src'     => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
+                'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
+                'version' => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
-            'dokan-util-helper' => [
+            'dokan-util-helper'         => [
                 'src'       => $asset_url . '/js/helper.js',
                 'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-promo-notice-js' => [
+            'dokan-promo-notice-js'     => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
-            'dokan-reverse-withdrawal' => [
+            'dokan-reverse-withdrawal'  => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
-            'product-category-ui' => [
+            'product-category-ui'       => [
                 'src'     => $asset_url . '/js/product-category-ui.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
@@ -514,8 +530,8 @@ class Assets {
             'nonce'                      => wp_create_nonce( 'dokan_reviews' ),
             'ajax_loader'                => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'                     => [
-                'available'     => __( 'Available', 'dokan-lite' ),
-                'notAvailable'  => __( 'Not Available', 'dokan-lite' ),
+                'available'    => __( 'Available', 'dokan-lite' ),
+                'notAvailable' => __( 'Not Available', 'dokan-lite' ),
             ],
             'delete_confirm'             => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'              => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
@@ -535,13 +551,13 @@ class Assets {
              *
              * @param integer default -1
              */
-            'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', -1 ),  // Filter of maximun a vendor can add tags
+            'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
         $vue_localize_script = apply_filters(
             'dokan_frontend_localize_script', [
-                'rest' => [
+                'rest'            => [
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
                     'version' => 'dokan/v1',
@@ -629,13 +645,13 @@ class Assets {
         $localize_data = apply_filters(
             'dokan_helper_localize_script',
             [
-                'i18n_date_format'        => wc_date_format(),
-                'i18n_time_format'        => wc_time_format(),
-                'week_starts_day'         => intval( get_option( 'start_of_week', 0 ) ),
-                'reverse_withdrawal'                  => [
+                'i18n_date_format'       => wc_date_format(),
+                'i18n_time_format'       => wc_time_format(),
+                'week_starts_day'        => intval( get_option( 'start_of_week', 0 ) ),
+                'reverse_withdrawal'     => [
                     'enabled' => SettingsHelper::is_enabled(),
                 ],
-                'daterange_picker_local'  => [
+                'daterange_picker_local' => [
                     'toLabel'          => __( 'To', 'dokan-lite' ),
                     'firstDay'         => intval( get_option( 'start_of_week', 0 ) ),
                     'fromLabel'        => __( 'From', 'dokan-lite' ),
@@ -833,7 +849,7 @@ class Assets {
     /**
      * Filter 'dokan' localize script's arguments
      *
-     * @since 2.5.3
+     * @since  2.5.3
      *
      * @param array $default_args
      *
@@ -841,12 +857,12 @@ class Assets {
      */
     public function conditional_localized_args( $default_args ) {
         if ( dokan_is_seller_dashboard()
-            || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
-            || dokan_is_store_page()
-            || is_account_page()
-            || is_product()
-            || dokan_is_store_listing()
-            || apply_filters( 'dokan_force_load_extra_args', false )
+             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
+             || dokan_is_store_page()
+             || is_account_page()
+             || is_product()
+             || dokan_is_store_listing()
+             || apply_filters( 'dokan_force_load_extra_args', false )
         ) {
             $general_settings = get_option( 'dokan_general', [] );
 
@@ -1035,25 +1051,25 @@ class Assets {
 
         return apply_filters(
             'dokan_admin_localize_script', [
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce'   => wp_create_nonce( 'dokan_admin' ),
-                'rest'    => [
+                'ajaxurl'                           => admin_url( 'admin-ajax.php' ),
+                'nonce'                             => wp_create_nonce( 'dokan_admin' ),
+                'rest'                              => [
                     'root'    => esc_url_raw( get_rest_url() ),
                     'nonce'   => wp_create_nonce( 'wp_rest' ),
                     'version' => 'dokan/v1',
                 ],
-                'api'             => null,
-                'libs'            => [],
-                'routeComponents' => [ 'default' => null ],
-                'routes'          => $this->get_vue_admin_routes(),
-                'currency'        => $this->get_localized_price(),
-                'proNag'          => dokan()->is_pro_exists() ? 'hide' : get_option( 'dokan_hide_pro_nag', 'show' ),
-                'hasPro'          => dokan()->is_pro_exists(),
-                'showPromoBanner' => empty( Helper::dokan_get_promo_notices() ),
-                'hasNewVersion'   => Helper::dokan_has_new_version(),
-                'proVersion'      => dokan()->is_pro_exists() ? dokan_pro()->version : '',
-                'i18n'            => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],
-                'urls'            => [
+                'api'                               => null,
+                'libs'                              => [],
+                'routeComponents'                   => [ 'default' => null ],
+                'routes'                            => $this->get_vue_admin_routes(),
+                'currency'                          => $this->get_localized_price(),
+                'proNag'                            => dokan()->is_pro_exists() ? 'hide' : get_option( 'dokan_hide_pro_nag', 'show' ),
+                'hasPro'                            => dokan()->is_pro_exists(),
+                'showPromoBanner'                   => empty( Helper::dokan_get_promo_notices() ),
+                'hasNewVersion'                     => Helper::dokan_has_new_version(),
+                'proVersion'                        => dokan()->is_pro_exists() ? dokan_pro()->version : '',
+                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],
+                'urls'                              => [
                     'adminRoot'    => admin_url(),
                     'siteUrl'      => home_url( '/' ),
                     'storePrefix'  => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
@@ -1062,27 +1078,27 @@ class Assets {
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                     'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                 ],
-                'states'                 => WC()->countries->get_allowed_country_states(),
-                'countries'              => WC()->countries->get_allowed_countries(),
-                'current_time'           => current_time( 'mysql' ),
-                'store_banner_dimension' => [
+                'states'                            => WC()->countries->get_allowed_country_states(),
+                'countries'                         => WC()->countries->get_allowed_countries(),
+                'current_time'                      => current_time( 'mysql' ),
+                'store_banner_dimension'            => [
                     'width'       => $banner_width,
                     'height'      => $banner_height,
                     'flex-width'  => $has_flex_width,
                     'flex-height' => $has_flex_height,
                 ],
-                'ajax_loader'        => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
+                'ajax_loader'                       => DOKAN_PLUGIN_ASSEST . '/images/spinner-2x.gif',
                 /* translators: %s: decimal */
-                'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
+                'i18n_decimal_error'                => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
                 /* translators: %s: price decimal separator */
-                'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
-                'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
-                'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
-                'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
-                'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
-                'decimal_point'                       => $decimal,
-                'mon_decimal_point'                   => wc_get_price_decimal_separator(),
-                'i18n_date_format'                    => wc_date_format(),
+                'i18n_mon_decimal_error'            => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
+                'i18n_country_iso_error'            => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
+                'i18n_sale_less_than_regular_error' => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
+                'i18n_delete_product_notice'        => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
+                'i18n_remove_personal_data_notice'  => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
+                'decimal_point'                     => $decimal,
+                'mon_decimal_point'                 => wc_get_price_decimal_separator(),
+                'i18n_date_format'                  => wc_date_format(),
             ]
         );
     }

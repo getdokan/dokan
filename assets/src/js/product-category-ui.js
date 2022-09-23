@@ -21,7 +21,7 @@
 
             $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', ProductCategory.debounce( this.typeToSearch, 500 ) );
 
-            $( '#dokan-single-categories' ).scroll( this.categoryScroll );
+            $( 'body' ).on ( 'scroll', '#dokan-single-categories', this.categoryScroll );
 
             $( 'body' ).on( 'click', '.dokan-single-categories-right-box', ProductCategory.indicatorScrollTo );
 
