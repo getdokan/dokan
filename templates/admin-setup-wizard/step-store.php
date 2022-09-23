@@ -16,7 +16,7 @@
                 <select class="wc-enhanced-select" id="shipping_fee_recipient" name="shipping_fee_recipient">
                     <?php foreach ( $recipients as $key => $value ) : ?>
                     <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $shipping_fee_recipient ); ?>>
-                        <?php esc_html( $value ); ?>
+                        <?php echo esc_html( $value ); ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -29,7 +29,7 @@
                 <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
                     <?php foreach ( $recipients as $key => $value ) : ?>
                     <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $tax_fee_recipient ); ?>>
-                        <?php esc_html( $value ); ?>
+                        <?php echo esc_html( $value ); ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -42,7 +42,7 @@
                 <select class="wc-enhanced-select" id="map_api_source" name="map_api_source">
                     <?php foreach ( $map_api_source_options as $key => $value ) : ?>
                     <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $map_api_source ); ?>>
-                        <?php esc_html( $value ); ?>
+                        <?php echo esc_html( $value ); ?>
                     </option>
                     <?php endforeach; ?>
                 </select>

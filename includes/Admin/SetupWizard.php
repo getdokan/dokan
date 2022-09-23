@@ -68,8 +68,6 @@ class SetupWizard {
 
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', [ 'jquery' ], WC_VERSION, true );
         wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', [ 'jquery' ], '2.70', true );
-        wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
-        wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
         wp_localize_script(
             'wc-enhanced-select', 'wc_enhanced_select_params', [
                 'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan-lite' ),
@@ -88,7 +86,6 @@ class SetupWizard {
             ]
         );
 
-        wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', [ 'dashicons', 'install' ], WC_VERSION );
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup', 'dokan-fontawesome' ], DOKAN_PLUGIN_VERSION );
 
