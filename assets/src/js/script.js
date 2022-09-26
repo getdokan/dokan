@@ -136,14 +136,10 @@ jQuery(function($) {
         var form = $(this).closest('form');
         var self = $('form#' + form.attr('id'));
 
-        var nonce = self.find('input[name="_wpnonce"]').val();
-        self.find('input[type=text]').val('');
-        self.find('textarea').val('');
-        self.find('input[type=checkbox]').prop('checked', false);
-        self.find('#ac_type').prop('selectedIndex', 0);
-        self.find('input[name="_wpnonce"').val(nonce);
-
-        console.log(self.find('input[type=text]'));
+        $(':input',form)
+        .not(':button, :submit, :reset, :hidden, :checkbox')
+        .val('')
+        .prop('selected', false);
 
         var data = form.serializeArray().reduce(function(obj, item) {
             obj[item.name] = item.value;
@@ -153,7 +149,6 @@ jQuery(function($) {
         data[$(this).attr('name')] = ''
         data['form_id'] = form.attr('id');
         data['action'] = 'dokan_settings';
-
 
         var isDisconnect = true;
 
