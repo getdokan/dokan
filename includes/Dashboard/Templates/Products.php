@@ -200,7 +200,7 @@ class Products {
      */
     public function load_product_edit_template() {
         if ( current_user_can( 'dokan_edit_product' ) ) {
-            dokan_get_template_part( 'products/new-product-single' );
+            dokan_get_template_part( 'products/edit-product-single' );
         } else {
             dokan_get_template_part(
                 'global/dokan-error', '', [

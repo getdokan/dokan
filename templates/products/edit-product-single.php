@@ -40,7 +40,6 @@ if ( isset( $_GET['product_id'] ) ) {
 
 if ( ! dokan_is_product_author( $post_id ) ) {
     wp_die( esc_html__( 'Access Denied', 'dokan-lite' ) );
-    exit();
 }
 
 $_regular_price         = get_post_meta( $post_id, '_regular_price', true );
@@ -307,7 +306,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                             'hide_empty' => 0,
                                         );
                                         ?>
-                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>">
+                                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control wc-enhanced-select dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>">
                                             <?php if ( ! empty( $terms ) ) : ?>
                                                 <?php foreach ( $terms as $tax_term ) : ?>
                                                     <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
