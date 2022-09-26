@@ -111,6 +111,8 @@ jQuery(function($) {
 
   var api = wp.customize;
 
+  var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
+
   var Dokan_Settings = {
     init: function() {
       var self = this;
@@ -127,7 +129,36 @@ jQuery(function($) {
           $("input[name='dokan_update_store_settings']").trigger( 'click' );
       });
 
+
       this.validateForm(self);
+
+      $('.dokan_payment_disconnect_btn').on( 'click', function(){
+        var form = $(this).closest('form');
+        var self = $('form#' + form.attr('id'));
+
+        var nonce = self.find('input[name="_wpnonce"]').val();
+        self.find('input[type=text]').val('');
+        self.find('textarea').val('');
+        self.find('input[type=checkbox]').prop('checked', false);
+        self.find('#ac_type').prop('selectedIndex', 0);
+        self.find('input[name="_wpnonce"').val(nonce);
+
+        console.log(self.find('input[type=text]'));
+
+        var data = form.serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        data[$(this).attr('name')] = ''
+        data['form_id'] = form.attr('id');
+        data['action'] = 'dokan_settings';
+
+
+        var isDisconnect = true;
+
+        Dokan_Settings.handleRequest( self, data, isDisconnect );
+      });
 
       return false;
     },
@@ -466,23 +497,14 @@ jQuery(function($) {
       }
 
       var self = $('form#' + form_id),
-        form_data =
-          self.serialize() + '&action=dokan_settings&form_id=' + form_id;
+        form_data = self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       var isDisconnect = false;
-      var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
-      if (self.find(selectors).length > 0){
-        isDisconnect = true;
-        var nonce = self.find('input[name="_wpnonce"]').val();
-        self.find('input[type=text]').val('');
-        self.find('textarea').val('');
-        self.find('input[type=checkbox]').prop('checked', false);
-        self.find('#ac_type').prop('selectedIndex', 0);
 
-        self.find('input[name="_wpnonce"').val(nonce);
-        form_data = self.serialize() + '&action=dokan_settings&form_id=' + form_id;
-      }
+      Dokan_Settings.handleRequest( self, form_data, isDisconnect );
+    },
 
+    handleRequest: function ( self, form_data, isDisconnect ) {
       if (isDisconnect) {
         self.find('.ajax_prev.disconnect').append('<span class="dokan-loading"> </span>');
       } else {
@@ -491,6 +513,7 @@ jQuery(function($) {
 
       $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
+
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
         $('.dokan-update-setting-top-button span.dokan-loading').remove();
