@@ -491,24 +491,23 @@ class Settings {
             }
         }
 
-        $is_disconnect = isset( $post_data['settings']['bank']['disconnect'] );
-        if ( ! empty( $post_data['settings']['bank'] ) && ! $is_disconnect ) {
+        $is_disconnect = isset( $_POST['settings']['bank']['disconnect'] );
+        if ( ! empty( $_POST['settings']['bank'] ) && ! $is_disconnect ) {
             $payment_fields = dokan_bank_payment_required_fields();
-
             /**
              * Here we are validating the bank payment required fields,
              * if the payment field is required and the payment field from post data is given.
              * And if the filed in account type and the given value is personal or business.
              */
             foreach ( $payment_fields as $key => $payment_field ) {
-                if ( ! empty( $payment_field ) && empty( $post_data['settings']['bank'][ $key ] ) ) {
+                if ( ! empty( $payment_field ) && empty( $_POST['settings']['bank'][ $key ] ) ) {
                     $error->add( 'dokan_bank_' . $key, $payment_field );
-                } elseif ( ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $post_data['settings']['bank'][ $key ], [ 'personal', 'business' ], true ) ) {
+                } elseif ( ! empty( $payment_field ) && $key === 'ac_type' && ! in_array( $_POST['settings']['bank'][ $key ], [ 'personal', 'business' ], true ) ) {
                     $error->add( 'dokan_bank_ac_type', __( 'Invalid Account Type', 'dokan-lite' ) );
                 }
             }
 
-            if ( empty( $post_data['settings']['bank']['declaration'] ) ) {
+            if ( empty( $_POST['settings']['bank']['declaration'] ) ) {
                 $error->add( 'dokan_bank_declaration', __( 'You must attest that the bank account is yours.', 'dokan-lite' ) );
             }
         }
