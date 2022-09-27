@@ -622,6 +622,7 @@ jQuery(function($) {
 
     var Dokan_Editor = {
 
+        modal: false,
         /**
          * Constructor function
          */
@@ -874,37 +875,44 @@ jQuery(function($) {
 
         openProductPopup: function() {
             const productTemplate = wp.template( 'dokan-add-new-product' ),
-                modalElem = $( '#dokan-add-product-popup' ),
-                modal = modalElem.iziModal( {
+                modalElem = $( '#dokan-add-product-popup' );
+                Dokan_Editor.modal = modalElem.iziModal( {
                 headerColor : '#b11d1db8',
                 overlayColor: 'rgba(0, 0, 0, 0.8)',
                 width       : 690,
+                top         : 32,
                 onOpening   : () => {
-                    Dokan_Editor.loadSelect2();
-                    Dokan_Editor.bindProductTagDropdown();
-
-                    $( '.sale_price_dates_from, .sale_price_dates_to' ).on( 'focus', function() {
-                        $(this).css( 'z-index', '99999' );
-                    } );
-
-                    $( '.sale_price_dates_fields input' ).datepicker({
-                        defaultDate   : "",
-                        dateFormat    : "yy-mm-dd",
-                        numberOfMonths: 1
-                    } );
-
-                    $( '.tips' ).tooltip();
-
-                    Dokan_Editor.gallery.sortable();
-                    $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
+                  Dokan_Editor.reRenderPopupElements();
                 },
                 onClosed: () => {
                     product_gallery_frame  = undefined;
                     product_featured_frame = undefined;
+                    $( '#dokan-add-new-product-popup input[name="_sale_price_dates_from"], #dokan-add-new-product-popup input[name="_sale_price_dates_to"]' ).datepicker( 'destroy' );
                 },
             } );
-            modal.iziModal( 'setContent', productTemplate().trim() );
-            modal.iziModal( 'open' );
+            Dokan_Editor.modal.iziModal( 'setContent', productTemplate().trim() );
+            Dokan_Editor.modal.iziModal( 'open' );
+        },
+
+        reRenderPopupElements: function() {
+            Dokan_Editor.loadSelect2();
+            Dokan_Editor.bindProductTagDropdown();
+
+            $( '#dokan-add-new-product-popup .sale_price_dates_fields input' ).daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: false,
+                autoApply: true,
+                parentEl: '#dokan-add-new-product-popup',
+                opens: 'left',
+                autoUpdateInput : false,
+            } ).on( 'apply.daterangepicker', function( ev, picker ) {
+                $( this ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
+            } );
+
+            $( '.tips' ).tooltip();
+
+            Dokan_Editor.gallery.sortable();
+            $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
         },
 
         createNewProduct: function (e) {
@@ -940,15 +948,18 @@ jQuery(function($) {
                 _wpnonce : dokan.nonce
             };
 
+            Dokan_Editor.modal.iziModal('startLoading');
             $.post( dokan.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
                     self.removeAttr( 'disabled' );
-                    if ( btn_id == 'create_new' ) {
+                    if ( btn_id === 'create_new' ) {
                         $( '#dokan-add-product-popup' ).iziModal('close');
                         window.location.href = resp.data;
                     } else {
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
+                        Dokan_Editor.modal.iziModal('resetContent');
                         Dokan_Editor.openProductPopup();
+                        Dokan_Editor.reRenderPopupElements();
                         $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
 
                         setTimeout(function() {
@@ -960,6 +971,9 @@ jQuery(function($) {
                     $( 'span.dokan-show-add-product-error' ).html( resp.data );
                 }
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
+            })
+            .always( function () {
+                Dokan_Editor.modal.iziModal('stopLoading');
             });
         },
 
@@ -1882,6 +1896,8 @@ jQuery(function($) {
 
   var api = wp.customize;
 
+  var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
+
   var Dokan_Settings = {
     init: function() {
       var self = this;
@@ -1898,7 +1914,31 @@ jQuery(function($) {
           $("input[name='dokan_update_store_settings']").trigger( 'click' );
       });
 
+
       this.validateForm(self);
+
+      $('.dokan_payment_disconnect_btn').on( 'click', function(){
+        var form = $(this).closest('form');
+        var self = $('form#' + form.attr('id'));
+
+        $(':input',form)
+        .not(':button, :submit, :reset, :hidden, :checkbox')
+        .val('')
+        .prop('selected', false);
+
+        var data = form.serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        data[$(this).attr('name')] = ''
+        data['form_id'] = form.attr('id');
+        data['action'] = 'dokan_settings';
+
+        var isDisconnect = true;
+
+        Dokan_Settings.handleRequest( self, data, isDisconnect );
+      });
 
       return false;
     },
@@ -2237,23 +2277,14 @@ jQuery(function($) {
       }
 
       var self = $('form#' + form_id),
-        form_data =
-          self.serialize() + '&action=dokan_settings&form_id=' + form_id;
+        form_data = self.serialize() + '&action=dokan_settings&form_id=' + form_id;
 
       var isDisconnect = false;
-      var selectors = 'input[name="settings[bank][disconnect]"], input[name="settings[paypal][disconnect]"], input[name="settings[skrill][disconnect]"], input[name="settings[dokan_custom][disconnect]"]';
-      if (self.find(selectors).length > 0){
-        isDisconnect = true;
-        var nonce = self.find('input[name="_wpnonce"]').val();
-        self.find('input[type=text]').val('');
-        self.find('textarea').val('');
-        self.find('input[type=checkbox]').prop('checked', false);
-        self.find('#ac_type').prop('selectedIndex', 0);
 
-        self.find('input[name="_wpnonce"').val(nonce);
-        form_data = self.serialize() + '&action=dokan_settings&form_id=' + form_id;
-      }
+      Dokan_Settings.handleRequest( self, form_data, isDisconnect );
+    },
 
+    handleRequest: function ( self, form_data, isDisconnect ) {
       if (isDisconnect) {
         self.find('.ajax_prev.disconnect').append('<span class="dokan-loading"> </span>');
       } else {
@@ -2262,6 +2293,7 @@ jQuery(function($) {
 
       $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
+
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
         $('.dokan-update-setting-top-button span.dokan-loading').remove();
@@ -3392,11 +3424,12 @@ jQuery(function($) {
         },
         openRequestWithdrawWindow: () => {
             const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
-                modal = $( '#dokan-withdraw-request-popup' ).iziModal();
+                modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
+                    width       : 690,
+                    overlayColor: 'rgba(0, 0, 0, 0.8)',
+                    headerColor : '#b11d1db8',
+                } );
 
-            modal.iziModal( 'setWidth', 690 );
-            modal.iziModal( 'setHeaderColor', '#b11d1db8' );
-            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', withdrawTemplate().trim() );
             modal.iziModal( 'open' );
 
@@ -3404,11 +3437,12 @@ jQuery(function($) {
         },
         opensScheduleWindow: () => {
             const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
-                modal = $( '#dokan-withdraw-schedule-popup' ).iziModal();
+                modal = $( '#dokan-withdraw-schedule-popup' ).iziModal( {
+                    width       : 690,
+                    overlayColor: 'rgba(0, 0, 0, 0.8)',
+                    headerColor : '#b11d1db8',
+                } );
 
-            modal.iziModal( 'setWidth', 690 );
-            modal.iziModal( 'setHeaderColor', '#b11d1db8' );
-            modal.iziModal( 'setOverlayColor', 'rgba(0, 0, 0, 0.8)' );
             modal.iziModal( 'setContent', scheduleTemplate().trim() );
             modal.iziModal( 'open' );
 

@@ -4106,7 +4106,7 @@ function dokan_get_timestamp( $date_string, $gmt_date = false ) {
 /**
  * Get inverval between two dates, useful for chart functions
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @param string|int $start_date
  * @param string|int $end_date
@@ -4135,7 +4135,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
      * Format date time string to WC format
      *
      * @since 2.6.8
-     * @since DOKAN_SINCE This method was moved from wc-functions.php
+     * @since 3.7.0 This method was moved from wc-functions.php
      *
      * @param boolean $date_only
      *
@@ -4424,7 +4424,7 @@ function is_tweleve_hour_format() {
  * Sanitize phone number.
  * Allows only numbers and "+" (plus sign) "." (full stop) "(" ")" "-".
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @param string $phone Phone number.
  *

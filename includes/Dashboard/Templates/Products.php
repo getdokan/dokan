@@ -544,7 +544,7 @@ class Products {
     /**
      * Add new product open modal html
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @return void
      */

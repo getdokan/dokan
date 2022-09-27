@@ -69,7 +69,7 @@ class Helper {
     /**
      * Fotomat's chosen cates for generate chosen cats.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @param  array $all_children
      * @param  array $all_ancestors
@@ -198,7 +198,7 @@ class Helper {
     /**
      * Enqueue styles and scripts and localize for dokan multi-step category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @return void
      */
@@ -224,7 +224,7 @@ class Helper {
     /**
      * Returns the chosen category of a product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @param int $product_id
      *

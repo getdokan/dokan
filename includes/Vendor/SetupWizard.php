@@ -109,7 +109,7 @@ class SetupWizard extends DokanSetupWizard {
     /**
      * Enqueue vendor setup wizard scripts
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @return void
      */

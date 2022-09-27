@@ -891,7 +891,7 @@ function dokan_store_contact_widget() {
 /**
  * Get Dokan seller registration form data
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @return string[]
  */
