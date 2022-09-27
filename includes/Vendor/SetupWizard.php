@@ -106,6 +106,13 @@ class SetupWizard extends DokanSetupWizard {
         exit;
     }
 
+    /**
+     * Enqueue vendor setup wizard scripts
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     public function frontend_enqueue_scripts() {
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
