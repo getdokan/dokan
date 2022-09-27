@@ -158,7 +158,8 @@ class NewProductPending extends WC_Email {
             'recipient' => array(
                 'title'         => __( 'Recipient(s)', 'dokan-lite' ),
                 'type'          => 'text',
-                'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
+                // translators: 1) admin email address
+                'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %1$s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
                 'placeholder'   => '',
                 'default'       => '',
                 'desc_tip'      => true,

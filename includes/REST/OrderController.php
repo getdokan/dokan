@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Order;
+use WC_Order_Refund;
+use WP_Comment;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -186,8 +189,10 @@ class OrderController extends DokanRESTController {
      * Get object.
      *
      * @since  2.8.0
+     *
      * @param  int $id Object ID.
-     * @return WC_Data
+     *
+     * @return bool|WC_Order|WC_Order_Refund
      */
     public function get_object( $id ) {
         return wc_get_order( $id );
@@ -198,7 +203,7 @@ class OrderController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     public function validation_before_update_item( $request ) {
         $store_id = dokan_get_current_user_id();
@@ -215,7 +220,7 @@ class OrderController extends DokanRESTController {
 
         $product_author = dokan_get_seller_id_by_order( $object->get_id() );
 
-        if ( $store_id != $product_author ) {
+        if ( $store_id !== intval( $product_author ) ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), array( 'status' => 400 ) );
         }
 
@@ -226,7 +231,7 @@ class OrderController extends DokanRESTController {
      * Get formatted item data.
      *
      * @since  3.0.0
-     * @param  WC_Data $object WC_Data instance.
+     * @param  \WC_Data $object WC_Data instance.
      * @return array
      */
     protected function get_formatted_item_data( $object ) {
@@ -315,7 +320,7 @@ class OrderController extends DokanRESTController {
      *
      * @since  2.8.0
      *
-     * @param  WC_Data         $object  Object data.
+     * @param  \WC_Data         $object  Object data.
      * @param  WP_REST_Request $request Request object.
      *
      * @return WP_REST_Response
@@ -333,7 +338,7 @@ class OrderController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|WC_Order|WC_Order_Refund
      */
     public function prepare_object_for_database( $request ) {
         $id             = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
@@ -356,7 +361,7 @@ class OrderController extends DokanRESTController {
             );
         }
 
-        if ( ! in_array( $status, array_keys( $order_statuses ) ) ) {
+        if ( ! in_array( $status, array_keys( $order_statuses ), true ) ) {
             return new WP_Error(
                 "dokan_rest_invalid_{$this->post_type}_status", __( 'Order status not valid', 'dokan-lite' ), array(
 					'status' => 404,
@@ -382,7 +387,7 @@ class OrderController extends DokanRESTController {
     /**
      * Prepare links for the request.
      *
-     * @param WC_Data         $object  Object data.
+     * @param \WC_Data         $object  Object data.
      * @param WP_REST_Request $request Request object.
      *
      * @return array                   Links for the given post.
@@ -455,7 +460,7 @@ class OrderController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function get_order_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
@@ -470,7 +475,7 @@ class OrderController extends DokanRESTController {
     /**
      * Expands an order item to get its data.
      *
-     * @param WC_Order_item $item
+     * @param \WC_Order_item $item
      *
      * @return array
      */
@@ -528,9 +533,9 @@ class OrderController extends DokanRESTController {
      */
     public function get_order_notes( $request ) {
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
+        $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
-        if ( $order_author_id != dokan_get_current_user_id() ) {
+        if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
@@ -546,7 +551,7 @@ class OrderController extends DokanRESTController {
 
         // Allow filter by order note type.
         if ( 'customer' === $request['type'] ) {
-            $args['meta_query'] = array(
+            $args['meta_query'] = array( // phpcs:ignore
                 array(
                     'key'     => 'is_customer_note',
                     'value'   => 1,
@@ -554,7 +559,7 @@ class OrderController extends DokanRESTController {
                 ),
             );
         } elseif ( 'internal' === $request['type'] ) {
-            $args['meta_query'] = array(
+            $args['meta_query'] = array( // phpcs:ignore
                 array(
                     'key'     => 'is_customer_note',
                     'compare' => 'NOT EXISTS',
@@ -583,17 +588,18 @@ class OrderController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function create_order_note( $request ) {
         if ( ! empty( $request['note_id'] ) ) {
+            // translators: 1) post type name
             return new WP_Error( "dokan_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), $this->post_type ), array( 'status' => 400 ) );
         }
 
         $order = wc_get_order( (int) $request['id'] );
-        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
+        $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
-        if ( $order_author_id != dokan_get_current_user_id() ) {
+        if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to create this notes', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
@@ -626,15 +632,16 @@ class OrderController extends DokanRESTController {
      * Get a single order note.
      *
      * @param WP_REST_Request $request Full details about the request.
+     *
      * @return WP_Error|WP_REST_Response
      */
     public function get_order_note( $request ) {
         $id    = (int) $request['note_id'];
         $order = wc_get_order( (int) $request['id'] );
 
-        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
+        $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
-        if ( $order_author_id != dokan_get_current_user_id() ) {
+        if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
@@ -658,14 +665,15 @@ class OrderController extends DokanRESTController {
      * Delete a single order note.
      *
      * @param WP_REST_Request $request Full details about the request.
+     *
      * @return WP_REST_Response|WP_Error
      */
     public function delete_order_note( $request ) {
         $id              = (int) $request['note_id'];
         $order           = wc_get_order( (int) $request['id'] );
-        $order_author_id = dokan_get_seller_id_by_order( $order->get_id() );
+        $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
-        if ( $order_author_id != dokan_get_current_user_id() ) {
+        if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
@@ -685,7 +693,7 @@ class OrderController extends DokanRESTController {
         $result = wc_delete_order_note( $note->comment_ID );
 
         if ( ! $result ) {
-            return new WP_Error( 'dokan_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'dokan-lite' ), 'order_note' ), array( 'status' => 500 ) );
+            return new WP_Error( 'dokan_rest_cannot_delete', sprintf( __( 'Given order note cannot be deleted.', 'dokan-lite' ) ), array( 'status' => 500 ) );
         }
 
         do_action( 'dokan_rest_delete_order_note', $note, $response, $request );
@@ -756,7 +764,7 @@ class OrderController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function update_order_permissions_check() {
         if ( ! current_user_can( 'dokan_manage_order' ) ) {
@@ -765,7 +773,7 @@ class OrderController extends DokanRESTController {
 
         $has_admin_permission = dokan_get_option( 'order_status_change', 'dokan_selling', 'on' );
 
-        if ( 'off' == $has_admin_permission ) {
+        if ( 'off' === $has_admin_permission ) {
             return false;
         }
 

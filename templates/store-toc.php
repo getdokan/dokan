@@ -19,40 +19,51 @@ get_header( 'shop' );
 <?php do_action( 'woocommerce_before_main_content' ); ?>
 
 <div class="dokan-store-wrap layout-<?php echo esc_attr( $layout ); ?>">
-
     <?php if ( 'left' === $layout ) { ?>
-        <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+        <?php
+        dokan_get_template_part(
+            'store', 'sidebar', [
+                'store_user'   => $store_user,
+                'store_info'   => $store_info,
+                'map_location' => $map_location,
+            ]
+        );
+        ?>
     <?php } ?>
 
-<div id="primary" class="content-area dokan-single-store">
-    <div id="dokan-content" class="site-content store-review-wrap woocommerce" role="main">
+    <div id="primary" class="content-area dokan-single-store">
+        <div id="dokan-content" class="site-content store-review-wrap woocommerce" role="main">
 
-        <?php dokan_get_template_part( 'store-header' ); ?>
+            <?php dokan_get_template_part( 'store-header' ); ?>
 
-        <div id="store-toc-wrapper">
-            <div id="store-toc">
-                <?php
-                if( ! empty( $vendor->get_store_tnc() ) ):
-                ?>
-                    <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
-                    <div>
+            <div id="store-toc-wrapper">
+                <div id="store-toc">
+                    <?php if ( ! empty( $vendor->get_store_tnc() ) ) : ?>
+                        <h2 class="headline"><?php esc_html_e( 'Terms And Conditions', 'dokan-lite' ); ?></h2>
+                        <div>
+                            <?php echo wp_kses_post( nl2br( $vendor->get_store_tnc() ) ); ?>
+                        </div>
                         <?php
-                            echo wp_kses_post( nl2br( $vendor->get_store_tnc() ) );
-                        ?>
-                    </div>
-                <?php
-                endif;
-                ?>
-            </div><!-- #store-toc -->
-        </div><!-- #store-toc-wrap -->
+                    endif;
+                    ?>
+                </div><!-- #store-toc -->
+            </div><!-- #store-toc-wrap -->
 
-    </div><!-- #content .site-content -->
-</div><!-- #primary .content-area -->
+        </div><!-- #content .site-content -->
+    </div><!-- #primary .content-area -->
 
-<div class="dokan-clearfix"></div>
+    <div class="dokan-clearfix"></div>
 
     <?php if ( 'right' === $layout ) { ?>
-        <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+        <?php
+        dokan_get_template_part(
+            'store', 'sidebar', [
+                'store_user'   => $store_user,
+                'store_info'   => $store_info,
+                'map_location' => $map_location,
+            ]
+        );
+        ?>
     <?php } ?>
 
 </div><!-- .dokan-store-wrap -->

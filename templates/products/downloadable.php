@@ -18,15 +18,18 @@
                     <tfoot>
                         <tr>
                             <th colspan="3">
-                                <a href="#" class="insert-file-row dokan-btn dokan-btn-sm dokan-btn-success" data-row="<?php
-                                    $file = array(
-                                        'file' => '',
-                                        'name' => ''
-                                    );
-                                    ob_start();
-                                    include DOKAN_INC_DIR . '/woo-views/html-product-download.php';
-                                    echo esc_attr( ob_get_clean() );
-                                ?>"><?php esc_html_e( 'Add File', 'dokan-lite' ); ?></a>
+                                <?php
+                                $file = [
+                                    'file' => '',
+                                    'name' => '',
+                                ];
+                                ob_start();
+                                require DOKAN_INC_DIR . '/woo-views/html-product-download.php';
+                                $row_html = ob_get_clean();
+                                ?>
+                                <a href="#" class="insert-file-row dokan-btn dokan-btn-sm dokan-btn-success" data-row="<?php echo esc_attr( $row_html ); ?>">
+                                    <?php esc_html_e( 'Add File', 'dokan-lite' ); ?>
+                                </a>
                             </th>
                         </tr>
                     </tfoot>
@@ -53,12 +56,12 @@
                 <div class="dokan-clearfix">
                     <div class="content-half-part">
                         <label for="_download_limit" class="form-label"><?php esc_html_e( 'Download Limit', 'dokan-lite' ); ?></label>
-                        <?php dokan_post_input_box( $post_id, '_download_limit', array( 'placeholder' => __( 'e.g. 4', 'dokan-lite' ) ) ); ?>
+                        <?php dokan_post_input_box( $post_id, '_download_limit', array( 'placeholder' => __( 'Unlimited', 'dokan-lite' ) ) ); ?>
                     </div><!-- .content-half-part -->
 
                     <div class="content-half-part">
                         <label for="_download_expiry" class="form-label"><?php esc_html_e( 'Download Expiry', 'dokan-lite' ); ?></label>
-                        <?php dokan_post_input_box( $post_id, '_download_expiry', array( 'placeholder' => __( 'Number of days', 'dokan-lite' ) ) ); ?>
+                        <?php dokan_post_input_box( $post_id, '_download_expiry', array( 'placeholder' => __( 'Never', 'dokan-lite' ) ) ); ?>
                     </div><!-- .content-half-part -->
                 </div>
 

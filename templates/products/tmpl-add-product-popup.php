@@ -6,7 +6,6 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 ?>
 <script type="text/html" id="tmpl-dokan-add-new-product">
     <div id="dokan-add-new-product-popup" class="white-popup dokan-add-new-product-popup">
-        <h2><i class="fas fa-briefcase">&nbsp;</i>&nbsp;<?php esc_html_e( 'Add New Product', 'dokan-lite' ); ?></h2>
         <?php do_action( 'dokan_new_product_before_product_area' ); ?>
         <form action="" method="post" id="dokan-add-new-product-form">
             <div class="product-form-container">
@@ -80,14 +79,14 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                             <div class="content-half-part from">
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php esc_html_e( 'From', 'dokan-lite' ); ?></span>
-                                    <input type="text" name="_sale_price_dates_from" class="dokan-form-control datepicker sale_price_dates_from" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
+                                    <input type="text" name="_sale_price_dates_from" class="dokan-form-control" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                 </div>
                             </div>
 
                             <div class="content-half-part to">
                                 <div class="dokan-input-group">
                                     <span class="dokan-input-group-addon"><?php esc_html_e( 'To', 'dokan-lite' ); ?></span>
-                                    <input type="text" name="_sale_price_dates_to" class="dokan-form-control datepicker sale_price_dates_to" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
+                                    <input type="text" name="_sale_price_dates_to" class="dokan-form-control" value="" maxlength="10" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'dokan-lite' ); ?>">
                                 </div>
                             </div>
                         </div>
@@ -103,8 +102,8 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                     ?>
 
                     <div class="dokan-form-group">
-                        <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
-                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>"></select>
+                        <label for="product_tag_search" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
+                        <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>" style="width: 100%;"></select>
                     </div>
 
                     <?php do_action( 'dokan_new_product_after_product_tags' ); ?>
@@ -112,7 +111,7 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
                     <div class="dokan-form-group">
                         <textarea name="post_excerpt" id="" class="dokan-form-control" rows="5" placeholder="<?php esc_attr_e( 'Enter some short description about this product...' , 'dokan-lite' ) ?>"></textarea>
                     </div>
-                </div>
+                </d>
             </div>
             <div class="product-container-footer">
                 <span class="dokan-show-add-product-error"></span>
@@ -133,5 +132,14 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
             </div>
         </form>
     </div>
+    <style>
+        .select2-container--open .select2-dropdown--below {
+            margin-top: 0px;
+        }
+
+        .select2-container--open .select2-dropdown--above {
+            margin-top: 0px;
+        }
+    </style>
 </script>
 <?php do_action( 'dokan_add_product_js_template_end' );?>

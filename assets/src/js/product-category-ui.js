@@ -21,7 +21,7 @@
 
             $( 'body' ).on( 'keyup', '#dokan-single-cat-search-input', ProductCategory.debounce( this.typeToSearch, 500 ) );
 
-            $( '#dokan-single-categories' ).scroll( this.categoryScroll );
+            $( 'body' ).on ( 'scroll', '#dokan-single-categories', this.categoryScroll );
 
             $( 'body' ).on( 'click', '.dokan-single-categories-right-box', ProductCategory.indicatorScrollTo );
 
@@ -102,6 +102,9 @@
             ProductCategory.setCatName( ProductCategory.getSelectedLabel(), $( category_box ) );
             ProductCategory.setCatId( selectedCatId, $( category_box ) );
             ProductCategory.hideCategoryModal();
+
+            // Any one can use this hook and do anything after any category is selected.
+            wp.hooks.doAction( 'dokan_selected_multistep_category', selectedCatId );
 
             $(category_box).attr('data-activate', 'no');
         },

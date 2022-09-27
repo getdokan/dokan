@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.6.5",
+  "version": "3.7.0",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -9,12 +9,13 @@
     "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
-    "makepot": "wpvuei18n makepot",
+    "makepot": "grunt makepot",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "version": "node bin/version-replace"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
+    "chartjs-adapter-moment": "^1.0.0",
     "debounce": "^1.2.1",
     "papaparse": "^5.3.2",
     "vue": "^2.7.10",
@@ -62,8 +63,8 @@
     "url-loader": "^1.1.2",
     "vue-color": "^2.8.1",
     "vue-loader": "^13.7.3",
-    "vue-router": "^3.6.0",
-    "vue-slick": "^1.1.20",
+    "vue-router": "^3.6.5",
+    "vue-slick": "^1.2.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.7.10",
     "webpack": "^3.12.0",

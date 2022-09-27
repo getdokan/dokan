@@ -9,13 +9,12 @@ use WeDevs\Dokan\Withdraw\Withdraws;
 /**
  * Withdraw base class
  *
- * @author wedDevs <info@wedevs.com>
+ * @since   2.4
  *
- * @since 2.4
+ * @author  wedDevs <info@wedevs.com>
  *
  * @package dokan
  */
-
 class Manager {
 
     /**
@@ -107,9 +106,9 @@ class Manager {
      *
      * @since 2.4
      *
-     * @param  int     $id
-     * @param  int     $user_id
-     * @param  string  $status
+     * @param int    $id
+     * @param int    $user_id
+     * @param string $status
      *
      * @return void
      */
@@ -122,20 +121,20 @@ class Manager {
 
         $updated = $wpdb->update(
             $wpdb->dokan_withdraw,
-            array(
+            [
                 'status' => $status,
-            ),
-            array(
+            ],
+            [
                 'id'      => $id,
                 'user_id' => $user_id,
-            ),
-            array(
+            ],
+            [
                 '%s',
-            ),
-            array(
+            ],
+            [
                 '%d',
                 '%d',
-            )
+            ]
         );
 
         if ( $updated !== 1 ) {
@@ -154,10 +153,10 @@ class Manager {
      *
      * @return bool|\WP_Error
      */
-    public function insert_withdraw( $args = array() ) {
+    public function insert_withdraw( $args = [] ) {
         global $wpdb;
 
-        $data = array(
+        $data = [
             'user_id' => $args['user_id'],
             'amount'  => $args['amount'],
             'date'    => current_time( 'mysql' ),
@@ -166,9 +165,9 @@ class Manager {
             'note'    => $args['notes'],
             'details' => ! empty( $args['details'] ) ? $args['details'] : '',
             'ip'      => $args['ip'],
-        );
+        ];
 
-        $format = array( '%d', '%f', '%s', '%d', '%s', '%s', '%s', '%s' );
+        $format = [ '%d', '%f', '%s', '%d', '%s', '%s', '%s', '%s' ];
 
         $inserted = $wpdb->insert( $wpdb->dokan_withdraw, $data, $format );
 
@@ -195,7 +194,7 @@ class Manager {
     /**
      * Check if a user has already pending withdraw request
      *
-     * @param  integer   $user_id
+     * @param integer $user_id
      *
      * @return boolean
      */
@@ -223,10 +222,10 @@ class Manager {
     /**
      * Get withdraw request of a user
      *
-     * @param  integer   $user_id
-     * @param  integer   $status
-     * @param  integer   $limit
-     * @param  integer   $offset
+     * @param integer $user_id
+     * @param integer $status
+     * @param integer $limit
+     * @param integer $offset
      *
      * @return array
      */
@@ -255,7 +254,7 @@ class Manager {
     /**
      * Get status code by status type
      *
-     * @param  string
+     * @param string
      *
      * @return integer
      */
@@ -278,8 +277,8 @@ class Manager {
     /**
      * Get withdraw details by method and user
      *
-     * @param  string $method
-     * @param  int    $user_id
+     * @param string $method
+     * @param int    $user_id
      *
      * @return array
      */
@@ -288,7 +287,7 @@ class Manager {
             $store_settings = dokan_get_store_info( $user_id );
 
             return [
-                'value' => $store_settings['payment']['dokan_custom']['value'],
+                'value'  => $store_settings['payment']['dokan_custom']['value'],
                 'method' => dokan_get_option( 'withdraw_method_name', 'dokan_withdraw' ),
             ];
         }
@@ -331,17 +330,17 @@ class Manager {
      *
      * @return array|object
      */
-    public function all( $args = array() ) {
+    public function all( $args = [] ) {
         $withdraws = new Withdraws( $args );
 
         if ( empty( $args['paginate'] ) ) {
             return $withdraws->get_withdraws();
         } else {
-            return (object) array(
+            return (object) [
                 'withdraws'     => $withdraws->get_withdraws(),
                 'total'         => $withdraws->get_total(),
                 'max_num_pages' => $withdraws->get_maximum_num_pages(),
-            );
+            ];
         }
     }
 
@@ -352,7 +351,8 @@ class Manager {
      */
     public function get_total_withdraw_count() {
         $withdraws = new Withdraws();
-        $count = $withdraws->get_total();
+        $count     = $withdraws->get_total();
+
         return (int) $count;
     }
 
@@ -376,7 +376,7 @@ class Manager {
                 ), ARRAY_A
             );
         } else {
-            $attributes = array(
+            $attributes = [
                 'id'      => '%d',
                 'user_id' => '%d',
                 'amount'  => '%s',
@@ -386,7 +386,7 @@ class Manager {
                 'note'    => '%s',
                 'details' => '%s',
                 'ip'      => '%s',
-            );
+            ];
 
             $fields = array_intersect( array_keys( $attributes ), array_keys( $id ) );
 
@@ -394,10 +394,10 @@ class Manager {
                 return null;
             }
 
-            $where = '';
-            $formats = array();
+            $where   = '';
+            $formats = [];
             foreach ( $fields as $field ) {
-                $where .= ' and ' . $field . '=' . $attributes[ $field ];
+                $where     .= ' and ' . $field . '=' . $attributes[ $field ];
                 $formats[] = $id[ $field ];
             }
 
@@ -429,7 +429,7 @@ class Manager {
     /**
      * Check if a user has sufficient withdraw balance
      *
-     * @param  integer   $user_id
+     * @param integer $user_id
      *
      * @return boolean
      */
@@ -456,7 +456,7 @@ class Manager {
     /**
      * Get a sellers balance
      *
-     * @param  integer  $user_id
+     * @param integer $user_id
      *
      * @return integer
      */

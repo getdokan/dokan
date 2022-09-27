@@ -42,7 +42,7 @@ class V_2_9_4 extends DokanUpgrader {
         $columns = [ 'item_qtys', 'item_totals', 'item_tax_totals' ];
 
 		foreach ( $columns as $column ) {
-            $wpdb->query( "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN `{$column}` varchar(200)" );
+            $wpdb->query( "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN `{$column}` varchar(200)" ); //phpcs:ignore
         }
     }
 }

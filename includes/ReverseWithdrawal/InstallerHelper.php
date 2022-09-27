@@ -53,7 +53,7 @@ class InstallerHelper {
      * @return void
      */
     public static function create_reverse_withdrawal_base_product() {
-         // ! Check if WooCommerce is active, we need to check this because dokan can be enabled without wooCommerce
+        // ! Check if WooCommerce is active, we need to check this because dokan can be enabled without wooCommerce
         if ( ! class_exists( 'WooCommerce' ) ) {
             return;
         }

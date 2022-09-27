@@ -6,6 +6,8 @@ use Exception;
 use WeDevs\Dokan\Cache;
 use WP_Error;
 use WP_REST_Controller;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\RESTResponseError;
@@ -131,7 +133,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @param \WP_Request $request
+     * @param WP_REST_Request $request
      *
      * @return bool
      */
@@ -166,7 +168,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @param \WP_Request $request
+     * @param WP_REST_Request $request
      *
      * @return bool
      */
@@ -224,7 +226,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return return object
+     * @return array
      */
     public function get_user_data( $user_id ) {
         $vendor = dokan()->vendor->get( $user_id );
@@ -237,7 +239,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response|WP_Error
      */
     public function get_items( $request ) {
         $args = [
@@ -299,7 +301,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get vendor balance
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
     public function get_balance() {
         $data = [];
@@ -315,7 +317,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
     public function create_item( $request ) {
         try {
@@ -380,9 +382,9 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @param \WP_Request $request
+     * @param WP_REST_Request $request
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
     public function get_item( $request ) {
         // No need to try-catch here, `withdraw_exists` will handle that
@@ -397,7 +399,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function update_item( $request ) {
         try {
@@ -463,7 +465,9 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 3.0.0
      *
-     * @return \WP_REST_Request
+     * @param  WP_REST_Request $request
+     *
+     * @return WP_REST_Response|WP_Error
      */
     public function delete_item( $request ) {
         try {
@@ -504,7 +508,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function batch_items( $request ) {
         $success = [];
@@ -585,7 +589,7 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return data
+     * @return WP_REST_Response|WP_Error
      */
     public function prepare_item_for_response( $withdraw, $request ) {
         $vendor = $this->get_user_data( $withdraw->get_user_id() );
@@ -624,8 +628,8 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @param  object $response
-     * @param  object $request
+     * @param  WP_REST_Response $response
+     * @param  WP_REST_Request $request
      * @param  array $items
      * @param  int $total_items
      *

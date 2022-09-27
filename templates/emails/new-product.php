@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Email_New_Product
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -37,14 +36,13 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_attr_e( 'Vendor :', 'dokan-lite' ); ?>
         </strong>
-        <?php
-        printf( '<a href="%s">%s</a>', esc_url( $data['seller_url'] ), esc_attr( $data['seller-name'] ) ); ?>
+        <?php printf( '<a href="%s">%s</a>', esc_url( $data['seller_url'] ), esc_attr( $data['seller-name'] ) ); ?>
     </li>
     <li>
         <strong>
             <?php esc_attr_e( 'Category :', 'dokan-lite' ); ?>
         </strong>
-        <?php echo esc_html( $data['category'] ) ?>
+        <?php echo esc_html( $data['category'] ); ?>
     </li>
 
 </ul>

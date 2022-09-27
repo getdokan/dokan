@@ -2,8 +2,8 @@
 <div class="dokan-w6" style="width: auto">
     <?php
     foreach ( $dokan_days as $day_key => $day ) {
-        $status = isset( $store_info[ $day_key ]['status'] ) ? $store_info[ $day_key ]['status'] : '';
-        $status = isset( $store_info[ $day_key ]['open'] ) ? $store_info[ $day_key ]['open'] : $status;
+        $status = isset( $store_info[ $day_key ]['status'] ) ? $store_info[ $day_key ]['status'] : ''; // phpcs:ignore
+        $status = isset( $store_info[ $day_key ]['open'] ) ? $store_info[ $day_key ]['open'] : $status; // phpcs:ignore
         ?>
         <div class="dokan-store-times">
             <div class="dokan-form-group">
@@ -13,8 +13,8 @@
                 <label>
                     <select name="<?php echo esc_attr( $day_key ); ?>[working_status]" class="dokan-on-off dokan-form-control">
                         <?php foreach ( $dokan_status as $status_key => $status_value ) : ?>
-                            <option value="<?php echo esc_attr( $status_key ); ?>" <?php ! empty( $status ) ? selected( $status, $status_key ) : ''; ?> >
-                                <?php esc_html_e( $status_value, 'dokan-lite' ); ?>
+                            <option value="<?php echo esc_attr( $status_key ); ?>" <?php echo ! empty( $status ) ? selected( $status, $status_key, false ) : ''; ?> >
+                                <?php echo esc_html( $status_value ); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>

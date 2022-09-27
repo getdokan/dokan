@@ -12,7 +12,7 @@ use WeDevs\Dokan\Withdraw\WithdrawCache;
  *
  * @since 3.3.2
  *
- * @see \WeDevs\Dokan\Cache
+ * @see   \WeDevs\Dokan\Cache
  */
 class OrderCache {
 
@@ -32,7 +32,7 @@ class OrderCache {
      *
      * @since 3.3.2
      *
-     * @param int $seller_id
+     * @param int      $seller_id
      * @param int|null $order_id
      *
      * @return void

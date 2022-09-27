@@ -1,5 +1,7 @@
 <?php
-    $img_kses = apply_filters( 'dokan_product_image_attributes', [
+$img_kses = apply_filters(
+    'dokan_product_image_attributes',
+    [
         'img' => [
             'alt'         => [],
             'class'       => [],
@@ -10,9 +12,12 @@
             'data-srcset' => [],
             'data-src'    => [],
         ],
-    ] );
+    ]
+);
 
-    $row_actions_kses = apply_filters( 'dokan_row_actions_kses', [
+$row_actions_kses = apply_filters(
+    'dokan_row_actions_kses',
+    [
         'span' => [
             'class' => [],
         ],
@@ -20,13 +25,17 @@
             'href'    => [],
             'onclick' => [],
         ],
-    ] );
+    ]
+);
 
-    $price_kses = apply_filters( 'dokan_price_kses', [
+$price_kses = apply_filters(
+    'dokan_price_kses',
+    [
         'span' => [
             'class' => [],
         ],
-    ] );
+    ]
+);
 ?>
 <tr class="<?php echo esc_attr( $tr_class ); ?>">
     <th class="dokan-product-select check-column">
@@ -47,7 +56,7 @@
             <strong><a href=""><?php echo esc_html( $product->get_title() ); ?></a></strong>
         <?php } ?>
 
-        <?php if ( !empty( $row_actions ) ) { ?>
+        <?php if ( ! empty( $row_actions ) ) { ?>
             <div class="row-actions">
                 <?php echo wp_kses( $row_actions, $row_actions_kses ); ?>
             </div>
@@ -90,7 +99,7 @@
     </td>
     <td data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>">
         <?php
-        if ( $product->get_type() == 'variable' ) {
+        if ( $product->get_type() === 'variable' ) {
             $price = dokan_get_variable_product_earning( $product->get_id() );
             echo wp_kses( $price, $price_kses );
         } else {
@@ -101,11 +110,11 @@
     </td>
     <td data-title="<?php esc_attr_e( 'Type', 'dokan-lite' ); ?>">
         <?php
-        if ( dokan_get_prop( $product, 'product_type', 'get_type' ) == 'grouped' ) {
+        if ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'grouped' ) {
             echo '<span class="product-type tips grouped" title="' . esc_html__( 'Grouped', 'dokan-lite' ) . '"></span>';
-        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) == 'external' ) {
+        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'external' ) {
             echo '<span class="product-type tips external" title="' . esc_html__( 'External/Affiliate', 'dokan-lite' ) . '"></span>';
-        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) == 'simple' ) {
+        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'simple' ) {
             if ( $product->is_virtual() ) {
                 echo '<span class="product-type tips virtual" title="' . esc_html__( 'Virtual', 'dokan-lite' ) . '"></span>';
             } elseif ( $product->is_downloadable() ) {
@@ -113,7 +122,7 @@
             } else {
                 echo '<span class="product-type tips simple" title="' . esc_html__( 'Simple', 'dokan-lite' ) . '"></span>';
             }
-        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) == 'variable' ) {
+        } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'variable' ) {
             echo '<span class="product-type tips variable" title="' . esc_html__( 'Variable', 'dokan-lite' ) . '"></span>';
         } else {
             // Assuming that we have other types in future
@@ -129,8 +138,9 @@
 
 
 
-        if ( '0000-00-00 00:00:00' == $post->post_date ) {
-            $post_published_date = $human_readable_time = __( 'Unpublished', 'dokan-lite' );
+        if ( '0000-00-00 00:00:00' === $post->post_date ) {
+            $post_published_date = __( 'Unpublished', 'dokan-lite' );
+            $human_readable_time = __( 'Unpublished', 'dokan-lite' );
             $time_diff = 0;
         } else {
             // get current time
@@ -150,6 +160,7 @@
             // get human readable time
             $time_diff = $current_time->getTimestamp() - $post_time_gmt->getTimestamp();
             if ( $time_diff > 0 && $time_diff < 24 * 60 * 60 ) {
+                /* translators: %s: time difference */
                 $human_readable_time = sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $post_time_gmt->getTimestamp() ) );
             }
         }
@@ -157,9 +168,9 @@
         echo '<abbr title="' . esc_attr( $human_readable_time ) . '">' . esc_html( $post_published_date ) . '</abbr>';
         echo '<div class="status">';
 
-        if ( 'publish' == $post->post_status ) {
+        if ( 'publish' === $post->post_status ) {
             esc_html_e( 'Published', 'dokan-lite' );
-        } elseif ( 'future' == $post->post_status ) {
+        } elseif ( 'future' === $post->post_status ) {
             if ( $time_diff > 0 ) {
                 echo '<strong class="attention">' . esc_html__( 'Missed schedule', 'dokan-lite' ) . '</strong>';
             } else {
@@ -171,5 +182,4 @@
         ?>
         </div>
     </td>
-    <td class="diviader"></td>
 </tr>
