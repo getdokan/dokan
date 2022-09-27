@@ -132,5 +132,14 @@ use WeDevs\Dokan\Walkers\TaxonomyDropdown;
             </div>
         </form>
     </div>
+    <style>
+        .select2-container--open .select2-dropdown--below {
+            margin-top: 0px;
+        }
+
+        .select2-container--open .select2-dropdown--above {
+            margin-top: 0px;
+        }
+    </style>
 </script>
 <?php do_action( 'dokan_add_product_js_template_end' );?>

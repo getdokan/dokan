@@ -206,7 +206,7 @@ function dokan_withdraw_method_bank( $store_settings ) {
 /**
  * Returns vendors bank payment require fields.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @return array
  */
@@ -248,7 +248,7 @@ function dokan_bank_payment_required_fields() {
 /**
  * Available bank payment fields in dokan.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @return array
  */

@@ -52,7 +52,7 @@ class Categories {
     /**
      * Sets categories.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @param array $categories
      *
