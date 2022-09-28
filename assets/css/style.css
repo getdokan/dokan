@@ -2117,6 +2117,43 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links a:last-child {
   border-right: none;
 }
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu {
+  list-style: none;
+  position: absolute;
+  top: -1000em;
+  left: 160px;
+  overflow: visible;
+  word-wrap: break-word;
+  padding: 7px 0 8px;
+  z-index: 9999;
+  background-color: #2c3338;
+  box-shadow: 0 3px 5px rgb(0 0 0%);
+  margin-left: 0;
+  background: #242424;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu::after {
+  right: 0;
+  border: 8px solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  top: 10px;
+  z-index: 10000;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li {
+  padding-left: 1.2em;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li a {
+  font-size: 13px;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li:hover {
+  background: #f0502588;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li.active {
+  background: #f0502588;
+}
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active {
   position: relative;
   background: #f05025;
@@ -2134,6 +2171,24 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   border-left-color: #fff;
   border-width: 16px 16px 16px 0;
   margin-top: -16px;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active a {
+  padding-right: 16px;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active:hover ul.navigation-submenu {
+  top: -1px;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active ul.navigation-submenu {
+  position: relative;
+  z-index: 3;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  border: 0 none;
+  margin-top: 0;
+  box-shadow: none;
+  display: block;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.sub-menu {
   background: #fff;

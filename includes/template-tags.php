@@ -429,12 +429,6 @@ function dokan_get_dashboard_nav() {
     );
 
     $settings_sub = array(
-        'back' => array(
-            'title' => __( 'Back to Dashboard', 'dokan-lite' ),
-            'icon'  => '<i class="fas fa-long-arrow-alt-left"></i>',
-            'url'   => dokan_get_navigation_url(),
-            'pos'   => 10,
-        ),
         'store' => array(
             'title'      => __( 'Store', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-university"></i>',
@@ -476,8 +470,6 @@ function dokan_get_dashboard_nav() {
     // Manage main settings url after re-render permission cheching
     if ( count( $settings['sub'] ) > 1 ) {
         $urls['settings'] = $settings;
-        $sub_settings_key = array_keys( $settings['sub'] );
-        $urls['settings']['url'] = $settings['sub'][ $sub_settings_key[1] ]['url'];
     }
 
     $nav_urls = apply_filters( 'dokan_get_dashboard_nav', $urls );
@@ -527,9 +519,11 @@ function dokan_check_menu_permission( $menu ) {
 function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
+    $active_submenu    = '';
 
     if ( $active_menu && false !== strpos( $active_menu, '/' ) ) {
-        $active_menu = $active_menu_parts[1];
+        $active_menu    = $active_menu_parts[0];
+        $active_submenu = $active_menu_parts[1];
     }
 
     /**
@@ -540,21 +534,6 @@ function dokan_dashboard_nav( $active_menu = '' ) {
      * @return string
      */
     $settings_key = apply_filters( 'dokan_dashboard_nav_settings_key', 'settings' );
-
-    if ( isset( $active_menu_parts[1] )
-            && ( $active_menu_parts[1] === $settings_key || urldecode( $active_menu_parts[0] ) === $settings_key )
-            && isset( $nav_menu[ $settings_key ]['sub'] )
-            && (
-                array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
-                ( isset( $active_menu_parts[2] ) && array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ) ||
-                ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) // special case when submenu is payment
-            )
-    ) {
-        $urls        = $nav_menu[ $settings_key ]['sub'];
-        $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
-    } else {
-        $urls = $nav_menu;
-    }
 
     $menu           = '';
     $hamburger_menu = apply_filters( 'dokan_load_hamburger_menu', true );
@@ -567,9 +546,36 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     $menu .= '<ul class="dokan-dashboard-menu">';
 
-    foreach ( $urls as $key => $item ) {
+    foreach ( $nav_menu as $key => $item ) {
         $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key; // checking starts with the key
-        $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
+
+        $submenu = '';
+        if ( ! empty( $item['sub'] ) ) {
+            $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
+
+            foreach ( $item['sub'] as $sub_key => $sub ) {
+                $submenu_class = ( ( $active_submenu === $key ) || 0 === stripos( $active_submenu, $sub_key ) ) ? "active $sub_key" : $sub_key;
+
+                $submenu .= sprintf(
+                    '<li class="%s"><a href="%s">%s %s</a></li>',
+                    $submenu_class,
+                    $sub['url'],
+                    $sub['icon'],
+                    $sub['title']
+                );
+            }
+
+            $submenu .= '</ul>';
+        }
+
+        $menu .= sprintf(
+            '<li class="%s"><a href="%s">%s %s</a>%s</li>',
+            $class,
+            $item['url'],
+            $item['icon'],
+            $item['title'],
+            $submenu
+        );
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
