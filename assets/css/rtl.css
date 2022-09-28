@@ -95,6 +95,12 @@
   padding-left: 16px;
   padding-right: 0;
 }
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active a i.menu-dropdown {
+  transform: translateX(0%) translateY(0%) rotate(180deg);
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover a i.menu-dropdown {
+  transform: translateX(0%) translateY(0%) rotate(180deg);
+}
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.back a {
   padding-left: 0px;
   padding-right: 16px;

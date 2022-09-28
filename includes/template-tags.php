@@ -422,7 +422,7 @@ function dokan_get_dashboard_nav() {
     );
 
     $settings = array(
-        'title' => sprintf( '%s <i class="fas fa-angle-right pull-right"></i>', __( 'Settings', 'dokan-lite' ) ),
+        'title' => __( 'Settings', 'dokan-lite' ),
         'icon'  => '<i class="fas fa-cog"></i>',
         'url'   => dokan_get_navigation_url( 'settings/store' ),
         'pos'   => 200,
@@ -547,10 +547,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $nav_menu as $key => $item ) {
-        $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key; // checking starts with the key
-
+        $class   = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key;  // checking starts with the key
+        $title = $item['title'];
         $submenu = '';
+
         if ( ! empty( $item['sub'] ) ) {
+            $class .= ' has-submenu';
+            $title .= ' <i class="fas fa-caret-down menu-dropdown"></i>';
             $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
 
             foreach ( $item['sub'] as $sub_key => $sub ) {
@@ -573,7 +576,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $class,
             $item['url'],
             $item['icon'],
-            $item['title'],
+            $title,
             $submenu
         );
     }
