@@ -2712,7 +2712,7 @@ add_filter( 'woocommerce_login_redirect', 'dokan_after_login_redirect', 1, 2 );
  * @return bool
  */
 function dokan_is_valid_owner( $post_id, $user_id ) {
-    $author = get_post_field( 'post_author', $post_id );
+    $author = (int) get_post_field( 'post_author', $post_id );
 
     if ( $user_id === $author ) {
         return true;
@@ -3638,7 +3638,6 @@ function dokan_login_form( $args = [], $echo = false ) {
     $login_url = apply_filters( 'dokan_redirect_login', dokan_get_page_url( 'myaccount', 'woocommerce' ) );
 
     $defaults = [
-        'title'        => esc_html__( 'Please Login to Continue', 'dokan-lite' ),
         'id'           => 'dokan-login-form',
         'nonce_action' => 'dokan-login-form-action',
         'nonce_name'   => 'dokan-login-form-nonce',
@@ -4148,7 +4147,7 @@ function dokan_get_timestamp( $date_string, $gmt_date = false ) {
 /**
  * Get inverval between two dates, useful for chart functions
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @param string|int $start_date
  * @param string|int $end_date
@@ -4177,7 +4176,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
      * Format date time string to WC format
      *
      * @since 2.6.8
-     * @since DOKAN_SINCE This method was moved from wc-functions.php
+     * @since 3.7.0 This method was moved from wc-functions.php
      *
      * @param boolean $date_only
      *
@@ -4466,7 +4465,7 @@ function is_tweleve_hour_format() {
  * Sanitize phone number.
  * Allows only numbers and "+" (plus sign) "." (full stop) "(" ")" "-".
  *
- * @since DOKAN_SINCE
+ * @since 3.7.0
  *
  * @param string $phone Phone number.
  *

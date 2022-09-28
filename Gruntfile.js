@@ -91,12 +91,6 @@ module.exports = function(grunt) {
         }
       },
 
-      flot: {
-        files: {
-          '<%= dirs.js %>/flot-all.min.js': '<%= dirs.vendors %>/flot/*.js'
-        }
-      },
-
       helper: {
         files: {
           '<%= dirs.js %>/helper.js': '<%= dirs.devJsSrc %>/helper.js'

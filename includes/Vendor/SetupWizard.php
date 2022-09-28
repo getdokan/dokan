@@ -23,7 +23,8 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function __construct() {
         add_filter( 'woocommerce_registration_redirect', [ $this, 'filter_woocommerce_registration_redirect' ], 10, 1 );
-        add_action( 'init', [ $this, 'setup_wizard' ], 99 );
+        add_action( 'init', [ $this, 'setup_wizard' ], 9999 );
+        add_action( 'dokan_setup_wizard_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );
     }
 
     // define the woocommerce_registration_redirect callback
@@ -95,18 +96,28 @@ class SetupWizard extends DokanSetupWizard {
             $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
-        $this->enqueue_scripts();
-
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
             call_user_func( $this->steps[ $this->step ]['handler'] );
         }
 
+        $this->enqueue_scripts();
         ob_start();
-        $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
-        $this->setup_wizard_footer();
+        $this->set_setup_wizard_template();
         exit;
+    }
+
+    /**
+     * Enqueue vendor setup wizard scripts
+     *
+     * @since 3.7.0
+     *
+     * @return void
+     */
+    public function frontend_enqueue_scripts() {
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'jquery-tiptip' );
+        wp_enqueue_script( 'jquery-blockui' );
+        wp_enqueue_script( 'wc-enhanced-select' );
     }
 
     /**
@@ -120,7 +131,7 @@ class SetupWizard extends DokanSetupWizard {
             <meta name="viewport" content="width=device-width"/>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             <title><?php esc_attr_e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
-            <?php wp_print_scripts( 'wc-setup' ); ?>
+            <?php wp_print_scripts(); ?>
             <?php wp_print_styles(); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
@@ -224,7 +235,7 @@ class SetupWizard extends DokanSetupWizard {
                 <tr>
                     <th scope="row"><label for="address[country]"><?php esc_html_e( 'Country', 'dokan-lite' ); ?></label></th>
                     <td>
-                        <select name="address[country]" class="wc-enhanced-select country_to_state" id="address[country]">
+                        <select name="address[country]" class="wc-enhanced-select country_to_state" id="address[country]" style="width: 100%;">
                             <?php dokan_country_dropdown( $countries, $address_country, false ); ?>
                         </select>
                     </td>
@@ -330,9 +341,14 @@ class SetupWizard extends DokanSetupWizard {
 
                 $(':input.country_to_state').trigger('change');
 
-            })(jQuery)
+            })(jQuery);
 
         </script>
+        <style>
+            .select2-container--open .select2-dropdown {
+                left: 20px;
+            }
+        </style
         <?php
 
         do_action( 'dokan_seller_wizard_after_store_setup_form', $this );

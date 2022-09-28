@@ -66,29 +66,29 @@ class SetupWizard {
     public function enqueue_scripts() {
         $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-        wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', [ 'jquery' ], WC_VERSION, true );
-        wp_register_script( 'jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', [ 'jquery' ], '2.70', true );
-        wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
-        wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
-        wp_localize_script(
-            'wc-enhanced-select', 'wc_enhanced_select_params', [
-                'i18n_matches_1'            => _x( 'One result is available, press enter to select it.', 'enhanced select', 'dokan-lite' ),
-                'i18n_matches_n'            => _x( '%qty% results are available, use up and down arrow keys to navigate.', 'enhanced select', 'dokan-lite' ),
-                'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan-lite' ),
-                'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan-lite' ),
-                'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan-lite' ),
-                'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan-lite' ),
-                'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan-lite' ),
-                'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan-lite' ),
-                'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan-lite' ),
-                'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan-lite' ),
-                'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan-lite' ),
-                'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan-lite' ),
-                'ajax_url'                  => admin_url( 'admin-ajax.php' ),
-            ]
-        );
+        if ( ! is_admin() ) {
+            wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
+            wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
+            wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], WC_VERSION );
+            wp_localize_script(
+                'wc-enhanced-select',
+                'wc_enhanced_select_params',
+                [
+                    'i18n_no_matches'           => _x( 'No matches found', 'enhanced select', 'dokan-lite' ),
+                    'i18n_ajax_error'           => _x( 'Loading failed', 'enhanced select', 'dokan-lite' ),
+                    'i18n_input_too_short_1'    => _x( 'Please enter 1 or more characters', 'enhanced select', 'dokan-lite' ),
+                    'i18n_input_too_short_n'    => _x( 'Please enter %qty% or more characters', 'enhanced select', 'dokan-lite' ),
+                    'i18n_input_too_long_1'     => _x( 'Please delete 1 character', 'enhanced select', 'dokan-lite' ),
+                    'i18n_input_too_long_n'     => _x( 'Please delete %qty% characters', 'enhanced select', 'dokan-lite' ),
+                    'i18n_selection_too_long_1' => _x( 'You can only select 1 item', 'enhanced select', 'dokan-lite' ),
+                    'i18n_selection_too_long_n' => _x( 'You can only select %qty% items', 'enhanced select', 'dokan-lite' ),
+                    'i18n_load_more'            => _x( 'Loading more results&hellip;', 'enhanced select', 'dokan-lite' ),
+                    'i18n_searching'            => _x( 'Searching&hellip;', 'enhanced select', 'dokan-lite' ),
+                    'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+                ]
+            );
+        }
 
-        wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], WC_VERSION );
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', [ 'dashicons', 'install' ], WC_VERSION );
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup', 'dokan-fontawesome' ], DOKAN_PLUGIN_VERSION );
 
@@ -266,7 +266,7 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width"/>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             <title><?php esc_html_e( 'Dokan &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
-            <?php wp_print_scripts( 'wc-setup' ); ?>
+            <?php wp_print_scripts(); ?>
             <?php do_action( 'admin_print_styles' ); ?>
             <?php do_action( 'admin_head' ); ?>
             <?php do_action( 'dokan_setup_wizard_styles' ); ?>

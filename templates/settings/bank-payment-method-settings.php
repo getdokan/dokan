@@ -134,7 +134,7 @@
                 <?php esc_html_e( 'Cancel', 'dokan-lite' ); ?>
             </a>
             <input type="hidden" name="dokan_update_payment_settings">
-            <button class="ajax_prev disconnect dokan-btn dokan-btn-danger <?php echo $connected ? '' : 'dokan-hide'; ?>" type="submit" name="settings[bank][disconnect]">
+            <button class="ajax_prev disconnect dokan_payment_disconnect_btn dokan-btn dokan-btn-danger <?php echo $connected ? '' : 'dokan-hide'; ?>" type="button" name="settings[bank][disconnect]">
                 <?php esc_html_e( 'Disconnect', 'dokan-lite' ); ?>
             </button>
         </div>

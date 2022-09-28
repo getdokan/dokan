@@ -206,7 +206,7 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
 
             $(document).ready( function() {
 
-                var order_data = jQuery.parseJSON( '<?php echo wp_json_encode( $chart_data ); ?>' );
+                var order_data = JSON.parse( '<?php echo wp_json_encode( $chart_data ); ?>' );
                 var isRtl = '<?php echo is_rtl() ? '1' : '0'; ?>';
                 var series = [
                     {
@@ -474,7 +474,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
     <script type="text/javascript">
         jQuery(function($) {
 
-            var order_data = jQuery.parseJSON( '<?php echo wp_json_encode( $chart_data ); ?>' );
+            var order_data = JSON.parse( '<?php echo wp_json_encode( $chart_data ); ?>' );
             var series = [
                 {
                     label: "<?php echo esc_js( __( 'Total Sales', 'dokan-lite' ) ); ?>",

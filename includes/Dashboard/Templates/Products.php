@@ -33,6 +33,7 @@ class Products {
         add_action( 'dokan_render_new_product_template', [ $this, 'render_new_product_template' ], 10 );
         add_action( 'dokan_render_product_edit_template', [ $this, 'load_product_edit_template' ], 11 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_popup' ], 10 );
+        add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_modal' ], 10 );
         add_action( 'dokan_product_edit_after_title', [ __CLASS__, 'load_download_virtual_template' ], 10, 2 );
         add_action( 'dokan_product_edit_after_main', [ __CLASS__, 'load_inventory_template' ], 5, 2 );
         add_action( 'dokan_product_edit_after_main', [ __CLASS__, 'load_downloadable_template' ], 10, 2 );
@@ -199,7 +200,7 @@ class Products {
      */
     public function load_product_edit_template() {
         if ( current_user_can( 'dokan_edit_product' ) ) {
-            dokan_get_template_part( 'products/new-product-single' );
+            dokan_get_template_part( 'products/edit-product-single' );
         } else {
             dokan_get_template_part(
                 'global/dokan-error', '', [
@@ -424,7 +425,7 @@ class Products {
         $errors       = [];
         $post_title   = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
         $post_slug    = ! empty( $_POST['editable-post-name'] ) ? sanitize_title( wp_unslash( $_POST['editable-post-name'] ) ) : '';
-        $post_status  = isset( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : 'pending';
+        $post_status  = isset( $_POST['post_status'] ) ? sanitize_text_field( wp_unslash( $_POST['post_status'] ) ) : '';
         $post_content = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';
         $post_excerpt = isset( $_POST['post_excerpt'] ) ? wp_kses_post( wp_unslash( $_POST['post_excerpt'] ) ) : '';
 
@@ -435,6 +436,10 @@ class Products {
         $post_id = isset( $_POST['dokan_product_id'] ) ? absint( $_POST['dokan_product_id'] ) : 0;
         if ( ! $post_id ) {
             $errors[] = __( 'No product found!', 'dokan-lite' );
+        }
+
+        if ( empty( $post_status ) ) {
+            $post_status = get_post_status( $post_id );
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {
@@ -534,6 +539,17 @@ class Products {
 
     public function load_add_new_product_popup() {
         dokan_get_template_part( 'products/tmpl-add-product-popup' );
+    }
+
+    /**
+     * Add new product open modal html
+     *
+     * @since 3.7.0
+     *
+     * @return void
+     */
+    public function load_add_new_product_modal() {
+        dokan_get_template_part( 'products/add-new-product-modal' );
     }
 
     /**

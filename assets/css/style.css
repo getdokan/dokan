@@ -225,7 +225,7 @@ button.dokan-close {
   display: block;
   font-size: 14px;
   min-height: 26px;
-  line-height: 26px;
+  line-height: 20px;
   vertical-align: middle;
   width: 100%;
   margin: 0;
@@ -2610,6 +2610,18 @@ div.media-sidebar a.edit-attachment {
 .dokan-dashboard .dokan-dashboard-content .dokan-page-help p {
   margin-bottom: 10px;
 }
+.dokan-dashboard div.chart-container > div.chart-placeholder > div.legend table {
+  border-spacing: 0.5em;
+  width: auto;
+  margin: 0;
+  border-collapse: separate;
+}
+.dokan-dashboard div.chart-container > div.chart-placeholder > div.legend table td {
+  padding: 0;
+  text-align: left;
+  vertical-align: middle;
+  background: none;
+}
 .dokan-column-name-with-avatar {
   position: relative;
   padding-left: 46px !important;
@@ -3920,10 +3932,9 @@ div.media-sidebar a.edit-attachment {
   z-index: 999999;
 }
 .dokan-add-new-product-popup .product-form-container {
-  padding: 80px 20px 20px;
   margin-top: 30px;
+  padding: 20px;
   height: 550px;
-  overflow-y: scroll;
 }
 .dokan-add-new-product-popup .product-form-container .dokan-feat-image-upload {
   border: 3px dashed #dddddd;
@@ -3987,6 +3998,14 @@ div.media-sidebar a.edit-attachment {
 .dokan-add-new-product-popup .dokan-feat-image-content {
   width: 35%;
   margin-right: 15px;
+}
+.dokan-add-new-product-popup .dokan-feat-image-content ul > li {
+  list-style: none;
+}
+.dokan-add-new-product-popup .dokan-feat-image-content ul > li > a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .dokan-add-new-product-popup #dokan-product-images ul.product_images {
   margin: 0 0 10px 0;
@@ -4093,7 +4112,10 @@ div.media-sidebar a.edit-attachment {
   display: block;
 }
 .select2-container--open .select2-dropdown--below {
-  margin-top: 5px !important;
+  margin-top: 32px;
+}
+.select2-container--open .select2-dropdown--above {
+  margin-top: 32px;
 }
 .dokan-vendor-info-wrap {
   border: 1px solid #E7E7E7;
@@ -4506,6 +4528,8 @@ div.media-sidebar a.edit-attachment {
   background: #fff;
   width: 80px;
   height: 80px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery .profile-info-head .profile-img.profile-img-square img {
   background-color: #fff;
@@ -5129,8 +5153,8 @@ div.media-sidebar a.edit-attachment {
     height: 150px;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout2 .profile-info-summery-wrapper .profile-info-summery .profile-info {
-    position: absolute;
-    top: 33%;
+    position: relative;
+    top: -40%;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout2 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-name {
     color: inherit;
@@ -5499,6 +5523,12 @@ p.vendor-customer-registration .radio:hover {
 }
 .dokan-popup-content .dokan-popup-error.has-error {
   display: block;
+}
+.iziModal .iziModal-header .iziModal-noSubtitle .iziModal-header-title {
+  font-size: revert;
+}
+.iziModal .iziModal-header-title {
+  font-family: revert;
 }
 #dokan-seller-listing-wrap button {
   margin: unset;

@@ -145,8 +145,10 @@ function dokan_save_product_price( $product_id, $regular_price, $sale_price = ''
     $product->set_sale_price( $sale_price );
 
     // Save Dates
-    $product->set_date_on_sale_from( $date_from );
-    $product->set_date_on_sale_to( $date_to );
+    if ( $date_from && $date_to ) {
+        $product->set_date_on_sale_from( $now->modify( $date_from )->modify( 'today' )->getTimestamp() );
+        $product->set_date_on_sale_to( $now->modify( $date_to )->setTime( 23, 59, 59 )->getTimestamp() );
+    }
 
     if ( $date_to && ! $date_from ) {
         $product->set_date_on_sale_from( $now->getTimestamp() );

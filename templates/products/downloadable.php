@@ -56,12 +56,12 @@
                 <div class="dokan-clearfix">
                     <div class="content-half-part">
                         <label for="_download_limit" class="form-label"><?php esc_html_e( 'Download Limit', 'dokan-lite' ); ?></label>
-                        <?php dokan_post_input_box( $post_id, '_download_limit', array( 'placeholder' => __( 'e.g. 4', 'dokan-lite' ) ) ); ?>
+                        <?php dokan_post_input_box( $post_id, '_download_limit', array( 'placeholder' => __( 'Unlimited', 'dokan-lite' ) ) ); ?>
                     </div><!-- .content-half-part -->
 
                     <div class="content-half-part">
                         <label for="_download_expiry" class="form-label"><?php esc_html_e( 'Download Expiry', 'dokan-lite' ); ?></label>
-                        <?php dokan_post_input_box( $post_id, '_download_expiry', array( 'placeholder' => __( 'Number of days', 'dokan-lite' ) ) ); ?>
+                        <?php dokan_post_input_box( $post_id, '_download_expiry', array( 'placeholder' => __( 'Never', 'dokan-lite' ) ) ); ?>
                     </div><!-- .content-half-part -->
                 </div>
 
