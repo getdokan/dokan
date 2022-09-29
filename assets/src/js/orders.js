@@ -484,10 +484,10 @@ jQuery(function($) {
                     ) / qty;
 
                     if ( 0 < unit_total_tax ) {
-						var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
-						var precision         = dokan_refund[
-							round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
-						];
+                        var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
+                        var precision         = dokan_refund[
+                            round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
+                        ];
 
                         refund_line_total_tax.val(
                             parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, precision, '' ) )
