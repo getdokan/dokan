@@ -139,7 +139,10 @@
                                             ),
                                         );
 
-                                        if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
+                                        if (
+                                            ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) )
+                                            || ( isset( $_GET['dokan_product_search_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) )
+                                        ) {
                                             if ( isset( $_GET['pagenum'] ) ) {
                                                 $args['paged'] = absint( $_GET['pagenum'] );
                                             }
