@@ -73,7 +73,7 @@ do_action( 'dokan_product_listing_filter_before_form' );
 
         <button type="submit" name="product_listing_search" value="ok" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Search', 'dokan-lite' ); ?></button>
 
-        <?php wp_nonce_field( 'dokan_product_search', 'dokan_product_search_nonce', false ); ?>
+        <?php wp_nonce_field( 'product_listing_filter', '_product_listing_filter_nonce', false ); ?>
 
         <div class="dokan-form-group">
             <input type="text" class="dokan-form-control" name="product_search_name" placeholder="<?php esc_html_e( 'Search Products', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $product_search_name ); ?>">
@@ -83,6 +83,10 @@ do_action( 'dokan_product_listing_filter_before_form' );
 
         <?php if ( ! empty( $date ) ) : ?>
             <input type="hidden" name="date" value="<?php echo esc_attr( $date ); ?>">
+        <?php endif; ?>
+
+        <?php if ( ! empty( $product_type ) ) : ?>
+            <input type="hidden" name="product_type" value="<?php echo esc_attr( $product_type ); ?>">
         <?php endif; ?>
     </form>
 

@@ -2378,10 +2378,7 @@ function dokan_product_listing_filter() {
         'filter_by_other'     => '',
     ];
 
-    if (
-        ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) )
-        || ( isset( $_GET['dokan_product_search_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) )
-    ) {
+    if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         $template_args['product_cat']         = ! empty( $_GET['product_cat'] ) ? intval( wp_unslash( $_GET['product_cat'] ) ) : -1;
         $template_args['product_search_name'] = ! empty( $_GET['product_search_name'] ) ? sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) ) : '';
         $template_args['date']                = ! empty( $_GET['date'] ) ? intval( wp_unslash( $_GET['date'] ) ) : '';
@@ -2401,7 +2398,7 @@ function dokan_product_listing_filter() {
  */
 function dokan_product_search_by_sku( $where ) {
     // nonce checking
-    if ( ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) ) {
+    if ( ! isset( $_GET['_product_listing_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         return $where;
     }
 
