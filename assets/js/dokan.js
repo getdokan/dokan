@@ -877,7 +877,7 @@ jQuery(function($) {
             const productTemplate = wp.template( 'dokan-add-new-product' ),
                 modalElem = $( '#dokan-add-product-popup' );
                 Dokan_Editor.modal = modalElem.iziModal( {
-                headerColor : dokan.modal_header_color,
+                headerColor : '#b11d1db8',
                 overlayColor: 'rgba(0, 0, 0, 0.8)',
                 width       : 690,
                 top         : 32,
