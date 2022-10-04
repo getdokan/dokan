@@ -417,9 +417,9 @@ class Hooks {
         $vendors = [];
         $results = [];
         $args    = [
-            'number'  => 20,
-            'status'  => [ 'all' ],
-            'role__in'   => [ 'seller', 'administrator' ],
+            'number'   => 20,
+            'status'   => [ 'all' ],
+            'role__in' => [ 'seller', 'administrator' ],
         ];
 
         if ( ! empty( $_GET['s'] ) ) {
