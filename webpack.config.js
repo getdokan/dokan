@@ -23,6 +23,7 @@ var entryPoint = {
     'dokan-promo-notice': './src/promo-notice/main.js',
     'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
     'product-category-ui': './assets/src/js/product-category-ui.js',
+    'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
     // style: './less/style.less',
 };
 
