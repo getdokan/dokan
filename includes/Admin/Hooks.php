@@ -34,7 +34,7 @@ class Hooks {
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
 
-
+        // Ajax hooks
         add_action( 'wp_ajax_dokan_product_search_author', [ $this, 'search_vendors' ] );
     }
 
@@ -376,15 +376,15 @@ class Hooks {
      * @param object $post
      */
     public static function seller_meta_box_content( $post ) {
-        $selected   = empty( $post->ID ) ? get_current_user_id() : $post->post_author;
+        $selected = empty( $post->ID ) ? get_current_user_id() : $post->post_author;
 
         $user = dokan()->vendor->get( $selected );
 
         $user = [
             [
                 'id'       => $selected,
-                'text'     => ! empty( $user->get_shop_name() ) ? $user->get_shop_name(): $user->get_name(),
-            ]
+                'text'     => ! empty( $user->get_shop_name() ) ? $user->get_shop_name() : $user->get_name(),
+            ],
         ];
         ?>
 
@@ -392,13 +392,13 @@ class Hooks {
             style="width: 40%;"
             id="dokan_product_author_override"
             name="dokan_product_author_override"
-            data-placeholder="<?php esc_attr_e( 'Select vendor', 'dokan' ); ?>"
+            data-placeholder="<?php esc_attr_e( 'Select vendor', 'dokan-lite' ); ?>"
             data-action="dokan_product_search_author"
             data-close_on_select="true"
             data-minimum_input_length="0"
-            data-data='<?php echo json_encode( $user ); ?>'
+            data-data='<?php echo wp_json_encode( $user ); ?>'
         >
-        </select> <?php echo wc_help_tip( __( 'You can search vendors and assign them.', 'dokan' ) ); ?>
+        </select> <?php echo wc_help_tip( __( 'You can search vendors and assign them.', 'dokan-lite' ) ); ?>
         <?php
     }
 
@@ -410,8 +410,8 @@ class Hooks {
      * @return void
      */
     public function search_vendors() {
-        if ( ! current_user_can( 'manage_woocommerce' ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'dokan_admin_product' ) ) {
-            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized operation', 'dokan' ) ], 403 );
+        if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'dokan_admin_product' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized operation', 'dokan-lite' ) ], 403 );
         }
 
         $vendors = [];
@@ -442,9 +442,7 @@ class Hooks {
             }
         }
 
-        wp_send_json_success( [
-            'vendors' => $vendors
-        ] );
+        wp_send_json_success( [ 'vendors' => $vendors, ] );
     }
 
     /**
