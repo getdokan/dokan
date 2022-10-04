@@ -420,7 +420,6 @@ class Hooks {
             'number'  => 20,
             'status'  => [ 'all' ],
             'role__in'   => [ 'seller', 'administrator' ],
-            // 'exclude' => $exlcude_vendors,
         ];
 
         if ( ! empty( $_GET['s'] ) ) {
