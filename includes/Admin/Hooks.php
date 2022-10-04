@@ -441,7 +441,7 @@ class Hooks {
             }
         }
 
-        wp_send_json_success( [ 'vendors' => $vendors, ] );
+        wp_send_json_success( [ 'vendors' => $vendors ] );
     }
 
     /**
