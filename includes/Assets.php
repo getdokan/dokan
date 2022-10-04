@@ -140,12 +140,12 @@ class Assets {
         return apply_filters(
             'admin_product_localize_scripts', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce'=>wp_create_nonce( 'dokan_admin_product' ),
-                'i18n' => [
-                    'error_loading'   => esc_html__( 'Could not find any vendor.', 'dokan' ),
-                    'searching'       => esc_html__( 'Searching vendors', 'dokan' ),
-                    'input_too_short' => esc_html__( 'Search vendors', 'dokan' ),
-                    'confirm_delete'  => esc_html__( 'Are you sure ?', 'dokan' ),
+                'nonce'   => wp_create_nonce( 'dokan_admin_product' ),
+                'i18n'    => [
+                    'error_loading'   => esc_html__( 'Could not find any vendor.', 'dokan-lite' ),
+                    'searching'       => esc_html__( 'Searching vendors', 'dokan-lite' ),
+                    'input_too_short' => esc_html__( 'Search vendors', 'dokan-lite' ),
+                    'confirm_delete'  => esc_html__( 'Are you sure ?', 'dokan-lite' ),
                 ],
             ]
         );
@@ -534,7 +534,7 @@ class Assets {
             ],
             'dokan-admin-product'       => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
-                'deps'      => [ 'jquery', 'dokan-vue-vendor','selectWoo' ],
+                'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
             ],
