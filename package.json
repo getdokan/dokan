@@ -18,6 +18,7 @@
     "chartjs-adapter-moment": "^1.0.0",
     "debounce": "^1.2.1",
     "papaparse": "^5.3.2",
+    "sweetalert2": "11.4.8",
     "vue": "^2.7.10",
     "vue-chartjs": "^3.5.1",
     "vue-content-loading": "^1.6.0",
