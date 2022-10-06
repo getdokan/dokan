@@ -2,7 +2,7 @@
 /**
  * Dokan Seller Widget Map Content
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
@@ -12,9 +12,9 @@ if ( empty( $map_location ) ) {
 }
 
 ?>
-<div class="location-container">
-    <div id="dokan-store-location"></div>
-</div>
+    <div class="location-container">
+        <div id="dokan-store-location"></div>
+    </div>
 <?php
 
 $source = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
@@ -28,25 +28,30 @@ if ( 'mapbox' === $source ) {
 
     if ( ! $access_token ) {
         esc_html_e( 'Mapbox Access Token not found', 'dokan-lite' );
+
         return;
     }
 
-    dokan_get_template_part( 'widgets/store-map-mapbox', '', array(
-        'map_location' => $map_location,
-        'access_token' => $access_token,
-        'location'     => array(
-            'longitude' => $longitude,
-            'latitude'  => $latitude,
-            'zoom'      => 10,
-        ),
-    ) );
+    dokan_get_template_part(
+        'widgets/store-map-mapbox', '', [
+            'map_location' => $map_location,
+            'access_token' => $access_token,
+            'location'     => [
+                'longitude' => $longitude,
+                'latitude'  => $latitude,
+                'zoom'      => 10,
+            ],
+        ]
+    );
 } else {
-    dokan_get_template_part( 'widgets/store-map-google-maps', '', array(
-        'map_location' => $map_location,
-        'location'     => array(
-            'longitude' => $longitude,
-            'latitude'  => $latitude,
-            'zoom'      => 15,
-        ),
-    ) );
+    dokan_get_template_part(
+        'widgets/store-map-google-maps', '', [
+            'map_location' => $map_location,
+            'location'     => [
+                'longitude' => $longitude,
+                'latitude'  => $latitude,
+                'zoom'      => 15,
+            ],
+        ]
+    );
 }

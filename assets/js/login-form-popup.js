@@ -1,7 +1,8 @@
 // Dokan Login Form Popup
 (function($) {
     dokan.login_form_popup = {
-        form_html: '',
+        form_html : '',
+        form_title: '',
 
         init: function () {
             $( 'body' ).on( 'dokan:login_form_popup:show', this.get_form );
@@ -32,25 +33,27 @@
                     action: options.action
                 }
             } ).done( function ( response ) {
-                dokan.login_form_popup.form_html = response.data;
+                dokan.login_form_popup.form_html  = response.data.html;
+                dokan.login_form_popup.form_title = response.data.title;
                 dokan.login_form_popup.show_popup();
                 $( 'body' ).trigger( 'dokan:login_form_popup:fetched_form' );
             } );
         },
 
         show_popup: function () {
-            $.magnificPopup.open({
-                items: {
-                    src: dokan.login_form_popup.form_html,
-                    type: 'inline'
-                },
+            $( 'body' ).append( '<div id="dokan-modal-login-form-popup"></div>' );
 
-                callbacks: {
-                    open: function () {
-                        $( 'body' ).trigger( 'dokan:login_form_popup:opened' );
-                    }
+            const modal = $( '#dokan-modal-login-form-popup' ).iziModal( {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                onOpened    : () => {
+                    $( 'body' ).trigger( 'dokan:login_form_popup:opened' );
                 }
-            });
+            } );
+            modal.iziModal( 'setTitle', dokan.login_form_popup.form_title );
+            modal.iziModal( 'setContent', dokan.login_form_popup.form_html );
+            modal.iziModal( 'open' );
         },
 
         submit_form: function ( e ) {
@@ -74,7 +77,7 @@
                 }
             } ).done( function ( response ) {
                 $( 'body' ).trigger( 'dokan:login_form_popup:logged_in', response );
-                $.magnificPopup.close();
+                $( '#dokan-login-form-popup' ).iziModal( 'close' );
             } ).always( function () {
                 $( 'body' ).trigger( 'dokan:login_form_popup:done_working' );
             } ).fail( function ( jqXHR ) {

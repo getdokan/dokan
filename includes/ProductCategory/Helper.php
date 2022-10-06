@@ -33,7 +33,7 @@ class Helper {
      */
     public static function get_saved_products_category( $post_id = 0 ) {
         $is_single           = self::product_category_selection_is_single();
-        $chosen_cat          = get_post_meta( $post_id, 'chosen_product_cat', true );
+        $chosen_cat          = self::get_product_chosen_category( $post_id );
         $default_product_cat = get_term( get_option( 'default_product_cat' ) );
         $data                = [
             'chosen_cat'          => [],
@@ -69,7 +69,7 @@ class Helper {
     /**
      * Fotomat's chosen cates for generate chosen cats.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @param  array $all_children
      * @param  array $all_ancestors
@@ -198,7 +198,7 @@ class Helper {
     /**
      * Enqueue styles and scripts and localize for dokan multi-step category.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.0
      *
      * @return void
      */
@@ -219,5 +219,18 @@ class Helper {
         ];
 
         wp_localize_script( 'product-category-ui', 'dokan_product_category_data', $data );
+    }
+
+    /**
+     * Returns the chosen category of a product.
+     *
+     * @since 3.7.0
+     *
+     * @param int $product_id
+     *
+     * @return array
+     */
+    public static function get_product_chosen_category( $product_id ) {
+        return get_post_meta( $product_id, 'chosen_product_cat', true );
     }
 }

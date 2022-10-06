@@ -765,7 +765,7 @@ class Vendor {
     /**
      * Get vendor total earnings
      *
-     * @return float
+     * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
         global $wpdb;
@@ -907,7 +907,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return void|string
      */
     public function get_readable_rating( $display = true ) {
         $rating = $this->get_rating( $this->id );

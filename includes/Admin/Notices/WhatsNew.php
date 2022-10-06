@@ -35,7 +35,7 @@ class WhatsNew {
         // check if it has already been dismissed
         $versions = get_option( 'dokan_lite_whats_new_versions', array() );
 
-        if ( in_array( DOKAN_PLUGIN_VERSION, $versions ) ) {
+        if ( in_array( DOKAN_PLUGIN_VERSION, $versions, true ) ) {
             return $notices;
         }
 

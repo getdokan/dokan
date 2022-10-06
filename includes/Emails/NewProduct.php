@@ -64,11 +64,11 @@ class NewProduct extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $product_id, $postdata ) {
-		if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) != 'on' ) {
+		if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) !== 'on' ) {
 			return;
 		}
 
-		if ( dokan_get_new_post_status() == 'pending' ) {
+		if ( dokan_get_new_post_status() === 'pending' ) {
 			do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
 			return;
 		}
@@ -166,6 +166,7 @@ class NewProduct extends WC_Email {
             'recipient' => array(
                 'title'         => __( 'Recipient(s)', 'dokan-lite' ),
                 'type'          => 'text',
+                // translators: 1) Email recipients
                 'description'   => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to %s.', 'dokan-lite' ), '<code>' . esc_attr( get_option( 'admin_email' ) ) . '</code>' ),
                 'placeholder'   => '',
                 'default'       => '',

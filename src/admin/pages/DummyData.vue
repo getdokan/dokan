@@ -350,7 +350,6 @@ export default {
                         toast: true,
                         icon: 'success',
                         title: response.message,
-                        animation: false,
                         position: 'bottom-right',
                         showConfirmButton: false,
                         timer: 3000,

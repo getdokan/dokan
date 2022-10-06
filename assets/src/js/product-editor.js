@@ -8,6 +8,7 @@
 
     var Dokan_Editor = {
 
+        modal: false,
         /**
          * Constructor function
          */
@@ -259,41 +260,45 @@
         },
 
         openProductPopup: function() {
-            var productTemplate = wp.template( 'dokan-add-new-product' );
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: productTemplate().trim(),
-                    type: 'inline'
+            const productTemplate = wp.template( 'dokan-add-new-product' ),
+                modalElem = $( '#dokan-add-product-popup' );
+                Dokan_Editor.modal = modalElem.iziModal( {
+                headerColor : '#b11d1db8',
+                overlayColor: 'rgba(0, 0, 0, 0.8)',
+                width       : 690,
+                top         : 32,
+                onOpening   : () => {
+                  Dokan_Editor.reRenderPopupElements();
                 },
-                callbacks: {
-                    open: function() {
-                        $(this.content).closest('.mfp-wrap').removeAttr('tabindex');
-                        Dokan_Editor.loadSelect2();
-                        Dokan_Editor.bindProductTagDropdown();
+                onClosed: () => {
+                    product_gallery_frame  = undefined;
+                    product_featured_frame = undefined;
+                    $( '#dokan-add-new-product-popup input[name="_sale_price_dates_from"], #dokan-add-new-product-popup input[name="_sale_price_dates_to"]' ).datepicker( 'destroy' );
+                },
+            } );
+            Dokan_Editor.modal.iziModal( 'setContent', productTemplate().trim() );
+            Dokan_Editor.modal.iziModal( 'open' );
+        },
 
-                        $('.sale_price_dates_from, .sale_price_dates_to').on('focus', function() {
-                            $(this).css('z-index', '99999');
-                        });
+        reRenderPopupElements: function() {
+            Dokan_Editor.loadSelect2();
+            Dokan_Editor.bindProductTagDropdown();
 
-                        $( ".sale_price_dates_fields input" ).datepicker({
-                            defaultDate: "",
-                            dateFormat: "yy-mm-dd",
-                            numberOfMonths: 1
-                        });
+            $( '#dokan-add-new-product-popup .sale_price_dates_fields input' ).daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: false,
+                autoApply: true,
+                parentEl: '#dokan-add-new-product-popup',
+                opens: 'left',
+                autoUpdateInput : false,
+            } ).on( 'apply.daterangepicker', function( ev, picker ) {
+                $( this ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
+            } );
 
-                        $('.tips').tooltip();
+            $( '.tips' ).tooltip();
 
-                        Dokan_Editor.gallery.sortable();
-
-                        $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
-                    },
-                    close: function() {
-                        product_gallery_frame = undefined;
-                        product_featured_frame = undefined;
-                    }
-                }
-            });
+            Dokan_Editor.gallery.sortable();
+            $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
         },
 
         createNewProduct: function (e) {
@@ -329,16 +334,18 @@
                 _wpnonce : dokan.nonce
             };
 
+            Dokan_Editor.modal.iziModal('startLoading');
             $.post( dokan.ajaxurl, data, function( resp ) {
                 if ( resp.success ) {
                     self.removeAttr( 'disabled' );
-                    if ( btn_id == 'create_new' ) {
-                        $.magnificPopup.close();
+                    if ( btn_id === 'create_new' ) {
+                        $( '#dokan-add-product-popup' ).iziModal('close');
                         window.location.href = resp.data;
                     } else {
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
-                        $.magnificPopup.close();
+                        Dokan_Editor.modal.iziModal('resetContent');
                         Dokan_Editor.openProductPopup();
+                        Dokan_Editor.reRenderPopupElements();
                         $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
 
                         setTimeout(function() {
@@ -350,6 +357,9 @@
                     $( 'span.dokan-show-add-product-error' ).html( resp.data );
                 }
                 form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
+            })
+            .always( function () {
+                Dokan_Editor.modal.iziModal('stopLoading');
             });
         },
 

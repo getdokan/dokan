@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use Exception;
 use WeDevs\Dokan\Cache;
 use WP_Error;
 
@@ -47,11 +48,11 @@ class Manager {
 
         $fields     = '';
         $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
-        $where      = '';
+        $where      = ' AND p.post_status != %s';
         $groupby    = '';
         $orderby    = '';
         $limits     = '';
-        $query_args = [ 1, 1 ];
+        $query_args = [ 1, 1, 'trash' ];
 
         // determine which fields to return
         if ( in_array( $args['return'], [ 'objects', 'ids' ], true ) ) {
@@ -116,7 +117,6 @@ class Manager {
         //swap dates if start date is after end date
         $date_filter_applied = false;
         if ( $date_from && $date_to ) {
-            $date_filter_applied = true;
             // fix start and end date
             if ( $date_from > $date_to ) {
                 $date_from    = $date_from->format( 'Y-m-d' );
@@ -131,23 +131,19 @@ class Manager {
             $query_args[] = $args['date']['to'];
             // if only start date is set
         } elseif ( $date_from ) {
-            $date_filter_applied = true;
             $where        .= ' AND DATE( p.post_date ) >= %s';
             $query_args[] = $date_from->format( 'Y-m-d' );
             // if only end date is set
         } elseif ( $date_to ) {
-            $date_filter_applied = true;
             $where        .= ' AND DATE( p.post_date ) <= %s';
             $query_args[] = $date_to->format( 'Y-m-d' );
             // if only single date is set
         } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
-            $date_filter_applied = true;
+            // backward compatibility for old filter
             $where        .= ' AND DATE( p.post_date ) = %s';
             $query_args[] = $args['date'];
-        }
-
-        // backward compatibility for old filter
-        if ( ! $this->is_empty( $args['order_date'] ) && ! $date_filter_applied ) {
+        } elseif ( ! $this->is_empty( $args['order_date'] ) ) {
+            // backward compatibility for old filter
             $order_date = dokan_current_datetime()->modify( $args['order_date'] );
             if ( $order_date ) {
                 $where        .= ' AND DATE( p.post_date ) = %s';
@@ -271,11 +267,11 @@ class Manager {
     /**
      * Creates a sub order
      *
-     * @param integer $parent_order
+     * @param \WC_Order $parent_order
      * @param integer $seller_id
      * @param array $seller_products
      *
-     * @return void
+     * @return void|WP_Error
      */
     public function create_sub_order( $parent_order, $seller_id, $seller_products ) {
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
@@ -448,15 +444,15 @@ class Manager {
 
         // Get all shipping methods for parent order
         $shipping_methods = $parent_order->get_shipping_methods();
-        $order_seller_id  = dokan_get_seller_id_by_order( $order->get_id() );
+        $order_seller_id  = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
         $applied_shipping_method = '';
 
         if ( $shipping_methods ) {
             foreach ( $shipping_methods as $method_item_id => $shipping_object ) {
-                $shipping_seller_id = wc_get_order_item_meta( $method_item_id, 'seller_id', true );
+                $shipping_seller_id = (int) wc_get_order_item_meta( $method_item_id, 'seller_id', true );
 
-                if ( $order_seller_id == $shipping_seller_id ) {
+                if ( $order_seller_id === $shipping_seller_id ) {
                     $applied_shipping_method = $shipping_object;
                     break;
                 }
@@ -534,7 +530,7 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                  apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();
@@ -571,7 +567,7 @@ class Manager {
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
-        if ( $parent_order->get_meta( 'has_sub_order' ) == true ) {
+        if ( wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
             $args = array(
                 'post_parent' => $parent_order_id,
                 'post_type'   => 'shop_order',
@@ -589,7 +585,7 @@ class Manager {
         $vendors = dokan_get_sellers_by( $parent_order_id );
 
         // return if we've only ONE seller
-        if ( count( $vendors ) == 1 ) {
+        if ( count( $vendors ) === 1 ) {
             dokan_log( '1 vendor only, skipping sub order.' );
 
             $temp      = array_keys( $vendors );

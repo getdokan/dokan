@@ -37,7 +37,7 @@ class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
      *
      * @since 2.9.4
      *
-     * @return void
+     * @return array
      */
     private function update_shop_order_post_author( $paged ) {
         global $wpdb;
@@ -58,7 +58,7 @@ class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
         foreach ( $orders as $key => $order ) {
             $customer_id = get_post_meta( $order->id, '_customer_user', true );
 
-            if ( $order->post_author != $customer_id ) {
+            if ( (int) $order->post_author !== (int) $customer_id ) {
                 wp_update_post(
                     array(
 						'ID'          => $order->id,

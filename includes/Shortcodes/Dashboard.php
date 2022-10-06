@@ -16,12 +16,13 @@ class Dashboard extends DokanShortcode {
      *
      * @param array $atts
      *
-     * @return void
+     * @return string
      */
     public function render_shortcode( $atts ) {
         global $wp;
 
         if ( ! function_exists( 'WC' ) ) {
+            // translators: 1) wooCommerce installation url
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
 

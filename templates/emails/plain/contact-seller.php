@@ -6,25 +6,31 @@
  *
  * @class       Dokan_Email_Contact_Seller
  * @version     2.6.8
- *
  */
 
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-echo "= " . esc_attr( $email_heading ) . " =\n\n";
-?>
-<?php esc_attr_e( 'From : '.$data['customer_name']. '(' .$data['customer_email']. ')', 'dokan-lite'); ?>
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
+echo esc_html( wp_strip_all_tags( $email_heading ) );
+echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-------------------------------------------------------------
+// translators: 1) customer name 2) customer email
+echo sprintf( esc_html__( 'From : %1$s (%2$s)', 'dokan-lite' ), esc_html( $data['customer_name'] ), esc_html( $data['customer_email'] ) );
 
-<?php echo esc_attr( $data['message'] ); echo " \n\n";  ?>
+echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-------------------------------------------------------------
+echo esc_html( wp_strip_all_tags( wptexturize( $data['message'] ) ) );
 
-<?php
+echo "\n\n----------------------------------------\n\n";
 
-echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
+/**
+ * Show user-defined additional content - this is set in each email's settings.
+ */
+if ( ! empty( $additional_content ) ) {
+    echo esc_html( wp_strip_all_tags( wptexturize( $additional_content ) ) );
+    echo "\n\n----------------------------------------\n\n";
+}
 
-echo esc_html( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );
+echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );

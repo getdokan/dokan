@@ -20,6 +20,7 @@ class V_2_9_13 extends DokanUpgrader {
             return;
         }
 
+        // @codingStandardsIgnoreStart
         $columns = $wpdb->get_results( "describe {$map_table}" );
 
         $columns = array_filter(
@@ -33,5 +34,6 @@ class V_2_9_13 extends DokanUpgrader {
                 "alter table {$map_table} add column visibility tinyint(1) default 1"
             );
         }
+        // @codingStandardsIgnoreEnd
     }
 }

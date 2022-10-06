@@ -10,7 +10,7 @@ if ( 'mapbox' === $source ) {
         return;
     }
 
-    $map_id   = 'dokan-maps-' . rand();
+    $map_id   = 'dokan-maps-' . wp_rand();
     $location = explode( ',', $map_location );
 
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
@@ -27,18 +27,20 @@ if ( 'mapbox' === $source ) {
         $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
     }
 
-    dokan_get_template( 'maps/mapbox-with-search.php', array(
-        'map_location' => $map_location,
-        'map_address'  => $map_address,
-        'access_token' => $access_token,
-        'map_id'       => $map_id,
-        'location'     => array(
-            'address'   => $map_address,
-            'longitude' => $longitude,
-            'latitude'  => $latitude,
-            'zoom'      => 12,
-        ),
-    ) );
+    dokan_get_template(
+        'maps/mapbox-with-search.php', array(
+            'map_location' => $map_location,
+            'map_address'  => $map_address,
+            'access_token' => $access_token,
+            'map_id'       => $map_id,
+            'location'     => array(
+                'address'   => $map_address,
+                'longitude' => $longitude,
+                'latitude'  => $latitude,
+                'zoom'      => 12,
+            ),
+        )
+    );
 } else {
     $location    = explode( ',', $map_location );
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
@@ -55,14 +57,16 @@ if ( 'mapbox' === $source ) {
         $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
     }
 
-    dokan_get_template( 'maps/google-maps-with-search.php', array(
-        'map_location' => $map_location,
-        'map_address'  => $map_address,
-        'location'     => array(
-            'address'   => $map_address,
-            'longitude' => $longitude,
-            'latitude'  => $latitude,
-            'zoom'      => 12,
-        ),
-    ) );
+    dokan_get_template(
+        'maps/google-maps-with-search.php', array(
+            'map_location' => $map_location,
+            'map_address'  => $map_address,
+            'location'     => array(
+                'address'   => $map_address,
+                'longitude' => $longitude,
+                'latitude'  => $latitude,
+                'zoom'      => 12,
+            ),
+        )
+    );
 }

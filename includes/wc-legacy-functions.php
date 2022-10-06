@@ -8,18 +8,20 @@
  * some sub-orders based on the number of sellers.
  *
  * @param int $parent_order_id
+ *
+ * @throws Exception
  * @return void
  *
  * @hooked woocommerce_checkout_update_order_meta - 10
  */
 function dokan_create_sub_order( $parent_order_id ) {
-    if ( get_post_meta( $parent_order_id, 'has_sub_order' ) == true ) {
-        $args = array(
+    if ( dokan_string_to_bool( get_post_meta( $parent_order_id, 'has_sub_order' ) ) === true ) {
+        $args         = [
             'post_parent' => $parent_order_id,
             'post_type'   => 'shop_order',
-            'numberposts' => -1,
+            'numberposts' => - 1,
             'post_status' => 'any',
-        );
+        ];
         $child_orders = get_children( $args );
 
         foreach ( $child_orders as $child ) {
@@ -27,19 +29,20 @@ function dokan_create_sub_order( $parent_order_id ) {
         }
     }
 
-    $parent_order         = new WC_Order( $parent_order_id );
-    $sellers              = dokan_get_sellers_by( $parent_order_id );
+    $parent_order = new WC_Order( $parent_order_id );
+    $sellers      = dokan_get_sellers_by( $parent_order_id );
 
     // return if we've only ONE seller
-    if ( count( $sellers ) == 1 ) {
-        $temp = array_keys( $sellers );
+    if ( count( $sellers ) === 1 ) {
+        $temp      = array_keys( $sellers );
         $seller_id = reset( $temp );
         wp_update_post(
-            array(
-				'ID' => $parent_order_id,
-				'post_author' => $seller_id,
-            )
+            [
+                'ID'          => $parent_order_id,
+                'post_author' => $seller_id,
+            ]
         );
+
         return;
     }
 
@@ -55,29 +58,33 @@ function dokan_create_sub_order( $parent_order_id ) {
 /**
  * Creates a sub order
  *
- * @param int $parent_order
- * @param int $seller_id
+ * @param int   $parent_order
+ * @param int   $seller_id
  * @param array $seller_products
+ *
+ * @throws Exception
  */
 function dokan_create_seller_order( $parent_order, $seller_id, $seller_products ) {
     $order_data = apply_filters(
-        'woocommerce_new_order_data', array(
-			'post_type'     => 'shop_order',
-			'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan-lite' ), strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan-lite' ) ) ),
-			'post_status'   => 'wc-pending',
-			'ping_status'   => 'closed',
-			'post_excerpt'  => isset( $posted['order_comments'] ) ? $posted['order_comments'] : '',
-			'post_author'   => $seller_id,
-			'post_parent'   => $parent_order->id,
-			'post_password' => uniqid( 'order_' ),   // Protects the post just in case
-        )
+        'woocommerce_new_order_data', [
+            'post_type'     => 'shop_order',
+            // translators: 1) time format
+            'post_title'    => sprintf( __( 'Order &ndash; %s', 'dokan-lite' ), strftime( _x( '%1$b %2$d, %Y @ %I:%M %p', 'Order date parsed by strftime', 'dokan-lite' ) ) ),
+            'post_status'   => 'wc-pending',
+            'ping_status'   => 'closed',
+            'post_excerpt'  => isset( $posted['order_comments'] ) ? $posted['order_comments'] : '',
+            'post_author'   => $seller_id,
+            'post_parent'   => $parent_order->id,
+            'post_password' => uniqid( 'order_' ),   // Protects the post just in case
+        ]
     );
 
     $order_id = wp_insert_post( $order_data );
 
     if ( $order_id && ! is_wp_error( $order_id ) ) {
-        $order_total = $order_tax = 0;
-        $product_ids = array();
+        $order_total = 0;
+        $order_tax   = 0;
+        $product_ids = [];
 
         do_action( 'woocommerce_new_order', $order_id );
 
@@ -88,10 +95,10 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
             $product_ids[] = $item['product_id'];
 
             $item_id = wc_add_order_item(
-                $order_id, array(
-					'order_item_name' => $item['name'],
-					'order_item_type' => 'line_item',
-                )
+                $order_id, [
+                    'order_item_name' => $item['name'],
+                    'order_item_type' => 'line_item',
+                ]
             );
 
             if ( $item_id ) {
@@ -101,28 +108,28 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
             }
         } // foreach
 
-        $bill_ship = array(
+        $bill_ship = [
             '_billing_country',
-			'_billing_first_name',
-			'_billing_last_name',
-			'_billing_company',
+            '_billing_first_name',
+            '_billing_last_name',
+            '_billing_company',
             '_billing_address_1',
-			'_billing_address_2',
-			'_billing_city',
-			'_billing_state',
-			'_billing_postcode',
+            '_billing_address_2',
+            '_billing_city',
+            '_billing_state',
+            '_billing_postcode',
             '_billing_email',
-			'_billing_phone',
-			'_shipping_country',
-			'_shipping_first_name',
-			'_shipping_last_name',
+            '_billing_phone',
+            '_shipping_country',
+            '_shipping_first_name',
+            '_shipping_last_name',
             '_shipping_company',
-			'_shipping_address_1',
-			'_shipping_address_2',
-			'_shipping_city',
+            '_shipping_address_1',
+            '_shipping_address_2',
+            '_shipping_city',
             '_shipping_state',
-			'_shipping_postcode',
-        );
+            '_shipping_postcode',
+        ];
 
         // save billing and shipping address
         foreach ( $bill_ship as $val ) {
@@ -168,9 +175,10 @@ function dokan_create_seller_order( $parent_order, $seller_id, $seller_products 
  * Create coupons for a sub-order if neccessary
  *
  * @param WC_Order $parent_order
- * @param int $order_id
- * @param array $product_ids
- * @return type
+ * @param int      $order_id
+ * @param array    $product_ids
+ *
+ * @return void
  */
 function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids ) {
     $used_coupons = $parent_order->get_used_coupons();
@@ -187,10 +195,10 @@ function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids )
 
                 // we found some match
                 $item_id = wc_add_order_item(
-                    $order_id, array(
-						'order_item_name' => $coupon_code,
-						'order_item_type' => 'coupon',
-                    )
+                    $order_id, [
+                        'order_item_name' => $coupon_code,
+                        'order_item_type' => 'coupon',
+                    ]
                 );
 
                 // Add line item meta
@@ -206,20 +214,23 @@ function dokan_create_sub_order_coupon( $parent_order, $order_id, $product_ids )
  * Create shipping for a sub-order if neccessary
  *
  * @param WC_Order $parent_order
- * @param int $order_id
- * @param array $product_ids
- * @return type
+ * @param int      $order_id
+ * @param array    $seller_products
+ *
+ * @throws Exception
+ *
+ * @return mixed
  */
 function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_products ) {
     // Get all shipping methods for parent order
     $shipping_methods        = $parent_order->get_shipping_methods();
     $order_seller_id         = dokan_get_seller_id_by_order( $order_id );
-    $applied_shipping_method = array();
+    $applied_shipping_method = [];
 
     if ( $shipping_methods ) {
         foreach ( $shipping_methods as $key => $value ) {
-            $product_id                               = $value['_product_ids'];
-            $product_author                           = get_post_field( 'post_author', $product_id );
+            $product_id                                 = $value['_product_ids'];
+            $product_author                             = get_post_field( 'post_author', $product_id );
             $applied_shipping_method[ $product_author ] = $value;
         }
     }
@@ -232,15 +243,15 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
         return;
     }
 
-    $shipping_products = array();
-    $packages = array();
+    $shipping_products = [];
+    $packages          = [];
 
     // emulate shopping cart for calculating the shipping method
     foreach ( $seller_products as $product_item ) {
         $product = wc_get_product( $product_item['product_id'] );
 
         if ( $product->needs_shipping() ) {
-            $shipping_products[] = array(
+            $shipping_products[] = [
                 'product_id'        => $product_item['product_id'],
                 'variation_id'      => $product_item['variation_id'],
                 'variation'         => '',
@@ -250,28 +261,28 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
                 'line_tax'          => $product_item['line_tax'],
                 'line_subtotal'     => $product_item['line_subtotal'],
                 'line_subtotal_tax' => $product_item['line_subtotal_tax'],
-            );
+            ];
         }
     }
 
     if ( $shipping_products ) {
-        $package = array(
+        $package = [
             'contents'        => $shipping_products,
             'contents_cost'   => array_sum( wp_list_pluck( $shipping_products, 'line_total' ) ),
-            'applied_coupons' => array(),
+            'applied_coupons' => [],
             'seller_id'       => $order_seller_id,
-            'destination'     => array(
+            'destination'     => [
                 'country'   => dokan_get_prop( $parent_order, 'shipping_country' ),
                 'state'     => dokan_get_prop( $parent_order, 'shipping_state' ),
                 'postcode'  => dokan_get_prop( $parent_order, 'shipping_postcode' ),
                 'city'      => dokan_get_prop( $parent_order, 'shipping_city' ),
                 'address'   => dokan_get_prop( $parent_order, 'shipping_address_1' ),
                 'address_2' => dokan_get_prop( $parent_order, 'shipping_address_2' ),
-            ),
-        );
+            ],
+        ];
 
         $wc_shipping = WC_Shipping::instance();
-        $pack = $wc_shipping->calculate_shipping_for_package( $package );
+        $pack        = $wc_shipping->calculate_shipping_for_package( $package );
 
         if ( array_key_exists( $shipping_method['method_id'], $pack['rates'] ) ) {
             $method = $pack['rates'][ $shipping_method['method_id'] ];
@@ -281,10 +292,10 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
             $tax = wc_format_decimal( $method->taxes[1] );
 
             $item_id = wc_add_order_item(
-                $order_id, array(
-					'order_item_name' => $method->label,
-					'order_item_type' => 'shipping',
-                )
+                $order_id, [
+                    'order_item_name' => $method->label,
+                    'order_item_type' => 'shipping',
+                ]
             );
 
             if ( $item_id ) {
@@ -292,11 +303,11 @@ function dokan_create_sub_order_shipping( $parent_order, $order_id, $seller_prod
                 wc_add_order_item_meta( $item_id, 'cost', $cost );
             }
 
-            return array(
-				'cost' => $cost,
-				'tax' => $tax,
-			);
-        };
+            return [
+                'cost' => $cost,
+                'tax'  => $tax,
+            ];
+        }
     }
 
     return 0;

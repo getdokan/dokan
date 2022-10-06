@@ -43,7 +43,7 @@ class Pointers {
      * @return void
      */
     public function dismiss_screen( $screen = false ) {
-        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] ) ) : $screen; // WPCS: CSRF ok.
+        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] ) ) : $screen; // phpcs:ignore.
 
         if ( ! $screen ) {
             return;
@@ -57,7 +57,7 @@ class Pointers {
      *
      * @param String $screen
      *
-     * @return void
+     * @return bool
      */
     public function is_dismissed( $screen ) {
         return get_option( 'dokan_pointer_' . $screen, false );
@@ -67,7 +67,7 @@ class Pointers {
      * Setup pointers for screen.
      */
     public function setup_pointers_for_screen() {
-        if ( ! $screen = get_current_screen() ) {
+        if ( ! $screen = get_current_screen() ) { // phpcs:ignore
             return;
         }
 
@@ -154,7 +154,7 @@ class Pointers {
     /**
      * Renders Settings tutorial pointers
      *
-     * @return type
+     * @return void
      */
     public function settings_tutorial() {
         if ( $this->is_dismissed( $this->screen_id ) ) {
@@ -242,7 +242,7 @@ class Pointers {
         wp_enqueue_style( 'wp-pointer' );
         wp_enqueue_script( 'wp-pointer' );
 
-        wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST . '/js/pointers.js', array( 'wp-pointer' ) );
+        wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST . '/js/pointers.js', array( 'wp-pointer' ), DOKAN_PLUGIN_VERSION, true );
         wp_enqueue_script( 'dokan-pointers' );
 
         $data = array(
