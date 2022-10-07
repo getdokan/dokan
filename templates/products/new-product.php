@@ -4,8 +4,8 @@ use WeDevs\Dokan\ProductCategory\Helper;
 
 $created_product      = null;
 $feat_image_id        = null;
-$regular_price        = 0;
-$sale_price           = 0;
+$regular_price        = '';
+$sale_price           = '';
 $sale_price_date_from = '';
 $sale_price_date_to   = '';
 $post_content         = '';
