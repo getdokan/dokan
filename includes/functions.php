@@ -2398,7 +2398,7 @@ function dokan_product_listing_filter() {
  */
 function dokan_product_search_by_sku( $where ) {
     // nonce checking
-    if ( ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) ) {
+    if ( ! isset( $_GET['_product_listing_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         return $where;
     }
 
