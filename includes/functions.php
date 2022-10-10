@@ -3398,12 +3398,17 @@ function dokan_stop_sending_multiple_email() {
     if ( did_action( 'woocommerce_order_status_completed_notification' ) === 1 ) {
         dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_completed_notification', 'WC_Email_Customer_Completed_Order', 'trigger', 10 );
     }
+
+    if ( did_action( 'woocommerce_order_status_failed_to_processing_notification' ) === 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_failed_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
 }
 
 add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_completed', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_failed_to_processing', 'dokan_stop_sending_multiple_email' );
 
 /**
  * Remove hook for anonymous class
