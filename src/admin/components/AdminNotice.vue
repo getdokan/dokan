@@ -149,9 +149,9 @@ export default {
 
         handleAction( action, index ) {
             if ( action.confirm_message ) {
-                this.$swal( {
+                swal.fire( {
                     title: this.__( 'Are you sure?', 'dokan-lite' ),
-                    type: 'warning',
+                    icon: 'warning',
                     html: action.confirm_message,
                     showCancelButton: true,
                     confirmButtonText: action.text,

@@ -38,7 +38,6 @@ import Search from "admin/components/Search.vue"
 import Datepicker from "admin/components/Datepicker.vue";
 import DateRangePicker from 'vue2-daterange-picker';
 import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
-import VueSweetalert2 from 'vue-sweetalert2';
 import ColorPicker from "admin/components/ColorPicker.vue"
 import GoogleMaps from "admin/components/GoogleMaps.vue"
 import Mapbox from "admin/components/Mapbox.vue"
@@ -55,7 +54,6 @@ import CardFunFact from "../admin/components/CardFunFact.vue";
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
 Vue.use(Notifications)
-Vue.use(VueSweetalert2);
 
 Vue.mixin( Mixin );
 
