@@ -138,7 +138,7 @@ class Assets {
      */
     public function admin_product_localize_scripts() {
         return apply_filters(
-            'admin_product_localize_scripts', [
+            'dokan_admin_product_localize_scripts', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'dokan_admin_product' ),
                 'i18n'    => [
