@@ -424,7 +424,7 @@ class Assets {
             ],
             'dokan-flot'                => [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack' . $suffix . '.js',
-                'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time', 'dokan-flot-resize' ],
+                'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
             ],
             'speaking-url'              => [
                 'src'  => $asset_url . '/js/speakingurl.min.js',
