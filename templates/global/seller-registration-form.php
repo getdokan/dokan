@@ -54,9 +54,12 @@
             <input class="tc_check_box" type="checkbox" id="tc_agree" name="tc_agree" required="required">
             <label style="display: inline" for="tc_agree">
                 <?php
-                echo wp_kses_post(
-                    // translators: 1) term & condition url
-                    sprintf( __( 'I have read and agree to the <a target="_blank" href="%s">Terms &amp; Conditions</a>.', 'dokan-lite' ), esc_url( $terms_condition_url ) )
+                printf(
+                /* translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag */
+                    __( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
+                    sprintf( '<a target="_blank" href="%s">', esc_url( $terms_condition_url ) ),
+                    '&amp;',
+                    '</a>'
                 );
                 ?>
             </label>
