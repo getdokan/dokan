@@ -7,7 +7,7 @@ Tested up to: 6.0.2
 WC requires at least: 5.0.0
 WC tested up to: 6.9.4
 Requires PHP: 7.0
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.1 ( Oct 11, 2022 ) =
+
+- **fix:** [VariableProduct] Fixed variable product's variation image uploading height size overlapping on price field.
+- **fix:** [ProductSearch] Fixed product search of the product listing page of the vendor dashboard is not working.
+- **fix:** [OrderEmail] Fixed multiple emails are sent to the customer when a parent order's status is changed to processing from failed payment.
+- **fix:** Removed unwanted popup code from the SweetAlert library
+- **fix:** Fixed the vendor dashboard adds new products' discount prices set to 0 by default.
+- **fix:** Fixed vendor order page not showing line item qty and totals
 
 = v3.7.0 ( Sep 27, 2022 ) =
 
