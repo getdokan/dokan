@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.1',
+        'released' => '2022-10-11',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => '[VariableProduct] Fixed variable product\'s variation image uploading height size overlapping on price field.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductSearch] Fixed product search of the product listing page of the vendor dashboard is not working.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[OrderEmail] Fixed multiple emails are sent to the customer when a parent order\'s status is changed to processing from failed payment.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '**fix:** Removed unwanted popup code from the SweetAlert library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed the vendor dashboard adds new products\' discount prices set to 0 by default.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor order page not showing line item qty and totals',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.0',
         'released' => '2022-09-27',
         'changes'  => [

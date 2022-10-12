@@ -431,7 +431,7 @@ class Assets {
             ],
             'dokan-flot'                => [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack' . $suffix . '.js',
-                'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time', 'dokan-flot-resize' ],
+                'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
             ],
             'speaking-url'              => [
                 'src'  => $asset_url . '/js/speakingurl.min.js',
@@ -559,6 +559,7 @@ class Assets {
              * @param integer default -1
              */
             'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
+            'modal_header_color' => '#F05025',
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );

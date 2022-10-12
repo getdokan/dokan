@@ -2398,7 +2398,7 @@ function dokan_product_listing_filter() {
  */
 function dokan_product_search_by_sku( $where ) {
     // nonce checking
-    if ( ! isset( $_GET['dokan_product_search_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_product_search_nonce'] ) ), 'dokan_product_search' ) ) {
+    if ( ! isset( $_GET['_product_listing_filter_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         return $where;
     }
 
@@ -3398,12 +3398,17 @@ function dokan_stop_sending_multiple_email() {
     if ( did_action( 'woocommerce_order_status_completed_notification' ) === 1 ) {
         dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_completed_notification', 'WC_Email_Customer_Completed_Order', 'trigger', 10 );
     }
+
+    if ( did_action( 'woocommerce_order_status_failed_to_processing_notification' ) === 1 ) {
+        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_failed_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
+    }
 }
 
 add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
 add_action( 'woocommerce_order_status_completed', 'dokan_stop_sending_multiple_email' );
+add_action( 'woocommerce_order_status_failed_to_processing', 'dokan_stop_sending_multiple_email' );
 
 /**
  * Remove hook for anonymous class
