@@ -419,7 +419,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
                         $( 'div#dokan-states-box' ).slideUp( 2 );
                         if ( $statebox.is( 'select' ) ) {
-                            $( 'select#dokan_address_state' ).replaceWith( '<input type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" required />' );
+                            $( 'select#dokan_address_state' ).replaceWith( '<input type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" />' );
                         }
 
                         $( '#dokan_address_state' ).val( 'N/A' );
@@ -452,14 +452,14 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                         }
                         $( '#dokan_address_state' ).removeClass( 'dokan-hide' );
                         $( 'div#dokan-states-box' ).slideDown();
-
+                        $( '#dokan_address_state_label' ).find('span.required').show();
                     }
                 } else {
-
-
                     if ( $statebox.is( 'select' ) ) {
                         input_selected_state = '';
-                        $( 'select#dokan_address_state' ).replaceWith( '<input type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" required="required"/>' );
+                        $( 'select#dokan_address_state' ).replaceWith( '<input type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '"/>' );
+                        $( '#dokan_address_state' ).closest('#dokan-states-box').find('span.error').remove();
+                        $( '#dokan_address_state_label' ).find('span.required').hide();
                     }
                     $( '#dokan_address_state' ).val(input_selected_state);
 

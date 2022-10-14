@@ -147,14 +147,16 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
             }
             ?>
             <div id="dokan-states-box" class="dokan-form-group">
-                <label class="control-label" for="dokan_address[state]"><?php esc_html_e( 'State ', 'dokan-lite' ); ?>
+                <label class="control-label" id="dokan_address_state_label" for="dokan_address[state]"><?php esc_html_e( 'State ', 'dokan-lite' ); ?>
+
                     <?php
                     $required_attr = '';
                     if ( $seller_address_fields['state']['required'] ) {
                         $required_attr = 'required';
                         ?>
-                        <span class="required"> *</span>
-                    <?php } ?>
+                    <?php }?>
+
+                    <span class="required" style="display: <?php $required_attr ? 'inline' : 'none' ?>;"> *</span>
                 </label>
                 <?php
                 if ( $is_input ) {

@@ -509,9 +509,13 @@ jQuery(function($) {
       $('.dokan-update-setting-top-button span.dokan-loading').remove();
       $('.dokan-update-setting-top-button').append('<span class="dokan-loading"> </span>');
 
+      $('.dokan-btn[name="dokan_update_store_settings"]').closest('div').find('span.dokan-loading').remove();
+      $('.dokan-btn[name="dokan_update_store_settings"]').closest('div').append("<span class='dokan-loading dokan_update_store_settings_loading'> </span>");
+
       $.post(dokan.ajaxurl, form_data, function(resp) {
         self.find('span.dokan-loading').remove();
         $('.dokan-update-setting-top-button span.dokan-loading').remove();
+        $('.dokan-btn[name="dokan_update_store_settings"]').closest('div').find('span.dokan-loading').remove();
         $('html,body').animate({ scrollTop: $('.dokan-dashboard-header').offset().top });
 
         if (resp.success) {
