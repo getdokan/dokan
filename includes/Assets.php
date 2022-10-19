@@ -253,8 +253,11 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
             ],
+            'dokan-minitoggle'              => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/minitoggle/minitoggle.css',
+            ],
             'dokan-select2-css'             => [
-                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
+                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
             ],
             'dokan-rtl-style'               => [
                 'src' => DOKAN_PLUGIN_ASSEST . '/css/rtl.css',
@@ -366,6 +369,10 @@ class Assets {
             ],
             'dokan-modal'               => [
                 'src'  => $asset_url . '/vendors/izimodal/iziModal.min.js',
+                'deps' => [ 'jquery' ],
+            ],
+            'dokan-minitoggle'          => [
+                'src'  => $asset_url . '/vendors/minitoggle/minitoggle.js',
                 'deps' => [ 'jquery' ],
             ],
             'dokan-tooltip'             => [
@@ -482,7 +489,7 @@ class Assets {
             ],
             'dokan-util-helper'         => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery', 'dokan-sweetalert2' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
@@ -651,6 +658,15 @@ class Assets {
                 'week_starts_day'        => intval( get_option( 'start_of_week', 0 ) ),
                 'reverse_withdrawal'     => [
                     'enabled' => SettingsHelper::is_enabled(),
+                ],
+                'timepicker_locale'      => [
+                    'am'   => _x( 'am', 'time constant', 'dokan-lite' ),
+                    'pm'   => _x( 'pm', 'time constant', 'dokan-lite' ),
+                    'AM'   => _x( 'AM', 'time constant', 'dokan-lite' ),
+                    'PM'   => _x( 'PM', 'time constant', 'dokan-lite' ),
+                    'hr'   => _x( 'hr', 'time constant', 'dokan-lite' ),
+                    'hrs'  => _x( 'hrs', 'time constant', 'dokan-lite' ),
+                    'mins' => _x( 'mins', 'time constant', 'dokan-lite' ),
                 ],
                 'daterange_picker_local' => [
                     'toLabel'          => __( 'To', 'dokan-lite' ),

@@ -50,7 +50,7 @@ function dokan_get_i18n_date_format( format = true ) {
  *
  * @return {string} Return a specific time format
  */
- function dokan_get_i18n_time_format( format = true ) {
+function dokan_get_i18n_time_format( format = true ) {
   if ( ! format ) {
     return dokan_helper.i18n_time_format;
   }
@@ -86,6 +86,13 @@ function dokan_get_i18n_date_format( format = true ) {
     timeFormat = '';
 
   for ( i = 0; i < dokan_helper.i18n_time_format.length; i++ ) {
+    if ( '\\' === dokan_helper.i18n_time_format[ i ] ) {
+      timeFormat += dokan_helper.i18n_time_format[ i ];
+      i++;
+      timeFormat += dokan_helper.i18n_time_format[ i ];
+      continue;
+    }
+
     char = dokan_helper.i18n_time_format[ i ];
 
     if ( char in replacements ) {
@@ -108,14 +115,23 @@ function dokan_get_i18n_date_format( format = true ) {
  *
  * @return {string} Return formatted time.
  */
-function dokan_get_formatted_time( time, format ) {
-  const times   = new Date( Date.parse( `Jan 1 ${time}` ) ), // We used this dummy date for getting time info.
+function dokan_get_formatted_time( time_string, output_format, input_format = dokan_get_i18n_time_format() ) {
+  const length = output_format.length;
+  // return if no length is provided
+  if ( length <= 0 ) {
+    return '';
+  }
+
+  const times   = moment( time_string, input_format ).toDate(), // We used this date for getting time info.
     add0        = function( t ) { return t < 10 ? '0' + t : t; },
-    hours       = times.getHours(),
-    minutes     = times.getMinutes(),
-    seconds     = times.getSeconds(),
+    hours       = String( times.getHours() ),
+    minutes     = String( times.getMinutes() ),
+    seconds     = String( times.getSeconds() ),
     sampm       = hours >= 12 ? 'pm' : 'am',
     campm       = hours >= 12 ? 'PM' : 'AM',
+    checkFormat = ( formats, format ) => {
+      return formats[format] ? formats[format] : format;
+    }
     convertTime = ( time ) => {
       // Check correct time format and split into components
       time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -127,7 +143,7 @@ function dokan_get_formatted_time( time, format ) {
 
       return time[0];
     },
-    hour12 = convertTime (`${add0( hours )}:${add0( minutes )}`),
+    hour12      = convertTime (`${add0( hours )}:${add0( minutes )}`),
     replaceMent = {
       'hh' : add0( hour12 ),
       'h'  : hour12,
@@ -145,11 +161,34 @@ function dokan_get_formatted_time( time, format ) {
       'a'  : sampm,
     };
 
-  for ( let key in replaceMent ) {
-    format = format.replace( key, replaceMent[ key ] );
+  let formatted_string = '',
+    temp_string 			 = '',
+    current_string 		 = '';
+
+  for ( let i = 0; i < length; i++ ) {
+    // get current string
+    current_string = output_format[i];
+
+    if ( '\\' === current_string ) {
+      if ( temp_string.length > 0 ) {
+        formatted_string += checkFormat( replaceMent, temp_string );
+        temp_string 			= '';
+      }
+      i++;
+      formatted_string += output_format[i];
+    } else if ( temp_string.length === 0 ) {
+      temp_string = current_string;
+    } else if ( temp_string !== current_string ) {
+      formatted_string += checkFormat( replaceMent, temp_string );
+      temp_string 		  = current_string;
+    } else if ( temp_string === current_string ) {
+      temp_string += current_string;
+    }
   }
 
-  return format;
+  formatted_string += temp_string.length ? checkFormat( replaceMent, temp_string ) : '';
+
+  return formatted_string;
 }
 
 /**
