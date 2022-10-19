@@ -883,8 +883,7 @@ class Assets {
         ) {
             $general_settings = get_option( 'dokan_general', [] );
 
-            $locale          = localeconv();
-            $decimal         = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
+            $decimal         = wc_get_price_decimal_separator();
             $banner_width    = dokan_get_vendor_store_banner_width();
             $banner_height   = dokan_get_vendor_store_banner_height();
             $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
@@ -1063,8 +1062,7 @@ class Assets {
         $banner_height    = dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 );
         $has_flex_width   = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
         $has_flex_height  = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
-        $locale           = localeconv();
-        $decimal          = isset( $locale['decimal_point'] ) ? $locale['decimal_point'] : '.';
+        $decimal          = wc_get_price_decimal_separator();
 
         return apply_filters(
             'dokan_admin_localize_script', [
