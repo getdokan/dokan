@@ -656,6 +656,10 @@
             } else {
                 $('.show_if_stock').slideUp('fast');
             }
+
+            if ( 'simple' === product_type ) {
+                $(this).is(':checked') ? $('.hide_if_stock_global').slideUp('fast') : $('.hide_if_stock_global').slideDown('fast');
+            }
         },
 
         gallery: {
