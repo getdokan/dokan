@@ -1048,36 +1048,36 @@ class Settings {
         $location_contact_card = apply_filters( 'dokan_vendor_settings_api_location_contact_card', $location_contact_card );
         array_push( $store_details_tab, ...$location_contact_card );
 
-        $store_weekly_timing_card = array();
-        $store_weekly_timing_card[] = array(
+        $store_weekly_timing_card = [];
+        $store_weekly_timing_card[] = [
             'id'        => 'store_weekly_timing',
             'title'     => __( 'Store Weekly Timing', 'dokan-lite' ),
             'desc'      => __( 'Set your convenient time according to business needs.', 'dokan-lite' ),
-            'info'      => array(),
+            'info'      => [],
             'icon'      => 'dokan-icon-clock',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'editable'  => false,
-        );
+        ];
 
-        $store_weekly_timing_card[] = array(
+        $store_weekly_timing_card[] = [
             'id'        => 'dokan_store_time_enabled',
             'title'     => __( 'Enable Store Time', 'dokan-lite' ),
             'desc'      => __( 'Enable Store Time', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'yes',
-            'options'   => array(
+            'options'   => [
                 'yes' => __( 'Yes', 'dokan-lite' ),
                 'no'  => __( 'No', 'dokan-lite' ),
-            ),
+            ],
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'card'      => 'store_weekly_timing',
-        );
+        ];
 
-        $store_weekly_timing_card[] = array(
+        $store_weekly_timing_card[] = [
             'id'        => 'dokan_store_time',
             'title'     => __( 'Store Operation Time', 'dokan-lite' ),
             'desc'      => __( 'Your store operation time', 'dokan-lite' ),
@@ -1086,66 +1086,66 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'card'      => 'store_weekly_timing',
-            'fields'    => array(
-                array(
+            'fields'    => [
+                [
                     'id'        => 'monday',
                     'title'     => __( 'Monday', 'dokan-lite' ),
                     'desc'      => __( 'Monday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'tuesday',
                     'title'     => __( 'Tuesday', 'dokan-lite' ),
                     'desc'      => __( 'Tuesday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'wednesday',
                     'title'     => __( 'Wednesday', 'dokan-lite' ),
                     'desc'      => __( 'Wednesday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'thursday',
                     'title'     => __( 'Thursday', 'dokan-lite' ),
                     'desc'      => __( 'Thursday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'friday',
                     'title'     => __( 'Friday', 'dokan-lite' ),
                     'desc'      => __( 'Friday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'saturday',
                     'title'     => __( 'Saturday', 'dokan-lite' ),
                     'desc'      => __( 'Saturday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'sunday',
                     'title'     => __( 'Sunday', 'dokan-lite' ),
                     'desc'      => __( 'Sunday Schedule', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'custom',
                     'parent_id' => 'dokan_store_time',
-                ),
-            ),
-        );
-        $store_weekly_timing_card[] = array(
+                ],
+            ],
+        ];
+        $store_weekly_timing_card[] = [
             'id'        => 'dokan_store_open_notice',
             'title'     => __( 'Store Open Notice', 'dokan-lite' ),
             'desc'      => __( 'Store Open Notice Message', 'dokan-lite' ),
@@ -1154,8 +1154,8 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'card'      => 'store_weekly_timing',
-        );
-        $store_weekly_timing_card[] = array(
+        ];
+        $store_weekly_timing_card[] = [
             'id'        => 'dokan_store_close_notice',
             'title'     => __( 'Store Close Notice', 'dokan-lite' ),
             'desc'      => __( 'Store Close Notice Message', 'dokan-lite' ),
@@ -1164,7 +1164,7 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'card'      => 'store_weekly_timing',
-        );
+        ];
 
         $store_weekly_timing_card = apply_filters( 'dokan_vendor_settings_api_store_weekly_timing_card', $store_weekly_timing_card );
         array_push( $store_details_tab, ...$store_weekly_timing_card );
@@ -1172,99 +1172,99 @@ class Settings {
         $store_details_tab = apply_filters( 'dokan_vendor_settings_api_store_details_tab', $store_details_tab );
         array_push( $settings, ...$store_details_tab );
 
-        $advanced_tab = array();
-        $advanced_tab[] = array(
+        $advanced_tab = [];
+        $advanced_tab[] = [
             'id'        => 'advanced',
             'title'     => __( 'Advanced', 'dokan-lite' ),
             'desc'      => __( 'The advanced store settings.', 'dokan-lite' ),
             'icon'      => '',
-            'info'      => array(),
+            'info'      => [],
             'type'      => 'tab',
             'parent_id' => 'store',
-        );
+        ];
 
-        $product_display_card = array();
-        $product_display_card[] = array(
+        $product_display_card = [];
+        $product_display_card[] = [
             'id'        => 'product_display',
             'title'     => __( 'Product Display', 'dokan-lite' ),
             'desc'      => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
-            'info'      => array(),
+            'info'      => [],
             'icon'      => 'dokan-icon-products',
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'editable'  => false,
-        );
+        ];
 
-        $fields = array();
+        $fields = [];
         $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
 
         if ( isset( $customizer_settings['featured'] ) && 'off' === $customizer_settings['featured'] ) {
-            $fields[] = array(
+            $fields[] = [
                 'id'        => 'featured',
                 'title'     => __( 'Show featured products section', 'dokan-lite' ),
                 'desc'      => __( 'Show featured products section', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
-                'options'   => array(
+                'options'   => [
                     'yes' => __( 'Yes', 'dokan-lite' ),
                     'no'  => __( 'No', 'dokan-lite' ),
-                ),
+                ],
                 'parent_id' => 'product_sections',
-            );
+            ];
         }
 
         if ( isset( $customizer_settings['latest'] ) && 'off' === $customizer_settings['latest'] ) {
-            $fields[] = array(
+            $fields[] = [
                 'id'        => 'latest',
                 'title'     => __( 'Show latest products section', 'dokan-lite' ),
                 'desc'      => __( 'Show latest products section', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
-                'options'   => array(
+                'options'   => [
                     'yes' => __( 'Yes', 'dokan-lite' ),
                     'no'  => __( 'No', 'dokan-lite' ),
-                ),
+                ],
                 'parent_id' => 'product_sections',
-            );
+            ];
         }
 
         if ( isset( $customizer_settings['best_selling'] ) && 'off' === $customizer_settings['best_selling'] ) {
-            $fields[] = array(
+            $fields[] = [
                 'id'        => 'best_selling',
                 'title'     => __( 'Show best selling products section', 'dokan-lite' ),
                 'desc'      => __( 'Show best selling products section', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
-                'options'   => array(
+                'options'   => [
                     'yes' => __( 'Yes', 'dokan-lite' ),
                     'no'  => __( 'No', 'dokan-lite' ),
-                ),
+                ],
                 'parent_id' => 'product_sections',
-            );
+            ];
         }
 
         if ( isset( $customizer_settings['top_rated'] ) && 'off' === $customizer_settings['top_rated'] ) {
-            $fields[] = array(
+            $fields[] = [
                 'id'        => 'top_rated',
                 'title'     => __( 'Show top rated products section', 'dokan-lite' ),
                 'desc'      => __( 'Show top rated products section', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
-                'options'   => array(
+                'options'   => [
                     'yes' => __( 'Yes', 'dokan-lite' ),
                     'no'  => __( 'No', 'dokan-lite' ),
-                ),
+                ],
                 'parent_id' => 'product_sections',
-            );
+            ];
         }
 
         $fields = apply_filters( 'dokan_vendor_settings_api_product_section_fields', $fields );
-        $product_display_card[] = array(
+        $product_display_card[] = [
             'id'        => 'product_section',
             'title'     => __( 'Store Page Product Section', 'dokan-lite' ),
             'desc'      => '',
@@ -1275,39 +1275,39 @@ class Settings {
             'tab'       => 'advance',
             'card'      => 'product_display',
             'fields'    => $fields,
-        );
+        ];
 
-        $product_display_card[] = array(
+        $product_display_card[] = [
             'id'        => 'show_more_ptab',
             'title'     => __( 'Show More Product tab', 'dokan-lite' ),
             'desc'      => __( 'Show More Product tab', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'yes',
-            'options'   => array(
+            'options'   => [
                 'yes' => __( 'Yes', 'dokan-lite' ),
                 'no'  => __( 'No', 'dokan-lite' ),
-            ),
+            ],
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'product_display',
-        );
-        $product_display_card[] = array(
+        ];
+        $product_display_card[] = [
             'id'        => 'show_email',
             'title'     => __( 'Show Email', 'dokan-lite' ),
             'desc'      => __( 'Do you want to display the store email publicly?', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'no',
-            'options'   => array(
+            'options'   => [
                 'yes' => __( 'Yes', 'dokan-lite' ),
                 'no'  => __( 'No', 'dokan-lite' ),
-            ),
+            ],
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'product_display',
-        );
-        $product_display_card[] = array(
+        ];
+        $product_display_card[] = [
             'id'        => 'store_ppp',
             'title'     => __( 'Product Per Page', 'dokan-lite' ),
             'desc'      => __( 'Store Product Per Page', 'dokan-lite' ),
@@ -1317,12 +1317,12 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'product_display',
-        );
+        ];
         $product_display_card = apply_filters( 'dokan_vendor_settings_api_product_display_card', $product_display_card );
         array_push( $advanced_tab, ...$product_display_card );
 
-        $terms_and_conditions_card = array();
-        $terms_and_conditions_card[] = array(
+        $terms_and_conditions_card = [];
+        $terms_and_conditions_card[] = [
             'id'        => 'terms_and_conditions',
             'title'     => __( 'Terms and Conditions', 'dokan-lite' ),
             'desc'      => __( 'Seller can close his store by giving a message to customer. ', 'dokan-lite' ),
@@ -1332,23 +1332,23 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'editable'  => true,
-        );
-        $terms_and_conditions_card[] = array(
+        ];
+        $terms_and_conditions_card[] = [
             'id'        => 'enable_tnc',
             'title'     => __( 'Display Terms & Condition', 'dokan-lite' ),
             'desc'      => __( 'Enable Store Terms & Condition', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'yes',
-            'options'   => array(
+            'options'   => [
                 'on'  => __( 'On', 'dokan-lite' ),
                 'off' => __( 'Off', 'dokan-lite' ),
-            ),
+            ],
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'terms_and_conditions',
-        );
-        $terms_and_conditions_card[] = array(
+        ];
+        $terms_and_conditions_card[] = [
             'id'        => 'dokan_tnc_text',
             'title'     => __( 'Terms & Condition', 'dokan-lite' ),
             'desc'      => __( 'Store Terms & Condition', 'dokan-lite' ),
@@ -1358,7 +1358,7 @@ class Settings {
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'terms_and_conditions',
-        );
+        ];
 
         $terms_and_conditions_card = apply_filters( 'dokan_vendor_settings_api_terms_and_conditions_card', $terms_and_conditions_card );
         array_push( $advanced_tab, ...$terms_and_conditions_card );
@@ -1377,7 +1377,7 @@ class Settings {
      * @return array
      */
     public function add_paypal_payment_settings( $settings ) {
-        $settings[] = array(
+        $settings[] = [
             'id'        => 'paypal_card',
             'title'     => __( 'Paypal', 'dokan-lite' ),
             'desc'      => __( 'Paypal settings.', 'dokan-lite' ),
@@ -1387,8 +1387,8 @@ class Settings {
             'parent_id' => 'payment',
             'tab'       => 'general',
             'editable'  => true,
-        );
-        $settings[] = array(
+        ];
+        $settings[] = [
             'id'        => 'paypal',
             'title'     => __( 'PayPal', 'dokan-lite' ),
             'desc'      => __( 'Paypal settings', 'dokan-lite' ),
@@ -1398,17 +1398,17 @@ class Settings {
             'tab'       => 'general',
             'editable'  => true,
             'card'      => 'paypal_card',
-            'fields'    => array(
-                array(
+            'fields'    => [
+                [
                     'id'        => 'email',
                     'title'     => __( 'Email', 'dokan-lite' ),
                     'desc'      => __( 'Enter your paypal email address', 'dokan-lite' ),
                     'icon'      => '<i class="fa fa-email"></i>',
                     'type'      => 'email',
                     'parent_id' => 'paypal',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         return $settings;
     }
@@ -1421,7 +1421,7 @@ class Settings {
      * @return array
      */
     public function add_bank_payment_settings( $settings ) {
-        $settings[] = array(
+        $settings[] = [
             'id'        => 'bank_card',
             'title'     => __( 'Bank', 'dokan-lite' ),
             'desc'      => __( 'Bank settings.', 'dokan-lite' ),
@@ -1431,8 +1431,8 @@ class Settings {
             'parent_id' => 'payment',
             'tab'       => 'general',
             'editable'  => true,
-        );
-        $settings[] = array(
+        ];
+        $settings[] = [
             'id'        => 'bank',
             'title'     => __( 'Bank', 'dokan-lite' ),
             'desc'      => __( 'Bank settings', 'dokan-lite' ),
@@ -1442,65 +1442,65 @@ class Settings {
             'tab'       => 'general',
             'editable'  => true,
             'card'      => 'bank_card',
-            'fields'    => array(
-                array(
+            'fields'    => [
+                [
                     'id'        => 'ac_name',
                     'title'     => __( 'Account Name', 'dokan-lite' ),
                     'desc'      => __( 'Enter your bank account name.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'ac_number',
                     'title'     => __( 'Account Number', 'dokan-lite' ),
                     'desc'      => __( 'Enter your bank account number.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'bank_name',
                     'title'     => __( 'Bank Name', 'dokan-lite' ),
                     'desc'      => __( 'Enter your bank name.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'bank_addr',
                     'title'     => __( 'Bank Address', 'dokan-lite' ),
                     'desc'      => __( 'Enter your bank address.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'textarea',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'routing_number',
                     'title'     => __( 'Routing Number', 'dokan-lite' ),
                     'desc'      => __( 'Enter your bank routing number.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'iban',
                     'title'     => __( 'IBAN', 'dokan-lite' ),
                     'desc'      => __( 'Enter your IBAN number.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-                array(
+                ],
+                [
                     'id'        => 'swift',
                     'title'     => __( 'Swift Code', 'dokan-lite' ),
                     'desc'      => __( 'Enter your banks Swift Code.', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'text',
                     'parent_id' => 'bank',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         return $settings;
     }
