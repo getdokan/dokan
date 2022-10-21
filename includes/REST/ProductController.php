@@ -8,9 +8,9 @@ use WC_Product_Simple;
 use WC_REST_Exception;
 use WC_Product_Factory;
 use WC_Product_Download;
-use WC_Product_Attribute;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
+use WeDevs\Dokan\Product\ProductAttribute;
 
 /**
  * Store API Controller
@@ -934,67 +934,8 @@ class ProductController extends DokanRESTController {
 
         // Attributes.
         if ( isset( $request['attributes'] ) ) {
-            $attributes = [];
-
-            foreach ( $request['attributes'] as $attribute ) {
-                $attribute_id   = 0;
-                $attribute_name = '';
-
-                // Check ID for global attributes or name for product attributes.
-                if ( ! empty( $attribute['id'] ) ) {
-                    $attribute_id   = absint( $attribute['id'] );
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                } elseif ( ! empty( $attribute['name'] ) ) {
-                    $attribute_name = wc_clean( $attribute['name'] );
-                }
-
-                if ( ! $attribute_id && ! $attribute_name ) {
-                    continue;
-                }
-
-                if ( $attribute_id ) {
-                    if ( isset( $attribute['options'] ) ) {
-                        $options = $attribute['options'];
-
-                        if ( ! is_array( $attribute['options'] ) ) {
-                            // Text based attributes - Posted values are term names.
-                            $options = explode( WC_DELIMITER, $options );
-                        }
-
-                        $values = array_map( 'wc_sanitize_term_text_based', $options );
-                        $values = array_filter( $values, 'strlen' );
-                    } else {
-                        $values = [];
-                    }
-
-                    if ( ! empty( $values ) ) {
-                        // Add attribute to array, but don't set values.
-                        $attribute_object = new WC_Product_Attribute();
-                        $attribute_object->set_id( $attribute_id );
-                        $attribute_object->set_name( $attribute_name );
-                        $attribute_object->set_options( $values );
-                        $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                        $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                        $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                        $attributes[] = $attribute_object;
-                    }
-                } elseif ( isset( $attribute['options'] ) ) {
-                    // Custom attribute - Add attribute to array and set the values.
-                    if ( is_array( $attribute['options'] ) ) {
-                        $values = $attribute['options'];
-                    } else {
-                        $values = explode( WC_DELIMITER, $attribute['options'] );
-                    }
-                    $attribute_object = new WC_Product_Attribute();
-                    $attribute_object->set_name( $attribute_name );
-                    $attribute_object->set_options( $values );
-                    $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                    $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                    $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                    $attributes[] = $attribute_object;
-                }
-            }
-            $product->set_attributes( $attributes );
+            $product_attribute = new ProductAttribute( $request['attributes'] );
+            $product_attribute->set( $product );
         }
 
         // Sales and prices.
