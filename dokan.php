@@ -314,6 +314,11 @@ final class WeDevs_Dokan {
         require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
         require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( ! function_exists( 'dokan_pro' ) ) {
+            require_once DOKAN_INC_DIR . '/reports.php';
+        }
+
         require_once DOKAN_INC_DIR . '/Order/functions.php';
         require_once DOKAN_INC_DIR . '/Product/functions.php';
         require_once DOKAN_INC_DIR . '/Withdraw/functions.php';
@@ -360,6 +365,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
+        $this->container['product_block']       = new \WeDevs\Dokan\Blocks\ProductBlock();
         $this->container['pageview']            = new \WeDevs\Dokan\PageViews();
         $this->container['seller_wizard']       = new \WeDevs\Dokan\Vendor\SetupWizard();
         $this->container['core']                = new \WeDevs\Dokan\Core();

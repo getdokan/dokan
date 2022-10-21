@@ -1161,7 +1161,7 @@ class Vendor {
         $this->set_social_prop( 'gplus', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1170,7 +1170,7 @@ class Vendor {
         $this->set_social_prop( 'twitter', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1179,7 +1179,7 @@ class Vendor {
         $this->set_social_prop( 'pinterest', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1188,7 +1188,7 @@ class Vendor {
         $this->set_social_prop( 'linkedin', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1197,7 +1197,7 @@ class Vendor {
         $this->set_social_prop( 'youtube', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1206,13 +1206,26 @@ class Vendor {
         $this->set_social_prop( 'instagram', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set flickr
      *
      * @param string
      */
     public function set_flickr( $value ) {
         $this->set_social_prop( 'flickr', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
+     * Set payment fields
+     *
+     * @param string $parent
+     * @param string $field
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function set_payment_field( $parent, $field, $value ) {
+        $this->set_payment_prop( $field, $parent, $value );
     }
 
     /**

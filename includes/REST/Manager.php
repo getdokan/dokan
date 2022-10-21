@@ -209,6 +209,10 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminNoticeController.php'           => '\WeDevs\Dokan\REST\AdminNoticeController',
                 DOKAN_DIR . '/includes/REST/ChangeLogController.php'             => '\WeDevs\Dokan\REST\ChangeLogController',
                 DOKAN_DIR . '/includes/REST/DummyDataController.php'             => '\WeDevs\Dokan\REST\DummyDataController',
+                DOKAN_DIR . '/includes/REST/OrderControllerV2.php'               => '\WeDevs\Dokan\REST\OrderControllerV2',
+                DOKAN_DIR . '/includes/REST/StoreSettingControllerV2.php'        => '\WeDevs\Dokan\REST\StoreSettingControllerV2',
+                DOKAN_DIR . '/includes/REST/VendorDashboardController.php'       => '\WeDevs\Dokan\REST\VendorDashboardController',
+                DOKAN_DIR . '/includes/REST/ProductBlockController.php'          => '\WeDevs\Dokan\REST\ProductBlockController',
             )
         );
     }
