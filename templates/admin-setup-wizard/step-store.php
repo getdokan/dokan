@@ -71,7 +71,7 @@
                 <input type="text" id="mapbox_access_token" name="mapbox_access_token" class="location-input" value="<?php echo esc_attr( $mapbox_access_token ); ?>" />
                 <p class="description">
                     <?php
-                    sprintf(
+                    echo sprintf(
                         /* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
                         esc_html__( '%1$sAccess Token%2$s is needed to display map on store page', 'dokan-lite' ),
                         '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">',
