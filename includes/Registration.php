@@ -139,6 +139,7 @@ class Registration {
             'store_name'     => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'social'         => $social_profiles,
             'payment'        => [],
+            'address'        => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : '',
             'phone'          => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
             'show_email'     => 'no',
             'location'       => '',

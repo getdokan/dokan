@@ -508,6 +508,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
+            'dokan-vendor-address'      => [
+                'src'     => $asset_url . '/js/vendor-address.js',
+                'deps'    => [ 'jquery', 'wc-country-select' ],
+                'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
+            ],
         ];
 
         return $scripts;
@@ -623,6 +628,7 @@ class Assets {
 
         if ( is_account_page() && ! is_user_logged_in() ) {
             wp_enqueue_script( 'dokan-vendor-registration' );
+            wp_enqueue_script( 'dokan-vendor-address' );
         }
 
         // Scripts for contact form widget google recaptcha
