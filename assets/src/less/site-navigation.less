@@ -78,37 +78,27 @@
           left: 160px;
           overflow: visible;
           word-wrap: break-word;
-          padding: 7px 0 8px;
           z-index: 9999;
           box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
           margin-left: 0;
           background: #242424;
 
-          &::after {
-            right: 0;
-            border: 8px solid transparent;
-            content: " ";
-            height: 0;
-            width: 0;
-            position: absolute;
-            pointer-events: none;
-            top: 10px;
-            z-index: 10000;
-          }
-
           li {
-            padding-left: 1.2em;
+            padding-left: 1.3em;
+            line-height: 1;
 
             a {
               font-size: 13px;
             }
 
-            &:hover {
-              background: @childColor;
-            }
+            &:hover,
+            &.current {
+              font-weight: 600;
+              background: unset;
 
-            &.active {
-              background: @childColor;
+              a {
+                color: @mainColor;
+              }
             }
           }
         }
@@ -119,7 +109,7 @@
 
           &:after {
             left: 93%;
-            top: 50%;
+            top: 1.3rem;
             border: transparent solid;
             content: ' ';
             height: 0;
@@ -134,9 +124,15 @@
 
           ul.navigation-submenu {
             li {
-              &:not(.active) {
+              &:not(.current) {
                 a {
                   font-weight: normal;
+                }
+              }
+
+              a {
+                &:focus {
+                  outline: none;
                 }
               }
             }

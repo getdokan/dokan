@@ -557,10 +557,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
 
             foreach ( $item['sub'] as $sub_key => $sub ) {
-                $submenu_class = ( ( $active_submenu === $key ) || 0 === stripos( $active_submenu, $sub_key ) ) ? "active $sub_key" : $sub_key;
+                $submenu_class = ( ( $active_submenu === $key ) || 0 === stripos( $active_submenu, $sub_key ) ) ? "current $sub_key" : $sub_key;
 
                 $submenu .= sprintf(
-                    '<li class="%s"><a href="%s">%s %s</a></li>',
+                    '<li class="%s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
                     $sub['url'],
                     $sub['icon'],
