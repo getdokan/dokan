@@ -1,5 +1,3 @@
-import '../less/dokan-admin-product.less';
-
 (function($) {
     let DokanAdminProduct = {
         searchVendors() {
