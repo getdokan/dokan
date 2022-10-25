@@ -1748,6 +1748,20 @@ class OrderController extends DokanRESTController {
             'type'        => $schema_properties['customer_id']['type'],
         );
 
+        $params['after'] = array(
+            'description'        => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'dokan-lite' ),
+            'type'               => 'string',
+            'format'             => 'date-time',
+            'validate_callback'  => 'rest_validate_request_arg',
+        );
+
+        $params['before'] = array(
+            'description'        => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'dokan-lite' ),
+            'type'               => 'string',
+            'format'             => 'date-time',
+            'validate_callback'  => 'rest_validate_request_arg',
+        );
+
         return $query_params;
     }
 }
