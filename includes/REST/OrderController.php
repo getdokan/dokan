@@ -434,6 +434,15 @@ class OrderController extends DokanRESTController {
             'seller_id'   => dokan_get_current_user_id(),
         ];
 
+        // Add after and before support for order date-filtering.
+        if ( $request['after'] ) {
+            $args['date']['from'] = sanitize_text_field( wp_unslash( $request['after'] ) );
+        }
+
+        if ( $request['before'] ) {
+            $args['date']['to'] = sanitize_text_field( wp_unslash( $request['before'] ) );
+        }
+
         $orders = dokan()->order->all( $args );
 
         $data_objects = array();
