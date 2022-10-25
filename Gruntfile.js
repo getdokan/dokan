@@ -39,6 +39,7 @@ module.exports = function(grunt) {
           ],
           '<%= dirs.css %>/reverse-withdrawal.css': ['<%= dirs.devLessSrc %>/reverse-withdrawal.less'],
           '<%= dirs.css %>/dokan-product-category-ui.css': ['<%= dirs.devLessSrc %>/dokan-product-category-ui.less'],
+          '<%= dirs.css %>/dokan-admin-product.css': ['<%= dirs.devLessSrc %>/dokan-admin-product.less'],
         }
       }
     },
