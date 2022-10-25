@@ -54,8 +54,7 @@ class Assets {
      * Enqueue admin scripts
      */
     public function enqueue_admin_scripts( $hook ) {
-        global $post;
-        global $wp_version;
+        global $post, $wp_version, $typenow;
 
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' === $hook ) {
@@ -121,7 +120,35 @@ class Assets {
             wp_enqueue_style( 'dokan-plugin-list-css' );
         }
 
+        if ( 'product' === $typenow ) {
+            wp_enqueue_script( 'dokan-admin-product' );
+            wp_enqueue_style( 'dokan-admin-product' );
+            wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
+        }
+
         do_action( 'dokan_enqueue_admin_scripts' );
+    }
+
+    /**
+     * Load admin product localize data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function admin_product_localize_scripts() {
+        return apply_filters(
+            'dokan_admin_product_localize_scripts', [
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'dokan_admin_product' ),
+                'i18n'    => [
+                    'error_loading'   => esc_html__( 'Could not find any vendor.', 'dokan-lite' ),
+                    'searching'       => esc_html__( 'Searching vendors', 'dokan-lite' ),
+                    'input_too_short' => esc_html__( 'Search vendors', 'dokan-lite' ),
+                    'confirm_delete'  => esc_html__( 'Are you sure ?', 'dokan-lite' ),
+                ],
+            ]
+        );
     }
 
     public function get_localized_price() {
@@ -312,6 +339,10 @@ class Assets {
             'dokan-reverse-withdrawal'      => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
+            ],
+            'dokan-admin-product' => [
+                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product.css',
+                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product.css' ),
             ],
         ];
 
@@ -507,6 +538,12 @@ class Assets {
                 'src'     => $asset_url . '/js/product-category-ui.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
+            ],
+            'dokan-admin-product'       => [
+                'src'       => $asset_url . '/js/dokan-admin-product.js',
+                'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
+                'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
+                'in_footer' => false,
             ],
         ];
 
