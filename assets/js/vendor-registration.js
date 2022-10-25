@@ -173,7 +173,8 @@ var Dokan_Vendor_Registration = {
 
 // boot the class onReady
 $(function() {
-    Dokan_Vendor_Registration.init();
+    window.Dokan_Vendor_Registration = Dokan_Vendor_Registration;
+    window.Dokan_Vendor_Registration.init();
 
     $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 

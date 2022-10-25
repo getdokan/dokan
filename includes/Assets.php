@@ -645,7 +645,6 @@ class Assets {
             }
 
             if ( DOKAN_LOAD_SCRIPTS ) {
-                self::load_form_validate_script();
                 $this->load_gmap_script();
 
                 wp_enqueue_script( 'jquery-ui-sortable' );
@@ -674,6 +673,9 @@ class Assets {
                 wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
             }
         }
+
+        // localized form validate script
+        self::load_form_validate_script();
 
         do_action( 'dokan_enqueue_scripts' );
     }
