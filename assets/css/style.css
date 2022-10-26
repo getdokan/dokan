@@ -2096,6 +2096,9 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   font-size: 17px;
   padding-right: 15px;
 }
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a i.menu-dropdown::before {
+  padding-left: 15px;
+}
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover {
   background: #f05025;
   color: #fff;
@@ -2135,6 +2138,9 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover a i.menu-dropdown {
   transform: translateX(-50%) translateY(0%) rotate(180deg);
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover a i.menu-dropdown::before {
+  padding-left: 0;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.dokan-common-links:hover {
   background: none !important;
@@ -2210,7 +2216,10 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   font-weight: bold;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active a i.menu-dropdown {
-  transform: translateX(-50%) translateY(0%) rotate(180deg);
+  transform: translateX(0%) translateY(0%) rotate(270deg);
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active a i.menu-dropdown::before {
+  padding-left: 10px;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active:hover ul.navigation-submenu {
   top: -1px;

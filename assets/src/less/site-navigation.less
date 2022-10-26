@@ -26,6 +26,12 @@
           i {
             font-size: 17px;
             padding-right: 15px;
+
+            &.menu-dropdown {
+              &::before {
+                padding-left: 15px;
+              }
+            }
           }
         }
 
@@ -77,6 +83,9 @@
           a {
             i.menu-dropdown {
               transform: translateX(-50%) translateY(0%) rotate(180deg);
+              &::before {
+                padding-left: 0;
+              }
             }
           }
         }
@@ -176,7 +185,11 @@
             font-weight: bold;
 
             i.menu-dropdown {
-              transform: translateX(-50%) translateY(0%) rotate(180deg);
+              transform: translateX(0%) translateY(0%) rotate(270deg);
+
+              &::before {
+                padding-left: 10px;
+              }
             }
           }
 

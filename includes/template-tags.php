@@ -553,7 +553,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
         if ( ! empty( $item['sub'] ) ) {
             $class .= ' has-submenu';
-            $title .= ' <i class="fas fa-caret-down menu-dropdown"></i>';
+            $title .= ' <i class="fas fa-caret-right menu-dropdown"></i>';
             $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
 
             foreach ( $item['sub'] as $sub_key => $sub ) {
