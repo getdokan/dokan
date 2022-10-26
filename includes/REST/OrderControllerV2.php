@@ -89,6 +89,30 @@ class OrderControllerV2 extends OrderController {
                 ],
             ]
         );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/bulk-actions', [
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'do_bulk_actions' ),
+					'args'                => array(
+						'bulk_orders' => array(
+							'type'        => 'array',
+							'description' => __( 'Order ids', 'dokan-lite' ),
+							'required'    => true,
+							'sanitize_callback' => 'wc_clean',
+						),
+						'status' => array(
+							'type'        => 'string',
+							'description' => __( 'Order status', 'dokan-lite' ),
+							'required'    => true,
+							'sanitize_callback' => 'sanitize_text_field',
+						),
+					),
+					'permission_callback' => array( $this, 'update_order_permissions_check' ),
+                ],
+            ]
+        );
     }
 
     /**
@@ -225,4 +249,23 @@ class OrderControllerV2 extends OrderController {
         return rest_ensure_response( array( 'success' => true ) );
     }
 
+    /**
+     *
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_REST_Request $requests Request object.
+     *
+     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function do_bulk_actions( $requests ) {
+        $data = [
+            'bulk_orders' => $requests->get_param( 'bulk_orders' ),
+            'status'      => $requests->get_param( 'status' ),
+        ];
+
+        dokan_apply_bulk_order_status_change( $data );
+
+        return rest_ensure_response( array( 'success' => true ) );
+    }
 }
