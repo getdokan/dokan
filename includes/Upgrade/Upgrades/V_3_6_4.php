@@ -15,6 +15,8 @@ class V_3_6_4 extends DokanUpgrader {
      */
     public static function remove_unfiltered_html_capabilities_from_vendor() {
         $role = get_role( 'seller' );
-        $role->remove_cap( 'unfiltered_html' );
+        if ( $role ) {
+            $role->remove_cap( 'unfiltered_html' );
+        }
     }
 }
