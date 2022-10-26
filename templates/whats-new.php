@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.2',
+        'released' => '2022-10-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Spaces between paragraphs are too large under the store terms and condition page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.1',
         'released' => '2022-10-11',
         'changes'  => [
