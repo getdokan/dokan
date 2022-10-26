@@ -44,6 +44,22 @@ function dokan_override_product_author( $product, $seller_id ) {
         ]
     );
 
+    dokan_override_author_for_variations( $product, $seller_id );
+
+    do_action( 'dokan_after_override_product_author', $product, $seller_id );
+}
+
+/**
+ * Overrides author for products with variations.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param WC_Product $product
+ * @param int        $seller_id
+ *
+ * @return void
+ */
+function dokan_override_author_for_variations( $product, $seller_id ) {
     if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
         $variations = $product->get_children();
 
@@ -56,10 +72,7 @@ function dokan_override_product_author( $product, $seller_id ) {
             );
         }
     }
-
-    do_action( 'dokan_after_override_product_author', $product, $seller_id );
 }
-
 
 /**
  * Dokan Get Admin report data
