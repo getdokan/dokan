@@ -7,7 +7,7 @@
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 7.0.0  
 **Requires PHP:** 7.0  
-**Stable tag:** 3.7.2  
+**Stable tag:** 3.7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -313,13 +313,17 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.7.3 ( Oct 27, 2022 ) ###
+
+- **fix:** Fixed a fatal error due to a function moved from dokan pro
+
 ### v3.7.2 ( Oct 27, 2022 ) ###
 
-**new:** Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters
-**new:** Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks
-**fix:** [AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page
-**fix:** [Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.
-**fix:** Spaces between paragraphs are too large under the store terms and condition page.
+- **new:** Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters
+- **new:** Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks
+- **fix:** [AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page
+- **fix:** [Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.
+- **fix:** Spaces between paragraphs are too large under the store terms and condition page.
 
 ### v3.7.1 ( Oct 11, 2022 ) ###
 

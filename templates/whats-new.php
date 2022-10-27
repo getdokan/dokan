@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.3',
+        'released' => '2022-10-27',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Fixed a fatal error due to a function moved from dokan pro',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.2',
         'released' => '2022-10-27',
         'changes'  => [
