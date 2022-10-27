@@ -3201,7 +3201,7 @@ function dokan_get_translated_days( $day = '' ) {
 function dokan_get_store_times( $day, $return_type, $index = null, $store_id = null ) {
     $store_id          = null === $store_id ? dokan_get_current_user_id() : $store_id;
     $store_info        = dokan_get_store_info( $store_id );
-    $dokan_store_times = isset( $store_info['dokan_store_time'][ $day ][ $return_type ] ) ? $store_info['dokan_store_time'][ $day ][ $return_type ] : '';
+    $dokan_store_times = ! empty( $store_info['dokan_store_time'][ $day ][ $return_type ] ) ? $store_info['dokan_store_time'][ $day ][ $return_type ] : '';
 
     if ( empty( $dokan_store_times ) ) {
         return '';
@@ -4083,6 +4083,47 @@ function dokan_format_time( $date = '', $format = false ) {
     }
 
     return dokan_format_datetime( $date, $format );
+}
+
+/**
+ * Create an expected date time format from a given format.
+ *
+ * @since 3.7.1
+ *
+ * @param string $format      Date string format
+ * @param string $date_string Date time string
+ *
+ * @return DateTimeImmutable|false
+ */
+function dokan_create_date_from_format( $format, $date_string ) {
+    return \DateTimeImmutable::createFromFormat(
+        $format,
+        $date_string,
+        new \DateTimeZone( dokan_wp_timezone_string() )
+    );
+}
+
+/**
+ * Convert times in expected format.
+ *
+ * @param array|string $times_data    Times data
+ * @param string       $input_format  Times current format
+ * @param string       $output_format Times converted format
+ *
+ * @return string|array
+ */
+function dokan_convert_date_format( $times_data, $input_format = 'g:i a', $output_format = 'g:i a' ) {
+    if ( empty( $times_data ) ) {
+        return $times_data;
+    }
+
+    $times = [];
+    foreach ( (array) $times_data as $time ) {
+        $datetime = dokan_create_date_from_format( $input_format, $time );
+        $times[]  = $datetime ? $datetime->format( $output_format ) : '';
+    }
+
+    return is_string( $times_data ) ? $times[0] : $times;
 }
 
 /**

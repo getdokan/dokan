@@ -518,7 +518,6 @@
                         $($html).find('.dokan-product-attribute-heading').css({ borderBottom: '1px solid #e3e3e3' });
 
                         attributeWrapper.append( $html );
-                        $( 'select#product_type' ).trigger('change');
                         Dokan_Editor.loadSelect2();
                         Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
@@ -542,6 +541,9 @@
                         attrWrap.find( 'option[value="' + attribute + '"]' ).attr( 'disabled','disabled' );
                         attrWrap.val( '' );
                     }
+                })
+                .done(function() {
+                    $( 'select#product_type' ).trigger('change');
                 });
             },
 
@@ -655,6 +657,10 @@
                 $('.show_if_stock').slideDown('fast');
             } else {
                 $('.show_if_stock').slideUp('fast');
+            }
+
+            if ( 'simple' === product_type ) {
+                $(this).is(':checked') ? $('.hide_if_stock_global').slideUp('fast') : $('.hide_if_stock_global').slideDown('fast');
             }
         },
 

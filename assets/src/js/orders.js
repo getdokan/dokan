@@ -478,11 +478,19 @@ jQuery(function($) {
                 $( 'td.line_tax', $row ).each( function() {
                     var line_total_tax        = $( 'input.line_tax', $( this ) );
                     var refund_line_total_tax = $( 'input.refund_line_tax', $( this ) );
-                    var unit_total_tax = accounting.unformat( line_total_tax.attr( 'data-total_tax' ), dokan_refund.mon_decimal_point ) / qty;
+                    var unit_total_tax        = accounting.unformat(
+                        line_total_tax.attr( 'data-total_tax' ),
+                        dokan_refund.mon_decimal_point
+                    ) / qty;
 
                     if ( 0 < unit_total_tax ) {
+                        var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
+                        var precision         = dokan_refund[
+                            round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
+                        ];
+
                         refund_line_total_tax.val(
-                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
+                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
                         ).trigger( 'change' );
