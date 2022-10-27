@@ -94,13 +94,13 @@ class OrderControllerV2 extends OrderController {
             $this->namespace, '/' . $this->base . '/bulk-actions', [
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'do_bulk_actions' ),
+					'callback'            => array( $this, 'process_orders_bulk_action' ),
 					'args'                => array(
-						'bulk_orders' => array(
+						'order_ids' => array(
 							'type'        => 'array',
 							'description' => __( 'Order ids', 'dokan-lite' ),
 							'required'    => true,
-							'sanitize_callback' => 'wc_clean',
+							'sanitize_callback' => [ $this, 'sanitize_order_ids' ],
 						),
 						'status' => array(
 							'type'        => 'string',
@@ -250,7 +250,7 @@ class OrderControllerV2 extends OrderController {
     }
 
     /**
-     *
+     * Updates bulk orders status.
      *
      * @since DOKAN_SINCE
      *
@@ -258,14 +258,31 @@ class OrderControllerV2 extends OrderController {
      *
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
-    public function do_bulk_actions( $requests ) {
+    public function process_orders_bulk_action( $requests ) {
         $data = [
-            'bulk_orders' => $requests->get_param( 'bulk_orders' ),
+            'bulk_orders' => $requests->get_param( 'order_ids' ),
             'status'      => $requests->get_param( 'status' ),
         ];
 
         dokan_apply_bulk_order_status_change( $data );
 
         return rest_ensure_response( array( 'success' => true ) );
+    }
+
+    /**
+     * Sanitizes order ids.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $order_ids
+     *
+     * @return array
+     */
+    function sanitize_order_ids( $order_ids ) {
+        if ( is_array( $order_ids ) ) {
+            return array_map( 'absint', $order_ids );
+        } else {
+            return [];
+        }
     }
 }

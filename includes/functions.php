@@ -4373,6 +4373,15 @@ function dokan_get_nonce_data() {
     ];
 }
 
+/**
+ * Updates bulk orders status by orders ids.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $postdata
+ *
+ * @return void
+ */
 function dokan_apply_bulk_order_status_change( $postdata ) {
     if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
         return;
