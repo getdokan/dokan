@@ -7,7 +7,7 @@
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 7.0.0  
 **Requires PHP:** 7.0  
-**Stable tag:** 3.7.3  
+**Stable tag:** 3.7.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.4 ( Oct 27, 2022 ) ###
+
+- **fix:** Fixed a fatal error update updating to Dokan if Dokan Pro version is outdated
 
 ### v3.7.3 ( Oct 27, 2022 ) ###
 
