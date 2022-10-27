@@ -73,7 +73,7 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
                  * Same as product author id
                  */
                 if ( $product_author !== $variation_author_id ) {
-                    dokan_override_author_for_variations( $product, $product_author );
+                    dokan_override_author_for_product_variations( $product, $product_author );
                 }
             }
         }

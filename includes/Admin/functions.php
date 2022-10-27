@@ -44,34 +44,32 @@ function dokan_override_product_author( $product, $seller_id ) {
         ]
     );
 
-    dokan_override_author_for_variations( $product, $seller_id );
+    dokan_override_author_for_product_variations( $product, $seller_id );
 
     do_action( 'dokan_after_override_product_author', $product, $seller_id );
 }
 
-if ( ! function_exists( 'dokan_override_author_for_variations' ) ) {
-    /**
-     * Overrides author for products with variations.
-     *
-     * @since 3.7.1
-     *
-     * @param WC_Product $product
-     * @param int        $seller_id
-     *
-     * @return void
-     */
-    function dokan_override_author_for_variations( $product, $seller_id ) {
-        if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
-            $variations = $product->get_children();
+/**
+ * Overrides author for products with variations.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param WC_Product $product
+ * @param int        $seller_id
+ *
+ * @return void
+ */
+function dokan_override_author_for_product_variations( $product, $seller_id ) {
+    if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
+        $variations = $product->get_children();
 
-            foreach ( $variations as $variation_id ) {
-                wp_update_post(
-                    [
-                        'ID'          => $variation_id,
-                        'post_author' => $seller_id,
-                    ]
-                );
-            }
+        foreach ( $variations as $variation_id ) {
+            wp_update_post(
+                [
+                    'ID'          => $variation_id,
+                    'post_author' => $seller_id,
+                ]
+            );
         }
     }
 }
