@@ -405,7 +405,7 @@ class Hooks {
     /**
      * Ajax method to search vendors
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.1
      *
      * @return void
      */

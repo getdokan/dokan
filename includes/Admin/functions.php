@@ -52,7 +52,7 @@ function dokan_override_product_author( $product, $seller_id ) {
 /**
  * Overrides author for products with variations.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.1
  *
  * @param WC_Product $product
  * @param int        $seller_id

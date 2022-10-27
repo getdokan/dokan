@@ -61,7 +61,7 @@ class ProductCategoryMenu extends WP_Widget {
             </div>
         <?php
 
-        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**

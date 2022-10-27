@@ -4088,7 +4088,7 @@ function dokan_format_time( $date = '', $format = false ) {
 /**
  * Create an expected date time format from a given format.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.1
  *
  * @param string $format      Date string format
  * @param string $date_string Date time string
