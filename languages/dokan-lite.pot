@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.7.2\n"
+"Project-Id-Version: Dokan 3.7.3\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-10-27 04:52:26+00:00\n"
+"POT-Creation-Date: 2022-10-27 08:37:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1476,30 +1476,30 @@ msgstr ""
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
-#: includes/Admin/functions.php:239 includes/Admin/functions.php:506
+#: includes/Admin/functions.php:241 includes/Admin/functions.php:508
 #: includes/REST/AdminReportController.php:140
 msgid "Total Sales"
 msgstr ""
 
-#: includes/Admin/functions.php:246 includes/Admin/functions.php:513
+#: includes/Admin/functions.php:248 includes/Admin/functions.php:515
 msgid "Total: "
 msgstr ""
 
-#: includes/Admin/functions.php:249 includes/Admin/functions.php:516
+#: includes/Admin/functions.php:251 includes/Admin/functions.php:518
 #: includes/REST/AdminReportController.php:148 includes/reports.php:365
 msgid "Number of orders"
 msgstr ""
 
-#: includes/Admin/functions.php:256 includes/Admin/functions.php:523
+#: includes/Admin/functions.php:258 includes/Admin/functions.php:525
 msgid "sales"
 msgstr ""
 
-#: includes/Admin/functions.php:259 includes/Admin/functions.php:526
+#: includes/Admin/functions.php:261 includes/Admin/functions.php:528
 #: includes/REST/AdminReportController.php:155
 msgid "Commision"
 msgstr ""
 
-#: includes/Admin/functions.php:266 includes/Admin/functions.php:533
+#: includes/Admin/functions.php:268 includes/Admin/functions.php:535
 msgid "Commision: "
 msgstr ""
 
