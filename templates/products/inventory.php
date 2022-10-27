@@ -15,7 +15,7 @@
             <?php dokan_post_input_box( $post_id, '_sku' ); ?>
         </div>
 
-        <div class="content-half-part hide_if_variable hide_if_external">
+        <div class="content-half-part hide_if_variable hide_if_external hide_if_stock_global">
             <label for="_stock_status" class="form-label"><?php esc_html_e( 'Stock Status', 'dokan-lite' ); ?></label>
 
             <?php

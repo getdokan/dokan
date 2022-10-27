@@ -75,7 +75,7 @@ class Settings {
             if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
                 $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
             } else {
-                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_decimal( $option_values['admin_percentage'] ) : 0;
+                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_decimal( $option_values['admin_percentage'] ) : 0;
             }
         }
 

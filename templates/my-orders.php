@@ -40,10 +40,12 @@ if ( $customer_orders ) :
         <tbody>
         <?php
         $statuses = wc_get_order_statuses();
+        $now      = dokan_current_datetime();
         foreach ( $customer_orders as $customer_order ) {
             $order      = new WC_Order( $customer_order ); // phpcs:ignore
             $item_count = $order->get_item_count();
-
+            $order_date = $order->get_date_created();
+            $order_date = is_a( $order_date, 'WC_DateTime' ) ? $now->setTimestamp( $order_date->getTimestamp() ) : $now;
             ?>
             <tr class="order">
                 <td class="order-number">
@@ -52,8 +54,8 @@ if ( $customer_orders ) :
                     </a>
                 </td>
                 <td class="order-date">
-                    <time datetime="<?php echo esc_attr( strtotime( $order->get_date_created() ) ? dokan_current_datetime()->modify( $order->get_date_created() )->format( 'Y-m-dTH:i:s' ) : '' ); ?>"
-                    <?php echo esc_html( dokan_format_date( $order->get_date_created() ) ); ?>
+                    <time datetime="<?php echo esc_attr( $order_date->format( 'Y-m-dTH:i:s' ) ); ?>">
+                    <?php echo dokan_format_date( $order_date ); ?>
                     </time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
