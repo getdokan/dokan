@@ -1218,31 +1218,49 @@ jQuery(function($) {
      * @return {void}
      */
     function dokanNavigateSubmenu( hide ) {
-      $( '#dokan-navigation' ).find( '.dokan-dashboard-menu .has-submenu' ).each( ( index, elem ) => {
-          $(elem).find( '.navigation-submenu' ).each( ( index, subElem ) => {
-              if ( ! hide ) {
-                  let elemRect    = elem.getBoundingClientRect(),
-                      subElemRect = subElem.getBoundingClientRect();
+        $( '#dokan-navigation' ).find( '.dokan-dashboard-menu .has-submenu:not(.active)' ).each( ( index, elem ) => {
+            $(elem).find( '.navigation-submenu' ).each( ( index, subElem ) => {
+                if ( ! hide ) {
+                    let elemRect    = elem.getBoundingClientRect(),
+                        subElemRect = subElem.getBoundingClientRect();
 
-                  if ( elemRect.top < 10 ) {
-                      $(subElem).css( 'bottom', 'unset' );
-                      $(subElem).css( 'top', 0 );
-                  } else {
-                      $(subElem).css( 'top', 'unset' );
+                    if ( elemRect.top < elemRect.height ) {
+                        $(subElem).css( 'bottom', 'unset' );
+                        $(subElem).css( 'top', 0 );
+                    } else {
+                        $(subElem).css( 'top', 'unset' );
 
-                      let dist = elemRect.y - subElemRect.height;
-                      if ( dist > 0 ) {
-                          $(subElem).css( 'bottom', 0 );
-                      } else {
-                          $(subElem).css( 'bottom', dist );
-                      }
-                  }
-              } else {
-                  $(subElem).css( 'bottom', 0 );
-                  $(subElem).removeAttr( 'style' );
-              }
-          } );
-      } );
+                        let dist = elemRect.top - subElemRect.height;
+                        if ( dist > 0 ) {
+                            $(subElem).css( 'bottom', 0 );
+
+                            subElemRect = subElem.getBoundingClientRect();
+                            if ( subElemRect.top < 0 ) {
+                                $(subElem).css( 'bottom', 'unset' );
+                                $(subElem).css( 'top', 0 );
+                            }
+                        } else {
+                            $(subElem).css( 'bottom', dist );
+
+                            let navRect             = $( '.dokan-dash-sidebar' )[0].getBoundingClientRect(),
+                                navElderSiblingRect = $( '.entry-header' )[0].getBoundingClientRect();
+                            subElemRect = subElem.getBoundingClientRect();
+
+                            if ( subElemRect.bottom > navRect.bottom ) {
+                                dist += subElemRect.bottom - navRect.bottom;
+                            } else if ( subElemRect.bottom - navElderSiblingRect.bottom < subElemRect.height ) {
+                                dist += subElemRect.bottom - navElderSiblingRect.bottom - subElemRect.height - 20;
+                            }
+
+                            $(subElem).css( 'bottom', dist );
+                        }
+                    }
+                } else {
+                    $(subElem).css( 'bottom', 0 );
+                    $(subElem).removeAttr( 'style' );
+                }
+            } );
+        } );
     }
 })(jQuery);
 /**

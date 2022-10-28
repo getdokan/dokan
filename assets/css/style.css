@@ -2123,7 +2123,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   border-left-color: #242424eb;
   border-width: 16px 16px 16px 0;
   margin-top: -16px;
-  z-index: 999;
+  z-index: 99999;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover:not(.active) ul.navigation-submenu {
   position: absolute;
