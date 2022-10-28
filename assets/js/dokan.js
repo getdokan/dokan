@@ -2999,6 +2999,50 @@ jQuery(function($) {
           .css('cursor', 'help');
       });
     });
+
+    // Submenu navigation on vendor dashboard
+    $( '#dokan-navigation .dokan-dashboard-menu .has-submenu' )
+    .on( 'mouseover', () => {
+        dokanNavigateSubmenu();
+    } )
+    .on( 'mouseout', () => {
+        dokanNavigateSubmenu( true );
+    } );
+
+    /**
+     * Navigates submenu on hovering the parent menu.
+     *
+     * @param {boolean} hide Hide or show sub menu
+     *
+     * @return {void}
+     */
+    function dokanNavigateSubmenu( hide ) {
+      $( '#dokan-navigation' ).find( '.dokan-dashboard-menu .has-submenu' ).each( ( index, elem ) => {
+          $(elem).find( '.navigation-submenu' ).each( ( index, subElem ) => {
+              if ( ! hide ) {
+                  let elemRect    = elem.getBoundingClientRect(),
+                      subElemRect = subElem.getBoundingClientRect();
+
+                  if ( elemRect.top < 10 ) {
+                      $(subElem).css( 'bottom', 'unset' );
+                      $(subElem).css( 'top', 0 );
+                  } else {
+                      $(subElem).css( 'top', 'unset' );
+
+                      let dist = elemRect.y - subElemRect.height;
+                      if ( dist > 0 ) {
+                          $(subElem).css( 'bottom', 0 );
+                      } else {
+                          $(subElem).css( 'bottom', dist );
+                      }
+                  }
+              } else {
+                  $(subElem).css( 'bottom', 0 );
+                  $(subElem).removeAttr( 'style' );
+              }
+          } );
+      } );
+    }
 })(jQuery);
 /**
  * Show Delete Button Prompt
@@ -3026,7 +3070,6 @@ jQuery(function($) {
     return false;
   }
 }
-
 
 ;(function($) {
     var storeLists = {
