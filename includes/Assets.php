@@ -132,7 +132,7 @@ class Assets {
     /**
      * Load admin product localize data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.1
      *
      * @return array
      */

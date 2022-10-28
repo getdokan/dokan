@@ -478,11 +478,19 @@ jQuery(function($) {
                 $( 'td.line_tax', $row ).each( function() {
                     var line_total_tax        = $( 'input.line_tax', $( this ) );
                     var refund_line_total_tax = $( 'input.refund_line_tax', $( this ) );
-                    var unit_total_tax = accounting.unformat( line_total_tax.attr( 'data-total_tax' ), dokan_refund.mon_decimal_point ) / qty;
+                    var unit_total_tax        = accounting.unformat(
+                        line_total_tax.attr( 'data-total_tax' ),
+                        dokan_refund.mon_decimal_point
+                    ) / qty;
 
                     if ( 0 < unit_total_tax ) {
+                        var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
+                        var precision         = dokan_refund[
+                            round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
+                        ];
+
                         refund_line_total_tax.val(
-                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
+                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
                         ).trigger( 'change' );
@@ -1132,7 +1140,6 @@ jQuery(function($) {
                         $($html).find('.dokan-product-attribute-heading').css({ borderBottom: '1px solid #e3e3e3' });
 
                         attributeWrapper.append( $html );
-                        $( 'select#product_type' ).trigger('change');
                         Dokan_Editor.loadSelect2();
                         Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
@@ -1156,6 +1163,9 @@ jQuery(function($) {
                         attrWrap.find( 'option[value="' + attribute + '"]' ).attr( 'disabled','disabled' );
                         attrWrap.val( '' );
                     }
+                })
+                .done(function() {
+                    $( 'select#product_type' ).trigger('change');
                 });
             },
 
@@ -1269,6 +1279,10 @@ jQuery(function($) {
                 $('.show_if_stock').slideDown('fast');
             } else {
                 $('.show_if_stock').slideUp('fast');
+            }
+
+            if ( 'simple' === product_type ) {
+                $(this).is(':checked') ? $('.hide_if_stock_global').slideUp('fast') : $('.hide_if_stock_global').slideDown('fast');
             }
         },
 

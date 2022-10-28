@@ -7388,6 +7388,13 @@ var RefreshSettingOptions = dokan_get_lib('RefreshSettingOptions');
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 var ListTable = dokan_get_lib('ListTable');
@@ -7458,7 +7465,8 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       vendors: [],
       loadAddVendor: false,
       dokanVendorHeaderArea: dokan.hooks.applyFilters('getDokanVendorHeaderArea', []),
-      isVendorSwitchingEnabled: false
+      isVendorSwitchingEnabled: false,
+      dokanVendorFilterSectionStart: dokan.hooks.applyFilters('dokanVendorFilterSectionStart', [])
     };
   },
   watch: {
@@ -7525,6 +7533,13 @@ var AdminNotice = dokan_get_lib('AdminNotice');
     addNew: function addNew() {
       this.loadAddVendor = true;
     },
+    updateVendorComponent: function updateVendorComponent() {
+      var rerender = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      if (rerender) {
+        this.fetchVendors();
+      }
+    },
     doSearch: function doSearch(payload) {
       var _this2 = this;
 
@@ -7564,6 +7579,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         order: self.sortOrder,
         store_category: self.storeCategory
       };
+      data = dokan.hooks.applyFilters('DokanGetVendorArgs', data, this.$route.query);
       dokan.api.get('/stores', data).done(function (response, status, xhr) {
         self.vendors = response;
         self.loading = false;
@@ -17029,6 +17045,21 @@ var render = function() {
                     ],
                     2
                   )
+                })
+              }
+            },
+            {
+              key: "filters",
+              fn: function(data) {
+                return _vm._l(_vm.dokanVendorFilterSectionStart, function(
+                  dokanVendorFilterSection,
+                  index
+                ) {
+                  return _c(dokanVendorFilterSection, {
+                    key: index,
+                    tag: "component",
+                    on: { updateVendorComponent: _vm.updateVendorComponent }
+                  })
                 })
               }
             }
