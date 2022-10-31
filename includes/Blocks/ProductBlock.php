@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Blocks;
 /**
  * Dokan Block For Products.
  *
- * @since DOKAN_PRO_SINCE
+ * @since DOKAN_SINCE
  */
 class ProductBlock {
 
