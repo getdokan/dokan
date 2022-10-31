@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Email_New_Product_Pending
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -37,8 +36,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Vendor :', 'dokan-lite' ); ?>
         </strong>
-        <?php
-        printf( '<a href="%s">%s</a>', esc_url( $data['seller_url'] ), esc_html( $data['seller-name'] ) ); ?>
+        <?php printf( '<a href="%s">%s</a>', esc_url( $data['seller_url'] ), esc_html( $data['seller-name'] ) ); ?>
     </li>
     <li>
         <strong>

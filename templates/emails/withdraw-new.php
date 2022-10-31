@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Vendor_Withdraw_Request
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,7 +26,8 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
             <?php esc_html_e( 'Username : ', 'dokan-lite' ); ?>
         </strong>
         <?php
-        printf( '<a href="%s">%s</a>', esc_attr( $data['profile_url'] ), esc_attr( $data['username'] ) ); ?>
+        printf( '<a href="%s">%s</a>', esc_attr( $data['profile_url'] ), esc_attr( $data['username'] ) );
+        ?>
     </li>
     <li>
         <strong>
@@ -43,6 +43,12 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     </li>
 </ul>
 
-<?php echo wp_kses_post( sprintf( __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_attr( $data['withdraw_page'] ) ) );
+<?php
+echo wp_kses_post(
+    sprintf(
+        // translators: 1) withdraw page url
+        __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_attr( $data['withdraw_page'] )
+    )
+);
 
 do_action( 'woocommerce_email_footer', $email );

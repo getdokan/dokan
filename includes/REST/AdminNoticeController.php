@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 

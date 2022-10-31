@@ -33,7 +33,7 @@ class Category extends Walker {
     }
 
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
-        extract( $args );
+        extract( $args ); // phpcs:ignore
         $indent = str_repeat( "\t\r", $depth );
 
         if ( $depth === 0 ) {

@@ -11,7 +11,7 @@ class StoreCategory extends Category {
     }
 
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
-        extract( $args );
+        extract( $args ); // phpcs:ignore
         $indent = str_repeat( "\t", $depth );
 
         $url              = $this->store_url . 'section/' . $category->term_id;

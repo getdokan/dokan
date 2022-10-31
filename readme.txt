@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 5.4
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 WC requires at least: 5.0.0
-WC tested up to: 6.8.2
+WC tested up to: 6.9.4
 Requires PHP: 7.0
-Stable tag: 3.6.5
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,31 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.1 ( Oct 11, 2022 ) =
+
+- **fix:** [VariableProduct] Fixed variable product's variation image uploading height size overlapping on price field.
+- **fix:** [ProductSearch] Fixed product search of the product listing page of the vendor dashboard is not working.
+- **fix:** [OrderEmail] Fixed multiple emails are sent to the customer when a parent order's status is changed to processing from failed payment.
+- **fix:** Removed unwanted popup code from the SweetAlert library
+- **fix:** Fixed the vendor dashboard adds new products' discount prices set to 0 by default.
+- **fix:** Fixed vendor order page not showing line item qty and totals
+
+= v3.7.0 ( Sep 27, 2022 ) =
+
+- **new:** Added `dokan_selected_multistep_category` js hook after a category has been selected
+- **update:** Fixed some security issues
+- **update:** Performance enhancement for dokan
+- **update:** Updated some JS libraries
+- **update:** Vendor dashboard `add-product-single.php` file is renamed to `edit-product-single.php`
+- **fix:** Select2 spacing issue CSS fix
+- **fix:** Fixed vendor single store page profile picture CSS issue
+- **fix:** Fixed vendor product page extra table field issue
+- **fix:** Fixed admin dashboard vendor details page: social profile Twitter icon is not showing issue
+- **fix:** Fixed multiple sub-categories of the same parent category is assigned to a product, they are not saved issue
+- **fix:** [Store settings]: Not being able to add "+" or "-" sign to the phone number filed of the store on Firefox web browser.
+- **fix:** Bank withdrawal method required field updated, Added a new filter hook `dokan_bank_payment_required_fields` so that site owner can manage required fields as they pleased
+- **fix:** Category-based commission is not working when a category has child categories.
 
 = v3.6.5 ( Aug 25, 2022 ) =
 

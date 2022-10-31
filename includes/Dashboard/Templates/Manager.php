@@ -23,13 +23,13 @@ class Manager {
      * @return void
      */
     public function __construct() {
-        $this->container['main']                = new Main();
-        $this->container['dashboard']           = new Dashboard();
-        $this->container['products']            = new Products();
-        $this->container['orders']              = new Orders();
-        $this->container['settings']            = new Settings();
-        $this->container['withdraw']            = new Withdraw();
-        $this->container['product_category']    = new MultiStepCategories();
-        $this->container['reverse_withdrawal']  = new ReverseWithdrawal();
+        $this->container['main']               = new Main();
+        $this->container['dashboard']          = new Dashboard();
+        $this->container['products']           = new Products();
+        $this->container['orders']             = new Orders();
+        $this->container['settings']           = new Settings();
+        $this->container['withdraw']           = new Withdraw();
+        $this->container['product_category']   = new MultiStepCategories();
+        $this->container['reverse_withdrawal'] = new ReverseWithdrawal();
     }
 }

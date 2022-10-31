@@ -7,11 +7,11 @@ use Exception;
 /**
  * Admin Hooks
  *
+ * @since   3.0.0
+ *
  * @package dokan
  *
- * @since 3.0.0
- *
- * @author weDevs
+ * @author  weDevs
  */
 class Hooks {
 
@@ -70,12 +70,13 @@ class Hooks {
      *
      * @param $display_key
      *
-     * @return void
+     * @return string
      */
     public function change_order_item_display_meta_key( $display_key ) {
         if ( 'seller_id' === $display_key ) {
             return __( 'Vendor', 'dokan-lite' );
         }
+
         return $display_key;
     }
 
@@ -87,7 +88,7 @@ class Hooks {
      * @param $display_value
      * @param $meta
      *
-     * @return mixed
+     * @return string
      */
     public function change_order_item_display_meta_value( $display_value, $meta ) {
         if ( 'seller_id' === $meta->key ) {
@@ -99,6 +100,7 @@ class Hooks {
 
             return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
         }
+
         return $display_value;
     }
 
@@ -106,11 +108,11 @@ class Hooks {
      * Update the child order status when a parent order status is changed
      *
      * @param integer $order_id
-     * @param string $old_status
-     * @param string $new_status
+     * @param string  $old_status
+     * @param string  $new_status
      *
-     * @return void
      * @global object $wpdb
+     * @return void
      */
     public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
         global $wpdb;
@@ -180,77 +182,84 @@ class Hooks {
             [ '%d', '%s' ]
         );
 
-        if ( $new_status === 'wc-refunded' ) {
-            $postdata = wp_unslash( $_POST );
+        if ( $new_status !== 'wc-refunded' ) {
+            return;
+        }
 
-            if ( ! empty( $postdata['_wpnonce'] ) && ( wp_verify_nonce( $postdata['_wpnonce'], 'dokan_change_status' ) || $postdata['post_type'] === 'shop_order' ) ) {
-                $balance_data = $wpdb->get_row(
-                    $wpdb->prepare(
-                        "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
-                        $order_id
-                    )
-                );
+        // verify nonce
+        if ( ! isset( $_POST['_wpnonce'], $_POST['post_type'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan_change_status' ) ) {
+            return;
+        }
 
-                if ( $balance_data ) {
-                    return;
-                }
+        if ( $_POST['post_type'] !== 'shop_order' ) {
+            return;
+        }
 
-                $seller_id  = dokan_get_seller_id_by_order( $order_id );
-                $net_amount = dokan()->commission->get_earning_by_order( $order );
+        $balance_data = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
+                $order_id
+            )
+        );
 
-                $wpdb->insert(
-                    $wpdb->dokan_vendor_balance,
-                    [
-                        'vendor_id'    => $seller_id,
-                        'trn_id'       => $order_id,
-                        'trn_type'     => 'dokan_refund',
-                        'debit'        => 0,
-                        'credit'       => $net_amount,
-                        'status'       => 'approved',
-                        'trn_date'     => current_time( 'mysql' ),
-                        'balance_date' => current_time( 'mysql' ),
-                    ],
-                    [
-                        '%d',
-                        '%d',
-                        '%s',
-                        '%f',
-                        '%f',
-                        '%s',
-                        '%s',
-                        '%s',
-                    ]
-                );
+        if ( $balance_data ) {
+            return;
+        }
 
-                // update the order table with new refund amount
-                $order_data = $wpdb->get_row(
-                    $wpdb->prepare(
-                        "select * from $wpdb->dokan_orders where order_id = %d",
-                        $order_id
-                    )
-                );
+        $seller_id  = dokan_get_seller_id_by_order( $order_id );
+        $net_amount = dokan()->commission->get_earning_by_order( $order );
 
-                if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
-                    // insert on dokan sync table
-                    $wpdb->update(
-                        $wpdb->dokan_orders,
-                        [
-                            'order_total' => 0,
-                            'net_amount'  => 0,
-                        ],
-                        [
-                            'order_id' => $order_id,
-                        ],
-                        [
-                            '%f',
-                            '%f',
-                        ],
-                        [
-                            '%d',
-                        ]
-                    );
-                }
-            }
+        $wpdb->insert(
+            $wpdb->dokan_vendor_balance,
+            [
+                'vendor_id'    => $seller_id,
+                'trn_id'       => $order_id,
+                'trn_type'     => 'dokan_refund',
+                'debit'        => 0,
+                'credit'       => $net_amount,
+                'status'       => 'approved',
+                'trn_date'     => current_time( 'mysql' ),
+                'balance_date' => current_time( 'mysql' ),
+            ],
+            [
+                '%d',
+                '%d',
+                '%s',
+                '%f',
+                '%f',
+                '%s',
+                '%s',
+                '%s',
+            ]
+        );
+
+        // update the order table with new refund amount
+        $order_data = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from $wpdb->dokan_orders where order_id = %d",
+                $order_id
+            )
+        );
+
+        if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
+            // insert on dokan sync table
+            $wpdb->update(
+                $wpdb->dokan_orders,
+                [
+                    'order_total' => 0,
+                    'net_amount'  => 0,
+                ],
+                [
+                    'order_id' => $order_id,
+                ],
+                [
+                    '%f',
+                    '%f',
+                ],
+                [
+                    '%d',
+                ]
+            );
         }
     }
 
@@ -258,8 +267,8 @@ class Hooks {
      * Mark the parent order as complete when all the child order are completed
      *
      * @param integer $order_id
-     * @param string $old_status
-     * @param string $new_status
+     * @param string  $old_status
+     * @param string  $new_status
      *
      * @return void
      */
@@ -304,9 +313,9 @@ class Hooks {
     /**
      * Split order for vendor
      *
-     * @param $parent_order_id
-     *
      * @since 3.0.0
+     *
+     * @param $parent_order_id
      *
      * @return void
      */
@@ -325,12 +334,12 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @param boolean $valid
-     * @param \WC_Coupon $coupon
+     * @param boolean       $valid
+     * @param \WC_Coupon    $coupon
      * @param \WC_Discounts $discount
      *
-     * @return boolean|Exception
      * @throws Exception
+     * @return boolean|Exception
      */
     public function ensure_vendor_coupon( $valid, $coupon, $discount ) {
         $available_vendors  = [];
@@ -348,7 +357,6 @@ class Hooks {
                 $available_products[] = $item_id;
             }
         }
-
 
         $available_vendors = array_unique( $available_vendors );
 
@@ -475,9 +483,9 @@ class Hooks {
     /**
      * Handle stock level wrong calculation in order notes for suborder
      *
-     * @param $order
-     *
      * @since DOKAN_LITE_SINCE
+     *
+     * @param $order
      *
      * @return void
      */

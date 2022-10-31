@@ -14,7 +14,7 @@ class Enfold {
     /**
      * The constructor
      */
-    function __construct() {
+    public function __construct() {
         add_filter( 'avia_layout_filter', [ $this, 'filter_layout_classes' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'store_listing_style' ], 100 );
         add_filter( 'avf_enqueue_wp_mediaelement', '__return_true' );

@@ -40,7 +40,7 @@ class V_3_0_4 extends DokanUpgrader {
             }
 
             foreach ( $columns as $column ) {
-                $wpdb->query( "ALTER TABLE `{$table_name}` MODIFY COLUMN `{$column}` DECIMAL(19,4)" );
+                $wpdb->query( "ALTER TABLE `{$table_name}` MODIFY COLUMN `{$column}` DECIMAL(19,4)" ); // phpcs:ignore
             }
         }
     }

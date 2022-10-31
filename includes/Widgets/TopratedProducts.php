@@ -28,8 +28,6 @@ class TopratedProducts extends WP_Widget {
      * @param array $instance Saved values from database.
      */
     public function widget( $args, $instance ) {
-        extract( $args, EXTR_SKIP );
-
         $title         = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $no_of_product = isset( $instance['no_of_product'] ) ? $instance['no_of_product'] : 8;
         $show_rating   = isset( $instance['show_rating'] ) ? $instance['show_rating'] : false;
@@ -62,15 +60,15 @@ class TopratedProducts extends WP_Widget {
      */
     public function form( $instance ) {
         if ( isset( $instance['title'] ) ) {
-            $title         = esc_attr( $instance['title'] );
-            $no_of_product = esc_attr( intval( $instance['no_of_product'] ) );
-            $show_rating   = esc_attr( $instance['show_rating'] );
+            $title         = sanitize_text_field( $instance['title'] );
+            $no_of_product = intval( $instance['no_of_product'] );
+            $show_rating   = sanitize_text_field( $instance['show_rating'] );
         } else {
             $title         = __( 'Top Rated Product', 'dokan-lite' );
-            $no_of_product = '8';
-            $show_rating   = '0';
+            $no_of_product = 8;
+            $show_rating   = 0;
         }
-        $no_of_product = $no_of_product == '-1' ? '' : $no_of_product;
+        $no_of_product = $no_of_product === -1 ? '' : $no_of_product;
         ?>
         <p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'dokan-lite' ); ?></label>
@@ -100,9 +98,9 @@ class TopratedProducts extends WP_Widget {
      */
     public function update( $new_instance, $old_instance ) {
         $instance                  = array();
-        $instance['title']         = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['no_of_product'] = ( ! empty( $new_instance['no_of_product'] ) && is_numeric( $new_instance['no_of_product'] ) && $new_instance['no_of_product'] > 0 ) ? strip_tags( intval( $new_instance['no_of_product'] ) ) : '8';
-        $instance['show_rating']   = ( ! empty( $new_instance['show_rating'] ) ) ? strip_tags( $new_instance['show_rating'] ) : '';
+        $instance['title']         = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
+        $instance['no_of_product'] = ( ! empty( $new_instance['no_of_product'] ) && is_numeric( $new_instance['no_of_product'] ) && $new_instance['no_of_product'] > 0 ) ? intval( $new_instance['no_of_product'] ) : 8;
+        $instance['show_rating']   = ( ! empty( $new_instance['show_rating'] ) ) ? sanitize_text_field( $new_instance['show_rating'] ) : '';
         return $instance;
     }
 

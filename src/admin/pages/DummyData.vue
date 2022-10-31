@@ -350,14 +350,13 @@ export default {
                         toast: true,
                         icon: 'success',
                         title: response.message,
-                        animation: false,
                         position: 'bottom-right',
                         showConfirmButton: false,
                         timer: 3000,
                         timerProgressBar: true,
                         didOpen: ( toast ) => {
-                            toast.addEventListener( 'mouseenter', Swal.stopTimer )
-                            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                            toast.addEventListener( 'mouseenter', swal.stopTimer )
+                            toast.addEventListener( 'mouseleave', swal.resumeTimer )
                         }
                     } );
 

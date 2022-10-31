@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 use WeDevs\Dokan\Cache;
+use WP_Error;
+use WP_REST_Response;
 use WP_REST_Server;
 
 /**
@@ -43,7 +45,7 @@ class ChangeLogController extends DokanRESTAdminController {
      *
      * @since 3.3.3
      *
-     * @return WP_REST_Response
+     * @return WP_REST_Response|WP_Error
      */
     public function get_change_log() {
         $cache_key = 'changelog_lite_' . DOKAN_PLUGIN_VERSION;

@@ -50,6 +50,19 @@ class Categories {
     }
 
     /**
+     * Sets categories.
+     *
+     * @since 3.7.0
+     *
+     * @param array $categories
+     *
+     * @return void
+     */
+    public function set_categories( $categories = [] ) {
+        $this->categories = $categories;
+    }
+
+    /**
      * Get Children of a parent category
      *
      * @since 3.6.4

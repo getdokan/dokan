@@ -17,7 +17,7 @@
         <?php
 
             /**
-             *  dokan_dashboard_content_before hook
+             *  Added dokan_dashboard_content_before hook
              *
              *  @hooked get_dashboard_side_navigation
              *
@@ -33,7 +33,7 @@
             <?php
 
                 /**
-                 *  dokan_order_content_inside_before hook
+                 *  Added dokan_order_content_inside_before hook
                  *
                  *  @hooked show_seller_enable_message
                  *
@@ -48,7 +48,7 @@
                 <?php
 
                     /**
-                     *  dokan_order_inside_content Hook
+                     *  Added dokan_order_inside_content Hook
                      *
                      *  @hooked dokan_order_listing_status_filter
                      *  @hooked dokan_order_main_content
@@ -65,7 +65,7 @@
             <?php
 
                 /**
-                 *  dokan_order_content_inside_after hook
+                 *  Added dokan_order_content_inside_after hook
                  *
                  *  @since 2.4
                  */
@@ -77,7 +77,7 @@
         <?php
 
             /**
-             *  dokan_dashboard_content_after hook
+             *  Added dokan_dashboard_content_after hook
              *  dokan_order_content_after hook
              *
              *  @since 2.4

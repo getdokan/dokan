@@ -16,7 +16,7 @@ class V_2_7_3 extends DokanUpgrader {
             'post_type'      => 'shop_order',
             'posts_per_page' => -1,
             'post_status'    => 'any',
-            'meta_query'     => [
+            'meta_query'     => [ //phpcs:ignore
                 [
                     'key'     => 'has_sub_order',
                     'compare' => 'NOT EXISTS',
@@ -43,6 +43,7 @@ class V_2_7_3 extends DokanUpgrader {
     public static function update_table_structure() {
         global $wpdb;
 
+        // @codingStandardsIgnoreStart
         $wpdb->query(
             "ALTER TABLE `{$wpdb->prefix}dokan_orders`
             MODIFY COLUMN order_total float(11,4)"
@@ -52,6 +53,7 @@ class V_2_7_3 extends DokanUpgrader {
             "ALTER TABLE `{$wpdb->prefix}dokan_orders`
             MODIFY COLUMN net_amount float(11,4)"
         );
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -65,7 +67,7 @@ class V_2_7_3 extends DokanUpgrader {
         global $wp_roles;
 
         if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
-            $wp_roles = new WP_Roles();
+            $wp_roles = new WP_Roles(); //phpcs:ignore
         }
 
         $capabilities = [];

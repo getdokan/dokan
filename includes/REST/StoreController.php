@@ -7,6 +7,8 @@ use Dokan_REST_Product_Controller;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 
 /**
@@ -223,11 +225,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get stores
      *
-     * @param $request
-     *
      * @since 1.0.0
      *
-     * @return object|WP_Error|\WP_REST_Response
+     * @param $request
+     *
+     * @return object|WP_Error|WP_REST_Response
      */
     public function get_stores( $request ) {
         $params = $request->get_params();
@@ -235,7 +237,7 @@ class StoreController extends WP_REST_Controller {
         $args = [
             'number' => (int) $params['per_page'],
             'offset' => (int) ( $params['page'] - 1 ) * $params['per_page'],
-            'status' => 'all'
+            'status' => 'all',
         ];
 
         if ( ! empty( $params['search'] ) ) {
@@ -261,7 +263,7 @@ class StoreController extends WP_REST_Controller {
 
         $args = apply_filters( 'dokan_rest_get_stores_args', $args, $request );
 
-        $stores       = dokan()->vendor->get_vendors( $args );
+        $stores = dokan()->vendor->get_vendors( $args );
 
         $search_text = isset( $params['search'] ) ? sanitize_text_field( $params['search'] ) : '';
 
@@ -270,7 +272,7 @@ class StoreController extends WP_REST_Controller {
             unset( $args['search'] );
             unset( $args['search_columns'] );
 
-            $args['meta_query'] = [
+            $args['meta_query'] = [ // phpcs:ignore
                 [
                     'key'     => 'dokan_store_name',
                     'value'   => $search_text,
@@ -297,11 +299,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get singe store
      *
-     * @param $request
-     *
      * @since 1.0.0
      *
-     * @return WP_Error|\WP_REST_Response
+     * @param $request
+     *
+     * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
         $store_id = (int) $request['id'];
@@ -321,11 +323,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Delete store
      *
-     * @param $request
-     *
      * @since 2.8.0
      *
-     * @return WP_Error|\WP_REST_Response
+     * @param $request
+     *
+     * @return WP_Error|WP_REST_Response
      */
     public function delete_store( $request ) {
         $store_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
@@ -370,11 +372,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Update Store
      *
-     * @param \WP_REST_Request $request
-     *
      * @since 2.9.2
      *
-     * @return WP_Error|\WP_REST_Response
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_REST_Response
      */
     public function update_store( $request ) {
         $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
@@ -405,7 +407,7 @@ class StoreController extends WP_REST_Controller {
      *
      * @param $request
      *
-     * @return WP_Error|\WP_REST_Response
+     * @return WP_Error|WP_REST_Response
      */
     public function create_store( $request ) {
         $params = $request->get_params();
@@ -429,7 +431,7 @@ class StoreController extends WP_REST_Controller {
      *
      * @since 1.0.0
      *
-     * @return void
+     * @return bool
      */
     public function permission_check_for_manageable_part() {
         return current_user_can( 'manage_woocommerce' );
@@ -439,7 +441,7 @@ class StoreController extends WP_REST_Controller {
      * Prepare links for the request.
      *
      * @param \WC_Data $object Object data.
-     * @param \WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request Request object.
      *
      * @return array                   Links for the given post.
      */
@@ -510,9 +512,9 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get store Products
      *
-     * @param object $request
+     * @param WP_REST_Request|array $request
      *
-     * @return WP_Error|\WP_REST_Response
+     * @return WP_Error|WP_REST_Response
      */
     public function get_store_products( $request ) {
         $product_controller = new Dokan_REST_Product_Controller();
@@ -532,7 +534,7 @@ class StoreController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return object|WP_Error|\WP_REST_Response
+     * @return object|WP_Error|WP_REST_Response
      */
     public function get_store_reviews( $request ) {
         $params = $request->get_params();
@@ -629,10 +631,10 @@ class StoreController extends WP_REST_Controller {
      * Prepare a single user output for response
      *
      * @param $store
-     * @param \WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
-     * @return \WP_REST_Response $response Response data.
+     * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
         $data     = $store->to_array();
@@ -647,10 +649,10 @@ class StoreController extends WP_REST_Controller {
      * Prepare a single user output for response
      *
      * @param object $item
-     * @param \WP_REST_Request $request Request object.
+     * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
-     * @return \WP_REST_Response $response Response data.
+     * @return array $response Response data.
      */
     public function prepare_reviews_for_response( $item, $request, $additional_fields = [] ) {
         if ( dokan()->is_pro_exists() && dokan_pro()->module->is_active( 'store_reviews' ) ) {
@@ -703,11 +705,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Check store availability
      *
-     * @param \WP_REST_Request $request
+     * @param WP_REST_Request $request
      *
      * @since 2.9.13
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
     public function check_store_availability( $request ) {
         $params = $request->get_params();
@@ -791,11 +793,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Send email to vendor
      *
-     * @param \WP_REST_Request
+     * @param WP_REST_Request
      *
      * @since 2.9.23
      *
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
     public function send_email( $request ) {
         $params = $request->get_params();
@@ -816,7 +818,7 @@ class StoreController extends WP_REST_Controller {
         /**
          * Fires before sending email to vendor via the REST API.
          *
-         * @param \WP_REST_Request $request Request object.
+         * @param WP_REST_Request $request Request object.
          * @param boolean $creating True when creating object, false when updating.
          *
          * @since  2.9.23
@@ -848,7 +850,7 @@ class StoreController extends WP_REST_Controller {
      *
      * @since 2.9.23
      *
-     * @return \WP_REST_Response|WP_Error
+     * @return WP_REST_Response|WP_Error
      */
     public function update_vendor_status( $request ) {
         if ( ! in_array( $request['status'], [ 'active', 'inactive' ], true ) ) {
@@ -923,11 +925,11 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get singe store
      *
-     * @param $request
-     *
      * @since 3.2.11
      *
-     * @return WP_Error|\WP_REST_Response
+     * @param $request
+     *
+     * @return WP_Error|WP_REST_Response
      */
     public function get_store_category( $request ) {
         $store_id     = absint( $request['id'] );

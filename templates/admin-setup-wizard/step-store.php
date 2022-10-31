@@ -14,12 +14,11 @@
             <th scope="row"><label for="shipping_fee_recipient"><?php esc_html_e( 'Shipping Fee Recipient', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="wc-enhanced-select" id="shipping_fee_recipient" name="shipping_fee_recipient">
-                    <?php
-                        foreach ( $recipients as $key => $value ) {
-                            $selected = ( $shipping_fee_recipient == $key ) ? ' selected="true"' : '';
-                            echo '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $value ) . '</option>';
-                        }
-                    ?>
+                    <?php foreach ( $recipients as $key => $value ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $shipping_fee_recipient ); ?>>
+                        <?php echo esc_html( $value ); ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
                 <p class="description"><?php esc_html_e( 'Shipping fees will go to', 'dokan-lite' ); ?></p>
             </td>
@@ -28,12 +27,11 @@
             <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
-                    <?php
-                        foreach ( $recipients as $key => $value ) {
-                            $selected = ( $tax_fee_recipient == $key ) ? ' selected="true"' : '';
-                            echo '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $value ) . '</option>';
-                        }
-                    ?>
+                    <?php foreach ( $recipients as $key => $value ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $tax_fee_recipient ); ?>>
+                        <?php echo esc_html( $value ); ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
                 <p class="description"><?php esc_html_e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
             </td>
@@ -42,12 +40,11 @@
             <th scope="row"><label for="map_api_source"><?php esc_html_e( 'Map API Source', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="wc-enhanced-select" id="map_api_source" name="map_api_source">
-                    <?php
-                        foreach ( $map_api_source_options as $key => $value ) {
-                            $selected = ( $map_api_source == $key ) ? ' selected="true"' : '';
-                            echo '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $value ) . '</option>';
-                        }
-                    ?>
+                    <?php foreach ( $map_api_source_options as $key => $value ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $map_api_source ); ?>>
+                        <?php echo esc_html( $value ); ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
                 <p class="description"><?php esc_html_e( 'Which Map API source you want to use in your site?', 'dokan-lite' ); ?></p>
             </td>
@@ -58,11 +55,12 @@
                 <input type="text" id="gmap_api_key" name="gmap_api_key" class="location-input" value="<?php echo esc_attr( $gmap_api_key ); ?>" />
                 <p class="description">
                     <?php
-                        printf(
-                            esc_html__( '%sAPI Key%s is needed to display map on store page', 'dokan-lite' ),
-                            '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">',
-                            '</a>'
-                        );
+                    printf(
+                        /* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+                        esc_html__( '%1$sAPI Key%2$s is needed to display map on store page', 'dokan-lite' ),
+                        '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">',
+                        '</a>'
+                    );
                     ?>
                 </p>
             </td>
@@ -72,7 +70,14 @@
             <td>
                 <input type="text" id="mapbox_access_token" name="mapbox_access_token" class="location-input" value="<?php echo esc_attr( $mapbox_access_token ); ?>" />
                 <p class="description">
-                    <?php echo __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ) ?>
+                    <?php
+                    echo sprintf(
+                        /* translators: %1$s: opening anchor tag, %2$s: closing anchor tag */
+                        esc_html__( '%1$sAccess Token%2$s is needed to display map on store page', 'dokan-lite' ),
+                        '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">',
+                        '</a>'
+                    );
+                    ?>
                 </p>
             </td>
         </tr>
@@ -86,12 +91,43 @@
                     <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
                 </label>
                 <span class="description">
-                    <?php esc_html_e( 'Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information', 'dokan-lite' ); ?>
-                    <?php printf( '<a class="insights-data-we-collect" href="#">%s</a>', esc_html__( 'What we collect', 'dokan-lite' ) ); ?>
+                    <?php
+                    wp_kses(
+                        sprintf(
+                            /* translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag */
+                            __( 'Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s', 'dokan-lite' ),
+                            '<a class="insights-data-we-collect" href="#">',
+                            '</a>'
+                        ),
+                        [
+                            'a' => [
+                                'class'  => [],
+                                'href'   => [],
+                                'target' => [],
+                            ],
+                        ]
+                    );
+                    ?>
                 </span>
                 <p id="collection-info" class="description" style="display:none;">
-                    <?php esc_html_e( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked.', 'dokan-lite' ); ?>
-                    <?php printf( __( 'We are using %1$s to collect your data. <a href="%2$s" target="_blank">Learn more</a> about how %1$s collects and handle your data.', 'dokan-lite' ), '<a href="https://appsero.com" target="_blank">Appsero</a>', 'https://appsero.com/privacy-policy/' ); ?>
+                    <?php
+                    wp_kses(
+                        sprintf(
+                            /* translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag */
+                            __( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data.', 'dokan-lite' ),
+                            '<a href="https://appsero.com" target="_blank">Appsero</a>',
+                            '<a href="https://appsero.com/privacy-policy/" target="_blank">',
+                            '</a>'
+                        ),
+                        [
+                            'a' => [
+                                'class'  => [],
+                                'href'   => [],
+                                'target' => [],
+                            ],
+                        ]
+                    );
+                    ?>
                 </p>
             </td>
         </tr>

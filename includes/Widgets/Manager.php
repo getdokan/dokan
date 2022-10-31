@@ -59,6 +59,6 @@ class Manager {
      * @return bool|string Returns widget id if found, outherwise returns false
      */
     public function get_id( $widget_class ) {
-        return array_search( $widget_class, $this->container );
+        return array_search( $widget_class, $this->container, true );
     }
 }

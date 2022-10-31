@@ -4,10 +4,106 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.1',
+        'released' => '2022-10-11',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => '[VariableProduct] Fixed variable product\'s variation image uploading height size overlapping on price field.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductSearch] Fixed product search of the product listing page of the vendor dashboard is not working.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[OrderEmail] Fixed multiple emails are sent to the customer when a parent order\'s status is changed to processing from failed payment.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '**fix:** Removed unwanted popup code from the SweetAlert library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed the vendor dashboard adds new products\' discount prices set to 0 by default.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor order page not showing line item qty and totals',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.0',
+        'released' => '2022-09-27',
+        'changes'  => [
+            'New'    => [
+                [
+                    'title'       => 'Added `dokan_selected_multistep_category` js hook after a category has been selected',
+                    'description' => '',
+                ],
+            ],
+            'Update' => [
+                [
+                    'title'       => 'Fixed some security issues',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Performance enhancement for dokan',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated some JS libraries',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard `add-product-single.php` file is renamed to `edit-product-single.php`',
+                    'description' => '',
+                ],
+            ],
+            'Fix'    => [
+                [
+                    'title'       => 'Select2 spacing issue CSS fix',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor single store page profile picture CSS issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor product page extra table field issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed admin dashboard vendor details page: social profile Twitter icon is not showing issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed multiple sub-categories of the same parent category is assigned to a product, they are not saved issue',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Store settings]: Not being able to add "+" or "-" sign to the phone number filed of the store on Firefox web browser.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Bank withdrawal method required field updated, Added a new filter hook `dokan_bank_payment_required_fields` so that site owner can manage required fields as they pleased',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Category-based commission is not working when a category has child categories.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.6.5',
         'released' => '2022-08-25',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[WPML] Added WPML support for the multistep product category.',
                     'description' => '',

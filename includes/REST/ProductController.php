@@ -2,15 +2,20 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Data;
+use WC_Product;
+use WC_Product_Variation;
 use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_REST_Server;
 use WC_Product_Simple;
 use WC_REST_Exception;
 use WC_Product_Factory;
 use WC_Product_Download;
-use WC_Product_Attribute;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
+use WeDevs\Dokan\Product\ProductAttribute;
 
 /**
  * Store API Controller
@@ -264,7 +269,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return \WC_Product|null|false
+     * @return WC_Product|null|false
      */
     public function get_object( $id ) {
         return wc_get_product( $id );
@@ -375,7 +380,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_product_permissions_check() {
         return current_user_can( 'dokan_view_product_menu' );
@@ -386,7 +391,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function create_product_permissions_check() {
         return current_user_can( 'dokan_add_product' );
@@ -397,7 +402,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_single_product_permissions_check() {
         return current_user_can( 'dokandar' );
@@ -408,7 +413,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function update_product_permissions_check() {
         return current_user_can( 'dokan_edit_product' );
@@ -419,7 +424,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function delete_product_permissions_check() {
         return current_user_can( 'dokan_delete_product' );
@@ -430,7 +435,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool
      */
     public function get_product_summary_permissions_check() {
         return current_user_can( 'dokan_view_product_status_report' );
@@ -441,7 +446,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
@@ -459,7 +464,9 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return void
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response|WP_Error
      */
     public function get_related_product( $request ) {
         $related_ids = wc_get_related_products( $request['id'], $request['per_page'] );
@@ -484,7 +491,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array|object|WP_Error|\WP_REST_Response
+     * @return array|object|WP_Error|WP_REST_Response
      */
     public function get_top_rated_product( $request ) {
         $result   = dokan_get_top_rated_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -511,7 +518,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_best_selling_product( $request ) {
         $result   = dokan_get_best_selling_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -538,7 +545,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_featured_product( $request ) {
         $result   = dokan_get_featured_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -565,7 +572,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 2.9.1
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     public function get_latest_product( $request ) {
         $result   = dokan_get_latest_products( $request['per_page'], $request['seller_id'], $request['page'] );
@@ -590,7 +597,7 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare objects query
      *
-     * @param \WeDevs\Dokan\Abstracts\WP_REST_Request $request
+     * @param WP_REST_Request|array $request
      *
      * @return array
      */
@@ -722,10 +729,10 @@ class ProductController extends DokanRESTController {
      * Get product data.
      *
      * @param WC_Product $product Product instance.
-     * @param string $context Request context.
+     * @param WP_REST_Request $request Request context.
      *                            Options: 'view' and 'edit'.
      *
-     * @return array
+     * @return WP_REST_Response|array|WP_Error
      */
     protected function prepare_data_for_response( $product, $request ) {
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -934,67 +941,8 @@ class ProductController extends DokanRESTController {
 
         // Attributes.
         if ( isset( $request['attributes'] ) ) {
-            $attributes = [];
-
-            foreach ( $request['attributes'] as $attribute ) {
-                $attribute_id   = 0;
-                $attribute_name = '';
-
-                // Check ID for global attributes or name for product attributes.
-                if ( ! empty( $attribute['id'] ) ) {
-                    $attribute_id   = absint( $attribute['id'] );
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                } elseif ( ! empty( $attribute['name'] ) ) {
-                    $attribute_name = wc_clean( $attribute['name'] );
-                }
-
-                if ( ! $attribute_id && ! $attribute_name ) {
-                    continue;
-                }
-
-                if ( $attribute_id ) {
-                    if ( isset( $attribute['options'] ) ) {
-                        $options = $attribute['options'];
-
-                        if ( ! is_array( $attribute['options'] ) ) {
-                            // Text based attributes - Posted values are term names.
-                            $options = explode( WC_DELIMITER, $options );
-                        }
-
-                        $values = array_map( 'wc_sanitize_term_text_based', $options );
-                        $values = array_filter( $values, 'strlen' );
-                    } else {
-                        $values = [];
-                    }
-
-                    if ( ! empty( $values ) ) {
-                        // Add attribute to array, but don't set values.
-                        $attribute_object = new WC_Product_Attribute();
-                        $attribute_object->set_id( $attribute_id );
-                        $attribute_object->set_name( $attribute_name );
-                        $attribute_object->set_options( $values );
-                        $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                        $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                        $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                        $attributes[] = $attribute_object;
-                    }
-                } elseif ( isset( $attribute['options'] ) ) {
-                    // Custom attribute - Add attribute to array and set the values.
-                    if ( is_array( $attribute['options'] ) ) {
-                        $values = $attribute['options'];
-                    } else {
-                        $values = explode( WC_DELIMITER, $attribute['options'] );
-                    }
-                    $attribute_object = new WC_Product_Attribute();
-                    $attribute_object->set_name( $attribute_name );
-                    $attribute_object->set_options( $values );
-                    $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                    $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                    $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                    $attributes[] = $attribute_object;
-                }
-            }
-            $product->set_attributes( $attributes );
+            $product_attribute = new ProductAttribute( $request['attributes'] );
+            $product_attribute->set( $product );
         }
 
         // Sales and prices.
@@ -1508,15 +1456,6 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * Prepare a single product for create or update.
-     *
-     * @param WP_REST_Request $request Request object.
-     * @param bool $creating If is creating a new object.
-     *
-     * @return WP_Error|WC_Data
-     */
-
-    /**
      * Set product images.
      *
      * @param WC_Product $product Product instance.
@@ -1753,7 +1692,7 @@ class ProductController extends DokanRESTController {
      *
      * @since 3.6.2
      *
-     * @return array
+     * @return WP_REST_Response|WP_Error
      */
     public function get_multistep_categories() {
         $categories_controller = new Categories();

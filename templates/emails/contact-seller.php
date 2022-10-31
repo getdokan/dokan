@@ -6,7 +6,6 @@
  *
  * @class       Dokan_Email_Contact_Seller
  * @version     2.6.8
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p>
-    <?php echo wp_kses_post( sprintf( __( 'From : %s (%s)', 'dokan-lite' ), $data['customer_name'], $data['customer_email'] ) ); ?>
+    <?php
+    echo wp_kses_post(
+        // translators: 1) customer name 2) customer email
+        sprintf( __( 'From : %1$s (%2$s)', 'dokan-lite' ), esc_html( $data['customer_name'] ), esc_html( $data['customer_email'] ) )
+    );
+    ?>
     <br>
 </p>
 <hr>

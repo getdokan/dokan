@@ -15,14 +15,23 @@
             <?php dokan_post_input_box( $post_id, '_sku' ); ?>
         </div>
 
-        <div class="content-half-part hide_if_variable hide_if_external">
+        <div class="content-half-part hide_if_variable hide_if_external hide_if_stock_global">
             <label for="_stock_status" class="form-label"><?php esc_html_e( 'Stock Status', 'dokan-lite' ); ?></label>
 
-            <?php dokan_post_input_box( $post_id, '_stock_status', array( 'options' => array(
-                'instock'     => __( 'In Stock', 'dokan-lite' ),
-                'outofstock'  => __( 'Out of Stock', 'dokan-lite' ),
-                'onbackorder' => __( 'On Backorder', 'dokan-lite' ),
-            ) ), 'select' ); ?>
+            <?php
+            dokan_post_input_box(
+                $post_id,
+                '_stock_status',
+                [
+                    'options' => [
+                        'instock'     => __( 'In Stock', 'dokan-lite' ),
+                        'outofstock'  => __( 'Out of Stock', 'dokan-lite' ),
+                        'onbackorder' => __( 'On Backorder', 'dokan-lite' ),
+                    ],
+                ],
+                'select'
+            );
+            ?>
         </div>
 
         <div class="dokan-clearfix"></div>
@@ -49,11 +58,20 @@
             <div class="content-half-part last-child">
                 <label for="_backorders" class="form-label"><?php esc_html_e( 'Allow Backorders', 'dokan-lite' ); ?></label>
 
-                <?php dokan_post_input_box( $post_id, '_backorders', array( 'options' => array(
-                    'no'     => __( 'Do not allow', 'dokan-lite' ),
-                    'notify' => __( 'Allow but notify customer', 'dokan-lite' ),
-                    'yes'    => __( 'Allow', 'dokan-lite' )
-                ) ), 'select' ); ?>
+                <?php
+                dokan_post_input_box(
+                    $post_id,
+                    '_backorders',
+                    [
+                        'options' => [
+                            'no'     => __( 'Do not allow', 'dokan-lite' ),
+                            'notify' => __( 'Allow but notify customer', 'dokan-lite' ),
+                            'yes'    => __( 'Allow', 'dokan-lite' ),
+                        ],
+                    ],
+                    'select'
+                );
+                ?>
             </div>
             <div class="dokan-clearfix"></div>
         </div><!-- .show_if_stock -->
@@ -62,11 +80,11 @@
         <div class="dokan-form-group hide_if_grouped hide_if_external">
             <label class="" for="_sold_individually">
                 <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
-                <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ?>
+                <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ); ?>
             </label>
         </div>
 
-        <?php if ( $post_id ): ?>
+        <?php if ( $post_id ) : ?>
             <?php do_action( 'dokan_product_edit_after_inventory' ); ?>
         <?php endif; ?>
 

@@ -28,31 +28,29 @@
             });
         },
         openRequestWithdrawWindow: () => {
-            let self = $(this),
-                withdrawTemplate = wp.template( 'withdraw-request-popup' );
+            const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
+                modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
+                    width       : 690,
+                    overlayColor: 'rgba(0, 0, 0, 0.8)',
+                    headerColor : '#b11d1db8',
+                } );
 
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: withdrawTemplate().trim(),
-                    type: 'inline'
-                },
-                callbacks: {}
-            });
+            modal.iziModal( 'setContent', withdrawTemplate().trim() );
+            modal.iziModal( 'open' );
+
             Dokan_Withdraw.init();
         },
         opensScheduleWindow: () => {
-            let self = $(this),
-                scheduleTemplate = wp.template( 'withdraw-schedule-popup' );
+            const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
+                modal = $( '#dokan-withdraw-schedule-popup' ).iziModal( {
+                    width       : 690,
+                    overlayColor: 'rgba(0, 0, 0, 0.8)',
+                    headerColor : '#b11d1db8',
+                } );
 
-            $.magnificPopup.open({
-                fixedContentPos: true,
-                items: {
-                    src: scheduleTemplate().trim(),
-                    type: 'inline'
-                },
-                callbacks: {}
-            });
+            modal.iziModal( 'setContent', scheduleTemplate().trim() );
+            modal.iziModal( 'open' );
+
             Dokan_Withdraw.init();
         },
         makeDefault: ( e ) => {
@@ -119,22 +117,26 @@
                 dokan.ajaxurl,
                 {
                     action: 'dokan_handle_withdraw_request',
-                    nonce: nonce,
+                    _handle_withdraw_request: nonce,
                     amount: amount,
                     method: method,
                 },
-                ( response ) => {
+                async ( response ) => {
                     if ( response.success ) {
-                        dokan_sweetalert( response.data, {
+                        await dokan_sweetalert( response.data, {
                             position: 'bottom-end',
                             toast: true,
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 2000,
                             timerProgressBar: true,
+                            didOpen: (toast) => {
+                              setTimeout( function() {
+                                form.unblock();
+                                window.location.reload();
+                              }, 2000);
+                            }
                         } );
-                        form.unblock();
-                        window.location.reload();
                     } else {
                         dokan_sweetalert( '', {
                             icon: 'error',

@@ -278,7 +278,7 @@ class OrderControllerV2 extends OrderController {
      *
      * @return array
      */
-    function sanitize_order_ids( $order_ids ) {
+    public function sanitize_order_ids( $order_ids ) {
         if ( is_array( $order_ids ) ) {
             return array_map( 'absint', $order_ids );
         } else {

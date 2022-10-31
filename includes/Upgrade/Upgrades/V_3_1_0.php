@@ -24,8 +24,7 @@ class V_3_1_0 extends DokanUpgrader {
 
             if ( empty( $new_methods ) ) {
                 unset( $options['withdraw_methods'] ); // by default paypal will be added if we remove withdraw_methods
-            }
-            else {
+            } else {
                 $options['withdraw_methods'] = $new_methods;
             }
 

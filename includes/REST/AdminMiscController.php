@@ -41,7 +41,7 @@ class AdminMiscController extends DokanRESTAdminController {
     /**
      * Get help documents
      *
-     * @return WP_REST_Response
+     * @return \WP_REST_Response
      */
     public function get_help() {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
