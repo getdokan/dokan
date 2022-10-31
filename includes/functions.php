@@ -4521,11 +4521,11 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
     foreach ( $orders as $order_id ) {
         $order = wc_get_order( $order_id );
 
-        if ( ! $order instanceof \WC_Order || $order->get_status() === $status ) {
+        if ( ! $order instanceof \WC_Order ) {
             continue;
         }
 
-        if ( in_array( $order->get_status(), $excluded_status, true ) ) {
+        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
             continue;
         }
 
