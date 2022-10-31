@@ -115,6 +115,17 @@ class WithdrawController extends WP_REST_Controller {
 				'schema' => [ $this, 'get_public_batch_schema' ],
 			]
         );
+
+        // Returns withdraw settings for vendors.
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/settings', [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_withdraw_settings' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				],
+			]
+        );
     }
 
     /**
@@ -826,5 +837,24 @@ class WithdrawController extends WP_REST_Controller {
         ];
 
         return $schema;
+    }
+
+    /**
+     * Returns withdraw settings for vendors
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_withdraw_settings() {
+        $payment_methods         = array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() );
+        $default_withdraw_method = dokan_withdraw_get_default_method( dokan_get_current_user_id() );
+
+        $response = rest_ensure_response( [
+            'withdraw_method' => $default_withdraw_method,
+            'payment_methods' => $payment_methods,
+        ] );
+
+        return $response;
     }
 }
