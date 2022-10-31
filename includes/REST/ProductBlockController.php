@@ -55,7 +55,7 @@ class ProductBlockController extends ProductController {
     /**
      * Get Product detail item for block.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param \WP_Request $request
      * @return void
@@ -113,7 +113,7 @@ class ProductBlockController extends ProductController {
                 ],
             ],
             $product,
-            $context,
+            $context
         );
     }
 }

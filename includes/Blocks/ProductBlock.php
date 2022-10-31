@@ -12,7 +12,7 @@ class ProductBlock {
     /**
      * Get Product configurations.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @return array
      */
