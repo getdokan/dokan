@@ -1413,7 +1413,7 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
     $start_date = 'day' !== $group_by ? $start_date->modify( 'first day of this month' ) : $start_date;
 
     $date_interval = new DateInterval( $duration_str );
-    $date_range    = new DatePeriod( $start_date, $date_interval, $interval );
+    $date_range    = $interval > 0 ? new DatePeriod( $start_date, $date_interval, $interval ) : [ $start_date ];
     foreach ( $date_range as $date ) {
         $time = $date->getTimestamp() . '000';
         if ( ! isset( $prepared_data[ $time ] ) ) {
