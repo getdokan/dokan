@@ -603,7 +603,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
      */
     function dokan_store_category_menu( $seller_id, $title = '' ) {
         ?>
-    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+    <div class="store-cat-stack-dokan cat-drop-stack">
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
@@ -635,7 +635,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
      */
     function dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type ) {
         ?>
-    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+    <div class="store-cat-stack-dokan cat-drop-stack">
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
