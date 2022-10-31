@@ -143,7 +143,7 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
     /**
      * Get product attribute and term update collection params.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @return array
      */
@@ -198,7 +198,7 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
     /**
      * Update product attributes by a product id.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param WP_Rest_Request            $request
      * @return WP_Error|WP_REST_Response Rest Response

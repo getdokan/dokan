@@ -133,9 +133,9 @@ class StoreSettingControllerV2 extends StoreSettingController {
     }
 
     /**
-     * Update Store
+     * Update Store.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param WP_REST_Request $request
      *
@@ -146,9 +146,9 @@ class StoreSettingControllerV2 extends StoreSettingController {
     }
 
     /**
-     * Update Store
+     * Update Store single settings.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param WP_REST_Request $request
      *
@@ -159,9 +159,9 @@ class StoreSettingControllerV2 extends StoreSettingController {
     }
 
     /**
-     * Update Store single settings field
+     * Update Store single settings field.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param WP_REST_Request $request
      *
