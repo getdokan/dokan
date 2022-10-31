@@ -4467,6 +4467,73 @@ function is_tweleve_hour_format() {
 }
 
 /**
+ * Returns all nonce and nonce related data.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
+function dokan_get_nonce_data() {
+    return apply_filters(
+        'dokan_get_nonce_data',
+        [
+            'export_order' => [
+                'nonce'            => wp_create_nonce( 'dokan_vendor_order_export_action' ),
+                'nonce_key'        => 'dokan_vendor_order_export_nonce',
+                'action'           => 'dokan_vendor_order_export_action',
+                '_wp_http_referer' => '/dashboard/orders/',
+            ],
+            'order' => [
+                'details_url'    => wp_nonce_url( add_query_arg( [ 'order_id' => 'edit_this_as_id' ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
+                'complete_order' => [
+                    'action'   => 'dokan_change_status',
+                    '_wpnonce' => wp_create_nonce( 'dokan_change_status' ),
+                ],
+            ],
+        ]
+    );
+}
+
+/**
+ * Updates bulk orders status by orders ids.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $postdata
+ *
+ * @return void
+ */
+function dokan_apply_bulk_order_status_change( $postdata ) {
+    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
+    $orders = array_map( 'absint', $postdata['bulk_orders'] );
+
+    // -1 means bluk action option value
+    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
+
+    if ( in_array( $status, $excluded_status, true ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order instanceof \WC_Order ) {
+            continue;
+        }
+
+        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
+            continue;
+        }
+
+        $order->update_status( $status );
+    }
+}
+
+/**
  * Sanitize phone number.
  * Allows only numbers and "+" (plus sign) "." (full stop) "(" ")" "-".
  *
