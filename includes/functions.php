@@ -4356,21 +4356,24 @@ function is_tweleve_hour_format() {
  * @return array
  */
 function dokan_get_nonce_data() {
-    return [
-        'export_order' => [
-            'nonce'     => wp_create_nonce( 'dokan_vendor_order_export_action' ),
-            'nonce_key' => 'dokan_vendor_order_export_nonce',
-            'action' => 'dokan_vendor_order_export_action',
-            '_wp_http_referer'=> '/dashboard/orders/',
-        ],
-        'order' => [
-            'details_url'     => wp_nonce_url( add_query_arg( [ 'order_id' => 'edit_this_as_id' ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
-            'complete_order' => [
-                'action'   => 'dokan_change_status',
-                '_wpnonce' => wp_create_nonce( 'dokan_change_status' ),
+    return apply_filters(
+        'dokan_get_nonce_data',
+        [
+            'export_order' => [
+                'nonce'            => wp_create_nonce( 'dokan_vendor_order_export_action' ),
+                'nonce_key'        => 'dokan_vendor_order_export_nonce',
+                'action'           => 'dokan_vendor_order_export_action',
+                '_wp_http_referer' => '/dashboard/orders/',
             ],
-        ],
-    ];
+            'order' => [
+                'details_url'    => wp_nonce_url( add_query_arg( [ 'order_id' => 'edit_this_as_id' ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
+                'complete_order' => [
+                    'action'   => 'dokan_change_status',
+                    '_wpnonce' => wp_create_nonce( 'dokan_change_status' ),
+                ],
+            ],
+        ]
+    );
 }
 
 /**
@@ -4388,7 +4391,7 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
     }
 
     $status = sanitize_text_field( $postdata['status'] );
-    $orders = array_map( 'sanitize_text_field', $postdata['bulk_orders'] );
+    $orders = array_map( 'absint', $postdata['bulk_orders'] );
 
     // -1 means bluk action option value
     $excluded_status = [ '-1', 'cancelled', 'refunded' ];
@@ -4397,8 +4400,8 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
         return;
     }
 
-    foreach ( $orders as $order ) {
-        $the_order = new WC_Order( $order );
+    foreach ( $orders as $order_id ) {
+        $the_order = new WC_Order( $order_id );
 
         if ( $the_order->get_status() === $status ) {
             continue;
