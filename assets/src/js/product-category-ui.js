@@ -193,7 +193,7 @@
             }
 
             // sort categories by name
-            returnableCategories.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+            returnableCategories.sort((a,b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))
 
             return {
                 categories: returnableCategories,
