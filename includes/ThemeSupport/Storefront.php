@@ -62,6 +62,7 @@ class Storefront {
         if ( dokan_is_seller_dashboard() ) {
             // Styles to fix date range picker js broken layout issue
             $style .= '.daterangepicker .calendar-table td, .daterangepicker .calendar-table th { padding: 5px 10px; } .daterangepicker td.in-range { background-color: #ebf4f8 !important; } .daterangepicker td.active, .daterangepicker td.active:hover { background-color: #357ebd !important; }';
+            $style .= '.dokan-dashboard-wrap .dokan-btn.dokan-btn-theme {border-radius: 3px ! important }';
         }
 
         // Check if the current page is dokan store listing page.

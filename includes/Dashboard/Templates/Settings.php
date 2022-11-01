@@ -573,14 +573,12 @@ class Settings {
                 }
 
                 // Check & make 12 hours format data for save.
-                $opening_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $opening_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
-                $opening_timestamp = $opening_time ? $opening_time->getTimestamp() : '';
-                $opening_time      = $opening_time ? $opening_time->format( 'g:i a' ) : '';
+                $opening_timestamp = dokan_get_timestamp( $opening_time );
+                $opening_time      = dokan_convert_date_format( $opening_time, wc_time_format(), 'g:i a' );
 
                 // Check & make 12 hours format data for save.
-                $closing_time      = \DateTimeImmutable::createFromFormat( wc_time_format(), $closing_time, new \DateTimeZone( dokan_wp_timezone_string() ) );
-                $closing_timestamp = $closing_time ? $closing_time->getTimestamp() : $closing_time;
-                $closing_time      = $closing_time ? $closing_time->format( 'g:i a' ) : '';
+                $closing_timestamp = dokan_get_timestamp( $closing_time );
+                $closing_time      = dokan_convert_date_format( $closing_time, wc_time_format(), 'g:i a' );
 
                 // If our opening time is less than closing time.
                 if ( $opening_timestamp > $closing_timestamp ) {

@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 5.4  
-**Tested up to:** 6.0.2  
+**Tested up to:** 6.0.3  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 6.9.4  
+**WC tested up to:** 7.0.0  
 **Requires PHP:** 7.0  
-**Stable tag:** 3.7.0  
+**Stable tag:** 3.7.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,31 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.4 ( Oct 27, 2022 ) ###
+
+- **fix:** Fixed a fatal error update updating to Dokan if Dokan Pro version is outdated
+
+### v3.7.3 ( Oct 27, 2022 ) ###
+
+- **fix:** Fixed a fatal error due to a function moved from dokan pro
+
+### v3.7.2 ( Oct 27, 2022 ) ###
+
+- **new:** Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters
+- **new:** Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks
+- **fix:** [AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page
+- **fix:** [Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.
+- **fix:** Spaces between paragraphs are too large under the store terms and condition page.
+
+### v3.7.1 ( Oct 11, 2022 ) ###
+
+- **fix:** [VariableProduct] Fixed variable product's variation image uploading height size overlapping on price field.
+- **fix:** [ProductSearch] Fixed product search of the product listing page of the vendor dashboard is not working.
+- **fix:** [OrderEmail] Fixed multiple emails are sent to the customer when a parent order's status is changed to processing from failed payment.
+- **fix:** Removed unwanted popup code from the SweetAlert library
+- **fix:** Fixed the vendor dashboard adds new products' discount prices set to 0 by default.
+- **fix:** Fixed vendor order page not showing line item qty and totals
 
 ### v3.7.0 ( Sep 27, 2022 ) ###
 

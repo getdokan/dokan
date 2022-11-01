@@ -46,51 +46,6 @@ $img_kses = apply_filters(
             }
             ?>
         </small>
-
-        <?php
-        global $wpdb;
-
-        $item     = new WC_Order_Item( $order );
-        $metadata = $item->get_meta_data();
-        foreach ( $metadata as $meta ) {
-            // Skip hidden core fields
-            if ( in_array(
-                $meta['meta_key'],
-                apply_filters(
-                    'woocommerce_hidden_order_itemmeta', [
-                        '_qty',
-                        '_tax_class',
-                        '_product_id',
-                        '_variation_id',
-                        '_line_subtotal',
-                        '_line_subtotal_tax',
-                        '_line_total',
-                        '_line_tax',
-                    ]
-                ),
-                true
-            ) ) {
-                continue;
-            }
-
-            // Skip serialised meta
-            if ( is_serialized( $meta['meta_value'] ) ) {
-                continue;
-            }
-
-            // Get attribute data
-            if ( taxonomy_exists( wc_sanitize_taxonomy_name( $meta['meta_key'] ) ) ) {
-                $term               = get_term_by( 'slug', $meta['meta_value'], wc_sanitize_taxonomy_name( $meta['meta_key'] ) ); // phpcs:ignore
-                $meta['meta_key']   = wc_attribute_label( wc_sanitize_taxonomy_name( $meta['meta_key'] ) ); // phpcs:ignore
-                $meta['meta_value'] = isset( $term->name ) ? $term->name : $meta['meta_value']; // phpcs:ignore
-            } else {
-                $meta['meta_key'] = apply_filters( 'woocommerce_attribute_label', wc_attribute_label( $meta['meta_key'], $_product ), $meta['meta_key'] ); // phpcs:ignore
-            }
-
-            echo '<br /><strong>' . wp_kses_post( rawurldecode( $meta['meta_key'] ) ) . ':</strong> ' . wp_kses_post( make_clickable( rawurldecode( $meta['meta_value'] ) ) );
-        }
-        ?>
-
     </td>
 
     <?php do_action( 'woocommerce_admin_order_item_values', $_product, $item, absint( $item_id ) ); ?>

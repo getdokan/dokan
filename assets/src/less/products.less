@@ -273,7 +273,7 @@
   }
 
   .dokan-product-edit-form .dokan-new-product-featured-img {
-    height: auto !important;
+    max-height: 300px;
   }
 
   label {
@@ -699,6 +699,11 @@
                   margin-right: 20px;
                   position: relative;
                   cursor: pointer;
+
+                  img {
+                    max-width: 130px;
+                    max-height: 130px
+                  }
 
                   &.dokan-img-remove {
                     img {

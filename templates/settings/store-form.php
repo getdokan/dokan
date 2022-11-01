@@ -71,7 +71,6 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
             <i class="fas fa-cloud-upload-alt"></i>
-
             <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
             <p class="help-block">
                 <?php
@@ -341,54 +340,50 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         } );
 
-        // Set timepicker jquery here.
-        $( '.dokan-store-times .time .opening-time' ).timepicker({
-            scrollDefault : 'now',
-            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:00' : '11:30 pm'; ?>',
-            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
-        });
+        <?php if ( ! dokan()->is_pro_exists() ) : ?>
+            // Set timepicker jquery here.
+            $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
+                step          : 30,
+                lang          : dokan_helper.timepicker_locale,
+                minTime       : '12:00 am',
+                maxTime       : '11:30 pm',
+                timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
+                scrollDefault : 'now',
+            });
 
-        $( '.dokan-store-times .time .closing-time' ).timepicker({
-            scrollDefault : 'now',
-            minTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '00:59' : '00:29 am'; ?>',
-            maxTime       : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '23:59' : '11:59 pm'; ?>',
-            timeFormat    : '<?php echo addcslashes( esc_attr( wc_time_format() ), '\\' ); ?>',
-            step          : '<?php echo 'h:i' === strtolower( wc_time_format() ) ? '60' : '30'; ?>',
-        });
-
-        // Add validation for store time when changed.
-        $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
-            const self              = $( this ),
-                openValue           = self.find( '.opening-time' ).val(),
-                closeValue          = self.find( '.closing-time' ).val(),
-                formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
-                formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
-
-            if ( formattedOpenValue > formattedCloseValue ) {
-                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-            } else {
-                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
-            }
-        });
-
-        $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
-            $( '.dokan-store-times' ).each( function () {
+            // Add validation for store time when changed.
+            $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
                 const self              = $( this ),
                     openValue           = self.find( '.opening-time' ).val(),
                     closeValue          = self.find( '.closing-time' ).val(),
-                    formattedOpenValue  = moment( openValue, dokan_get_i18n_time_format() ).format( 'HH:mm' ),
-                    formattedCloseValue = moment( closeValue, dokan_get_i18n_time_format() ).format( 'HH:mm' );
+                    formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
+                    formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
 
-                if ( formattedOpenValue > formattedCloseValue && '<?php echo ! dokan()->is_pro_exists(); ?>' ) {
+                if ( formattedOpenValue > formattedCloseValue ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-                    e.preventDefault();
-                    return false;
+                } else {
+                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
                 }
-
-                self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
             });
-        });
+
+            $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
+                $( '.dokan-store-times' ).each( function () {
+                    const self              = $( this ),
+                        openValue           = self.find( '.opening-time' ).val(),
+                        closeValue          = self.find( '.closing-time' ).val(),
+                        formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
+                        formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
+
+                    if ( formattedOpenValue >= formattedCloseValue ) {
+                        self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+                });
+            });
+        <?php endif; ?>
 
         var dokan_address_wrapper = $( '.dokan-address-fields' );
         var dokan_address_select = {

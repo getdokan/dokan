@@ -153,7 +153,7 @@ export default {
         },
 
         showAlert( $title, $des, $status ) {
-            this.$swal( $title, $des, $status );
+            swal.fire( $title, $des, $status );
         },
 
         createVendor() {
@@ -169,8 +169,8 @@ export default {
                 .done( ( response ) => {
                     this.$root.$emit( 'vendorAdded', response );
 
-                    this.$swal( {
-                        type: 'success',
+                    swal.fire( {
+                        icon: 'success',
                         title: this.__( 'Vendor Created', 'dokan-lite' ),
                         text: this.__( 'A vendor has been created successfully!', 'dokan-lite' ),
                         showCloseButton: true,
@@ -182,7 +182,7 @@ export default {
                     .then( ( result ) => {
                         if ( result.value ) {
                             this.$root.$emit( 'addAnotherVendor' );
-                        } else if ( result.dismiss === this.$swal.DismissReason.cancel ) {
+                        } else if ( result.dismiss === swal.DismissReason.cancel ) {
 
                             if ( this.hasPro ) {
                                 this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
