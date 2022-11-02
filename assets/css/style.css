@@ -2133,6 +2133,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   min-width: 165px;
   display: block;
   background: #242424eb;
+  border-bottom: none;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover:not(.active) ul.navigation-submenu li {
   display: block;
@@ -2171,11 +2172,12 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   box-shadow: 0 3px 5px rgb(0 0 0%);
   margin-left: 0;
   background: #242424;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li {
   padding-left: 1.3em;
   line-height: 1;
+  background: #242424;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li a {
   font-size: 13px;
@@ -2183,7 +2185,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li:hover,
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li.current {
   font-weight: 600;
-  background: unset;
+  background: inherit;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li:hover a,
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li.current a {
@@ -2231,6 +2233,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   right: auto;
   bottom: auto;
   border: 0 none;
+  border-bottom: 0.5px solid #f05025;
   margin-top: 0;
   box-shadow: none;
 }

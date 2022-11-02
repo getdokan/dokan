@@ -74,6 +74,7 @@
               min-width: 165px;
               display: block;
               background: #242424eb;
+              border-bottom: none;
 
               li {
                 display: block;
@@ -125,11 +126,12 @@
           box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
           margin-left: 0;
           background: #242424;
-          padding: 10px 0;
+          padding: 8px 0;
 
           li {
             padding-left: 1.3em;
             line-height: 1;
+            background: #242424;
 
             a {
               font-size: 13px;
@@ -138,7 +140,7 @@
             &:hover,
             &.current {
               font-weight: 600;
-              background: unset;
+              background: inherit;
 
               a {
                 color: @mainColor;
@@ -203,6 +205,7 @@
             right: auto;
             bottom: auto;
             border: 0 none;
+            border-bottom: 0.5px solid @mainColor;
             margin-top: 0;
             box-shadow: none;
           }

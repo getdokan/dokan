@@ -594,7 +594,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
 
                 $submenu .= sprintf(
-                    '<li class="%s"><a href="%s" class="submenu-link">%s %s</a></li>',
+                    '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
                     isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$filtered_key}/{$filtered_subkey}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
