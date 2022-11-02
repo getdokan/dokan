@@ -1229,10 +1229,14 @@ jQuery(function($) {
                     subElemRect     = subElem.getBoundingClientRect(),
                     dashboard       = $( '.dokan-dashboard-wrap' ),
                     dashboardRect   = dashboard[0].getBoundingClientRect(),
-                    dashboardHeight = Math.min( dashboardRect.bottom, dashboard.height() );
+                    dashboardHeight = Math.min( dashboardRect.bottom, dashboardRect.height );
 
                 if ( dashboardHeight < subElemRect.height ) {
-                    dashboard.css( 'height', dashboardRect.height + subElemRect.height - dashboardHeight );
+                    let extendedHeight = subElemRect.height - dashboardHeight;
+                    if ( elemRect.top < elemRect.height ) {
+                        extendedHeight += elemRect.top;
+                    }
+                    dashboard.css( 'height', dashboardRect.height + extendedHeight );
                 } else {
                     dashboard.css( 'height', '' );
                 }
