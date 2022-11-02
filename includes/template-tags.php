@@ -421,7 +421,7 @@ function dokan_get_dashboard_nav() {
         'settings' => array(
             'title' => __( 'Settings', 'dokan-lite' ),
             'icon'  => '<i class="fas fa-cog"></i>',
-            // 'url'   => dokan_get_navigation_url( 'settings/store' ),
+            'url'   => dokan_get_navigation_url( 'settings/store' ),
             'pos'   => 200,
         ),
     );
@@ -571,14 +571,14 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
         $class     = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
         $title     = isset( $item['title'] ) ? $item['title'] : __( 'No title', 'dokan-lite' );
+        $menu_slug = $filtered_key;
         $submenu   = '';
-        $menu_slug = $key;
 
         if ( ! empty( $item['submenu'] ) ) {
-            $class     .= ' has-submenu';
-            $title     .= ' <i class="fas fa-caret-right menu-dropdown"></i>';
-            $menu_slug = trailingslashit( $menu_slug ) . array_key_first( $item['submenu'] );
-            $submenu   = sprintf( '<ul class="navigation-submenu %s">', $key );
+            $class .= ' has-submenu';
+            $title .= ' <i class="fas fa-caret-right menu-dropdown"></i>';
+            $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
+            $subkey_slugs = [];
 
             foreach ( $item['submenu'] as $sub_key => $sub ) {
                 /**
@@ -596,13 +596,20 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 $submenu .= sprintf(
                     '<li class="%s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
-                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "$key/$sub_key" ),
+                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$filtered_key}/{$filtered_subkey}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
                     isset( $sub['title'] ) ? $sub['title'] : __( 'No title', 'dokan-lite' )
                 );
+
+                $subkey_slugs[] = $filtered_subkey;
             }
 
             $submenu .= '</ul>';
+
+            // Building parent menu slug pointing to the first submenu item
+            if ( isset( $subkey_slugs[0] ) ) {
+                $menu_slug = trailingslashit( $menu_slug ) . $subkey_slugs[0];
+            }
         }
 
         $menu .= sprintf(

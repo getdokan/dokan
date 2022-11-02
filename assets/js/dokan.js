@@ -3068,7 +3068,7 @@ jQuery(function($) {
                     }
                 }
             } else {
-                $(elem).removeClass( 'submenu-hovered' );
+                elem.removeClass( 'submenu-hovered' );
                 $( '.dokan-dashboard-wrap' ).css( 'height', '' );
                 $(subElem).css( 'bottom', 0 );
                 $(subElem).removeAttr( 'style' );
