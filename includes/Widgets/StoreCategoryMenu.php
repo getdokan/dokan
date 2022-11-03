@@ -28,6 +28,9 @@ class StoreCategoryMenu extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
+            // load frontend script
+            wp_enqueue_script( 'dokan-frontend' );
+
             echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             $defaults = array(

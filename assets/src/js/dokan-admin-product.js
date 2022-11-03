@@ -1,5 +1,5 @@
 (function($) {
-    let DokanAdminProduct = {
+    const DokanAdminProduct = {
         searchVendors(element) {
             $( element ).each( function () {
                 let selector = $(this);
@@ -62,12 +62,12 @@
         },
 
         init() {
-            dokan_admin.vendor_selectwoo('.dokan_product_author_override');
+            this.searchVendors( '.dokan_product_author_override' );
         }
     }
 
-    $( document ).ready(()=>{
-        window.dokan_admin.vendor_selectwoo = DokanAdminProduct.searchVendors;
+    $(function(){
+        // DOM Ready - Let's invoke the init method
         DokanAdminProduct.init();
     });
 })(jQuery);

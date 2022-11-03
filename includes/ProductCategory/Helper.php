@@ -109,13 +109,13 @@ class Helper {
                     $current_chosen        = array_merge( [ $term_id ], $all_children );
                     $common_children_count = count( array_intersect( $existing_chosen, $current_chosen ) );
 
-                    // If current term and saved chosen cat terms are same blood line category and current term,
-                    // has more ancestors means current term is more youngest term.
+                    // If current term and saved chosen cat terms are same bloodline category and current term,
+                    // has more ancestors means current term is the youngest term.
                     if ( $common_children_count > 0 && count( $all_ancestors ) > count( $item['ancestors'] ) ) {
                         unset( $all_parents[ $old_parent ][ $item_id ] );
 
                         $all_parents[ $old_parent ][ $term_id ] = self::get_formatted_chosen_cat( $all_children, $all_ancestors );
-                        // If current term and saved chosen cat terms are same blood line category but not the youngest child.
+                        // If current term and saved chosen cat terms are same bloodline category but not the youngest child.
                     } elseif ( $common_children_count > 0 && count( $all_ancestors ) < count( $item['ancestors'] ) ) {
                         break;
                     } elseif ( $common_children_count < 1 ) {
