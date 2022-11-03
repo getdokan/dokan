@@ -545,6 +545,11 @@ class Assets {
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
             ],
+            'dokan-frontend'       => [
+                'src'     => $asset_url . '/js/dokan-frontend.js',
+                'deps'    => [ 'jquery' ],
+                'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
+            ],
         ];
 
         return $scripts;

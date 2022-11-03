@@ -227,7 +227,7 @@ export default {
         },
 
         storeCategory() {
-            return this.$route.query.store_category || null;
+            return this.$route.query.store_categories || null;
         }
     },
 
@@ -314,7 +314,7 @@ export default {
                 status: self.currentStatus,
                 orderby: self.sortBy,
                 order: self.sortOrder,
-                store_category: self.storeCategory
+                store_categories: self.storeCategory
             };
 
             data = dokan.hooks.applyFilters( 'DokanGetVendorArgs', data, this.$route.query );

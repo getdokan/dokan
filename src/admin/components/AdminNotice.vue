@@ -149,7 +149,7 @@ export default {
 
         handleAction( action, index ) {
             if ( action.confirm_message ) {
-                swal.fire( {
+                Swal.fire( {
                     title: this.__( 'Are you sure?', 'dokan-lite' ),
                     icon: 'warning',
                     html: action.confirm_message,

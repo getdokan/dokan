@@ -1413,7 +1413,7 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
     $start_date = 'day' !== $group_by ? $start_date->modify( 'first day of this month' ) : $start_date;
 
     $date_interval = new DateInterval( $duration_str );
-    $date_range    = new DatePeriod( $start_date, $date_interval, $interval );
+    $date_range    = $interval > 0 ? new DatePeriod( $start_date, $date_interval, $interval ) : [ $start_date ];
     foreach ( $date_range as $date ) {
         $time = $date->getTimestamp() . '000';
         if ( ! isset( $prepared_data[ $time ] ) ) {
@@ -2373,9 +2373,10 @@ function dokan_product_listing_filter() {
         'product_types'       => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
         'product_cat'         => -1,
         'product_search_name' => '',
-        'date'                => 0,
+        'date'                => '',
         'product_type'        => '',
         'filter_by_other'     => '',
+        'post_status'         => 'all',
     ];
 
     if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
@@ -2384,6 +2385,7 @@ function dokan_product_listing_filter() {
         $template_args['date']                = ! empty( $_GET['date'] ) ? intval( wp_unslash( $_GET['date'] ) ) : '';
         $template_args['product_type']        = ! empty( $_GET['product_type'] ) ? sanitize_text_field( wp_unslash( $_GET['product_type'] ) ) : '';
         $template_args['filter_by_other']     = ! empty( $_GET['filter_by_other'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_by_other'] ) ) : '';
+        $template_args['post_status']         = ! empty( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) : 'all';
     }
 
     dokan_get_template_part( 'products/listing-filter', '', apply_filters( 'dokan_product_listing_filter_args', $template_args ) );
