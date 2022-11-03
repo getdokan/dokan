@@ -183,7 +183,7 @@ function dokan_product_listing_status_filter() {
     $outofstock_counts = dokan_count_stock_posts( 'product', dokan_get_current_user_id(), 'outofstock' );
     $statuses          = dokan_get_post_status();
 
-    if ( isset( $_GET['_post_status_count_nonce'], $_GET['post_status'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_post_status_count_nonce'] ) ), 'product_status_counter_nonce' ) ) {
+    if ( isset( $_GET['_product_listing_filter_nonce'], $_GET['post_status'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         $status_class = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
     }
 
