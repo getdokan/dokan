@@ -180,7 +180,7 @@ module.exports = jQuery;
       var _this4 = this;
 
       if (action.confirm_message) {
-        swal.fire({
+        Swal.fire({
           title: this.__('Are you sure?', 'dokan-lite'),
           icon: 'warning',
           html: action.confirm_message,
