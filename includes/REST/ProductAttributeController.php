@@ -49,6 +49,19 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
                 ),
             )
         );
+
+         // REST API for setting Product default attribute.
+         register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/set-default/(?P<id>[\d]+)',
+            array(
+                array(
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => array( $this, 'update_product_default_attribute' ),
+                    'permission_callback' => array( $this, 'update_product_attribute_permissions_check' ),
+                    'args'                => $this->get_product_update_collection_params(),
+                ),
+            )
+        );
     }
 
     /**
@@ -221,6 +234,37 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
 
         if ( ! $is_saved ) {
             return new WP_Error( 'product_bulk_attribute_terms_saved_failed', __( 'Failed to save product bulk attribute and terms. Please try again later.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        return rest_ensure_response( $is_saved );
+    }
+
+    /**
+     * Update product default attributes by a product id.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_Rest_Request            $request
+     * @return WP_Error|WP_REST_Response Rest Response
+     */
+    public function update_product_default_attribute( $request ) {
+        $product_id = isset( $request['id'] ) ? absint( wp_unslash( $request['id'] ) ) : 0;
+
+        if ( empty( $product_id ) ) {
+            return new WP_Error( 'invalid_product_id', __( 'Invalid product id.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        $product = wc_get_product( $product_id );
+
+        if ( empty( $product ) ) {
+            return new WP_Error( 'no_product_found', __( 'No product found.', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $product_attribute = new ProductAttribute( $request['attributes'] );
+        $is_saved = $product_attribute->set_default( $product, true );
+
+        if ( ! $is_saved ) {
+            return new WP_Error( 'product_default_attribute_saved_failed', __( 'Failed to save product default attribute and terms. Please try again later.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
         return rest_ensure_response( $is_saved );
