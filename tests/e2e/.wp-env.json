@@ -1,0 +1,22 @@
+{
+  "phpVersion": "8.0",
+  "WP_DEBUG": "true",
+  "SCRIPT_DEBUG": "true",
+  "WP_DEBUG_LOG": "true",
+  "WP_DEBUG_DISPLAY": "true",
+
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/woocommerce.7.0.1.zip",
+    "../../",
+    "../../plugins/dokan-pro",
+    "https://demo.nurul.me/wp-content/uploads/2022/11/ba.zip",
+    "https://demo.nurul.me/wp-content/uploads/2022/11/wa.zip",
+    "https://demo.nurul.me/wp-content/uploads/2022/11/wb.zip",
+    "https://demo.nurul.me/wp-content/uploads/2022/11/wps.zip",
+    "https://demo.nurul.me/wp-content/uploads/2022/11/ws.zip"
+  ],
+  "themes": [
+    "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
+  ]
+ 
+}
