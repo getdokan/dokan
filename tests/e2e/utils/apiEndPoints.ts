@@ -48,13 +48,14 @@ export const endPoints = {
 
     // Orders
     getAllOrders: `${SERVER_URL}/wp-json/dokan/v1/orders/`,
-    getAllOrdersWithPagination: `${SERVER_URL}/wp-json/dokan/v1/orders/?per_page=2&page=2`,
+    getAllOrdersWithPagination: `${SERVER_URL}/wp-json/dokan/v1/orders/?per_page=2&page=2`, //TODO:
+    getOrdersSummary: `${SERVER_URL}/wp-json/dokan/v1/orders/summary`,
     getNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/`,
     getSingleNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/115`,
-    getSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/115`,
-    getOrdersSummaryReport: `${SERVER_URL}/wp-json/dokan/v1/orders/summary`,
+    getSingleOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
     getMyOrdersCustomer: `${SERVER_URL}`,
     postCreateNoteForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/474/notes`,
+    putUpdateOrder:  (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
     putUpdateOrderStatus: `${SERVER_URL}/wp-json/dokan/v1/orders/578/?status=wc-pending`,
     delDeleteSingleNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/115`,
 
@@ -67,9 +68,9 @@ export const endPoints = {
 
     // Coupons
     getGetAllCoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons/`,
-    getGetASingleCoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons/586`,
-    postCreateACoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`,
-    putUpdateACoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/313`,
+    getGetSingleCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/586`,
+    postCreateCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`,
+    putUpdateCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
 
 
     // Reviews

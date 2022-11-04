@@ -65,13 +65,14 @@ test('get all stores', async ({ request }) => {
 
 
 test('get single store info', async ({ request }) => {
-    const response = await request.get(endPoints.getAllStores)
-    const responseBody = await response.json()
-    let sellerId = (responseBody.find(o => o.first_name === 'vendor1')).id
-
-    const response1 = await request.get(endPoints.getSingleStoreInfo(sellerId))
+    const response1 = await request.get(endPoints.getAllStores)
     const responseBody1 = await response1.json()
+    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
     console.log(responseBody1)
+
+    const response = await request.get(endPoints.getSingleStoreInfo(sellerId))
+    const responseBody = await response.json()
+    console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
@@ -127,13 +128,14 @@ test('get single store info', async ({ request }) => {
 
 
 test('get single store products', async ({ request }) => {
-    const response = await request.get(endPoints.getAllStores)
-    const responseBody = await response.json()
-    let sellerId = (responseBody.find(o => o.first_name === 'vendor1')).id
-
-    const response1 = await request.get(endPoints.getSingleStoreProducts(sellerId))
+    const response1 = await request.get(endPoints.getAllStores)
     const responseBody1 = await response1.json()
+    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
     console.log(responseBody1)
+
+    const response = await request.get(endPoints.getSingleStoreProducts(sellerId))
+    const responseBody = await response.json()
+    console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
@@ -141,14 +143,15 @@ test('get single store products', async ({ request }) => {
 
 });
 
-test.only('get single store reviews', async ({ request }) => {
-    const response = await request.get(endPoints.getAllStores)
-    const responseBody = await response.json()
-    let sellerId = (responseBody.find(o => o.first_name === 'vendor1')).id
-
-    const response1 = await request.get(endPoints.getSingleStoreReviews(sellerId))
+test('get single store reviews', async ({ request }) => {
+    const response1 = await request.get(endPoints.getAllStores)
     const responseBody1 = await response1.json()
+    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
     console.log(responseBody1)
+
+    const response = await request.get(endPoints.getSingleStoreReviews(sellerId))
+    const responseBody = await response.json()
+    console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)

@@ -22,15 +22,15 @@ test('get products summary', async ({ request }) => {
     expect(response.status()).toBe(200)
 });
 
-test('get single products', async ({ request }) => {
-    const response = await request.get(endPoints.getAllProducts)
-    const responseBody = await response.json()
-    let productId = (responseBody.find(o => o.name === 'p1_v1')).id
-    // console.log(responseBody)
-
-    const response1 = await request.get(endPoints.getSingleProduct(productId))
+test('get single product', async ({ request }) => {
+    const response1 = await request.get(endPoints.getAllProducts)
     const responseBody1 = await response1.json()
-    console.log(responseBody1)
+    let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    // console.log(responseBody1)
+
+    const response = await request.get(endPoints.getSingleProduct(productId))
+    const responseBody = await response.json()
+    console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
@@ -51,6 +51,7 @@ test('update a product', async ({ request }) => {
     const response1 = await request.get(endPoints.getAllProducts)
     const responseBody1 = await response1.json()
     let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    // console.log(responseBody1)
 
 
     const response = await request.put(endPoints.putUpdateProduct(productId),{data: payloads.updateProduct})
@@ -62,10 +63,11 @@ test('update a product', async ({ request }) => {
 });
 
 
-test.only('delete a product', async ({ request }) => {
+test('delete a product', async ({ request }) => {
     const response1 = await request.get(endPoints.getAllProducts)
     const responseBody1 = await response1.json()
     let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    // console.log(responseBody1)
 
     const response = await request.delete(endPoints.delDeleteProduct(productId))
     const responseBody = await response.json()

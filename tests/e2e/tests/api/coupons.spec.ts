@@ -5,7 +5,7 @@ import { payloads } from '../../utils/payloads'
 
 //TODO: need to send vendor credentials for vendor info
 test('get all coupons', async ({ request }) => {
-    const response = await request.get(endPoints.getAllProducts)
+    const response = await request.get(endPoints.getGetAllCoupons)
     const responseBody = await response.json()
     console.log(responseBody)
 
@@ -13,32 +13,13 @@ test('get all coupons', async ({ request }) => {
     expect(response.status()).toBe(200)
 });
 
-test('get products summary', async ({ request }) => {
-    const response = await request.get(endPoints.getProductsSummary)
-    const responseBody = await response.json()
-    console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
-
-test('get single products', async ({ request }) => {
-    const response = await request.get(endPoints.getAllProducts)
-    const responseBody = await response.json()
-    let productId = (responseBody.find(o => o.name === 'p1_v1')).id
-    // console.log(responseBody)
-
-    const response1 = await request.get(endPoints.getSingleProduct(productId))
+test('get single coupon', async ({ request }) => {
+    const response1 = await request.get(endPoints.getGetAllCoupons)
     const responseBody1 = await response1.json()
+    let couponId = (responseBody1.find(o => o.code === 'c1_v1')).id
     console.log(responseBody1)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
-
-
-test('create a product', async ({ request }) => {
-    const response = await request.post(endPoints.postCreateProduct,{data: payloads.createProduct})
+    const response = await request.get(endPoints.getSingleProduct(couponId))
     const responseBody = await response.json()
     console.log(responseBody)
 
@@ -47,13 +28,8 @@ test('create a product', async ({ request }) => {
 });
 
 
-test('update a product', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllProducts)
-    const responseBody1 = await response1.json()
-    let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
-
-
-    const response = await request.put(endPoints.putUpdateProduct(productId),{data: payloads.updateProduct})
+test('create a coupon', async ({ request }) => {
+    const response = await request.post(endPoints.postCreateCoupon,{data: payloads.createCoupon})
     const responseBody = await response.json()
     console.log(responseBody)
 
@@ -62,12 +38,13 @@ test('update a product', async ({ request }) => {
 });
 
 
-test.only('delete a product', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllProducts)
+test.only('update a coupon', async ({ request }) => {
+    const response1 = await request.get(endPoints.getGetAllCoupons)
     const responseBody1 = await response1.json()
-    let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    let couponId = (responseBody1.find(o => o.code === 'c1_v1')).id
+    // console.log(responseBody1)
 
-    const response = await request.delete(endPoints.delDeleteProduct(productId))
+    const response = await request.put(endPoints.putUpdateCoupon(couponId),{data: payloads.updateCoupon})
     const responseBody = await response.json()
     console.log(responseBody)
 
