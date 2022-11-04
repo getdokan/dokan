@@ -11,7 +11,7 @@ import {
     type JSHandle,
     type ElementHandle
 } from '@playwright/test'
-import {selector} from './selectors'
+import { selector } from './selectors'
 require('dotenv').config();
 
 // This Page Contains All Necessary Playwright Automation Methods
@@ -142,9 +142,14 @@ export class BasePage {
         await this.page.setContent(html)
     }
 
-    //Brings page to front (activates tab)
+    //brings page to front (activates tab)
     async bringToFront(): Promise<void> {
         await this.page.bringToFront()
+    }
+
+    // scroll to top
+    async scrollToTop() {  //TODO: crosscheck
+        await this.page.evaluate(() => { window.scroll(0, 0); });
     }
 
     /**
@@ -294,8 +299,6 @@ export class BasePage {
         return await this.page.getAttribute(selector, attribute)
     }
 
- 
-
     //get class attribute value
     async getClassValue(selector: string): Promise<string | null> {
         return await this.page.getAttribute(selector, 'className')   //TODO: maybe class
@@ -315,6 +318,21 @@ export class BasePage {
         // await this.page.evaluate((element, attribute) => element.removeAttribute(attribute), element, attribute)
         let element = await this.page.locator(selector)
         await element.evaluate(element => element.removeAttribute(attribute))
+    }
+
+    // get element property value: background color
+    async getElementBackgroundColor(selector: string) {   //TODO: update with playwright method
+        let element = await this.page.locator(selector)
+        let value = await element.evaluate(element => window.getComputedStyle(element).getPropertyValue('background-color'), element)
+        // console.log(value)
+        return value
+    }
+
+    // get multiple element texts
+    async getMultipleElementTexts(selector: string) {
+        let texts = await this.page.$$eval(selector, elements => elements.map(item => item.textContent))
+        // console.log(texts)
+        return texts
     }
 
 
@@ -398,17 +416,26 @@ export class BasePage {
     // }
     // }
 
-    async selectbyValue(selector: string, value: string): Promise<string[]> {
-        return await this.page.selectOption(selector, {value: value})
-        }
+    // select by value
+    async selectByValue(selector: string, value: string): Promise<string[]> {
+        return await this.page.selectOption(selector, { value: value })
+    }
 
-        async selectbylabel(selector: string,  value: string): Promise<string[]> {
-            return await this.page.selectOption(selector, {label: value})
-            }
+    // select by label
+    async selectBylabel(selector: string, value: string): Promise<string[]> {
+        return await this.page.selectOption(selector, { label: value })
+    }
 
-            async selectbynumber(selector: string,  value: number): Promise<string[]> {
-                return await this.page.selectOption(selector, {index: value})
-                }
+    // select by number
+    async selectBynumber(selector: string, value: number): Promise<string[]> {
+        return await this.page.selectOption(selector, { index: value })
+    }
+
+    // set value based on select options text 
+    async selectByText(selectSelector: string, optionSelector: string, text: string) {
+        let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
+        await this.selectbyValue(selectSelector, optionValue);
+    }
 
 
 
@@ -769,6 +796,13 @@ export class BasePage {
         })
     }
 
+    // type on prompt box/alert
+    async fillAlert(value:string): Promise<void> {
+        this.page.on('dialog', async dialog => {
+            await dialog.accept(value)
+        })
+    }
+
     // // get default prompt value. Otherwise, returns empty string.
     // async getDefaultPromptValue(): Promise<string> {
     //     let value: string
@@ -796,6 +830,7 @@ export class BasePage {
     //     return message
     // }
 
+
     /**
      * Cookies methods
      */
@@ -818,6 +853,24 @@ export class BasePage {
         return decodeURIComponent(cookie.value).split('|')[0]
     }
 
+
+    /**
+     * drodown methods
+     */
+
+    // set dropdown option  span dropdown
+    async setDropdownOptionSpan(selector: string, value: string) {
+        let elements = await this.page.$$(selector)
+        for (let element of elements) {
+            const text = element.evaluate(element => element.textContent, element)
+            // console.log(text)
+            if (value.toLowerCase() == (text.trim()).toLowerCase()) {
+                // console.log(text)
+                await element.click()
+            }
+        }
+    }
+
     /**
      * Debug methods
      */
@@ -825,6 +878,99 @@ export class BasePage {
     // pauses script execution
     async pause(): Promise<void> {
         await this.page.pause()
+    }
+
+    /**
+     * custom methods
+     */
+
+
+    // admin enable switcher , if enabled then Skip : admin settings switcher
+    async enableSwitcher(selector: string): Promise<void> {
+        let value = await this.getElementBackgroundColor(selector)
+        if (!value.includes('rgb(0, 144, 255)')) {
+            await this.click(selector)
+        }
+    }
+
+    // admin disable switcher , if disabled then skip : admin settings switcher
+    async disableSwitcher(selector: string): Promise<void> {
+        let value = await this.getElementBackgroundColor(selector)
+        if (value.includes('rgb(0, 144, 255)')) {
+            await this.click(selector)
+        }
+    }
+
+    // admin Enable payment methods via Slider
+    async enablePaymentMethod(selector: string) {
+        let classValueBefore = await this.getClassValue(selector)
+        if (classValueBefore.includes('woocommerce-input-toggle--disabled')) {
+            await this.click(selector)
+        }
+        let classValueAfter = await this.getClassValue(selector)
+        expect(classValueAfter).toContain('woocommerce-input-toggle--enabled')
+    }
+
+    // get pseudo element style
+    async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
+        let element = await this.getElement(selector)
+        let value = await page.evaluate((element, pseudoElement, property) => {
+            let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
+            let style = stylesObject.getPropertyValue(property)
+            return style
+        }, element, pseudoElement, property)
+        return value
+    }
+
+    // enable switch or checkbox: dokan setup wizard
+    async enableSwitcherSetupWizard(selector: string) {
+        let IsVisible = await this.isVisible(selector)
+        if (IsVisible) {
+            let element = await this.getElement(selector)
+            await element.focus()
+            let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+            // console.log('before', value)
+            // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+            if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+                // console.log('if:', selector)
+                await this.page.evaluate(el => el.click(), element)
+                await this.wait(0.3)
+                await this.page.evaluate(el => el.click(), element)
+            } else {
+                // console.log('else:', selector)
+                await this.page.evaluate(el => el.click(), element)
+            }
+        }
+    }
+
+    // enable switch or checkbox: dokan setup wizard
+    async disableSwitcherSetupWizard(selector) {
+        let IsVisible = await this.isVisible(selector)
+        if (IsVisible) {
+            let element = await this.getElement(selector)
+            await element.focus()
+            let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+            // console.log('before', value)
+            // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+            if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+                // console.log('if:', selector)
+                await this.page.evaluate(el => el.click(), element)
+            } else {
+                // console.log('else:', selector)
+                await this.page.evaluate(el => el.click(), element)
+                await this.wait(0.3)
+                await this.page.evaluate(el => el.click(), element)
+            }
+        }
+    }
+
+    // delete element if exist (only first will delete) : dokan rma,report abuse
+    async deleteIfExists(selector:string) { //TODO: there may be alternative solution, this method might not needed
+        let elementExists = await this.isVisible(selector)
+        if (elementExists) {
+            let element =  await this.page.locator(selector)
+            await element.click()
+        }
     }
 
 }

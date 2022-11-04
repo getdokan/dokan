@@ -61,7 +61,7 @@ export class VendorPage extends BasePage {
         let subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack)
         if (subscriptionPackIsVisible) {
             // await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())    //TODO:
-            await this.select(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring)
+            await this.selectByValue(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring)
         }
         await this.click(selector.vendor.vRegistration.register)
         let registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError)
@@ -97,7 +97,7 @@ export class VendorPage extends BasePage {
             await this.clearAndType(selector.vendor.vSetup.paypal, setupWizardData.paypal())
             // bank transfer
             await this.type(selector.vendor.vSetup.bankAccountName, setupWizardData.bankAccountName)
-            await this.select(selector.vendor.vSetup.bankAccountType, setupWizardData.bankAccountType)
+            await this.selectByValue(selector.vendor.vSetup.bankAccountType, setupWizardData.bankAccountType)
             await this.type(selector.vendor.vSetup.bankRoutingNumber, setupWizardData.bankRoutingNumber)
             await this.type(selector.vendor.vSetup.bankAccountNumber, setupWizardData.bankAccountNumber)
             await this.type(selector.vendor.vSetup.bankName, setupWizardData.bankName)
@@ -154,9 +154,9 @@ export class VendorPage extends BasePage {
         await this.addSimpleProduct(product)
 
         // edit product
-        await this.select(selector.vendor.product.productType, product.productType)
+        await this.selectByValue(selector.vendor.product.productType, product.productType)
         // add variation
-        await this.select(selector.vendor.product.customProductAttribute, `pa_${product.attribute}`)
+        await this.selectByValue(selector.vendor.product.customProductAttribute, `pa_${product.attribute}`)
         await this.click(selector.vendor.product.addAttribute)
         await this.waitForSelector(selector.vendor.product.selectAll)
         await this.click(selector.vendor.product.selectAll)
@@ -164,12 +164,12 @@ export class VendorPage extends BasePage {
         await this.waitForSelector(selector.vendor.product.saveAttributes)
         await this.click(selector.vendor.product.saveAttributes)
         await this.waitForSelector(selector.vendor.product.addVariations)
-        await this.select(selector.vendor.product.addVariations, product.variations.linkAllVariation)
+        await this.selectByValue(selector.vendor.product.addVariations, product.variations.linkAllVariation)
         await this.click(selector.vendor.product.go)
         await this.waitForSelector(selector.vendor.product.confirmGo)
         await this.click(selector.vendor.product.confirmGo)
         await this.click(selector.vendor.product.okSuccessAlertGo)
-        await this.select(selector.vendor.product.addVariations, product.variations.variableRegularPrice)
+        await this.selectByValue(selector.vendor.product.addVariations, product.variations.variableRegularPrice)
         await this.click(selector.vendor.product.go)
         // await this.waitForSelector(selector.vendor.product.variationPrice)
         await this.type(selector.vendor.product.variationPrice, product.regularPrice())
@@ -184,13 +184,13 @@ export class VendorPage extends BasePage {
     async addSimpleSubscription(product: { productType: any; productName?: () => string; category?: string; regularPrice?: () => string; subscriptionPrice: any; subscriptionPeriodInterval: any; subscriptionPeriod: any; expireAfter: any; subscriptionTrialLength: any; subscriptionTrialPeriod: any; storeName?: string; status?: string; saveSuccessMessage: any; }): Promise<void> {
         await this.addSimpleProduct(product)
         // edit product
-        await this.select(selector.vendor.product.productType, product.productType)
+        await this.selectByValue(selector.vendor.product.productType, product.productType)
         await this.type(selector.vendor.product.subscriptionPrice, product.subscriptionPrice())
-        await this.select(selector.vendor.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval)
-        await this.select(selector.vendor.product.subscriptionPeriod, product.subscriptionPeriod)
-        await this.select(selector.vendor.product.expireAfter, product.expireAfter)
+        await this.selectByValue(selector.vendor.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval)
+        await this.selectByValue(selector.vendor.product.subscriptionPeriod, product.subscriptionPeriod)
+        await this.selectByValue(selector.vendor.product.expireAfter, product.expireAfter)
         await this.type(selector.vendor.product.subscriptionTrialLength, product.subscriptionTrialLength)
-        await this.select(selector.vendor.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod)
+        await this.selectByValue(selector.vendor.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod)
 
         await this.click(selector.vendor.product.saveProduct)
         let productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage)
@@ -201,9 +201,9 @@ export class VendorPage extends BasePage {
     async addVariableSubscription(product: { productType: any; productName?: () => string; category?: string; subscriptionPrice?: () => string; subscriptionPeriodInterval?: string; subscriptionPeriod?: string; expireAfter?: string; subscriptionTrialLength?: string; subscriptionTrialPeriod?: string; storeName?: string; status?: string; attribute: any; attributeTerms?: string[]; variations: any; saveSuccessMessage: any; regularPrice?: any; }): Promise<void> {
         await this.addSimpleProduct(product)
         // edit product
-        await this.select(selector.vendor.product.productType, product.productType)
+        await this.selectByValue(selector.vendor.product.productType, product.productType)
         // add variation
-        await this.select(selector.vendor.product.customProductAttribute, `pa_${product.attribute}`)
+        await this.selectByValue(selector.vendor.product.customProductAttribute, `pa_${product.attribute}`)
         await this.click(selector.vendor.product.addAttribute)
         await this.waitForSelector(selector.vendor.product.selectAll)
         await this.click(selector.vendor.product.selectAll)
@@ -211,12 +211,12 @@ export class VendorPage extends BasePage {
         await this.waitForSelector(selector.vendor.product.saveAttributes)
         await this.click(selector.vendor.product.saveAttributes)
         await this.waitForSelector(selector.vendor.product.addVariations)
-        await this.select(selector.vendor.product.addVariations, product.variations.linkAllVariation)
+        await this.selectByValue(selector.vendor.product.addVariations, product.variations.linkAllVariation)
         await this.click(selector.vendor.product.go)
         await this.waitForSelector(selector.vendor.product.confirmGo)
         await this.click(selector.vendor.product.confirmGo)
         await this.click(selector.vendor.product.okSuccessAlertGo)
-        await this.select(selector.vendor.product.addVariations, product.variations.variableRegularPrice)
+        await this.selectByValue(selector.vendor.product.addVariations, product.variations.variableRegularPrice)
         await this.click(selector.vendor.product.go)
         await this.waitForSelector(selector.vendor.product.variationPrice)
         await this.type(selector.vendor.product.variationPrice, product.regularPrice())
@@ -232,7 +232,7 @@ export class VendorPage extends BasePage {
     async addExternalProduct(product: { productType: any; productName?: () => string; productUrl: any; buttonText: any; category?: string; regularPrice: any; storeName?: string; status?: string; saveSuccessMessage: any; }): Promise<void> {
         await this.addSimpleProduct(product)
         // edit product
-        await this.select(selector.vendor.product.productType, product.productType)
+        await this.selectByValue(selector.vendor.product.productType, product.productType)
         await this.type(selector.vendor.product.productUrl, await this.getBaseUrl() + product.productUrl)
         await this.type(selector.vendor.product.buttonText, product.buttonText)
         await this.clearAndType(selector.vendor.product.price, product.regularPrice())
@@ -251,8 +251,8 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.vAuction.addNewActionProduct)
         await this.type(selector.vendor.vAuction.productName, product.productName())
         // await this.addCategory(product.category)
-        await this.select(selector.vendor.vAuction.itemCondition, product.itemCondition)
-        await this.select(selector.vendor.vAuction.auctionType, product.auctionType)
+        await this.selectByValue(selector.vendor.vAuction.itemCondition, product.itemCondition)
+        await this.selectByValue(selector.vendor.vAuction.auctionType, product.auctionType)
         await this.type(selector.vendor.vAuction.startPrice, product.regularPrice())
         await this.type(selector.vendor.vAuction.bidIncrement, product.bidIncrement())
         await this.type(selector.vendor.vAuction.reservedPrice, product.reservedPrice())
@@ -278,18 +278,18 @@ export class VendorPage extends BasePage {
         await this.type(selector.vendor.vBooking.productName, productName)
         // await this.addCategory(product.category)
         // general booking options
-        await this.select(selector.vendor.vBooking.bookingDurationType, product.bookingDurationType)
+        await this.selectByValue(selector.vendor.vBooking.bookingDurationType, product.bookingDurationType)
         await this.clearAndType(selector.vendor.vBooking.bookingDurationMax, product.bookingDurationMax)
-        await this.select(selector.vendor.vBooking.bookingDurationUnit, product.bookingDurationUnit)
+        await this.selectByValue(selector.vendor.vBooking.bookingDurationUnit, product.bookingDurationUnit)
         // calendar display mode
-        await this.select(selector.vendor.vBooking.calenderDisplayMode, product.calendarDisplayMode)
+        await this.selectByValue(selector.vendor.vBooking.calenderDisplayMode, product.calendarDisplayMode)
         await this.check(selector.vendor.vBooking.enableCalendarRangePicker)
         // availability
         await this.clearAndType(selector.vendor.vBooking.maxBookingsPerBlock, product.maxBookingsPerBlock)
         await this.clearAndType(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate)
-        await this.select(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit)
+        await this.selectByValue(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit)
         await this.clearAndType(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate)
-        await this.select(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit)
+        await this.selectByValue(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit)
         // costs
         await this.type(selector.vendor.vBooking.baseCost, product.baseCost)
         await this.type(selector.vendor.vBooking.blockCost, product.blockCost)
@@ -354,7 +354,7 @@ export class VendorPage extends BasePage {
             await this.click(selector.vendor.vWithdraw.requestWithdraw)
             await this.clearAndType(selector.vendor.vWithdraw.withdrawAmount, String(minimumWithdrawAmount))
 
-            await this.select(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default)
+            await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default)
             await this.click(selector.vendor.vWithdraw.submitRequest)
 
             let canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest)
@@ -379,10 +379,10 @@ export class VendorPage extends BasePage {
         await this.goToVendorDashboard()
         await this.click(selector.vendor.vDashboard.withdraw)
         await this.click(selector.vendor.vWithdraw.editSchedule)
-        await this.select(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod)
+        await this.selectByValue(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod)
         await this.click(selector.vendor.vWithdraw[withdraw.preferredSchedule])
-        await this.select(selector.vendor.vWithdraw.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount)
-        await this.select(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance)
+        await this.selectByValue(selector.vendor.vWithdraw.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount)
+        await this.selectByValue(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance)
         await this.click(selector.vendor.vWithdraw.changeSchedule)
     }
 
@@ -444,8 +444,8 @@ export class VendorPage extends BasePage {
         await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2)
         await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city)
         await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode)
-        await this.select(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue)
-        await this.select(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue)
+        await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue)
+        await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue)
         // update settings
         await this.click(selector.vendor.vStoreSettings.updateSettings)
 
@@ -476,8 +476,8 @@ export class VendorPage extends BasePage {
         await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2)
         await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city)
         await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode)
-        await this.select(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue)
-        await this.select(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue)
+        await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue)
+        await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue)
         // company info //TODO: uncomment after ui fix
         // await this.clearAndType(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName)
         // await this.clearAndType(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId)
@@ -533,7 +533,7 @@ export class VendorPage extends BasePage {
             await this.click(selector.vendor.vStoreSettings.confirmDeleteSavedVacationSchedule)
         }
         await this.check(selector.vendor.vStoreSettings.goToVacation)
-        await this.select(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle)
+        await this.selectByValue(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle)
         await this.type(selector.vendor.vStoreSettings.vacationDateRangeFrom, vacation.vacationDayFrom)
         await this.type(selector.vendor.vStoreSettings.vacationDateRangeTo, vacation.vacationDayTo)
         await this.type(selector.vendor.vStoreSettings.setVacationMessage, vacation.vacationMessage)
@@ -576,7 +576,7 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.vStoreSettings.clear)
         await this.click(selector.vendor.vStoreSettings.selectAll)
         // await this.selectOptionByText(selector.vendor.vStoreSettings.selectCategory, minMax.category)
-        await this.select(selector.vendor.vStoreSettings.selectCategory, minMax.category)
+        await this.selectByValue(selector.vendor.vStoreSettings.selectCategory, minMax.category)
     }
 
 
@@ -596,15 +596,15 @@ export class VendorPage extends BasePage {
         await this.press(data.key.enter)
         // add-on fields
         await this.click(selector.vendor.vAddonSettings.addField)
-        await this.select(selector.vendor.vAddonSettings.type, addon.type)
-        await this.select(selector.vendor.vAddonSettings.displayAs, addon.displayAs)
+        await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type)
+        await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs)
         await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired)
-        await this.select(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle)
+        await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle)
         await this.click(selector.vendor.vAddonSettings.enableDescription)
         await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription)
         await this.click(selector.vendor.vAddonSettings.requiredField)
         await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption)
-        await this.select(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType)
+        await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType)
         await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput)
         await this.click(selector.vendor.vAddonSettings.publish)
 
@@ -629,14 +629,14 @@ export class VendorPage extends BasePage {
         await this.press(data.key.enter)
         // add-on fields
         await this.click(selector.vendor.vAddonSettings.addedFirstField)
-        await this.select(selector.vendor.vAddonSettings.type, addon.type)
-        await this.select(selector.vendor.vAddonSettings.displayAs, addon.displayAs)
+        await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type)
+        await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs)
         await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired)
-        await this.select(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle)
+        await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle)
         await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription)
         await this.click(selector.vendor.vAddonSettings.requiredField)
         await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption)
-        await this.select(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType)
+        await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType)
         await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput)
         await this.click(selector.vendor.vAddonSettings.update)
 
@@ -793,8 +793,8 @@ export class VendorPage extends BasePage {
         await this.clearAndType(selector.vendor.vVerificationSettings.street2, verification.street2)
         await this.clearAndType(selector.vendor.vVerificationSettings.city, verification.city)
         await this.clearAndType(selector.vendor.vVerificationSettings.postOrZipCode, verification.zipCode)
-        await this.select(selector.vendor.vVerificationSettings.country, verification.country)
-        await this.select(selector.vendor.vVerificationSettings.state, verification.state)
+        await this.selectByValue(selector.vendor.vVerificationSettings.country, verification.country)
+        await this.selectByValue(selector.vendor.vVerificationSettings.state, verification.state)
         await this.click(selector.vendor.vVerificationSettings.uploadResidenceProof)
         await this.uploadMedia(verification.file)
         await this.click(selector.vendor.vVerificationSettings.select)
@@ -863,8 +863,8 @@ export class VendorPage extends BasePage {
             // tab
             await this.click(selector.vendor.vDeliveryTimeSettings.deliveryDayTab(day))
             // individual day settings
-            await this.select(selector.vendor.vDeliveryTimeSettings.openingTime(day), deliveryTime.openingTime)
-            await this.select(selector.vendor.vDeliveryTimeSettings.closingTime(day), deliveryTime.closingTime)
+            await this.selectByValue(selector.vendor.vDeliveryTimeSettings.openingTime(day), deliveryTime.openingTime)
+            await this.selectByValue(selector.vendor.vDeliveryTimeSettings.closingTime(day), deliveryTime.closingTime)
 
             await this.clearAndType(selector.vendor.vDeliveryTimeSettings.timeSlot(day), deliveryTime.timeSlot)
             await this.clearAndType(selector.vendor.vDeliveryTimeSettings.orderPerSlot(day), deliveryTime.orderPerSlot)
@@ -894,7 +894,7 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.vDashboard.settings)
         await this.click(selector.vendor.vSettings.shipping)
         await this.click(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies)
-        await this.select(selector.vendor.vShippingSettings.shippingPolicies.processingTime, shippingPolicy.processingTime)
+        await this.selectByValue(selector.vendor.vShippingSettings.shippingPolicies.processingTime, shippingPolicy.processingTime)
         await this.clearAndType(selector.vendor.vShippingSettings.shippingPolicies.shippingPolicy, shippingPolicy.shippingPolicy)
         await this.type(selector.vendor.vShippingSettings.shippingPolicies.refundPolicy, shippingPolicy.refundPolicy)
         await this.click(selector.vendor.vShippingSettings.shippingPolicies.shippingPoliciesSaveSettings)
@@ -917,7 +917,7 @@ export class VendorPage extends BasePage {
         if (!methodIsVisible) {
             await this.click(selector.vendor.vShippingSettings.addShippingMethod)
 
-            await this.select(selector.vendor.vShippingSettings.shippingMethod, shipping.selectShippingMethod)
+            await this.selectByValue(selector.vendor.vShippingSettings.shippingMethod, shipping.selectShippingMethod)
             await this.click(selector.vendor.vShippingSettings.shippingMethodPopupAddShippingMethod)
 
         }
@@ -930,9 +930,9 @@ export class VendorPage extends BasePage {
                 // flat rate
                 await this.clearAndType(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod)
                 await this.clearAndType(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost)
-                await this.select(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus)
+                await this.selectByValue(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus)
                 await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description)
-                await this.select(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType)
+                await this.selectByValue(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType)
                 break
 
             case 'free_shipping':
@@ -945,19 +945,19 @@ export class VendorPage extends BasePage {
                 // local pickup
                 await this.clearAndType(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod)
                 await this.clearAndType(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost)
-                await this.select(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus)
+                await this.selectByValue(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus)
                 await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description)
                 break
 
             case 'dokan_table_rate_shipping':
                 // dokan table rate shipping
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod)
-                await this.select(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus)
-                await this.select(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts)
+                await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus)
+                await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts)
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee)
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost)
                 // rates
-                // await this.select(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
+                // await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder)
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder)
                 await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder)
@@ -970,10 +970,10 @@ export class VendorPage extends BasePage {
             case 'dokan_distance_rate_shipping':
                 // dokan distance rate shipping
                 await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod)
-                await this.select(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus)
-                await this.select(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode)
-                await this.select(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid)
-                await this.select(selector.vendor.vShippingSettings.distanceRateShippingDistanceUnit, shipping.distanceUnit)
+                await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus)
+                await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode)
+                await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid)
+                await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingDistanceUnit, shipping.distanceUnit)
                 await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDistance)
                 await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDuration)
                 // shipping address
@@ -982,7 +982,7 @@ export class VendorPage extends BasePage {
                 await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city)
                 await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode)
                 await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state)
-                await this.select(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country)
+                await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country)
 
                 await this.click(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettings)
                 let distanceRateSuccessMessage = await this.getElementText(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettingsSuccessMessage)
@@ -1029,10 +1029,10 @@ export class VendorPage extends BasePage {
     //     await this.click(selector.vendor.vSettings.rma)
     //
     //     await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label)
-    //     await this.select(selector.vendor.vRmaSettings.type, rma.type)
-    //     await this.select(selector.vendor.vRmaSettings.length, rma.rmaLength)
+    //     await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type)
+    //     await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength)
     //     await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue)
-    //     await this.select(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration)
+    //     await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration)
     //
     //     let refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasons)
     //     if (refundReasonIsVisible) {
@@ -1073,7 +1073,7 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.vDashboard.returnRequest)
         await this.click(selector.vendor.vReturnRequest.view(orderId))
         // change order status to refund
-        await this.select(selector.vendor.vReturnRequest.changeOrderStatus, 'processing')
+        await this.selectByValue(selector.vendor.vReturnRequest.changeOrderStatus, 'processing')
         // await this.alert('accept')
         await this.acceptAlert()
         await this.click(selector.vendor.vReturnRequest.updateOrderStatus)
@@ -1109,10 +1109,10 @@ export class VendorPage extends BasePage {
         // override rma settings
         await this.check(selector.vendor.product.overrideYourDefaultRmaSettingsForThisProduct)
         await this.clearAndType(selector.vendor.product.rmaLabel, label)
-        await this.select(selector.vendor.product.rmaType, type)
-        await this.select(selector.vendor.product.rmaLength, length)
+        await this.selectByValue(selector.vendor.product.rmaType, type)
+        await this.selectByValue(selector.vendor.product.rmaLength, length)
         await this.clearAndType(selector.vendor.product.rmaLengthValue, lengthValue)
-        await this.select(selector.vendor.product.rmaLengthDuration, lengthDuration)
+        await this.selectByValue(selector.vendor.product.rmaLengthDuration, lengthDuration)
 
         let refundReasonIsVisible = await this.isVisible(selector.vendor.product.refundReasons)
         if (refundReasonIsVisible) {
@@ -1158,7 +1158,7 @@ export class VendorPage extends BasePage {
         //change order status
         await this.click(selector.vendor.vOrders.orderLink(orderNumber))
         await this.click(selector.vendor.vOrders.edit)
-        await this.select(selector.vendor.vOrders.orderStatus, orderStatus)
+        await this.selectByValue(selector.vendor.vOrders.orderStatus, orderStatus)
         await this.click(selector.vendor.vOrders.updateOrderStatus)
 
         let currentOrderStatus = await this.getElementText(selector.vendor.vOrders.currentOrderStatus)
