@@ -217,6 +217,15 @@
                     li {
                         padding-right: 1.4em;
                         padding-left: 0;
+
+                        &:hover,
+                        &.current {
+                            &:before {
+                                right: 1%;
+                                left: 0;
+                            }
+                        }
+
                     }
                 }
             }

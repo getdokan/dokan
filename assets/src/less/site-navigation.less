@@ -125,13 +125,13 @@
           z-index: 9999;
           box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
           margin-left: 0;
-          background: #242424;
+          background: #242424ed;
           padding: 8px 0;
 
           li {
             padding-left: 1.3em;
             line-height: 1;
-            background: #242424;
+            background: #242424ed;
 
             a {
               font-size: 13px;
@@ -139,11 +139,22 @@
 
             &:hover,
             &.current {
-              font-weight: 600;
               background: inherit;
 
+              &:before {
+                left: 0.5%;
+                top: 4%;
+                border: transparent solid;
+                content: ' ';
+                height: 92%;
+                position: absolute;
+                pointer-events: none;
+                border-color: #fff;
+              }
+
               a {
-                color: @mainColor;
+                font-weight: 800 !important;
+                color: #fff;
               }
             }
           }
@@ -169,6 +180,17 @@
           }
 
           ul.navigation-submenu {
+            position: relative;
+            z-index: 3;
+            top: auto;
+            left: auto;
+            right: auto;
+            bottom: auto;
+            border: 0 none;
+            border-bottom: 0.5px solid @mainColor;
+            margin-top: 0;
+            box-shadow: none;
+
             li {
               &:not(.current) {
                 a {
@@ -186,8 +208,7 @@
 
           a {
             padding-right: 16px;
-            font-weight: bold;
-
+            font-weight: 800;
             i.menu-dropdown {
               transform: translateX(0%) translateY(0%) rotate(270deg);
 
@@ -195,19 +216,6 @@
                 padding-left: 10px;
               }
             }
-          }
-
-          ul.navigation-submenu {
-            position: relative;
-            z-index: 3;
-            top: auto;
-            left: auto;
-            right: auto;
-            bottom: auto;
-            border: 0 none;
-            border-bottom: 0.5px solid @mainColor;
-            margin-top: 0;
-            box-shadow: none;
           }
         }
 

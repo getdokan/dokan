@@ -146,6 +146,11 @@
   padding-right: 1.4em;
   padding-left: 0;
 }
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li:hover:before,
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li.current:before {
+  right: 1%;
+  left: 0;
+}
 .dokan-dashboard .product-edit-new-container .dokan-edit-row .dokan-section-heading h2 {
   float: right;
 }
