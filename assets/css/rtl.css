@@ -96,13 +96,10 @@
   padding-right: 0;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.active a i.menu-dropdown {
-  transform: translateX(0%) translateY(20%) rotate(270deg);
+  display: none;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover a i.menu-dropdown {
-  transform: translateX(-20%) translateY(0%) rotate(0deg);
-}
-.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover a i.menu-dropdown::before {
-  padding-left: 0;
+  display: none;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover:not(.active).has-submenu:after {
   right: 92%;
@@ -110,6 +107,10 @@
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover:not(.active) ul.navigation-submenu {
   right: 100%;
+}
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover:not(.active) ul.navigation-submenu li {
+  padding-left: 0;
+  padding-right: 0.75em;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li.back a {
   padding-left: 0px;
@@ -143,13 +144,13 @@
   margin-right: 0;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li {
-  padding-right: 1.4em;
+  padding-right: 1em;
   padding-left: 0;
 }
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li:hover:before,
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li ul.navigation-submenu li.current:before {
   right: 1%;
-  left: 0;
+  left: auto;
 }
 .dokan-dashboard .product-edit-new-container .dokan-edit-row .dokan-section-heading h2 {
   float: right;

@@ -140,7 +140,7 @@
                         padding-right: 0;
 
                         i.menu-dropdown {
-                            transform: translateX(0%) translateY(20%) rotate(270deg);
+                            display: none;
                         }
                     }
                 }
@@ -148,11 +148,7 @@
                 &:hover {
                     a {
                         i.menu-dropdown {
-                            transform: translateX(-20%) translateY(0%) rotate(0deg);
-
-                            &::before {
-                                padding-left: 0;
-                            }
+                            display: none;
                         }
                     }
 
@@ -166,6 +162,11 @@
 
                         ul.navigation-submenu {
                           right: 100%;
+
+                          li {
+                            padding-left: 0;
+                            padding-right: 0.75em;
+                          }
                         }
                       }
                 }
@@ -215,14 +216,14 @@
                     margin-right: 0;
 
                     li {
-                        padding-right: 1.4em;
+                        padding-right: 1em;
                         padding-left: 0;
 
                         &:hover,
                         &.current {
                             &:before {
                                 right: 1%;
-                                left: 0;
+                                left: auto;
                             }
                         }
 
