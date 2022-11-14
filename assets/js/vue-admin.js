@@ -6203,7 +6203,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                 }));
 
               case 5:
-                return _context2.abrupt("return", swal.fire({
+                return _context2.abrupt("return", Swal.fire({
                   title: _this2.__('Withdraw Method Changed', 'dokan-lite'),
                   text: _this2.__('Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite'),
                   icon: 'warning',
@@ -6397,7 +6397,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
     this.$root.$on('onFieldSwitched', function (value, fieldName) {
       if ('on' === value && 'dokan_general' in _this6.settingValues && 'data_clear_on_uninstall' === fieldName) {
-        swal.fire({
+        Swal.fire({
           icon: 'warning',
           html: _this6.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
           title: _this6.__('Are you sure?', 'dokan-lite'),
@@ -7498,7 +7498,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return this.$route.query.order || 'desc';
     },
     storeCategory: function storeCategory() {
-      return this.$route.query.store_category || null;
+      return this.$route.query.store_categories || null;
     }
   },
   created: function created() {
@@ -7577,7 +7577,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         status: self.currentStatus,
         orderby: self.sortBy,
         order: self.sortOrder,
-        store_category: self.storeCategory
+        store_categories: self.storeCategory
       };
       data = dokan.hooks.applyFilters('DokanGetVendorArgs', data, this.$route.query);
       dokan.api.get('/stores', data).done(function (response, status, xhr) {
@@ -7822,7 +7822,7 @@ var Loading = dokan_get_lib('Loading');
       return this.$route.params.id;
     },
     showAlert: function showAlert($title, $des, $status) {
-      swal.fire($title, $des, $status);
+      Swal.fire($title, $des, $status);
     },
     createVendor: function createVendor() {
       var _this2 = this;
@@ -7836,7 +7836,7 @@ var Loading = dokan_get_lib('Loading');
         dokan.api.post('/stores/', this.store).done(function (response) {
           _this2.$root.$emit('vendorAdded', response);
 
-          swal.fire({
+          Swal.fire({
             icon: 'success',
             title: _this2.__('Vendor Created', 'dokan-lite'),
             text: _this2.__('A vendor has been created successfully!', 'dokan-lite'),
@@ -7848,7 +7848,7 @@ var Loading = dokan_get_lib('Loading');
           }).then(function (result) {
             if (result.value) {
               _this2.$root.$emit('addAnotherVendor');
-            } else if (result.dismiss === swal.DismissReason.cancel) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
               if (_this2.hasPro) {
                 _this2.$router.push({
                   path: 'vendors/' + response.id,
@@ -8017,7 +8017,7 @@ var Loading = dokan_get_lib('Loading');
         var message = window.dokan_handle_ajax_error(jqXHR);
 
         if (message) {
-          swal.fire(message, '', 'error');
+          Swal.fire(message, '', 'error');
         }
       });
     },
@@ -8071,7 +8071,7 @@ var Loading = dokan_get_lib('Loading');
         var message = window.dokan_handle_ajax_error(jqXHR);
 
         if (message) {
-          swal.fire(message, '', 'error');
+          Swal.fire(message, '', 'error');
         }
       });
     },
@@ -8177,8 +8177,8 @@ var Loading = dokan_get_lib('Loading');
                       timer: 3000,
                       timerProgressBar: true,
                       didOpen: function didOpen(toast) {
-                        toast.addEventListener('mouseenter', swal.stopTimer);
-                        toast.addEventListener('mouseleave', swal.resumeTimer);
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
                       }
                     });
                     self.resetToImport();
@@ -8186,7 +8186,7 @@ var Loading = dokan_get_lib('Loading');
                     var message = window.dokan_handle_ajax_error(jqXHR);
 
                     if (message) {
-                      swal.fire(message, '', 'error');
+                      Swal.fire(message, '', 'error');
                     }
                   });
                 }
