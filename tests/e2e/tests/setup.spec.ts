@@ -22,7 +22,7 @@ test.describe('setup test', () => {
         await adminPage.checkActivePlugins(data.plugin)
     })
 
-    test.only('admin set WpSettings', async ({ page }) => {
+    test('admin set WpSettings', async ({ page }) => {
         const loginPage = new LoginPage(page)
         const adminPage = new AdminPage(page)
         await loginPage.adminLogin(data.admin)

@@ -55,14 +55,19 @@ test.only('create a product variation', async ({ request }) => {
 });
 
 
-test('update a product', async ({ request }) => {
+test('update a product variation', async ({ request }) => {
     const response1 = await request.get(endPoints.getAllProducts)
     const responseBody1 = await response1.json()
-    let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    let productId = (responseBody1.find(o => o.name === 'p2_v1')).id
     // console.log(responseBody1)
 
+    const response2 = await request.get(endPoints.getAllProductVariations(productId))
+    const responseBody2 = await response2.json()
+    // console.log(responseBody2[0].id)
+    let variationId = responseBody2[0].id
 
-    const response = await request.put(endPoints.putUpdateProductVariation(productId),{data: payloads.updateProduct})
+
+    const response = await request.put(endPoints.putUpdateProductVariation(productId,variationId),{data: payloads.updateProductVariation})
     const responseBody = await response.json()
     console.log(responseBody)
 
@@ -71,13 +76,18 @@ test('update a product', async ({ request }) => {
 });
 
 
-test('delete a product', async ({ request }) => {
+test('delete a product variation', async ({ request }) => {
     const response1 = await request.get(endPoints.getAllProducts)
     const responseBody1 = await response1.json()
-    let productId = (responseBody1.find(o => o.name === 'p1_v1')).id
+    let productId = (responseBody1.find(o => o.name === 'p2_v1')).id
     // console.log(responseBody1)
 
-    const response = await request.delete(endPoints.delDeleteProductVariation(productId))
+    const response2 = await request.get(endPoints.getAllProductVariations(productId))
+    const responseBody2 = await response2.json()
+    // console.log(responseBody2[0].id)
+    let variationId = responseBody2[0].id
+
+    const response = await request.delete(endPoints.delDeleteProductVariation(productId, variationId))
     const responseBody = await response.json()
     console.log(responseBody)
 

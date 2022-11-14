@@ -15,12 +15,12 @@ export const payloads = {
   },
 
   creatrProductvariation: {
-    name: 'discounted variation',
-    regular_price: '15.00',
+    name: 'l',
+    regular_price: '16.00',
     categories: [{ id: 48 }],
     attributes: [{
       id: 18,
-      name: 'pa_size',
+      // name: 'size',
       option: 'l'
     }],
   },
@@ -29,6 +29,9 @@ export const payloads = {
     regular_price: '300'
   },
 
+  updateProductVariation: {
+    regular_price: '220'
+  },
   createCoupon: {
     code: 'c1_v0',
     amount: '10',

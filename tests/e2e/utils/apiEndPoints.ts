@@ -37,10 +37,10 @@ export const endPoints = {
 
     // Product Variations
     getAllProductVariations: (productId: String) =>`${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
-    getSingleProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}/`,
+    getSingleProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
     postCreateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
-    putUpdateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
-    delDeleteProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
+    putUpdateProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
+    delDeleteProductVariation: (productId: String, variationId: String)=> `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
 
     // Filter products
     getFilterParam: `${SERVER_URL}/wp-json/dokan/v1/products/best-selling/filter-types`,
