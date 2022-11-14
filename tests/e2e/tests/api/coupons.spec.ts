@@ -13,13 +13,13 @@ test('get all coupons', async ({ request }) => {
     expect(response.status()).toBe(200)
 });
 
-test('get single coupon', async ({ request }) => {
+test.only('get single coupon', async ({ request }) => {
     const response1 = await request.get(endPoints.getGetAllCoupons)
     const responseBody1 = await response1.json()
     let couponId = (responseBody1.find(o => o.code === 'c1_v1')).id
-    console.log(responseBody1)
+    // console.log(responseBody1)
 
-    const response = await request.get(endPoints.getSingleProduct(couponId))
+    const response = await request.get(endPoints.getGetSingleCoupon(couponId))
     const responseBody = await response.json()
     console.log(responseBody)
 

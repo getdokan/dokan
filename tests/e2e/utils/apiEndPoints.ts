@@ -68,14 +68,14 @@ export const endPoints = {
 
     // Withdraw
     getAllWithdraws: `${SERVER_URL}/wp-json/dokan/v1/withdraw/`,
-    getAllWithdrawsDependingOnStatus: `${SERVER_URL}/wp-json/dokan/v1/withdraw/?status=pending`,
-    getGetTotalBalanceWithWithdrawLimitAndThreshold: `${SERVER_URL}/wp-json/dokan/v1/withdraw/balance`,
-    postMakeAWithdrawRequest: `${SERVER_URL}/wp-json/dokan/v1/withdraw/?status=pending`,
-    putCancelAWithdrawRequest: `${SERVER_URL}/wp-json/dokan/v1/withdraw/?status=pending`,
+    getAllWithdrawsbyStatus: (status: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/?status=${status}`,
+    getGetBalanceDetails: `${SERVER_URL}/wp-json/dokan/v1/withdraw/balance`,
+    postCreateWithdraw: `${SERVER_URL}/wp-json/dokan/v1/withdraw/`,
+    putCancelAWithdraw: (withdrawId: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/${withdrawId}`,
 
     // Coupons
     getGetAllCoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons/`,
-    getGetSingleCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/586`,
+    getGetSingleCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
     postCreateCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`,
     putUpdateCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
     delDeleteCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,

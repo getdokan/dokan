@@ -47,7 +47,13 @@ export const payloads = {
   updateOrder: {
     status: 'pending'
 
-  }
+  },
+
+  createWithdraw:{
+    amount: "12",
+    notes: "Withdraw notes",
+    method: "paypal"
+  },
 
 
 

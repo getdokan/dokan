@@ -103,6 +103,16 @@ jobs:
       - name: Running the e2e tests
         run: |
            cd tests/e2e && npm run test setup.spec.ts
+        
+        env:
+          CI: true
+          ADMIN: ${{ secrets.ADMIN }}
+          ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
+          VENDOR: ${{ secrets.VENDOR }}
+          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          CUSTOMER: ${{ secrets.CUSTOMER }}
+          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          BASE_URL: ${{ secrets.BASE_URL }}
 
       # - name: Generate Test Report
       #   uses: phoenix-actions/test-reporting@v8
@@ -137,3 +147,5 @@ jobs:
           name: flaky-tests-report
           path: flaky-tests
           if-no-files-found: ignore
+      
+      
