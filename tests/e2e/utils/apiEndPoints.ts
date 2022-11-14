@@ -15,32 +15,32 @@ export const endPoints = {
     getSingleStoreProducts: (seller_id: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${seller_id}/products`,
     getSingleStoreReviews: (seller_id: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${seller_id}/reviews`,
 
-    getAllStoresWithPagination: `${SERVER_URL}/wp-json/dokan/v1/stores?page=1&per_page=100`, //TODO:
-    getFeaturedVendors: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO:
-    postStoreContact: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO:
+    // getAllStoresWithPagination: `${SERVER_URL}/wp-json/dokan/v1/stores?page=1&per_page=100`, //TODO:
+    // getFeaturedVendors: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO:
+    // postStoreContact: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO:
 
     // Products
     getAllProducts: `${SERVER_URL}/wp-json/dokan/v1/products/`,
     getSingleProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
-    getProducts: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO: it's for get featured stores
+    // getProducts: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`, //TODO: it's for get featured stores
 
-    getProductsWithPagination: `${SERVER_URL}/wp-json/dokan/v1/products?page=1&per_page=100`,//TODO: 
+    // getProductsWithPagination: `${SERVER_URL}/wp-json/dokan/v1/products?page=1&per_page=100`,//TODO: 
     getProductsSummary: `${SERVER_URL}/wp-json/dokan/v1/products/summary`,
-    getTopRatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/top_rated`,//TODO: 
-    getBestSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/products/best_selling`,//TODO: 
-    getLatestProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest?number=10`,//TODO: 
-    getRelatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest?number=10`,//TODO: 
-    getFeaturedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/featured`,//TODO: 
+    // getTopRatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/top_rated`,//TODO: 
+    // getBestSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/products/best_selling`,//TODO: 
+    // getLatestProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest?number=10`,//TODO: 
+    // getRelatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest?number=10`,//TODO: 
+    // getFeaturedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/featured`,//TODO: 
     postCreateProduct: `${SERVER_URL}/wp-json/dokan/v1/products/`,
     putUpdateProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
     delDeleteProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
 
     // Product Variations
-    getAllProductVariations: (productId: String) =>`${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
+    getAllProductVariations: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
     getSingleProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
     postCreateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
     putUpdateProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
-    delDeleteProductVariation: (productId: String, variationId: String)=> `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
+    delDeleteProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
 
     // Filter products
     getFilterParam: `${SERVER_URL}/wp-json/dokan/v1/products/best-selling/filter-types`,
@@ -55,7 +55,7 @@ export const endPoints = {
 
     // Orders
     getAllOrders: `${SERVER_URL}/wp-json/dokan/v1/orders/`,
-    getAllOrdersWithPagination: `${SERVER_URL}/wp-json/dokan/v1/orders/?per_page=2&page=2`, //TODO:
+    // getAllOrdersWithPagination: `${SERVER_URL}/wp-json/dokan/v1/orders/?per_page=2&page=2`, //TODO:
     getOrdersSummary: `${SERVER_URL}/wp-json/dokan/v1/orders/summary`,
     getNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/`,
     getSingleNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/115`,
@@ -85,22 +85,23 @@ export const endPoints = {
     getGetAllReviews: `${SERVER_URL}/wp-json/dokan/v1/reviews/`,
     getGetReviewSummary: `${SERVER_URL}/wp-json/dokan/v1/reviews/summary`,
 
-    putupdateAReview: `${SERVER_URL}/wp-json/dokan/v1/reviews/`,  //TODO:
+    // putupdateAReview: `${SERVER_URL}/wp-json/dokan/v1/reviews/`,  //TODO:
 
     // Settings
     getGetSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`,
     putUpdateSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`,
 
     // Reports
-    getReportSummary: `${SERVER_URL}/wp-json/dokan/v1/settings`,
+    getReportSummary: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`,
     getReportsOverview: `${SERVER_URL}/wp-json/dokan/v1/reports/sales_overview`,
     getReportsTopEarners: `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners`,
     getReportsTopSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling`,
-    getReportsDashboard: `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard`,
-    getReportsDashboardOverview: `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_overview`,
-    getReportsDashboardOrders: `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_orders`,
-    getReportsDashboardProducts: `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_orders`,
-    getReportsDashboardReviews: `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_reviews`,
+
+    // getReportsDashboard: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports`, //TODO:
+    // getReportsDashboardOverview: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_overview`,//TODO:
+    // getReportsDashboardOrders: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_orders`,//TODO:
+    // getReportsDashboardProducts: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_orders`,//TODO:
+    // getReportsDashboardReviews: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_reviews`,//TODO:
 
     // Attributes
     getGetAllProductAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes`,

@@ -500,7 +500,8 @@ export class AdminPage extends BasePage {
 
 
         let newTaxRate = await this.getElementValue(selector.admin.wooCommerce.settings.taxRate)
-        expect(newTaxRate).toBe(String(Number(tax.taxRate).toPrecision(5)))
+        // expect(newTaxRate).toBe(String(Number(tax.taxRate).toPrecision(5)))
+        expect(newTaxRate).toBe(tax.taxRate)
     }
 
 
