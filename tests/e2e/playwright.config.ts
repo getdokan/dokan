@@ -52,7 +52,7 @@ const config: PlaywrightTestConfig = {
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         // viewport: {width: 500, height: 500},//TODO: start maximized
-        viewport: {width: 1920, height: 1080},
+        // viewport: {width: 1920, height: 1080},
         // viewport: null,
         //Whether to run tests on headless or non-headless mode
         headless: true,
@@ -60,7 +60,7 @@ const config: PlaywrightTestConfig = {
         //whether to slow down test execution by provided seconds
         launchOptions: {
             // args: ['--start-fullscreen'],
-            slowMo: 5,
+            slowMo: 0,
         },
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 0,
@@ -68,8 +68,10 @@ const config: PlaywrightTestConfig = {
         // baseURL: 'http://dokan4.test',
         baseURL: process.env.BASE_URL,
 
-        /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry',
+        ignoreHTTPSErrors: true,  //Whether to ignore HTTPS errors during navigation.
+        trace: 'on-first-retry',  //Record trace only when retrying a test for the first time.
+        screenshot: 'only-on-failure',  //Capture screenshot after each test failure.
+        video: 'on-first-retry',  //Record video only when retrying a test for the first time.
 
         //api
         extraHTTPHeaders: {

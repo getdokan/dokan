@@ -22,11 +22,11 @@ test.describe('setup test', () => {
         await adminPage.checkActivePlugins(data.plugin)
     })
 
-    test('admin set WpSettings', async ({ page }) => {
+    test.only('admin set WpSettings', async ({ page }) => {
         const loginPage = new LoginPage(page)
         const adminPage = new AdminPage(page)
         await loginPage.adminLogin(data.admin)
-        await adminPage.setWpSettings(data.wpSettings)
+        // await adminPage.setWpSettings(data.wpSettings)
     })
 
     test('admin enable register password field', async ({ page }) => {
