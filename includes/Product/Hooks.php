@@ -59,7 +59,8 @@ class Hooks {
 
         $keyword  = wc_clean( wp_unslash( $_POST['search_term'] ) ); //phpcs:ignore
         $store_id = intval( wp_unslash( $_POST['store_id'] ) ); //phpcs:ignore
-        $keyword  = '%' . $wpdb->esc_like( $keyword ) . '%';
+        // escaping keyword
+        $keyword_escaped = '%' . $wpdb->esc_like( $keyword ) . '%';
 
         $querystr = $wpdb->prepare(
             "SELECT DISTINCT posts.ID
@@ -76,13 +77,13 @@ class Hooks {
                 AND posts.post_type   = 'product'
                 AND posts.post_author = %d
                 ORDER BY posts.post_date DESC LIMIT 100",
-            $keyword,
-            $keyword,
-            $keyword,
+            $keyword_escaped,
+            $keyword_escaped,
+            $keyword_escaped,
             $store_id
         );
 
-        $query_results = $wpdb->get_results( $querystr ); // phpcs:ignore
+        $query_results = apply_filters( 'dokan_store_product_search_results', $wpdb->get_results( $querystr ), $store_id, $keyword ); // phpcs:ignore
 
         if ( empty( $query_results ) ) {
             echo wp_json_encode( $return_result );

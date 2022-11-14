@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 5.4
-Tested up to: 6.0.2
+Tested up to: 6.1
 WC requires at least: 5.0.0
-WC tested up to: 6.9.4
-Requires PHP: 7.0
-Stable tag: 3.7.1
+WC tested up to: 7.0.1
+Requires PHP: 7.2
+Stable tag: 3.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,35 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.5 ( Nov 03, 2022 ) =
+
+- **new:** Added a new hook named dokan_store_product_search_results to filter out store product search results closes
+- **update:** Sort product categories under the vendor dashboard alphabetically
+- **fix:** SweetAlert library is conflicting with the WooCommerce Conversion Tracking plugin
+- **fix:** [BestSellingProductWidget] Products are being shown on the widget even when the catalog visibility is set to hidden.
+- **fix:** [VendorDashboardProducts] Products of different statuses are not displayed in the appropriate tab from the vendor dashboard.
+- **fix:** [ProductCategoryWidget] Sub Category dropdown on the Dokan Product Category widget doesn't work
+- **fix:** [AdminProduct] When editing a product in the WordPress backend, the vendor select dropdown doesn't contain any data.
+- **fix:** Fixed a fatal error on the report page if the same day is selected for both the start and end date to generate reports
+- **fix:** [VendorSoreSettings] Store settings update button wasn't working if the Dokan Pro plugin isn't activated.
+- **fix:** Store filtering using category was not working
+
+= v3.7.4 ( Oct 27, 2022 ) =
+
+- **fix:** Fixed a fatal error update updating to Dokan if Dokan Pro version is outdated
+
+= v3.7.3 ( Oct 27, 2022 ) =
+
+- **fix:** Fixed a fatal error due to a function moved from dokan pro
+
+= v3.7.2 ( Oct 27, 2022 ) =
+
+- **new:** Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters
+- **new:** Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks
+- **fix:** [AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page
+- **fix:** [Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.
+- **fix:** Spaces between paragraphs are too large under the store terms and condition page.
 
 = v3.7.1 ( Oct 11, 2022 ) =
 

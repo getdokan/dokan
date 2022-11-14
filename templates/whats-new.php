@@ -4,6 +4,100 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.5',
+        'released' => '2022-11-03',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a new hook named dokan_store_product_search_results to filter out store product search results closes.',
+                    'description' => '',
+                ],
+            ],
+            'Update' => [
+                [
+                    'title'       => 'Sort product categories under the vendor dashboard alphabetically.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'SweetAlert library is conflicting with the WooCommerce Conversion Tracking plugin',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[BestSellingProductWidget] Products are being shown on the widget even when the catalog visibility is set to hidden.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorDashboardProducts] Products of different statuses are not displayed in the appropriate tab from the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductCategoryWidget] Sub Category dropdown on the Dokan Product Category widget doesn\'t work',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[AdminProduct] When editing a product in the WordPress backend, the vendor select dropdown doesn\'t contain any data.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error on the report page if the same day is selected for both the start and end date to generate reports',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorSoreSettings] Store settings update button wasn\'t working if the Dokan Pro plugin isn\'t activated.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store filtering using category was not working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.3',
+        'released' => '2022-10-27',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Fixed a fatal error due to a function moved from dokan pro',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.2',
+        'released' => '2022-10-27',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a new filter hooked named `dokan_rest_api_store_collection_params` for StoreController request parameters',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced `dokanVendorFilterSectionStart` and `DokanGetVendorArgs` js filter hooks',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Products] Product author is assigned to the shop manager when the shop manager publishes a product drafted by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Spaces between paragraphs are too large under the store terms and condition page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.1',
         'released' => '2022-10-11',
         'changes'  => [

@@ -575,6 +575,17 @@ class Settings {
                     continue;
                 }
 
+                // If pass null value or our store is not open then our store will be close.
+                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
+                    $dokan_store_time[ $day_key ] = [
+                        'status'       => 'close',
+                        'opening_time' => [],
+                        'closing_time' => [],
+                    ];
+
+                    continue;
+                }
+
                 // Check & make 12 hours format data for save.
                 $opening_timestamp = dokan_get_timestamp( $opening_time );
                 $opening_time      = dokan_convert_date_format( $opening_time, wc_time_format(), 'g:i a' );
@@ -588,17 +599,6 @@ class Settings {
                     $user_data    = get_user_meta( dokan_get_current_user_id(), 'dokan_profile_settings', true );
                     $opening_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['opening_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['opening_time'] : '';
                     $closing_time = ! empty( $user_data['dokan_store_time'][ $day_key ]['closing_time'] ) ? $user_data['dokan_store_time'][ $day_key ]['closing_time'] : '';
-                }
-
-                // If pass null value or our store is not open then our store will be close.
-                if ( empty( $opening_time ) || empty( $closing_time ) || 'open' !== $store_status ) {
-                    $dokan_store_time[ $day_key ] = [
-                        'status'       => 'close',
-                        'opening_time' => [],
-                        'closing_time' => [],
-                    ];
-
-                    continue;
                 }
 
                 // Get and set current day's data for update dokan store time. Make dokan store time data here.

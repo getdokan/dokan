@@ -45,7 +45,7 @@ class StoreController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
-                    'args'                => $this->get_collection_params(),
+                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_collection_params() ),
                     'permission_callback' => '__return_true',
                 ],
                 [

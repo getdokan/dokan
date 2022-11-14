@@ -85,6 +85,13 @@
                     <template v-if="index !== (actions.length - 1)"> | </template>
                 </span>
                 </template>
+                <template slot="filters" slot-scope="data">
+                    <component v-for="(dokanVendorFilterSection, index) in dokanVendorFilterSectionStart"
+                               :key="index"
+                               :is="dokanVendorFilterSection"
+                               @updateVendorComponent="updateVendorComponent"
+                    />
+                </template>
             </list-table>
 
             <add-vendor :vendor-id="vendorId" v-if="loadAddVendor" />
@@ -177,7 +184,8 @@ export default {
             vendors: [],
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
-            isVendorSwitchingEnabled: false
+            isVendorSwitchingEnabled: false,
+            dokanVendorFilterSectionStart: dokan.hooks.applyFilters( 'dokanVendorFilterSectionStart', [] ),
         }
     },
 
@@ -219,7 +227,7 @@ export default {
         },
 
         storeCategory() {
-            return this.$route.query.store_category || null;
+            return this.$route.query.store_categories || null;
         }
     },
 
@@ -259,7 +267,11 @@ export default {
         addNew() {
             this.loadAddVendor = true;
         },
-
+        updateVendorComponent (rerender=false) {
+            if (rerender) {
+                this.fetchVendors()
+            }
+        },
         doSearch(payload) {
             let self     = this;
             self.loading = true;
@@ -296,15 +308,16 @@ export default {
 
             self.loading = true;
 
-            const data = {
+            let data = {
                 per_page: self.perPage,
                 page: self.currentPage,
                 status: self.currentStatus,
                 orderby: self.sortBy,
                 order: self.sortOrder,
-                store_category: self.storeCategory
+                store_categories: self.storeCategory
             };
 
+            data = dokan.hooks.applyFilters( 'DokanGetVendorArgs', data, this.$route.query );
             dokan.api.get('/stores', data)
                 .done((response, status, xhr) => {
                     self.vendors = response;

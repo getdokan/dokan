@@ -35,6 +35,9 @@ class FilterByAttributes extends WP_Widget {
             return;
         }
 
+        // load frontend script
+        wp_enqueue_script( 'dokan-frontend' );
+
         $taxonomy     = $this->get_instance_taxonomy( $instance );
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );

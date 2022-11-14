@@ -201,8 +201,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           currentCategory.uiActivaion = Number(currentCategory.term_id) === selectedId ? 'dokan-product-category-li-active' : false;
           returnableCategories.push(currentCategory);
         }
-      }
+      } // sort categories by name
 
+
+      returnableCategories.sort(function (a, b) {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0;
+      });
       return {
         categories: returnableCategories,
         level: level,

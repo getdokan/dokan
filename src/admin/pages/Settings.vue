@@ -301,7 +301,7 @@
                     return Promise.resolve({value: false});
                 }
 
-                return swal.fire({
+                return Swal.fire({
                     title: this.__( 'Withdraw Method Changed', 'dokan-lite' ),
                     text: this.__( 'Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite' ),
                     icon: 'warning',
@@ -495,7 +495,7 @@
 
             this.$root.$on( 'onFieldSwitched', ( value, fieldName ) => {
                 if ( 'on' === value && ( 'dokan_general' in this.settingValues ) && 'data_clear_on_uninstall' === fieldName ) {
-                    swal.fire({
+                    Swal.fire({
                         icon              : 'warning',
                         html              : this.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
                         title             : this.__( 'Are you sure?', 'dokan-lite' ),

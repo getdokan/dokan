@@ -183,7 +183,7 @@ function dokan_product_listing_status_filter() {
     $outofstock_counts = dokan_count_stock_posts( 'product', dokan_get_current_user_id(), 'outofstock' );
     $statuses          = dokan_get_post_status();
 
-    if ( isset( $_GET['_post_status_count_nonce'], $_GET['post_status'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_post_status_count_nonce'] ) ), 'product_status_counter_nonce' ) ) {
+    if ( isset( $_GET['_product_listing_filter_nonce'], $_GET['post_status'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         $status_class = sanitize_text_field( wp_unslash( $_GET['post_status'] ) );
     }
 
@@ -603,7 +603,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
      */
     function dokan_store_category_menu( $seller_id, $title = '' ) {
         ?>
-    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+    <div class="store-cat-stack-dokan cat-drop-stack">
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );
@@ -635,7 +635,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
      */
     function dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type ) {
         ?>
-    <div id="cat-drop-stack" class="store-cat-stack-dokan">
+    <div class="store-cat-stack-dokan cat-drop-stack">
         <?php
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
         $vendor    = dokan()->vendor->get( $seller_id );

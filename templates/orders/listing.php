@@ -108,7 +108,7 @@ if ( $user_orders ) {
                             $t_time = __( 'Unpublished', 'dokan-lite' );
                             $h_time = __( 'Unpublished', 'dokan-lite' );
                         } else {
-                            $now       = dokan_current_datetime();
+                            $now       = dokan_current_datetime()->setTimezone( new DateTimeZone( 'UTC' ) );
                             $t_time    = $now->modify( $order->get_date_created() );
                             $time_diff = time() - $t_time->getTimestamp();
 

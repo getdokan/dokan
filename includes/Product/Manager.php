@@ -655,7 +655,7 @@ class Manager {
     public function latest( $args = [] ) {
         $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-        $args['tax_query'] = [ // phpcs:ignore
+        $args['tax_query'][] = [ // phpcs:ignore
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
             'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
@@ -679,7 +679,7 @@ class Manager {
         $args['orderby']  = 'meta_value_num';
 
         $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-        $args['tax_query']           = [ // phpcs:ignore
+        $args['tax_query'][]           = [ // phpcs:ignore
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
             'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
@@ -701,7 +701,7 @@ class Manager {
     public function top_rated( $args = [] ) {
         $product_visibility_term_ids = wc_get_product_visibility_term_ids();
 
-        $args['tax_query'] = [ // phpcs:ignore
+        $args['tax_query'][] = [ // phpcs:ignore
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
             'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],
