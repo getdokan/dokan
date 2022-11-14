@@ -64,11 +64,11 @@ dokanWebpack([7],{
       });
     },
     init: function init() {
-      dokan_admin.vendor_selectwoo('.dokan_product_author_override');
+      this.searchVendors('.dokan_product_author_override');
     }
   };
-  $(document).ready(function () {
-    window.dokan_admin.vendor_selectwoo = DokanAdminProduct.searchVendors;
+  $(function () {
+    // DOM Ready - Let's invoke the init method
     DokanAdminProduct.init();
   });
 })(jQuery);
