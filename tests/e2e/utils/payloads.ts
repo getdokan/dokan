@@ -15,7 +15,7 @@ export const payloads = {
   },
 
   creatrProductvariation: {
-    name: 'l',
+    // id: '47',
     regular_price: '16.00',
     categories: [{ id: 48 }],
     attributes: [{

@@ -78,6 +78,7 @@ export const endPoints = {
     getGetSingleCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/586`,
     postCreateCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`,
     putUpdateCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
+    delDeleteCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
 
 
     // Reviews
