@@ -35,6 +35,13 @@ export const endPoints = {
     putUpdateProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
     delDeleteProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
 
+    // Product Variations
+    getAllProductVariations: `${SERVER_URL}/wp-json/dokan/v1/products/<product_id>/variations`,
+    getSingleProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
+    postCreateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
+    putUpdateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
+    delDeleteProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
+
     // Filter products
     getFilterParam: `${SERVER_URL}/wp-json/dokan/v1/products/best-selling/filter-types`,
     postFilterProduct: `${SERVER_URL}/wp-json/dokan/v1/products/best-selling/filter`,
@@ -55,7 +62,7 @@ export const endPoints = {
     getSingleOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
     getMyOrdersCustomer: `${SERVER_URL}`,
     postCreateNoteForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/474/notes`,
-    putUpdateOrder:  (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
+    putUpdateOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
     putUpdateOrderStatus: `${SERVER_URL}/wp-json/dokan/v1/orders/578/?status=wc-pending`,
     delDeleteSingleNotesForSingleOrder: `${SERVER_URL}/wp-json/dokan/v1/orders/223/notes/115`,
 
