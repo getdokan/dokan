@@ -22,7 +22,7 @@ test('get report summary', async ({ request }) => {
 });
 
 test('get top earners report', async ({ request }) => {
-    const response = await request.get(endPoints.getReportsTopEarners)
+    const response = await request.get(endPoints.getReportsTopEarners('2022-01-01'))
     const responseBody = await response.json()
     console.log(responseBody)
 
@@ -31,7 +31,7 @@ test('get top earners report', async ({ request }) => {
 });
 
 test('get top selling products report ', async ({ request }) => {
-    const response = await request.get(endPoints.getReportsTopSellingProducts)
+    const response = await request.get(endPoints.getReportsTopSellingProducts('2022-01-01'))
     const responseBody = await response.json()
     console.log(responseBody)
 

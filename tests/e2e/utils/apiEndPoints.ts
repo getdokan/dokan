@@ -94,8 +94,8 @@ export const endPoints = {
     // Reports
     getReportSummary: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`,
     getReportsOverview: `${SERVER_URL}/wp-json/dokan/v1/reports/sales_overview`,
-    getReportsTopEarners: `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners`,
-    getReportsTopSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling`,
+    getReportsTopEarners: (date: String) => `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners?start_date=${date}`,
+    getReportsTopSellingProducts: (date: String) => `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling?start_date=${date}`,
 
     // getReportsDashboard: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports`, //TODO:
     // getReportsDashboardOverview: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_overview`,//TODO:
@@ -104,18 +104,18 @@ export const endPoints = {
     // getReportsDashboardReviews: (vendorId: String) => `${SERVER_URL}/wp-json/dokan/v1/${vendorId}/reports?type=dashboard_reviews`,//TODO:
 
     // Attributes
-    getGetAllProductAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes`,
-    getGetSingleAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1`,
-    postCreateANewAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/`,
-    putUpdateAnAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/2`,
-    delDeleteAnAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/2`,
+    getGetAllAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes`,
+    getGetSingleAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
+    postCreateAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/`,
+    putUpdateAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
+    delDeleteAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
 
     // Attribute Terms
-    getGetAllTermsInAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1/terms`,
-    getGetSingleTermsInAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1/terms/25`,
-    postCreateANewTermForanAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1/terms`,
-    putUpdateTermForAnAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1/terms/95`,
-    delDeleteTermForAnAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/1/terms/95`,
+    getGetAllAttributeTerms: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`,
+    getGetSingleAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
+    postCreateAttributeTerm: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`,
+    putUpdateAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
+    delDeleteAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
 
     // Refund
     getGetAllRefund: `${SERVER_URL}/wp-json/dokan/v1/refund/`,
