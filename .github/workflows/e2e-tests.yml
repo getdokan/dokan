@@ -75,21 +75,22 @@ jobs:
 
       - name: Install dependencies & Setup WordPress Env
         run: |
-          cd tests/e2e 
-          npm ci
-          npm run start-env
+           cd tests/e2e 
+           ls
+           npm ci
+           npm run start-env
 
 
       - name: Activate storefront
         run: |
-          cd tests/e2e 
-          npm run activate-sf-test
+           cd tests/e2e 
+           npm run activate-sf-test
 
 
       - name: Setup for e2e tests
         run: |
-          cd tests/e2e 
-          npm run test:e2e-setup
+           cd tests/e2e 
+           npm run test:e2e-setup
 
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
@@ -101,7 +102,7 @@ jobs:
 
       - name: Running the e2e tests
         run: |
-          cd tests/e2e && npm run test setup.spec.ts
+           cd tests/e2e && npm run test setup.spec.ts
 
       # - name: Generate Test Report
       #   uses: phoenix-actions/test-reporting@v8
