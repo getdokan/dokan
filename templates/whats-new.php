@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.6',
+        'released' => '2022-11-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a sql security issue while searching for products via ajax from vendor dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.5',
         'released' => '2022-11-03',
         'changes'  => [
