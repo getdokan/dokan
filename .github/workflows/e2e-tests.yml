@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
         with:
-          ref: 'e2etests'
+          ref: 'e2e-pw'
 
 
       - name: Use desired version of NodeJS
