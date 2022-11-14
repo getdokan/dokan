@@ -55,7 +55,7 @@ const config: PlaywrightTestConfig = {
         viewport: {width: 1920, height: 1080},
         // viewport: null,
         //Whether to run tests on headless or non-headless mode
-        headless: false,
+        headless: true,
         // headless: true,
         //whether to slow down test execution by provided seconds
         launchOptions: {

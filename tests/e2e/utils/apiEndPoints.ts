@@ -36,7 +36,7 @@ export const endPoints = {
     delDeleteProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
 
     // Product Variations
-    getAllProductVariations: `${SERVER_URL}/wp-json/dokan/v1/products/<product_id>/variations`,
+    getAllProductVariations: (productId: String) =>`${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
     getSingleProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
     postCreateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
     putUpdateProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/<id>`,
