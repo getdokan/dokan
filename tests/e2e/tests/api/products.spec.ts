@@ -37,7 +37,7 @@ test('get single product', async ({ request }) => {
 });
 
 
-test('create a product', async ({ request }) => {
+test.only('create a product', async ({ request }) => {
     const response = await request.post(endPoints.postCreateProduct,{data: payloads.createProduct})
     const responseBody = await response.json()
     console.log(responseBody)
