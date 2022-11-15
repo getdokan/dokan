@@ -2,6 +2,15 @@ import { test, expect, type Page } from '@playwright/test'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
+// test.beforeAll(async ({ request }) => { });
+// test.afterAll(async ({ request }) => { });
+// test.beforeEach(async ({ request }) => { });
+// test.afterEach(async ({ request }) => { });
+
+
+test.describe('report api test', () => {
+
+    //TODO: need to send vendor credentials for vendor info
 
 test('get report overview', async ({ request }) => {
     const response = await request.get(endPoints.getReportsOverview)
@@ -37,4 +46,8 @@ test('get top selling products report ', async ({ request }) => {
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+});
+
+
+
 });

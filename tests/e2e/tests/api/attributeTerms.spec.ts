@@ -3,6 +3,13 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
+// test.beforeAll(async ({ request }) => { });
+// test.afterAll(async ({ request }) => { });
+// test.beforeEach(async ({ request }) => { });
+// test.afterEach(async ({ request }) => { });
+
+test.describe('attribute term api test', () => {
+
 //TODO: need to send vendor credentials for vendor info
 test('get all attribute terms', async ({ request }) => {
     const response1 = await request.get(endPoints.getGetAllAttributes)
@@ -92,4 +99,6 @@ test('delete an attribute term', async ({ request }) => {
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+});
+
 });

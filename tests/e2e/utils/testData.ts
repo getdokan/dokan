@@ -415,8 +415,10 @@ export const data = {
     },
 
     coupon: {
-        title: 'VC_' + faker.random.alpha({count: 5, casing: 'upper'},),
-        amount: faker.datatype.number({min: 1, max: 10},).toString(),
+        // title: () => 'VC_' + faker.random.alpha({count: 5, casing: 'upper'},),
+        title: () => 'VC_' + faker.datatype.uuid(),
+        amount: () => faker.datatype.number({min: 1, max: 10},).toString(),
+        discount_type:() =>faker.helpers.arrayElement(['percent', 'fixed_product']),
         existingCouponErrorMessage: 'Coupon title already exists',
     },
 

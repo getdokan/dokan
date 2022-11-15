@@ -1,22 +1,25 @@
-
+import { faker } from '@faker-js/faker'
+import { data } from './testData'
 
 
 export const payloads = {
 
-  createProduct: {
-    name: 'p1_v3',
-    type: 'simple',
-    regular_price: '150',
-    categories: [
-      {
-        id: 48
-      }
-    ],
+  createProduct: () => {
+    return {
+      name: faker.commerce.productName() + (' (Simple)'),
+      type: data.product.type.simple,
+      regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+      categories: [
+        {
+          id: 48
+        }
+      ],
+    }
   },
 
   creatrProductvariation: {
     // id: '47',
-    regular_price: '16.00',
+    regular_price: data.product.price.price_random(),
     categories: [{ id: 48 }],
     attributes: [{
       id: 18,
@@ -25,27 +28,30 @@ export const payloads = {
     }],
   },
 
-  updateProduct: {
-    regular_price: '300'
+  updateProduct: () => {
+    return { regular_price: data.product.price.price_random(), }
   },
 
-  updateProductVariation: {
-    regular_price: '220'
-  },
-  createCoupon: {
-    code: 'c1_v0',
-    amount: '10',
-    discount_type: 'percent',
-    product_ids: [15],
+  updateProductVariation: () => {
+    return { regular_price: data.product.price.price_random(), }
   },
 
-  updateCoupon: {
-    amount: '25'
+  createCoupon: () => {
+    return {
+      code: 'VC_' + faker.datatype.uuid(),
+      amount: faker.datatype.number({ min: 1, max: 10 },).toString(),
+      discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
+      product_ids: [15]
+    }
+  },
+
+  updateCoupon: () => {
+    return { amount: faker.datatype.number({ min: 1, max: 10 },).toString(), }
   },
 
 
   updateOrder: {
-    status: 'pending'
+    status: 'wc-pending'
 
   },
 
@@ -130,7 +136,7 @@ export const payloads = {
     setting_order_percentage: ''
   },
 
-  createAttribute:{
+  createAttribute: {
     name: "color",
     slug: "pa_color",
     type: "select",
@@ -138,7 +144,7 @@ export const payloads = {
     has_archives: false
   },
 
-  updateAttribute:{
+  updateAttribute: {
     name: "color1",
     slug: "pa_color1",
     type: "select",
@@ -147,19 +153,28 @@ export const payloads = {
 
   },
 
-  createAttributeTerm:{
+  createAttributeTerm: {
     name: "xl",
   },
 
-  updateAttributeTerm:{
+  updateAttributeTerm: {
     name: "xxl",
 
   },
 
+  createOrderNote: {
+    status: "processing",
+    note: "test order note1"
+  },
 
 
-
-
+  updateReview: {
+    review: data.product.review.reviewMessage(),
+    rating: data.product.review.rating,
+    name: 'customer1',
+    email: 'customer1@g.com',
+    verified: true
+  }
 
 
 

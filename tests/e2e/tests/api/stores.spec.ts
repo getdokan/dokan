@@ -3,6 +3,16 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
+// test.beforeAll(async ({ request }) => { });
+// test.afterAll(async ({ request }) => { });
+// test.beforeEach(async ({ request }) => { });
+// test.afterEach(async ({ request }) => { });
+
+
+test.describe('stores api test', () => {
+
+    //TODO: need to send vendor credentials for vendor info
+
 test('get all stores', async ({ request }) => {
     const response = await request.get(endPoints.getAllStores)
     const responseBody = await response.json()
@@ -62,7 +72,23 @@ test('get all stores', async ({ request }) => {
     //     }))
 });
 
+test('get stores with pagination', async ({ request }) => { 
+    const response = await request.get(endPoints.getAllStoresWithPagination('10','1'))
+    const responseBody = await response.json()
+    console.log(responseBody)
 
+    expect(response.ok()).toBeTruthy()
+    expect(response.status()).toBe(200)
+});
+
+test('get featured stores', async ({ request }) => { 
+    const response = await request.get(endPoints.getFeaturedStores)
+    const responseBody = await response.json()
+    console.log(responseBody)
+
+    expect(response.ok()).toBeTruthy()
+    expect(response.status()).toBe(200)
+});
 
 test('get single store info', async ({ request }) => {
     const response1 = await request.get(endPoints.getAllStores)
@@ -139,8 +165,6 @@ test('get single store products', async ({ request }) => {
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
-
-
 });
 
 test('get single store reviews', async ({ request }) => {
@@ -155,4 +179,7 @@ test('get single store reviews', async ({ request }) => {
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+});
+
+
 });
