@@ -21,7 +21,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $ac_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Your bank account name', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_name'] ) ? '' : 'required'; ?> >
+            <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $ac_name ); ?>" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['ac_name'] ) ? $fields_placeholders['ac_name'] : '' ); ?>" type="text" <?php echo empty( $required_fields['ac_name'] ) ? '' : 'required'; ?> >
         </div>
     </div>
 
@@ -44,7 +44,7 @@
             <label><?php esc_html_e( 'Account Number', 'dokan-lite' ); ?> </label>
         </div>
         <div class="dokan-w10">
-            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $ac_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Account number', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['ac_number'] ) ? '' : 'required'; ?>>
+            <input name="settings[bank][ac_number]" value="<?php echo esc_attr( $ac_number ); ?>" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['ac_number'] ) ? $fields_placeholders['ac_number'] : '' ); ?>" type="text" <?php echo empty( $required_fields['ac_number'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -54,7 +54,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Routing number', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['routing_number'] ) ? '' : 'required'; ?>>
+            <input name="settings[bank][routing_number]" value="<?php echo esc_attr( $routing_number ); ?>" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['routing_number'] ) ? $fields_placeholders['routing_number'] : '' ); ?>" type="text" <?php echo empty( $required_fields['routing_number'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -64,7 +64,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Name of bank', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['bank_name'] ) ? '' : 'required'; ?>>
+            <input name="settings[bank][bank_name]" value="<?php echo esc_attr( $bank_name ); ?>" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['bank_name'] ) ? $fields_placeholders['bank_name'] : '' ); ?>" type="text" <?php echo empty( $required_fields['bank_name'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
         </div>
 
         <div class="dokan-w10">
-            <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Address of your bank', 'dokan-lite' ); ?>" <?php echo empty( $required_fields['bank_addr'] ) ? '' : 'required'; ?>><?php echo esc_html( $bank_addr ); ?></textarea>
+            <textarea name="settings[bank][bank_addr]" rows="5" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['bank_addr'] ) ? $fields_placeholders['bank_addr'] : '' ); ?>" <?php echo empty( $required_fields['bank_addr'] ) ? '' : 'required'; ?>><?php echo esc_html( $bank_addr ); ?></textarea>
         </div>
     </div>
 
@@ -84,7 +84,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php esc_attr_e( 'IBAN', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['iban'] ) ? '' : 'required'; ?>>
+            <input name="settings[bank][iban]" value="<?php echo esc_attr( $iban ); ?>" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['iban'] ) ? $fields_placeholders['iban'] : '' ); ?>" type="text" <?php echo empty( $required_fields['iban'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -94,7 +94,7 @@
         </div>
 
         <div class="dokan-w10">
-            <input value="<?php echo esc_attr( $swift ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php esc_attr_e( 'Swift code', 'dokan-lite' ); ?>" type="text" <?php echo empty( $required_fields['swift'] ) ? '' : 'required'; ?>>
+            <input value="<?php echo esc_attr( $swift ); ?>" name="settings[bank][swift]" class="dokan-form-control" placeholder="<?php echo  esc_attr( ! empty( $fields_placeholders['swift'] ) ? $fields_placeholders['swift'] : '' ); ?>" type="text" <?php echo empty( $required_fields['swift'] ) ? '' : 'required'; ?>>
         </div>
     </div>
 
@@ -105,7 +105,7 @@
     <div class="dokan-form-group dokan-text-left">
         <input id="declaration" name="settings[bank][declaration]" checked type="checkbox"/>
         <label for="declaration">
-            <?php esc_html_e( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ); ?>
+            <?php echo  esc_attr( ! empty( $fields_placeholders['declaration'] ) ? $fields_placeholders['declaration'] : '' ); ?>
         </label>
     </div>
 

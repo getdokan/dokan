@@ -186,8 +186,9 @@ function dokan_withdraw_method_bank( $store_settings ) {
         'save_or_add_btn_text' => isset( $store_settings['is_edit_mode'] ) && $store_settings['is_edit_mode'] ? __( 'Save', 'dokan-lite' ) : __( 'Add Account', 'dokan-lite' ),
     ];
 
-    $args['required_fields'] = dokan_bank_payment_required_fields();
-    $args['connected'] = false;
+    $args['required_fields']     = dokan_bank_payment_required_fields();
+    $args['fields_placeholders'] = dokan_bank_payment_fields_placeholders();
+    $args['connected']           = false;
 
     // If any required field is empty in args, connected is false and
     // by default it is false because if there are no require field then the account is not connected.
@@ -263,6 +264,31 @@ function dokan_bank_payment_available_fields() {
         'iban',
         'swift',
     ];
+}
+
+/**
+ * Dokan bank payment fields placeholders.
+ * Anyone can update any placeholder using 'dokan_bank_payment_fields_placeholders'
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
+function dokan_bank_payment_fields_placeholders() {
+    return apply_filters(
+        'dokan_bank_payment_fields_placeholders',
+        [
+            'ac_name'        => __( 'Your bank account name', 'dokan-lite' ),
+            'ac_type'        => __( 'Account Type', 'dokan-lite' ),
+            'ac_number'      => __( 'Account Number', 'dokan-lite' ),
+            'routing_number' => __( 'Routing Number', 'dokan-lite' ),
+            'bank_name'      => __( 'Name of bank', 'dokan-lite' ),
+            'bank_addr'      => __( 'Address of your bank', 'dokan-lite' ),
+            'iban'           => __( 'IBAN', 'dokan-lite' ),
+            'swift'          => __( 'Swift Code', 'dokan-lite' ),
+            'declaration'    => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
+        ]
+    );
 }
 
 /**
