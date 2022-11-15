@@ -278,15 +278,42 @@ function dokan_bank_payment_fields_placeholders() {
     return apply_filters(
         'dokan_bank_payment_fields_placeholders',
         [
-            'ac_name'        => __( 'Your bank account name', 'dokan-lite' ),
-            'ac_type'        => __( 'Account Type', 'dokan-lite' ),
-            'ac_number'      => __( 'Account Number', 'dokan-lite' ),
-            'routing_number' => __( 'Routing Number', 'dokan-lite' ),
-            'bank_name'      => __( 'Name of bank', 'dokan-lite' ),
-            'bank_addr'      => __( 'Address of your bank', 'dokan-lite' ),
-            'iban'           => __( 'IBAN', 'dokan-lite' ),
-            'swift'          => __( 'Swift Code', 'dokan-lite' ),
-            'declaration'    => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
+            'ac_name'  => [
+                'label'       => __(  'Account Holder', 'dokan-lite' ),
+                'placeholder' => __( 'Your bank account name', 'dokan-lite' ),
+            ],
+            'ac_type'  => [
+                'label'       => __(  'Account Type', 'dokan-lite' ),
+                'placeholder' => __( 'Account Type', 'dokan-lite' ),
+            ],
+            'ac_number' => [
+                'label'       => __(  'Account Number', 'dokan-lite' ),
+                'placeholder' => __( 'Account Number', 'dokan-lite' ),
+            ],
+            'routing_number' => [
+                'label'       => __(  'Routing Number', 'dokan-lite' ),
+                'placeholder' => __( 'Routing Number', 'dokan-lite' ),
+            ],
+            'bank_name' => [
+                'label'       => __(  'Bank Name', 'dokan-lite' ),
+                'placeholder' => __( 'Name of bank', 'dokan-lite' ),
+            ],
+            'bank_addr' => [
+                'label'       => __(  'Bank Address', 'dokan-lite' ),
+                'placeholder' => __( 'Address of your bank', 'dokan-lite' ),
+            ],
+            'iban' => [
+                'label'       => __(  'Bank IBAN', 'dokan-lite' ),
+                'placeholder' => __( 'IBAN', 'dokan-lite' ),
+            ],
+            'swift' => [
+                'label'       => __(  'Bank Swift Code', 'dokan-lite' ),
+                'placeholder' => __( 'Swift Code', 'dokan-lite' ),
+            ],
+            'declaration' => [
+                'label'       => __(  '', 'dokan-lite' ),
+                'placeholder' => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
+            ],
         ]
     );
 }
