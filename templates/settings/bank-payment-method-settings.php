@@ -18,7 +18,7 @@
 <div class="dokan-bank-settings-template">
     <div class="dokan-form-group">
         <div>
-            <label for="ac_name"><?php echo  esc_attr( ! empty( $fields_placeholders['ac_number']['label'] ) ? $fields_placeholders['ac_number']['label'] : '' ); ?> </label>
+            <label for="ac_name"><?php echo  esc_attr( ! empty( $fields_placeholders['ac_name']['label'] ) ? $fields_placeholders['ac_name']['label'] : '' ); ?> </label>
         </div>
 
         <div class="dokan-w10">

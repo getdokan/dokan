@@ -311,8 +311,8 @@ function dokan_bank_payment_fields_placeholders() {
                 'placeholder' => __( 'Swift Code', 'dokan-lite' ),
             ],
             'declaration' => [
-                'label'       => __(  '', 'dokan-lite' ),
-                'placeholder' => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
+                'label'       => __(  'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
+                'placeholder' => __( '', 'dokan-lite' ),
             ],
         ]
     );
