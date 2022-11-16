@@ -76,6 +76,26 @@ export class ApiUtils {
     }
 
     /**
+     * product variation api methods
+     */
+
+    // get variationTd
+    async getVariationTd(productName: String) {
+        let productId = await this.getProductId(productName)
+        // console.log(productId)
+
+        let response = await this.request.get(endPoints.getAllProductVariations(productId))
+        let responseBody = await response.json()
+        let variationId = responseBody[0].id
+        // console.log(responseBody)
+        // console.log(variationId)
+        return [productId, variationId]
+    }
+
+
+
+
+    /**
      * attribute api methods
      */
 
@@ -151,7 +171,12 @@ export class ApiUtils {
 
     // create coupon
     async createCoupon() {
-        let response = await this.request.post(endPoints.createCoupon, { data: payloads.createCoupon() })
+        let [, productId] = await this.createProduct()
+        let payloadCoupon = payloads.createCoupon()
+        payloadCoupon.product_ids = [productId]
+        // console.log(payloadCoupon)
+
+        let response = await this.request.post(endPoints.createCoupon, { data: payloadCoupon })
         let responseBody = await response.json()
         let couponId = responseBody.id
         // console.log(responseBody)
@@ -231,7 +256,7 @@ export class ApiUtils {
         let orderNoteId = responseBody.id
         // console.log(responseBody)
         // console.log(orderNoteId)
-        return [responseBody,orderId, orderNoteId]
+        return [responseBody, orderId, orderNoteId]
     }
 
 

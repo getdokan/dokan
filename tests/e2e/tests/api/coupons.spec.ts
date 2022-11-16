@@ -7,6 +7,7 @@ import { payloads } from '../../utils/payloads'
 
 test.beforeAll(async ({ request }) => {
     let apiUtils = new ApiUtils(request)
+    let [, productId] = await apiUtils.createProduct()
     await apiUtils.createCoupon()
 
 });
@@ -43,6 +44,11 @@ test.describe('coupon api test', () => {
 
 
     test('create a coupon', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, productId] = await apiUtils.createProduct()
+        let payloadCoupon = payloads.createCoupon()
+        payloadCoupon.product_ids = [productId]
+
         let response = await request.post(endPoints.createCoupon, { data: payloads.createCoupon() })
         let responseBody = await response.json()
         console.log(responseBody)

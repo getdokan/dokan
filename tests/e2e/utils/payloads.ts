@@ -17,7 +17,7 @@ export const payloads = {
     }
   },
 
-  creatrProductvariation: {
+  createProductVariation: {
     // id: '47',
     regular_price: data.product.price.price_random(),
     categories: [{ id: 48 }],
