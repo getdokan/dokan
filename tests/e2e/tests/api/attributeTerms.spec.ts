@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -12,13 +13,11 @@ test.describe('attribute term api test', () => {
 
 //TODO: need to send vendor credentials for vendor info
 test('get all attribute terms', async ({ request }) => {
-    const response1 = await request.get(endPoints.getGetAllAttributes)
-    const responseBody1 = await response1.json()
-    let attributeId = responseBody1[0].id
-    // console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let [,attributeId,] = await apiUtils.createAttributeTerm()
 
-    const response = await request.get(endPoints.getGetAllAttributeTerms(attributeId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllAttributeTerms(attributeId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -26,18 +25,11 @@ test('get all attribute terms', async ({ request }) => {
 });
 
 test('get single attribute term', async ({ request }) => {
-    const response1 = await request.get(endPoints.getGetAllAttributes)
-    const responseBody1 = await response1.json()
-    let attributeId = responseBody1[0].id
-    // console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
 
-    const response2 = await request.get(endPoints.getGetAllAttributeTerms(attributeId))
-    const responseBody2 = await response2.json()
-    let attributeTermId = responseBody2[0].id
-    console.log(responseBody2)
-
-    const response = await request.get(endPoints.getGetSingleAttributeTerm(attributeId, attributeTermId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -46,13 +38,11 @@ test('get single attribute term', async ({ request }) => {
 
 
 test('create an attribute term', async ({ request }) => {
-    const response1 = await request.get(endPoints.getGetAllAttributes)
-    const responseBody1 = await response1.json()
-    let attributeId = responseBody1[0].id
-    // console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let [, attributeId] = await apiUtils.createAttribute()
 
-    const response = await request.post(endPoints.postCreateAttributeTerm(attributeId), { data: payloads.createAttributeTerm })
-    const responseBody = await response.json()
+    let response = await request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() })
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -61,19 +51,11 @@ test('create an attribute term', async ({ request }) => {
 
 
 test('update an attribute term ', async ({ request }) => {
-    const response1 = await request.get(endPoints.getGetAllAttributes)
-    const responseBody1 = await response1.json()
-    let attributeId = responseBody1[0].id
-    // console.log(responseBody1)
-    // console.log(responseBody1[0].id)
+    let apiUtils = new ApiUtils(request)
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
 
-    const response2 = await request.get(endPoints.getGetAllAttributeTerms(attributeId))
-    const responseBody2 = await response2.json()
-    let attributeTermId = responseBody2[0].id
-    console.log(responseBody2)
-
-    const response = await request.put(endPoints.putUpdateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm })
-    const responseBody = await response.json()
+    let response = await request.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() })
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -82,19 +64,11 @@ test('update an attribute term ', async ({ request }) => {
 
 
 test('delete an attribute term', async ({ request }) => {
-    const response1 = await request.get(endPoints.getGetAllAttributes)
-    const responseBody1 = await response1.json()
-    let attributeId = responseBody1[0].id
-    // console.log(responseBody1)
-    // console.log(responseBody1[0].id)
+    let apiUtils = new ApiUtils(request)
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
 
-    const response2 = await request.get(endPoints.getGetAllAttributeTerms(attributeId))
-    const responseBody2 = await response2.json()
-    let attributeTermId = responseBody2[0].id
-    console.log(responseBody2)
-
-    const response = await request.delete(endPoints.delDeleteAttributeTerm(attributeId, attributeTermId))
-    const responseBody = await response.json()
+    let response = await request.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()

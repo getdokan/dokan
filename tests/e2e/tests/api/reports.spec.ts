@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -11,10 +12,11 @@ import { payloads } from '../../utils/payloads'
 test.describe('report api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
+    //TODO: prerequisite: order, vendor, product, customer ...
 
 test('get report overview', async ({ request }) => {
-    const response = await request.get(endPoints.getReportsOverview)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getReportsOverview)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -22,8 +24,8 @@ test('get report overview', async ({ request }) => {
 });
 
 test('get report summary', async ({ request }) => {
-    const response = await request.get(endPoints.getReportSummary)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getReportSummary)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -31,8 +33,8 @@ test('get report summary', async ({ request }) => {
 });
 
 test('get top earners report', async ({ request }) => {
-    const response = await request.get(endPoints.getReportsTopEarners('2022-01-01'))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getReportsTopEarners('2022-01-01'))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -40,8 +42,8 @@ test('get top earners report', async ({ request }) => {
 });
 
 test('get top selling products report ', async ({ request }) => {
-    const response = await request.get(endPoints.getReportsTopSellingProducts('2022-01-01'))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getReportsTopSellingProducts('2022-01-01'))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()

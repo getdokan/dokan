@@ -136,35 +136,32 @@ export const payloads = {
     setting_order_percentage: ''
   },
 
-  createAttribute: {
-    name: "color",
-    slug: "pa_color",
-    type: "select",
-    order_by: "menu_order",
-    has_archives: false
+  createAttribute: () => {
+    return {
+      name: 'Test_attribute_' + faker.random.alpha(8),
+      // slug: `pa_${payloads.createAttribute.name}`,
+      // type: "select",
+      // order_by: "menu_order",
+      // has_archives: false
+    }
   },
 
-  updateAttribute: {
-    name: "color1",
-    slug: "pa_color1",
-    type: "select",
-    order_by: "menu_order",
-    has_archives: false
-
+  updateAttribute: () => {
+    return { name: 'Updated_Test_attribute_' + faker.random.alpha(5), }
   },
 
-  createAttributeTerm: {
-    name: "xl",
+  createAttributeTerm: () => {
+    return { name: 'Test_attributeTerm_' + faker.random.alpha(8), }
   },
 
-  updateAttributeTerm: {
-    name: "xxl",
+  updateAttributeTerm: () => {
+    return { name: 'Updated_Test_attributeTerm_' + faker.random.alpha(5), }
 
   },
 
   createOrderNote: {
     status: "processing",
-    note: "test order note1"
+    note: "test order note"
   },
 
 

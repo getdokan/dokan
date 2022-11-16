@@ -1,7 +1,7 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
-
 
 // test.beforeAll(async ({ request }) => { });
 // test.afterAll(async ({ request }) => { });
@@ -12,10 +12,11 @@ import { payloads } from '../../utils/payloads'
 test.describe('stores api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
+    //TODO: prerequisite vendor, feratured vendor , vendor product, vendor review
 
 test('get all stores', async ({ request }) => {
-    const response = await request.get(endPoints.getAllStores)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllStores)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -73,8 +74,8 @@ test('get all stores', async ({ request }) => {
 });
 
 test('get stores with pagination', async ({ request }) => { 
-    const response = await request.get(endPoints.getAllStoresWithPagination('10','1'))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllStoresWithPagination('10','1'))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -82,8 +83,8 @@ test('get stores with pagination', async ({ request }) => {
 });
 
 test('get featured stores', async ({ request }) => { 
-    const response = await request.get(endPoints.getFeaturedStores)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getFeaturedStores)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -91,13 +92,11 @@ test('get featured stores', async ({ request }) => {
 });
 
 test('get single store info', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllStores)
-    const responseBody1 = await response1.json()
-    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
-    console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let  sellerId = await apiUtils.getSellerId('vendor1')
 
-    const response = await request.get(endPoints.getSingleStoreInfo(sellerId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getSingleStoreInfo(sellerId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -154,13 +153,11 @@ test('get single store info', async ({ request }) => {
 
 
 test('get single store products', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllStores)
-    const responseBody1 = await response1.json()
-    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
-    console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let  sellerId = await apiUtils.getSellerId('vendor1')
 
-    const response = await request.get(endPoints.getSingleStoreProducts(sellerId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getSingleStoreProducts(sellerId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -168,13 +165,11 @@ test('get single store products', async ({ request }) => {
 });
 
 test('get single store reviews', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllStores)
-    const responseBody1 = await response1.json()
-    let sellerId = (responseBody1.find(o => o.first_name === 'vendor1')).id
-    console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let  sellerId = await apiUtils.getSellerId('vendor1')
 
-    const response = await request.get(endPoints.getSingleStoreReviews(sellerId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getSingleStoreReviews(sellerId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()

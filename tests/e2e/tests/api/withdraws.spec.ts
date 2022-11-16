@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -10,59 +11,58 @@ import { payloads } from '../../utils/payloads'
 
 test.describe('withdraw api test', () => {
 
-//TODO: need to send vendor credentials for vendor info
+    //TODO: need to send vendor credentials for vendor info
+    //TODO: prerequisite: vendor balance greater than minimum withdraw limit, withdraw request
 
-test('get all withdraws', async ({ request }) => {
-    const response = await request.get(endPoints.getAllWithdraws)
-    const responseBody = await response.json()
-    console.log(responseBody)
+    test('get all withdraws', async ({ request }) => {
+        let response = await request.get(endPoints.getAllWithdraws)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get all withdraws by status', async ({ request }) => {
-    const response = await request.get(endPoints.getAllWithdrawsbyStatus('pending')) // pending, cancelled, approved
-    const responseBody = await response.json()
-    console.log(responseBody)
+    test('get all withdraws by status', async ({ request }) => {
+        let response = await request.get(endPoints.getAllWithdrawsbyStatus('pending')) // pending, cancelled, approved
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get balance details', async ({ request }) => {
-    const response = await request.get(endPoints.getGetBalanceDetails)
-    const responseBody = await response.json()
-    console.log(responseBody)
+    test('get balance details', async ({ request }) => {
+        let response = await request.get(endPoints.getBalanceDetails)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
 
-test('create a withdraw', async ({ request }) => {
-    const response = await request.post(endPoints.postCreateWithdraw,{data: payloads.createWithdraw})
-    const responseBody = await response.json()
-    console.log(responseBody)
+    test('create a withdraw', async ({ request }) => {
+        let response = await request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(201)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(201)
+    });
 
-test('cancel a withdraw', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllWithdrawsbyStatus('pending')) // pending, cancelled, approved
-    const responseBody1 = await response1.json()
-    console.log(responseBody1)
-    let withdrawId = responseBody1[0].id
-    console.log(responseBody1[0].id)
+    test('cancel a withdraw', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        // let withdrawId = await apiUtils.getWithdrawId()
+        let [, withdrawId] = await apiUtils.createWithdraw()
 
-    const response = await request.put(endPoints.putCancelAWithdraw(withdrawId))
-    const responseBody = await response.json()
-    console.log(responseBody)
+        let response = await request.put(endPoints.cancelAWithdraw(withdrawId))
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
 
 });

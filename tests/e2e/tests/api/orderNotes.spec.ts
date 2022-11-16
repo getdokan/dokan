@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -11,78 +12,57 @@ import { payloads } from '../../utils/payloads'
 test.describe('order note api test', () => {
 
 
-//TODO: need to send vendor credentials for vendor info
-test('get all order notes', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
-    console.log(responseBody1[0].id)
+    //TODO: need to send vendor credentials for vendor info
+    //TODO: prerequisite : orders
+    test('get all order notes', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, orderId,] = await apiUtils.createOrderNote()
 
-    const response = await request.get(endPoints.getAllOrderNotes(orderId))
-    const responseBody = await response.json()
-    console.log(responseBody)
+        let response = await request.get(endPoints.getAllOrderNotes(orderId))
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get single order note', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
-    // console.log(responseBody1[0].id)
+    test('get single order note', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, orderId, orderNoteId] = await apiUtils.createOrderNote()
 
-    const response2 = await request.get(endPoints.getAllOrderNotes(orderId))
-    const responseBody2 = await response2.json()
-    let orderNoteId = responseBody2[0].id
-    console.log(responseBody2)
+        let response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId))
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    const response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId))
-    const responseBody = await response.json()
-    console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
 
-test('create an order note', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
-    console.log(responseBody1[0].id)
+    test('create an order note', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let orderId = await apiUtils.getOrderId()
 
-    const response = await request.post(endPoints.postCreateOrderNote(orderId), { data: payloads.createOrderNote })
-    const responseBody = await response.json()
-    console.log(responseBody)
+        let response = await request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote })
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(201)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(201)
+    });
 
 
-test('delete an order note', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
+    test('delete an order note', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, orderId, orderNoteId] = await apiUtils.createOrderNote()
 
-    const response2 = await request.get(endPoints.getAllOrderNotes(orderId))
-    const responseBody2 = await response2.json()
-    let orderNoteId = responseBody2[0].id
-    // console.log(responseBody2)
-    // console.log(responseBody2[0].id)
+        let response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId))
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    const response = await request.delete(endPoints.delDeleteOrderNote(orderId, orderNoteId))
-    const responseBody = await response.json()
-    console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
 
 });

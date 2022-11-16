@@ -207,6 +207,10 @@ export const data = {
                 attributeName: 'color',
                 attributeTerms: ["red", "blue", "black", "yellow", "white"]
             },
+
+            attributeName: faker.random.alpha(),
+            attributeTerm: faker.random.alpha(),
+
         },
 
         simple: {

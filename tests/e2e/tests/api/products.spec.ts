@@ -1,11 +1,11 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
 test.beforeAll(async ({ request }) => {
-    const apiUtils = new ApiUtils(request)
+    let apiUtils = new ApiUtils(request)
     await apiUtils.createProduct()
 
 });
@@ -17,8 +17,8 @@ test.describe('product api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     test('get all products', async ({ request }) => {
-        const response = await request.get(endPoints.getAllProducts)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getAllProducts)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -26,8 +26,8 @@ test.describe('product api test', () => {
     });
 
     test('get products summary', async ({ request }) => {
-        const response = await request.get(endPoints.getProductsSummary)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getProductsSummary)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -35,8 +35,8 @@ test.describe('product api test', () => {
     });
 
     test('get products with pagination', async ({ request }) => {
-        const response = await request.get(endPoints.getProductsWithPagination('10', '1'))
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getProductsWithPagination('10', '1'))
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -44,8 +44,8 @@ test.describe('product api test', () => {
     });
 
     test('get top rated products', async ({ request }) => {
-        const response = await request.get(endPoints.getTopRatedProducts)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getTopRatedProducts)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -53,8 +53,8 @@ test.describe('product api test', () => {
     });
 
     test('get best selling products', async ({ request }) => {
-        const response = await request.get(endPoints.getBestSellingProducts)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getBestSellingProducts)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -62,8 +62,8 @@ test.describe('product api test', () => {
     });
 
     test('get latest products', async ({ request }) => {
-        const response = await request.get(endPoints.getLatestProducts)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getLatestProducts)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -71,8 +71,8 @@ test.describe('product api test', () => {
     });
 
     test('get featured products', async ({ request }) => {
-        const response = await request.get(endPoints.getFeaturedProducts)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getFeaturedProducts)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -80,11 +80,11 @@ test.describe('product api test', () => {
     });
 
     test('get single product', async ({ request }) => {
-        const apiUtils = new ApiUtils(request)
+        let apiUtils = new ApiUtils(request)
         let [, productId] = await apiUtils.createProduct()
 
-        const response = await request.get(endPoints.getSingleProduct(productId))
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getSingleProduct(productId))
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -93,8 +93,8 @@ test.describe('product api test', () => {
 
 
     test('create a product', async ({ request }) => {
-        const response = await request.post(endPoints.postCreateProduct, { data: payloads.createProduct() })
-        const responseBody = await response.json()
+        let response = await request.post(endPoints.createProduct, { data: payloads.createProduct() })
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -103,11 +103,11 @@ test.describe('product api test', () => {
 
 
     test('update a product', async ({ request }) => {
-        const apiUtils = new ApiUtils(request)
+        let apiUtils = new ApiUtils(request)
         let [, productId] = await apiUtils.createProduct()
 
-        const response = await request.put(endPoints.putUpdateProduct(productId), { data: payloads.updateProduct()})
-        const responseBody = await response.json()
+        let response = await request.put(endPoints.updateProduct(productId), { data: payloads.updateProduct()})
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -116,11 +116,11 @@ test.describe('product api test', () => {
 
 
     test('delete a product', async ({ request }) => {
-        const apiUtils = new ApiUtils(request)
+        let apiUtils = new ApiUtils(request)
         let [, productId] = await apiUtils.createProduct()
 
-        const response = await request.delete(endPoints.delDeleteProduct(productId))
-        const responseBody = await response.json()
+        let response = await request.delete(endPoints.deleteProduct(productId))
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()

@@ -1,9 +1,13 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
+test.beforeAll(async ({ request }) => {
+    let apiUtils = new ApiUtils(request)
+    await apiUtils.createAttribute()
 
-// test.beforeAll(async ({ request }) => { });
+});
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
@@ -12,9 +16,10 @@ import { payloads } from '../../utils/payloads'
 test.describe('attribute api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
+    //TODO: prerequisite: attriburtes
     test('get all attributes', async ({ request }) => {
-        const response = await request.get(endPoints.getGetAllAttributes)
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getAllAttributes)
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -22,13 +27,11 @@ test.describe('attribute api test', () => {
     });
 
     test('get single attribute', async ({ request }) => {
-        const response1 = await request.get(endPoints.getGetAllAttributes)
-        const responseBody1 = await response1.json()
-        let attributeId = responseBody1[0].id
-        // console.log(responseBody1)
+        let apiUtils = new ApiUtils(request)
+        let [, attributeId] = await apiUtils.createAttribute()
 
-        const response = await request.get(endPoints.getGetSingleAttribute(attributeId))
-        const responseBody = await response.json()
+        let response = await request.get(endPoints.getSingleAttribute(attributeId))
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -36,9 +39,9 @@ test.describe('attribute api test', () => {
     });
 
 
-    test('create an attributes', async ({ request }) => {
-        const response = await request.post(endPoints.postCreateAttribute, { data: payloads.createAttribute })
-        const responseBody = await response.json()
+    test('create an attribute', async ({ request }) => {
+        let response = await request.post(endPoints.createAttribute, { data: payloads.createAttribute() })
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -46,15 +49,12 @@ test.describe('attribute api test', () => {
     });
 
 
-    test('update an attributes', async ({ request }) => {
-        const response1 = await request.get(endPoints.getGetAllAttributes)
-        const responseBody1 = await response1.json()
-        let attributeId = responseBody1[0].id
-        // console.log(responseBody1)
-        // console.log(responseBody1[0].id)
+    test('update an attribute', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, attributeId] = await apiUtils.createAttribute()
 
-        const response = await request.put(endPoints.putUpdateAttribute(attributeId), { data: payloads.updateAttribute })
-        const responseBody = await response.json()
+        let response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() })
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
@@ -62,15 +62,12 @@ test.describe('attribute api test', () => {
     });
 
 
-    test('delete an attributes', async ({ request }) => {
-        const response1 = await request.get(endPoints.getGetAllAttributes)
-        const responseBody1 = await response1.json()
-        let attributeId = responseBody1[0].id
-        // console.log(responseBody1)
-        console.log(responseBody1[0].id)
+    test('delete an attribute', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let [, attributeId] = await apiUtils.createAttribute()
 
-        const response = await request.delete(endPoints.delDeleteAttribute(attributeId))
-        const responseBody = await response.json()
+        let response = await request.delete(endPoints.deleteAttribute(attributeId))
+        let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()

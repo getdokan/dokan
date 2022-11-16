@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -12,10 +13,11 @@ import { payloads } from '../../utils/payloads'
 test.describe('order api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
+    //TODO: orders
 
 test('get all orders', async ({ request }) => {
-    const response = await request.get(endPoints.getAllOrders)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllOrders)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -23,8 +25,8 @@ test('get all orders', async ({ request }) => {
 });
 
 test('get orders summary', async ({ request }) => {
-    const response = await request.get(endPoints.getOrdersSummary)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getOrdersSummary)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -33,17 +35,17 @@ test('get orders summary', async ({ request }) => {
 });
 
 test('get orders with pagination', async ({ request }) => { 
-    const response = await request.get(endPoints.getAllOrdersWithPagination('10','1'))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllOrdersWithPagination('10','1'))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
 });
 
-test('get orders with before after', async ({ request }) => { //TODO: PR still not merged
-    const response = await request.get(endPoints.getOrdersBeforAfter('2022-11-01','2022-11-16'))
-    const responseBody = await response.json()
+test('get orders with before after', async ({ request }) => { //TODO: PR still not merged also add tests with only befor/after
+    let response = await request.get(endPoints.getOrdersBeforAfter('2022-11-01','2022-11-16'))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -51,14 +53,11 @@ test('get orders with before after', async ({ request }) => { //TODO: PR still n
 });
 
 test('get single order', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
+    let apiUtils = new ApiUtils(request)
+    let orderId = await apiUtils.getOrderId()
 
-
-    const response = await request.get(endPoints.getSingleOrder(orderId))
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getSingleOrder(orderId))
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -66,14 +65,11 @@ test('get single order', async ({ request }) => {
 });
 
 test('update an order', async ({ request }) => {
-    const response1 = await request.get(endPoints.getAllOrders)
-    const responseBody1 = await response1.json()
-    let orderId = responseBody1[0].id
-    // console.log(responseBody1)
-    // console.log(responseBody1[0].id)
+    let apiUtils = new ApiUtils(request)
+    let orderId = await apiUtils.getOrderId()
 
-    const response = await request.put(endPoints.putUpdateOrder(orderId),{data: payloads.updateOrder}) 
-    const responseBody = await response.json()
+    let response = await request.put(endPoints.updateOrder(orderId),{data: payloads.updateOrder}) 
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()

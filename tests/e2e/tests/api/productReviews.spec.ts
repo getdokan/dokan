@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
@@ -8,13 +9,14 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('reviews test', () => {
+test.describe('product review api test', () => {
 
 
 //TODO: need to send vendor credentials for vendor info
+//TODO: prerequisite : product reviews
 test('get all reviews', async ({ request }) => {
-    const response = await request.get(endPoints.getGetAllReviews)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getAllReviews)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
@@ -22,8 +24,8 @@ test('get all reviews', async ({ request }) => {
 });
 
 test('get reviews summary', async ({ request }) => {
-    const response = await request.get(endPoints.getGetReviewSummary)
-    const responseBody = await response.json()
+    let response = await request.get(endPoints.getReviewSummary)
+    let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
