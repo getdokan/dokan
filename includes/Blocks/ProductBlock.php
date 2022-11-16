@@ -22,8 +22,8 @@ class ProductBlock {
         return apply_filters(
             'dokan_get_product_block_configurations',
             [
-                'enable_popup' => 'off' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ),
-                'statuses'     => apply_filters(
+                'disable_popup' => 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ),
+                'statuses' => apply_filters(
                     'dokan_post_status',
                     [
                         'publish' => __( 'Online', 'dokan-lite' ),
@@ -44,7 +44,7 @@ class ProductBlock {
                 'tags' => [
                     'can_create'  => $can_create_tags,
                     'placeholder' => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
-                    'max_limit'   => apply_filters( 'dokan_product_tags_select_max_height', -1 ),
+                    'max_limit'   => apply_filters( 'dokan_product_tags_select_max_length', -1 ),
                 ],
                 'category' => [],
             ]

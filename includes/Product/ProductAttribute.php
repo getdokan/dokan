@@ -60,8 +60,14 @@ class ProductAttribute {
      * @return array $product_attributes
      */
     public function get( $post_id ) {
+        $product = wc_get_product( $post_id );
+
+        if ( ! $product instanceof WC_Product ) {
+            return [];
+        }
+
         // Product attributes - taxonomies and custom, ordered, with visibility and variation attributes set
-        $attributes = maybe_unserialize( get_post_meta( $post_id, '_product_attributes', true ) );
+        $attributes = maybe_unserialize( $product->get_attributes() );
         $product_attributes = [];
 
         if ( empty( $attributes ) ) {
