@@ -4489,7 +4489,10 @@ div.media-sidebar a.edit-attachment {
     flex-wrap: wrap;
   }
   .dokan-store-products-filter-area .dokan-store-products-ordeby input.product-name-search {
-      flex-basis: 69.3%;
+      width: 70%;
+  }
+  .dokan-store-products-filter-area .dokan-store-products-ordeby input.search-store-products {
+      width: 30%;
   }
   .dokan-store-products-filter-area select.orderby.orderby-search {
       flex-basis: 100%;
