@@ -43,5 +43,4 @@ abstract class Gateways {
      * @return array
      */
     abstract public function render_settings( array $settings ): array;
-
 }

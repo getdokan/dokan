@@ -1216,19 +1216,6 @@ class Vendor {
     }
 
     /**
-     * Set payment fields
-     *
-     * @param string $parent
-     * @param string $field
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function set_payment_field( $parent, $field, $value ) {
-        $this->set_payment_prop( $field, $parent, $value );
-    }
-
-    /**
      * Set paypal email
      *
      * @param string $value

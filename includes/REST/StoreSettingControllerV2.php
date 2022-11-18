@@ -122,8 +122,8 @@ class StoreSettingControllerV2 extends StoreSettingController {
      * @return WP_Error|WP_REST_Response
      */
     public function update_single_settings( $request ) {
-        $group_id = $request->get_param( 'group_id' );
-        $settings_id = $request->get_param( 'id' );
+        $group_id       = $request->get_param( 'group_id' );
+        $settings_id    = $request->get_param( 'id' );
         $settings_value = $request->get_param( 'value' );
 
         return rest_ensure_response( ( new Processor() )->save_single_settings( $group_id, $settings_id, $settings_value ) );
@@ -139,9 +139,9 @@ class StoreSettingControllerV2 extends StoreSettingController {
      * @return WP_Error|WP_REST_Response
      */
     public function update_single_settings_field( $request ) {
-        $group_id = $request->get_param( 'group_id' );
-        $settings_id = $request->get_param( 'parent_id' );
-        $settings_field_id = $request->get_param( 'id' );
+        $group_id             = $request->get_param( 'group_id' );
+        $settings_id          = $request->get_param( 'parent_id' );
+        $settings_field_id    = $request->get_param( 'id' );
         $settings_field_value = $request->get_param( 'value' );
 
         return rest_ensure_response( ( new Processor() )->save_single_settings_field( $group_id, $settings_id, $settings_field_id, $settings_field_value ) );
@@ -183,9 +183,9 @@ class StoreSettingControllerV2 extends StoreSettingController {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_single_settings_field( $request ) {
-        $group_id = $request->get_param( 'group_id' );
+        $group_id  = $request->get_param( 'group_id' );
         $parent_id = $request->get_param( 'parent_id' );
-        $id       = $request->get_param( 'id' );
+        $id        = $request->get_param( 'id' );
         return rest_ensure_response( ( new Processor() )->get_single_settings_field( $group_id, $parent_id, $id ) );
     }
 

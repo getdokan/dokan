@@ -124,7 +124,7 @@ class Processor {
     /**
      * Populate settings link section.
      *
-     * @param array $settings
+     * @param array $settings Settings array.
      *
      * @return array
      */
@@ -149,7 +149,7 @@ class Processor {
     /**
      * Populate settings link section.
      *
-     * @param array $settings
+     * @param array $settings Settings Element.
      *
      * @return array
      */

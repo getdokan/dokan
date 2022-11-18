@@ -164,14 +164,14 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_sales_reports( $request ) {
-        $from           = $request->get_param( 'from' );
-        $to             = $request->get_param( 'to' );
-        $group_by       = $request->get_param( 'group_by' );
-        $from_date      = dokan_current_datetime()->modify( $from );
-        $to_date        = dokan_current_datetime()->modify( $to );
-        $interval       = DateInterval::createFromDateString( '1 ' . $group_by );
-        $to_date        = $to_date->add( $interval );
-        $group_by_array = [];
+        $from             = $request->get_param( 'from' );
+        $to               = $request->get_param( 'to' );
+        $group_by         = $request->get_param( 'group_by' );
+        $from_date        = dokan_current_datetime()->modify( $from );
+        $to_date          = dokan_current_datetime()->modify( $to );
+        $interval         = DateInterval::createFromDateString( '1 ' . $group_by );
+        $to_date          = $to_date->add( $interval );
+        $group_by_array   = [];
         $date_time_format = 'Y-m-d';
 
         switch ( $group_by ) {

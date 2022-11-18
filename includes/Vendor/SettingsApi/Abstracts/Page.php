@@ -54,5 +54,4 @@ abstract class Page {
      * @return array
      */
     abstract public function render_group( array $groups ): array;
-
 }

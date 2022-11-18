@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WC_REST_Product_Attributes_V1_Controller;
 use WeDevs\Dokan\Product\ProductAttribute;
+use WP_REST_Response;
 use WP_REST_Server;
 use WP_Error;
 use WP_REST_Request;
@@ -161,51 +162,51 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * @return array
      */
     public function get_product_update_collection_params() {
-        return array(
-            'attributes'  => array(
+        return [
+            'attributes'  => [
                 'description' => __( 'Attribute options.', 'dokan-lite' ),
                 'type'        => 'array',
                 'required'    => true,
-                'context'     => array( 'edit' ),
-                'items'       => array(
+                'context'     => [ 'edit' ],
+                'items'       => [
                     'type'       => 'object',
-                    'properties' => array(
-                        'id' => array(
+                    'properties' => [
+                        'id' => [
                             'description'       => __( 'Attribute id.', 'dokan-lite' ),
                             'type'              => 'int',
-                            'context'           => array( 'edit' ),
+                            'context'           => [ 'edit' ],
                             'sanitize_callback' => 'absint',
-                        ),
-                        'name' => array(
+                        ],
+                        'name' => [
                             'description'       => __( 'Attribute name.', 'dokan-lite' ),
                             'type'              => 'string',
-                            'context'           => array( 'edit' ),
+                            'context'           => [ 'edit' ],
                             'sanitize_callback' => 'sanitize_text_field',
-                        ),
-                        'visible' => array(
+                        ],
+                        'visible' => [
                             'description'       => __( 'Attribute visible in product list page or not.', 'dokan-lite' ),
                             'type'              => 'boolean',
                             'default'           => false,
-                            'context'           => array( 'edit' ),
+                            'context'           => [ 'edit' ],
                             'sanitize_callback' => 'boolval',
-                        ),
-                        'variation' => array(
+                        ],
+                        'variation' => [
                             'description'       => __( 'Attribute is for variation or not.', 'dokan-lite' ),
                             'type'              => 'boolean',
                             'default'           => false,
-                            'context'           => array( 'edit' ),
+                            'context'           => [ 'edit' ],
                             'sanitize_callback' => 'boolval',
-                        ),
-                        'options' => array(
+                        ],
+                        'options' => [
                             'description' => __( 'Attribute values.', 'dokan-lite' ),
                             'type'        => 'array',
                             'required'    => true,
-                            'context'     => array( 'edit' ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+                            'context'     => [ 'edit' ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -245,6 +246,7 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * @since DOKAN_SINCE
      *
      * @param WP_Rest_Request            $request
+     *
      * @return WP_Error|WP_REST_Response Rest Response
      */
     public function update_product_default_attribute( $request ) {
