@@ -35,13 +35,9 @@ class OrderControllerV2 extends OrderController {
     public function register_routes() {
         parent::register_routes();
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/downloads', [
-				'args' => [
-					'id' => [
-						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-						'type'        => 'integer',
-                    ],
-                ],
+            $this->namespace,
+            '/' . $this->base . '/(?P<id>[\d]+)/downloads',
+            [
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_order_downloads' ],
@@ -91,25 +87,27 @@ class OrderControllerV2 extends OrderController {
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/bulk-actions', [
+            $this->namespace,
+            '/' . $this->base . '/bulk-actions',
+            [
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'process_orders_bulk_action' ),
-					'args'                => array(
-						'order_ids' => array(
+					'callback'            => [ $this, 'process_orders_bulk_action' ],
+					'args'                => [
+						'order_ids' => [
 							'type'        => 'array',
 							'description' => __( 'Order ids', 'dokan-lite' ),
 							'required'    => true,
 							'sanitize_callback' => [ $this, 'sanitize_order_ids' ],
-						),
-						'status' => array(
+                        ],
+						'status' => [
 							'type'        => 'string',
 							'description' => __( 'Order status', 'dokan-lite' ),
 							'required'    => true,
 							'sanitize_callback' => 'sanitize_text_field',
-						),
-					),
-					'permission_callback' => array( $this, 'update_order_permissions_check' ),
+                        ],
+                    ],
+					'permission_callback' => [ $this, 'update_order_permissions_check' ],
                 ],
             ]
         );
@@ -131,6 +129,7 @@ class OrderControllerV2 extends OrderController {
         $data      = [];
         $downloads = [];
 
+        // TODO: Need to move this into a separate function.
         $download_permissions = $wpdb->get_results(
             $wpdb->prepare(
                 "
