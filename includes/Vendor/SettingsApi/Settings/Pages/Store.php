@@ -1,8 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Vendor\SettingsApi\Pages;
+namespace WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages;
 
-use WeDevs\Dokan\Vendor\SettingsApi\Page;
+use WeDevs\Dokan\Vendor\SettingsApi\Abstracts\Page;
 
 defined( 'ABSPATH' ) || exit;
 

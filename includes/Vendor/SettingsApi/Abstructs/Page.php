@@ -1,15 +1,13 @@
 <?php
 
-namespace WeDevs\Dokan\Vendor\SettingsApi;
+namespace WeDevs\Dokan\Vendor\SettingsApi\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor Settings Payment processor.
- *
- * @since DOKAN_SINCE
+ * Vendor Settings Page.
  */
-abstract class PaymentProcessor {
+abstract class Page {
 
     /**
      * Hook Order for setting rendering.
@@ -30,7 +28,8 @@ abstract class PaymentProcessor {
      * Constructor function.
      */
     public function __construct() {
-        add_filter( 'dokan_vendor_rest_payment_settings', [ $this, 'render_settings' ], $this->hook_order );
+        add_filter( 'dokan_vendor_rest_settings_page_list', [ $this, 'render_group' ], $this->hook_order );
+        add_filter( 'dokan_vendor_rest_settings_for' . $this->group . '_page', [ $this, 'render_settings' ], $this->hook_order );
     }
 
     /**
@@ -43,5 +42,17 @@ abstract class PaymentProcessor {
      * @return array
      */
     abstract public function render_settings( array $settings ): array;
+
+
+    /**
+     * Render the settings page with tab, cad, fields.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $groups Settings Group or page to render.
+     *
+     * @return array
+     */
+    abstract public function render_group( array $groups ): array;
 
 }

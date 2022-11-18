@@ -2,10 +2,10 @@
 
 namespace WeDevs\Dokan\Vendor\SettingsApi;
 
-use WeDevs\Dokan\Vendor\SettingsApi\Pages\Payments;
-use WeDevs\Dokan\Vendor\SettingsApi\Pages\Store;
-use WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessors\Bank;
-use WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessors\PayPal;
+use WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Payments\Gateways\Bank;
+use WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Payments\Gateways\PayPal;
+use WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Payments\Payments;
+use WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Store;
 
 defined( 'ABSPATH' ) || exit;
 

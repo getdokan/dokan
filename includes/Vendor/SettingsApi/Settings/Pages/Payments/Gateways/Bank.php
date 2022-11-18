@@ -1,8 +1,9 @@
 <?php
 
-namespace WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessors;
+namespace WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Payments\Gateways;
 
-use WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessor;
+
+use WeDevs\Dokan\Vendor\SettingsApi\Abstracts\Gateways;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since DOKAN_SINCE
  */
-class Bank extends PaymentProcessor {
+class Bank extends Gateways {
 
     /**
      * Render the settings page for bank.

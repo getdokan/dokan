@@ -1,8 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessors;
+namespace WeDevs\Dokan\Vendor\SettingsApi\Settings\Pages\Payments\Gateways;
 
-use WeDevs\Dokan\Vendor\SettingsApi\PaymentProcessor;
+use WeDevs\Dokan\Vendor\SettingsApi\Abstracts\Gateways;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since DOKAN_SINCE
  */
-class PayPal extends PaymentProcessor {
+class PayPal extends Gateways {
 
     /**
      * Render the settings for PayPal.
