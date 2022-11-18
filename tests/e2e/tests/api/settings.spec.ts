@@ -24,7 +24,7 @@ test('get settings', async ({ request }) => {
 
 
 
-test('update settings', async ({ request }) => {
+test.only('update settings', async ({ request }) => {
     let response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings })
     let responseBody = await response.json()
     console.log(responseBody)

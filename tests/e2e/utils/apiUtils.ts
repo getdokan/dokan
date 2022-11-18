@@ -2,6 +2,8 @@ import { type APIRequestContext } from '@playwright/test'
 import { endPoints } from './apiEndPoints'
 import { payloads } from './payloads'
 
+//TODO: update all predefine payload to function argument
+
 export class ApiUtils {
     readonly request: APIRequestContext
 
@@ -260,4 +262,276 @@ export class ApiUtils {
     }
 
 
+
+
+
+
+
+
+
+    /**
+    * wp  api methods
+    */
+
+    // get site settings
+    async getSiteSettings() {
+        let response = await this.request.get(endPoints.wp.getSiteSettings)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // update user
+    async setSiteSettings(payload: object) {
+        let response = await this.request.post(endPoints.wp.setSiteSetiings, { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all users
+    async getAllUsers() {
+        let response = await this.request.get(endPoints.wp.getAllUsers)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get user by role
+    async getAllUsersByRole(role: String) {
+        let response = await this.request.get(endPoints.wp.getAllUsersByRole(role))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get current user
+    async getCurrentUser() {
+        let response = await this.request.get(endPoints.wp.getcurrentUser)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get user by Id
+    async getUserById(userId: String) {
+        let response = await this.request.get(endPoints.wp.getUserById(userId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // create user
+    async createUser() {  // administrator,  customer, seller
+        let response = await this.request.post(endPoints.wp.createUser, { data: payloads.createUser })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // update user
+    async updateUser() {
+        let response = await this.request.put(endPoints.wp.createUser, { data: payloads.createUser })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // delete user
+    async deleteUser(userId: String) {
+        let response = await this.request.delete(endPoints.wp.deleteUser(userId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all plugins
+    async getAllPlugins() {
+        let response = await this.request.get(endPoints.wp.getAllPlugins)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all plugins
+    async getAllPluginByStatus(status: String) {
+        let response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get single plugin
+    async getSinglePlugin(plugin: String) {
+        let response = await this.request.get(endPoints.wp.getSinglePlugin(plugin))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // update plugin
+    async updatePlugin(plugin: String) {
+        let response = await this.request.put(endPoints.wp.updatePlugin(plugin), { data: payloads.updatePlugin })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // delete plugin
+    async deletePlugin(plugin: String) {
+        let response = await this.request.delete(endPoints.wp.deletePlugin(plugin))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
+    * woocommerce  api methods
+    */
+
+    // get all setting options
+
+
+    // get all customers
+    async getAllWcSettings(groupId: String) {
+        let response = await this.request.get(endPoints.wc.getAllSettingOptions(groupId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all single wc settings option
+    async getSingleWcSettingsOption(groupId: String, optionId: String) {
+        let response = await this.request.get(endPoints.wc.getSingleSettingOption(groupId, optionId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // set single wc settings option
+    async updateSingleWcSettingsOption(groupId: String, optionId: String, payload: object) {
+        let response = await this.request.post(endPoints.wc.updateSettingOption(groupId, optionId), { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all customers
+    async getAllCustomers() {
+        let response = await this.request.get(endPoints.wc.getAllCustomers)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get customerId
+    async getCustomerId(username: string) {
+        let allCustomers = await this.getAllCustomers()
+        let cutomerId = (allCustomers.find(o => o.username === username)).id
+        // console.log(cutomerId)
+        return cutomerId
+    }
+
+    // create customer
+    async createCustomer(payload: object) {
+        let response = await this.request.post(endPoints.wc.createCustomer, { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // delete customer
+    async deleteCustomer(userId: String) {
+        let response = await this.request.delete(endPoints.wc.deleteCustomer(userId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+    // create tax rate
+    async createTaxRate(payload: object) {
+        let response = await this.request.post(endPoints.wc.createTaxRate, { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all shipping zones
+    async getAllShippingZones() {
+        let response = await this.request.get(endPoints.wc.getAllShippingZones)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get zoneId
+    async getzoneId(zoneName: string) {
+        let allZones = await this.getAllShippingZones()
+        let zoneId = (allZones.find(o => o.name === zoneName)).id
+        // console.log(cutomerId)
+        return zoneId
+    }
+
+    // create shipping zone 
+    async createShippingZone(payload: object) {
+        let response = await this.request.post(endPoints.wc.createShippingZone, { data: payload })
+        let responseBody = await response.json()
+        let shippingZoneId = responseBody.id
+        // console.log(responseBody)
+        // console.log(shippingZoneId)
+        return [responseBody, shippingZoneId]
+    }
+
+    // get all shipping zone locations
+    async getAllShippingZoneLocations(zoneId: string) {
+        let response = await this.request.get(endPoints.wc.getAllShippingZoneLocations(zoneId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // add shipping zone location
+    async addShippingZoneLoation(zoneId: string, zoneLocation: object) {
+        let response = await this.request.put(endPoints.wc.addShippingZoneLocation(zoneId), { data: zoneLocation })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all shipping zone methods
+    async getAllShippingZoneMethods(zoneId: string) {
+        let response = await this.request.get(endPoints.wc.getAllShippingZoneMethods(zoneId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // add shipping method
+    async addShippingZoneMethod(zoneId: string, zoneMethod: object) {
+        let response = await this.request.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+
+
+
 }
+
+
+
+
+

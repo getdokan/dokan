@@ -34,8 +34,8 @@ test.describe('product variation api test', () => {
         let responseBody = await response.json()
         console.log(responseBody)
 
-        // expect(response.ok()).toBeTruthy()
-        // expect(response.status()).toBe(200)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
     });
 
 
