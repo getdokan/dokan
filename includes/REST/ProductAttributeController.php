@@ -50,8 +50,8 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
             )
         );
 
-         // REST API for setting Product default attribute.
-         register_rest_route(
+        // REST API for setting Product default attribute.
+        register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/set-default/(?P<id>[\d]+)',
             array(
                 array(
