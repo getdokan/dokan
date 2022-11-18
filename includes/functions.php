@@ -4469,34 +4469,6 @@ function is_tweleve_hour_format() {
 }
 
 /**
- * Returns all nonce and nonce related data.
- *
- * @since DOKAN_SINCE
- *
- * @return array
- */
-function dokan_get_nonce_data() {
-    return apply_filters(
-        'dokan_get_nonce_data',
-        [
-            'export_order' => [
-                'nonce'            => wp_create_nonce( 'dokan_vendor_order_export_action' ),
-                'nonce_key'        => 'dokan_vendor_order_export_nonce',
-                'action'           => 'dokan_vendor_order_export_action',
-                '_wp_http_referer' => '/dashboard/orders/',
-            ],
-            'order' => [
-                'details_url'    => wp_nonce_url( add_query_arg( [ 'order_id' => 'edit_this_as_id' ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
-                'complete_order' => [
-                    'action'   => 'dokan_change_status',
-                    '_wpnonce' => wp_create_nonce( 'dokan_change_status' ),
-                ],
-            ],
-        ]
-    );
-}
-
-/**
  * Updates bulk orders status by orders ids.
  *
  * @since DOKAN_SINCE

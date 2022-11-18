@@ -1133,7 +1133,12 @@ function dokan_bulk_order_status_change() {
     }
 
     // Doing the bulk action for orders.
-    dokan_apply_bulk_order_status_change( $_POST );
+    dokan_apply_bulk_order_status_change(
+        [
+            'status'      => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
+            'bulk_orders' => isset( $_POST['bulk_orders'] ) ? array_map( 'absint', $_POST['bulk_orders'] ) : [],
+        ]
+    );
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
