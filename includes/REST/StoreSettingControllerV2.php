@@ -197,8 +197,8 @@ class StoreSettingControllerV2 extends StoreSettingController {
     private function update_single_settings_args() {
         $args = [
             'value' => [
-                'type'        => [ 'string', 'number', 'boolean', 'object', 'array' ],
-                'description' => __( 'Option value', 'dokan-lite' ),
+                'type'        => [ 'string', 'number', 'boolean', 'object', 'array', 'null' ],
+                'description' => __( 'Settings or fields value', 'dokan-lite' ),
                 'required'    => true,
             ],
         ];
@@ -224,8 +224,8 @@ class StoreSettingControllerV2 extends StoreSettingController {
                             'required'    => true,
                         ],
                         'value' => [
-                            'type'        => [ 'string', 'number', 'boolean', 'object', 'array' ],
-                            'description' => __( 'Option value', 'dokan-lite' ),
+                            'type'        => [ 'string', 'number', 'boolean', 'object', 'array', 'null' ],
+                            'description' => __( 'Settings value', 'dokan-lite' ),
                             'required'    => true,
                         ],
                     ],
