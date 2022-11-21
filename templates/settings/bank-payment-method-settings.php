@@ -110,19 +110,23 @@
         </label>
     </div>
 
-    <div class="data-warning">
-        <div class="left-icon-container">
-            <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
-        </div>
+    <?php if( ! empty( $fields_placeholders['form_caution']['label'] ) || ! empty( $fields_placeholders['form_caution']['placeholder'] ) ):?>
+        <div class="data-warning">
+            <div class="left-icon-container">
+                <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+            </div>
 
-        <div class="vr-separator"></div>
+            <div class="vr-separator"></div>
 
-        <div class="dokan-text-left">
-            <span class="display-block"><b><?php esc_html_e( 'Please double-check your account information!', 'dokan-lite' ); ?></b></span>
-            <br/>
-            <span class="display-block"><?php esc_html_e( 'Incorrect or mismatched account name and number can result in withdrawal delays and fees', 'dokan-lite' ); ?></span>
+            <div class="dokan-text-left">
+                <?php if ( ! empty( $fields_placeholders['form_caution']['label'] ) ): ?>
+                    <span class="display-block"><b><?php echo  esc_attr( ! empty( $fields_placeholders['form_caution']['label'] ) ? $fields_placeholders['form_caution']['label'] : '' ); ?></b></span>
+                    <br/>
+                <?php endif; ?>
+                <span class="display-block"><?php echo  esc_attr( ! empty( $fields_placeholders['form_caution']['placeholder'] ) ? $fields_placeholders['form_caution']['placeholder'] : '' ); ?></span>
+            </div>
         </div>
-    </div>
+    <?php endif;?>
 
     <p class="bottom-note"></p>
 
