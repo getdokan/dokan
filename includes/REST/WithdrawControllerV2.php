@@ -91,12 +91,11 @@ class WithdrawControllerV2 extends WithdrawController {
             $wpdb->prepare(
                 "SELECT
                     count(*) AS total,
-                    sum(case when status = '0' then 1 else 0 end) AS pending,
-                    sum(case when status = '1' then 1 else 0 end) AS approved,
-                    sum(case when status = '2' then 1 else 0 end) AS cancelled
+                    sum(status = '0') AS pending,
+                    sum(status = '1') AS approved,
+                    sum(status = '2') AS cancelled
                 FROM {$wpdb->prefix}dokan_withdraw AS dw
-                WHERE dw.user_id = %d
-                GROUP BY id",
+                WHERE dw.user_id = %d",
                 dokan_get_current_user_id()
             ),
             ARRAY_A
