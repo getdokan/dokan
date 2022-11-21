@@ -64,17 +64,21 @@ class WithdrawControllerV2 extends WithdrawController {
         $payment_methods         = array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() );
         $default_withdraw_method = dokan_withdraw_get_default_method( dokan_get_current_user_id() );
 
-        $payment_methods = array_map( function( $payment_method ) {
-            return [
-                'label' => dokan_withdraw_get_method_title( $payment_method ),
-                'value' => $payment_method,
-            ];
-        }, $payment_methods );
+        $payment_methods = array_map(
+            function( $payment_method ) {
+                return [
+                    'label' => dokan_withdraw_get_method_title( $payment_method ),
+                    'value' => $payment_method,
+                ];
+            }, $payment_methods
+        );
 
-        return rest_ensure_response( [
-            'withdraw_method' => $default_withdraw_method,
-            'payment_methods' => $payment_methods,
-        ] );
+        return rest_ensure_response(
+            [
+                'withdraw_method' => $default_withdraw_method,
+                'payment_methods' => $payment_methods,
+            ]
+        );
     }
 
     /**
