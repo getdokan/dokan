@@ -2609,7 +2609,7 @@ jQuery(function($) {
               action:
                 $(this).data('action') ||
                 'dokan_json_search_products_and_variations',
-              security: dokan.search_products_nonce,
+              security: $(this).data('nonce') || dokan.search_products_nonce,
               exclude: $(this).data('exclude'),
               user_ids: $(this).data('user_ids'),
               include: $(this).data('include'),
