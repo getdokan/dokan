@@ -358,7 +358,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
                 if ( ! empty( $file_urls[ $i ] ) ) {
                     $files[ md5( $file_urls[ $i ] ) ] = [
                         'name' => $file_names[ $i ],
-                        'file' => $file_urls[ $i ],
+                        'file' => apply_filters( 'dokan_product_file_download_path', $file_urls[ $i ], $post_id ),
                     ];
                 }
             }
