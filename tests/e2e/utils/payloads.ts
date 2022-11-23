@@ -62,7 +62,7 @@ export const payloads = {
   },
 
   updateSettings: {
-    store_name: 'vendorstore1',
+    store_name: 'vendorstore2',
     social: {
       fb: 'http://dokan.test',
       youtube: 'http://dokan.test',
@@ -74,29 +74,31 @@ export const payloads = {
     },
     payment: {
       bank: {
-        ac_name: '',
-        ac_type: '',
-        ac_number: '',
-        bank_name: '',
-        bank_addr: '',
-        routing_number: '',
-        iban: '',
-        swift: ''
+        ac_name: 'account name',
+        ac_type: 'personal',
+        ac_number: '1234567890',
+        bank_name: 'bank name',
+        bank_addr: 'bank address',
+        routing_number: '1234567890',
+        iban: '1234567890',
+        swift: '1234567890'
       },
-      paypal: { email: '' }
+      paypal: { email: 'pay9pal@g.c' }
     },
-    phone: '1234',
+    phone: '0123456789',
     show_email: 'no',
     address: {
-      street_1: 'bcd street',
+      street_1: 'abc street',
       street_2: 'xyz street',
       city: 'New York',
       zip: '10003',
       state: 'NY',
-      country: 'US'
+      country: 'US',
       // country: 'AF'
+      location_name: 'Default'
     },
-    location: '',
+    location: '40.7127753,-74.0059728',
+    // location: '23.709921,90.407143', //dhaka
     banner: '',
     icon: '',
     gravatar: '',
@@ -107,9 +109,17 @@ export const payloads = {
     show_min_order_discount: '',
     store_seo: [],
     dokan_store_time_enabled: 'no',
-    dokan_store_open_notice: '',
-    dokan_store_close_notice: '',
-    dokan_store_time: [],
+    dokan_store_open_notice: 'Store is open',
+    dokan_store_close_notice: 'Store is closed',
+    dokan_store_time: {
+      monday: { status: 'close', opening_time: [], closing_time: [] },
+      tuesday: { status: 'close', opening_time: [], closing_time: [] },
+      wednesday: { status: 'close', opening_time: [], closing_time: [] },
+      thursday: { status: 'close', opening_time: [], closing_time: [] },
+      friday: { status: 'close', opening_time: [], closing_time: [] },
+      saturday: { status: 'close', opening_time: [], closing_time: [] },
+      sunday: { status: 'close', opening_time: [], closing_time: [] }
+    },
     company_name: '',
     vat_number: '',
     company_id_number: '',
@@ -134,7 +144,35 @@ export const payloads = {
       }
     },
     setting_minimum_order_amount: '',
-    setting_order_percentage: ''
+    setting_order_percentage: '',
+    find_address: 'Dhaka',
+  product_sections: {
+    advertised: 'no',
+    featured: 'no',
+    latest: 'no',
+    best_selling: 'no',
+    top_rated: 'no'
+  },
+  order_min_max: {
+    enable_vendor_min_max_quantity: 'no',
+    min_quantity_to_order: '',
+    max_quantity_to_order: '',
+    vendor_min_max_products: [],
+    vendor_min_max_product_cat: [],
+    enable_vendor_min_max_amount: 'no',
+    min_amount_to_order: '',
+    max_amount_to_order: ''
+  },
+  vendor_biography: '',
+  show_support_btn_product: 'yes',
+  support_btn_name: '',
+  show_support_btn: 'yes',
+  setting_go_vacation: 'no',
+  settings_closing_style: 'instantly',
+  setting_vacation_message: '',
+  seller_vacation_schedules: [],
+  vendor_store_location_pickup: { multiple_store_location: 'no', default_location_name: 'Default' },
+  store_locations: []
   },
 
   createAttribute: () => {
@@ -160,6 +198,7 @@ export const payloads = {
 
   },
 
+
   createOrderNote: {
     status: "processing",
     note: "test order note"
@@ -174,6 +213,13 @@ export const payloads = {
     verified: true
   },
 
+  createCategory: {
+    name: "Clothing",
+  },
+
+  updateCategory: {
+    name: "Clothing",
+  },
 
 
   createUser: {
@@ -183,6 +229,15 @@ export const payloads = {
     email: '',
     roles: '',
     password: '',
+  },
+
+  createVendor: {
+    username: 'vendor2',
+    first_name: 'vendor2',
+    last_name: 'v2',
+    email: 'vendor2@yopmail.com',
+    roles: 'seller',
+    password: 'password',
   },
 
   updatePlugin: {
@@ -268,7 +323,6 @@ export const payloads = {
   // general , products, tax, shipping, checkout, account
   general: {
     update: [
-
       {
         id: 'woocommerce_calc_taxes',
         // label: 'Enable taxes',
@@ -301,17 +355,189 @@ export const payloads = {
         value: '2',
         // value: '4',
       }
-
     ]
   },
 
-  account:
-  {
-    // id: 'woocommerce_registration_generate_password',
-    // description: 'When creating an account, send the new user a link to set their password',
-    value: 'no',
-    // value: 'yes',
+  account: {
+    update: [
+      {
+        id: 'woocommerce_registration_generate_password',
+        // description: 'When creating an account, send the new user a link to set their password',
+        value: 'no',
+        // value: 'yes',
+      }
+    ]
   },
+
+  bcs: {
+    id: 'bacs',
+    // title: 'Direct bank transfer',
+    enabled: true,
+    // method_title: 'Direct bank transfer',
+  },
+
+  cheque: {
+    id: 'cheque',
+    // title: 'Check payments',
+    enabled: true,
+    // method_title: 'Check payments',
+  },
+  cod: {
+    id: 'cod',
+    // title: 'Cash on delivery',
+    enabled: true,
+    // method_title: 'Cash on delivery',
+  },
+  // payPal: {
+  //   id: 'dokan_paypal_marketplace',
+  //   title: 'PayPal Marketplace',
+  //   enabled: false,
+  //   method_title: 'Dokan PayPal Marketplace',
+  //   settings: {
+  //     shipping_tax_fee_recipient_notice: [Object],
+  //     title: [Object],
+  //     partner_id: [Object],
+  //     api_details: [Object],
+  //     test_mode: [Object],
+  //     app_user: [Object],
+  //     app_pass: [Object],
+  //     test_app_user: [Object],
+  //     test_app_pass: [Object],
+  //     bn_code: [Object],
+  //     disbursement_mode: [Object],
+  //     disbursement_delay_period: [Object],
+  //     button_type: [Object],
+  //     ucc_mode_notice: [Object],
+  //     ucc_mode: [Object],
+  //     marketplace_logo: [Object],
+  //     display_notice_on_vendor_dashboard: [Object],
+  //     display_notice_to_non_connected_sellers: [Object],
+  //     display_notice_interval: [Object],
+  //     webhook_message: [Object]
+  //   },
+  // },
+  // stripeConnect: {
+  //   id: 'dokan-stripe-connect',
+  //   title: 'Dokan Credit card (Stripe)',
+  //   enabled: false,
+  //   method_title: 'Dokan Stripe Connect',
+  //   settings: {
+  //     title: [Object],
+  //     allow_non_connected_sellers: [Object],
+  //     display_notice_to_non_connected_sellers: [Object],
+  //     display_notice_interval: [Object],
+  //     enable_3d_secure: [Object],
+  //     seller_pays_the_processing_fee: [Object],
+  //     testmode: [Object],
+  //     stripe_checkout: [Object],
+  //     stripe_checkout_locale: [Object],
+  //     stripe_checkout_image: [Object],
+  //     stripe_checkout_label: [Object],
+  //     saved_cards: [Object],
+  //     'live-credentials-title': [Object],
+  //     publishable_key: [Object],
+  //     secret_key: [Object],
+  //     client_id: [Object],
+  //     'test-credentials-title': [Object],
+  //     test_publishable_key: [Object],
+  //     test_secret_key: [Object],
+  //     test_client_id: [Object]
+  //   },
+  // },
+  // mangopay: {
+  //   id: 'dokan_mangopay',
+  //   title: 'MangoPay',
+  //   enabled: false,
+  //   method_title: 'Dokan MangoPay',
+  //   settings: {
+  //     title: [Object],
+  //     api_details: [Object],
+  //     sandbox_mode: [Object],
+  //     client_id: [Object],
+  //     api_key: [Object],
+  //     sandbox_client_id: [Object],
+  //     sandbox_api_key: [Object],
+  //     payment_options: [Object],
+  //     cards: [Object],
+  //     direct_pay: [Object],
+  //     saved_cards: [Object],
+  //     platform_fees: [Object],
+  //     fund_transfers: [Object],
+  //     disburse_mode: [Object],
+  //     disbursement_delay_period: [Object],
+  //     instant_payout: [Object],
+  //     user_types: [Object],
+  //     default_vendor_status: [Object],
+  //     default_business_type: [Object],
+  //     advanced: [Object],
+  //     notice_on_vendor_dashboard: [Object],
+  //     announcement_to_sellers: [Object],
+  //     notice_interval: [Object]
+  //   },
+  // },
+  //razorpay: {
+  //   id: 'dokan_razorpay',
+  //   title: 'Razorpay',
+  //   description: null,
+  //   enabled: false,
+  //   method_title: 'Dokan Razorpay',
+  //   settings: {
+  //     title: [Object],
+  //     api_details: [Object],
+  //     test_mode: [Object],
+  //     key_id: [Object],
+  //     key_secret: [Object],
+  //     test_key_id: [Object],
+  //     test_key_secret: [Object],
+  //     enable_route_transfer: [Object],
+  //     disbursement_mode: [Object],
+  //     razorpay_disbursement_delay_period: [Object],
+  //     seller_pays_the_processing_fee: [Object],
+  //     display_notice_on_vendor_dashboard: [Object],
+  //     display_notice_to_non_connected_sellers: [Object],
+  //     display_notice_interval: [Object]
+  //   },
+  // },
+  //stripteExpress {
+  //   id: 'dokan_stripe_express',
+  //   title: 'Credit/Debit Card',
+  //   enabled: false,
+  //   settings: {
+  //     title: [Object],
+  //     api_details: [Object],
+  //     testmode: [Object],
+  //     publishable_key: [Object],
+  //     secret_key: [Object],
+  //     test_publishable_key: [Object],
+  //     test_secret_key: [Object],
+  //     webhook: [Object],
+  //     webhook_key: [Object],
+  //     test_webhook_key: [Object],
+  //     payment_options: [Object],
+  //     enabled_payment_methods: [Object],
+  //     sellers_pay_processing_fee: [Object],
+  //     saved_cards: [Object],
+  //     capture: [Object],
+  //     disburse_mode: [Object],
+  //     disbursement_delay_period: [Object],
+  //     statement_descriptor: [Object],
+  //     appearance: [Object],
+  //     element_theme: [Object],
+  //     payment_request_options: [Object],
+  //     payment_request: [Object],
+  //     payment_request_button_type: [Object],
+  //     payment_request_button_theme: [Object],
+  //     payment_request_button_locations: [Object],
+  //     payment_request_button_size: [Object],
+  //     advanced: [Object],
+  //     notice_on_vendor_dashboard: [Object],
+  //     announcement_to_sellers: [Object],
+  //     notice_interval: [Object],
+  //     debug: [Object]
+  //   },
+  // }
+
+
 
 
 

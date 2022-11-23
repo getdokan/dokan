@@ -11,9 +11,11 @@ export class ApiUtils {
         this.request = request
     }
 
+
     /**
      * store api methods
      */
+
 
     // get all stores
     async getAllStores() {
@@ -38,9 +40,11 @@ export class ApiUtils {
         return sellerId
     }
 
+
     /**
      * product api methods
      */
+
 
     // get all coupons
     async getAllProducts() {
@@ -68,8 +72,8 @@ export class ApiUtils {
     }
 
     // create product
-    async createProduct() {
-        let response = await this.request.post(endPoints.createProduct, { data: payloads.createProduct() })
+    async createProduct(payload: object) {
+        let response = await this.request.post(endPoints.createProduct, { data: payload })
         let responseBody = await response.json()
         let productId = responseBody.id
         // console.log(responseBody)
@@ -118,8 +122,8 @@ export class ApiUtils {
     }
 
     // create attribute
-    async createAttribute() {
-        let response = await this.request.post(endPoints.createAttribute, { data: payloads.createAttribute() })
+    async createAttribute(payload: object) {
+        let response = await this.request.post(endPoints.createAttribute, { data: payload })
         let responseBody = await response.json()
         let attributeId = responseBody.id
         // console.log(responseBody)
@@ -132,9 +136,9 @@ export class ApiUtils {
      */
 
     // create attribute term
-    async createAttributeTerm() {
-        let [, attributeId] = await this.createAttribute()
-        let response = await this.request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() })
+    async createAttributeTerm(attribute: object, attributeTerm: object) {
+        let [, attributeId] = await this.createAttribute(attribute)
+        let response = await this.request.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm })
         let responseBody = await response.json()
         let attributeTermId = responseBody.id
         // console.log(responseBody)
@@ -172,8 +176,8 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon() {
-        let [, productId] = await this.createProduct()
+    async createCoupon(product: object) {
+        let [, productId] = await this.createProduct(product)
         let payloadCoupon = payloads.createCoupon()
         payloadCoupon.product_ids = [productId]
         // console.log(payloadCoupon)
@@ -230,7 +234,7 @@ export class ApiUtils {
      * order api methods
      */
 
-    // get all withdraws
+    // get all orders
     async getAllOrders() {
         let response = await this.request.get(endPoints.getAllOrders)
         let responseBody = await response.json()
@@ -261,7 +265,45 @@ export class ApiUtils {
         return [responseBody, orderId, orderNoteId]
     }
 
+    /**
+    * refund api methods
+    */
 
+    // get all orders
+    async getAllRefunds() {
+        let response = await this.request.get(endPoints.getAllRefunds)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get orderId
+    async getRefundId() {
+        let allRefunds = await this.getAllRefunds()
+        let refundId = allRefunds[0].id
+        console.log(refundId)
+        return refundId
+    }
+
+    /**
+    * dokan settings  api methods
+    */
+
+    // get store settings
+    async getStoreSettings() {
+        let response = await this.request.get(endPoints.getSettings)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // set store settings
+    async setStoreSettings(payload: object) {
+        let response = await this.request.put(endPoints.updateSettings, { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
 
 
 
@@ -273,6 +315,8 @@ export class ApiUtils {
     * wp  api methods
     */
 
+    // settings
+
     // get site settings
     async getSiteSettings() {
         let response = await this.request.get(endPoints.wp.getSiteSettings)
@@ -281,13 +325,15 @@ export class ApiUtils {
         return responseBody
     }
 
-    // update user
+    // set site settings 
     async setSiteSettings(payload: object) {
         let response = await this.request.post(endPoints.wp.setSiteSetiings, { data: payload })
         let responseBody = await response.json()
         // console.log(responseBody)
         return responseBody
     }
+
+    // wp users
 
     // get all users
     async getAllUsers() {
@@ -322,16 +368,16 @@ export class ApiUtils {
     }
 
     // create user
-    async createUser() {  // administrator,  customer, seller
-        let response = await this.request.post(endPoints.wp.createUser, { data: payloads.createUser })
+    async createUser(payload: object) {  // administrator,  customer, seller
+        let response = await this.request.post(endPoints.wp.createUser, { data: payload })
         let responseBody = await response.json()
-        // console.log(responseBody)
+        console.log(responseBody)
         return responseBody
     }
 
     // update user
-    async updateUser() {
-        let response = await this.request.put(endPoints.wp.createUser, { data: payloads.createUser })
+    async updateUser(payload: object) {
+        let response = await this.request.put(endPoints.wp.createUser, { data: payload })
         let responseBody = await response.json()
         // console.log(responseBody)
         return responseBody
@@ -345,6 +391,8 @@ export class ApiUtils {
         return responseBody
     }
 
+    // plugins
+
     // get all plugins
     async getAllPlugins() {
         let response = await this.request.get(endPoints.wp.getAllPlugins)
@@ -353,7 +401,7 @@ export class ApiUtils {
         return responseBody
     }
 
-    // get all plugins
+    // get all plugins by status
     async getAllPluginByStatus(status: String) {
         let response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status))
         let responseBody = await response.json()
@@ -399,10 +447,9 @@ export class ApiUtils {
     * woocommerce  api methods
     */
 
-    // get all setting options
+    // settings
 
-
-    // get all customers
+    // get all wc setting options
     async getAllWcSettings(groupId: String) {
         let response = await this.request.get(endPoints.wc.getAllSettingOptions(groupId))
         let responseBody = await response.json()
@@ -425,6 +472,18 @@ export class ApiUtils {
         // console.log(responseBody)
         return responseBody
     }
+
+    // update single wc settings option
+    async updateBatchWcSettingsOptions(groupId: String, payload: object) {
+        let response = await this.request.post(endPoints.wc.updateBatchSettingOptions(groupId), { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+    // customers
+
 
     // get all customers
     async getAllCustomers() {
@@ -458,6 +517,59 @@ export class ApiUtils {
         return responseBody
     }
 
+    // categories
+
+    // get all categories
+    async getAllCategories() {
+        let response = await this.request.get(endPoints.wc.getAllCategories)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get single category
+    async getSingleCategory(categoryId: String) {
+        let response = await this.request.get(endPoints.wc.getSingleCategory(categoryId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get categoryId
+    async getCategoryId(categoryName: string) {
+        let allCustomers = await this.getAllCustomers()
+        let cutomerId = (allCustomers.find(o => o.name === categoryName)).id
+        // console.log(cutomerId)
+        return cutomerId
+    }
+
+    // create category
+    async createCategory(payload: object) {
+        let response = await this.request.post(endPoints.wc.createCategory, { data: payload })
+        let responseBody = await response.json()
+        let categoryId = responseBody.id
+        // console.log(responseBody)
+        return [responseBody, categoryId]
+    }
+
+    // update category
+    async updateCategory(categoryId: String, payload: object) {
+        let response = await this.request.put(endPoints.wc.updateCategory(categoryId), { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // delete category
+    async deleteCategory(categoryId: String) {
+        let response = await this.request.delete(endPoints.wc.deleteCategory(categoryId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // tax
+
 
     // create tax rate
     async createTaxRate(payload: object) {
@@ -466,6 +578,9 @@ export class ApiUtils {
         // console.log(responseBody)
         return responseBody
     }
+
+
+    // shipping
 
     // get all shipping zones
     async getAllShippingZones() {
@@ -525,6 +640,31 @@ export class ApiUtils {
         return responseBody
     }
 
+    // payment
+
+    // get all payment gateway
+    async getAllPaymentGatways() {
+        let response = await this.request.get(endPoints.wc.getAllPaymentGatways)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get single payment gateway
+    async getSinglePaymentGatway(paymentGatewayId: String) {
+        let response = await this.request.get(endPoints.wc.getSinglePaymentGatway(paymentGatewayId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // update payment gateway
+    async updatePaymentGateway(paymentGatewayId: String, payload: object) {
+        let response = await this.request.put(endPoints.wc.updatePaymentGatway(paymentGatewayId), { data: payload })
+        let responseBody = await response.json()
+        console.log(responseBody)
+        return responseBody
+    }
 
 
 
