@@ -507,15 +507,13 @@ class Manager {
             ARRAY_A
         );
 
-        if ( ! $results ) {
-            $results = [
-                'total'     => 0,
-                'pending'   => 0,
-                'approved'  => 0,
-                'cancelled' => 0,
-            ];
-        }
+        $summary = [
+            'total'     => ! empty( $results['total'] ) ? absint( $results['total'] ) : 0,
+            'pending'   => ! empty( $results['pending'] ) ? absint( $results['pending'] ) : 0,
+            'approved'  => ! empty( $results['approved'] ) ? absint( $results['approved'] ) : 0,
+            'cancelled' => ! empty( $results['cancelled'] ) ? absint( $results['cancelled'] ) : 0,
+        ];
 
-        return $results;
+        return $summary;
     }
 }

@@ -2,14 +2,10 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WP_Error;
-use WP_REST_Response;
 use WP_REST_Server;
-use WeDevs\Dokan\Traits\RESTResponseError;
 
 class WithdrawControllerV2 extends WithdrawController {
 
-    use RESTResponseError;
 
     /**
      * Endpoint namespace.
