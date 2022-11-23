@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\REST;
 
 use WP_REST_Server;
+use WP_Error;
+use WP_REST_Response;
 
 class WithdrawControllerV2 extends WithdrawController {
 
