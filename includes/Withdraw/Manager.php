@@ -482,7 +482,7 @@ class Manager {
      *
      * @since DOKAN_SINCE
      *
-     * @param string $user_id
+     * @param int $user_id
      *
      * @return array
      */
