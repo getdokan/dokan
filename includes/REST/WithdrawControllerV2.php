@@ -6,7 +6,6 @@ use WP_REST_Server;
 
 class WithdrawControllerV2 extends WithdrawController {
 
-
     /**
      * Endpoint namespace.
      *
