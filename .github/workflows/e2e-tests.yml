@@ -100,9 +100,10 @@ jobs:
       #     retry_on: error
       #     command: d tests/e2e && npm run test:e2e
 
+      #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-           cd tests/e2e && npm run test setup.spec.ts
+           cd tests/e2e && npm run test tests/api/
         
         env:
           CI: true
@@ -136,7 +137,7 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: playwright-report
+          path: tests/e2e/playwright-report
           if-no-files-found: ignore
           retention-days: 30
 

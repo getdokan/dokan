@@ -14,7 +14,7 @@ test.describe('attribute term api test', () => {
 //TODO: need to send vendor credentials for vendor info
 test('get all attribute terms', async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [,attributeId,] = await apiUtils.createAttributeTerm()
+    let [,attributeId,] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.get(endPoints.getAllAttributeTerms(attributeId))
     let responseBody = await response.json()
@@ -26,7 +26,7 @@ test('get all attribute terms', async ({ request }) => {
 
 test('get single attribute term', async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId))
     let responseBody = await response.json()
@@ -39,7 +39,7 @@ test('get single attribute term', async ({ request }) => {
 
 test('create an attribute term', async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [, attributeId] = await apiUtils.createAttribute()
+    let [, attributeId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() })
     let responseBody = await response.json()
@@ -52,7 +52,7 @@ test('create an attribute term', async ({ request }) => {
 
 test('update an attribute term ', async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() })
     let responseBody = await response.json()
@@ -65,7 +65,7 @@ test('update an attribute term ', async ({ request }) => {
 
 test('delete an attribute term', async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm()
+    let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId))
     let responseBody = await response.json()

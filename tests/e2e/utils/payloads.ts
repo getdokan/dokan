@@ -146,33 +146,33 @@ export const payloads = {
     setting_minimum_order_amount: '',
     setting_order_percentage: '',
     find_address: 'Dhaka',
-  product_sections: {
-    advertised: 'no',
-    featured: 'no',
-    latest: 'no',
-    best_selling: 'no',
-    top_rated: 'no'
-  },
-  order_min_max: {
-    enable_vendor_min_max_quantity: 'no',
-    min_quantity_to_order: '',
-    max_quantity_to_order: '',
-    vendor_min_max_products: [],
-    vendor_min_max_product_cat: [],
-    enable_vendor_min_max_amount: 'no',
-    min_amount_to_order: '',
-    max_amount_to_order: ''
-  },
-  vendor_biography: '',
-  show_support_btn_product: 'yes',
-  support_btn_name: '',
-  show_support_btn: 'yes',
-  setting_go_vacation: 'no',
-  settings_closing_style: 'instantly',
-  setting_vacation_message: '',
-  seller_vacation_schedules: [],
-  vendor_store_location_pickup: { multiple_store_location: 'no', default_location_name: 'Default' },
-  store_locations: []
+    product_sections: {
+      advertised: 'no',
+      featured: 'no',
+      latest: 'no',
+      best_selling: 'no',
+      top_rated: 'no'
+    },
+    order_min_max: {
+      enable_vendor_min_max_quantity: 'no',
+      min_quantity_to_order: '',
+      max_quantity_to_order: '',
+      vendor_min_max_products: [],
+      vendor_min_max_product_cat: [],
+      enable_vendor_min_max_amount: 'no',
+      min_amount_to_order: '',
+      max_amount_to_order: ''
+    },
+    vendor_biography: '',
+    show_support_btn_product: 'yes',
+    support_btn_name: '',
+    show_support_btn: 'yes',
+    setting_go_vacation: 'no',
+    settings_closing_style: 'instantly',
+    setting_vacation_message: '',
+    seller_vacation_schedules: [],
+    vendor_store_location_pickup: { multiple_store_location: 'no', default_location_name: 'Default' },
+    store_locations: []
   },
 
   createAttribute: () => {
@@ -573,7 +573,18 @@ export const payloads = {
       state: 'NY',
       phone: '0123456789'
     },
-  }
+  },
+
+  deactivateModule: {
+    "module": ["booking"]
+  },
+
+  activateModule: {
+    "module": ["booking"]
+  },
+
+
+
 }
 
 

@@ -28,12 +28,13 @@ const config: PlaywrightTestConfig = {
     testDir: './tests',
     /* Maximum time one test can run for. */
     timeout: 120 * 1000,
+    // timeout: 40 * 1000,
     expect: {
         /**
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 5000
+        timeout: 2000
     },
     /* Run tests in files in parallel */
     // fullyParallel: true,
@@ -56,12 +57,12 @@ const config: PlaywrightTestConfig = {
         // viewport: {width: 1920, height: 1080},
         // viewport: null,
         //Whether to run tests on headless or non-headless mode
-        headless: true,
+        headless: false,
         // headless: true,
         //whether to slow down test execution by provided seconds
         launchOptions: {
             // args: ['--start-fullscreen'],
-            slowMo: 0,
+            slowMo: 2,
         },
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 0,

@@ -312,6 +312,52 @@ export class ApiUtils {
 
 
     /**
+    * module  api methods
+    */
+    // get all modules
+    async getAllModules() {
+        let response = await this.request.get(endPoints.getAllModules)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get all modules ids
+    async getAllModuleIds() {
+        let allModulesIds = (await this.getAllModules()).map(a => a.id)
+        // console.log(allModulesIds)
+        return allModulesIds
+    }
+
+    // activate modules
+    async activateModules(moduleIds: String) {
+        let response = await this.request.put(endPoints.activateModule, { data: { module: [moduleIds] } })
+        let responseBody = await response.json()
+        // let activeStatus = responseBody.active
+        // console.log(responseBody)
+        // console.log(activeStatus)
+        // return [responseBody, activeStatus]
+        return responseBody
+    }
+    // deactivate modules
+    async deactivateModules(moduleIds: String) {
+        let response = await this.request.put(endPoints.deactivateModule, { data: { module: [moduleIds] } })
+        let responseBody = await response.json()
+        // let activeStatus = responseBody.active
+        // console.log(responseBody)
+        // console.log(activeStatus)
+        // return [responseBody, activeStatus]
+        return responseBody
+    }
+
+
+
+
+
+
+
+
+    /**
     * wp  api methods
     */
 

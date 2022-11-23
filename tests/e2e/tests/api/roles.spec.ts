@@ -9,12 +9,10 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('settings api test', () => {
+test.describe('roles api test', () => {
 
-    //TODO: need to send vendor credentials for vendor info
-
-test('get settings', async ({ request }) => {
-    let response = await request.get(endPoints.getSettings)
+test('get all user roles ', async ({ request }) => {
+    let response = await request.get(endPoints.getAllUserRoles)
     let responseBody = await response.json()
     console.log(responseBody)
 
@@ -22,19 +20,4 @@ test('get settings', async ({ request }) => {
     expect(response.status()).toBe(200)
 });
 
-
-
-test('update settings', async ({ request }) => {
-    let response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings })
-    let responseBody = await response.json()
-    console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
 });
-
-
-
-});
-
-

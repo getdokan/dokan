@@ -7,8 +7,8 @@ import { payloads } from '../../utils/payloads'
 
 test.beforeAll(async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [, productId] = await apiUtils.createProduct()
-    await apiUtils.createCoupon()
+    let [, productId] = await apiUtils.createProduct(payloads.createProduct())
+    await apiUtils.createCoupon(payloads.createProduct())
 
 });
 
@@ -32,7 +32,7 @@ test.describe('coupon api test', () => {
 
     test('get single coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, couponId] = await apiUtils.createCoupon()
+        let [, couponId] = await apiUtils.createCoupon(payloads.createProduct())
 
         let response = await request.get(endPoints.getSingleCoupon(couponId))
         let responseBody = await response.json()
@@ -45,7 +45,7 @@ test.describe('coupon api test', () => {
 
     test('create a coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, productId] = await apiUtils.createProduct()
+        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
         let payloadCoupon = payloads.createCoupon()
         payloadCoupon.product_ids = [productId]
 
@@ -60,7 +60,7 @@ test.describe('coupon api test', () => {
 
     test('update a coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, couponId] = await apiUtils.createCoupon()
+        let [, couponId] = await apiUtils.createCoupon(payloads.createProduct())
 
         let response = await request.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() })
         let responseBody = await response.json()
@@ -73,7 +73,7 @@ test.describe('coupon api test', () => {
 
     test('delete a coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, couponId] = await apiUtils.createCoupon()
+        let [, couponId] = await apiUtils.createCoupon(payloads.createProduct())
 
         let response = await request.delete(endPoints.deleteCoupon(couponId))
         let responseBody = await response.json()

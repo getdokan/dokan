@@ -5,7 +5,7 @@ import { payloads } from '../../utils/payloads'
 
 test.beforeAll(async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    await apiUtils.createAttribute()
+    await apiUtils.createAttribute(payloads.createAttribute())
 
 });
 // test.afterAll(async ({ request }) => { });
@@ -28,7 +28,7 @@ test.describe('attribute api test', () => {
 
     test('get single attribute', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, attributeId] = await apiUtils.createAttribute()
+        let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.get(endPoints.getSingleAttribute(attributeId))
         let responseBody = await response.json()
@@ -51,7 +51,7 @@ test.describe('attribute api test', () => {
 
     test('update an attribute', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, attributeId] = await apiUtils.createAttribute()
+        let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() })
         let responseBody = await response.json()
@@ -64,7 +64,7 @@ test.describe('attribute api test', () => {
 
     test('delete an attribute', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, attributeId] = await apiUtils.createAttribute()
+        let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.delete(endPoints.deleteAttribute(attributeId))
         let responseBody = await response.json()

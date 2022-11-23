@@ -16,6 +16,9 @@ export const helpers = {
     //random number between 0 and 1000
     randomNumber: () => Math.floor(Math.random() * 1000),
 
+    // random array element
+    randomItem: (array) => array[Math.floor(Math.random() * array.length)],
+
     // opens the url in the default browser 
     openUrl: (url) => open('url'),
 
@@ -60,7 +63,7 @@ export const helpers = {
 
     //order total
     orderTotal(subtotal, tax = 0, shipping = 0) {
-        let orderTotal = subtotal + tax + shipping 
+        let orderTotal = subtotal + tax + shipping
         return this.roundToTwo(orderTotal)
     },
 

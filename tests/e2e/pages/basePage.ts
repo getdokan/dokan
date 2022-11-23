@@ -261,7 +261,8 @@ export class BasePage {
 
     // hover on selector
     async hover(selector: string): Promise<void> {
-        await this.page.hover(selector)
+        await this.page.hover(selector,{timeout: 20000})
+        await this.wait(1)
     }
 
     // drag and drop
@@ -418,11 +419,13 @@ export class BasePage {
 
     // select by value
     async selectByValue(selector: string, value: string): Promise<string[]> {
+        console.log(selector,value)
         return await this.page.selectOption(selector, { value: value })
     }
 
     // select by label
     async selectBylabel(selector: string, value: string): Promise<string[]> {
+        console.log(selector,value)
         return await this.page.selectOption(selector, { label: value })
     }
 
@@ -434,7 +437,7 @@ export class BasePage {
     // set value based on select options text 
     async selectByText(selectSelector: string, optionSelector: string, text: string) {
         let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
-        await this.selectbyValue(selectSelector, optionValue);
+        await this.selectByValue(selectSelector, optionValue);
     }
 
 
@@ -913,34 +916,30 @@ export class BasePage {
 
     // get pseudo element style
     async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
-        let element = await this.getElement(selector)
-        let value = await page.evaluate((element, pseudoElement, property) => {
+        // let element = await this.getElement(selector)
+        let value = await this.page.evaluate((selector, pseudoElement, property) => {
             let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
             let style = stylesObject.getPropertyValue(property)
             return style
-        }, element, pseudoElement, property)
+        }, selector, )
         return value
     }
 
     // enable switch or checkbox: dokan setup wizard
     async enableSwitcherSetupWizard(selector: string) {
-        let IsVisible = await this.isVisible(selector)
-        if (IsVisible) {
-            let element = await this.getElement(selector)
-            await element.focus()
+            // let element = await this.getElement(selector)
             let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-            // console.log('before', value)
-            // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-            if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-                // console.log('if:', selector)
-                await this.page.evaluate(el => el.click(), element)
-                await this.wait(0.3)
-                await this.page.evaluate(el => el.click(), element)
-            } else {
-                // console.log('else:', selector)
-                await this.page.evaluate(el => el.click(), element)
-            }
-        }
+            console.log('before', value)
+            // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+            // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+            //     // console.log('if:', selector)
+            //     await this.page.evaluate(el => el.click(), element)
+            //     await this.wait(0.3)
+            //     await this.page.evaluate(el => el.click(), element)
+            // } else {
+            //     // console.log('else:', selector)
+            //     await this.page.evaluate(el => el.click(), element)
+            // }
     }
 
     // enable switch or checkbox: dokan setup wizard

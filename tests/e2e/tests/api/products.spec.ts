@@ -6,7 +6,7 @@ import { payloads } from '../../utils/payloads'
 
 test.beforeAll(async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    await apiUtils.createProduct()
+    await apiUtils.createProduct(payloads.createProduct())
 
 });
 // test.afterAll(async ({ request }) => { });
@@ -81,7 +81,7 @@ test.describe('product api test', () => {
 
     test('get single product', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, productId] = await apiUtils.createProduct()
+        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.get(endPoints.getSingleProduct(productId))
         let responseBody = await response.json()
@@ -104,7 +104,7 @@ test.describe('product api test', () => {
 
     test('update a product', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, productId] = await apiUtils.createProduct()
+        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.put(endPoints.updateProduct(productId), { data: payloads.updateProduct()})
         let responseBody = await response.json()
@@ -117,7 +117,7 @@ test.describe('product api test', () => {
 
     test('delete a product', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, productId] = await apiUtils.createProduct()
+        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.delete(endPoints.deleteProduct(productId))
         let responseBody = await response.json()
