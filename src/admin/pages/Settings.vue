@@ -419,12 +419,16 @@
                     return;
                 }
 
-                if (!this.awaitingSearch) {
-                    setTimeout(() => {
-                        let searchText = this.$refs.searchInSettings.value.toLowerCase();
-                        this.doSearch(searchText);
+                if ( ! this.awaitingSearch ) {
+                    setTimeout( () => {
+                        let searchText = this.$refs.searchInSettings.value;
+
+                        // If more than two (space/tab) found, replace with space > trim > lowercase.
+                        searchText = searchText.replace( /\s\s+/g,' ' ).trim().toLowerCase();
+
+                        this.doSearch( searchText );
                         this.awaitingSearch = false;
-                    }, 1000);
+                    }, 1000 );
                 }
 
                 this.awaitingSearch = true;
@@ -439,11 +443,23 @@
 
                 Object.keys( dokan_setting_fields ).forEach( function( section, index ) {
                     Object.keys( dokan_setting_fields[section] ).forEach( function( field, i ) {
-                        if (dokan_setting_fields[section][field].type === "sub_section") {
-                            return;
+                        let label = '';
+
+                        // Append section field label.
+                        label += dokan_setting_fields[section][field]['label'];
+
+                        // Append section label and description.
+                        if ( typeof self.settingSections[index] !== 'undefined' ) {
+                            label += ` ${self.settingSections[index]['title']} ${self.settingSections[index]['description']}`;
                         }
 
-                        let label = dokan_setting_fields[section][field]['label'].toLowerCase();
+                        // Append sub-section label and description.
+                        if ( 'sub_section' === dokan_setting_fields[section][field].type ) {
+                            label += ` ${dokan_setting_fields[section][field]['label']} ${dokan_setting_fields[section][field]['description']}`;
+                        }
+
+                        // Make the label lowercase, as `searchText` is also like that.
+                        label = label.toLocaleLowerCase();
 
                         if ( label && label.includes(searchText) ) {
                             if (!settingFields[section]) {
