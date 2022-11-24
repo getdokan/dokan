@@ -13,8 +13,7 @@ import { helpers } from '../../utils/helpers'
 
 
 test.describe('modules api test', () => {
-
-    // //TODO: need to send admin credentials 
+    //TODO: need to send admin credentials 
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)
         let responseBody = await response.json()
@@ -36,8 +35,8 @@ test.describe('modules api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        //
-        apiUtils.activateModules(randomModule)
+        //reactivate module
+        await apiUtils.activateModules(randomModule)
     });
 
     test('activate a module', async ({ request }) => {

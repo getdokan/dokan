@@ -29,7 +29,7 @@ export class ApiUtils {
         let allStores = await this.getAllStores()
 
         // let sellerId = ''
-        // if (couponCode) {
+        // if (firstName) {
         //     sellerId = (allStores.find(o => o.first_name === firstName)).id
         // } else {
         //     sellerId = allStores[0].id
@@ -97,9 +97,6 @@ export class ApiUtils {
         // console.log(variationId)
         return [productId, variationId]
     }
-
-
-
 
     /**
      * attribute api methods
@@ -312,8 +309,69 @@ export class ApiUtils {
 
 
     /**
+    * support ticket  api methods
+    */
+
+    // get all support tickets
+    async getAllSupportTickets() {
+        let response = await this.request.get(endPoints.getAllSupportTickets)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get support ticket id
+    async getSupportTicketId() {
+        let allSuppoertTickets = await this.getAllSupportTickets()
+        let supportTicketId = allSuppoertTickets[0].ID
+        let sellerId = allSuppoertTickets[0].vendor_id
+        // console.log(supportTicketId)
+        // console.log(sellerId)
+        return [supportTicketId, sellerId]
+    }
+
+    // create support ticket comment
+    async createSupportTicketComment(payload: object) {
+        let [supportTicketId,] = await this.getSupportTicketId()
+        let response = await this.request.post(endPoints.createSupportTicketComment(supportTicketId), { data: payload })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // update support ticket status
+    async updateSupportTicketStatus(supportTicketId: String, status: String) {
+        let response = await this.request.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: { status: status } })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    /**
+    * reverse withdrawal  api methods
+    */
+
+    // get all reverse withdrawal stores
+    async getAllReverseWithdrawalStores() {
+        let response = await this.request.get(endPoints.getAllReverseWithdrawalStores)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get orderId
+    async getReverseWithdrawalStoreId() {
+        let allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores()
+        let reverseWithdrawalStoreId = allReverseWithdrawalStores[0].id
+        console.log(reverseWithdrawalStoreId)
+        return reverseWithdrawalStoreId
+    }
+
+
+    /**
     * module  api methods
     */
+
     // get all modules
     async getAllModules() {
         let response = await this.request.get(endPoints.getAllModules)
@@ -324,9 +382,9 @@ export class ApiUtils {
 
     // get all modules ids
     async getAllModuleIds() {
-        let allModulesIds = (await this.getAllModules()).map(a => a.id)
-        // console.log(allModulesIds)
-        return allModulesIds
+        let allModuleIds = (await this.getAllModules()).map(a => a.id)
+        // console.log(allModuleIds)
+        return allModuleIds
     }
 
     // activate modules
@@ -349,6 +407,128 @@ export class ApiUtils {
         // return [responseBody, activeStatus]
         return responseBody
     }
+
+    /**
+    * customers  api methods
+    */
+
+    // get all customers
+    async getAllCustomers() {
+        let response = await this.request.get(endPoints.getAllCustomers)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // get customerId
+    async getCustomerId(username: string) {
+        let allCustomers = await this.getAllCustomers()
+        let cutomerId = (allCustomers.find(o => o.username === username)).id
+        // console.log(cutomerId)
+        return cutomerId
+    }
+
+    // create customer
+    async createCustomer(payload: object) {
+        let response = await this.request.post(endPoints.createCustomer, { data: payload })
+        let responseBody = await response.json()
+        let customerId = responseBody.id
+        // console.log(responseBody)
+        return [responseBody, customerId]
+    }
+
+    // delete customer
+    async deleteCustomer(userId: String) {
+        let response = await this.request.delete(endPoints.deleteCustomer(userId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+    /**
+    * wholesale customers  api methods
+    */
+
+    // get all whosale customers
+    async getAllWholesaleCustomers() {
+        let response = await this.request.get(endPoints.getAllCustomers)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+
+    // create a wholesale customer
+    async createWholesaleCustomer() {
+        let [, customerId] = await this.createCustomer(payloads.createCustomer())
+
+        let response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } })
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return [responseBody, customerId]
+    }
+
+    /**
+    * product advertisement  api methods
+    */
+
+    // get all product advertisements
+    async getAllProductAdvertisements() {
+        let response = await this.request.get(endPoints.getAllProductAdvertisements)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    // create a product advertisement
+    async createProductAdvertisement() {
+        let [body, productId] = await this.createProduct(payloads.createProduct())
+        let sellerId = body.store.id
+
+        let response = await this.request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })
+        let responseBody = await response.json()
+        let productAdvertisementId = responseBody.id
+        // console.log(responseBody)
+        // console.log(productAdvertisementId)
+        return [responseBody, productAdvertisementId]
+    }
+
+    /**
+     * abuse report api methods
+     */
+
+    // get all abuse reports
+    async getAllAbuseReports() {
+        let response = await this.request.get(endPoints.getAllAbuseReports)
+        let responseBody = await response.json()
+        // console.log(responseBody)
+        return responseBody
+    }
+
+    /**
+     * announcements api methods
+     */
+
+    // create announcement
+    async createAnnouncement(payload: object) {
+        let response = await this.request.post(endPoints.createAnnouncement, { data: payload })
+        let responseBody = await response.json()
+        let announcementId = responseBody.id
+        // console.log(responseBody)
+        // console.log(announcementId)
+        return [responseBody, announcementId]
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,40 +708,7 @@ export class ApiUtils {
     }
 
 
-    // customers
 
-
-    // get all customers
-    async getAllCustomers() {
-        let response = await this.request.get(endPoints.wc.getAllCustomers)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-        return responseBody
-    }
-
-    // get customerId
-    async getCustomerId(username: string) {
-        let allCustomers = await this.getAllCustomers()
-        let cutomerId = (allCustomers.find(o => o.username === username)).id
-        // console.log(cutomerId)
-        return cutomerId
-    }
-
-    // create customer
-    async createCustomer(payload: object) {
-        let response = await this.request.post(endPoints.wc.createCustomer, { data: payload })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-        return responseBody
-    }
-
-    // delete customer
-    async deleteCustomer(userId: String) {
-        let response = await this.request.delete(endPoints.wc.deleteCustomer(userId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-        return responseBody
-    }
 
     // categories
 

@@ -538,10 +538,162 @@ export const payloads = {
   // }
 
 
+  createCustomer: () => {
+    return {
+      email: faker.internet.email(),
+      first_name: faker.name.firstName('male'),
+      last_name: faker.name.lastName('male'),
+      role: 'customer',
+      username: faker.name.firstName('male'),
+      password: '01password01',
+      billing: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        email: 'customer1@yopmail.com',
+        phone: '0123456789'
+      },
+      shipping: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        phone: '0123456789'
+      }
+    }
+  },
+  updateCustomer: () => {
+    return {
+      email: faker.internet.email(),
+      first_name: faker.name.firstName('male'),
+      last_name: faker.name.lastName('male'),
+      role: 'customer',
+      password: '01password01',
+      billing: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        email: 'customer1@yopmail.com',
+        phone: '0123456789'
+      },
+      shipping: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        phone: '0123456789'
+      }
+    }
+  },
+
+  updateBatchCustomersTemplate: () => {
+    return {
+      id: '',
+      email: faker.internet.email(),
+      first_name: faker.name.firstName('male'),
+      last_name: faker.name.lastName('male'),
+      role: 'customer',
+      password: '01password01',
+      billing: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        email: 'customer1@yopmail.com',
+        phone: '0123456789'
+      },
+      shipping: {
+        first_name: 'customer1',
+        last_name: 'c1',
+        company: '',
+        address_1: 'abc street',
+        address_2: 'xyz street',
+        city: 'New York',
+        postcode: '10003',
+        country: 'US',
+        state: 'NY',
+        phone: '0123456789'
+      }
+    }
+  },
+
+  updateWholesaleCustomer: {
+    status: "activate"  // activate, deacticate, delete
+  },
+
+  deleteWholesaleCustomer: {
+    status: "delete"
+  },
+
+  createSupportTicketComment: {
+    replay: "sp replay...1",
+    vendor_id: "1",
+    selected_user: "vendor"
+  },
+
+  updateSuppotTicketStatus: {
+    status: "close"
+  },
+
+  updateSuppotTicketEmailNotification: {
+    notification: true
+  },
+
+  updateBatchSuppotTickets: {
+    close: [247, 248]
+  },
+
+  deactivateModule: {
+    module: ["booking"]
+  },
+
+  activateModule: {
+    module: ["booking"]
+  },
+
+  createAnnouncemnt: {
+    title: "test announcement title",
+    content: "<p>This is announcement content</p>",
+    status: "publish",
+    sender_type: "all_seller"
+  },
+
+  updateAnnouncement: {
+    "title": "updated test announcement title",
+    "content": "<p>updated This is announcement content</p>",
+    "status": "publish",
+    "sender_type": "all_seller"
+  },
 
 
-
-  createCustomer: {
+  createCustomer1: {
     email: 'customer1@yopmail.com',
     first_name: 'customer1',
     last_name: 'c1',
@@ -574,15 +726,6 @@ export const payloads = {
       phone: '0123456789'
     },
   },
-
-  deactivateModule: {
-    "module": ["booking"]
-  },
-
-  activateModule: {
-    "module": ["booking"]
-  },
-
 
 
 }
