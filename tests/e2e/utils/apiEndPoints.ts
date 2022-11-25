@@ -1,8 +1,8 @@
 require('dotenv').config();
 
-// const SERVER_URL = process.env.BASE_URL
+const SERVER_URL = process.env.BASE_URL
 // const SERVER_URL = process.env.SERVER_URL
-const SERVER_URL = 'http://dokan1.test'
+// const SERVER_URL = 'http://dokan1.test'
 // const SERVER_URL = 'http://localhost:8889'
 
 

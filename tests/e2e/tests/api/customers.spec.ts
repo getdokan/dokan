@@ -50,11 +50,11 @@ test.describe('customers api test', () => {
     });
 
 
-    test('update a customer', async ({ request }) => {
+    test.only('update a customer', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
-        let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() })
+        let response = await request.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() })
         let responseBody = await response.json()
         console.log(responseBody)
 
