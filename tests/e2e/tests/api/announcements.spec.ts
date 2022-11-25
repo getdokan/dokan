@@ -74,22 +74,20 @@ test.describe('announcements api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    // test('update batch announcements', async ({ request }) => {
-    //     let apiUtils = new ApiUtils(request)
-    //     let allSupportTicketIds = (await apiUtils.getAllSupportTickets()).map(a => a.ID)
-    //     console.log(allSupportTicketIds)
+    test('update batch announcements', async ({ request }) => { 
+        let apiUtils = new ApiUtils(request)
+        let allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map(a => a.id)
+        console.log(allAnnouncementIds)
 
-    //     let response = await request.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } })
-    //     let responseBody = await response.json()
-    //     console.log(responseBody)
+        let response = await request.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } })
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    //     // reopen all support tickets
-    //     for (let supportTicketId of allSupportTicketIds) {
-    //         await apiUtils.updateSupportTicketStatus(supportTicketId, 'open')
-    //     }
-    // });
+        // restore all announcements
+        await apiUtils.updateBatchAnnouncements('restore', allAnnouncementIds)
+    });
 
 });

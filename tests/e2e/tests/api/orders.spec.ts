@@ -34,23 +34,15 @@ test('get orders summary', async ({ request }) => {
 
 });
 
-test('get orders with pagination', async ({ request }) => { 
-    let response = await request.get(endPoints.getAllOrdersWithPagination('10','1'))
-    let responseBody = await response.json()
-    console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+// test('get orders with before after', async ({ request }) => { //TODO: PR still not merged also add tests with only befor/after
+//     let response = await request.get(endPoints.getOrdersBeforAfter('2022-11-01','2022-11-16'))
+//     let responseBody = await response.json()
+//     console.log(responseBody)
 
-test('get orders with before after', async ({ request }) => { //TODO: PR still not merged also add tests with only befor/after
-    let response = await request.get(endPoints.getOrdersBeforAfter('2022-11-01','2022-11-16'))
-    let responseBody = await response.json()
-    console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+//     expect(response.ok()).toBeTruthy()
+//     expect(response.status()).toBe(200)
+// });
 
 test('get single order', async ({ request }) => {
     let apiUtils = new ApiUtils(request)

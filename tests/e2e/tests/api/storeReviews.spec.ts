@@ -6,8 +6,9 @@ import { payloads } from '../../utils/payloads'
 
 
 // test.beforeAll(async ({ request }) => {
-//     let apiUtils = new ApiUtils(request)
-//     await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+// let apiUtils = new ApiUtils(request) 
+// let [,sellerId] = await apiUtils.createStore(payloads.createStore) // TODO: request sender must be other than vendor
+// await apiUtils.createStoreReview(sellerId,payloads.createStoreReview)
 // });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -20,7 +21,7 @@ test.describe('store reviews api test', () => {
     //TODO: store, store reviews
 
     test('get all store reviews', async ({ request }) => {
-        let response = await request.get(endPoints.getAllAnnouncements)
+        let response = await request.get(endPoints.getAllStoreReviews)
         let responseBody = await response.json()
         console.log(responseBody)
 
@@ -30,9 +31,9 @@ test.describe('store reviews api test', () => {
 
     test('get single store review', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        let reviewId = await apiUtils.getStoreReviewId()
 
-        let response = await request.get(endPoints.getSingleAnnouncement(announcementId))
+        let response = await request.get(endPoints.getSingleStoreReview(reviewId))
         let responseBody = await response.json()
         console.log(responseBody)
 
@@ -42,22 +43,35 @@ test.describe('store reviews api test', () => {
 
     test('update a store review', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        let reviewId = await apiUtils.getStoreReviewId()
 
-        let response = await request.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement })
+        let response = await request.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateStoreReview })
         let responseBody = await response.json()
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
+    });
+
+    test('delete a store review ', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let reviewId = await apiUtils.getStoreReviewId()
+
+        let response = await request.delete(endPoints.deleteStoreReview(reviewId))
+        let responseBody = await response.json()
+        console.log(responseBody)
+
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
     });
 
     test('restore a deleted store review ', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        let reviewId = await apiUtils.getStoreReviewId()
+        await request.delete(endPoints.deleteStoreReview(reviewId))
 
-        let response = await request.delete(endPoints.deleteAnnouncement(announcementId))
+        let response = await request.put(endPoints.restoreDeletedStoreReview(reviewId))
         let responseBody = await response.json()
         console.log(responseBody)
 
@@ -65,22 +79,20 @@ test.describe('store reviews api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    // test('update batch store review', async ({ request }) => { //TODO
-    //     let apiUtils = new ApiUtils(request)
-    //     let allSupportTicketIds = (await apiUtils.getAllSupportTickets()).map(a => a.ID)
-    //     console.log(allSupportTicketIds)
+    test('update batch store review', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let allStoreReviewIds = (await apiUtils.getAllStoreReviews()).map(a => a.id)
+        console.log(allStoreReviewIds)
 
-    //     let response = await request.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } })
-    //     let responseBody = await response.json()
-    //     console.log(responseBody)
+        let response = await request.put(endPoints.updateBatchStoreReviews, { data: { trash: allStoreReviewIds } })
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    //     // reopen all support tickets
-    //     for (let supportTicketId of allSupportTicketIds) {
-    //         await apiUtils.updateSupportTicketStatus(supportTicketId, 'open')
-    //     }
-    // });
+        // restore all store reviews
+        await apiUtils.updateBatchStoreReviews('restore', allStoreReviewIds)
+    });
 
 });

@@ -64,7 +64,7 @@
     // get: `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling`,       // get
     // get: `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners`,       // get
     // get: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`,       // get
-    // reviews
+    // product reviews
     // get: `${SERVER_URL}/wp-json/dokan/v1/reviews`,       // get
     // get: `${SERVER_URL}/wp-json/dokan/v1/reviews/summary`,       // get
     // get: `${SERVER_URL}/wp-json/dokan/v1/reviews/<review_id>`,       // post put patch

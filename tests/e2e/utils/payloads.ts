@@ -56,7 +56,13 @@ export const payloads = {
   },
 
   createWithdraw: {
-    amount: "12",
+    amount: "5",
+    notes: "Withdraw notes",
+    method: "paypal"
+  },
+
+  updateWithdraw: {
+    amount: "10",
     notes: "Withdraw notes",
     method: "paypal"
   },
@@ -686,12 +692,308 @@ export const payloads = {
   },
 
   updateAnnouncement: {
-    "title": "updated test announcement title",
-    "content": "<p>updated This is announcement content</p>",
-    "status": "publish",
-    "sender_type": "all_seller"
+    title: "updated test announcement title",
+    content: "<p>updated This is announcement content</p>",
+    status: "publish",
+    sender_type: "all_seller"
   },
 
+  updateProductReview: {
+    status: "approved"
+  },
+
+  updateStoreReview: {
+    title: "Updated Test review title",
+    content: "Updated Test review content",
+    status: "publish"
+  },
+
+  createStoreCategory: () => { return { name: 'Test_Store_Category' + faker.datatype.uuid() } },
+  updateStoreCategory: () => { return { name: 'Update_Test_Store_Category' + faker.datatype.uuid() } },
+
+  dummydata: {
+
+  },
+  createStore: () => {
+    return {
+      user_login: faker.name.firstName('male'),
+      user_pass: "01dokan01",
+      role: "seller",
+      username: faker.name.firstName('male'),
+      email: faker.internet.email(),
+      store_name: faker.name.firstName('male'),
+      first_name: faker.name.firstName('male'),
+      last_name: faker.name.lastName('male'),
+      social: {
+        fb: "http://dokan.test",
+        youtube: "http://dokan.test",
+        twitter: "http://dokan.test",
+        linkedin: "http://dokan.test",
+        pinterest: "http://dokan.test",
+        instagram: "http://dokan.test",
+        flickr: "http://dokan.test"
+      },
+      phone: "0123456789",
+      show_email: false,
+      address: {
+        street_1: "abc street",
+        street_2: "xyz street",
+        city: "New York",
+        zip: "10003",
+        state: "NY",
+        country: "US"
+      },
+      location: "",
+      banner: "",
+      banner_id: 0,
+      gravatar: "",
+      gravatar_id: 0,
+      shop_url: "",
+      products_per_page: 12,
+      show_more_product_tab: true,
+      toc_enabled: false,
+      store_toc: "",
+      featured: true,
+      rating: {
+        rating: "0.00",
+        count: 1
+      },
+      enabled: true,
+      registered: "",
+      payment: {
+        paypal: {
+          0: "email",
+          email: "paypal@g.c"
+        },
+        bank: {
+          ac_name: "account name",
+          ac_type: "personal",
+          ac_number: "1234567",
+          bank_name: "bank name",
+          bank_addr: "bank address",
+          routing_number: "123456",
+          iban: "123456",
+          swift: "12345"
+        },
+        stripe: false
+      },
+      trusted: true,
+      store_open_close: {
+        enabled: false,
+        time: [],
+        open_notice: "Store is open",
+        close_notice: "Store is closed"
+      },
+      company_name: "",
+      vat_number: "",
+      company_id_number: "",
+      bank_name: "",
+      bank_iban: "",
+      categories: [
+        {
+          id: 74,
+          name: "Uncategorized",
+          slug: "uncategorized"
+        }
+      ],
+      admin_commission: "",
+      admin_additional_fee: "0.00",
+      admin_commission_type: "flat"
+    }
+  },
+
+  updateStore: () => {
+    return {
+      email: faker.internet.email(),
+      store_name: faker.name.firstName('male'),
+      first_name: faker.name.firstName('male'),
+      last_name: faker.name.lastName('male'),
+      social: {
+        fb: "http://dokan.test",
+        youtube: "http://dokan.test",
+        twitter: "http://dokan.test",
+        linkedin: "http://dokan.test",
+        pinterest: "http://dokan.test",
+        instagram: "http://dokan.test",
+        flickr: "http://dokan.test"
+      },
+      phone: "0123456789",
+      show_email: false,
+      address: {
+        street_1: "abc street",
+        street_2: "xyz street",
+        city: "New York",
+        zip: "10003",
+        state: "NY",
+        country: "US"
+      },
+      location: "",
+      banner: "",
+      banner_id: 0,
+      gravatar: "",
+      gravatar_id: 0,
+      shop_url: "",
+      products_per_page: 12,
+      show_more_product_tab: true,
+      toc_enabled: false,
+      store_toc: "",
+      featured: true,
+      rating: {
+        rating: "0.00",
+        count: 1
+      },
+      enabled: true,
+      registered: "",
+      payment: {
+        paypal: {
+          0: "email",
+          email: "paypal@g.c"
+        },
+        bank: {
+          ac_name: "account name",
+          ac_type: "personal",
+          ac_number: "1234567",
+          bank_name: "bank name",
+          bank_addr: "bank address",
+          routing_number: "123456",
+          iban: "123456",
+          swift: "12345"
+        },
+        stripe: false
+      },
+      trusted: true,
+      store_open_close: {
+        enabled: false,
+        time: [],
+        open_notice: "Store is open",
+        close_notice: "Store is closed"
+      },
+      company_name: "",
+      vat_number: "",
+      company_id_number: "",
+      bank_name: "",
+      bank_iban: "",
+      categories: [
+        {
+          id: 74,
+          name: "Uncategorized",
+          slug: "uncategorized"
+        }
+      ],
+      admin_commission: "",
+      admin_additional_fee: "0.00",
+      admin_commission_type: "flat"
+    }
+  },
+
+  createStoreReview: {
+    title: "Test store review",
+    content: "Test store review contant",
+    rating: 2,
+    approved: true
+  },
+
+  updateStoreStatus: {
+    status: "active"
+  },
+
+  adminContactStore: {
+    "name": "admin",
+    "email": "admin@g.c",
+    "message": "Test admin connect with vendor message"
+  },
+
+  adminEnailStore: {
+    "subject": "Test email sub",
+    "body": "Test email body"
+  },
+
+  createStore1: {
+    return: {
+      user_login: "vendor1",
+      user_pass: "01dokan01",
+      role: "seller",
+      email: "vendorstore10@g.c",
+      store_name: "vendorstore1",
+      first_name: "vendor1",
+      last_name: "v1",
+      social: {
+        fb: "http://dokan.test",
+        youtube: "http://dokan.test",
+        twitter: "http://dokan.test",
+        linkedin: "http://dokan.test",
+        pinterest: "http://dokan.test",
+        instagram: "http://dokan.test",
+        flickr: "http://dokan.test"
+      },
+      phone: "0123456789",
+      show_email: false,
+      address: {
+        street_1: "abc street",
+        street_2: "xyz street",
+        city: "New York",
+        zip: "10003",
+        state: "NY",
+        country: "US"
+      },
+      location: "",
+      banner: "",
+      banner_id: 0,
+      gravatar: "",
+      gravatar_id: 0,
+      shop_url: "",
+      products_per_page: 12,
+      show_more_product_tab: true,
+      toc_enabled: false,
+      store_toc: "",
+      featured: true,
+      rating: {
+        rating: "0.00",
+        count: 1
+      },
+      enabled: true,
+      registered: "",
+      payment: {
+        paypal: {
+          0: "email",
+          email: "paypal@g.c"
+        },
+        bank: {
+          ac_name: "account name",
+          ac_type: "personal",
+          ac_number: "1234567",
+          bank_name: "bank name",
+          bank_addr: "bank address",
+          routing_number: "123456",
+          iban: "123456",
+          swift: "12345"
+        },
+        stripe: false
+      },
+      trusted: true,
+      store_open_close: {
+        enabled: false,
+        time: [],
+        open_notice: "Store is open",
+        close_notice: "Store is closed"
+      },
+      company_name: "",
+      vat_number: "",
+      company_id_number: "",
+      bank_name: "",
+      bank_iban: "",
+      categories: [
+        {
+          id: 74,
+          name: "Uncategorized",
+          slug: "uncategorized"
+        }
+      ],
+      admin_commission: "",
+      admin_additional_fee: "0.00",
+      admin_commission_type: "flat"
+    }
+  },
 
   createCustomer1: {
     email: 'customer1@yopmail.com',

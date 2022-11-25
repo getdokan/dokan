@@ -22,20 +22,20 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v3
         with:
           ref: 'e2e-pw'
 
 
       - name: Use desired version of NodeJS
-        uses: actions/setup-nodev@3.5.1
+        uses: actions/setup-nodev@3
         with:
           node-version: 14
           cache: "npm"
 
 
       - name: Clone dokan-pro
-        uses: actions/checkout@v2.5.0
+        uses: actions/checkout@v3
         with:
           repository: weDevsOfficial/dokan-pro
           token: ${{ secrets.ACCESS_TOKEN }}

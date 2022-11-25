@@ -2,100 +2,117 @@ require('dotenv').config();
 
 // const SERVER_URL = process.env.BASE_URL
 // const SERVER_URL = process.env.SERVER_URL
-const SERVER_URL = 'http://dokan1.test'
-// const SERVER_URL = 'http://localhost:8889'
+// const SERVER_URL = 'http://dokan1.test'
+const SERVER_URL = 'http://localhost:8889'
 
 
 export const endPoints = {
-
-    // stores
-    getAllStores: `${SERVER_URL}/wp-json/dokan/v1/stores`,
-    getSingleStoreInfo: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}`,
-    getSingleStoreProducts: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/products`,
-    getSingleStoreReviews: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/reviews`,
-    getAllStoresWithPagination: (perPage: String, pageNo: String) => `${SERVER_URL}/wp-json/dokan/v1/stores/?per_page=${perPage}&page=${pageNo}`,
-    getFeaturedStores: `${SERVER_URL}/wp-json/dokan/v1/stores?featured=yes`,
+    getAllStoresCheck: `${SERVER_URL}/wp-json/dokan/v1/stores/check`,      // get
+    getAllStores: `${SERVER_URL}/wp-json/dokan/v1/stores`,        // get 
+    getSingleStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}`,  // get
+    createStore: `${SERVER_URL}/wp-json/dokan/v1/stores`,        // post
+    updateStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}`,     //  post put patch
+    deleteStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}?reassign=0`,     //  delete
+    getStoreCurrentVisitor: `${SERVER_URL}/wp-json/dokan/v1/stores/current-visitor`,     // get
+    getStoreStats: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/stats`,       // get
+    getStoreCategories: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/categories`,      // get
+    getStoreProducts: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/products`,        // get
+    getStoreReviews: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/reviews`,     // get 
+    createStoreReview: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/reviews`,     //post
+    updateStoreStatus: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/status`,      // post put patch
+    adminContactStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/contact`,     // post
+    adminEmailStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}/email`,       // post
+    // updateBatchStores: `${SERVER_URL}/wp-json/dokan/v1/stores/batch`,      // post put patch     // method:
     // products
-    getAllProducts: `${SERVER_URL}/wp-json/dokan/v1/products/`,
-    getSingleProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
-    getProductsWithPagination: (perPage: String, pageNo: String) => `${SERVER_URL}/wp-json/dokan/v1/products/?per_page=${perPage}&page=${pageNo}`,
-    getProductsSummary: `${SERVER_URL}/wp-json/dokan/v1/products/summary`,
-    getTopRatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/top_rated`,
-    getBestSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/products/best_selling`,
-    getLatestProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest`,
-    getFeaturedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/featured`,
-    createProduct: `${SERVER_URL}/wp-json/dokan/v1/products/`,
-    updateProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
-    deleteProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,
+    getProductsSummary: `${SERVER_URL}/wp-json/dokan/v1/products/summary`,  // get
+    getTopRatedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/top_rated`,   // get
+    getBestSellingProducts: `${SERVER_URL}/wp-json/dokan/v1/products/best_selling`, // get
+    getFeaturedProducts: `${SERVER_URL}/wp-json/dokan/v1/products/featured`,    // get
+    getLatestProducts: `${SERVER_URL}/wp-json/dokan/v1/products/latest`,    // get
+    getAllMultistepCategories: `${SERVER_URL}/wp-json/dokan/v1/products/multistep-categories`,     // get
+    getAllProducts: `${SERVER_URL}/wp-json/dokan/v1/products/`, // get
+    getSingleProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,    // get 
+    getAllRelatedProducts: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/related`,     // get
+    createProduct: `${SERVER_URL}/wp-json/dokan/v1/products/`, // post
+    updateProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,   // post put patch
+    deleteProduct: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}`,   // delete
     // product variations
-    getAllProductVariations: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
-    getSingleProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
-    createProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,
-    updateProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
-    deleteProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,
+    getAllProductVariations: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,  // get
+    getSingleProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,    // get
+    createProductVariation: (productId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations`,   // post 
+    updateProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,   // post put patch
+    deleteProductVariation: (productId: String, variationId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/${productId}/variations/${variationId}`,   // delete
+    // product attributes
+    getAllAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes`, // get
+    getSingleAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,   // get
+    createAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/`, // post 
+    updateAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,  // post put patch
+    deleteAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,  // delete
+    // batchUpdateAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/batch`,     // post put patch     // method:
+    // product attribute terms
+    getAllAttributeTerms: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`,   // get
+    getSingleAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`, // get
+    createAttributeTerm: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`, // post 
+    updateAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,    // post put patch
+    deleteAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,    // delete
+    // updateBatchAttributeTerms: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/batch`,   // post put patch    // method:
     // orders
-    getAllOrders: `${SERVER_URL}/wp-json/dokan/v1/orders/`,
-    getAllOrdersWithPagination: (perPage: String, pageNo: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/?per_page=${perPage}&page=${pageNo}`,
-    getOrdersSummary: `${SERVER_URL}/wp-json/dokan/v1/orders/summary`,
-    getSingleOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
-    getOrdersBeforAfter: (before: String, after: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/?after=${after}&before=${before}`,
-    updateOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,
+    getOrdersSummary: `${SERVER_URL}/wp-json/dokan/v1/orders/summary`,  // get
+    getAllOrders: `${SERVER_URL}/wp-json/dokan/v1/orders/`, // get
+    getSingleOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,    // get
+    getOrdersBeforAfter: (before: String, after: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/?after=${after}&before=${before}`,   // get
+    updateOrder: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}`,   // post put patch 
     // order notes
     getAllOrderNotes: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/notes/`,
     getSingleOrderNote: (orderId: String, noteId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/notes/${noteId}`,
     createOrderNote: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/notes`,
     deleteOrderNote: (orderId: String, noteId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/notes/${noteId}`,
-    // withdraw
-    getAllWithdraws: `${SERVER_URL}/wp-json/dokan/v1/withdraw/`,
+    // withdraws
+    getBalanceDetails: `${SERVER_URL}/wp-json/dokan/v1/withdraw/balance`,   // get
     getAllWithdrawsbyStatus: (status: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/?status=${status}`,
-    getBalanceDetails: `${SERVER_URL}/wp-json/dokan/v1/withdraw/balance`,
+    getAllWithdraws: `${SERVER_URL}/wp-json/dokan/v1/withdraw/`,    // get
+    getSingleWithdraw: (withdrawId: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/${withdrawId}`,    // get
     createWithdraw: `${SERVER_URL}/wp-json/dokan/v1/withdraw/`,
-    cancelAWithdraw: (withdrawId: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/${withdrawId}`,
-    // coupons
-    getAllCoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons/`,
-    getSingleCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
-    createCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`,
-    updateCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
-    deleteCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`,
+    updateWithdraw: (withdrawId: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/${withdrawId}`,    // post put patch
+    cancelAWithdraw: (withdrawId: String) => `${SERVER_URL}/wp-json/dokan/v1/withdraw/${withdrawId}`,   // delete
+    // updateBatchWithdraws: `${SERVER_URL}/wp-json/dokan/v1/withdraw/batch`,        // post put patch
     // settings
-    getSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`,
-    updateSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`,
-    // attributes
-    getAllAttributes: `${SERVER_URL}/wp-json/dokan/v1/products/attributes`,
-    getSingleAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
-    createAttribute: `${SERVER_URL}/wp-json/dokan/v1/products/attributes/`,
-    updateAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
-    deleteAttribute: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}`,
-    // attribute terms
-    getAllAttributeTerms: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`,
-    getSingleAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
-    createAttributeTerm: (attributeId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms`,
-    updateAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
-    deleteAttributeTerm: (attributeId: String, attributeTermId: String) => `${SERVER_URL}/wp-json/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
+    getSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`, // get 
+    updateSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`, // post put patch
+    // dummy data
+    getDummyDataStatus: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/status`,     // get
+    importDummyData: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/import`,        // post
+    clearDummyData: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/clear`,      // delete
+    // store categories
+    getDefaultStoreCategory: `${SERVER_URL}/wp-json/dokan/v1/store-categories/default-category`,     // get 
+    setDefaultStoreCategory: `${SERVER_URL}/wp-json/dokan/v1/store-categories/default-category`,     // post put patch
+    getAllStoreCategories: `${SERVER_URL}/wp-json/dokan/v1/store-categories`,      // get 
+    getSingleStoreCategory: (categoryId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-categories/${categoryId}`,    // get 
+    createStoreCategory: `${SERVER_URL}/wp-json/dokan/v1/store-categories`, // post 
+    updateStoreCategory: (categoryId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-categories/${categoryId}`,   // post put patch 
+    deleteStoreCategory: (categoryId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-categories/${categoryId}?force=true`,   //  delete
+    // coupons
+    getAllCoupons: `${SERVER_URL}/wp-json/dokan/v1/coupons`, // get
+    getSingleCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`, // get 
+    createCoupon: `${SERVER_URL}/wp-json/dokan/v1/coupons/?code=REST`, //  post
+    updateCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`, // post put patch
+    deleteCoupon: (couponId: String) => `${SERVER_URL}/wp-json/dokan/v1/coupons/${couponId}`, // delete
     // reports
-    getReportSummary: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`,
-    getReportsOverview: `${SERVER_URL}/wp-json/dokan/v1/reports/sales_overview`,
-    getReportsTopEarners: (date: String) => `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners?start_date=${date}`,
-    getReportsTopSellingProducts: (date: String) => `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling?start_date=${date}`,
-    // reports
-    // get: `${SERVER_URL}/wp-json/dokan/v1/reports/sales_overview`,    // get
-    // get: `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling`,       // get
-    // get: `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners`,       // get
-    // get: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`,       // get
-    // reviews
-    getAllReviews: `${SERVER_URL}/wp-json/dokan/v1/reviews/`,
-    getReviewSummary: `${SERVER_URL}/wp-json/dokan/v1/reviews/summary`,
-    // reviews
-    // getAllRevierws: `${SERVER_URL}/wp-json/dokan/v1/reviews`,       // get
-    // getReviewsSummary: `${SERVER_URL}/wp-json/dokan/v1/reviews/summary`,       // get
-    // updateReview: `${SERVER_URL}/wp-json/dokan/v1/reviews/${reviewId}`,       // post put patch 
+    getSalesOverviewReport: `${SERVER_URL}/wp-json/dokan/v1/reports/sales_overview`,    // get
+    getSummaryReport: `${SERVER_URL}/wp-json/dokan/v1/reports/summary`, // get
+    getTopEarnersReport: `${SERVER_URL}/wp-json/dokan/v1/reports/top_earners`,    // get
+    getTopSellingProductsReport: `${SERVER_URL}/wp-json/dokan/v1/reports/top_selling`,    // get
+    // product reviews
+    getAllProductReviews: `${SERVER_URL}/wp-json/dokan/v1/reviews`,       // get
+    getProductReviewSummary: `${SERVER_URL}/wp-json/dokan/v1/reviews/summary`,       // get
+    updateReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/reviews/${reviewId}`,       // post put patch 
     // store reviews
-    // getAllStoreReviews: `${SERVER_URL}/wp-json/dokan/v1/store-reviews`,     // get
-    // getSingleStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`,        // get 
-    // updateStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`, // post put patch
-    // deleteStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`, // delete
-    // restoreDeletedStoreReview:(reviewId: String) =>  `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}/restore`,     //  post put patch 
-    // updateBatchStoreReview: `${SERVER_URL}/wp-json/dokan/v1/store-reviews/batch`,       //  post put patch  // method: 
+    getAllStoreReviews: `${SERVER_URL}/wp-json/dokan/v1/store-reviews`,     // get
+    getSingleStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`, // get 
+    updateStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`, // post put patch
+    deleteStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}`, // delete
+    restoreDeletedStoreReview: (reviewId: String) => `${SERVER_URL}/wp-json/dokan/v1/store-reviews/${reviewId}/restore`,     //  post put patch 
+    updateBatchStoreReviews: `${SERVER_URL}/wp-json/dokan/v1/store-reviews/batch`,       //  post put patch  // method: trash, delete, restore
     // announcements
     getAllAnnouncements: `${SERVER_URL}/wp-json/dokan/v1/announcement`,      // get
     getSingleAnnouncement: (announcementId: String) => `${SERVER_URL}/wp-json/dokan/v1/announcement/${announcementId}`,        // get 
@@ -103,13 +120,14 @@ export const endPoints = {
     updateAnnouncement: (announcementId: String) => `${SERVER_URL}/wp-json/dokan/v1/announcement/${announcementId}`,        // post put patch 
     deleteAnnouncement: (announcementId: String) => `${SERVER_URL}/wp-json/dokan/v1/announcement/${announcementId}`,        // delete
     restoredeletedAnnouncement: (announcementId: String) => `${SERVER_URL}/wp-json/dokan/v1/announcement/${announcementId}/restore`,        //  post put patch 
-    // updateBatchAnnouncement: `${SERVER_URL}/wp-json/dokan/v1/announcement/batch`,        // post put patch  // method: 
+    updateBatchAnnouncements: `${SERVER_URL}/wp-json/dokan/v1/announcement/batch`,        // post put patch  // method: trash, delete, restore
     // refunds
-    // get: `${SERVER_URL}/wp-json/dokan/v1refunds`,        // get
-    // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>`,       // delete
-    // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>/approve`,       // post put patch 
-    // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>/cancel`,        // post put patch 
-    // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/batch`,     // post put patch  // method: 
+    getAllRefunds: `${SERVER_URL}/wp-json/dokan/v1/refunds/`,     // get
+    getAllRefundsByStatus: (status: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/?status=${status}`,
+    approveRefund: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}/approve`,       // post put patch 
+    cancelRefund: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}/cancel`,        // post put patch 
+    deleteRefund: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}`,    // delete
+    // updateBatchRefunds: `${SERVER_URL}/wp-json/dokan/v1/refunds/batch`,     // post put patch  // method: 
     // follow store
     getStoreFollowStatus: (sellerId: String) => `${SERVER_URL}/wp-json/dokan/v1/follow-store?vendor_id=${sellerId}`,      // get 
     followUnfollowStore: `${SERVER_URL}/wp-json/dokan/v1/follow-store`,      // post
@@ -137,7 +155,7 @@ export const endPoints = {
     updateCustomer: (customerId: String) => `${SERVER_URL}/wp-json/dokan/v1/customers/${customerId}`,   // post put patch
     deleteCustomer: (customerId: String) => `${SERVER_URL}/wp-json/dokan/v1/customers/${customerId}?force=true`, //delete
     // updateBatchCustomers: `${SERVER_URL}/wp-json/dokan/v1/customers/batch`, // post put patch  // method: 
-    // // request quotes
+    // request quote rules
     // getAllQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/`,
     // getSingleQuoteRule: (quoteId: String) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}`,
     // createlQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/`,
@@ -145,6 +163,7 @@ export const endPoints = {
     // deleteQuoteRule: (quoteId: String) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}`,
     // restoreQuoteRule: (quoteId: String) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}/restore`,
     // updateBatchQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/batch`, // method: 
+    // request quotes
     // getAllRequestQuotes: `${SERVER_URL}/wp-json/dokan/v1/dokan-request-quote`,
     // getSingleRequestQuote: (quoteRequestId: String) => `${SERVER_URL}/wp-json/dokan/v1/dokan-request-quote/${quoteRequestId}`,
     // createRequestQuote: `${SERVER_URL}/wp-json/dokan/v1/dokan-request-quote/`,
@@ -176,36 +195,16 @@ export const endPoints = {
     //admin
     getAdminReportSummary: `${SERVER_URL}/wp-json/dokan/v1/admin/report/summary`,    //get
     getAdminReportOverview: `${SERVER_URL}/wp-json/dokan/v1/admin/report/overview`,     //get
+    // getAdminDashboardFeed: `${SERVER_URL}/wp-json/dokan/v1/admin/dashboard/feed`,        // get
+    // getAdminHelp: `${SERVER_URL}/wp-json/dokan/v1/admin/help`,      // get
+    // getAdminChangelogLite: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/lite`,        // get
+    // getAdminChangelogPro: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/pro`,     // get
+    // getAdminNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/admin`,     // get
+    // getAdminPromoNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/promo`,     // get
+    // getAdminLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs`,      // get
+    // getAdminExportLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs/export`,       // get
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // refund
-    getAllRefunds: `${SERVER_URL}/wp-json/dokan/v1/refunds/`,
-    getAllRefundsByStatus: (status: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/?status=${status}`,
-    // getSingleRefund:  (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}`,
-    makeARefundRequest: `${SERVER_URL}/wp-json/dokan/v1/refunds/`, //TODO:
-    changeStatusOfARefundRequest: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}`, //TODO:
-    changeBulkStatusOfRefundRequests: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}`, //TODO:
-    deleteRefundRequest: (refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/refunds/${refundId}`, //TODO:
-
-    // getSingleRefund: (orderId: String, refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/refunds/${refundId}`,
-    // createRefund: (orderId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/refunds`,
-    // deleteRefund: (orderId: String, refundId: String) => `${SERVER_URL}/wp-json/dokan/v1/orders/${orderId}/refunds/${refundId}`,
 
     // user
     users: `${SERVER_URL}/wp-json/dokan/v1/user/`, //TODO:

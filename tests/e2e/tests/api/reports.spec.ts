@@ -14,41 +14,41 @@ test.describe('report api test', () => {
     //TODO: need to send vendor credentials for vendor info
     //TODO: prerequisite: order, vendor, product, customer ...
 
-test('get report overview', async ({ request }) => {
-    let response = await request.get(endPoints.getReportsOverview)
-    let responseBody = await response.json()
-    console.log(responseBody)
+    test('get sales overview report', async ({ request }) => {
+        let response = await request.get(endPoints.getSalesOverviewReport)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get report summary', async ({ request }) => {
-    let response = await request.get(endPoints.getReportSummary)
-    let responseBody = await response.json()
-    console.log(responseBody)
+    test('get summary report', async ({ request }) => {
+        let response = await request.get(endPoints.getSummaryReport)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get top earners report', async ({ request }) => {
-    let response = await request.get(endPoints.getReportsTopEarners('2022-01-01'))
-    let responseBody = await response.json()
-    console.log(responseBody)
+    test('get top earners report', async ({ request }) => {
+        let response = await request.get(endPoints.getTopEarnersReport)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
-test('get top selling products report ', async ({ request }) => {
-    let response = await request.get(endPoints.getReportsTopSellingProducts('2022-01-01'))
-    let responseBody = await response.json()
-    console.log(responseBody)
+    test('get top selling products report ', async ({ request }) => {
+        let response = await request.get(endPoints.getTopSellingProductsReport)
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-});
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
 
 

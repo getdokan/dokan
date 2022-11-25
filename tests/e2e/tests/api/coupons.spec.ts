@@ -20,7 +20,6 @@ test.beforeAll(async ({ request }) => {
 test.describe('coupon api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
-    //TODO: prerequisite => product id for payload and a coupon
     test('get all coupons', async ({ request }) => {
         let response = await request.get(endPoints.getAllCoupons)
         let responseBody = await response.json()
