@@ -28,7 +28,7 @@ jobs:
 
 
       - name: Use desired version of NodeJS
-        uses: actions/setup-nodev@3
+        uses: actions/setup-node@v3
         with:
           node-version: 14
           cache: "npm"
