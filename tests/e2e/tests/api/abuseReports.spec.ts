@@ -34,7 +34,7 @@ test.describe('abuse report api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('delete a abuse report', async ({ request }) => {
+    test.skip('delete a abuse report', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let allAbuseReports = await apiUtils.getAllAbuseReports()
         let abuseReportId = allAbuseReports[0].id

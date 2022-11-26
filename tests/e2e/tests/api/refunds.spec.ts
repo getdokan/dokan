@@ -35,7 +35,7 @@ test.describe('refunds api test', () => {
     //     expect(response.status()).toBe(200)
     // });
 
-    test('approve a refund', async ({ request }) => {
+    test.skip('approve a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
@@ -47,7 +47,7 @@ test.describe('refunds api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('cancel a refund', async ({ request }) => {
+    test.skip('cancel a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
@@ -59,7 +59,7 @@ test.describe('refunds api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('delete a refund', async ({ request }) => {
+    test.skip('delete a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
@@ -70,9 +70,6 @@ test.describe('refunds api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
     });
-
-
-
 
 });
 

@@ -41,7 +41,7 @@ test.describe('withdraw api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('get single withdraw', async ({ request }) => {
+    test.skip('get single withdraw', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, withdrawId] = await apiUtils.createWithdraw()
 
@@ -53,7 +53,7 @@ test.describe('withdraw api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('create a withdraw', async ({ request }) => {
+    test.skip('create a withdraw', async ({ request }) => {
         let response = await request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
         let responseBody = await response.json()
         console.log(responseBody)
@@ -62,7 +62,7 @@ test.describe('withdraw api test', () => {
         expect(response.status()).toBe(201)
     });
 
-    test('update a withdraw', async ({ request }) => {
+    test.skip('update a withdraw', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, withdrawId] = await apiUtils.createWithdraw()
 
@@ -74,7 +74,7 @@ test.describe('withdraw api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('cancel a withdraw', async ({ request }) => {
+    test.skip('cancel a withdraw', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, withdrawId] = await apiUtils.createWithdraw()
 

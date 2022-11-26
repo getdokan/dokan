@@ -504,6 +504,7 @@ export class ApiUtils {
     // create a product advertisement
     async createProductAdvertisement() {
         let [body, productId] = await this.createProduct(payloads.createProduct())
+        console.log(body)
         let sellerId = body.store.id
 
         let response = await this.request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })

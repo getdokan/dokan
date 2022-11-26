@@ -50,7 +50,7 @@ test.describe('customers api test', () => {
     });
 
 
-    test.only('update a customer', async ({ request }) => {
+    test('update a customer', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
