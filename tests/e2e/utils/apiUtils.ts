@@ -105,8 +105,18 @@ export class ApiUtils {
      * product variation api methods
      */
 
+    // create product
+    async createProductVariation(productId: string, payload: object) {
+        let response = await this.request.post(endPoints.createProductVariation(productId), { data: payload })
+        let responseBody = await response.json()
+        let variationId = responseBody.id
+        // console.log(responseBody)
+        // console.log(variationId)
+        return [responseBody, variationId]
+    }
+
     // get variationTd
-    async getVariationTd(productName: string) {
+    async getVariationId(productName: string) {
         let productId = await this.getProductId(productName)
         // console.log(productId)
 
@@ -115,6 +125,22 @@ export class ApiUtils {
         let variationId = responseBody[0].id
         // console.log(responseBody)
         // console.log(variationId)
+        return [productId, variationId]
+    }
+
+    // get variationTd
+    async createVariableProductWithVariation(attribute: object, attributeTerm: object, product: object) {
+        let [, productId] = await this.createProduct(product)
+        let [body, attributeId,] = await this.createAttributeTerm(attribute, attributeTerm)
+        let payload = {
+            ...payloads.createProductVariation, attributes: [{
+                id: attributeId,
+                option: body.name
+            }],
+        }
+        let [responseBody, variationId] = await this.createProductVariation(productId, payload)
+        // console.log(responseBody)
+        // console.log(productId, variationId)
         return [productId, variationId]
     }
 

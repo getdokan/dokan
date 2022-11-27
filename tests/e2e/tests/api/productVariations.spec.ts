@@ -16,9 +16,11 @@ test.describe('product variation api test', () => {
     // TODO: prerequisite variable product with variations
     test('get all product variations', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let productId = await apiUtils.getProductId('p2_v1')
+        let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.get(endPoints.getAllProductVariations(productId))
+        let responseBody = await response.json()
+        console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -27,7 +29,7 @@ test.describe('product variation api test', () => {
 
     test('get single product variation', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [productId, variationId] = await apiUtils.getVariationTd('p2_v1')
+        let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
 
         let response = await request.get(endPoints.getSingleProductVariation(productId, variationId))
@@ -39,9 +41,9 @@ test.describe('product variation api test', () => {
     });
 
 
-    test('create a product variation', async ({ request }) => { //TODO: not generate attribute
+    test('create a product variation', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let productId = await apiUtils.getProductId('p2_v1')
+        let [, productId] = await apiUtils.createProduct(payloads.createVariableProduct())
 
         let response = await request.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation })
         let responseBody = await response.json()
@@ -54,24 +56,26 @@ test.describe('product variation api test', () => {
 
     test('update a product variation', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [productId, variationId] = await apiUtils.getVariationTd('p2_v1')
+        let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
-        let response = await request.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation })
+        let response = await request.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() })
         let responseBody = await response.json()
+        console.log(responseBody)
         console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+        
     });
 
 
     test('delete a product variation', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [productId, variationId] = await apiUtils.getVariationTd('p2_v1')
-
+        let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
         let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
-        let responseBody = await response.json()
-        console.log(responseBody)
+
+        // let responseBody = await response.json()
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

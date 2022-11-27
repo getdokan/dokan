@@ -11,7 +11,20 @@ export const payloads = {
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
         {
-          id: 48
+          // id: 48
+        }
+      ],
+    }
+  },
+
+  createVariableProduct: () => {
+    return {
+      name: faker.commerce.productName() + (' (Variable)'),
+      type: data.product.type.variable,
+      regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+      categories: [
+        {
+          // id: 48
         }
       ],
     }
@@ -20,7 +33,9 @@ export const payloads = {
   createProductVariation: {
     // id: '47',
     regular_price: data.product.price.price_random(),
-    categories: [{ id: 48 }],
+    categories: [{
+      //  id: 48
+       }],
     attributes: [{
       id: 18,
       // name: 'size',
