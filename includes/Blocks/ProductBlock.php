@@ -46,7 +46,9 @@ class ProductBlock {
                     'placeholder' => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                     'max_limit'   => apply_filters( 'dokan_product_tags_select_max_length', -1 ),
                 ],
-                'category' => [],
+                'category' => [
+                    'default' => get_term( get_option( 'default_product_cat' ) ),
+                ],
             ]
         );
     }
