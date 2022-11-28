@@ -2,8 +2,7 @@ require('dotenv').config();
 
 const SERVER_URL = process.env.BASE_URL
 // const SERVER_URL = process.env.SERVER_URL
-// const SERVER_URL = 'http://dokan1.test'
-// const SERVER_URL = 'http://localhost:8889'
+
 
 
 export const endPoints = {
@@ -81,7 +80,7 @@ export const endPoints = {
     updateSettings: `${SERVER_URL}/wp-json/dokan/v1/settings`, // post put patch
     // dummy data
     getDummyDataStatus: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/status`,     // get
-    importDummyData: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/import`,        // post
+    // importDummyData: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/import`,        // post
     clearDummyData: `${SERVER_URL}/wp-json/dokan/v1/dummy-data/clear`,      // delete
     // store categories
     getDefaultStoreCategory: `${SERVER_URL}/wp-json/dokan/v1/store-categories/default-category`,     // get 
@@ -195,61 +194,14 @@ export const endPoints = {
     //admin
     getAdminReportSummary: `${SERVER_URL}/wp-json/dokan/v1/admin/report/summary`,    //get
     getAdminReportOverview: `${SERVER_URL}/wp-json/dokan/v1/admin/report/overview`,     //get
-    // getAdminDashboardFeed: `${SERVER_URL}/wp-json/dokan/v1/admin/dashboard/feed`,        // get
-    // getAdminHelp: `${SERVER_URL}/wp-json/dokan/v1/admin/help`,      // get
-    // getAdminChangelogLite: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/lite`,        // get
-    // getAdminChangelogPro: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/pro`,     // get
-    // getAdminNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/admin`,     // get
-    // getAdminPromoNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/promo`,     // get
-    // getAdminLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs`,      // get
-    // getAdminExportLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs/export`,       // get
-
-
-
-    // user
-    users: `${SERVER_URL}/wp-json/dokan/v1/user/`, //TODO:
-    userRegitration: `${SERVER_URL}/wp-json/dokan/v1/user/register`, //TODO:
-    passwordRecovery: `${SERVER_URL}/wp-json/dokan/v1/user/lostpassword`, //TODO:
-
-    // cart
-    getCartItems: `${SERVER_URL}/wp-json/dokan/v1/cart/items`, //TODO:
-    postCartProduct: `${SERVER_URL}/wp-json/dokan/v1/cart/items`, //TODO:
-    postBatchCartItem: `${SERVER_URL}/wp-json/dokan/v1/cart/items/batch`, //TODO:
-    deleteCart: `${SERVER_URL}`, //TODO:
-    deleteSingleProduct: `${SERVER_URL}`, //TODO:
-    restoreCart: `${SERVER_URL}/wp-json/dokan/v1/cart/items/{key}/restore`, //TODO:
-    getCartShipping: `${SERVER_URL}/wp-json/dokan/v1/cart/coupons/`, //TODO:
-    addCouponsToCart: `${SERVER_URL}/wp-json/dokan/v1/cart/coupons/`, //TODO:
-    getCartCoupons: `${SERVER_URL}/wp-json/dokan/v1/cart/coupons/`, //TODO:
-    deleteCartCoupon: `${SERVER_URL}/wp-json/dokan/v1/cart/coupons/212`, //TODO:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    getAdminDashboardFeed: `${SERVER_URL}/wp-json/dokan/v1/admin/dashboard/feed`,        // get
+    getAdminHelp: `${SERVER_URL}/wp-json/dokan/v1/admin/help`,      // get
+    getAdminChangelogLite: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/lite`,        // get
+    getAdminChangelogPro: `${SERVER_URL}/wp-json/dokan/v1/admin/changelog/pro`,     // get
+    getAdminNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/admin`,     // get
+    getAdminPromoNotices: `${SERVER_URL}/wp-json/dokan/v1/admin/notices/promo`,     // get
+    getAdminLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs`,      // get
+    getAdminExportLogs: `${SERVER_URL}/wp-json/dokan/v1/admin/logs/export`,       // get
 
 
 

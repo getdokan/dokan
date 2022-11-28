@@ -3,7 +3,6 @@ import { devices } from '@playwright/test';
 
 // api 
 const httpCredentials = {
-    // username: process.env.ADMIN,
     username: process.env.ADMIN,
     password: process.env.ADMIN_PASSWORD,
 };

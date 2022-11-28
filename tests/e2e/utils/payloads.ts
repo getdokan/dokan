@@ -35,7 +35,7 @@ export const payloads = {
     regular_price: data.product.price.price_random(),
     categories: [{
       //  id: 48
-       }],
+    }],
     attributes: [{
       id: 18,
       // name: 'size',
@@ -83,7 +83,7 @@ export const payloads = {
   },
 
   updateSettings: {
-    store_name: 'vendorstore2',
+    // store_name: 'vendorstore2',
     social: {
       fb: 'http://dokan.test',
       youtube: 'http://dokan.test',
@@ -106,6 +106,7 @@ export const payloads = {
       },
       paypal: { email: 'pay9pal@g.c' }
     },
+    enabled: true,
     phone: '0123456789',
     show_email: 'no',
     address: {
@@ -857,6 +858,7 @@ export const payloads = {
         rating: "0.00",
         count: 1
       },
+      trusted: true,
       enabled: true,
       registered: "",
       payment: {
@@ -876,7 +878,6 @@ export const payloads = {
         },
         stripe: false
       },
-      trusted: true,
       store_open_close: {
         enabled: false,
         time: [],
