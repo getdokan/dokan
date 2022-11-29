@@ -11,7 +11,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('support ticket api test', () => {
+test.describe.skip('support ticket api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     //TODO: prerequisite => multiple support tickets

@@ -12,6 +12,8 @@ const httpCredentials = {
 // };
 const btoa = (str: string) => Buffer.from(str).toString('base64');
 const credentialsBase64 = btoa(`${httpCredentials.username}:${httpCredentials.password}`);
+// const basicAuth = 'Basic ' + Buffer.from(httpCredentials.username + ':' + httpCredentials.password).toString('base64');
+
 
 
 /**
@@ -51,7 +53,9 @@ const config: PlaywrightTestConfig = {
     // reporter: [['html', { open: 'never' }]],
     // reporter: [['junit', { outputFile: '.playwright-report/junit/test-results.xml' }]],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+    // globalSetup: require.resolve('./global-setup'),
     use: {
+        // storageState: 'storageState.json',
         // viewport: {width: 500, height: 500},//TODO: start maximized
         // viewport: {width: 1920, height: 1080},
         // viewport: null,

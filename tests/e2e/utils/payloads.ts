@@ -106,6 +106,8 @@ export const payloads = {
       },
       paypal: { email: 'pay9pal@g.c' }
     },
+    featured: true,
+    trusted: true,
     enabled: true,
     phone: '0123456789',
     show_email: 'no',
@@ -563,7 +565,7 @@ export const payloads = {
   createCustomer: () => {
     return {
       email: faker.internet.email(),
-      first_name: faker.name.firstName('male'),
+      first_name: faker.name.firstName('male') + + faker.datatype.uuid() ,
       last_name: faker.name.lastName('male'),
       role: 'customer',
       username: faker.name.firstName('male'),
@@ -732,7 +734,7 @@ export const payloads = {
   },
   createStore: () => {
     return {
-      user_login: faker.name.firstName('male'),
+      user_login: faker.name.firstName('male') + + faker.datatype.uuid(),
       user_pass: "01dokan01",
       role: "seller",
       username: faker.name.firstName('male'),

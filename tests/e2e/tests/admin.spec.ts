@@ -14,11 +14,11 @@ import {VendorPage} from '../pages/vendorPage'
 
 test.describe('Admin functionality test', () => {
 
-    // test('admin can login',async ({page}) => {
-    //     const loginPage = new LoginPage(page)
-    //     const adminPage = new AdminPage(page)
-    //     await loginPage.adminLogin(data.admin)
-    // })
+    test.only('admin can login',async ({page}) => {
+        const loginPage = new LoginPage(page)
+        const adminPage = new AdminPage(page)
+        await loginPage.adminLogin(data.admin)
+    })
 
     // test('admin can logout',async ({page}) => {
     //     const loginPage = new LoginPage(page)

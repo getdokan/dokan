@@ -9,7 +9,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('settings api test', () => {
+test.describe.skip('settings api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
 
@@ -24,14 +24,14 @@ test('get settings', async ({ request }) => {
 
 
 
-test('update settings', async ({ request }) => {
+test.skip('update settings', async ({ request }) => {
     let response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings })
     let responseBody = await response.json()
     console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
-});
+}); 
 
 
 

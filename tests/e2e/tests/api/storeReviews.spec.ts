@@ -15,7 +15,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('store reviews api test', () => {
+test.describe.skip('store reviews api test', () => {
 
     //TODO: need to send admin credentials 
     //TODO: store, store reviews

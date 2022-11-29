@@ -224,7 +224,7 @@ test.describe('stores api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('get store reviews', async ({ request }) => {
+    test.skip('get store reviews', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
         await apiUtils.createStoreReview(sellerId, payloads.createStoreReview) //TODO: user must be other than vendor

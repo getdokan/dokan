@@ -16,7 +16,7 @@ test.describe('abuse report api test', () => {
 
     //TODO: need to send admin credentials 
     //TODO: product, product abuse report
-    test('get all abuse report reasons', async ({ request }) => {
+    test.skip('get all abuse report reasons', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReportReasons)
         let responseBody = await response.json()
         console.log(responseBody)
@@ -25,7 +25,7 @@ test.describe('abuse report api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    test('get all abuse reports', async ({ request }) => {
+    test.skip('get all abuse reports', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReports)
         let responseBody = await response.json()
         console.log(responseBody)
