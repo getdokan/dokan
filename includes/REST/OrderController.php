@@ -434,6 +434,10 @@ class OrderController extends DokanRESTController {
             'seller_id'   => dokan_get_current_user_id(),
         ];
 
+        if ( ! empty( $request['search'] ) ) {
+            $args['search'] = absint( $request['search'] );
+        }
+
         $orders = dokan()->order->all( $args );
 
         $data_objects = array();
@@ -1003,6 +1007,12 @@ class OrderController extends DokanRESTController {
                     'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 0,
+                    'context'     => array( 'view' ),
+                ),
+                'search'          => array(
+                    'description' => __( 'Order id to search order', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => '',
                     'context'     => array( 'view' ),
                 ),
                 'customer_ip_address'  => array(
@@ -1738,6 +1748,13 @@ class OrderController extends DokanRESTController {
             'default'     => $schema_properties['customer_id']['default'],
             'description' => $schema_properties['customer_id']['description'],
             'type'        => $schema_properties['customer_id']['type'],
+        );
+
+        $query_params['search'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['search']['default'],
+            'description' => $schema_properties['search']['description'],
+            'type'        => $schema_properties['search']['type'],
         );
 
         return $query_params;

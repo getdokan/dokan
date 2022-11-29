@@ -101,9 +101,10 @@ class VendorDashboardController extends \WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_orders_summary' ],
-                    'args'                => [],
+                    'args'                => $this->get_collection_params(),
                     'permission_callback' => 'is_user_logged_in',
                 ],
+                'schema' => array( $this, 'get_public_item_schema' ),
             ]
         );
         register_rest_route(
@@ -295,10 +296,33 @@ class VendorDashboardController extends \WP_REST_Controller {
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
-    public function get_orders_summary() {
-        return rest_ensure_response(
-            dokan_count_orders( dokan_get_current_user_id() )
-        );
+    public function get_orders_summary( $request ) {
+        $start_date  = ! empty( $request['after'] ) ? sanitize_text_field( $request['after'] ) : '';
+        $end_date    = ! empty( $request['before'] ) ? sanitize_text_field( $request['before'] ) : '';
+        $customer_id = ! empty( $request['customer_id'] ) ? absint( $request['customer_id'] ) : 0;
+
+        $args = [
+            'return' => 'count',
+            'seller_id' => dokan_get_current_user_id(),
+            'date' => [
+                'from' => $start_date,
+                'to'   => $end_date,
+            ],
+            'customer_id' => $customer_id,
+            'status' => 'all',
+        ];
+
+        $result = [];
+
+        $result['total']         = dokan()->order->all( $args );
+        $result['wc-completed']  = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-completed' ] ) );
+        $result['wc-on-hold']    = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-on-hold' ] ) );
+        $result['wc-processing'] = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-processing' ] ) );
+        $result['wc-refunded']   = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-refunded' ] ) );
+        $result['wc-cancelled']  = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-cancelled' ] ) );
+        $result['wc-failed']     = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-failed' ] ) );
+
+        return rest_ensure_response( $result );
     }
 
     /**
@@ -468,5 +492,77 @@ class VendorDashboardController extends \WP_REST_Controller {
                 ],
             ],
         ];
+    }
+
+    /**
+     * Get our sample schema for order-summary.
+     */
+    public function get_order_summary_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'order-summary',
+            'type'       => 'object',
+            'properties' => [
+                'customer_id'          => array(
+                    'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
+                    'type'        => 'integer',
+                    'default'     => 0,
+                    'context'     => array( 'view' ),
+                ),
+                'after' => array(
+                    'description' => __( "Start date to show orders", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'default'     => null,
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'before' => array(
+                    'description' => __( "End date to show orders", 'dokan-lite' ),
+                    'type'        => 'date-time',
+                    'default'     => null,
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * Retrieves the query params for the posts collection.
+     *
+     * @since 4.7.0
+     *
+     * @return array Collection parameters.
+     */
+    public function get_collection_params() {
+        $query_params = parent::get_collection_params();
+
+        $query_params['context']['default'] = 'view';
+
+        $schema            = $this->get_order_summary_schema();
+        $schema_properties = $schema['properties'];
+
+        $query_params['customer_id'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['customer_id']['default'],
+            'description' => $schema_properties['customer_id']['description'],
+            'type'        => $schema_properties['customer_id']['type'],
+        );
+
+        $query_params['after'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['after']['default'],
+            'description' => $schema_properties['after']['description'],
+            'type'        => $schema_properties['after']['type'],
+        );
+
+        $query_params['before'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['before']['default'],
+            'description' => $schema_properties['before']['description'],
+            'type'        => $schema_properties['before']['type'],
+        );
+
+        return $query_params;
     }
 }
