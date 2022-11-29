@@ -103,7 +103,7 @@ jobs:
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-           cd tests/e2e && npm run test tests/api/
+          #  cd tests/e2e && npm run test admins.spec.ts --reporter=html
         
         env:
           CI: true
@@ -149,4 +149,12 @@ jobs:
           path: flaky-tests
           if-no-files-found: ignore
       
-      
+      - name: Publish HTML report 
+        if: always() # We want this to always run, even if test fail prior to this step running
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: tests/e2e/playwright-report # This is where index.html will be output
+          keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+          user_name: 'github-actions[bot]' # This will be the username that gets stamped in the repo commit
+          user_email: 'github-actions[bot]@users.noreply.github.com' # This will be the user email that gets stamped in the repo commit 
