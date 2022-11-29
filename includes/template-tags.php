@@ -389,7 +389,7 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  * @return array
  */
 function dokan_get_dashboard_nav() {
-    $urls = array(
+    $menus = array(
         'dashboard' => array(
             'title'      => __( 'Dashboard', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
@@ -411,7 +411,6 @@ function dokan_get_dashboard_nav() {
             'pos'        => 50,
             'permission' => 'dokan_view_order_menu',
         ),
-
         'withdraw' => array(
             'title'      => __( 'Withdraw', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-upload"></i>',
@@ -419,22 +418,15 @@ function dokan_get_dashboard_nav() {
             'pos'        => 70,
             'permission' => 'dokan_view_withdraw_menu',
         ),
-    );
-
-    $settings = array(
-        'title' => sprintf( '%s <i class="fas fa-angle-right pull-right"></i>', __( 'Settings', 'dokan-lite' ) ),
-        'icon'  => '<i class="fas fa-cog"></i>',
-        'url'   => dokan_get_navigation_url( 'settings/store' ),
-        'pos'   => 200,
+        'settings' => array(
+            'title' => __( 'Settings', 'dokan-lite' ),
+            'icon'  => '<i class="fas fa-cog"></i>',
+            'url'   => dokan_get_navigation_url( 'settings/store' ),
+            'pos'   => 200,
+        ),
     );
 
     $settings_sub = array(
-        'back' => array(
-            'title' => __( 'Back to Dashboard', 'dokan-lite' ),
-            'icon'  => '<i class="fas fa-long-arrow-alt-left"></i>',
-            'url'   => dokan_get_navigation_url(),
-            'pos'   => 10,
-        ),
         'store' => array(
             'title'      => __( 'Store', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-university"></i>',
@@ -458,43 +450,65 @@ function dokan_get_dashboard_nav() {
      *
      * @param array.
      */
-    $sub_settings = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
-
-    foreach ( $sub_settings as $key => $sub_setting ) {
-        if ( ! isset( $sub_setting['pos'] ) && empty( $sub_setting['pos'] ) ) {
-            $sub_setting['pos'] = '200';
-        }
-
-        $settings['sub'][ $key ] = $sub_setting;
-    }
-
-    uasort( $settings['sub'], 'dokan_nav_sort_by_pos' );
-
-    // Filter Sub setting menu according to permission
-    $settings['sub'] = array_filter( $settings['sub'], 'dokan_check_menu_permission' );
-
-    // Manage main settings url after re-render permission cheching
-    if ( count( $settings['sub'] ) > 1 ) {
-        $urls['settings'] = $settings;
-        $sub_settings_key = array_keys( $settings['sub'] );
-        $urls['settings']['url'] = $settings['sub'][ $sub_settings_key[1] ]['url'];
-    }
-
-    $nav_urls = apply_filters( 'dokan_get_dashboard_nav', $urls );
-
-    uasort( $nav_urls, 'dokan_nav_sort_by_pos' );
-
-    // Filter main menu according to permission
-    $nav_urls = array_filter( $nav_urls, 'dokan_check_menu_permission' );
+    $menus['settings']['submenu'] = apply_filters( 'dokan_get_dashboard_settings_nav', $settings_sub );
 
     /**
-     * Filter to get the final seller dashboard navigation.
+     * Filters nav menu items.
      *
-     * @since 2.2
-     *
-     * @param array $urls.
+     * @param array<string,array> $menus
      */
-    return $nav_urls;
+    $nav_menus = apply_filters( 'dokan_get_dashboard_nav', $menus );
+
+    foreach ( $nav_menus as $nav_key => $menu ) {
+        if ( ! isset( $menu['pos'] ) ) {
+            $nav_menus[ $nav_key ]['pos'] = 190;
+        }
+
+        $submenu_items = empty( $menu['submenu'] ) ? [] : $menu['submenu'];
+
+        /**
+         * Filters the vendor dashboard submenu item for each menu.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array<string,array> $submenu_items Associative array of submenu items.
+         * @param string              $menu_key      Key of the corresponding menu.
+         */
+        $submenu_items = apply_filters( 'dokan_dashboard_nav_submenu', $submenu_items, $nav_key );
+
+        if ( empty( $submenu_items ) ) {
+            continue;
+        }
+
+        foreach ( $submenu_items as $key => $submenu ) {
+            if ( ! isset( $submenu['pos'] ) ) {
+                $submenu['pos'] = 200;
+            }
+
+            $submenu_items[ $key ] = $submenu;
+        }
+
+        // Sort items according to positional value
+        uasort( $submenu_items, 'dokan_nav_sort_by_pos' );
+
+        // Filter items according to permissions
+        $submenu_items = array_filter( $submenu_items, 'dokan_check_menu_permission' );
+
+        // Manage menu with submenus after permission check
+        if ( count( $submenu_items ) < 1 ) {
+            unset( $nav_menus[ $nav_key ] );
+        } else {
+            $nav_menus[ $nav_key ]['submenu'] = $submenu_items;
+        }
+    }
+
+    // Sort items according to positional value
+    uasort( $nav_menus, 'dokan_nav_sort_by_pos' );
+
+    // Filter main menu according to permission
+    $nav_menus = array_filter( $nav_menus, 'dokan_check_menu_permission' );
+
+    return $nav_menus;
 }
 
 /**
@@ -527,33 +541,11 @@ function dokan_check_menu_permission( $menu ) {
 function dokan_dashboard_nav( $active_menu = '' ) {
     $nav_menu          = dokan_get_dashboard_nav();
     $active_menu_parts = explode( '/', $active_menu );
+    $active_submenu    = '';
 
     if ( $active_menu && false !== strpos( $active_menu, '/' ) ) {
-        $active_menu = $active_menu_parts[1];
-    }
-
-    /**
-     * Filters the settings' key.
-     *
-     * @param string $settings_key "settings" (default)
-     *
-     * @return string
-     */
-    $settings_key = apply_filters( 'dokan_dashboard_nav_settings_key', 'settings' );
-
-    if ( isset( $active_menu_parts[1] )
-            && ( $active_menu_parts[1] === $settings_key || urldecode( $active_menu_parts[0] ) === $settings_key )
-            && isset( $nav_menu[ $settings_key ]['sub'] )
-            && (
-                array_key_exists( $active_menu_parts[1], $nav_menu[ $settings_key ]['sub'] ) ||
-                ( isset( $active_menu_parts[2] ) && array_key_exists( $active_menu_parts[2], $nav_menu[ $settings_key ]['sub'] ) ) ||
-                ( 0 === stripos( $active_menu_parts[1], 'payment' ) && array_key_exists( 'payment', $nav_menu[ $settings_key ]['sub'] ) ) // special case when submenu is payment
-            )
-    ) {
-        $urls        = $nav_menu[ $settings_key ]['sub'];
-        $active_menu = $active_menu_parts[1] === $settings_key ? $active_menu_parts[2] : $active_menu_parts[1];
-    } else {
-        $urls = $nav_menu;
+        $active_menu    = $active_menu_parts[0];
+        $active_submenu = $active_menu_parts[1];
     }
 
     $menu           = '';
@@ -567,9 +559,67 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     $menu .= '<ul class="dokan-dashboard-menu">';
 
-    foreach ( $urls as $key => $item ) {
-        $class = ( ( $active_menu === $key ) || 0 === stripos( $active_menu, $key ) ) ? 'active ' . $key : $key; // checking starts with the key
-        $menu .= sprintf( '<li class="%s"><a href="%s">%s %s</a></li>', $class, $item['url'], $item['icon'], $item['title'] );
+    foreach ( $nav_menu as $key => $item ) {
+        /**
+         * Filters menu key according to slug if needed.
+         *
+         * @since DOKAN_PRO_SINCE
+         *
+         * @param string $menu_key
+         */
+        $filtered_key = apply_filters( 'dokan_dashboard_nav_menu_key', $key );
+
+        $class     = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
+        $title     = isset( $item['title'] ) ? $item['title'] : __( 'No title', 'dokan-lite' );
+        $menu_slug = $filtered_key;
+        $submenu   = '';
+
+        if ( ! empty( $item['submenu'] ) ) {
+            $class .= ' has-submenu';
+            $title .= ' <i class="fas fa-caret-right menu-dropdown"></i>';
+            $submenu = sprintf( '<ul class="navigation-submenu %s">', $key );
+            $subkey_slugs = [];
+
+            foreach ( $item['submenu'] as $sub_key => $sub ) {
+                /**
+                 * Filters menu key according to slug if needed.
+                 *
+                 * @since DOKAN_PRO_SINCE
+                 *
+                 * @param string $submenu_key
+                 * @param string $menu_key
+                 */
+                $filtered_subkey = apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key );
+
+                $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
+
+                $submenu .= sprintf(
+                    '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
+                    $submenu_class,
+                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$filtered_key}/{$filtered_subkey}" ),
+                    isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
+                    isset( $sub['title'] ) ? $sub['title'] : __( 'No title', 'dokan-lite' )
+                );
+
+                $subkey_slugs[] = $filtered_subkey;
+            }
+
+            $submenu .= '</ul>';
+
+            // Building parent menu slug pointing to the first submenu item
+            if ( isset( $subkey_slugs[0] ) ) {
+                $menu_slug = trailingslashit( $menu_slug ) . $subkey_slugs[0];
+            }
+        }
+
+        $menu .= sprintf(
+            '<li class="%s"><a href="%s">%s %s</a>%s</li>',
+            $class,
+            isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
+            isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
+            $title,
+            $submenu
+        );
     }
 
     $common_links = '<li class="dokan-common-links dokan-clearfix">
