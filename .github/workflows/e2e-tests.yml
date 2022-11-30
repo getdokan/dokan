@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  tests:
     name: e2e tests
     runs-on: ubuntu-latest
     strategy:
@@ -123,14 +123,8 @@ jobs:
       #   run: |
       #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
 
-      - name: Test results
-        run: |
-          cd tests/e2e
-          ls
-          cd playwright-report
-          ls
 
-      - name: Archive playwright artifacts (screenshots, HTML snapshots)
+      - name: Archive playwright artifacts (screenshots, HTML snapshots, Reports)
         uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -139,12 +133,31 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Publish HTML report
+      # - name: Publish HTML report
+      #   if: always() # We want this to always run, even if test fail prior to this step running
+      #   uses: peaceiris/actions-gh-pages@v3.7.3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: tests/e2e/playwright-report # This is where index.html will be output
+      #     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+      #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+      #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+
+  publishTestResults:
+    name: Publish Test Results
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        id: download
+
+      - name: Publish HTML report to GH Pages
         if: always() # We want this to always run, even if test fail prior to this step running
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: tests/e2e/playwright-report # This is where index.html will be output
+          publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
           keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
           user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
           user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
