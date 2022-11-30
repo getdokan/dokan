@@ -33,6 +33,9 @@ class Hooks {
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2 );
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
+
+        // Ajax hooks
+        add_action( 'wp_ajax_dokan_product_search_author', [ $this, 'search_vendors' ] );
     }
 
     /**
@@ -373,31 +376,73 @@ class Hooks {
      * @param object $post
      */
     public static function seller_meta_box_content( $post ) {
-        global $user_ID;
+        $selected = empty( $post->ID ) ? get_current_user_id() : $post->post_author;
 
-        $admin_user = get_user_by( 'id', $user_ID );
-        $selected   = empty( $post->ID ) ? $user_ID : $post->post_author;
-        $vendors = dokan()->vendor->all(
+        $user = dokan()->vendor->get( $selected );
+
+        $user = [
             [
-				'number' => -1,
-				'role__in' => [ 'seller' ],
-			]
-        );
+                'id'       => $selected,
+                'text'     => ! empty( $user->get_shop_name() ) ? $user->get_shop_name() : $user->get_name(),
+            ],
+        ];
         ?>
-        <label class="screen-reader-text" for="dokan_product_author_override"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></label>
-        <select name="dokan_product_author_override" id="dokan_product_author_override" class="">
-            <?php if ( empty( $vendors ) ) : ?>
-                <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
-            <?php else : ?>
-                <option value="<?php echo esc_attr( $user_ID ); ?>" <?php selected( $selected, $user_ID ); ?>><?php echo esc_html( $admin_user->display_name ); ?></option>
-                <?php foreach ( $vendors as $key => $vendor ) : ?>
-                    <option value="<?php echo esc_attr( $vendor->get_id() ); ?>" <?php selected( $selected, $vendor->get_id() ); ?>><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
-                <?php endforeach ?>
-            <?php endif ?>
-        </select>
+
+        <select
+            style="width: 40%;"
+            class="dokan_product_author_override"
+            name="dokan_product_author_override"
+            data-placeholder="<?php esc_attr_e( 'Select vendor', 'dokan-lite' ); ?>"
+            data-action="dokan_product_search_author"
+            data-close_on_select="true"
+            data-minimum_input_length="0"
+            data-data='<?php echo wp_json_encode( $user ); ?>'
+        >
+        </select> <?php echo wc_help_tip( __( 'You can search vendors and assign them.', 'dokan-lite' ) ); ?>
         <?php
     }
 
+    /**
+     * Ajax method to search vendors
+     *
+     * @since 3.7.1
+     *
+     * @return void
+     */
+    public function search_vendors() {
+        if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'dokan_admin_product' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized operation', 'dokan-lite' ) ], 403 );
+        }
+
+        $vendors = [];
+        $results = [];
+        $args    = [
+            'number'   => 20,
+            'status'   => [ 'all' ],
+            'role__in' => [ 'seller', 'administrator' ],
+        ];
+
+        if ( ! empty( $_GET['s'] ) ) {
+            $s = sanitize_text_field( wp_unslash( $_GET['s'] ) );
+
+            $args['search'] = '*' . $s . '*';
+            $args['number'] = 35;
+        }
+
+        $results = dokan()->vendor->all( $args );
+
+        if ( ! empty( $results ) ) {
+            foreach ( $results as $vendor ) {
+                $vendors[] = [
+                    'id'     => $vendor->get_id(),
+                    'text'   => ! empty( $vendor->get_shop_name() ) ? $vendor->get_shop_name() : $vendor->get_name(),
+                    'avatar' => $vendor->get_avatar(),
+                ];
+            }
+        }
+
+        wp_send_json_success( [ 'vendors' => $vendors ] );
+    }
 
     /**
      * Override product vendor ID from admin panel

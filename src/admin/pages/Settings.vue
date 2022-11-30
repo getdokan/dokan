@@ -301,7 +301,7 @@
                     return Promise.resolve({value: false});
                 }
 
-                return swal.fire({
+                return Swal.fire({
                     title: this.__( 'Withdraw Method Changed', 'dokan-lite' ),
                     text: this.__( 'Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite' ),
                     icon: 'warning',
@@ -419,38 +419,59 @@
                     return;
                 }
 
-                if (!this.awaitingSearch) {
-                    setTimeout(() => {
-                        let searchText = this.$refs.searchInSettings.value.toLowerCase();
-                        this.doSearch(searchText);
+                if ( ! this.awaitingSearch ) {
+                    setTimeout( () => {
+                        let searchText = this.$refs.searchInSettings.value;
+
+                        // If more than two (space/tab) found, replace with space > trim > lowercase.
+                        searchText = searchText.replace( /\s\s+/g,' ' ).trim().toLowerCase();
+
+                        // Create an empty string search first to resolve all previous-state issues.
+                        this.doSearch( '' );
+
+                        // Search now with searchText.
+                        this.doSearch( searchText );
                         this.awaitingSearch = false;
-                    }, 1000);
+                    }, 1000 );
                 }
 
                 this.awaitingSearch = true;
             },
 
             doSearch(searchText) {
-                var self = this;
-                let settingFields = {};
-                let filteredSettingSections = [];
-                let settingSections = [];
-                let dokan_setting_fields = dokan.settings_fields;
+                const self = this;
+                const settingFields = {};
+                const filteredSettingSections = [];
+                const settingSections = [];
+                const dokanSettingFields = dokan.settings_fields;
+                const dokanSettingSections = dokan.settings_sections;
 
-                Object.keys( dokan_setting_fields ).forEach( function( section, index ) {
-                    Object.keys( dokan_setting_fields[section] ).forEach( function( field, i ) {
-                        if (dokan_setting_fields[section][field].type === "sub_section") {
-                            return;
+                Object.keys( dokanSettingFields ).forEach( function( section, index ) {
+                    Object.keys( dokanSettingFields[section] ).forEach( function( field ) {
+                        let label = '';
+
+                        // Append section field label and description.
+                        if ( 'sub_section' !== dokanSettingFields[section][field].type ) {
+                            label += ` ${dokanSettingFields[section][field]['label']} ${dokanSettingFields[section][field]['desc']}`;
                         }
 
-                        let label = dokan_setting_fields[section][field]['label'].toLowerCase();
+                        // Append section label and description.
+                        Object.keys( dokanSettingSections ).forEach( function ( foundSectionIndex ) {
+                            const foundSection = dokanSettingSections[ foundSectionIndex ];
+                            if ( foundSection?.id === section ) {
+                                label += ` ${foundSection.title} ${foundSection.description} ${foundSection.settings_description}`;
+                            }
+                        } );
+
+                        // Make the label lowercase, as `searchText` is also like that.
+                        label = label.toLocaleLowerCase();
 
                         if ( label && label.includes(searchText) ) {
                             if (!settingFields[section]) {
                                 settingFields[section] = {};
                             }
 
-                            settingFields[section][field] = dokan_setting_fields[section][field];
+                            settingFields[section][field] = dokanSettingFields[section][field];
 
                             if ( filteredSettingSections.indexOf(section) === -1 ) {
                                 filteredSettingSections.push(section);
@@ -460,7 +481,7 @@
                 } );
 
                 let currentTab = 0;
-                Object.keys(dokan.settings_sections).forEach((section, index) => {
+                Object.keys(dokan.settings_sections).forEach((section) => {
                     if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
                         if (!currentTab) {
                             this.changeTab(dokan.settings_sections[section]);
@@ -495,7 +516,7 @@
 
             this.$root.$on( 'onFieldSwitched', ( value, fieldName ) => {
                 if ( 'on' === value && ( 'dokan_general' in this.settingValues ) && 'data_clear_on_uninstall' === fieldName ) {
-                    swal.fire({
+                    Swal.fire({
                         icon              : 'warning',
                         html              : this.__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
                         title             : this.__( 'Are you sure?', 'dokan-lite' ),

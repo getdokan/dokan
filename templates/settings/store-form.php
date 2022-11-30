@@ -369,13 +369,33 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
                 $( '.dokan-store-times' ).each( function () {
                     const self              = $( this ),
-                        openValue           = self.find( '.opening-time' ).val(),
-                        closeValue          = self.find( '.closing-time' ).val(),
-                        formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
+                        open_or_close       = self.find( '.dokan-on-off' ).val();
+
+                    // check if today is open
+                    if ( 'close' === open_or_close ) {
+                        return;
+                    }
+
+                    const openValue         = self.find( '.opening-time' ).val(),
+                        closeValue          = self.find( '.closing-time' ).val();
+
+                    if ( ! openValue || ! closeValue ) {
+                        self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                        if ( ! openValue ) {
+                            self.find( '.opening-time' ).focus();
+                        } else {
+                            self.find( '.closing-time' ).focus();
+                        }
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    const formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
                         formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
 
                     if ( formattedOpenValue >= formattedCloseValue ) {
                         self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                        self.find( '.opening-time' ).focus();
                         e.preventDefault();
                         return false;
                     }

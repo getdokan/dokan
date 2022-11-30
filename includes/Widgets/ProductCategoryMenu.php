@@ -28,6 +28,9 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
+        // load frontend script
+        wp_enqueue_script( 'dokan-frontend' );
+
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
         echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
@@ -36,7 +39,7 @@ class ProductCategoryMenu extends WP_Widget {
             echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
         ?>
-            <div id="cat-drop-stack" class="product-cat-stack-dokan">
+            <div class="product-cat-stack-dokan cat-drop-stack">
                 <?php
                 $args = apply_filters(
                     'dokan_category_widget', array(
@@ -61,7 +64,7 @@ class ProductCategoryMenu extends WP_Widget {
             </div>
         <?php
 
-        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**

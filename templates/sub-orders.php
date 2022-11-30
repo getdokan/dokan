@@ -52,9 +52,15 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
     </thead>
     <tbody>
     <?php
+    $now = dokan_current_datetime();
     foreach ( $sub_orders as $order_post ) {
-        $order      = new WC_Order( $order_post->ID ); // phpcs:ignore
+        $order      = wc_get_order( $order_post->ID ); // phpcs:ignore
+        if ( ! $order ) {
+            continue;
+        }
         $item_count = $order->get_item_count();
+        $order_date = $order->get_date_created();
+        $order_date = is_a( $order_date, 'WC_DateTime' ) ? $now->setTimestamp( $order_date->getTimestamp() ) : $now;
         ?>
             <tr class="order">
                 <td class="order-number">
@@ -63,8 +69,8 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
                     </a>
                 </td>
                 <td class="order-date">
-                    <time datetime="<?php echo esc_attr( dokan_current_datetime()->modify( $order->get_date_created() )->format( 'Y-m-dTH:i:s' ) ); ?>">
-                        <?php echo esc_html( dokan_format_date( $order->get_date_created() ) ); ?>
+                    <time datetime="<?php echo esc_attr( $order_date->format( 'Y-m-dTH:i:s' ) ); ?>">
+                        <?php echo esc_html( dokan_format_date( $order_date ) ); ?>
                     </time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
