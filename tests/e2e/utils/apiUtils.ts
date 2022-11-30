@@ -67,7 +67,7 @@ export class ApiUtils {
 
     // follow unfollow store
     async followUnfollowStore(sellerId: string) {
-        let response = await this.request.post(endPoints.followUnfollowStore, { data: { vendor_id: sellerId } })
+        let response = await this.request.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } })
         let responseBody = await response.json()
         console.log(responseBody)
         return responseBody

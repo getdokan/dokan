@@ -744,10 +744,10 @@ export const payloads = {
   },
   createStore: () => {
     return {
-      user_login: faker.name.firstName('male') + + faker.datatype.uuid(),
+      user_login: faker.name.firstName('male') +  faker.datatype.uuid(),
       user_pass: "01dokan01",
       role: "seller",
-      username: faker.name.firstName('male'),
+      username: faker.name.firstName('male') + faker.datatype.uuid(), //TODO: need unique user for vendor, store, customer
       email: faker.internet.email(),
       store_name: faker.name.firstName('male'),
       first_name: faker.name.firstName('male'),
