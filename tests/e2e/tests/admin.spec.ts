@@ -27,12 +27,12 @@ test.describe('Admin functionality test', () => {
         await loginPage.adminLogin(data.admin)
     })
 
-    // test('admin can logout',async ({page}) => {
-    //     const loginPage = new LoginPage(page)
-    //     const adminPage = new AdminPage(page)
-    //     await loginPage.adminLogin(data.admin)
-    //     await loginPage.adminLogout()
-    // })
+    test('admin can logout',async ({page}) => {
+        const loginPage = new LoginPage(page)
+        const adminPage = new AdminPage(page)
+        await loginPage.adminLogin(data.admin)
+        await loginPage.adminLogout()
+    })
 
     // test('admin can set dokan setup wizard',async ({page}) => { . //todo
     //     const loginPage = new LoginPage(page)
