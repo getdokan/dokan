@@ -134,7 +134,8 @@ jobs:
   #         retention-days: 30
 
   publishTestResults:
-    name: Publish Test Results
+    # name: Publish Test Results
+    name: echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
     runs-on: ubuntu-latest
     if: always()
     steps:
