@@ -41,7 +41,7 @@ const config: PlaywrightTestConfig = {
     workers: 1,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     // reporter: process.env.CI ? 'github' : 'list',
-    reporter: process.env.CI ? 'html' : [['html', { open: 'never' }]],
+    reporter: process.env.CI ? [['html']] : [['html', { open: 'never' }]],
     // reporter: [['html', { open: 'never' }]],
     // reporter: [['junit', { outputFile: '.playwright-report/junit/test-results.xml' }]],
 

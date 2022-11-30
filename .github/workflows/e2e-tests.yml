@@ -15,130 +15,129 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # tests:
-  #   name: e2e tests
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         ref: "e2e-pw"
-
-  #     - name: Use desired version of NodeJS
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 14
-  #         cache: "npm"
-
-  #     - name: Clone dokan-pro
-  #       uses: actions/checkout@v3
-  #       with:
-  #         repository: weDevsOfficial/dokan-pro
-  #         token: ${{ secrets.ACCESS_TOKEN }}
-  #         path: "plugins/dokan-pro"
-  #         ref: "develop"
-
-  #     - name: Composer install and build (Dokan-lite)
-  #       run: |
-  #         composer install
-  #         composer update
-  #         composer dump-autoload -o
-
-  #     - name: Npm install and build (Dokan-lite)
-  #       run: |
-  #         npm i
-  #         npm run dev:build
-  #         grunt
-
-  #     - name: Composer install and build (Dokan-pro)
-  #       run: |
-  #         cd plugins/dokan-pro
-  #         composer install
-  #         composer update
-  #         composer dump-autoload -o
-
-  #     - name: Npm install and build (Dokan-pro)
-  #       run: |
-  #         cd plugins/dokan-pro
-  #         npm i
-  #         npm run dev:build
-  #         npm run build
-
-  #     - name: Install dependencies & Setup WordPress Env
-  #       run: |
-  #         cd tests/e2e 
-  #         ls
-  #         npm ci
-  #         npm run start-env
-
-  #     - name: Activate storefront
-  #       run: |
-  #         cd tests/e2e 
-  #         npm run activate-sf-test
-
-  #     - name: Setup for e2e tests
-  #       run: |
-  #         cd tests/e2e 
-  #         npm run test:e2e-setup
-
-  #     # - name: Running the e2e tests
-  #     #   uses: nick-fields/retry@v2
-  #     #   with:
-  #     #     timeout_seconds: 30000
-  #     #     max_attempts: 1
-  #     #     retry_on: error
-  #     #     command: d tests/e2e && npm run test:e2e
-
-  #     #  cd tests/e2e && npm run test setup.spec.ts
-  #     - name: Running the e2e tests
-  #       run: |
-  #         cd tests/e2e && npm run test admin.spec.ts
-
-  #       env:
-  #         CI: true
-  #         ADMIN: ${{ secrets.ADMIN }}
-  #         ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
-  #         VENDOR: ${{ secrets.VENDOR }}
-  #         VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-  #         CUSTOMER: ${{ secrets.CUSTOMER }}
-  #         CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-  #         BASE_URL: ${{ secrets.BASE_URL }}
-
-  #     # - name: Generate Test Report
-  #     #   uses: phoenix-actions/test-reporting@v8
-  #     #   id: test-report               # Set ID reference for step
-  #     #   if: success() || failure()    # run this step even if previous step failed
-  #     #   with:
-  #     #     name: e2e tests result            # Name of the check run which will be created
-  #     #     path: artifacts/reports/junit.xml    # Path to test results
-  #     #     reporter: jest-junit
-  #     #     only-summary: 'false' # Allows you to generate only the summary.
-  #     #     list-suites: 'all'  # Limits which test suites are listed: 'all', 'failed'
-  #     #     list-tests: 'all'       # Limits which test cases are listed: 'all','failed', 'none'
-  #     #     fail-on-error: 'true'   # Set action as failed if test report contains any failed test
-
-  #     # - name: Test results
-  #     #   run: |
-  #     #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
-
-
-  #     - name: Archive playwright artifacts (screenshots, HTML snapshots, Reports)
-  #       uses: actions/upload-artifact@v3
-  #       if: always()
-  #       with:
-  #         name: playwright-report
-  #         path: tests/e2e/playwright-report
-  #         if-no-files-found: ignore
-  #         retention-days: 30
-
-  publishTestResults:
-    # name: Publish Test Results
-    name: "[rr](https://$GITHUB_REPOSITORY_OWNER.github.io/$GITHUB_REPOSITORY#*/)"
+  tests:
+    name: e2e tests
     runs-on: ubuntu-latest
-    if: always()
+    strategy:
+      fail-fast: false
+
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: "e2e-pw"
+
+      - name: Use desired version of NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: "npm"
+
+      - name: Clone dokan-pro
+        uses: actions/checkout@v3
+        with:
+          repository: weDevsOfficial/dokan-pro
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: "plugins/dokan-pro"
+          ref: "develop"
+
+      - name: Composer install and build (Dokan-lite)
+        run: |
+          composer install
+          composer update
+          composer dump-autoload -o
+
+      - name: Npm install and build (Dokan-lite)
+        run: |
+          npm i
+          npm run dev:build
+          grunt
+
+      - name: Composer install and build (Dokan-pro)
+        run: |
+          cd plugins/dokan-pro
+          composer install
+          composer update
+          composer dump-autoload -o
+
+      - name: Npm install and build (Dokan-pro)
+        run: |
+          cd plugins/dokan-pro
+          npm i
+          npm run dev:build
+          npm run build
+
+      - name: Install dependencies & Setup WordPress Env
+        run: |
+          cd tests/e2e 
+          ls
+          npm ci
+          npm run start-env
+
+      - name: Activate storefront
+        run: |
+          cd tests/e2e 
+          npm run activate-sf-test
+
+      - name: Setup for e2e tests
+        run: |
+          cd tests/e2e 
+          npm run test:e2e-setup
+
+      # - name: Running the e2e tests
+      #   uses: nick-fields/retry@v2
+      #   with:
+      #     timeout_seconds: 30000
+      #     max_attempts: 1
+      #     retry_on: error
+      #     command: d tests/e2e && npm run test:e2e
+
+      #  cd tests/e2e && npm run test setup.spec.ts
+      - name: Running the e2e tests
+        run: |
+          cd tests/e2e && npm run test admin.spec.ts
+
+        env:
+          CI: true
+          ADMIN: ${{ secrets.ADMIN }}
+          ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
+          VENDOR: ${{ secrets.VENDOR }}
+          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          CUSTOMER: ${{ secrets.CUSTOMER }}
+          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+
+      # - name: Generate Test Report
+      #   uses: phoenix-actions/test-reporting@v8
+      #   id: test-report               # Set ID reference for step
+      #   if: success() || failure()    # run this step even if previous step failed
+      #   with:
+      #     name: e2e tests result            # Name of the check run which will be created
+      #     path: artifacts/reports/junit.xml    # Path to test results
+      #     reporter: jest-junit
+      #     only-summary: 'false' # Allows you to generate only the summary.
+      #     list-suites: 'all'  # Limits which test suites are listed: 'all', 'failed'
+      #     list-tests: 'all'       # Limits which test cases are listed: 'all','failed', 'none'
+      #     fail-on-error: 'true'   # Set action as failed if test report contains any failed test
+
+      # - name: Test results
+      #   run: |
+      #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
+
+
+      - name: Archive playwright artifacts (screenshots, HTML snapshots, Reports)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report
+          if-no-files-found: ignore
+          retention-days: 30
+
+  # publishTestResults:
+  #   name: Publish Test Results
+  #   runs-on: ubuntu-latest
+  #   if: always()
+  #   steps:
       # - name: Download artifacts
       #   uses: actions/download-artifact@v2
       #   id: download
@@ -153,6 +152,6 @@ jobs:
       #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
       #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
         
-      - name: Test results
-        run: |
-          echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+      # - name: Test results
+      #   run: |
+      #     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"

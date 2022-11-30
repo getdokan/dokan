@@ -4,7 +4,6 @@ import { LoginPage } from '../pages/loginPage'
 import { AdminPage } from '../pages/adminPage'
 import { CustomerPage } from '../pages/customerPage'
 import { VendorPage } from '../pages/vendorPage'
-import { ApiUtils } from '../utils/apiUtils'
 
 // test.beforeAll(async ({ page }) => { });
 // test.afterAll(async ({ page }) => { });
@@ -13,13 +12,6 @@ import { ApiUtils } from '../utils/apiUtils'
 
 
 test.describe('Admin functionality test', () => {
-
-    test('check active plugins ', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
-        let activePlugins = (await apiUtils.getAllPluginByStatus('active')).map(a => a.plugin)
-        expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins))
-        // console.log(activePlugins)
-    })
 
     test('admin can login', async ({ page }) => {
         const loginPage = new LoginPage(page)
