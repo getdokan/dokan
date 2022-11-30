@@ -227,7 +227,7 @@ export const endPoints = {
         // orders
         getAllOrders: `${SERVER_URL}/wp-json/wc/v3/orders`,
         getSingleOrder: (orderId: string) => `${SERVER_URL}/wp-json/wc/v3/orders/${orderId}`,
-        createOrder: `${SERVER_URL}/wp-json/wc/v3/customers/`,
+        createOrder: `${SERVER_URL}/wp-json/wc/v3/orders/`,
         updateOrder: (orderId: string) => `${SERVER_URL}/wp-json/wc/v3/orders/${orderId}`,
         deleteOrder: (orderId: string) => `${SERVER_URL}/wp-json/wc/v3/orders/${orderId}`,
         updateBatchOrders: `${SERVER_URL}/wp-json/wc/v3/orders/batch`,

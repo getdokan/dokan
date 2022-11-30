@@ -24,6 +24,7 @@ test.describe('Admin functionality test', () => {
         const adminPage = new AdminPage(page)
         await loginPage.adminLogin(data.admin)
         await loginPage.adminLogout()
+        expect('1').toBe('2')
     })
 
     // test('admin can set dokan setup wizard',async ({page}) => { . //todo

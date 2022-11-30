@@ -95,6 +95,8 @@ jobs:
       - name: Running the e2e tests
         run: |
           cd tests/e2e && npm run test admin.spec.ts
+          ls
+          cd tests/e2e/playwright-report
 
         env:
           CI: true
@@ -112,7 +114,7 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: e2e tests result            # Name of the check run which will be created
-          path: playwright-report/results.xml    # Path to test results
+          path: tests/e2e/playwright-report/results.xml    # Path to test results
           reporter: jest-junit
           only-summary: 'false' # Allows you to generate only the summary.
           list-suites: 'all'  # Limits which test suites are listed: 'all', 'failed'
