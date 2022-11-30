@@ -62,6 +62,18 @@ export class ApiUtils {
 
 
     /**
+     * folloew store methods
+     */
+
+    // follow unfollow store
+    async followUnfollowStore(sellerId: string) {
+        let response = await this.request.post(endPoints.followUnfollowStore, { data: { vendor_id: sellerId } })
+        let responseBody = await response.json()
+        console.log(responseBody)
+        return responseBody
+    }
+
+    /**
      * product api methods
      */
 
@@ -864,9 +876,9 @@ export class ApiUtils {
     // reviews
 
     //create product review
-    async createProductReview(product: object,review: object) {
+    async createProductReview(product: object, review: object) {
         let [, productId] = await this.createProduct(product)
-        let response = await this.request.post(endPoints.wc.createReview, { data: {...review, product_id: productId} })
+        let response = await this.request.post(endPoints.wc.createReview, { data: { ...review, product_id: productId } })
         let responseBody = await response.json()
         let reviewId = responseBody.id
         // console.log(responseBody)

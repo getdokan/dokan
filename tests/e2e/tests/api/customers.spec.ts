@@ -17,8 +17,8 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('customers api test', () => {
 
-    //TODO: need to send vendor credentials for vendor info
-    //TODO: prerequisite => customers
+    //TODO: need to send admin/vendor credentials 
+
     test('get all customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllCustomers)
         let responseBody = await response.json()

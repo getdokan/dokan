@@ -6,8 +6,11 @@ import { payloads } from '../../utils/payloads'
 
 
 test.beforeAll(async ({ request }) => {
-    // let apiUtils = new ApiUtils(request)
-    // await apiUtils.createCoupon(payloads.createStore()) // TODO: create store
+    let apiUtils = new ApiUtils(request)
+    let [body, sellerId] = await apiUtils.createStore(payloads.createStore())
+    console.log(body)
+    console.log(sellerId)
+    await apiUtils.followUnfollowStore(sellerId)
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -18,11 +21,10 @@ test.beforeAll(async ({ request }) => {
 test.describe('follow store api test', () => {
 
     //TODO: need to send customer credentials 
-    //TODO: prerequisite => store , store id
+
     test('get store follow status', async ({ request }) => {
         let apiUtils = new ApiUtils(request) 
-        let allStores = await apiUtils.getAllStores() // TODO: replace with create store
-        let sellerId = allStores[0].id
+        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreFollowStatus(sellerId))
         let responseBody = await response.json()
@@ -34,17 +36,16 @@ test.describe('follow store api test', () => {
 
 
 
-    test('follow-unfollow a store', async ({ request }) => {
-        let apiUtils = new ApiUtils(request) 
-        let allStores = await apiUtils.getAllStores() // TODO: replace with create store
-        let sellerId = allStores[0].id
+    // test('follow-unfollow a store', async ({ request }) => {
+    //     let apiUtils = new ApiUtils(request) 
+    //     let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-        let response = await request.post(endPoints.followUnfollowStore, { data: { vendor_id: sellerId } })
-        let responseBody = await response.json()
-        console.log(responseBody)
+    //     let response = await request.post(endPoints.followUnfollowStore, { data: { vendor_id: sellerId } })
+    //     let responseBody = await response.json()
+    //     console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-    });
+    //     expect(response.ok()).toBeTruthy()
+    //     expect(response.status()).toBe(200)
+    // });
 
 });
