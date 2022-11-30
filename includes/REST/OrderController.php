@@ -255,6 +255,9 @@ class OrderController extends DokanRESTController {
         // Format the order status.
         $data['status'] = 'wc-' === substr( $data['status'], 0, 3 ) ? substr( $data['status'], 3 ) : $data['status'];
 
+        // Order shipment status.
+        $data['order_shipment'] = function_exists( 'dokan_get_order_shipment_current_status' ) ? dokan_get_order_shipment_current_status( $data['id'], true ) : '--';
+
         // Format line items.
         foreach ( $format_line_items as $key ) {
             $data[ $key ] = array_values( array_map( array( $this, 'get_order_item_data' ), $data[ $key ] ) );
@@ -312,6 +315,7 @@ class OrderController extends DokanRESTController {
             'fee_lines'            => $data['fee_lines'],
             'coupon_lines'         => $data['coupon_lines'],
             'refunds'              => $data['refunds'],
+            'order_shipment'       => $data['order_shipment'],
         );
     }
 
