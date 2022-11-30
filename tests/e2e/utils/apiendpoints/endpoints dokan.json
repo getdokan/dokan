@@ -6339,7 +6339,7 @@
                 ]
             }
         },
-        "/dokan/v1/reviews": {
+        "/dokan/v1/reviewreviewreviewreviews": {
             "namespace": "dokan/v1",
             "methods": [
                 "GET"
