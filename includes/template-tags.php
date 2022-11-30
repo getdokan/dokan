@@ -469,7 +469,7 @@ function dokan_get_dashboard_nav() {
         /**
          * Filters the vendor dashboard submenu item for each menu.
          *
-         * @since DOKAN_SINCE
+         * @since 3.7.7
          *
          * @param array<string,array> $submenu_items Associative array of submenu items.
          * @param string              $menu_key      Key of the corresponding menu.

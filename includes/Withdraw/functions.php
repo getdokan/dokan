@@ -270,7 +270,7 @@ function dokan_bank_payment_available_fields() {
  * Dokan bank payment fields placeholders.
  * Anyone can update any placeholder using 'dokan_bank_payment_fields_placeholders'
  *
- * @since DOKAN_SINCE
+ * @since 3.7.7
  *
  * @return array
  */
