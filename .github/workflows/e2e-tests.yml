@@ -24,8 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: 'e2e-pw'
-
+          ref: "e2e-pw"
 
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
@@ -33,64 +32,56 @@ jobs:
           node-version: 14
           cache: "npm"
 
-
       - name: Clone dokan-pro
         uses: actions/checkout@v3
         with:
           repository: weDevsOfficial/dokan-pro
           token: ${{ secrets.ACCESS_TOKEN }}
-          path: 'plugins/dokan-pro'
-          ref: 'develop'
-
+          path: "plugins/dokan-pro"
+          ref: "develop"
 
       - name: Composer install and build (Dokan-lite)
         run: |
-            composer install
-            composer update
-            composer dump-autoload -o
-            
+          composer install
+          composer update
+          composer dump-autoload -o
 
       - name: Npm install and build (Dokan-lite)
         run: |
-            npm i
-            npm run dev:build
-            grunt
-            
+          npm i
+          npm run dev:build
+          grunt
 
       - name: Composer install and build (Dokan-pro)
         run: |
-            cd plugins/dokan-pro
-            composer install
-            composer update
-            composer dump-autoload -o
-            
+          cd plugins/dokan-pro
+          composer install
+          composer update
+          composer dump-autoload -o
 
       - name: Npm install and build (Dokan-pro)
         run: |
-            cd plugins/dokan-pro
-            npm i
-            npm run dev:build
-            npm run build
-
+          cd plugins/dokan-pro
+          npm i
+          npm run dev:build
+          npm run build
 
       - name: Install dependencies & Setup WordPress Env
         run: |
-           cd tests/e2e 
-           ls
-           npm ci
-           npm run start-env
-
+          cd tests/e2e 
+          ls
+          npm ci
+          npm run start-env
 
       - name: Activate storefront
         run: |
-           cd tests/e2e 
-           npm run activate-sf-test
-
+          cd tests/e2e 
+          npm run activate-sf-test
 
       - name: Setup for e2e tests
         run: |
-           cd tests/e2e 
-           npm run test:e2e-setup
+          cd tests/e2e 
+          npm run test:e2e-setup
 
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
@@ -103,9 +94,8 @@ jobs:
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-          cd tests/e2e && npm run test admin.spec.ts 
-        
-        
+          cd tests/e2e && npm run test admin.spec.ts
+
         env:
           CI: true
           ADMIN: ${{ secrets.ADMIN }}
@@ -123,7 +113,7 @@ jobs:
       #   with:
       #     name: e2e tests result            # Name of the check run which will be created
       #     path: artifacts/reports/junit.xml    # Path to test results
-      #     reporter: jest-junit  
+      #     reporter: jest-junit
       #     only-summary: 'false' # Allows you to generate only the summary.
       #     list-suites: 'all'  # Limits which test suites are listed: 'all', 'failed'
       #     list-tests: 'all'       # Limits which test cases are listed: 'all','failed', 'none'
@@ -148,13 +138,13 @@ jobs:
           path: tests/e2e/playwright-report
           if-no-files-found: ignore
           retention-days: 30
-      
-      - name: Publish HTML report 
+
+      - name: Publish HTML report
         if: always() # We want this to always run, even if test fail prior to this step running
         uses: peaceiris/actions-gh-pages@v3.7.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: tests/e2e/playwright-report # This is where index.html will be output
           keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-          user_name: 'github-actions[bot]' # This will be the username that gets stamped in the repo commit
-          user_email: 'github-actions[bot]@users.noreply.github.com' # This will be the user email that gets stamped in the repo commit 
+          user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+          user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit

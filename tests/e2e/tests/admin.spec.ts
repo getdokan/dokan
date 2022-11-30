@@ -49,12 +49,12 @@ test.describe('Admin functionality test', () => {
 
     // })
 
-    test('admin can add simple product', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        const adminPage = new AdminPage(page)
-        await loginPage.adminLogin(data.admin)
-        await adminPage.addSimpleProduct(data.product.simple)
-    })
+    // test('admin can add simple product', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     const adminPage = new AdminPage(page)
+    //     await loginPage.adminLogin(data.admin)
+    //     await adminPage.addSimpleProduct(data.product.simple)
+    // })
 
     //    test.skip('admin can add variable product',async ({page}) => {
     //         const loginPage = new LoginPage(page)
