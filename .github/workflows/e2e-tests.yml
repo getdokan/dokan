@@ -154,4 +154,4 @@ jobs:
         
       - name: Test results
         run: |
-          echo "url is https://${{GITHUB_REPOSITORY_OWNER}}.github.io/${{GITHUB_REPOSITORY}}"
+          echo "url is https://${{env.GITHUB_REPOSITORY_OWNER}}.github.io/${{env.GITHUB_REPOSITORY}}"
