@@ -2,17 +2,9 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
 // api 
-const httpCredentials = {
-    username: process.env.ADMIN,
-    password: process.env.ADMIN_PASSWORD,
-};
-// const httpCredentials = {
-//   username: 'shashwata',
-//   password: 'fzyemm6nu2f0nal7agzs',
-// };
-const btoa = (str: string) => Buffer.from(str).toString('base64');
-const credentialsBase64 = btoa(`${httpCredentials.username}:${httpCredentials.password}`);
-// const basicAuth = 'Basic ' + Buffer.from(httpCredentials.username + ':' + httpCredentials.password).toString('base64');
+let username = process.env.ADMIN
+let password = process.env.ADMIN_PASSWORD
+const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 
 
@@ -49,39 +41,29 @@ const config: PlaywrightTestConfig = {
     workers: 1,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     // reporter: process.env.CI ? 'github' : 'list',
-    // reporter: process.env.CI ? 'github' : [['html', { open: 'never' }]],
+    reporter: process.env.CI ? 'html' : [['html', { open: 'never' }]],
     // reporter: [['html', { open: 'never' }]],
     // reporter: [['junit', { outputFile: '.playwright-report/junit/test-results.xml' }]],
+
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     // globalSetup: require.resolve('./global-setup'),
     use: {
-        // storageState: 'storageState.json',
-        // viewport: {width: 500, height: 500},//TODO: start maximized
-        // viewport: {width: 1920, height: 1080},
-        // viewport: null,
-        //Whether to run tests on headless or non-headless mode
-        headless: false,
-        // headless: true,
-        //whether to slow down test execution by provided seconds
-        launchOptions: {
-            // args: ['--start-fullscreen'],
-            slowMo: 2,
-        },
-        /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 0,
-        /* Base URL to use in actions like `await page.goto('/')`. */
-        // baseURL: 'http://dokan4.test',
-        baseURL: process.env.BASE_URL,
-
+        // storageState: 'storageState.json',  //location of sign in state
+        headless: process.env.CI ? !!process.env.CI : false,  //Whether to run tests on headless or non-headless mode
+        actionTimeout: 0,   // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
+        baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889',  //Base URL 
         ignoreHTTPSErrors: true,  //Whether to ignore HTTPS errors during navigation.
         trace: 'on-first-retry',  //Record trace only when retrying a test for the first time.
         screenshot: 'only-on-failure',  //Capture screenshot after each test failure.
         video: 'on-first-retry',  //Record video only when retrying a test for the first time.
-
-        //api
+        // launch options
+        launchOptions: {
+            slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) : 0,  //whether to slow down test execution by provided seconds
+        },
+        // api request headers 
         extraHTTPHeaders: {
             'Accept': '*/*',
-            'Authorization': `Basic ${credentialsBase64}`,
+            'Authorization': basicAuth,
         },
     },
 
