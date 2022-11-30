@@ -7,7 +7,6 @@ import { payloads } from '../../utils/payloads'
 
 test.beforeAll(async ({ request }) => {
     let apiUtils = new ApiUtils(request)
-    let [, productId] = await apiUtils.createProduct(payloads.createProduct())
     await apiUtils.createCoupon(payloads.createProduct())
 
 });

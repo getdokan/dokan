@@ -9,7 +9,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe(' api test', () => {
+test.describe.skip(' api test', () => {
 
     // test('get all ', async ({ request }) => {
     //     await request.post('http://dokan1.test/wp-admin', {

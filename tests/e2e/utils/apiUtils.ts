@@ -220,7 +220,7 @@ export class ApiUtils {
 
     // create coupon
     async createCoupon(product: object) {
-        let [, productId] = await this.createProduct(product)
+        let [, productId] = await this.createProduct(product) // TODO: might need to seperate createProduct from createCoupon,product review,....
         let payloadCoupon = payloads.createCoupon()
         payloadCoupon.product_ids = [productId]
         // console.log(payloadCoupon)
