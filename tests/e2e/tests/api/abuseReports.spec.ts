@@ -12,7 +12,7 @@ import { payloads } from '../../utils/payloads'
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe('abuse report api test', () => {
+test.describe.skip('abuse report api test', () => {
 
     //TODO: need to send admin credentials 
     //TODO: product, product abuse report

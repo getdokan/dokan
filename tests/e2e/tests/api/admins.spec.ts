@@ -12,7 +12,9 @@ import { payloads } from '../../utils/payloads'
 test.describe('admin api test', () => {
 
     //TODO: need to send admin credentials 
+
     test('get admin report overview', async ({ request }) => {
+        console.log(endPoints.getAdminReportOverview)
         let response = await request.get(endPoints.getAdminReportOverview)
         let responseBody = await response.json()
         console.log(responseBody)
