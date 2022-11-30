@@ -97,6 +97,7 @@ jobs:
           cd tests/e2e && npm run test admin.spec.ts
 
       - name: See result directory
+        run: |
           cd tests/e2e
           ls
           cd tests/e2e/playwright-report
