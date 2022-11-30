@@ -6320,7 +6320,12 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       if (!this.awaitingSearch) {
         setTimeout(function () {
-          var searchText = _this4.$refs.searchInSettings.value.toLowerCase();
+          var searchText = _this4.$refs.searchInSettings.value; // If more than two (space/tab) found, replace with space > trim > lowercase.
+
+          searchText = searchText.replace(/\s\s+/g, ' ').trim().toLowerCase(); // Create an empty string search first to resolve all previous-state issues.
+
+          _this4.doSearch(''); // Search now with searchText.
+
 
           _this4.doSearch(searchText);
 
@@ -6337,21 +6342,33 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       var settingFields = {};
       var filteredSettingSections = [];
       var settingSections = [];
-      var dokan_setting_fields = dokan.settings_fields;
-      Object.keys(dokan_setting_fields).forEach(function (section, index) {
-        Object.keys(dokan_setting_fields[section]).forEach(function (field, i) {
-          if (dokan_setting_fields[section][field].type === "sub_section") {
-            return;
-          }
+      var dokanSettingFields = dokan.settings_fields;
+      var dokanSettingSections = dokan.settings_sections;
+      Object.keys(dokanSettingFields).forEach(function (section, index) {
+        Object.keys(dokanSettingFields[section]).forEach(function (field) {
+          var label = ''; // Append section field label and description.
 
-          var label = dokan_setting_fields[section][field]['label'].toLowerCase();
+          if ('sub_section' !== dokanSettingFields[section][field].type) {
+            label += " ".concat(dokanSettingFields[section][field]['label'], " ").concat(dokanSettingFields[section][field]['desc']);
+          } // Append section label and description.
+
+
+          Object.keys(dokanSettingSections).forEach(function (foundSectionIndex) {
+            var foundSection = dokanSettingSections[foundSectionIndex];
+
+            if ((foundSection === null || foundSection === void 0 ? void 0 : foundSection.id) === section) {
+              label += " ".concat(foundSection.title, " ").concat(foundSection.description, " ").concat(foundSection.settings_description);
+            }
+          }); // Make the label lowercase, as `searchText` is also like that.
+
+          label = label.toLocaleLowerCase();
 
           if (label && label.includes(searchText)) {
             if (!settingFields[section]) {
               settingFields[section] = {};
             }
 
-            settingFields[section][field] = dokan_setting_fields[section][field];
+            settingFields[section][field] = dokanSettingFields[section][field];
 
             if (filteredSettingSections.indexOf(section) === -1) {
               filteredSettingSections.push(section);
@@ -6360,7 +6377,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         });
       });
       var currentTab = 0;
-      Object.keys(dokan.settings_sections).forEach(function (section, index) {
+      Object.keys(dokan.settings_sections).forEach(function (section) {
         if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
           if (!currentTab) {
             _this5.changeTab(dokan.settings_sections[section]);
