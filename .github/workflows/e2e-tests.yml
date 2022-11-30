@@ -154,5 +154,4 @@ jobs:
         
       - name: Test results
         run: |
-          echo 'url is https://${{GITHUB_REPOSITORY_OWNER}}.github.io/${{GITHUB_REPOSITORY/#/*/}}`
-          https://shashwatahalder01.github.io/dokan/"
+          echo "url is https://${{GITHUB_REPOSITORY_OWNER}}.github.io/${{GITHUB_REPOSITORY}}"
