@@ -861,6 +861,18 @@ export class ApiUtils {
     }
 
 
+    // reviews
+
+    //create product review
+    async createProductReview(product: object,review: object) {
+        let [, productId] = await this.createProduct(product)
+        let response = await this.request.post(endPoints.wc.createReview, { data: {...review, product_id: productId} })
+        let responseBody = await response.json()
+        let reviewId = responseBody.id
+        // console.log(responseBody)
+        // console.log(reviewId)
+        return [responseBody, reviewId]
+    }
 
 
     // categories

@@ -95,8 +95,12 @@ jobs:
       - name: Running the e2e tests
         run: |
           cd tests/e2e && npm run test admin.spec.ts
+
+      - name: See result directory
+          cd tests/e2e
           ls
           cd tests/e2e/playwright-report
+          ls
 
         env:
           CI: true

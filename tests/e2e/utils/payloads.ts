@@ -51,6 +51,16 @@ export const payloads = {
     return { regular_price: data.product.price.price_random(), }
   },
 
+  createProductReview: () => {
+    return {
+      product_id: '',
+      review: 'Test_review' + faker.datatype.uuid(),
+      reviewer: faker.name.fullName(),
+      reviewer_email: faker.internet.email(),
+      rating: faker.datatype.number({min: 1, max: 5}),
+    }
+  },
+
   createCoupon: () => {
     return {
       code: 'VC_' + faker.datatype.uuid(),
@@ -565,7 +575,7 @@ export const payloads = {
   createCustomer: () => {
     return {
       email: faker.internet.email(),
-      first_name: faker.name.firstName('male') + + faker.datatype.uuid() ,
+      first_name: faker.name.firstName('male') + + faker.datatype.uuid(),
       last_name: faker.name.lastName('male'),
       role: 'customer',
       username: faker.name.firstName('male'),
