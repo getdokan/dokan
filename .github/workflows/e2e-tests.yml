@@ -103,9 +103,8 @@ jobs:
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-          cd tests/e2e && npm run test admins.spec.ts --reporter=html
-          cd tests/e2e/playwright-report 
-          ls
+          cd tests/e2e && npm run test admin.spec.ts --reporter=html
+        
         
         env:
           CI: true
@@ -134,6 +133,13 @@ jobs:
       #   run: |
       #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
 
+      - name: Test results
+        run: |
+          cd tests/e2e
+          ls
+          cd playwright-report
+          ls
+
       - name: Archive playwright artifacts (screenshots, HTML snapshots)
         uses: actions/upload-artifact@v3
         if: always()
@@ -142,14 +148,6 @@ jobs:
           path: tests/e2e/playwright-report
           if-no-files-found: ignore
           retention-days: 30
-
-      - name: Archive flaky tests report
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: flaky-tests-report
-          path: flaky-tests
-          if-no-files-found: ignore
       
       - name: Publish HTML report 
         if: always() # We want this to always run, even if test fail prior to this step running
