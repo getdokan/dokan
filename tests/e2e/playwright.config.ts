@@ -1,5 +1,7 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
+require('dotenv').config();
+
 
 // api 
 let username = process.env.ADMIN
@@ -7,18 +9,14 @@ let password = process.env.ADMIN_PASSWORD
 const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-require('dotenv').config();
-
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
 const config: PlaywrightTestConfig = {
+    // test directory
     testDir: './tests',
+
     /* Maximum time one test can run for. */
     timeout: 120 * 1000,
     // timeout: 40 * 1000,
@@ -31,19 +29,22 @@ const config: PlaywrightTestConfig = {
     },
     /* Run tests in files in parallel */
     // fullyParallel: true,
+
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     // forbidOnly: !!process.env.CI,
+
     /* Retry on CI only */
     // retries: process.env.CI ? 1 : 0,
     retries: 0,
+
     /* Opt out of parallel tests on CI. */
     // workers: process.env.CI ? 1 : undefined,
     workers: 1,
+
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    // reporter: process.env.CI ? 'github' : 'list',
-    reporter: process.env.CI ? [['html'],['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }]],
+    reporter: [['junit', { outputFile: 'playwright-report/results.xml' }]],
+    // reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }]],
     // reporter: [['html', { open: 'never' }]],
-    // reporter: [['junit', { outputFile: '.playwright-report/junit/test-results.xml' }]],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     // globalSetup: require.resolve('./global-setup'),
