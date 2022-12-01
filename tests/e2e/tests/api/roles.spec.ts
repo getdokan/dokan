@@ -14,7 +14,7 @@ test.describe('roles api test', () => {
 test('get all user roles ', async ({ request }) => {
     let response = await request.get(endPoints.getAllUserRoles)
     let responseBody = await response.json()
-    console.log(responseBody)
+    // console.log(responseBody)
 
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)

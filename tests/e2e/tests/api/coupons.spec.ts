@@ -22,7 +22,7 @@ test.describe('coupon api test', () => {
     test('get all coupons', async ({ request }) => {
         let response = await request.get(endPoints.getAllCoupons)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -34,7 +34,7 @@ test.describe('coupon api test', () => {
 
         let response = await request.get(endPoints.getSingleCoupon(couponId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -49,7 +49,7 @@ test.describe('coupon api test', () => {
 
         let response = await request.post(endPoints.createCoupon, { data: payloads.createCoupon() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -62,7 +62,7 @@ test.describe('coupon api test', () => {
 
         let response = await request.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -75,7 +75,7 @@ test.describe('coupon api test', () => {
 
         let response = await request.delete(endPoints.deleteCoupon(couponId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

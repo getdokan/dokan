@@ -21,7 +21,7 @@ test.describe('stores api test', () => {
     test('get all stores check check_store_availability', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoresCheck)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -30,7 +30,7 @@ test.describe('stores api test', () => {
     test('get all stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllStores)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -92,7 +92,7 @@ test.describe('stores api test', () => {
 
         let response = await request.get(endPoints.getSingleStore(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -148,7 +148,7 @@ test.describe('stores api test', () => {
     test('create a store', async ({ request }) => {
         let response = await request.post(endPoints.createStore, { data: payloads.createStore() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -160,7 +160,7 @@ test.describe('stores api test', () => {
 
         let response = await request.put(endPoints.updateStore(sellerId), { data: payloads.updateStore() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -172,7 +172,7 @@ test.describe('stores api test', () => {
 
         let response = await request.delete(endPoints.deleteStore(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -181,7 +181,7 @@ test.describe('stores api test', () => {
     test('get store current visitor', async ({ request }) => {
         let response = await request.get(endPoints.getStoreCurrentVisitor)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -193,7 +193,7 @@ test.describe('stores api test', () => {
 
         let response = await request.get(endPoints.getStoreStats(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -205,7 +205,7 @@ test.describe('stores api test', () => {
 
         let response = await request.get(endPoints.getStoreCategories(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -218,7 +218,7 @@ test.describe('stores api test', () => {
 
         let response = await request.get(endPoints.getStoreProducts(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -231,7 +231,7 @@ test.describe('stores api test', () => {
 
         let response = await request.get(endPoints.getStoreReviews(sellerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -243,7 +243,7 @@ test.describe('stores api test', () => {
 
         let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -255,7 +255,7 @@ test.describe('stores api test', () => {
 
         let response = await request.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -267,7 +267,7 @@ test.describe('stores api test', () => {
 
         let response = await request.post(endPoints.adminContactStore(sellerId), { data: payloads.adminContactStore })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -279,7 +279,7 @@ test.describe('stores api test', () => {
 
         let response = await request.post(endPoints.adminEmailStore(sellerId), { data: payloads.adminEnailStore })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

@@ -69,7 +69,7 @@ export class ApiUtils {
     async followUnfollowStore(sellerId: string) {
         let response = await this.request.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } })
         let responseBody = await response.json()
-        console.log(responseBody)
+       //  console.log(responseBody)
         return responseBody
     }
 
@@ -305,14 +305,23 @@ export class ApiUtils {
         return orderId
     }
 
+    // update order status
+    async updateOrderStatus(orderId: string, orderStatus: string) {
+        let response = await this.request.put(endPoints.updateOrder(orderId), { data: { status: orderStatus } })
+        let responseBody = await response.json()
+        // console.log(responseBody)/
+        return responseBody
+    }
+
     /**
     * order notes api methods
     */
 
     // create attribute term
-    async createOrderNote() {
-        let orderId = await this.getOrderId()
-        let response = await this.request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote })
+    async createOrderNote(order: object, orderNote: object) {
+        // let orderId = await this.getOrderId()
+        let [, orderId] = await this.createOrder(order)
+        let response = await this.request.post(endPoints.createOrderNote(orderId), { data: orderNote })
         let responseBody = await response.json()
         let orderNoteId = responseBody.id
         // console.log(responseBody)
@@ -591,7 +600,7 @@ export class ApiUtils {
     async updateBatchAnnouncements(action: string, allIds: string[]) {
         let response = await this.request.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds } })
         let responseBody = await response.json()
-        console.log(responseBody)
+       //  console.log(responseBody)
         return responseBody
     }
 
@@ -648,7 +657,7 @@ export class ApiUtils {
     async updateBatchStoreReviews(action: string, allIds: string[]) {
         let response = await this.request.put(endPoints.updateBatchStoreReviews, { data: { [action]: allIds } })
         let responseBody = await response.json()
-        console.log(responseBody)
+       //  console.log(responseBody)
         return responseBody
     }
 
@@ -762,7 +771,7 @@ export class ApiUtils {
     async createUser(payload: object) {  // administrator,  customer, seller
         let response = await this.request.post(endPoints.wp.createUser, { data: payload })
         let responseBody = await response.json()
-        console.log(responseBody)
+       //  console.log(responseBody)
         return responseBody
     }
 
@@ -942,13 +951,38 @@ export class ApiUtils {
     // order
 
     // create order
-    async createOrder(payload: object) {
+    async createOrder(order: any) {
+        let [, productId] = await this.createProduct(payloads.createProduct())
+        let payload = order
+        payload.line_items[0].product_id = productId
         let response = await this.request.post(endPoints.wc.createOrder, { data: payload })
         let responseBody = await response.json()
         let orderId = responseBody.id
         // console.log(responseBody)
         // console.log(orderId)
         return [responseBody, orderId]
+    }
+
+    // create complete order
+    async createOrderWithStatus(order: any, status: string) {
+        let [, orderId] = await this.createOrder(order)
+        await this.updateOrderStatus(orderId, status)
+        // console.log(orderId)
+        return orderId
+    }
+
+    // refund
+
+    // create refund
+    async createRefund(order: object, refund: object) {
+        let [, orderId] = await this.createOrder(payloads.createOrder)
+
+        let response = await this.request.post(endPoints.wc.createRefund(orderId), { data: refund })
+        let responseBody = await response.json()
+        let refundId = responseBody.id
+        // console.log(responseBody)
+        // console.log(refundId)
+        return [responseBody, refundId]
 
 
     }

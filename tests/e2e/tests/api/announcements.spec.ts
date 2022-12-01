@@ -21,7 +21,7 @@ test.describe('announcements api test', () => {
     test('get all announcements', async ({ request }) => {
         let response = await request.get(endPoints.getAllAnnouncements)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -33,7 +33,7 @@ test.describe('announcements api test', () => {
 
         let response = await request.get(endPoints.getSingleAnnouncement(announcementId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -42,7 +42,7 @@ test.describe('announcements api test', () => {
     test('create a announcement', async ({ request }) => {
         let response = await request.post(endPoints.createAnnouncement, { data: payloads.createAnnouncemnt })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -55,7 +55,7 @@ test.describe('announcements api test', () => {
 
         let response = await request.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -68,7 +68,7 @@ test.describe('announcements api test', () => {
 
         let response = await request.delete(endPoints.deleteAnnouncement(announcementId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -81,7 +81,7 @@ test.describe('announcements api test', () => {
 
         let response = await request.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

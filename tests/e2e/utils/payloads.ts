@@ -77,8 +77,9 @@ export const payloads = {
 
   updateOrder: {
     status: 'wc-pending'
-
   },
+
+
 
   createOrder: {
     payment_method: "bacs",
@@ -96,6 +97,7 @@ export const payloads = {
       email: "john.doe@example.com",
       phone: "(555) 555-5555"
     },
+
     shipping: {
       first_name: "John",
       last_name: "Doe",
@@ -117,6 +119,58 @@ export const payloads = {
         method_id: "flat_rate",
         method_title: "Flat Rate",
         total: "10.00"
+      }
+    ]
+  },
+
+  createOrderCod: {
+    payment_method: "cod",
+    payment_method_title: "Cash on delivery",
+    set_paid: true,
+    billing: {
+      first_name: "John",
+      last_name: "Doe",
+      address_1: "969 Market",
+      address_2: "",
+      city: "San Francisco",
+      state: "CA",
+      postcode: "94103",
+      country: "US",
+      email: "john.doe@example.com",
+      phone: "(555) 555-5555"
+    },
+
+    shipping: {
+      first_name: "John",
+      last_name: "Doe",
+      address_1: "969 Market",
+      address_2: "",
+      city: "San Francisco",
+      state: "CA",
+      postcode: "94103",
+      country: "US"
+    },
+    line_items: [
+      {
+        product_id: 93,
+        quantity: 1
+      },
+    ],
+    shipping_lines: [
+      {
+        method_id: "flat_rate",
+        method_title: "Flat Rate",
+        total: "10.00"
+      }
+    ]
+  },
+
+  createRefund:
+  {
+    api_refund : false,
+    line_items: [
+      {
+        refund_total: 1
       }
     ]
   },
@@ -616,10 +670,10 @@ export const payloads = {
   createCustomer: () => {
     return {
       email: faker.internet.email(),
-      first_name: faker.name.firstName('male') + + faker.datatype.uuid(),
-      last_name: faker.name.lastName('male'),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
       role: 'customer',
-      username: faker.name.firstName('male'),
+      username: faker.name.firstName() + faker.datatype.uuid(),
       password: '01password01',
       billing: {
         first_name: 'customer1',
@@ -651,8 +705,8 @@ export const payloads = {
   updateCustomer: () => {
     return {
       email: faker.internet.email(),
-      first_name: faker.name.firstName('male'),
-      last_name: faker.name.lastName('male'),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
       role: 'customer',
       password: '01password01',
       billing: {
@@ -687,8 +741,8 @@ export const payloads = {
     return {
       id: '',
       email: faker.internet.email(),
-      first_name: faker.name.firstName('male'),
-      last_name: faker.name.lastName('male'),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
       role: 'customer',
       password: '01password01',
       billing: {
@@ -785,14 +839,14 @@ export const payloads = {
   },
   createStore: () => {
     return {
-      user_login: faker.name.firstName('male') + faker.datatype.uuid(),
+      user_login: faker.name.firstName() + faker.datatype.uuid(),
       user_pass: "01dokan01",
       role: "seller",
-      username: faker.name.firstName('male') + faker.datatype.uuid(), //TODO: need unique user for vendor, store, customer
+      username: faker.name.firstName() + faker.datatype.uuid(), //TODO: need unique user for vendor, store, customer
       email: faker.internet.email(),
-      store_name: faker.name.firstName('male'),
-      first_name: faker.name.firstName('male'),
-      last_name: faker.name.lastName('male'),
+      store_name: faker.name.firstName(),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
       social: {
         fb: "http://dokan.test",
         youtube: "http://dokan.test",
@@ -874,9 +928,9 @@ export const payloads = {
   updateStore: () => {
     return {
       email: faker.internet.email(),
-      store_name: faker.name.firstName('male'),
-      first_name: faker.name.firstName('male'),
-      last_name: faker.name.lastName('male'),
+      // store_name: faker.name.firstName(),
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
       social: {
         fb: "http://dokan.test",
         youtube: "http://dokan.test",

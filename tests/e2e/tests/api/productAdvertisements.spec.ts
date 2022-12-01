@@ -19,7 +19,7 @@ test.describe('product advertisement api test', () => {
     test('get all advertised product stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductAdvertisementStores)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -28,7 +28,7 @@ test.describe('product advertisement api test', () => {
     test('get all advertised product', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductAdvertisements)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -41,7 +41,7 @@ test.describe('product advertisement api test', () => {
 
         let response = await request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -54,7 +54,7 @@ test.describe('product advertisement api test', () => {
 
         let response = await request.put(endPoints.expireProductAdvertisement(productAdvertisementId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -66,7 +66,7 @@ test.describe('product advertisement api test', () => {
 
         let response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -79,7 +79,7 @@ test.describe('product advertisement api test', () => {
 
         let response = await request.put(endPoints.updateBatchProductAdvertisements, { data: { ids: allproductAdvertisementIds, action: "delete" } })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

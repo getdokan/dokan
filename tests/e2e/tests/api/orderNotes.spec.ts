@@ -12,15 +12,14 @@ import { payloads } from '../../utils/payloads'
 test.describe('order note api test', () => {
 
 
-    //TODO: need to send vendor credentials for vendor info
-    //TODO: prerequisite : orders
+    //TODO: need to send vendor credentials 
     test('get all order notes', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, orderId,] = await apiUtils.createOrderNote()
+        let [, orderId,] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getAllOrderNotes(orderId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -28,11 +27,11 @@ test.describe('order note api test', () => {
 
     test('get single order note', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, orderId, orderNoteId] = await apiUtils.createOrderNote()
+        let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -45,7 +44,7 @@ test.describe('order note api test', () => {
 
         let response = await request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
@@ -54,11 +53,11 @@ test.describe('order note api test', () => {
 
     test('delete an order note', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let [, orderId, orderNoteId] = await apiUtils.createOrderNote()
+        let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

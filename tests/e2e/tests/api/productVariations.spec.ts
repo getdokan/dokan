@@ -12,15 +12,15 @@ import { payloads } from '../../utils/payloads'
 test.describe('product variation api test', () => {
 
 
-    //TODO: need to send vendor credentials for vendor info
-    // TODO: prerequisite variable product with variations
+    //TODO: need to send vendor credentials 
+
     test('get all product variations', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.get(endPoints.getAllProductVariations(productId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -34,7 +34,7 @@ test.describe('product variation api test', () => {
 
         let response = await request.get(endPoints.getSingleProductVariation(productId, variationId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -47,7 +47,7 @@ test.describe('product variation api test', () => {
 
         let response = await request.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -60,8 +60,8 @@ test.describe('product variation api test', () => {
 
         let response = await request.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() })
         let responseBody = await response.json()
-        console.log(responseBody)
-        console.log(responseBody)
+        // console.log(responseBody)
+  
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

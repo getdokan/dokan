@@ -17,7 +17,7 @@ test.describe('admin api test', () => {
         console.log(endPoints.getAdminReportOverview)
         let response = await request.get(endPoints.getAdminReportOverview)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -26,7 +26,7 @@ test.describe('admin api test', () => {
     test('get admin report summary', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportSummary)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -35,7 +35,7 @@ test.describe('admin api test', () => {
     test('get getAdminDashboardFeed', async ({ request }) => {
         let response = await request.get(endPoints.getAdminDashboardFeed)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -44,7 +44,7 @@ test.describe('admin api test', () => {
     test('get admin help', async ({ request }) => {
         let response = await request.get(endPoints.getAdminHelp)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -53,7 +53,7 @@ test.describe('admin api test', () => {
     test('get changelog lite', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogLite)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -62,7 +62,7 @@ test.describe('admin api test', () => {
     test('get changelog pro', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogPro)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -71,7 +71,7 @@ test.describe('admin api test', () => {
     test('get getAdminNotices', async ({ request }) => {
         let response = await request.get(endPoints.getAdminNotices)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -80,7 +80,7 @@ test.describe('admin api test', () => {
     test('get admin promo notices ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminPromoNotices)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -89,7 +89,7 @@ test.describe('admin api test', () => {
     test('get admin logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminLogs)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -98,7 +98,7 @@ test.describe('admin api test', () => {
     test('get admin export logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminExportLogs)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

@@ -18,7 +18,7 @@ test.describe('modules api test', () => {
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -31,7 +31,7 @@ test.describe('modules api test', () => {
 
         let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule]} })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

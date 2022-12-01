@@ -18,6 +18,10 @@ test.describe('refunds api test', () => {
 
 
     test('get all refunds', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        await apiUtils.createRefund(orderId, payloads.createRefund)
+
         let response = await request.get(endPoints.getAllRefunds)
         let responseBody = await response.json()
         console.log(responseBody)
@@ -26,14 +30,15 @@ test.describe('refunds api test', () => {
         expect(response.status()).toBe(200)
     });
 
-    // test('get all refunds by status', async ({ request }) => {
-    //     let response = await request.get(endPoints.getAllRefundsByStatus('pending')) // pending, cancelled, approved
-    //     let responseBody = await response.json()
-    //     console.log(responseBody)
+    test.only('get all refunds by status', async ({ request }) => {
+        // let response = await request.get(endPoints.getAllRefundsByStatus('pending')) // pending, cancelled, completed
+        let response = await request.get(endPoints.getAllRefundsByStatus('completed')) // pending, cancelled, completed
+        let responseBody = await response.json()
+        console.log(responseBody)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
-    // });
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+    });
 
     test.skip('approve a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)

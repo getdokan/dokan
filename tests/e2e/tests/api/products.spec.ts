@@ -20,7 +20,7 @@ test.describe('product api test', () => {
     test('get products summary', async ({ request }) => {
         let response = await request.get(endPoints.getProductsSummary)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -29,7 +29,7 @@ test.describe('product api test', () => {
     test('get top rated products', async ({ request }) => {
         let response = await request.get(endPoints.getTopRatedProducts)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -38,7 +38,7 @@ test.describe('product api test', () => {
     test('get best selling products', async ({ request }) => {
         let response = await request.get(endPoints.getBestSellingProducts)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -47,7 +47,7 @@ test.describe('product api test', () => {
     test('get featured products', async ({ request }) => {
         let response = await request.get(endPoints.getFeaturedProducts)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -56,7 +56,7 @@ test.describe('product api test', () => {
     test('get latest products', async ({ request }) => {
         let response = await request.get(endPoints.getLatestProducts)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -65,7 +65,7 @@ test.describe('product api test', () => {
     test('get all multistep categories', async ({ request }) => {
         let response = await request.get(endPoints.getAllMultistepCategories)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -74,7 +74,7 @@ test.describe('product api test', () => {
     test('get all products', async ({ request }) => {
         let response = await request.get(endPoints.getAllProducts)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -86,7 +86,7 @@ test.describe('product api test', () => {
 
         let response = await request.get(endPoints.getSingleProduct(productId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -98,7 +98,7 @@ test.describe('product api test', () => {
 
         let response = await request.get(endPoints.getAllRelatedProducts(productId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -107,7 +107,7 @@ test.describe('product api test', () => {
     test('create a product', async ({ request }) => {
         let response = await request.post(endPoints.createProduct, { data: payloads.createProduct() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -119,7 +119,7 @@ test.describe('product api test', () => {
 
         let response = await request.put(endPoints.updateProduct(productId), { data: payloads.updateProduct() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -131,7 +131,7 @@ test.describe('product api test', () => {
 
         let response = await request.delete(endPoints.deleteProduct(productId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

@@ -9,7 +9,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('settings api test', () => {
+test.describe('settings api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
 

@@ -17,7 +17,7 @@ test.describe('report api test', () => {
     test('get sales overview report', async ({ request }) => {
         let response = await request.get(endPoints.getSalesOverviewReport)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -26,7 +26,7 @@ test.describe('report api test', () => {
     test('get summary report', async ({ request }) => {
         let response = await request.get(endPoints.getSummaryReport)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -35,7 +35,7 @@ test.describe('report api test', () => {
     test('get top earners report', async ({ request }) => {
         let response = await request.get(endPoints.getTopEarnersReport)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -44,7 +44,7 @@ test.describe('report api test', () => {
     test('get top selling products report ', async ({ request }) => {
         let response = await request.get(endPoints.getTopSellingProductsReport)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

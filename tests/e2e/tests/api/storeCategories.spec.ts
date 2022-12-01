@@ -22,7 +22,7 @@ test.describe('store categories api test', () => {
     test('get default store category', async ({ request }) => {
         let response = await request.get(endPoints.getDefaultStoreCategory)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -31,7 +31,7 @@ test.describe('store categories api test', () => {
     test('get all store categories', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoreCategories)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -43,7 +43,7 @@ test.describe('store categories api test', () => {
 
         let response = await request.get(endPoints.getSingleStoreCategory(categoryId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -52,7 +52,7 @@ test.describe('store categories api test', () => {
     test('create a store category', async ({ request }) => {
         let response = await request.post(endPoints.createStoreCategory, { data: payloads.createStoreCategory() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
@@ -65,7 +65,7 @@ test.describe('store categories api test', () => {
 
         let response = await request.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -78,7 +78,7 @@ test.describe('store categories api test', () => {
 
         let response = await request.delete(endPoints.deleteStoreCategory(categoryId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -91,7 +91,7 @@ test.describe('store categories api test', () => {
 
         let response = await request.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

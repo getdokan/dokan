@@ -21,7 +21,7 @@ test.describe('wholesale customers api test', () => {
     test('get all wholesale customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllWholesaleCustomers)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -33,7 +33,7 @@ test.describe('wholesale customers api test', () => {
 
         let response = await request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -46,7 +46,7 @@ test.describe('wholesale customers api test', () => {
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.updateWholesaleCustomer })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -59,7 +59,7 @@ test.describe('wholesale customers api test', () => {
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.deleteWholesaleCustomer })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -79,7 +79,7 @@ test.describe('wholesale customers api test', () => {
 
     // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
     // let responseBody = await response.json()
-    // console.log(responseBody)
+    // // console.log(responseBody)
 
     // expect(response.ok()).toBeTruthy()
     // expect(response.status()).toBe(200)

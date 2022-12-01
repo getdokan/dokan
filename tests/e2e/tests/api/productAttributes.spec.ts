@@ -20,7 +20,7 @@ test.describe('attribute api test', () => {
     test('get all attributes', async ({ request }) => {
         let response = await request.get(endPoints.getAllAttributes)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -32,7 +32,7 @@ test.describe('attribute api test', () => {
 
         let response = await request.get(endPoints.getSingleAttribute(attributeId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -42,7 +42,7 @@ test.describe('attribute api test', () => {
     test('create an attribute', async ({ request }) => {
         let response = await request.post(endPoints.createAttribute, { data: payloads.createAttribute() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
@@ -55,7 +55,7 @@ test.describe('attribute api test', () => {
 
         let response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -68,7 +68,7 @@ test.describe('attribute api test', () => {
 
         let response = await request.delete(endPoints.deleteAttribute(attributeId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

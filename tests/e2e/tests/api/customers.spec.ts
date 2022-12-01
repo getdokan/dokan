@@ -22,7 +22,7 @@ test.describe('customers api test', () => {
     test('get all customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllCustomers)
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -34,7 +34,7 @@ test.describe('customers api test', () => {
 
         let response = await request.get(endPoints.getSingleCustomer(customerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -43,7 +43,7 @@ test.describe('customers api test', () => {
     test('create a customer', async ({ request }) => {
         let response = await request.post(endPoints.createCustomer, { data: payloads.createCustomer() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
@@ -56,7 +56,7 @@ test.describe('customers api test', () => {
 
         let response = await request.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -69,7 +69,7 @@ test.describe('customers api test', () => {
 
         let response = await request.delete(endPoints.deleteCustomer(customerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
@@ -89,7 +89,7 @@ test.describe('customers api test', () => {
 
         // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
         // let responseBody = await response.json()
-        // console.log(responseBody)
+        // // console.log(responseBody)
 
         // expect(response.ok()).toBeTruthy()
         // expect(response.status()).toBe(200)
