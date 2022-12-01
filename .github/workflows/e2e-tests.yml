@@ -118,6 +118,12 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           report_paths: 'tests/e2e/playwright-report/results.xml'
+          include_passed: true,
+          check_retries: true,
+          detailed_summary: true,
+
+
+
 
 
       # - name: Generate Test Report
@@ -168,4 +174,4 @@ jobs:
 
     - name: Test results
       run: |
-        echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
+        echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
