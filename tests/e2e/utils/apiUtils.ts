@@ -942,14 +942,15 @@ export class ApiUtils {
     // order
 
     //create order
-   async createOrder()  {
-    // create store
-    // create product
-    // create customer
-    // create order
+    async createOrder() {
+        // enable
+        // create product
+        let [, productId] = await this.createProduct(payloads.createProduct())
+        // create customer
+        // create order
 
-    
-   }
+
+    }
 
 
 

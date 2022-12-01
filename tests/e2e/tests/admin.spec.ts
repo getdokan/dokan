@@ -19,11 +19,22 @@ test.describe('Admin functionality test', () => {
         await loginPage.adminLogin(data.admin)
     })
 
-    test('admin can logout',async ({page}) => {
+    test('admin can logout', async ({ page }) => {
         const loginPage = new LoginPage(page)
         const adminPage = new AdminPage(page)
         await loginPage.adminLogin(data.admin)
         await loginPage.adminLogout()
+        expect('1').toBe('2')
+    })
+
+    test('admin can logout', async ({ page }) => {
+        expect('1').toBe('1')
+    })
+    test('admin can logout', async ({ page }) => {
+        expect('1').toBe('1')
+    })
+    test('admin can logout', async ({ page }) => {
+        expect('1').toBe('3')
     })
 
     // test('admin can set dokan setup wizard',async ({page}) => { . //todo

@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests:
+  e2etests:
     name: e2e tests
     runs-on: ubuntu-latest
     # strategy:
@@ -147,7 +147,8 @@ jobs:
           retention-days: 30
 
   publishTestResults:
-    name: Publish Test Results
+    name: Publish Test Result
+    needs: e2etests
     runs-on: ubuntu-latest
     if: always()
     steps:
