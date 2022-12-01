@@ -13,6 +13,16 @@ test.describe('admin api test', () => {
 
     //TODO: need to send admin credentials 
 
+    test('get admin report overviesw', async ({ request }) => {
+        console.log(endPoints.getAdminReportOverview)
+        // let response = await request.get(endPoints.getAdminReportOverview)
+        // let responseBody = await response.json()
+        // // console.log(responseBody)
+
+        // expect(response.ok()).toBeTruthy()
+        // expect(response.status()).toBe(200)
+    });
+
     test('get admin report overview', async ({ request }) => {
         console.log(endPoints.getAdminReportOverview)
         let response = await request.get(endPoints.getAdminReportOverview)
