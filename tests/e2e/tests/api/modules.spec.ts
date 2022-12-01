@@ -22,11 +22,12 @@ test.describe('modules api test', () => {
 
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
+        console.log(response.status)
 
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
+        // expect(response.status()).toBe(200)
     });
 
     test('deactivate a module', async ({ request }) => {
