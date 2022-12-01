@@ -53,7 +53,7 @@ const config: PlaywrightTestConfig = {
         actionTimeout: 0,   // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889',  //Base URL 
         ignoreHTTPSErrors: true,  //Whether to ignore HTTPS errors during navigation.
-        trace: 'on-first-retry',  //Record trace only when retrying a test for the first time.
+        // trace: 'on-first-retry',  //Record trace only when retrying a test for the first time.
         screenshot: 'only-on-failure',  //Capture screenshot after each test failure.
         video: 'on-first-retry',  //Record video only when retrying a test for the first time.
         // launch options

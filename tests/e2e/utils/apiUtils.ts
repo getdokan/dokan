@@ -941,13 +941,14 @@ export class ApiUtils {
 
     // order
 
-    //create order
-    async createOrder() {
-        // enable
-        // create product
-        let [, productId] = await this.createProduct(payloads.createProduct())
-        // create customer
-        // create order
+    // create order
+    async createOrder(payload: object) {
+        let response = await this.request.post(endPoints.wc.createOrder, { data: payload })
+        let responseBody = await response.json()
+        let orderId = responseBody.id
+        // console.log(responseBody)
+        // console.log(orderId)
+        return [responseBody, orderId]
 
 
     }

@@ -57,7 +57,7 @@ export const payloads = {
       review: 'Test_review' + faker.datatype.uuid(),
       reviewer: faker.name.fullName(),
       reviewer_email: faker.internet.email(),
-      rating: faker.datatype.number({min: 1, max: 5}),
+      rating: faker.datatype.number({ min: 1, max: 5 }),
     }
   },
 
@@ -78,6 +78,47 @@ export const payloads = {
   updateOrder: {
     status: 'wc-pending'
 
+  },
+
+  createOrder: {
+    payment_method: "bacs",
+    payment_method_title: "Direct Bank Transfer",
+    set_paid: true,
+    billing: {
+      first_name: "John",
+      last_name: "Doe",
+      address_1: "969 Market",
+      address_2: "",
+      city: "San Francisco",
+      state: "CA",
+      postcode: "94103",
+      country: "US",
+      email: "john.doe@example.com",
+      phone: "(555) 555-5555"
+    },
+    shipping: {
+      first_name: "John",
+      last_name: "Doe",
+      address_1: "969 Market",
+      address_2: "",
+      city: "San Francisco",
+      state: "CA",
+      postcode: "94103",
+      country: "US"
+    },
+    line_items: [
+      {
+        product_id: 93,
+        quantity: 1
+      },
+    ],
+    shipping_lines: [
+      {
+        method_id: "flat_rate",
+        method_title: "Flat Rate",
+        total: "10.00"
+      }
+    ]
   },
 
   createWithdraw: {
@@ -744,7 +785,7 @@ export const payloads = {
   },
   createStore: () => {
     return {
-      user_login: faker.name.firstName('male') +  faker.datatype.uuid(),
+      user_login: faker.name.firstName('male') + faker.datatype.uuid(),
       user_pass: "01dokan01",
       role: "seller",
       username: faker.name.firstName('male') + faker.datatype.uuid(), //TODO: need unique user for vendor, store, customer
