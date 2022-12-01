@@ -24,7 +24,7 @@ test.describe('modules api test', () => {
         let response = await request.get(endPoints.getAllModules)
         // let responseBody = await response.json()
         // console.log(responseBody)
-        console.log(response.status)
+        console.log(await response.status)
 
         expect(response.ok()).toBeTruthy()
         // expect(response.status()).toBe(200)
