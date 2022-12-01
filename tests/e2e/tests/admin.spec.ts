@@ -27,13 +27,13 @@ test.describe('Admin functionality test', () => {
         expect('1').toBe('2')
     })
 
-    test('admin can logout', async ({ page }) => {
+    test('admin can logout1', async ({ page }) => {
         expect('1').toBe('1')
     })
-    test('admin can logout', async ({ page }) => {
+    test('admin can logout2', async ({ page }) => {
         expect('1').toBe('1')
     })
-    test('admin can logout', async ({ page }) => {
+    test('admin can logout3', async ({ page }) => {
         expect('1').toBe('3')
     })
 
