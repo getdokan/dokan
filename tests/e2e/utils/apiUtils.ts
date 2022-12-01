@@ -938,6 +938,21 @@ export class ApiUtils {
         return responseBody
     }
 
+
+    // order
+
+    //create order
+   async createOrder()  {
+    // create store
+    // create product
+    // create customer
+    // create order
+
+    
+   }
+
+
+
     // tax
 
 

@@ -9,7 +9,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('reverse withdrawal api test', () => {
+test.describe.skip('reverse withdrawal api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     //TODO: prerequisite: order, vendor, product, customer , reverse withdrawal transaction...

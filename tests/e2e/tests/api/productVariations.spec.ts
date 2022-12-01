@@ -65,7 +65,7 @@ test.describe('product variation api test', () => {
 
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
-        
+
     });
 
 
@@ -80,7 +80,6 @@ test.describe('product variation api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
     });
-
 
 
 });
