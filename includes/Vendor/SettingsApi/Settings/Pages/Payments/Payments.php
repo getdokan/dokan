@@ -59,7 +59,7 @@ class Payments extends Page {
             'id'        => 'general',
             'title'     => __( 'General', 'dokan-lite' ),
             'desc'      => __( 'The general Payment settings.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-piggy-bank"></i>',
+            'icon'      => 'dokan-icon-paypal',
             'info'      => [],
             'type'      => 'tab',
             'parent_id' => 'payment',

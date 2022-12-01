@@ -32,6 +32,7 @@ class Store extends Page {
             'parent_id'   => '',
             'sub_groups'  => apply_filters( 'dokan_vendor_settings_store_sub_groups', [] ),
         ];
+
         return $groups;
     }
 
@@ -45,8 +46,8 @@ class Store extends Page {
         $general_tab[] = [
             'id'        => 'general',
             'title'     => __( 'General', 'dokan-lite' ),
-            'desc'      => __( 'The general store settings.', 'dokan-lite' ),
-            'icon'      => '<i class="fa fa-shopping-cart"></i>',
+            'desc'      => '',
+            'icon'      => '',
             'info'      => [],
             'type'      => 'tab',
             'parent_id' => 'store',
@@ -56,7 +57,7 @@ class Store extends Page {
         $branding_card[] = [
             'id'        => 'branding',
             'title'     => __( 'Branding', 'dokan-lite' ),
-            'desc'      => __( 'Branding your store.', 'dokan-lite' ),
+            'desc'      => __( 'Set the overall appearance of your store by setting banner image, logo and more', 'dokan-lite' ),
             'info'      => [],
             'icon'      => 'dokan-icon-banner',
             'type'      => 'card',
@@ -67,7 +68,8 @@ class Store extends Page {
         $branding_card[] = [
             'id'        => 'banner',
             'title'     => __( 'Store Banner', 'dokan-lite' ),
-            'desc'      => __( 'Upload a banner for your store. Ideal size is 1000x180px', 'dokan-lite' ),
+            // translators: 1) store banner width, 2) store banner height.
+            'desc'      => sprintf( __( 'Upload your store banner [ jpg or png, %d X %d pixels (max), 5 mb (max) ]', 'dokan-lite' ), dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ), dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ),
             'icon'      => '',
             'type'      => 'image',
             'parent_id' => 'store',
@@ -77,7 +79,7 @@ class Store extends Page {
         $branding_card[] = [
             'id'        => 'gravatar',
             'title'     => __( 'Store Gravatar', 'dokan-lite' ),
-            'desc'      => __( 'Upload a profile image for your store', 'dokan-lite' ),
+            'desc'      => __( 'Upload your brand logo [ jpg or png, 150 X 150 pixels (max), 5mb (max) ]', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'image',
             'parent_id' => 'store',
@@ -92,18 +94,18 @@ class Store extends Page {
         $business_info_card[] = [
             'id'        => 'business_info',
             'title'     => __( 'Business Info', 'dokan-lite' ),
-            'desc'      => __( 'Lorem Ipsum is simply dummy text', 'dokan-lite' ),
+            'desc'      => __( 'Provide your business details for store visitors', 'dokan-lite' ),
             'info'      => [
-                [
-                    'text' => __( 'Docs', 'dokan-lite' ),
-                    'url'  => '#',
-                    'icon' => 'dokan-icon-doc',
-                ],
-                [
-                    'text' => __( 'Video Guide', 'dokan-lite' ),
-                    'url'  => '#',
-                    'icon' => 'dokan-icon-video',
-                ],
+//                [
+//                    'text' => __( 'Docs', 'dokan-lite' ),
+//                    'url'  => '#',
+//                    'icon' => 'dokan-icon-doc',
+//                ],
+//                [
+//                    'text' => __( 'Video Guide', 'dokan-lite' ),
+//                    'url'  => '#',
+//                    'icon' => 'dokan-icon-video',
+//                ],
             ],
             'icon'      => 'dokan-icon-inventory',
             'type'      => 'card',
@@ -111,14 +113,16 @@ class Store extends Page {
             'tab'       => 'general',
         ];
         $business_info_card[] = [
-            'id'        => 'store_name',
-            'title'     => __( 'Store Name', 'dokan-lite' ),
-            'desc'      => __( 'The name of your store.', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'text',
-            'parent_id' => 'store',
-            'tab'       => 'general',
-            'card'      => 'business_info',
+            'id'          => 'store_name',
+            'title'       => __( 'Store Name', 'dokan-lite' ),
+            'desc'        => '',
+            'placeholder' => __( 'Insert Store Name', 'dokan-lite' ),
+            'icon'        => '',
+            'required'    => true,
+            'type'        => 'text',
+            'parent_id'   => 'store',
+            'tab'         => 'general',
+            'card'        => 'business_info',
         ];
 
         $business_info_card = apply_filters( 'dokan_vendor_settings_api_business_info_card', $business_info_card );
@@ -127,23 +131,29 @@ class Store extends Page {
         $general_tab = apply_filters( 'dokan_vendor_settings_api_general_tab', $general_tab );
         array_push( $settings, ...$general_tab );
 
-        $store_details_tab = [];
+        $store_details_tab   = [];
         $store_details_tab[] = [
             'id'        => 'store_details',
-            'title'     => __( 'Store Details', 'dokan-lite' ),
-            'desc'      => __( 'The store details settings.', 'dokan-lite' ),
+            'title'     => __( 'Store Setup', 'dokan-lite' ),
+            'desc'      => '',
             'icon'      => '',
             'info'      => [],
             'type'      => 'tab',
             'parent_id' => 'store',
         ];
 
-        $location_contact_card = [];
+        $location_contact_card   = [];
         $location_contact_card[] = [
             'id'        => 'location_contact',
-            'title'     => __( 'Location and Contact details', 'dokan-lite' ),
-            'desc'      => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
-            'info'      => [],
+            'title'     => __( 'Store Address & Details', 'dokan-lite' ),
+            'desc'      => __( 'Store locations, contact information and more', 'dokan-lite' ),
+            'info'      => [
+                [
+                    'text' => __( 'Docs', 'dokan-lite' ),
+                    'url'  => 'https://wedevs.com/docs/dokan/modules/dokan-vendor-vacation/',
+                    'icon' => 'dokan-icon-doc',
+                ],
+            ],
             'icon'      => 'dokan-icon-location',
             'type'      => 'card',
             'parent_id' => 'store',
@@ -163,7 +173,7 @@ class Store extends Page {
         $location_contact_card[] = [
             'id'        => 'address',
             'title'     => __( 'Address', 'dokan-lite' ),
-            'desc'      => __( 'Your store address', 'dokan-lite' ),
+            'desc'      => __( 'Provide your store locations to be displayed on the site.', 'dokan-lite' ),
             'icon'      => 'dokan-icon-location',
             'type'      => 'section',
             'parent_id' => 'store',
@@ -218,7 +228,7 @@ class Store extends Page {
                     'desc'      => __( 'State or state code', 'dokan-lite' ),
                     'icon'      => '',
                     'type'      => 'select',
-                    'options'   => [ '' => __( 'Select a state&hellip;', 'dokan-lite' ) ] + WC()->countries->get_allowed_country_states(),
+                    'options'   => [ '' => __( 'Select a state', 'dokan-lite' ) ] + WC()->countries->get_allowed_country_states(),
                     'parent_id' => 'address',
                 ],
             ],
@@ -229,6 +239,7 @@ class Store extends Page {
             'desc'      => __( 'Store Location GPS coordinate.', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'text',
+            'hidden'    => true,
             'parent_id' => 'store',
             'tab'       => 'store_details',
             'card'      => 'location_contact',
@@ -247,11 +258,11 @@ class Store extends Page {
         $location_contact_card = apply_filters( 'dokan_vendor_settings_api_location_contact_card', $location_contact_card );
         array_push( $store_details_tab, ...$location_contact_card );
 
-        $store_weekly_timing_card = [];
+        $store_weekly_timing_card   = [];
         $store_weekly_timing_card[] = [
             'id'        => 'store_weekly_timing',
-            'title'     => __( 'Store Weekly Timing', 'dokan-lite' ),
-            'desc'      => __( 'Set your convenient time according to business needs.', 'dokan-lite' ),
+            'title'     => __( 'Store Open Close Timing', 'dokan-lite' ),
+            'desc'      => __( 'Set business operation hours ', 'dokan-lite' ),
             'info'      => [],
             'icon'      => 'dokan-icon-clock',
             'type'      => 'card',
@@ -263,7 +274,7 @@ class Store extends Page {
         $store_weekly_timing_card[] = [
             'id'        => 'dokan_store_time_enabled',
             'title'     => __( 'Enable Store Time', 'dokan-lite' ),
-            'desc'      => __( 'Enable Store Time', 'dokan-lite' ),
+            'desc'      => __( 'Show store opening closing time widget in store page', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'yes',
@@ -345,24 +356,26 @@ class Store extends Page {
             ],
         ];
         $store_weekly_timing_card[] = [
-            'id'        => 'dokan_store_open_notice',
-            'title'     => __( 'Store Open Notice', 'dokan-lite' ),
-            'desc'      => __( 'Store Open Notice Message', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'text',
-            'parent_id' => 'store',
-            'tab'       => 'store_details',
-            'card'      => 'store_weekly_timing',
+            'id'          => 'dokan_store_open_notice',
+            'title'       => __( 'Store Open Notice', 'dokan-lite' ),
+            'desc'        => __( 'Store open notice for store visitors', 'dokan-lite' ),
+            'icon'        => '',
+            'placeholder' => __( 'Store is open and taking orders', 'dokan-lite' ),
+            'type'        => 'text',
+            'parent_id'   => 'store',
+            'tab'         => 'store_details',
+            'card'        => 'store_weekly_timing',
         ];
         $store_weekly_timing_card[] = [
-            'id'        => 'dokan_store_close_notice',
-            'title'     => __( 'Store Close Notice', 'dokan-lite' ),
-            'desc'      => __( 'Store Close Notice Message', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'text',
-            'parent_id' => 'store',
-            'tab'       => 'store_details',
-            'card'      => 'store_weekly_timing',
+            'id'          => 'dokan_store_close_notice',
+            'title'       => __( 'Store Close Notice', 'dokan-lite' ),
+            'desc'        => __( 'Store close notice for store visitors', 'dokan-lite' ),
+            'placeholder' => __( 'Store closed. Please contact for emergencies only', 'dokan-lite' ),
+            'icon'        => '',
+            'type'        => 'text',
+            'parent_id'   => 'store',
+            'tab'         => 'store_details',
+            'card'        => 'store_weekly_timing',
         ];
 
         $store_weekly_timing_card = apply_filters( 'dokan_vendor_settings_api_store_weekly_timing_card', $store_weekly_timing_card );
@@ -371,23 +384,29 @@ class Store extends Page {
         $store_details_tab = apply_filters( 'dokan_vendor_settings_api_store_details_tab', $store_details_tab );
         array_push( $settings, ...$store_details_tab );
 
-        $advanced_tab = [];
+        $advanced_tab   = [];
         $advanced_tab[] = [
             'id'        => 'advanced',
             'title'     => __( 'Advanced', 'dokan-lite' ),
-            'desc'      => __( 'The advanced store settings.', 'dokan-lite' ),
+            'desc'      => '',
             'icon'      => '',
             'info'      => [],
             'type'      => 'tab',
             'parent_id' => 'store',
         ];
 
-        $product_display_card = [];
+        $product_display_card   = [];
         $product_display_card[] = [
             'id'        => 'product_display',
-            'title'     => __( 'Product Display', 'dokan-lite' ),
-            'desc'      => __( 'Put Company name & ID/EUID', 'dokan-lite' ),
-            'info'      => [],
+            'title'     => __( 'Product Display Settings', 'dokan-lite' ),
+            'desc'      => __( 'Configure which product sections you want to display in your store page', 'dokan-lite' ),
+            'info'      => [
+                [
+                    'text' => __( 'Docs', 'dokan-lite' ),
+                    'url'  => 'https://wedevs.com/docs/dokan/tutorials/how-to-create-product-sections-in-single-store-page/',
+                    'icon' => 'dokan-icon-doc',
+                ],
+            ],
             'icon'      => 'dokan-icon-products',
             'type'      => 'card',
             'parent_id' => 'store',
@@ -395,14 +414,14 @@ class Store extends Page {
             'editable'  => false,
         ];
 
-        $fields = [];
+        $fields              = [];
         $customizer_settings = dokan_get_option( 'product_sections', 'dokan_appearance' );
 
         if ( isset( $customizer_settings['featured'] ) && 'off' === $customizer_settings['featured'] ) {
             $fields[] = [
                 'id'        => 'featured',
                 'title'     => __( 'Show featured products section', 'dokan-lite' ),
-                'desc'      => __( 'Show featured products section', 'dokan-lite' ),
+                'desc'      => __( 'Allow your Featured Products section to be displayed in your single store page', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
@@ -418,7 +437,7 @@ class Store extends Page {
             $fields[] = [
                 'id'        => 'latest',
                 'title'     => __( 'Show latest products section', 'dokan-lite' ),
-                'desc'      => __( 'Show latest products section', 'dokan-lite' ),
+                'desc'      => __( 'Allow your Latest Products section to be displayed in your single store page', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
@@ -434,7 +453,7 @@ class Store extends Page {
             $fields[] = [
                 'id'        => 'best_selling',
                 'title'     => __( 'Show best selling products section', 'dokan-lite' ),
-                'desc'      => __( 'Show best selling products section', 'dokan-lite' ),
+                'desc'      => __( 'Allow your Best Selling Products section to be displayed in your single store page', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
@@ -450,7 +469,7 @@ class Store extends Page {
             $fields[] = [
                 'id'        => 'top_rated',
                 'title'     => __( 'Show top rated products section', 'dokan-lite' ),
-                'desc'      => __( 'Show top rated products section', 'dokan-lite' ),
+                'desc'      => __( 'Allow your Top Rated Products section to be displayed in your single store page', 'dokan-lite' ),
                 'icon'      => '',
                 'type'      => 'checkbox',
                 'default'   => 'yes',
@@ -462,10 +481,10 @@ class Store extends Page {
             ];
         }
 
-        $fields = apply_filters( 'dokan_vendor_settings_api_product_section_fields', $fields );
+        $fields                 = apply_filters( 'dokan_vendor_settings_api_product_section_fields', $fields );
         $product_display_card[] = [
             'id'        => 'product_section',
-            'title'     => __( 'Store Page Product Section', 'dokan-lite' ),
+            'title'     => '',
             'desc'      => '',
             'info'      => [],
             'icon'      => '',
@@ -478,8 +497,8 @@ class Store extends Page {
 
         $product_display_card[] = [
             'id'        => 'show_more_ptab',
-            'title'     => __( 'Show More Product tab', 'dokan-lite' ),
-            'desc'      => __( 'Show More Product tab', 'dokan-lite' ),
+            'title'     => __( 'Add "More Product" tab on Single Store page', 'dokan-lite' ),
+            'desc'      => __( 'Add "More Product" tab to display additional items in your store page', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'checkbox',
             'default'   => 'yes',
@@ -508,8 +527,8 @@ class Store extends Page {
         ];
         $product_display_card[] = [
             'id'        => 'store_ppp',
-            'title'     => __( 'Product Per Page', 'dokan-lite' ),
-            'desc'      => __( 'Store Product Per Page', 'dokan-lite' ),
+            'title'     => __( 'Number of products displayed per page', 'dokan-lite' ),
+            'desc'      => __( 'Number of products that will be shown by default in your store page', 'dokan-lite' ),
             'icon'      => '',
             'type'      => 'number',
             'default'   => 20,
@@ -517,14 +536,14 @@ class Store extends Page {
             'tab'       => 'advanced',
             'card'      => 'product_display',
         ];
-        $product_display_card = apply_filters( 'dokan_vendor_settings_api_product_display_card', $product_display_card );
+        $product_display_card   = apply_filters( 'dokan_vendor_settings_api_product_display_card', $product_display_card );
         array_push( $advanced_tab, ...$product_display_card );
 
-        $terms_and_conditions_card = [];
+        $terms_and_conditions_card   = [];
         $terms_and_conditions_card[] = [
             'id'        => 'terms_and_conditions',
             'title'     => __( 'Terms and Conditions', 'dokan-lite' ),
-            'desc'      => __( 'Seller can close his store by giving a message to customer. ', 'dokan-lite' ),
+            'desc'      => __( 'Define the rules of your store page by providing a detailed break down of the Terms and Conditions ', 'dokan-lite' ),
             'info'      => [],
             'icon'      => 'dokan-icon-policy',
             'type'      => 'card',
@@ -548,15 +567,16 @@ class Store extends Page {
             'card'      => 'terms_and_conditions',
         ];
         $terms_and_conditions_card[] = [
-            'id'        => 'dokan_tnc_text',
-            'title'     => __( 'Terms & Condition', 'dokan-lite' ),
-            'desc'      => __( 'Store Terms & Condition', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'textarea',
-            'default'   => '',
-            'parent_id' => 'store',
-            'tab'       => 'advanced',
-            'card'      => 'terms_and_conditions',
+            'id'          => 'dokan_tnc_text',
+            'title'       => __( 'Terms & Condition', 'dokan-lite' ),
+            'desc'        => __( 'Store Terms & Condition', 'dokan-lite' ),
+            'placeholder' => __( 'Insert your store Terms & Conditions', 'dokan-lite' ),
+            'icon'        => '',
+            'type'        => 'textarea',
+            'default'     => '',
+            'parent_id'   => 'store',
+            'tab'         => 'advanced',
+            'card'        => 'terms_and_conditions',
         ];
 
         $terms_and_conditions_card = apply_filters( 'dokan_vendor_settings_api_terms_and_conditions_card', $terms_and_conditions_card );
