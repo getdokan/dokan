@@ -133,7 +133,7 @@ jobs:
         with:
           name: e2e tests result # Name of the check run which will be created
           path: tests/e2e/playwright-report/results.xml # Path to test results
-          # reporter: jest-junit
+          reporter: jest-junit
           only-summary: "false" # Allows you to generate only the summary.
           list-suites: "all" # Limits which test suites are listed: 'all', 'failed'
           list-tests: "all" # Limits which test cases are listed: 'all','failed', 'none'
