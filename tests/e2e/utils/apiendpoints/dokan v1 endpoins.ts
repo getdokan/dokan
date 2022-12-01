@@ -79,7 +79,7 @@
     // get: `${SERVER_URL}/wp-json/dokan/v1/announcement/<announcement_id>/restore`,        //  post put patch
     // get: `${SERVER_URL}/wp-json/dokan/v1/announcement/batch`,        // post put patch
     // refunds
-    // get: `${SERVER_URL}/wp-json/dokan/v1refunds`,        // get
+    // get: `${SERVER_URL}/wp-json/dokan/v1/refunds`,        // get
     // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>`,       // delete
     // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>/approve`,       // post put patch
     // get: `${SERVER_URL}/wp-json/dokan/v1/refunds/<refund_id>/cancel`,        // post put patch
