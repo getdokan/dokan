@@ -26,38 +26,38 @@ test.describe('modules api test', () => {
         // console.log(responseBody)
         console.log(await response.status)
 
-        expect(response.ok()).toBeTruthy()
-        // expect(response.status()).toBe(200)
+        expect(await response.ok()).toBeTruthy()
+        expect(await response.status()).toBe(200)
     });
 
-    test('deactivate a module', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
-        let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-        console.log(randomModule)
+    // test('deactivate a module', async ({ request }) => {
+    //     let apiUtils = new ApiUtils(request)
+    //     let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
+    //     console.log(randomModule)
 
-        let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
+    //     let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } })
+    //     let responseBody = await response.json()
+    //     // console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
+    //     expect(response.ok()).toBeTruthy()
+    //     expect(response.status()).toBe(200)
 
-        //reactivate module
-        await apiUtils.activateModules(randomModule)
-    });
+    //     //reactivate module
+    //     await apiUtils.activateModules(randomModule)
+    // });
 
-    test('activate a module', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
-        let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-        console.log(randomModule)
+    // test('activate a module', async ({ request }) => {
+    //     let apiUtils = new ApiUtils(request)
+    //     let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
+    //     console.log(randomModule)
 
-        let response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
+    //     let response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } })
+    //     let responseBody = await response.json()
+    //     // console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-    });
+    //     expect(response.ok()).toBeTruthy()
+    //     expect(response.status()).toBe(200)
+    // });
 
 
 
