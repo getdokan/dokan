@@ -14,7 +14,12 @@ import { helpers } from '../../utils/helpers'
 
 test.describe('modules api test', () => {
     //TODO: need to send admin credentials 
-    
+
+
+    test('g_', async ({ request }) => {
+        console.log('endpoint is',endPoints.getAllModules)
+    });
+
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)
         let responseBody = await response.json()
@@ -29,7 +34,7 @@ test.describe('modules api test', () => {
         let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
         console.log(randomModule)
 
-        let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule]} })
+        let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } })
         let responseBody = await response.json()
         // console.log(responseBody)
 
@@ -45,7 +50,7 @@ test.describe('modules api test', () => {
         let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
         console.log(randomModule)
 
-        let response = await request.put(endPoints.activateModule, { data: { module:[randomModule] } })
+        let response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } })
         let responseBody = await response.json()
         // console.log(responseBody)
 
