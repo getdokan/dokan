@@ -1,7 +1,8 @@
 require('dotenv').config();
 
-// const SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
-const SERVER_URL = 'http://localhost:8889'
+const SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
+
+
 
 export const endPoints = {
     getAllStoresCheck: `${SERVER_URL}/wp-json/dokan/v1/stores/check`,      // get
