@@ -94,7 +94,7 @@ jobs:
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-          cd tests/e2e && ls && npm run test modules.spec.ts
+          cd tests/e2e && ls && npm run test tests/api
 
         env:
           CI: true
@@ -155,27 +155,27 @@ jobs:
         run: |
           echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
 
-  # publishTestResults:
-  #   name: Publish Test Result
-  #   needs: e2etests
-  #   runs-on: ubuntu-latest
-  #   if: always()
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v2
-  #       id: download
+  publishTestResults:
+    name: Publish Test Result
+    needs: e2etests
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        id: download
 
-  #     - name: Publish HTML report to GH Pages
-  #       if: always() # We want this to always run, even if test fail prior to this step running
-  #       uses: peaceiris/actions-gh-pages@v3.7.3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
-  #         keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-  #         user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-  #         user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+      - name: Publish HTML report to GH Pages
+        if: always() # We want this to always run, even if test fail prior to this step running
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
+          keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+          user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+          user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
 
-  #       redundant / in echo url remove before run
-  #     - name: Test results
-  #       run: |
-  #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
+        # redundant / in echo url remove before run
+      - name: Test results
+        run: |
+          echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"

@@ -3,6 +3,8 @@ require('dotenv').config();
 const SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
 
 
+// ${SERVER_URL}/index.php?rest_route=/  // plain format : replace with  ${SERVER_URL}/wp-json/
+// http://localhost:8888/index.php?rest_route=/dokan/{{version}}/admin/changelog/lite
 
 export const endPoints = {
     getAllStoresCheck: `${SERVER_URL}/wp-json/dokan/v1/stores/check`,      // get
