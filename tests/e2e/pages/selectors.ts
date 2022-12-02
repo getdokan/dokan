@@ -1582,11 +1582,12 @@ export const selector = {
             // Permalinks Settings
             // Common Settings
             numeric: "//input[@value='/archives/%post_id%']/..",
-            postName: "//input[@value='/%postname%/' and @type='radio']/..",
+            // postName: "//input[@value='/%postname%/' and @type='radio']/..",
+            postName: "#permalink-input-post-name",
             // Optional Settings
             shopBaseWithCategory: "//input[@value='/shop/%product_cat%/']",
-            customBase: "//input[@id='woocommerce_custom_selection']",
-            customBaseInput: "//input[@id='woocommerce_permalink_structure']",
+            customBase: "#woocommerce_custom_selection",
+            customBaseInput: "#woocommerce_permalink_structure",
             permalinkSaveChanges: "#submit",
 
             // Update Settings
