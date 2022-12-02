@@ -94,7 +94,7 @@ jobs:
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
         run: |
-          cd tests/e2e && npm run test aapiPermalink.spec.ts && npm run test tests/api
+          cd tests/e2e && npm run test aapiPermalink.spec.ts && npm run test admins.spec.ts
 
         env:
           CI: true
