@@ -45,7 +45,7 @@ export class ApiUtils {
         let response = await this.request.post(endPoints.createStore, { data: payload })
         let responseBody = await response.json()
         let sellerId = responseBody.id
-        // console.log(responseBody)
+        console.log(responseBody)
         // console.log(sellerId)
         return [responseBody, sellerId]
     }

@@ -1032,11 +1032,10 @@ export const payloads = {
   },
 
   createStore1: {
-    return: {
       user_login: "vendor1",
       user_pass: "01dokan01",
       role: "seller",
-      email: "vendorstore10@g.c",
+      email: "vendorstore1@g.c",
       store_name: "vendorstore1",
       first_name: "vendor1",
       last_name: "v1",
@@ -1113,9 +1112,8 @@ export const payloads = {
         }
       ],
       admin_commission: "",
-      admin_additional_fee: "0.00",
-      admin_commission_type: "flat"
-    }
+      admin_additional_fee: "",
+      admin_commission_type: ""
   },
 
   createCustomer1: {

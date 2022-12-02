@@ -205,11 +205,11 @@ test.describe('setup test', () => {
     //         await vendorPage.vendorRegister({ ...data.vendor.vendorInfo, ...data.predefined.vendorInfo }, data.vendorSetupWizard)
     //     })
 
-    test.only('add test vendor', async ({ request }) => {
+    test('add test vendor', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         // create store
         await apiUtils.createStore(payloads.createStore1)
-        // create vendor product & coupon
+        // create vendor product & coupon   //TODO: need to send vendor credential for product and coupon
         let product = payloads.createProduct()
         product.name = 'p1_v1'
         let [, productId] = await apiUtils.createProduct(product)
@@ -219,22 +219,21 @@ test.describe('setup test', () => {
         let response = await request.post(endPoints.createCoupon, { data: payloadCoupon })
     })
 
-    //     test('add test vendor1 rma settings', async ({ page }) => {
-    //         const loginPage = new LoginPage(page)
-    //         const vendorPage = new VendorPage(page)
-    //         await loginPage.login(data.vendor)
-    //         await vendorPage.setRmaSettings(data.vendor.rma)
-    //     })
+        // test('add test vendor1 rma settings', async ({ page }) => {
+        //     const loginPage = new LoginPage(page)
+        //     const vendorPage = new VendorPage(page)
+        //     await loginPage.login(data.vendor)
+        //     await vendorPage.setRmaSettings(data.vendor.rma)
+        // })
 
-    //     test('admin add test vendor products ', async ({ page }) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.switchUser(data.admin)
-    //         await adminPage.addSimpleProduct({ ...data.product.simple, status: 'publish', stockStatus: false })
-    //         await adminPage.addSimpleProduct({ ...data.product.simple, status: 'draft', stockStatus: false })
-    //         await adminPage.addSimpleProduct({ ...data.product.simple, status: 'pending', stockStatus: false })
-    //         await adminPage.addSimpleProduct({ ...data.product.simple, status: 'publish', stockStatus: true })
-    //     })
+    test('admin add test vendor products ', async ({ request }) => {
+        let apiUtils = new ApiUtils(request)
+        let product = payloads.createProduct()
+        await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false })
+        await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true })
+        await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true })
+        await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true })
+    })
 
     // Customer Details 
 
