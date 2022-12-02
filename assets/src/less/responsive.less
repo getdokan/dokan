@@ -246,6 +246,59 @@
   }
 }
 
+@media (max-width: 480px) {
+  // Store tabs and buttons
+  .dokan-single-store {
+    .dokan-store-tabs {
+      ul.dokan-modules-button {
+        li {
+          display: inline-block;
+          margin: 0 5px 3px 0 !important;
+
+          &:last-child {
+            margin-top: 0 !important;
+          }
+
+          button {
+            font-size: 12px;
+            margin: 0 !important;
+          }
+        }
+      }
+
+      ul.dokan-list-inline {
+        flex-wrap: wrap;
+
+        li {
+          margin-right: unset;
+          border-bottom: 1px solid #ededed;
+        }
+      }
+    }
+  }
+
+  // Product Search Field and Filter dropdown
+  .dokan-store-products-filter-area {
+    .dokan-store-products-ordeby {
+      display: flex;
+      flex-wrap: wrap;
+
+      input.product-name-search {
+        width: 70%;
+      }
+
+      input.search-store-products {
+        width: 30%;
+      }
+    }
+
+    select.orderby.orderby-search {
+      flex-basis: 100%;
+      margin-top: 5px;
+    }
+  }
+}
+
 @media (max-width: 430px) {
   #dokan-store-listing-filter-form-wrap {
     &:before {
