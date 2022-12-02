@@ -26,7 +26,7 @@ test.describe('setup test', () => {
         const loginPage = new LoginPage(page)
         const adminPage = new AdminPage(page)
         await loginPage.adminLogin(data.admin)
-        // await adminPage.setWpSettings(data.wpSettings)
+        await adminPage.setWpSettings(data.wpSettings)
     })
 
     test('admin enable register password field', async ({ page }) => {

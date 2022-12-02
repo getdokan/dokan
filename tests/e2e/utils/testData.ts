@@ -770,6 +770,7 @@ export const data = {
             adminDashboard: 'wp-admin',
             dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
             woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
+            permalinks: 'wp-admin/options-permalink.php',
             plugins: 'wp-admin/plugins.php',
         },
         frontend: {

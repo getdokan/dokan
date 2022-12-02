@@ -221,7 +221,7 @@ export class BasePage {
 
     // locator //TODO: need to update this
     async getLocator(selector: string): Promise<object> {
-        return await this.page.locator(selector)
+        return this.page.locator(selector)
     }
 
     // returns whether the element is visible
@@ -261,7 +261,7 @@ export class BasePage {
 
     // hover on selector
     async hover(selector: string): Promise<void> {
-        await this.page.hover(selector,{timeout: 20000})
+        await this.page.hover(selector, { timeout: 20000 })
         await this.wait(1)
     }
 
@@ -272,7 +272,7 @@ export class BasePage {
 
     // get element
     async getElement(selector: string): Promise<Locator> {
-        return await this.page.locator(selector)
+        return this.page.locator(selector)
     }
 
     // get element text content
@@ -308,7 +308,7 @@ export class BasePage {
     // set attribute value
     async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {  //TODO: update with playwright method
         // await page.$eval(selector, (element, attribute, value) => element.setAttribute(attribute, value), attribute, value)
-        let element = await this.page.locator(selector)
+        let element = this.page.locator(selector)
         // await this.page.evaluate((element, attribute, value) => element.setAttribute(attribute, value), element, attribute, value)
         await element.evaluate(element => element.setAttribute(attribute, value))
     }
@@ -317,14 +317,14 @@ export class BasePage {
     async removeAttribute(selector: string, attribute: string): Promise<void> {    //TODO: update with playwright method
         // let element = await this.getElement(selector)
         // await this.page.evaluate((element, attribute) => element.removeAttribute(attribute), element, attribute)
-        let element = await this.page.locator(selector)
+        let element = this.page.locator(selector)
         await element.evaluate(element => element.removeAttribute(attribute))
     }
 
     // get element property value: background color
     async getElementBackgroundColor(selector: string) {   //TODO: update with playwright method
-        let element = await this.page.locator(selector)
-        let value = await element.evaluate(element => window.getComputedStyle(element).getPropertyValue('background-color'), element)
+        let element = this.page.locator(selector)
+        let value = await element.evaluate(element => window.getComputedStyle(element).getPropertyValue('background-color'))
         // console.log(value)
         return value
     }
@@ -419,13 +419,13 @@ export class BasePage {
 
     // select by value
     async selectByValue(selector: string, value: string): Promise<string[]> {
-        console.log(selector,value)
+        // console.log(selector,value)
         return await this.page.selectOption(selector, { value: value })
     }
 
     // select by label
     async selectBylabel(selector: string, value: string): Promise<string[]> {
-        console.log(selector,value)
+        // console.log(selector,value)
         return await this.page.selectOption(selector, { label: value })
     }
 
@@ -499,49 +499,49 @@ export class BasePage {
 
     // get locator all inner texts
     async allInnerTextLocator(selector: string): Promise<string[]> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.allInnerTexts()
     }
 
     // get locator all text contents
     async allTextContentsLocator(selector: string): Promise<string[]> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.allTextContents()
     }
 
     // get locator boundingBox
     async boundingBoxLocator(selector: string): Promise<null | object> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.boundingBox()
     }
 
     // check locator
     async checkLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.check()
     }
 
     // click locator
     async clickLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.click()
     }
 
     // get locator count
     async countLocator(selector: string): Promise<number> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.count()
     }
 
     // double click element
     async dblclickLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.dblclick()
     }
 
     // dispatches event('click', 'dragstart',...) on the element
     async locator(selector: string, event: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         locator.dispatchEvent(event)
     }
 
@@ -554,139 +554,139 @@ export class BasePage {
 
     // resolves given locator to the first matching DOM element
     // async elementHandle(selector: string): Promise<ElementHandle> {
-    //     let locator = await this.page.locator(selector)
+    //     let locator = this.page.locator(selector)
     //     return await locator.elementHandle()
     // }
 
     // resolves given locator to all matching DOM elements
     async elementHandles(selector: string): Promise<ElementHandle[]> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.elementHandles()
     }
 
     // returns the return value of pageFunction
     async evaluate(selector: string, pageFunction: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.evaluate(pageFunction)
     }
 
     // returns the result of pageFunction invocation
     async evaluateAll(selector: string, pageFunction: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.evaluateAll(pageFunction)
     }
 
     // returns the return value of pageFunction as a JSHandle
     async evaluateHandle(selector: string, pageFunction: Function | string): Promise<JSHandle> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.evaluateHandle(pageFunction)
     }
 
     // fill input locator
     async fillLocator(selector: string, text: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.fill(text)
     }
 
     // filter locator through inner locator or text
     async filterLocator(selector: string, filterOptions: object): Promise<Locator> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.filter(filterOptions)
     }
 
     // get first matching locator
     async firstLocator(selector: string): Promise<Locator> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.first()
     }
 
     // focus locator
     async focusOnLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.focus()
     }
 
     // get frame locator
     async frameLocator(selector: string): Promise<FrameLocator> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.frameLocator(selector)
     }
 
     // get locator attribute value
     async getAttributeOfLocator(selector: string, attribute: string): Promise<null | string> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return locator.getAttribute(attribute)
     }
 
     // highlight locator
     async highlightLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.highlight()
     }
 
     // hover on locator
     async hoverOnLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.hover()
     }
 
     // get locator inner html
     async innerHTMLOfLocator(selector: string): Promise<string> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.innerHTML()
     }
 
     // get locator inner text
     async innerTextOfLocator(selector: string): Promise<string> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.innerText()
     }
 
     // get locator input value
     async inputValueOfLocator(selector: string): Promise<string> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.inputValue()
     }
 
     // returns whether the locator is checked
     async isCheckedLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isChecked()
     }
 
     // returns whether the locator is disabled
     async isDisabledLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isDisabled()
     }
 
     // returns whether the locator is editable
     async isEditableLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isEditable()
     }
 
     // returns whether the locator is enabled
     async isEnabledLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isEnabled()
     }
 
     // returns whether the locator is hidden
     async isHiddenLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isHidden()
     }
 
     //  returns whether the locator is visible
     async isVisibleLocator(selector: string): Promise<boolean> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.isVisible()
     }
 
     // get last matching locator
     async lastLocator(selector: string): Promise<Locator> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.last()
     }
 
@@ -698,85 +698,85 @@ export class BasePage {
 
     // get n-th matching locator
     async nthLocator(selector: string, index: number): Promise<Locator> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.nth(index)
     }
 
     // get the page locator belongs to
     async pageOfLocator(selector: string): Promise<Page> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.page()
     }
 
     // key press on locator
     async keyPressOnLocator(selector: string, key: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.press(key)
     }
 
     // take locator screenshot
     async screenshotOfLocator(selector: string): Promise<Buffer> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.screenshot()
     }
 
     // scroll locator into view if needed
     async scrollIntoViewLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.scrollIntoViewIfNeeded()
     }
 
     // select from select option through value, option, index
     async selectOptionOfLocator(selector: string, values: string): Promise<string[]> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.selectOption(values)
     }
 
     // select all locator's text content
     async selectTextOfLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.selectText()
     }
 
     // check/uncheck locator
     async setCheckedLocator(selector: string, checked: boolean): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.setChecked(checked)
     }
 
     //  upload file
     async setInputFilesLocator(selector: string, file: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.setInputFiles(file)
     }
 
     // tap on locator
     async tapOnLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.tap()
     }
 
     // get locator text content
     async textContentOfLocator(selector: string): Promise<null | string> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         return await locator.textContent()
     }
 
     // type on inout locator
     async typeOnLocator(selector: string, text: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.type(text)
     }
 
     // uncheck locator
     async uncheckLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.uncheck()
     }
 
     // wait for locator
     async waitForLocator(selector: string): Promise<void> {
-        let locator = await this.page.locator(selector)
+        let locator = this.page.locator(selector)
         await locator.waitFor()
     }
 
@@ -800,7 +800,7 @@ export class BasePage {
     }
 
     // type on prompt box/alert
-    async fillAlert(value:string): Promise<void> {
+    async fillAlert(value: string): Promise<void> {
         this.page.on('dialog', async dialog => {
             await dialog.accept(value)
         })
@@ -890,6 +890,7 @@ export class BasePage {
 
     // admin enable switcher , if enabled then Skip : admin settings switcher
     async enableSwitcher(selector: string): Promise<void> {
+        (/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span'
         let value = await this.getElementBackgroundColor(selector)
         if (!value.includes('rgb(0, 144, 255)')) {
             await this.click(selector)
@@ -898,6 +899,7 @@ export class BasePage {
 
     // admin disable switcher , if disabled then skip : admin settings switcher
     async disableSwitcher(selector: string): Promise<void> {
+        (/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span'
         let value = await this.getElementBackgroundColor(selector)
         if (value.includes('rgb(0, 144, 255)')) {
             await this.click(selector)
@@ -921,25 +923,25 @@ export class BasePage {
             let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
             let style = stylesObject.getPropertyValue(property)
             return style
-        }, selector, )
+        }, selector,)
         return value
     }
 
     // enable switch or checkbox: dokan setup wizard
     async enableSwitcherSetupWizard(selector: string) {
-            // let element = await this.getElement(selector)
-            let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-            console.log('before', value)
-            // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-            // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-            //     // console.log('if:', selector)
-            //     await this.page.evaluate(el => el.click(), element)
-            //     await this.wait(0.3)
-            //     await this.page.evaluate(el => el.click(), element)
-            // } else {
-            //     // console.log('else:', selector)
-            //     await this.page.evaluate(el => el.click(), element)
-            // }
+        // let element = await this.getElement(selector)
+        let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+        console.log('before', value)
+        // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+        // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+        //     // console.log('if:', selector)
+        //     await this.page.evaluate(el => el.click(), element)
+        //     await this.wait(0.3)
+        //     await this.page.evaluate(el => el.click(), element)
+        // } else {
+        //     // console.log('else:', selector)
+        //     await this.page.evaluate(el => el.click(), element)
+        // }
     }
 
     // enable switch or checkbox: dokan setup wizard
@@ -964,10 +966,10 @@ export class BasePage {
     }
 
     // delete element if exist (only first will delete) : dokan rma,report abuse
-    async deleteIfExists(selector:string) { //TODO: there may be alternative solution, this method might not needed
+    async deleteIfExists(selector: string) { //TODO: there may be alternative solution, this method might not needed
         let elementExists = await this.isVisible(selector)
         if (elementExists) {
-            let element =  await this.page.locator(selector)
+            let element = this.page.locator(selector)
             await element.click()
         }
     }

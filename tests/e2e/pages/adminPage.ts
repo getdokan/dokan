@@ -29,6 +29,10 @@ export class AdminPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.plugins)
     }
 
+    async goToPermalinks() {
+        await this.goIfNotThere(data.subUrls.backend.permalinks)
+    }
+
 
     // Wordpress Site Settings
 
@@ -67,12 +71,13 @@ export class AdminPage extends BasePage {
 
     // Admin Set Permalink Settings
     async setPermalinkSettings(permalink) {
-        await this.hover(selector.admin.aDashboard.settings)
+        // await this.hover(selector.admin.aDashboard.settings)
+        await this.goToPermalinks()
         // Set Permalinks Settings
-        await this.click(selector.admin.settings.permalinks)
+        // await this.click(selector.admin.settings.permalinks)
         await this.click(selector.admin.settings.postName)
-        await this.click(selector.admin.settings.customBase)
-        await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
+        // await this.click(selector.admin.settings.customBase)
+        // await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
         await this.click(selector.admin.settings.permalinkSaveChanges)
 
         let permalinkSuccessMessage = await this.getElementText(selector.admin.settings.updatedSuccessMessage)
@@ -436,7 +441,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Vendor Subscription Settings
-    async setDokanVendorSubscriptionSettings(subscription) {
+    async setDokanVendorSubscriptionSettings(subscription: any) {
         await this.goToDokanSettings()
 
         await this.click(selector.admin.dokan.settings.vendorSubscription)
@@ -458,7 +463,6 @@ export class AdminPage extends BasePage {
         expect(successMessage).toMatch(subscription.saveSuccessMessage)
 
         // Disabling Vendor Subscription
-
         await this.disableSwitcher(selector.admin.dokan.settings.enableProductSubscription)
         await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
     }

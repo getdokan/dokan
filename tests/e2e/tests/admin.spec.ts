@@ -13,37 +13,37 @@ import { VendorPage } from '../pages/vendorPage'
 
 test.describe('Admin functionality test', () => {
 
-    test.only('admin can login', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        const adminPage = new AdminPage(page)
-        const consoleLogs = [];
-        page.on("console", msg => {
-            // if (msg.type() == "error") {
-                console.log(msg.text());
-                // consoleLogs.push(msg.text());
-            // }
-        })
-        await loginPage.adminLogin(data.admin)
-    })
+    // test('admin can login', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     const adminPage = new AdminPage(page)
+    //     const consoleLogs = [];
+    //     page.on("console", msg => {
+    //         // if (msg.type() == "error") {
+    //             console.log(msg.text());
+    //             // consoleLogs.push(msg.text());
+    //         // }
+    //     })
+    //     await loginPage.adminLogin(data.admin)
+    // })
     
 
-    test('admin can logout', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        const adminPage = new AdminPage(page)
-        await loginPage.adminLogin(data.admin)
-        await loginPage.adminLogout()
-        expect('1').toBe('2')
-    })
+    // test('admin can logout', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     const adminPage = new AdminPage(page)
+    //     await loginPage.adminLogin(data.admin)
+    //     await loginPage.adminLogout()
+    //     expect('1').toBe('2')
+    // })
 
-    test('admin can logout1', async ({ page }) => {
-        expect('1').toBe('1')
-    })
-    test('admin can logout2', async ({ page }) => {
-        expect('1').toBe('1')
-    })
-    test('admin can logout3', async ({ page }) => {
-        expect('1').toBe('3')
-    })
+    // test('admin can logout1', async ({ page }) => {
+    //     expect('1').toBe('1')
+    // })
+    // test('admin can logout2', async ({ page }) => {
+    //     expect('1').toBe('1')
+    // })
+    // test('admin can logout3', async ({ page }) => {
+    //     expect('1').toBe('3')
+    // })
 
     // test('admin can set dokan setup wizard',async ({page}) => { . //todo
     //     const loginPage = new LoginPage(page)
@@ -308,40 +308,40 @@ test.describe('Admin functionality test', () => {
     //         await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime)
     //     })
 
-    //     test('admin can set dokan product advertising settings',async ({page}) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.adminLogin(data.admin)
-    //         await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising)
-    //     })
+        test('admin can set dokan product advertising settings',async ({page}) => {
+            const loginPage = new LoginPage(page)
+            const adminPage = new AdminPage(page)
+            await loginPage.adminLogin(data.admin)
+            await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising)
+        })
 
-    //     test('admin can set dokan geolocation settings',async ({page}) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.adminLogin(data.admin)
-    //         await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation)
-    //     })
+        test('admin can set dokan geolocation settings',async ({page}) => {
+            const loginPage = new LoginPage(page)
+            const adminPage = new AdminPage(page)
+            await loginPage.adminLogin(data.admin)
+            await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation)
+        })
 
-    //     test('admin can set dokan product report abuse settings',async ({page}) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.adminLogin(data.admin)
-    //         await adminPage.setDokanProductReportAbuseSettings(data.dokanSettings.productReportAbuse)
-    //     })
+        test('admin can set dokan product report abuse settings',async ({page}) => {
+            const loginPage = new LoginPage(page)
+            const adminPage = new AdminPage(page)
+            await loginPage.adminLogin(data.admin)
+            await adminPage.setDokanProductReportAbuseSettings(data.dokanSettings.productReportAbuse)
+        })
 
-    //     test('admin can set dokan spmv settings',async ({page}) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.adminLogin(data.admin)
-    //         await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv)
-    //     })
+        test.only('admin can set dokan spmv settings',async ({page}) => {
+            const loginPage = new LoginPage(page)
+            const adminPage = new AdminPage(page)
+            await loginPage.adminLogin(data.admin)
+            await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv)
+        })
 
-    //     test('admin can set dokan vendor subscription settings',async ({page}) => {
-    //         const loginPage = new LoginPage(page)
-    //         const adminPage = new AdminPage(page)
-    //         await loginPage.adminLogin(data.admin)
-    //         await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription)
-    //     })
+        test.skip('admin can set dokan vendor subscription settings',async ({page}) => {
+            const loginPage = new LoginPage(page)
+            const adminPage = new AdminPage(page)
+            await loginPage.adminLogin(data.admin)
+            await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription)
+        })
 
 
 })

@@ -13,9 +13,23 @@ test.describe('admin api test', () => {
 
     //TODO: need to send admin credentials 
 
+
+    test.only('check wp api', async ({ request }) => {
+        // let apiUtils = new ApiUtils(request)
+        // let activePlugins = (await apiUtils.getAllPluginByStatus('active')).map(a => a.plugin)
+        // // expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins))
+        // console.log(activePlugins)
+        let response = await request.get('http://localhost:8889/wp-json/wp/v2/settings')
+        console.log(response.status())
+        expect(response.ok()).toBeTruthy()
+
+
+    })
+
     test('get admin report overview', async ({ request }) => {
         console.log(endPoints.getAdminReportOverview)
         let response = await request.get(endPoints.getAdminReportOverview)
+        console.log(response.status())
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
