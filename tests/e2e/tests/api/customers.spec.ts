@@ -21,11 +21,11 @@ test.describe('customers api test', () => {
 
     test('get all customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllCustomers)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single customer', async ({ request }) => {
@@ -33,11 +33,11 @@ test.describe('customers api test', () => {
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.get(endPoints.getSingleCustomer(customerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a customer', async ({ request }) => {
@@ -55,11 +55,11 @@ test.describe('customers api test', () => {
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -68,11 +68,11 @@ test.describe('customers api test', () => {
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.delete(endPoints.deleteCustomer(customerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     // test.only('update batch customers', async ({ request }) => { //TODO
@@ -88,11 +88,11 @@ test.describe('customers api test', () => {
 
 
         // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
-        // let responseBody = await response.json()
-        // // console.log(responseBody)
-
         // expect(response.ok()).toBeTruthy()
         // expect(response.status()).toBe(200)
+
+        // let responseBody = await response.json()
+        // console.log(responseBody)
 
     // });
 

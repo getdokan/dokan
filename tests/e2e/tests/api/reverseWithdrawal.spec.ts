@@ -29,20 +29,20 @@ test.describe('reverse withdrawal api test', () => {
 
     test('get all reverse withdrawal stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllReverseWithdrawalStores)
-        let responseBody = await response.json()
-        //  console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get all reverse withdrawal store balance', async ({ request }) => {
         let response = await request.get(endPoints.getAllReverseWithdrawalStoreBalance)
-        let responseBody = await response.json()
-        //  console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('getAllReverseWithdrawalTransactions', async ({ request }) => {
@@ -51,11 +51,11 @@ test.describe('reverse withdrawal api test', () => {
         // console.log(storeId)
 
         let response = await request.get(endPoints.getAllReverseWithdrawalTransactions(storeId,'2022-01-01','2022-12-31'))
-        let responseBody = await response.json()
-        //  console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

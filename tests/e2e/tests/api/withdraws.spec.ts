@@ -18,11 +18,11 @@ test.describe('withdraw api test', () => {
 
     test('get balance details', async ({ request }) => {
         let response = await request.get(endPoints.getBalanceDetails)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     // test('get all withdraws by status', async ({ request }) => {
@@ -36,11 +36,11 @@ test.describe('withdraw api test', () => {
 
     test('get all withdraws', async ({ request }) => {
         let response = await request.get(endPoints.getAllWithdraws)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single withdraw', async ({ request }) => {
@@ -48,11 +48,11 @@ test.describe('withdraw api test', () => {
         let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.get(endPoints.getSingleWithdraw(withdrawId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a withdraw', async ({ request }) => {
@@ -69,11 +69,11 @@ test.describe('withdraw api test', () => {
         let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('cancel a withdraw', async ({ request }) => {
@@ -81,11 +81,11 @@ test.describe('withdraw api test', () => {
         let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.delete(endPoints.cancelAWithdraw(withdrawId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

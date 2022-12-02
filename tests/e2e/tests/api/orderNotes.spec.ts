@@ -18,11 +18,11 @@ test.describe('order note api test', () => {
         let [, orderId,] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getAllOrderNotes(orderId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single order note', async ({ request }) => {
@@ -30,11 +30,11 @@ test.describe('order note api test', () => {
         let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -56,11 +56,11 @@ test.describe('order note api test', () => {
         let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

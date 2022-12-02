@@ -17,20 +17,20 @@ test.describe.skip('support ticket api test', () => {
     //TODO: prerequisite => multiple support tickets
     test('get all support ticket customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllSupportTicketCustomers)
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get all support tickets', async ({ request }) => {
         let response = await request.get(endPoints.getAllSupportTickets)
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single support ticket', async ({ request }) => {
@@ -38,11 +38,11 @@ test.describe.skip('support ticket api test', () => {
         let [supportTicketId, sellerId] = await apiUtils.getSupportTicketId()
 
         let response = await request.get(endPoints.getSingleSupportTicket(supportTicketId, sellerId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -51,11 +51,11 @@ test.describe.skip('support ticket api test', () => {
         let [supportTicketId,] = await apiUtils.getSupportTicketId()
 
         let response = await request.post(endPoints.createSupportTicketComment(supportTicketId), { data: payloads.createSupportTicketComment })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -64,11 +64,11 @@ test.describe.skip('support ticket api test', () => {
         let [supportTicketId,] = await apiUtils.getSupportTicketId()
 
         let response = await request.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: payloads.updateSuppotTicketStatus })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         //reopen support ticket
         await apiUtils.updateSupportTicketStatus(supportTicketId, 'open')
@@ -79,11 +79,11 @@ test.describe.skip('support ticket api test', () => {
         let [supportTicketId,] = await apiUtils.getSupportTicketId()
 
         let response = await request.post(endPoints.updateSupportTicketEmailNotification(supportTicketId), { data: payloads.updateSuppotTicketEmailNotification })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -92,11 +92,11 @@ test.describe.skip('support ticket api test', () => {
         let supportTicketCommentId = await apiUtils.createSupportTicketComment(payloads.createSupportTicketComment)
 
         let response = await request.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update batch support tickets', async ({ request }) => {
@@ -105,11 +105,11 @@ test.describe.skip('support ticket api test', () => {
         console.log(allSupportTicketIds)
 
         let response = await request.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         // reopen all support tickets
         for (let supportTicketId of allSupportTicketIds) {

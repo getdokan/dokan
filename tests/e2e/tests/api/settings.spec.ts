@@ -15,22 +15,22 @@ test.describe('settings api test', () => {
 
 test('get settings', async ({ request }) => {
     let response = await request.get(endPoints.getSettings)
-    let responseBody = await response.json()
-    console.log(responseBody)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+        let responseBody = await response.json()
+        // console.log(responseBody)
 });
 
 
 
 test.skip('update settings', async ({ request }) => {
     let response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings })
-    let responseBody = await response.json()
-    console.log(responseBody)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+        let responseBody = await response.json()
+        // console.log(responseBody)
 }); 
 
 

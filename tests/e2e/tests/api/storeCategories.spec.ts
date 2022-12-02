@@ -21,20 +21,20 @@ test.describe('store categories api test', () => {
     //TODO: need to send admin credentials 
     test('get default store category', async ({ request }) => {
         let response = await request.get(endPoints.getDefaultStoreCategory)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get all store categories', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoreCategories)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single store category', async ({ request }) => {
@@ -42,11 +42,11 @@ test.describe('store categories api test', () => {
         let [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory())
 
         let response = await request.get(endPoints.getSingleStoreCategory(categoryId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a store category', async ({ request }) => {
@@ -64,11 +64,11 @@ test.describe('store categories api test', () => {
         let [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory())
 
         let response = await request.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -77,11 +77,11 @@ test.describe('store categories api test', () => {
         let [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory())
 
         let response = await request.delete(endPoints.deleteStoreCategory(categoryId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('set default store category', async ({ request }) => {
@@ -90,11 +90,11 @@ test.describe('store categories api test', () => {
         let [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory())
 
         let response = await request.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         // restore default stor category
         await apiUtils.setDefaultStoreCategory(defaultCategoryId)

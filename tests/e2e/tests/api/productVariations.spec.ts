@@ -19,11 +19,11 @@ test.describe('product variation api test', () => {
         let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.get(endPoints.getAllProductVariations(productId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -33,11 +33,11 @@ test.describe('product variation api test', () => {
 
 
         let response = await request.get(endPoints.getSingleProductVariation(productId, variationId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -46,11 +46,11 @@ test.describe('product variation api test', () => {
         let [, productId] = await apiUtils.createProduct(payloads.createVariableProduct())
 
         let response = await request.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

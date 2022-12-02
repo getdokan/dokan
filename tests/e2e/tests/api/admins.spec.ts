@@ -16,92 +16,95 @@ test.describe('admin api test', () => {
     test('get admin report overview', async ({ request }) => {
         console.log(endPoints.getAdminReportOverview)
         let response = await request.get(endPoints.getAdminReportOverview)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+
         let responseBody = await response.json()
         // console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
     });
 
     test('get admin report summary', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportSummary)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+
         let responseBody = await response.json()
         // console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
     });
 
     test('get getAdminDashboardFeed', async ({ request }) => {
         let response = await request.get(endPoints.getAdminDashboardFeed)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+
         let responseBody = await response.json()
         // console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
     });
 
     test('get admin help', async ({ request }) => {
         let response = await request.get(endPoints.getAdminHelp)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get changelog lite', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogLite)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get changelog pro', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogPro)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get getAdminNotices', async ({ request }) => {
         let response = await request.get(endPoints.getAdminNotices)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get admin promo notices ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminPromoNotices)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get admin logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminLogs)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get admin export logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminExportLogs)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 });

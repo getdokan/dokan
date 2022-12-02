@@ -19,11 +19,11 @@ test.describe('attribute api test', () => {
     //TODO: prerequisite: attriburtes
     test('get all attributes', async ({ request }) => {
         let response = await request.get(endPoints.getAllAttributes)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single attribute', async ({ request }) => {
@@ -31,11 +31,11 @@ test.describe('attribute api test', () => {
         let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.get(endPoints.getSingleAttribute(attributeId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -54,11 +54,11 @@ test.describe('attribute api test', () => {
         let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -67,11 +67,11 @@ test.describe('attribute api test', () => {
         let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
         let response = await request.delete(endPoints.deleteAttribute(attributeId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

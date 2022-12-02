@@ -18,20 +18,20 @@ test.describe('product advertisement api test', () => {
     //TODO: need to send admin credentials 
     test('get all advertised product stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductAdvertisementStores)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get all advertised product', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductAdvertisements)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a product advertisement', async ({ request }) => {
@@ -40,11 +40,11 @@ test.describe('product advertisement api test', () => {
         let sellerId = body.store.id
 
         let response = await request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -53,11 +53,11 @@ test.describe('product advertisement api test', () => {
         let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
 
         let response = await request.put(endPoints.expireProductAdvertisement(productAdvertisementId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('delete a product advertisement', async ({ request }) => {
@@ -65,11 +65,11 @@ test.describe('product advertisement api test', () => {
         let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
 
         let response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -78,11 +78,11 @@ test.describe('product advertisement api test', () => {
         let allproductAdvertisementIds = (await apiUtils.getAllProductAdvertisements()).map(a => a.id)
 
         let response = await request.put(endPoints.updateBatchProductAdvertisements, { data: { ids: allproductAdvertisementIds, action: "delete" } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 });

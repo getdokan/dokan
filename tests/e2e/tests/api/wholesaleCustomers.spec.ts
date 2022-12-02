@@ -20,11 +20,11 @@ test.describe('wholesale customers api test', () => {
     //TODO: need to send admin credentials for admin info
     test('get all wholesale customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllWholesaleCustomers)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a wholesale customer', async ({ request }) => {
@@ -32,11 +32,11 @@ test.describe('wholesale customers api test', () => {
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -45,11 +45,11 @@ test.describe('wholesale customers api test', () => {
         let [, customerId] = await apiUtils.createWholesaleCustomer()
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.updateWholesaleCustomer })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -58,11 +58,11 @@ test.describe('wholesale customers api test', () => {
         let [, customerId] = await apiUtils.createWholesaleCustomer()
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.deleteWholesaleCustomer })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

@@ -20,20 +20,20 @@ test.describe('stores api test', () => {
 
     test('get all stores check check_store_availability', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoresCheck)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get all stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllStores)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
         // expect(responseBody[0]).toContainEqual(expect.objectContaining(
         //     {
         //         id: expect.any(Number),
@@ -91,11 +91,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getSingleStore(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
         // expect(responseBody1).toEqual(expect.objectContaining(
         //     {
         //         id: expect.any(Number),
@@ -147,11 +147,11 @@ test.describe('stores api test', () => {
 
     test('create a store', async ({ request }) => {
         let response = await request.post(endPoints.createStore, { data: payloads.createStore() })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update a store', async ({ request }) => {
@@ -159,11 +159,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.put(endPoints.updateStore(sellerId), { data: payloads.updateStore() })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('delete a store', async ({ request }) => {
@@ -171,20 +171,20 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.delete(endPoints.deleteStore(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get store current visitor', async ({ request }) => {
         let response = await request.get(endPoints.getStoreCurrentVisitor)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get store stats', async ({ request }) => {
@@ -192,11 +192,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreStats(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get store categories', async ({ request }) => {
@@ -204,11 +204,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreCategories(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get store products', async ({ request }) => {
@@ -217,11 +217,11 @@ test.describe('stores api test', () => {
         // let sellerId = await apiUtils.getSellerId('vendor1') 
 
         let response = await request.get(endPoints.getStoreProducts(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test.skip('get store reviews', async ({ request }) => {
@@ -230,11 +230,11 @@ test.describe('stores api test', () => {
         await apiUtils.createStoreReview(sellerId, payloads.createStoreReview) //TODO: user must be other than vendor
 
         let response = await request.get(endPoints.getStoreReviews(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test.skip('create a store review', async ({ request }) => {  //TODO: user must be other than vendor
@@ -242,11 +242,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update a store status', async ({ request }) => {
@@ -254,11 +254,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('admin contact store', async ({ request }) => {
@@ -266,11 +266,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.adminContactStore(sellerId), { data: payloads.adminContactStore })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('admitn email store', async ({ request }) => {
@@ -278,11 +278,11 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.adminEmailStore(sellerId), { data: payloads.adminEnailStore })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 });

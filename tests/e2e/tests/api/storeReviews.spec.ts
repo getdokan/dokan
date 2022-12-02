@@ -22,11 +22,11 @@ test.describe.skip('store reviews api test', () => {
 
     test('get all store reviews', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoreReviews)
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single store review', async ({ request }) => {
@@ -34,11 +34,11 @@ test.describe.skip('store reviews api test', () => {
         let reviewId = await apiUtils.getStoreReviewId()
 
         let response = await request.get(endPoints.getSingleStoreReview(reviewId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update a store review', async ({ request }) => {
@@ -46,11 +46,11 @@ test.describe.skip('store reviews api test', () => {
         let reviewId = await apiUtils.getStoreReviewId()
 
         let response = await request.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateStoreReview })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
     });
 
@@ -59,11 +59,11 @@ test.describe.skip('store reviews api test', () => {
         let reviewId = await apiUtils.getStoreReviewId()
 
         let response = await request.delete(endPoints.deleteStoreReview(reviewId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('restore a deleted store review ', async ({ request }) => {
@@ -72,11 +72,11 @@ test.describe.skip('store reviews api test', () => {
         await request.delete(endPoints.deleteStoreReview(reviewId))
 
         let response = await request.put(endPoints.restoreDeletedStoreReview(reviewId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update batch store review', async ({ request }) => {
@@ -85,11 +85,11 @@ test.describe.skip('store reviews api test', () => {
         console.log(allStoreReviewIds)
 
         let response = await request.put(endPoints.updateBatchStoreReviews, { data: { trash: allStoreReviewIds } })
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         // restore all store reviews
         await apiUtils.updateBatchStoreReviews('restore', allStoreReviewIds)

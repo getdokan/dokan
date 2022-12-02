@@ -207,10 +207,8 @@ test.describe('setup test', () => {
 
     test.only('add test vendor', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        // create vendor
-        // await apiUtils.createUser(payloads.createVendor) // need admin credential
-        // set store settings
-        await apiUtils.setStoreSettings(payloads.updateSettings)
+        // create store
+        await apiUtils.createStore(payloads.createStore1)
         // create vendor product & coupon
         let product = payloads.createProduct()
         product.name = 'p1_v1'

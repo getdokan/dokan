@@ -20,11 +20,11 @@ test.describe('announcements api test', () => {
 
     test('get all announcements', async ({ request }) => {
         let response = await request.get(endPoints.getAllAnnouncements)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get single announcement', async ({ request }) => {
@@ -32,20 +32,20 @@ test.describe('announcements api test', () => {
         let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.get(endPoints.getSingleAnnouncement(announcementId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('create a announcement', async ({ request }) => {
         let response = await request.post(endPoints.createAnnouncement, { data: payloads.createAnnouncemnt })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 
@@ -54,11 +54,11 @@ test.describe('announcements api test', () => {
         let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
     });
 
@@ -67,11 +67,11 @@ test.describe('announcements api test', () => {
         let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.delete(endPoints.deleteAnnouncement(announcementId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update batch announcements', async ({ request }) => { 
@@ -80,11 +80,11 @@ test.describe('announcements api test', () => {
         console.log(allAnnouncementIds)
 
         let response = await request.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         // restore all announcements
         await apiUtils.updateBatchAnnouncements('restore', allAnnouncementIds)

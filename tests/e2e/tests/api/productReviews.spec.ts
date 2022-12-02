@@ -18,20 +18,20 @@ test.describe('product review api test', () => {
 
     test('get all product reviews', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductReviews)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('get product reviews summary', async ({ request }) => {
         let response = await request.get(endPoints.getProductReviewSummary)
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update a product review', async ({ request }) => {
@@ -39,11 +39,11 @@ test.describe('product review api test', () => {
         let [, reviewId] = await apiUtils.createProductReview(payloads.createProduct(), payloads.createProductReview())
 
         let response = await request.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateProductReview })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

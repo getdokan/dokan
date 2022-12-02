@@ -25,11 +25,11 @@ test.describe('follow store api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreFollowStatus(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('follow-unfollow a store', async ({ request }) => {
@@ -37,11 +37,11 @@ test.describe('follow store api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 });

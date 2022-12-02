@@ -17,11 +17,11 @@ test('get all attribute terms', async ({ request }) => {
     let [,attributeId,] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.get(endPoints.getAllAttributeTerms(attributeId))
-    let responseBody = await response.json()
-    // console.log(responseBody)
-
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+
+    let responseBody = await response.json()
+    // console.log(responseBody)
 });
 
 test('get single attribute term', async ({ request }) => {
@@ -29,11 +29,11 @@ test('get single attribute term', async ({ request }) => {
     let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId))
-    let responseBody = await response.json()
-    // console.log(responseBody)
-
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+
+    let responseBody = await response.json()
+    // console.log(responseBody)
 });
 
 
@@ -42,11 +42,11 @@ test('create an attribute term', async ({ request }) => {
     let [, attributeId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() })
+    expect(response.ok()).toBeTruthy()
+    expect(response.status()).toBe(200)
+
     let responseBody = await response.json()
     // console.log(responseBody)
-
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(201)
 });
 
 
@@ -55,11 +55,11 @@ test('update an attribute term ', async ({ request }) => {
     let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() })
-    let responseBody = await response.json()
-    // console.log(responseBody)
-
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+
+    let responseBody = await response.json()
+    // console.log(responseBody)
 });
 
 
@@ -68,11 +68,11 @@ test('delete an attribute term', async ({ request }) => {
     let [,attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
 
     let response = await request.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId))
-    let responseBody = await response.json()
-    // console.log(responseBody)
-
     expect(response.ok()).toBeTruthy()
     expect(response.status()).toBe(200)
+
+    let responseBody = await response.json()
+    // console.log(responseBody)
 });
 
 });

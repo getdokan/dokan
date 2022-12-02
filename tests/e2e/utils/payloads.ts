@@ -167,7 +167,7 @@ export const payloads = {
 
   createRefund:
   {
-    api_refund : false,
+    api_refund: false,
     line_items: [
       {
         refund_total: 1
@@ -837,12 +837,12 @@ export const payloads = {
   dummydata: {
 
   },
+
   createStore: () => {
     return {
       user_login: faker.name.firstName() + faker.datatype.uuid(),
       user_pass: "01dokan01",
       role: "seller",
-      username: faker.name.firstName() + faker.datatype.uuid(), //TODO: need unique user for vendor, store, customer
       email: faker.internet.email(),
       store_name: faker.name.firstName(),
       first_name: faker.name.firstName(),
@@ -1059,7 +1059,7 @@ export const payloads = {
         state: "NY",
         country: "US"
       },
-      location: "",
+      location: '40.7127753,-74.0059728',
       banner: "",
       banner_id: 0,
       gravatar: "",
@@ -1107,9 +1107,9 @@ export const payloads = {
       bank_iban: "",
       categories: [
         {
-          id: 74,
-          name: "Uncategorized",
-          slug: "uncategorized"
+          // id: 74,
+          // name: "Uncategorized",
+          // slug: "uncategorized"
         }
       ],
       admin_commission: "",

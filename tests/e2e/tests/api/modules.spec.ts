@@ -22,12 +22,11 @@ test.describe('modules api test', () => {
 
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)
-        // let responseBody = await response.json()
-        // console.log(responseBody)
-        console.log(await response.status())
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-        expect(await response.ok()).toBeTruthy()
-        expect(await response.status()).toBe(200)
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     // test('deactivate a module', async ({ request }) => {
@@ -36,11 +35,11 @@ test.describe('modules api test', () => {
     //     console.log(randomModule)
 
     //     let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } })
-    //     let responseBody = await response.json()
-    //     // console.log(responseBody)
+    // expect(response.ok()).toBeTruthy()
+    // expect(response.status()).toBe(200)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
+    // let responseBody = await response.json()
+    // console.log(responseBody)
 
     //     //reactivate module
     //     await apiUtils.activateModules(randomModule)
@@ -52,11 +51,11 @@ test.describe('modules api test', () => {
     //     console.log(randomModule)
 
     //     let response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } })
-    //     let responseBody = await response.json()
-    //     // console.log(responseBody)
+    // expect(response.ok()).toBeTruthy()
+    // expect(response.status()).toBe(200)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
+    // let responseBody = await response.json()
+    // console.log(responseBody)
     // });
 
 

@@ -18,20 +18,21 @@ test.describe.skip('abuse report api test', () => {
     //TODO: product, product abuse report
     test.skip('get all abuse report reasons', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReportReasons)
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test.skip('get all abuse reports', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReports)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+
         let responseBody = await response.json()
         console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
     });
 
     test.skip('delete a abuse report', async ({ request }) => {
@@ -41,11 +42,12 @@ test.describe.skip('abuse report api test', () => {
         console.log(abuseReportId)
 
         let response = await request.delete(endPoints.deleteAbuseReport(abuseReportId))
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
+
         let responseBody = await response.json()
         console.log(responseBody)
 
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
     });
 
 
@@ -54,11 +56,12 @@ test.describe.skip('abuse report api test', () => {
     //     let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
 
     //     let response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId))
+    //     expect(response.ok()).toBeTruthy()
+    //     expect(response.status()).toBe(200)
+
     //     let responseBody = await response.json()
     //     console.log(responseBody)
 
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
     // });
 
 
