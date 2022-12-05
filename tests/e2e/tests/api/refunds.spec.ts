@@ -10,7 +10,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('refunds api test', () => {
+test.describe.skip('refunds api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     //TODO: orders
@@ -30,7 +30,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test.only('get all refunds by status', async ({ request }) => {
+    test('get all refunds by status', async ({ request }) => {
         // let response = await request.get(endPoints.getAllRefundsByStatus('pending')) // pending, cancelled, completed
         let response = await request.get(endPoints.getAllRefundsByStatus('completed')) // pending, cancelled, completed
         expect(response.ok()).toBeTruthy()
@@ -40,7 +40,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test.skip('approve a refund', async ({ request }) => {
+    test('approve a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
@@ -52,7 +52,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test.skip('cancel a refund', async ({ request }) => {
+    test('cancel a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
@@ -64,7 +64,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test.skip('delete a refund', async ({ request }) => {
+    test('delete a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 

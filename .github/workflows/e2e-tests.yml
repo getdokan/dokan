@@ -171,7 +171,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
-          keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+          # keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
           user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
           user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
 
