@@ -7,8 +7,8 @@
 
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.7.0.1.zip",
-    "./plugins/dokan",
-    "./plugins/dokan-pro",
+    "../../",
+    "../../plugins/dokan-pro",
     "https://demo.nurul.me/wp-content/uploads/2022/11/ba.zip",
     "https://demo.nurul.me/wp-content/uploads/2022/11/wa.zip",
     "https://demo.nurul.me/wp-content/uploads/2022/11/wb.zip",
