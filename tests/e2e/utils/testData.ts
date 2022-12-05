@@ -1,5 +1,18 @@
-import {faker} from '@faker-js/faker'
-import {helpers} from './helpers'
+import { faker } from '@faker-js/faker'
+import { helpers } from './helpers'
+
+interface user {
+    username: string;
+    password: string;
+}
+
+interface admin {
+    username: string;
+    password: string;
+}
+
+
+export { admin, user }
 
 
 export const data = {
@@ -193,9 +206,9 @@ export const data = {
             categories: faker.helpers.arrayElement(["Electronic Devices", "Electronic Accessories", "Men's Fashion", "Clothings", "Women's Fashion"]),
         },
         store: {
-            adminStore: process.env.ADMIN + 'store',
-            vendorStore1: process.env.VENDOR + 'store',
-            vendorStore2: process.env.VENDOR1 + 'store',
+            adminStore: String(process.env.ADMIN) + 'store',
+            vendorStore1: String(process.env.VENDOR) + 'store',
+            vendorStore2: String(process.env.VENDOR1) + 'store',
         },
 
         attribute: {
@@ -339,7 +352,7 @@ export const data = {
 
         // Review
         review: {
-            rating: faker.datatype.number({min: 1, max: 5}),
+            rating: faker.datatype.number({ min: 1, max: 5 }),
             reviewMessage: () => faker.datatype.uuid(),
         },
 
@@ -421,8 +434,8 @@ export const data = {
     coupon: {
         // title: () => 'VC_' + faker.random.alpha({count: 5, casing: 'upper'},),
         title: () => 'VC_' + faker.datatype.uuid(),
-        amount: () => faker.datatype.number({min: 1, max: 10},).toString(),
-        discount_type:() =>faker.helpers.arrayElement(['percent', 'fixed_product']),
+        amount: () => faker.datatype.number({ min: 1, max: 10 },).toString(),
+        discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']),
         existingCouponErrorMessage: 'Coupon title already exists',
     },
 
@@ -637,8 +650,8 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
         appreance: {
-            googleMapApiKey: process.env.GOOGLE_MAP_API_KEY,
-            mapBoxApiKey: process.env.MAPBOX_API_KEY,
+            googleMapApiKey: String(process.env.GOOGLE_MAP_API_KEY),
+            mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -734,7 +747,7 @@ export const data = {
         shippingFeeRecipient: 'seller',
         taxFeeRecipient: 'seller',
         mapApiSource: 'google_maps',
-        googleMapApiKey: process.env.GOOGLE_MAP_API_KEY,
+        googleMapApiKey: String(process.env.GOOGLE_MAP_API_KEY),
         sellingProductTypes: 'sell_both',
         commissionType: 'percentage',
         adminCommission: '10',
@@ -785,25 +798,21 @@ export const data = {
         ajax: 'https://dokan2.test/wp-admin/admin-ajax.php'
     },
 
+
     admin: {
-        username: process.env.ADMIN,
-        password: process.env.ADMIN_PASSWORD,
+        username: String(process.env.ADMIN),
+        password: String(process.env.ADMIN_PASSWORD),
     },
 
     vendor: {
-        username: process.env.VENDOR,
-        password: process.env.VENDOR_PASSWORD,
-
-        vendor2: {
-            username: process.env.VENDOR2,
-            password: process.env.VENDOR_PASSWORD,
-        },
+        username: String(process.env.VENDOR),
+        password: String(process.env.VENDOR_PASSWORD),
 
         vendorInfo: {
             email: () => faker.internet.email(),
             emailDomain: '@gmail.com',
-            password: process.env.VENDOR_PASSWORD,
-            password1: process.env.VENDOR_PASSWORD + '1',
+            password: String(process.env.VENDOR_PASSWORD),
+            password1: String(process.env.VENDOR_PASSWORD) + '1',
             firstName: () => faker.name.firstName('male'),
             lastName: () => faker.name.lastName('male'),
             userName: faker.name.firstName('male'), //TODO: update all faker with function, also handle assignin one member value to other
@@ -1038,19 +1047,14 @@ export const data = {
         registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
     },
     customer: {
-        username: process.env.CUSTOMER,
-        password: process.env.CUSTOMER_PASSWORD,
-
-        customer2: {
-            username: process.env.CUSTOMER2,
-            password: process.env.CUSTOMER_PASSWORD,
-        },
+        username: String(process.env.CUSTOMER),
+        password: String(process.env.CUSTOMER_PASSWORD),
 
         customerInfo: {
             emailDomain: '@gmail.com',
             email: faker.internet.email(),
-            password: process.env.CUSTOMER_PASSWORD,
-            password1: process.env.CUSTOMER_PASSWORD + '1',
+            password: String(process.env.CUSTOMER_PASSWORD),
+            password1: String(process.env.CUSTOMER_PASSWORD) + '1',
             firstName: () => faker.name.firstName('male'),
             lastName: () => faker.name.lastName('male'),
             // username: () => this.customer.customerInfo.firstName, //TODO: handel callback  & not works

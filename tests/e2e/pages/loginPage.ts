@@ -1,6 +1,6 @@
 import {expect, type Page} from '@playwright/test';
 import {BasePage} from "./basePage";
-import {data} from '../utils/testData';
+import {data, user} from '../utils/testData';
 import {selector} from './selectors';
 
 export class LoginPage extends BasePage {
@@ -10,12 +10,12 @@ export class LoginPage extends BasePage {
     }
 
     // user login
-    async login(user: { username: string, password: string }): Promise<void> {
+    async login(user: user): Promise<void> {
         await this.loginFronted(user)
     }
 
     // user loginFronted
-    async loginFronted(user: { username: string, password: string }): Promise<void> {
+    async loginFronted(user: user): Promise<void> {
         await this.goIfBlank(data.subUrls.frontend.myAccount)
         let currentUser = await this.getCurrentUser()
         // skip if user is already logged in
@@ -37,12 +37,12 @@ export class LoginPage extends BasePage {
     }
 
     // user loginBackend
-    async loginBackend(user: { username: string, password: string }): Promise<void> {
+    async loginBackend(user: user): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.login)
         await this.loginWpDashboard(user)
     }
 
-    async loginWpDashboard(user: { username: string, password: string }): Promise<void> {
+    async loginWpDashboard(user: user): Promise<void> {
         let emailField = await this.isVisible(selector.backend.email)
         if (emailField) {
             await this.clearAndType(selector.backend.email, user.username)
@@ -69,7 +69,7 @@ export class LoginPage extends BasePage {
     }
 
     // admin login
-    async adminLogin(user: { username: string, password: string }) {
+    async adminLogin(user: user) {
         await this.goIfNotThere(data.subUrls.backend.adminLogin)
         await this.loginWpDashboard(user)
     }
@@ -84,7 +84,7 @@ export class LoginPage extends BasePage {
     }
 
     // switch user
-    async switchUser(user: { username: string, password: string }): Promise<void> {
+    async switchUser(user: user): Promise<void> {
         let currentUser = await this.getCurrentUser()
         if (currentUser !== user.username) {
             await this.loginBackend(user)
