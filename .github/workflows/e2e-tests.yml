@@ -112,7 +112,7 @@ jobs:
         with:
           report_paths: "tests/e2e/playwright-report/results.xml"
           include_passed: true,
-          check_retries: true,
+          # check_retries: true,
           # detailed_summary: true,
 
       # - name: Generate Test Report
@@ -152,6 +152,7 @@ jobs:
           user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
 
       - name: Test results
+        if: always()
         run: |
           echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
 
@@ -178,4 +179,4 @@ jobs:
   #       # redundant / in echo url remove before run
   #     - name: Test results
   #       run: |
-  #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+  #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"

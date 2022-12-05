@@ -16,7 +16,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('store categories api test', () => {
+test.describe.skip('store categories api test', () => {
 
     //TODO: need to send admin credentials 
     test('get default store category', async ({ request }) => {

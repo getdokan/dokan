@@ -37,7 +37,7 @@ test.describe('coupon api test', () => {
         expect(response.status()).toBe(200)
 
         let responseBody = await response.json()
-        // console.log(responseBody)
+        console.log(responseBody)
     });
 
 

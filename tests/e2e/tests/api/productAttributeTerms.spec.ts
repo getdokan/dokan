@@ -43,7 +43,7 @@ test('create an attribute term', async ({ request }) => {
 
     let response = await request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() })
     expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+    expect(response.status()).toBe(201)
 
     let responseBody = await response.json()
     // console.log(responseBody)
