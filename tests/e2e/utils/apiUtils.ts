@@ -21,6 +21,7 @@ export class ApiUtils {
     async getAllStores() {
         let response = await this.request.get(endPoints.getAllStores)
         let responseBody = await response.json()
+         // console.log(responseBody)
         return responseBody
     }
 
@@ -45,7 +46,7 @@ export class ApiUtils {
         let response = await this.request.post(endPoints.createStore, { data: payload })
         let responseBody = await response.json()
         let sellerId = responseBody.id
-        console.log(responseBody)
+        // console.log(responseBody)
         // console.log(sellerId)
         return [responseBody, sellerId]
     }
@@ -345,7 +346,7 @@ export class ApiUtils {
     async getRefundId() {
         let allRefunds = await this.getAllRefunds()
         let refundId = allRefunds[0].id
-        console.log(refundId)
+        // console.log(refundId)
         return refundId
     }
 
@@ -430,7 +431,7 @@ export class ApiUtils {
     async getReverseWithdrawalStoreId() {
         let allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores()
         let reverseWithdrawalStoreId = allReverseWithdrawalStores[0].id
-        console.log(reverseWithdrawalStoreId)
+        // console.log(reverseWithdrawalStoreId)
         return reverseWithdrawalStoreId
     }
 
@@ -551,7 +552,7 @@ export class ApiUtils {
     // create a product advertisement
     async createProductAdvertisement() {
         let [body, productId] = await this.createProduct(payloads.createProduct())
-        console.log(body)
+        // console.log(body)
         let sellerId = body.store.id
 
         let response = await this.request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })
@@ -691,7 +692,6 @@ export class ApiUtils {
         let response = await this.request.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } })
         let responseBody = await response.json()
         // console.log(responseBody)
-
         return responseBody
     }
 
@@ -1083,7 +1083,7 @@ export class ApiUtils {
     async updatePaymentGateway(paymentGatewayId: string, payload: object) {
         let response = await this.request.put(endPoints.wc.updatePaymentGatway(paymentGatewayId), { data: payload })
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
         return responseBody
     }
 

@@ -28,14 +28,14 @@ test.describe('modules api test', () => {
     test('deactivate a module', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-        console.log(randomModule)
+        // console.log(randomModule)
 
         let response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } })
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    let responseBody = await response.json()
-    console.log(responseBody)
+        let responseBody = await response.json()
+        // console.log(responseBody)
 
         //reactivate module
         await apiUtils.activateModules(randomModule)
@@ -44,14 +44,14 @@ test.describe('modules api test', () => {
     test('activate a module', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-        console.log(randomModule)
+        // console.log(randomModule)
 
         let response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } })
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
+        expect(response.ok()).toBeTruthy()
+        expect(response.status()).toBe(200)
 
-    let responseBody = await response.json()
-    console.log(responseBody)
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
 

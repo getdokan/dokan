@@ -27,11 +27,12 @@ test.describe('withdraw api test', () => {
 
     // test('get all withdraws by status', async ({ request }) => {
     //     let response = await request.get(endPoints.getAllWithdrawsbyStatus('pending')) // pending, cancelled, approved
-    //     let responseBody = await response.json()
-        // console.log(responseBody)
-
     //     expect(response.ok()).toBeTruthy()
     //     expect(response.status()).toBe(200)
+
+
+    //     let responseBody = await response.json()
+    //      console.log(responseBody)
     // });
 
     test('get all withdraws', async ({ request }) => {
@@ -57,11 +58,11 @@ test.describe('withdraw api test', () => {
 
     test('create a withdraw', async ({ request }) => {
         let response = await request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
+
+        let responseBody = await response.json()
+        // console.log(responseBody)
     });
 
     test('update a withdraw', async ({ request }) => {
