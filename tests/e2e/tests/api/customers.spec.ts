@@ -66,12 +66,15 @@ test.describe('customers api test', () => {
     test('delete a customer', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
+        console.log(customerId)
 
         let response = await request.delete(endPoints.deleteCustomer(customerId))
+        let responseBody = await response.json()
+        console.log(responseBody)
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
     });
 
@@ -87,12 +90,12 @@ test.describe('customers api test', () => {
     //     }
 
 
-        // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
-        // expect(response.ok()).toBeTruthy()
-        // expect(response.status()).toBe(200)
+    // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
+    // expect(response.ok()).toBeTruthy()
+    // expect(response.status()).toBe(200)
 
-        // let responseBody = await response.json()
-        // console.log(responseBody)
+    // let responseBody = await response.json()
+    // console.log(responseBody)
 
     // });
 

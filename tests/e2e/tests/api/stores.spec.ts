@@ -171,10 +171,13 @@ test.describe('stores api test', () => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.delete(endPoints.deleteStore(sellerId))
+        let responseBody = await response.json()
+        // console.log(responseBody)
+
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
     });
 
@@ -183,7 +186,7 @@ test.describe('stores api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
     });
 

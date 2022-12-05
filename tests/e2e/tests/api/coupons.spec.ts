@@ -16,7 +16,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('coupon api test', () => {
+test.describe.skip('coupon api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     test('get all coupons', async ({ request }) => {
