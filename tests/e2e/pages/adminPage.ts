@@ -71,7 +71,8 @@ export class AdminPage extends BasePage {
 
     // Admin Set Permalink Settings
     async setPermalinkSettings(permalink) {
-        await this.hover(selector.admin.aDashboard.settings)
+        // await this.hover(selector.admin.aDashboard.settings)
+        await this.hoverOnLocator(selector.admin.aDashboard.settings)
         // await this.goToPermalinks()
         // Set Permalinks Settings
         await this.click(selector.admin.settings.permalinks)
