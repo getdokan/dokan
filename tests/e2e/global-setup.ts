@@ -41,7 +41,7 @@ async function globalSetup(config: FullConfig) {
     process.env.SERVER_URL = serverUrl
     process.env.QUERY = query
 
-    //create vendor
+    // create vendor
     let apiUtils = new ApiUtils(context)
     await apiUtils.createStore(payloads.createStore1)
 }
