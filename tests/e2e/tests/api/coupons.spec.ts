@@ -41,7 +41,7 @@ test.describe('coupon api test', () => {
     });
 
 
-    test.only('create a coupon', async ({ request }) => {
+    test('create a coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, productId] = await apiUtils.createProduct(payloads.createProduct())
         let payloadCoupon = payloads.createCoupon()

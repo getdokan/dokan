@@ -119,7 +119,6 @@ export class ApiUtils {
 
     // create product
     async createProduct(payload: object) {
-        console.log(endPoints.createProduct)
         let response = await this.request.post(endPoints.createProduct, { data: payload })
         let responseBody = await response.json()
         let productId = responseBody.id
