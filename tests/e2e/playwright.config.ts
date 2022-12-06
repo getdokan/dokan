@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 // api 
-let username = process.env.ADMIN
+// let username = process.env.ADMIN
 let username = 'vendor1'
 let password = process.env.ADMIN_PASSWORD
 const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
