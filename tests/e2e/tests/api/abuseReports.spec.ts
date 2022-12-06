@@ -20,6 +20,7 @@ test.describe.skip('abuse report api test', () => {
         let response = await request.get(endPoints.getAllAbuseReportReasons)
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+        // expect(response).toContainJSON(defaultPost) //TODO: implement this
 
         let responseBody = await response.json()
         // console.log(responseBody)

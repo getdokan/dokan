@@ -16,7 +16,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('coupon api test', () => {
+test.describe('coupon api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     test('get all coupons', async ({ request }) => {
@@ -41,7 +41,7 @@ test.describe.skip('coupon api test', () => {
     });
 
 
-    test('create a coupon', async ({ request }) => {
+    test.only('create a coupon', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, productId] = await apiUtils.createProduct(payloads.createProduct())
         let payloadCoupon = payloads.createCoupon()
@@ -52,7 +52,7 @@ test.describe.skip('coupon api test', () => {
         expect(response.status()).toBe(200)
 
         let responseBody = await response.json()
-        // console.log(responseBody)
+        console.log(responseBody)
     });
 
 

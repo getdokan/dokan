@@ -7,6 +7,7 @@ const SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localho
 // http://localhost:8888/index.php?rest_route=/dokan/{{version}}/admin/changelog/lite
 
 export const endPoints = {
+    serverlUrl: `${SERVER_URL}`,
     getAllStoresCheck: `${SERVER_URL}/wp-json/dokan/v1/stores/check`,      // get
     getAllStores: `${SERVER_URL}/wp-json/dokan/v1/stores`,        // get 
     getSingleStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}`,  // get

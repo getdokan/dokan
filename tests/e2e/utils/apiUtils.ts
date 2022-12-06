@@ -12,6 +12,19 @@ export class ApiUtils {
     }
 
 
+    // get site headers
+    async getSiteHeaders() {
+        let response = await this.request.head(endPoints.serverlUrl)
+        let headers = response.headers()
+        return headers
+    }
+
+    async plainPermalink(){
+        let headers = await this.getSiteHeaders()
+        let link = headers.link
+        return link.includes('rest_route')
+    }
+
     /**
      * store api methods
      */
@@ -21,7 +34,7 @@ export class ApiUtils {
     async getAllStores() {
         let response = await this.request.get(endPoints.getAllStores)
         let responseBody = await response.json()
-         // console.log(responseBody)
+        // console.log(responseBody)
         return responseBody
     }
 
@@ -70,7 +83,7 @@ export class ApiUtils {
     async followUnfollowStore(sellerId: string) {
         let response = await this.request.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } })
         let responseBody = await response.json()
-       //  console.log(responseBody)
+        //  console.log(responseBody)
         return responseBody
     }
 
@@ -106,6 +119,7 @@ export class ApiUtils {
 
     // create product
     async createProduct(payload: object) {
+        console.log(endPoints.createProduct)
         let response = await this.request.post(endPoints.createProduct, { data: payload })
         let responseBody = await response.json()
         let productId = responseBody.id
@@ -601,7 +615,7 @@ export class ApiUtils {
     async updateBatchAnnouncements(action: string, allIds: string[]) {
         let response = await this.request.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds } })
         let responseBody = await response.json()
-       //  console.log(responseBody)
+        //  console.log(responseBody)
         return responseBody
     }
 
@@ -658,7 +672,7 @@ export class ApiUtils {
     async updateBatchStoreReviews(action: string, allIds: string[]) {
         let response = await this.request.put(endPoints.updateBatchStoreReviews, { data: { [action]: allIds } })
         let responseBody = await response.json()
-       //  console.log(responseBody)
+        //  console.log(responseBody)
         return responseBody
     }
 
@@ -771,7 +785,7 @@ export class ApiUtils {
     async createUser(payload: object) {  // administrator,  customer, seller
         let response = await this.request.post(endPoints.wp.createUser, { data: payload })
         let responseBody = await response.json()
-       //  console.log(responseBody)
+        //  console.log(responseBody)
         return responseBody
     }
 
