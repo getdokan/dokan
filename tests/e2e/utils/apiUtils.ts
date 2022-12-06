@@ -57,12 +57,12 @@ export class ApiUtils {
     // create store
     async createStore(payload: object) {
         let response = await this.request.post(endPoints.createStore, { data: payload })
-        console.log(response.status())
-        // let responseBody = await response.json()
-        // let sellerId = responseBody.id
+        // console.log(response.status())
+        let responseBody = await response.json()
+        let sellerId = responseBody.id
         // console.log(responseBody)
         // console.log(sellerId)
-        // return [responseBody, sellerId]
+        return [responseBody, sellerId]
     }
 
     // create store review

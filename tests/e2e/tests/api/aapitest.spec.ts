@@ -71,19 +71,19 @@ test.describe(' api test', () => {
 
     // });
 
-    test('update settings', async ({ request }) => {
-        let response = await request.put(endPoints.updateSettings, {
-            data: {
-                trusted: true,
-                enabled: true,
-            }
-        })
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
+    // test('update settings', async ({ request }) => {
+    //     let response = await request.put(endPoints.updateSettings, {
+    //         data: {
+    //             trusted: true,
+    //             enabled: true,
+    //         }
+    //     })
+    //     expect(response.ok()).toBeTruthy()
+    //     expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
-        // console.log(responseBody)
-    });
+    //     let responseBody = await response.json()
+    //     // console.log(responseBody)
+    // });
 
 
 });

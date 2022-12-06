@@ -18,7 +18,7 @@ test.describe('stores api test', () => {
     //TODO: need to send vendor credentials for vendor info
     //TODO: prerequisite vendor, feratured vendor , vendor product, vendor review
 
-    test('get all stores check check_store_availability', async ({ request }) => {
+    test('get all stores check store availability status', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoresCheck)
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)

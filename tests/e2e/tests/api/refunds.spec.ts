@@ -40,7 +40,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test('approve a refund', async ({ request }) => {
+    test.skip('approve a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         // let refundId = await apiUtils.getRefundId()
         let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
@@ -54,7 +54,7 @@ test.describe('refunds api test', () => {
         // console.log(responseBody)
     });
 
-    test('cancel a refund', async ({ request }) => {
+    test.skip('cancel a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
         let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)

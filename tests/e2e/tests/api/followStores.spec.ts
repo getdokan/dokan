@@ -40,7 +40,7 @@ test.describe('follow store api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
     });
 

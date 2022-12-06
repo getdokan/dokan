@@ -22,12 +22,12 @@
 
 require('dotenv').config();
 import { FullConfig, request } from '@playwright/test'
-import { ApiUtils } from './utils/apiUtils'
 import { payloads } from './utils/payloads'
 
+
 async function globalSetup(config: FullConfig) {
-    let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
-    let query = '?'
+    var serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
+    var query = '?'
     const context = await request.newContext({})
     let head = await context.head(serverUrl)
     let headers = head.headers()
@@ -35,15 +35,23 @@ async function globalSetup(config: FullConfig) {
     if (link.includes('rest_route')) {
         serverUrl = serverUrl + '?rest_route='
         query = '&'
+        // console.log('if')
+        // console.log(process.env.SERVER_URL)
     } else {
         serverUrl = serverUrl + '/wp-json'
+        // console.log('else')
     }
     process.env.SERVER_URL = serverUrl
     process.env.QUERY = query
 
-    // create vendor
-    let apiUtils = new ApiUtils(context)
-    await apiUtils.createStore(payloads.createStore1)
+    // // create vendor
+    // let response = await context.post(`${process.env.SERVER_URL}/dokan/v1/stores`, { data: payloads.createStore1 })
+    // console.log(response.status())
+    // let responseBody = await response.json()
+    // let sellerId = responseBody.id
+    // console.log(responseBody)
+    // console.log(sellerId)
+
 }
 
 export default globalSetup;
