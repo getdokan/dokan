@@ -62,7 +62,7 @@ test.describe('order api test', () => {
     test('update an order', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, orderId] = await apiUtils.createOrder(payloads.createOrder)
-        console.log(orderId)
+        // console.log(orderId)
 
         let response = await request.put(endPoints.updateOrder(orderId), { data: payloads.updateOrder })
         expect(response.ok()).toBeTruthy()

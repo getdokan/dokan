@@ -15,7 +15,7 @@ test.describe('admin api test', () => {
 
     test('get admin report overview', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportOverview)
-        console.log(response.status())
+        // console.log(response.status())
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 

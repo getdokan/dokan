@@ -77,7 +77,7 @@ test.describe('announcements api test', () => {
     test('update batch announcements', async ({ request }) => { 
         let apiUtils = new ApiUtils(request)
         let allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map(a => a.id)
-        console.log(allAnnouncementIds)
+        // console.log(allAnnouncementIds)
 
         let response = await request.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } })
         expect(response.ok()).toBeTruthy()

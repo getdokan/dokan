@@ -66,11 +66,11 @@ test.describe('customers api test', () => {
     test('delete a customer', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
-        console.log(customerId)
+        // console.log(customerId)
 
         let response = await request.delete(endPoints.deleteCustomer(customerId))
         let responseBody = await response.json()
-        console.log(responseBody)
+        // console.log(responseBody)
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
