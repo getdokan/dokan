@@ -245,7 +245,7 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(product: object) {
+    async createCoupon(product: object): Promise<[object, string]> {
         let [, productId] = await this.createProduct(product) // TODO: might need to seperate createProduct from createCoupon,product review,....
         let payloadCoupon = payloads.createCoupon()
         payloadCoupon.product_ids = [productId]

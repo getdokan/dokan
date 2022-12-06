@@ -10,7 +10,7 @@ import { payloads } from '../../utils/payloads'
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('refunds api test', () => {
+test.describe('refunds api test', () => {
 
     //TODO: need to send vendor credentials for vendor info
     //TODO: orders
@@ -42,7 +42,9 @@ test.describe.skip('refunds api test', () => {
 
     test('approve a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let refundId = await apiUtils.getRefundId()
+        // let refundId = await apiUtils.getRefundId()
+        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
 
         let response = await request.put(endPoints.approveRefund(refundId))
         expect(response.ok()).toBeTruthy()
@@ -54,13 +56,15 @@ test.describe.skip('refunds api test', () => {
 
     test('cancel a refund', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        let refundId = await apiUtils.getRefundId()
+        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
+        // let refundId = await apiUtils.getRefundId()
 
         let response = await request.put(endPoints.cancelRefund(refundId))
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
-        let responseBody = await response.json()
+        // let responseBody = await response.json()
         // console.log(responseBody)
     });
 
@@ -69,11 +73,13 @@ test.describe.skip('refunds api test', () => {
         let refundId = await apiUtils.getRefundId()
 
         let response = await request.delete(endPoints.deleteRefund(refundId))
-        let responseBody = await response.json()
-        console.log(responseBody)
-
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
+
+        // let responseBody = await response.json()
+        // console.log(responseBody)
+
+
     });
 
 });

@@ -21,8 +21,9 @@
 
 
 require('dotenv').config();
-import { FullConfig } from '@playwright/test';
-import { request } from '@playwright/test'
+import { FullConfig, request } from '@playwright/test'
+import { ApiUtils } from './utils/apiUtils'
+import { payloads } from './utils/payloads'
 
 async function globalSetup(config: FullConfig) {
     let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
@@ -39,6 +40,10 @@ async function globalSetup(config: FullConfig) {
     }
     process.env.SERVER_URL = serverUrl
     process.env.QUERY = query
+
+    //create vendor
+    let apiUtils = new ApiUtils(context)
+    await apiUtils.createStore(payloads.createStore1)
 }
 
 export default globalSetup;

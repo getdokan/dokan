@@ -4,11 +4,9 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
-
 test.beforeAll(async ({ request }) => {
-    let apiUtils = new ApiUtils(request)
+    var apiUtils = new ApiUtils(request)
     await apiUtils.createCoupon(payloads.createProduct())
-
 });
 
 // test.afterAll(async ({ request }) => { });

@@ -12,7 +12,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('withdraw api test', () => {
+test.describe('withdraw api test', () => {
 
     //TODO: need to send vendor credentials 
 
