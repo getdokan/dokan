@@ -844,7 +844,7 @@ export const payloads = {
       user_pass: "01dokan01",
       role: "seller",
       email: faker.internet.email(),
-      store_name: faker.name.firstName(),
+      store_name: faker.name.firstName() + '_store',
       first_name: faker.name.firstName(),
       last_name: faker.name.lastName(),
       social: {

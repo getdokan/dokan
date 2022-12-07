@@ -74,6 +74,7 @@ test.describe(' api test', () => {
     test('update settings', async ({ request }) => {
         let response = await request.put(endPoints.updateSettings, {
             data: {
+                store_name: 'admin_store',
                 trusted: true,
                 enabled: true,
             }

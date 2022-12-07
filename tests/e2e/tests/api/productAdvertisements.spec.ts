@@ -5,8 +5,8 @@ import { payloads } from '../../utils/payloads'
 
 
 test.beforeAll(async ({ request }) => {
-    let apiUtils = new ApiUtils(request)
-    await apiUtils.createProductAdvertisement()
+    // let apiUtils = new ApiUtils(request)
+    // await apiUtils.createProductAdvertisement()
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -40,6 +40,8 @@ test.describe('product advertisement api test', () => {
         let sellerId = body.store.id
 
         let response = await request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } })
+        // console.log(response.status())
+        // console.log(await response.text())
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(200)
 
