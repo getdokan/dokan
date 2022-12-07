@@ -1,0 +1,35 @@
+{
+  "name": "dokan_e2e_playwright",
+  "version": "1.0.0",
+  "description": "npm init playwright@latest",
+  "main": "index.js",
+  "scripts": {
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e-setup": "playwright install chromium",
+    "test:e2e-i": "playwright test --project=chromium --headed",
+    "test": "npx playwright test",
+    "test:chrome": "npx playwright test --project=chromium",
+    "test:debug": "npx playwright test --debug",
+    "test:codegen": "npx playwright codegen",
+    "container_path": "wp-env install-path",
+    "start-env": "wp-env start",
+    "start-env:update": "wp-env start -- --update",
+    "stop-env": "wp-env stop",
+    "restart-env": "wp-env stop && wp-env start",
+    "reset-db": "wp-env clean all && wp-env start",
+    "reset-env": "wp-env destroy all && wp-env start",
+    "dev-user-list": "wp-env run cli wp user list",
+    "activate-sf-test": "wp-env run tests-cli 'wp theme activate storefront'",
+    "wp-env": "wp-env"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "@playwright/test": "^1.26.0",
+    "@wordpress/env": "^5.6.0",
+    "dotenv": "^16.0.2"
+  },
+  "dependencies": {}
+}

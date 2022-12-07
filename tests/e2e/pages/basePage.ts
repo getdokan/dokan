@@ -865,7 +865,7 @@ export class BasePage {
     async setDropdownOptionSpan(selector: string, value: string) {
         let elements = await this.page.$$(selector)
         for (let element of elements) {
-            const text = element.evaluate(element => element.textContent, element)
+            const text: any = element.evaluate(element => element.textContent, element)
             // console.log(text)
             if (value.toLowerCase() == (text.trim()).toLowerCase()) {
                 // console.log(text)
@@ -908,7 +908,7 @@ export class BasePage {
 
     // admin Enable payment methods via Slider
     async enablePaymentMethod(selector: string) {
-        let classValueBefore = await this.getClassValue(selector)
+        let classValueBefore: any = await this.getClassValue(selector)
         if (classValueBefore.includes('woocommerce-input-toggle--disabled')) {
             await this.click(selector)
         }
@@ -916,54 +916,54 @@ export class BasePage {
         expect(classValueAfter).toContain('woocommerce-input-toggle--enabled')
     }
 
-    // get pseudo element style
-    async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
-        // let element = await this.getElement(selector)
-        let value = await this.page.evaluate((selector, pseudoElement, property) => {
-            let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
-            let style = stylesObject.getPropertyValue(property)
-            return style
-        }, selector,)
-        return value
-    }
+    // // get pseudo element style
+    // async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
+    //     // let element = await this.getElement(selector)
+    //     let value = await this.page.evaluate((selector, pseudoElement, property) => {
+    //         let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
+    //         let style = stylesObject.getPropertyValue(property)
+    //         return style
+    //     }, selector,)
+    //     return value
+    // }
 
-    // enable switch or checkbox: dokan setup wizard
-    async enableSwitcherSetupWizard(selector: string) {
-        // let element = await this.getElement(selector)
-        let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-        console.log('before', value)
-        // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-        //     // console.log('if:', selector)
-        //     await this.page.evaluate(el => el.click(), element)
-        //     await this.wait(0.3)
-        //     await this.page.evaluate(el => el.click(), element)
-        // } else {
-        //     // console.log('else:', selector)
-        //     await this.page.evaluate(el => el.click(), element)
-        // }
-    }
+    // // enable switch or checkbox: dokan setup wizard
+    // async enableSwitcherSetupWizard(selector: string) {
+    //     // let element = await this.getElement(selector)
+    //     let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+    //     console.log('before', value)
+    //     // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+    //     // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+    //     //     // console.log('if:', selector)
+    //     //     await this.page.evaluate(el => el.click(), element)
+    //     //     await this.wait(0.3)
+    //     //     await this.page.evaluate(el => el.click(), element)
+    //     // } else {
+    //     //     // console.log('else:', selector)
+    //     //     await this.page.evaluate(el => el.click(), element)
+    //     // }
+    // }
 
-    // enable switch or checkbox: dokan setup wizard
-    async disableSwitcherSetupWizard(selector) {
-        let IsVisible = await this.isVisible(selector)
-        if (IsVisible) {
-            let element = await this.getElement(selector)
-            await element.focus()
-            let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-            // console.log('before', value)
-            // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-            if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-                // console.log('if:', selector)
-                await this.page.evaluate(el => el.click(), element)
-            } else {
-                // console.log('else:', selector)
-                await this.page.evaluate(el => el.click(), element)
-                await this.wait(0.3)
-                await this.page.evaluate(el => el.click(), element)
-            }
-        }
-    }
+    // // enable switch or checkbox: dokan setup wizard
+    // async disableSwitcherSetupWizard(selector) {
+    //     let IsVisible = await this.isVisible(selector)
+    //     if (IsVisible) {
+    //         let element = await this.getElement(selector)
+    //         await element.focus()
+    //         let value: any = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+    //         // console.log('before', value)
+    //         // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+    //         if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+    //             // console.log('if:', selector)
+    //             await this.page.evaluate(el => el.click(), element)
+    //         } else {
+    //             // console.log('else:', selector)
+    //             await this.page.evaluate(el => el.click(), element)
+    //             await this.wait(0.3)
+    //             await this.page.evaluate(el => el.click(), element)
+    //         }
+    //     }
+    // }
 
     // delete element if exist (only first will delete) : dokan rma,report abuse
     async deleteIfExists(selector: string) { //TODO: there may be alternative solution, this method might not needed
