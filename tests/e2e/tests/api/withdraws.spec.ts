@@ -58,6 +58,8 @@ test.describe('withdraw api test', () => {
 
     test('create a withdraw', async ({ request }) => {
         let response = await request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
+        // console.log(response.status())
+        // console.log(await response.text())
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
 
