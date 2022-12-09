@@ -2,11 +2,15 @@ import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
-let apiUtils;
+
+
+let apiUtils: any
+let sellerId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+    let [, id] = await apiUtils.createStore(payloads.createStore())
+    sellerId = id
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -16,9 +20,6 @@ test.beforeAll(async ({ request }) => {
 
 
 test.describe('stores api test', () => {
-
-    //TODO: need to send vendor credentials for vendor info
-    //TODO: prerequisite vendor, feratured vendor , vendor product, vendor review
 
     test('get all stores check store availability status', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoresCheck)
@@ -83,7 +84,7 @@ test.describe('stores api test', () => {
     });
 
     test('get single store', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getSingleStore(sellerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -144,7 +145,7 @@ test.describe('stores api test', () => {
     });
 
     test('update a store', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.put(endPoints.updateStore(sellerId), { data: payloads.updateStore() })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -152,24 +153,17 @@ test.describe('stores api test', () => {
     });
 
     test('delete a store', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.delete(endPoints.deleteStore(sellerId))
-        let responseBody = await response.json()
-        // console.log(responseBody)
-
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
-        // let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get store current visitor', async ({ request }) => {
         let response = await request.get(endPoints.getStoreCurrentVisitor)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
-        // let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get store stats', async ({ request }) => {
@@ -218,7 +212,7 @@ test.describe('stores api test', () => {
     });
 
     test('update a store status', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -226,7 +220,7 @@ test.describe('stores api test', () => {
     });
 
     test('admin contact store', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.adminContactStore(sellerId), { data: payloads.adminContactStore })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -234,7 +228,7 @@ test.describe('stores api test', () => {
     });
 
     test('admitn email store', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.adminEmailStore(sellerId), { data: payloads.adminEnailStore })
         let responseBody = await apiUtils.getResponseBody(response)

@@ -3,9 +3,15 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils;
+let apiUtils: any
+let orderId: string
+let orderNoteId: string
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    let [, oId, onId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
+    orderId = oId
+    orderNoteId = onId
+
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -14,10 +20,8 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('order note api test', () => {
 
-
-    //TODO: need to send vendor credentials 
     test('get all order notes', async ({ request }) => {
-        let [, orderId,] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
+        // let [, orderId,] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getAllOrderNotes(orderId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -25,7 +29,7 @@ test.describe('order note api test', () => {
     });
 
     test('get single order note', async ({ request }) => {
-        let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
+        // let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -34,7 +38,7 @@ test.describe('order note api test', () => {
 
 
     test('create an order note', async ({ request }) => {
-        let orderId = await apiUtils.getOrderId()
+        // let orderId = await apiUtils.getOrderId()
 
         let response = await request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -44,7 +48,7 @@ test.describe('order note api test', () => {
 
 
     test('delete an order note', async ({ request }) => {
-        let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
+        // let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
 
         let response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId))
         let responseBody = await apiUtils.getResponseBody(response)

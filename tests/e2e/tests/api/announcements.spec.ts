@@ -3,22 +3,16 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils;
+let apiUtils: any
+let announcementId: string;
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    let [, id] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+    announcementId = id
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
-
-test.beforeAll(async ({ request }) => {
-    let apiUtils = new ApiUtils(request)
-    await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
-});
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 
 test.describe('announcements api test', () => {
 
@@ -29,7 +23,7 @@ test.describe('announcements api test', () => {
     });
 
     test('get single announcement', async ({ request }) => {
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        // let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.get(endPoints.getSingleAnnouncement(announcementId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -44,7 +38,7 @@ test.describe('announcements api test', () => {
 
 
     test('update a announcement', async ({ request }) => {
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        // let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -53,15 +47,24 @@ test.describe('announcements api test', () => {
     });
 
     test('delete a announcement', async ({ request }) => {
-        let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        // let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
 
         let response = await request.delete(endPoints.deleteAnnouncement(announcementId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
+    test('restore a deleted announcement ', async ({ request }) => {
+        // let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
+        await apiUtils.deleteAnnouncement(announcementId)
+
+        let response = await request.put(endPoints.restoredeletedAnnouncement(announcementId))
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
+
     test('update batch announcements', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
+        // let [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncemnt)
         let allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map(a => a.id)
         // console.log(allAnnouncementIds)
 

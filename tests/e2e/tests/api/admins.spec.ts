@@ -3,7 +3,7 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-var apiUtils;
+let apiUtils: any
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
 });
@@ -18,21 +18,18 @@ test.describe('admin api test', () => {
         let response = await request.get(endPoints.getAdminReportOverview)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
     });
 
     test('get admin report summary', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportSummary)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
     });
 
     test('get getAdminDashboardFeed', async ({ request }) => {
         let response = await request.get(endPoints.getAdminDashboardFeed)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
     });
 
     test('get admin help', async ({ request }) => {

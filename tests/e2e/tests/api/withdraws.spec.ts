@@ -3,11 +3,14 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils;
+let apiUtils: any
+let withdrawId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+    let [, id] = await apiUtils.createWithdraw()
+    withdrawId = id
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -29,7 +32,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('get single withdraw', async ({ request }) => {
-        let [, withdrawId] = await apiUtils.createWithdraw()
+        // let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.get(endPoints.getSingleWithdraw(withdrawId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -44,7 +47,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('update a withdraw', async ({ request }) => {
-        let [, withdrawId] = await apiUtils.createWithdraw()
+        // let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -52,7 +55,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('cancel a withdraw', async ({ request }) => {
-        let [, withdrawId] = await apiUtils.createWithdraw()
+        // let [, withdrawId] = await apiUtils.createWithdraw()
 
         let response = await request.delete(endPoints.cancelAWithdraw(withdrawId))
         let responseBody = await apiUtils.getResponseBody(response)

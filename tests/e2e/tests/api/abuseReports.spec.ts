@@ -4,9 +4,10 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
-let apiUtils;
+let apiUtils: any
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    // let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });

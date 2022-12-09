@@ -4,10 +4,13 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
-let apiUtils;
+let apiUtils: any
+let customerId: string
+
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    await apiUtils.createCustomer(payloads.createCustomer())
+    let [, id] = await apiUtils.createCustomer(payloads.createCustomer())
+    customerId = id
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -23,7 +26,7 @@ test.describe('customers api test', () => {
     });
 
     test('get single customer', async ({ request }) => {
-        let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
+        // let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.get(endPoints.getSingleCustomer(customerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -37,9 +40,8 @@ test.describe('customers api test', () => {
         expect(response.status()).toBe(201)
     });
 
-
     test('update a customer', async ({ request }) => {
-        let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
+        // let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -48,8 +50,7 @@ test.describe('customers api test', () => {
 
 
     test('delete a customer', async ({ request }) => {
-        let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
-        // console.log(customerId)
+        // let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.delete(endPoints.deleteCustomer(customerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -57,7 +58,6 @@ test.describe('customers api test', () => {
     });
 
     // test.only('update batch customers', async ({ request }) => { //TODO
-    //     let apiUtils = new ApiUtils(request)
     //     let allCustomerIds = (await apiUtils.getAllSupportTickets()).map(a => a.Id)
     //     console.log(allCustomerIds)
     //     var batchCustomers: object[]
@@ -66,7 +66,6 @@ test.describe('customers api test', () => {
     //         // batchCustomers.push({...template, id: customerId})
     //         batchCustomers.push({...template, id: customerId})
     //     }
-
 
     // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
     // expect(response.ok()).toBeTruthy()

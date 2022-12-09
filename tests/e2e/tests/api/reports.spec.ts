@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
-let apiUtils;
+let apiUtils: any;
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
@@ -16,9 +16,6 @@ test.beforeAll(async ({ request }) => {
 
 
 test.describe('report api test', () => {
-
-    //TODO: need to send vendor credentials for vendor info
-    //TODO: prerequisite: order, vendor, product, customer ...
 
     test('get sales overview report', async ({ request }) => {
         let response = await request.get(endPoints.getSalesOverviewReport)
@@ -43,7 +40,5 @@ test.describe('report api test', () => {
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
-
-
 
 });

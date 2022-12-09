@@ -3,20 +3,20 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils;
+let apiUtils: any;
+let productId: string;
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     await apiUtils.createProduct(payloads.createProduct())
-
+    let [, id] = await apiUtils.createProduct(payloads.createProduct())
+    productId = id
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
 test.describe('product api test', () => {
-
-    //TODO: need to send vendor credentials for vendor info
 
     test('get products summary', async ({ request }) => {
         let response = await request.get(endPoints.getProductsSummary)
@@ -61,7 +61,7 @@ test.describe('product api test', () => {
     });
 
     test('get single product', async ({ request }) => {
-        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
+        // let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.get(endPoints.getSingleProduct(productId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -69,7 +69,7 @@ test.describe('product api test', () => {
     });
 
     test('get all related products', async ({ request }) => {
-        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
+        // let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.get(endPoints.getAllRelatedProducts(productId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -83,7 +83,7 @@ test.describe('product api test', () => {
     });
 
     test('update a product', async ({ request }) => {
-        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
+        // let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.put(endPoints.updateProduct(productId), { data: payloads.updateProduct() })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -91,7 +91,7 @@ test.describe('product api test', () => {
     });
 
     test('delete a product', async ({ request }) => {
-        let [, productId] = await apiUtils.createProduct(payloads.createProduct())
+        // let [, productId] = await apiUtils.createProduct(payloads.createProduct())
 
         let response = await request.delete(endPoints.deleteProduct(productId))
         let responseBody = await apiUtils.getResponseBody(response)

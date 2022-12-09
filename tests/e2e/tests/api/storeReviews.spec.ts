@@ -4,23 +4,23 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
-let apiUtils;
+let apiUtils: any
+let sellerId: string
+let reviewId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-    let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+    // let [, sId] = await apiUtils.createStore(payloads.createStore())
+    let [, sId] = await apiUtils.getCurrentUser()
+    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+    sellerId = sId
+    reviewId = rId
 });
-
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-
-test.describe('store reviews api test', () => {
-
-    //TODO: need to send admin credentials 
-    //TODO: store, store reviews
+test.describe.skip('store reviews api test', () => {
 
     test('get all store reviews', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoreReviews)
@@ -29,7 +29,6 @@ test.describe('store reviews api test', () => {
     });
 
     test('get single store review', async ({ request }) => {
-        // let reviewId = await apiUtils.getStoreReviewId()
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
         let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
@@ -60,7 +59,7 @@ test.describe('store reviews api test', () => {
     test('restore a deleted store review ', async ({ request }) => {
         let [, sellerId] = await apiUtils.createStore(payloads.createStore())
         let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
-        await request.delete(endPoints.deleteStoreReview(reviewId))
+        await apiUtils.deleteStoreReview(reviewId)
 
         let response = await request.put(endPoints.restoreDeletedStoreReview(reviewId))
         let responseBody = await apiUtils.getResponseBody(response)

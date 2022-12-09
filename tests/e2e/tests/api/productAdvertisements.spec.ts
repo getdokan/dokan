@@ -3,10 +3,12 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils;
+let apiUtils: any
+let productAdvertisementId: string
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    // await apiUtils.createProductAdvertisement()
+    let [, id] = await apiUtils.createProductAdvertisement()
+    productAdvertisementId = id
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -37,9 +39,8 @@ test.describe('product advertisement api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-
     test('expire a product advertisement', async ({ request }) => {
-        let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
+        // let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
 
         let response = await request.put(endPoints.expireProductAdvertisement(productAdvertisementId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -47,16 +48,16 @@ test.describe('product advertisement api test', () => {
     });
 
     test('delete a product advertisement', async ({ request }) => {
-        let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
+        // let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
 
         let response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
-
     test('update batch product advertisements', async ({ request }) => {
         let allproductAdvertisementIds = (await apiUtils.getAllProductAdvertisements()).map(a => a.id)
+        // console.log(allproductAdvertisementIds)
 
         let response = await request.put(endPoints.updateBatchProductAdvertisements, { data: { ids: allproductAdvertisementIds, action: "delete" } })
         let responseBody = await apiUtils.getResponseBody(response)

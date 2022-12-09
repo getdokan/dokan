@@ -25,10 +25,13 @@ export const helpers = {
     // opens test report in the default browser 
     openReport: () => open('./artifacts/jest-stare/index.html'),
 
-    //convert string to price format
+    // convert string to price format
     price: (string) => parseFloat(string.replace(/[^\d\-.,]/g, "").replace(/,/g, ".").replace(/\.(?=.*\.)/g, "")),
 
-    //current day
+    // current year
+    currentYear: new Date().getFullYear(),
+
+    // current day
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     currentDateTime: new Date().toLocaleString('en-CA', {

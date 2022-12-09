@@ -1,11 +1,11 @@
-import { test, expect,  type APIRequestContext } from '@playwright/test'
+import { test, expect, type APIRequestContext } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
 
-let apiUtils;
+let apiUtils: any;
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
 });
@@ -16,20 +16,17 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('dummy Data api test', () => {
 
-    //TODO: need to send admin credentials 
     test('get dummy data status', async ({ request }) => {
         let response = await request.get(endPoints.getDummyDataStatus)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
+
     // test('import dummy data', async ({ request }) => {
     //     let response = await request.post(endPoints.importDummyData, { data: payloads.dummydata }) //TODO: payload
-    // expect(response.ok()).toBeTruthy()
-    // expect(response.status()).toBe(200)
-
-    // let responseBody = await response.json()
-    // console.log(responseBody)
+    //     let responseBody = await apiUtils.getResponseBody(response)
+    //     expect(response.ok()).toBeTruthy()
     // });
 
     test('clear dummuy data', async ({ request }) => {

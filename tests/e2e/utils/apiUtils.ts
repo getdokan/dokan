@@ -108,7 +108,7 @@ export class ApiUtils {
      */
 
 
-    // get all coupons
+    // get all products
     async getAllProducts() {
         let response = await this.request.get(endPoints.getAllProducts)
         let responseBody = await this.getResponseBody(response)
@@ -252,13 +252,13 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(product: object): Promise<[object, string]> {
+    async createCoupon(product: object, coupon: any): Promise<[object, string]> {
         let [, productId] = await this.createProduct(product) // TODO: might need to seperate createProduct from createCoupon,product review,....
-        let payloadCoupon = payloads.createCoupon()
-        payloadCoupon.product_ids = [productId]
+        // let payloadCoupon = payloads.createCoupon()
+        // coupon.product_ids = [productId]
         // console.log(payloadCoupon)
 
-        let response = await this.request.post(endPoints.createCoupon, { data: payloadCoupon })
+        let response = await this.request.post(endPoints.createCoupon, { data: {...coupon, product_ids: productId} })
         let responseBody = await this.getResponseBody(response)
         let couponId = responseBody.id
         // console.log(couponId)
@@ -502,7 +502,7 @@ export class ApiUtils {
     async createCustomer(payload: object) {
         let response = await this.request.post(endPoints.createCustomer, { data: payload })
         let responseBody = await this.getResponseBody(response)
-        let customerId = responseBody.id
+        let customerId = String(responseBody.id)
 
         return [responseBody, customerId]
     }
@@ -531,7 +531,7 @@ export class ApiUtils {
     async createWholesaleCustomer() {
         let [, customerId] = await this.createCustomer(payloads.createCustomer())
 
-        let response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } })
+        let response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: customerId } })
         let responseBody = await this.getResponseBody(response)
         // console.log(customerId)
         return [responseBody, customerId]
@@ -590,6 +590,13 @@ export class ApiUtils {
         let announcementId = responseBody.id
         // console.log(announcementId)
         return [responseBody, announcementId]
+    }
+
+    // delete announcement
+    async deleteAnnouncement(announcementId: string) {
+        let response = await this.request.delete(endPoints.deleteAnnouncement(announcementId))
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
     }
 
     // update batch announcements
@@ -859,7 +866,6 @@ export class ApiUtils {
         let response = await this.request.post(endPoints.wc.createReview, { data: { ...review, product_id: productId } })
         let responseBody = await this.getResponseBody(response)
         let reviewId = responseBody.id
-
         // console.log(reviewId)
         return [responseBody, reviewId]
     }
