@@ -2,9 +2,10 @@ import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
+let apiUtils;
 
 test.beforeAll(async ({ request }) => {
-    let apiUtils = new ApiUtils(request)
+    apiUtils = new ApiUtils(request)
     await apiUtils.createOrder(payloads.createOrder)
 
 });
@@ -21,38 +22,26 @@ test.describe('report api test', () => {
 
     test('get sales overview report', async ({ request }) => {
         let response = await request.get(endPoints.getSalesOverviewReport)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get summary report', async ({ request }) => {
         let response = await request.get(endPoints.getSummaryReport)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get top earners report', async ({ request }) => {
         let response = await request.get(endPoints.getTopEarnersReport)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get top selling products report ', async ({ request }) => {
         let response = await request.get(endPoints.getTopSellingProductsReport)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 

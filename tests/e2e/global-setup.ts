@@ -26,6 +26,7 @@ import { payloads } from './utils/payloads'
 
 
 async function globalSetup(config: FullConfig) {
+    // get site url structur
     var serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
     var query = '?'
     const context = await request.newContext({})
@@ -35,23 +36,18 @@ async function globalSetup(config: FullConfig) {
     if (link.includes('rest_route')) {
         serverUrl = serverUrl + '?rest_route='
         query = '&'
-        // console.log('if')
-        // console.log(process.env.SERVER_URL)
     } else {
         serverUrl = serverUrl + '/wp-json'
-        // console.log('else')
     }
     process.env.SERVER_URL = serverUrl
     process.env.QUERY = query
 
-    // // create vendor
-    // let response = await context.post(`${process.env.SERVER_URL}/dokan/v1/stores`, { data: payloads.createStore1 })
-    // console.log(response.status())
-    // let responseBody = await response.json()
-    // let sellerId = responseBody.id
-    // console.log(responseBody)
-    // console.log(sellerId)
-
+    // create user auth
+    let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+    process.env.ADMIN_AUTH = { Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD) }
+    process.env.VENDOR_AUTH = { Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD) }
+    process.env.CUSTOMER_AUTH = { Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD) }
+    // let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview, headers: process.env.CUSTOMER_AUTH })
 }
 
 export default globalSetup;

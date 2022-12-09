@@ -3,7 +3,10 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-// test.beforeAll(async ({ request }) => { });
+let apiUtils;
+test.beforeAll(async ({ request }) => {
+    apiUtils = new ApiUtils(request)
+});
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
@@ -11,13 +14,10 @@ import { payloads } from '../../utils/payloads'
 
 test.describe('roles api test', () => {
 
-test('get all user roles ', async ({ request }) => {
-    let response = await request.get(endPoints.getAllUserRoles)
-    expect(response.ok()).toBeTruthy()
-    expect(response.status()).toBe(200)
-
-    let responseBody = await response.json()
-    // console.log(responseBody)
-});
+    test('get all user roles ', async ({ request }) => {
+        let response = await request.get(endPoints.getAllUserRoles)
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
 
 });

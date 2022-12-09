@@ -4,50 +4,39 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
-// test.beforeAll(async ({ request }) => {
-
-// });
-
+let apiUtils;
+test.beforeAll(async ({ request }) => {
+    apiUtils = new ApiUtils(request)
+});
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
 test.describe.skip('abuse report api test', () => {
 
-    //TODO: need to send admin credentials 
     //TODO: product, product abuse report
     test.skip('get all abuse report reasons', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReportReasons)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
         // expect(response).toContainJSON(defaultPost) //TODO: implement this
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test.skip('get all abuse reports', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReports)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        console.log(responseBody)
 
     });
 
     test.skip('delete a abuse report', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let allAbuseReports = await apiUtils.getAllAbuseReports()
         let abuseReportId = allAbuseReports[0].id
         console.log(abuseReportId)
 
         let response = await request.delete(endPoints.deleteAbuseReport(abuseReportId))
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        console.log(responseBody)
 
     });
 

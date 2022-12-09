@@ -4,9 +4,10 @@ import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
 
+let apiUtils;
 
 test.beforeAll(async ({ request }) => {
-    let apiUtils = new ApiUtils(request)
+    apiUtils = new ApiUtils(request)
     await apiUtils.createWholesaleCustomer()
 
 });
@@ -20,49 +21,34 @@ test.describe('wholesale customers api test', () => {
     //TODO: need to send admin credentials for admin info
     test('get all wholesale customers', async ({ request }) => {
         let response = await request.get(endPoints.getAllWholesaleCustomers)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('create a wholesale customer', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createCustomer(payloads.createCustomer())
 
         let response = await request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } })
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 
     test('update a wholesale customer', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createWholesaleCustomer()
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.updateWholesaleCustomer })
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 
     test('delete a wholesale customer', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let [, customerId] = await apiUtils.createWholesaleCustomer()
 
         let response = await request.post(endPoints.updateCustomer(customerId), { data: payloads.deleteWholesaleCustomer })
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 

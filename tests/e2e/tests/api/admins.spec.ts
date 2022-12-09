@@ -3,7 +3,10 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-// test.beforeAll(async ({ request }) => { });
+var apiUtils;
+test.beforeAll(async ({ request }) => {
+    apiUtils = new ApiUtils(request)
+});
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
@@ -11,100 +14,67 @@ import { payloads } from '../../utils/payloads'
 
 test.describe('admin api test', () => {
 
-    //TODO: need to send admin credentials 
-
     test('get admin report overview', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportOverview)
-        // console.log(response.status())
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
 
     });
 
     test('get admin report summary', async ({ request }) => {
         let response = await request.get(endPoints.getAdminReportSummary)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
 
     });
 
     test('get getAdminDashboardFeed', async ({ request }) => {
         let response = await request.get(endPoints.getAdminDashboardFeed)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
 
     });
 
     test('get admin help', async ({ request }) => {
         let response = await request.get(endPoints.getAdminHelp)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get changelog lite', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogLite)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get changelog pro', async ({ request }) => {
         let response = await request.get(endPoints.getAdminChangelogPro)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get getAdminNotices', async ({ request }) => {
         let response = await request.get(endPoints.getAdminNotices)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get admin promo notices ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminPromoNotices)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get admin logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminLogs)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get admin export logs ', async ({ request }) => {
         let response = await request.get(endPoints.getAdminExportLogs)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 });

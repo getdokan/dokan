@@ -3,12 +3,13 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
+let apiUtils;
 
-// test.beforeAll(async ({ request }) => {
-//     let apiUtils = new ApiUtils(request)
-//     let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-//     await apiUtils.createRefund(orderId, payloads.createRefund)
-// });
+test.beforeAll(async ({ request }) => {
+    apiUtils = new ApiUtils(request)
+    // let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+    // await apiUtils.createRefund(orderId, payloads.createRefund)
+});
 
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
@@ -24,68 +25,47 @@ test.describe.skip('refunds api test', () => {
 
 
     test('get all refunds', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
         await apiUtils.createRefund(orderId, payloads.createRefund)
 
         let response = await request.get(endPoints.getAllRefunds)
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('get all refunds by status', async ({ request }) => {
         // let response = await request.get(endPoints.getAllRefundsByStatus('pending')) // pending, cancelled, completed
         let response = await request.get(endPoints.getAllRefundsByStatus('completed')) // pending, cancelled, completed
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('approve a refund', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         // let refundId = await apiUtils.getRefundId()
         let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
         let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
         console.log(orderId, refundId)
         let response = await request.put(endPoints.approveRefund(refundId))
-        console.log(response.status())
-        console.log(await response.text())
-        // expect(response.ok()).toBeTruthy()
-        // expect(response.status()).toBe(200)
-
-        // let responseBody = await response.json()
-        // console.log(responseBody)
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
     });
 
     test('cancel a refund', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
         let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
         // let refundId = await apiUtils.getRefundId()
 
         let response = await request.put(endPoints.cancelRefund(refundId))
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        // let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
     test('delete a refund', async ({ request }) => {
-        let apiUtils = new ApiUtils(request)
         let refundId = await apiUtils.getRefundId()
 
         let response = await request.delete(endPoints.deleteRefund(refundId))
+        let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(200)
-
-        // let responseBody = await response.json()
-        // console.log(responseBody)
     });
 
 });

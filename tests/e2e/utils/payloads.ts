@@ -4,6 +4,21 @@ import { data } from './testData'
 
 export const payloads = {
 
+  admin: {
+    username: process.env.ADMIN,
+    password: process.env.ADMIN_PASSWORD,
+  },
+
+  vendor: {
+    username: process.env.VENDOR,
+    password: process.env.VENDOR_PASSWORD,
+  },
+
+  customer: {
+    username: process.env.CUSTOMER,
+    password: process.env.CUSTOMER_PASSWORD,
+  },
+
   createProduct: () => {
     return {
       name: faker.commerce.productName() + (' (Simple)'),
@@ -927,10 +942,10 @@ export const payloads = {
 
   updateStore: () => {
     return {
-      email: faker.internet.email(),
+      // email: faker.internet.email(),
       // store_name: faker.name.firstName(),
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
+      // first_name: faker.name.firstName(),
+      // last_name: faker.name.lastName(),
       social: {
         fb: "http://dokan.test",
         youtube: "http://dokan.test",
@@ -998,9 +1013,6 @@ export const payloads = {
       bank_iban: "",
       categories: [
         {
-          id: 74,
-          name: "Uncategorized",
-          slug: "uncategorized"
         }
       ],
       admin_commission: "",
@@ -1013,7 +1025,7 @@ export const payloads = {
     title: "Test store review",
     content: "Test store review contant",
     rating: 2,
-    approved: true
+    // approved: true
   },
 
   updateStoreStatus: {
@@ -1032,100 +1044,100 @@ export const payloads = {
   },
 
   createStore1: {
-      user_login: "vendor1",
-      user_pass: "01dokan01",
-      role: "seller",
-      email: "vendorstore1@g.c",
-      store_name: "vendorstore1",
-      first_name: "vendor1",
-      last_name: "v1",
-      social: {
-        fb: "http://dokan.test",
-        youtube: "http://dokan.test",
-        twitter: "http://dokan.test",
-        linkedin: "http://dokan.test",
-        pinterest: "http://dokan.test",
-        instagram: "http://dokan.test",
-        flickr: "http://dokan.test"
+    user_login: process.env.VENDOR,
+    user_pass: process.env.VENDOR_PASSWORD,
+    role: "seller",
+    email: process.env.VENDOR + '@yopmail.com',
+    store_name: process.env.VENDOR + 'store',
+    first_name: process.env.VENDOR,
+    last_name: 'ven',
+    social: {
+      fb: "http://dokan.test",
+      youtube: "http://dokan.test",
+      twitter: "http://dokan.test",
+      linkedin: "http://dokan.test",
+      pinterest: "http://dokan.test",
+      instagram: "http://dokan.test",
+      flickr: "http://dokan.test"
+    },
+    phone: "0123456789",
+    show_email: false,
+    address: {
+      street_1: "abc street",
+      street_2: "xyz street",
+      city: "New York",
+      zip: "10003",
+      state: "NY",
+      country: "US"
+    },
+    location: '40.7127753,-74.0059728',
+    banner: "",
+    banner_id: 0,
+    gravatar: "",
+    gravatar_id: 0,
+    shop_url: "",
+    products_per_page: 12,
+    show_more_product_tab: true,
+    toc_enabled: false,
+    store_toc: "",
+    featured: true,
+    rating: {
+      rating: "0.00",
+      count: 1
+    },
+    enabled: true,
+    registered: "",
+    payment: {
+      paypal: {
+        0: "email",
+        email: "paypal@g.c"
       },
-      phone: "0123456789",
-      show_email: false,
-      address: {
-        street_1: "abc street",
-        street_2: "xyz street",
-        city: "New York",
-        zip: "10003",
-        state: "NY",
-        country: "US"
+      bank: {
+        ac_name: "account name",
+        ac_type: "personal",
+        ac_number: "1234567",
+        bank_name: "bank name",
+        bank_addr: "bank address",
+        routing_number: "123456",
+        iban: "123456",
+        swift: "12345"
       },
-      location: '40.7127753,-74.0059728',
-      banner: "",
-      banner_id: 0,
-      gravatar: "",
-      gravatar_id: 0,
-      shop_url: "",
-      products_per_page: 12,
-      show_more_product_tab: true,
-      toc_enabled: false,
-      store_toc: "",
-      featured: true,
-      rating: {
-        rating: "0.00",
-        count: 1
-      },
-      enabled: true,
-      registered: "",
-      payment: {
-        paypal: {
-          0: "email",
-          email: "paypal@g.c"
-        },
-        bank: {
-          ac_name: "account name",
-          ac_type: "personal",
-          ac_number: "1234567",
-          bank_name: "bank name",
-          bank_addr: "bank address",
-          routing_number: "123456",
-          iban: "123456",
-          swift: "12345"
-        },
-        stripe: false
-      },
-      trusted: true,
-      store_open_close: {
-        enabled: false,
-        time: [],
-        open_notice: "Store is open",
-        close_notice: "Store is closed"
-      },
-      company_name: "",
-      vat_number: "",
-      company_id_number: "",
-      bank_name: "",
-      bank_iban: "",
-      categories: [
-        {
-          // id: 74,
-          // name: "Uncategorized",
-          // slug: "uncategorized"
-        }
-      ],
-      admin_commission: "",
-      admin_additional_fee: "",
-      admin_commission_type: ""
+      stripe: false
+    },
+    trusted: true,
+    store_open_close: {
+      enabled: false,
+      time: [],
+      open_notice: "Store is open",
+      close_notice: "Store is closed"
+    },
+    company_name: "",
+    vat_number: "",
+    company_id_number: "",
+    bank_name: "",
+    bank_iban: "",
+    categories: [
+      {
+        // id: 74,
+        // name: "Uncategorized",
+        // slug: "uncategorized"
+      }
+    ],
+    admin_commission: "",
+    admin_additional_fee: "",
+    admin_commission_type: ""
   },
 
   createCustomer1: {
-    email: 'customer1@yopmail.com',
+    email: process.env.CUSTOMER + '@yopmail.com',
     first_name: 'customer1',
     last_name: 'c1',
     role: 'customer',
-    username: 'customer1',
-    password: 'password',
+    username: process.env.CUSTOMER,
+    password: process.env.CUSTOMER_PASSWORD,
     billing: {
-      first_name: 'customer1',
-      last_name: 'c1',
+      first_name: process.env.CUSTOMER,
+      last_name: 'cus',
       company: '',
       address_1: 'abc street',
       address_2: 'xyz street',
@@ -1133,12 +1145,12 @@ export const payloads = {
       postcode: '10003',
       country: 'US',
       state: 'NY',
-      email: 'customer1@yopmail.com',
+      email: process.env.CUSTOMER+ '@yopmail.com',
       phone: '0123456789'
     },
     shipping: {
-      first_name: 'customer1',
-      last_name: 'c1',
+      first_name: process.env.CUSTOMER,
+      last_name: 'cus',
       company: '',
       address_1: 'abc street',
       address_2: 'xyz street',
