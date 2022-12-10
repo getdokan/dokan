@@ -53,23 +53,14 @@ test.describe('wholesale customers api test', () => {
     });
 
 
-    // test.only('update batch wholesale customers', async ({ request }) => { //TODO
-    //     let allwholesaleCustomerIds = (await apiUtils.getAllSupportTickets()).map(a => a.Id)
-    //     console.log(allwholesaleCustomerIds)
-    //     var batchCustomers: object[]
-    //     for (let wholesaleCustomerId of allwholesaleCustomerIds) {
-    //         let template = payloads.updateBatchCustomersTemplate()
-    //         // batchCustomers.push({...template, id: wholesaleCustomerId})
-    //         batchCustomers.push({...template, id: wholesaleCustomerId})
-    //     }
+    test('update batch wholesale customers', async ({ request }) => { 
+        let allwholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map(a => a.id)
+        // console.log(allwholesaleCustomerIds)
 
-    // let response = await request.put(endPoints.updateBatchCustomers, { data: batchCustomers })
-    // let responseBody = await response.json()
-    // // console.log(responseBody)
+        let response = await request.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allwholesaleCustomerIds } })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
 
-    // expect(response.ok()).toBeTruthy()
-    // expect(response.status()).toBe(200)
-
-    // });
+    });
 
 });

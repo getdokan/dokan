@@ -12,15 +12,15 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     // let [, sId] = await apiUtils.createStore(payloads.createStore())
     let [, sId] = await apiUtils.getCurrentUser()
-    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
     sellerId = sId
+    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
     reviewId = rId
 });
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe.skip('store reviews api test', () => {
+test.describe('store reviews api test', () => {
 
     test('get all store reviews', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoreReviews)
@@ -29,8 +29,9 @@ test.describe.skip('store reviews api test', () => {
     });
 
     test('get single store review', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        // let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
         let response = await request.get(endPoints.getSingleStoreReview(reviewId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -38,8 +39,9 @@ test.describe.skip('store reviews api test', () => {
     });
 
     test('update a store review', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        // let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
         let response = await request.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateStoreReview })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -48,8 +50,9 @@ test.describe.skip('store reviews api test', () => {
     });
 
     test('delete a store review ', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        // let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
         let response = await request.delete(endPoints.deleteStoreReview(reviewId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -57,9 +60,10 @@ test.describe.skip('store reviews api test', () => {
     });
 
     test('restore a deleted store review ', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
-        await apiUtils.deleteStoreReview(reviewId)
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        // let [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+        // await apiUtils.deleteStoreReview(reviewId)
 
         let response = await request.put(endPoints.restoreDeletedStoreReview(reviewId))
         let responseBody = await apiUtils.getResponseBody(response)

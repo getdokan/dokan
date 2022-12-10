@@ -1,8 +1,18 @@
 import { faker } from '@faker-js/faker'
 import { data } from './testData'
 
-
+let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 export const payloads = {
+
+  adminAuth: {
+    Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD)
+  },
+  vendorAuth: {
+    Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD)
+  },
+  customerAuth: {
+    Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD)
+  },
 
   admin: {
     username: process.env.ADMIN,
@@ -689,7 +699,7 @@ export const payloads = {
       last_name: faker.name.lastName(),
       role: 'customer',
       username: faker.name.firstName() + faker.datatype.uuid(),
-      password: '01password01',
+      password: '01dokan01',
       billing: {
         first_name: 'customer1',
         last_name: 'c1',
@@ -723,7 +733,7 @@ export const payloads = {
       first_name: faker.name.firstName(),
       last_name: faker.name.lastName(),
       role: 'customer',
-      password: '01password01',
+      password: '01dokan01',
       billing: {
         first_name: 'customer1',
         last_name: 'c1',
@@ -755,36 +765,9 @@ export const payloads = {
   updateBatchCustomersTemplate: () => {
     return {
       id: '',
-      email: faker.internet.email(),
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
-      role: 'customer',
-      password: '01password01',
       billing: {
-        first_name: 'customer1',
-        last_name: 'c1',
-        company: '',
-        address_1: 'abc street',
-        address_2: 'xyz street',
-        city: 'New York',
-        postcode: '10003',
-        country: 'US',
-        state: 'NY',
-        email: 'customer1@yopmail.com',
         phone: '0123456789'
       },
-      shipping: {
-        first_name: 'customer1',
-        last_name: 'c1',
-        company: '',
-        address_1: 'abc street',
-        address_2: 'xyz street',
-        city: 'New York',
-        postcode: '10003',
-        country: 'US',
-        state: 'NY',
-        phone: '0123456789'
-      }
     }
   },
 
@@ -1145,7 +1128,7 @@ export const payloads = {
       postcode: '10003',
       country: 'US',
       state: 'NY',
-      email: process.env.CUSTOMER+ '@yopmail.com',
+      email: process.env.CUSTOMER + '@yopmail.com',
       phone: '0123456789'
     },
     shipping: {

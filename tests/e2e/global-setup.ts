@@ -43,10 +43,10 @@ async function globalSetup(config: FullConfig) {
     process.env.QUERY = query
 
     // create user auth
-    let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
-    process.env.ADMIN_AUTH = { Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD) }
-    process.env.VENDOR_AUTH = { Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD) }
-    process.env.CUSTOMER_AUTH = { Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD) }
+    // let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+    // process.env.ADMIN_AUTH = { Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD) }
+    // process.env.VENDOR_AUTH = { Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD) }
+    // process.env.CUSTOMER_AUTH = { Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD) }
     // let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview, headers: process.env.CUSTOMER_AUTH })
 }
 

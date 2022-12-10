@@ -3,7 +3,7 @@ export { };
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            [key: string]: string 
+            // [key: string]: string 
             ADMIN: string;
             ADMIN_PASSWORD: string;
             VENDOR: string;
@@ -11,7 +11,7 @@ declare global {
             CUSTOMER: string;
             CUSTOMER_PASSWORD: string;
             GOOGLE_MAP_API_KEY: string;
-            BASE_URL
+            BASE_URL:string
             HEADLESS: string;
             SLOWMO: string;
             DEVTOOLS: string;

@@ -5,6 +5,7 @@ import { payloads } from './payloads'
 //TODO: update all predefine payload to function argument
 
 export class ApiUtils {
+    
     readonly request: APIRequestContext
 
     constructor(request: APIRequestContext) {
@@ -77,14 +78,13 @@ export class ApiUtils {
         // console.log(response.status())
         let responseBody = await this.getResponseBody(response)
         let sellerId = responseBody.id
-
         // console.log(sellerId)
         return [responseBody, sellerId]
     }
 
     // create store review
-    async createStoreReview(sellerId: string, payload: object) {
-        let response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview })
+    async createStoreReview(sellerId: string, payload: object, auth?: any){  //TODO: implete auth to every function 
+        let response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview, headers: auth })
         let responseBody = await this.getResponseBody(response)
         let reviewId = responseBody.id
         // console.log(reviewId)
@@ -258,7 +258,7 @@ export class ApiUtils {
         // coupon.product_ids = [productId]
         // console.log(payloadCoupon)
 
-        let response = await this.request.post(endPoints.createCoupon, { data: {...coupon, product_ids: productId} })
+        let response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId } })
         let responseBody = await this.getResponseBody(response)
         let couponId = responseBody.id
         // console.log(couponId)
@@ -521,7 +521,7 @@ export class ApiUtils {
 
     // get all whosale customers
     async getAllWholesaleCustomers() {
-        let response = await this.request.get(endPoints.getAllCustomers)
+        let response = await this.request.get(endPoints.getAllWholesaleCustomers)
         let responseBody = await this.getResponseBody(response)
         return responseBody
     }

@@ -4,60 +4,6 @@ require('dotenv').config();
 
 const { SERVER_URL, QUERY } = process.env;
 
-// let SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
-// let QUERY = ''
-
-// let a = async () => {
-//     const context = await request.newContext({})
-//     let head = await context.head(SERVER_URL)
-//     let headers = head.headers()
-//     let link = headers.link
-//     if (link.includes('rest_route')) {
-//         SERVER_URL = SERVER_URL + ''
-//         QUERY = '&'
-//     } else {
-//         SERVER_URL = SERVER_URL + '/wp-json'
-//         QUERY = '?'
-//     }
-//     console.log(SERVER_URL, QUERY)
-//     return [SERVER_URL, QUERY]
-// }
-
-
-// const printAddress = async () => {
-//     const b = await a();
-//     console.log(b);
-//   };
-//   printAddress()
-// console.log(SERVER_URL, QUERY)
-
-//  async function getUrlndQUERY(serverUrl: string, QUERY: string) {
-//     const context = await request.newContext({})
-//     let head = await context.head(serverUrl)
-//     let headers = head.headers()
-//     let link = headers.link
-//     if (link.includes('rest_route')) {
-//         serverUrl = serverUrl + ''
-//         QUERY = '&'
-//     } else {
-//         serverUrl = serverUrl + '/wp-json'
-//         QUERY = '?'
-//     }
-//     return [serverUrl, QUERY]
-// }
-// [SERVER_URL, QUERY] = 
-
-// let p= getUrlndQUERY(SERVER_URL, QUERY).then((res) => { console.log(res); return res}).then((res)=> {return res})
-
-// console.log('finally:',p)
-// console.log('finally:',SERVER_URL,QUERY)
-
-
-
-
-
-// plain format :  ${SERVER_URL}/route & any paramerter
-
 
 export const endPoints = {
     serverlUrl: `${SERVER_URL}`,
@@ -76,7 +22,7 @@ export const endPoints = {
     updateStoreStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/status`,      // post put patch
     adminContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`,     // post
     adminEmailStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/email`,       // post
-    // updateBatchStores: `${SERVER_URL}/dokan/v1/stores/batch`,      // post put patch     // method:
+    updateBatchStores: `${SERVER_URL}/dokan/v1/stores/batch`,      // post put patch     // method:approved, pending, delete
     // products
     getProductsSummary: `${SERVER_URL}/dokan/v1/products/summary`,  // get
     getTopRatedProducts: `${SERVER_URL}/dokan/v1/products/top_rated`,   // get
@@ -199,16 +145,16 @@ export const endPoints = {
     updateBatchProductAdvertisements: `${SERVER_URL}/dokan/v1/product_adv/batch`,  // post put patch  // method: 
     // wholesale customers 
     getAllWholesaleCustomers: `${SERVER_URL}/dokan/v1/wholesale/customers`,     // get
-    createWholesaleCustomer: `${SERVER_URL}/dokan/v1/wholesale/register/`,  // post
+    createWholesaleCustomer: `${SERVER_URL}/dokan/v1/wholesale/register`,  // post
     updateWholesaleCustomer: (wholesaleCustomerId: string) => `${SERVER_URL}/dokan/v1/wholesale/customer/${wholesaleCustomerId}`,       // post put patch
-    // updateBatchWholesaleCustomer: `${SERVER_URL}/dokan/v1/wholesale/customers/batch`,        // post put patch   // method: 
+    updateBatchWholesaleCustomer: `${SERVER_URL}/dokan/v1/wholesale/customers/batch`,        // post put patch   // method: activate, deactivate, delete
     // customers
     getAllCustomers: `${SERVER_URL}/dokan/v1/customers`, // get
     getSingleCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}`, // get
     createCustomer: `${SERVER_URL}/dokan/v1/customers/`, // post
     updateCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}`,   // post put patch
     deleteCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}${QUERY}force=true`, //delete
-    // updateBatchCustomers: `${SERVER_URL}/dokan/v1/customers/batch`, // post put patch  // method: 
+    updateBatchCustomers: `${SERVER_URL}/dokan/v1/customers/batch`, // post put patch  // method: 
     // request quote rules
     // getAllQuoteRules: `${SERVER_URL}/dokan/v1/dokan-quote-rule/`,
     // getSingleQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/dokan-quote-rule/${quoteId}`,

@@ -6,11 +6,15 @@ import { payloads } from '../../utils/payloads'
 
 let apiUtils: any
 let sellerId: string
+let reviewId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     let [, id] = await apiUtils.createStore(payloads.createStore())
+    // let [, id] = await apiUtils.getCurrentUser()
     sellerId = id
+    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth)
+    reviewId = rId
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -21,7 +25,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('stores api test', () => {
 
-    test('get all stores check store availability status', async ({ request }) => {
+    test('get all stores availability status', async ({ request }) => {
         let response = await request.get(endPoints.getAllStoresCheck)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
@@ -153,9 +157,9 @@ test.describe('stores api test', () => {
     });
 
     test('delete a store', async ({ request }) => {
-        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        let [, sId] = await apiUtils.createStore(payloads.createStore())
 
-        let response = await request.delete(endPoints.deleteStore(sellerId))
+        let response = await request.delete(endPoints.deleteStore(sId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
@@ -167,7 +171,7 @@ test.describe('stores api test', () => {
     });
 
     test('get store stats', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreStats(sellerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -175,7 +179,7 @@ test.describe('stores api test', () => {
     });
 
     test('get store categories', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.get(endPoints.getStoreCategories(sellerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -183,19 +187,19 @@ test.describe('stores api test', () => {
     });
 
     test('get store products', async ({ request }) => {
-        let [, sellerId] = await apiUtils.createStore(payloads.createStore()) // TODO: add product to store
-        await apiUtils.createProduct(payloads.createProduct()) // TODO: add product to store
-        // let sellerId = await apiUtils.getSellerId('vendor1') 
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore()) 
+        let [, sId] = await apiUtils.getCurrentUser()
+        await apiUtils.createProduct(payloads.createProduct())
 
-        let response = await request.get(endPoints.getStoreProducts(sellerId))
+        let response = await request.get(endPoints.getStoreProducts(sId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
     test('get store reviews', async ({ request }) => {
         // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, sellerId] = await apiUtils.getCurrentUser()
-        await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        // await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
         let response = await request.get(endPoints.getStoreReviews(sellerId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -204,7 +208,6 @@ test.describe('stores api test', () => {
 
     test('create a store review', async ({ request }) => {
         // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        let [, sellerId] = await apiUtils.getCurrentUser()
 
         let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview })
         let responseBody = await apiUtils.getResponseBody(response)
@@ -233,6 +236,16 @@ test.describe('stores api test', () => {
         let response = await request.post(endPoints.adminEmailStore(sellerId), { data: payloads.adminEnailStore })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
+    });
+
+    test('update batch store', async ({ request }) => {
+        let allStoreIds = (await apiUtils.getAllStores()).map(a => a.id)
+        // console.log(allStoreIds)
+
+        let response = await request.put(endPoints.updateBatchStores, { data: { approved: allStoreIds } })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+
     });
 
 });
