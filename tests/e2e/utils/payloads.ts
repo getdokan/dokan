@@ -774,7 +774,7 @@ export const payloads = {
   updateBatchAttributesTemplate: () => {
     return {
       id: '',
-      description: 'description update (batch req)'
+      description: 'updated description (batch req)'
     }
   },
 

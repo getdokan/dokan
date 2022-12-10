@@ -60,7 +60,7 @@ test.describe('attribute term api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test('update batch attribute terms', async ({ request }) => {
+    test.only('update batch attribute terms', async ({ request }) => {
         let allAttributeTermIds = (await apiUtils.getAllAttributeTerms(attributeId)).map(a => a.id)
         // console.log(allAttributeTermIds)
         let batchAttributeTerms = []
