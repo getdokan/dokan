@@ -60,4 +60,19 @@ test.describe('attribute term api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
+    test('update batch attribute terms', async ({ request }) => {
+        let allAttributeTermIds = (await apiUtils.getAllAttributeTerms(attributeId)).map(a => a.id)
+        // console.log(allAttributeTermIds)
+        let batchAttributeTerms = []
+        for (let attributeTermId of allAttributeTermIds.slice(0, 2)) {
+            batchAttributeTerms.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeTermId })
+        }
+        // console.log(batchAttributeTerms)
+
+        let response = await request.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+
+    });
+
 });

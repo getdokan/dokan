@@ -238,7 +238,7 @@ test.describe('stores api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test('update batch store', async ({ request }) => {
+    test('update batch stores', async ({ request }) => {
         let allStoreIds = (await apiUtils.getAllStores()).map(a => a.id)
         // console.log(allStoreIds)
 

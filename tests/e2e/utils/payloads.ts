@@ -771,6 +771,20 @@ export const payloads = {
     }
   },
 
+  updateBatchAttributesTemplate: () => {
+    return {
+      id: '',
+      description: 'description update (batch req)'
+    }
+  },
+
+  updateBatchAttributeTermsTemplate: () => {
+    return {
+      id: '',
+      order_by: 'menu_order'
+    }
+  },
+
   updateWholesaleCustomer: {
     status: "activate"  // activate, deacticate, delete
   },

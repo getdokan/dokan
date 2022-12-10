@@ -48,14 +48,14 @@ export const endPoints = {
     createAttribute: `${SERVER_URL}/dokan/v1/products/attributes/`, // post 
     updateAttribute: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}`,  // post put patch
     deleteAttribute: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}`,  // delete
-    // batchUpdateAttributes: `${SERVER_URL}/dokan/v1/products/attributes/batch`,     // post put patch     // method:
+    batchUpdateAttributes: `${SERVER_URL}/dokan/v1/products/attributes/batch`,     // post put patch     // method: crearte, update, delete
     // product attribute terms
     getAllAttributeTerms: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms`,   // get
     getSingleAttributeTerm: (attributeId: string, attributeTermId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`, // get
     createAttributeTerm: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms`, // post 
     updateAttributeTerm: (attributeId: string, attributeTermId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,    // post put patch
     deleteAttributeTerm: (attributeId: string, attributeTermId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,    // delete
-    // updateBatchAttributeTerms: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/batch`,   // post put patch    // method:
+    updateBatchAttributeTerms: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/batch`,   // post put patch    // method:
     // orders
     getOrdersSummary: `${SERVER_URL}/dokan/v1/orders/summary`,  // get
     getAllOrders: `${SERVER_URL}/dokan/v1/orders/`, // get

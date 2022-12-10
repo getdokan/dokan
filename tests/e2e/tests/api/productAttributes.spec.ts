@@ -60,5 +60,19 @@ test.describe('attribute api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
+    test('update batch attributes', async ({ request }) => { 
+        let allAttributeIds = (await apiUtils.getAllAttributes()).map(a => a.id)
+        // console.log(allAttributeIds)
+        let batchAttributes = []
+        for (let attributeId of allAttributeIds.slice(0, 2)) {
+            batchAttributes.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeId })
+        }
+        // console.log(batchAttributes)
+
+        let response = await request.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+
+    });
 
 });

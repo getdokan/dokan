@@ -5,7 +5,7 @@ import { payloads } from './payloads'
 //TODO: update all predefine payload to function argument
 
 export class ApiUtils {
-    
+
     readonly request: APIRequestContext
 
     constructor(request: APIRequestContext) {
@@ -83,7 +83,7 @@ export class ApiUtils {
     }
 
     // create store review
-    async createStoreReview(sellerId: string, payload: object, auth?: any){  //TODO: implete auth to every function 
+    async createStoreReview(sellerId: string, payload: object, auth?: any) {  //TODO: implete auth to every function 
         let response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview, headers: auth })
         let responseBody = await this.getResponseBody(response)
         let reviewId = responseBody.id
@@ -212,6 +212,14 @@ export class ApiUtils {
     /**
      * attribute term api methods
      */
+
+    // get all attribute terms
+    async getAllAttributeTerms(attributeId: string) {
+        let response = await this.request.get(endPoints.getAllAttributeTerms(attributeId))
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
 
     // create attribute term
     async createAttributeTerm(attribute: object, attributeTerm: object) {
