@@ -16,8 +16,6 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product advertisement api test', () => {
 
-    //TODO: need to send admin credentials 
-
     test('get all advertised product stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllProductAdvertisementStores)
         let responseBody = await apiUtils.getResponseBody(response)

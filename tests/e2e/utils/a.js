@@ -1,10 +1,13 @@
 
 
 
-let a = [1, 2, 3, 4, 5, 6]
+class ABC {
 
-console.log(a.slice(0,))
+    constructor(request) {
+        this.request = request
+    }
 
-for (let b of a.slice(0, 3)) {
-    console.log(b)
+     b = '123'
 }
+
+export default new ABC()

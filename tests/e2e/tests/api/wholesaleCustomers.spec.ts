@@ -54,10 +54,10 @@ test.describe('wholesale customers api test', () => {
 
 
     test('update batch wholesale customers', async ({ request }) => { 
-        let allwholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map(a => a.id)
-        // console.log(allwholesaleCustomerIds)
+        let allWholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map(a => a.id)
+        // console.log(allWholesaleCustomerIds)
 
-        let response = await request.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allwholesaleCustomerIds } })
+        let response = await request.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
 

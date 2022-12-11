@@ -19,7 +19,6 @@ test.beforeAll(async ({ request }) => {
 
 test.describe.skip('store categories api test', () => {
 
-    //TODO: need to send admin credentials 
     test('get default store category', async ({ request }) => {
         let response = await request.get(endPoints.getDefaultStoreCategory)
         let responseBody = await apiUtils.getResponseBody(response)

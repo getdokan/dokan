@@ -36,7 +36,6 @@ test.describe('order note api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-
     test('create an order note', async ({ request }) => {
         // let orderId = await apiUtils.getOrderId()
 
@@ -45,7 +44,6 @@ test.describe('order note api test', () => {
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
     });
-
 
     test('delete an order note', async ({ request }) => {
         // let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createOrder, payloads.createOrderNote)
