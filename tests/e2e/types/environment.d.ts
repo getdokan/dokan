@@ -21,6 +21,7 @@ declare global {
             ADMIN_AUTH: any;
             VENDOR_AUTH: any;
             CUSTOMER_AUTH: any;
+            nonce: string;
 
 
         }

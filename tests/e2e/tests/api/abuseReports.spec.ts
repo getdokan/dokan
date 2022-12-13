@@ -13,49 +13,39 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe.skip('abuse report api test', () => {
+test.describe('abuse report api test', () => {
 
-    test.skip('get all abuse report reasons', async ({ request }) => {
+    test('get all abuse report reasons', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReportReasons)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-        // expect(response).toContainJSON(defaultPost) //TODO: implement this
+        // expect(responseBody).toContainJSON(defaultPost) //TODO: implement this
     });
 
     test.skip('get all abuse reports', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReports)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
     });
 
     test.skip('delete a abuse report', async ({ request }) => {
         let allAbuseReports = await apiUtils.getAllAbuseReports()
         let abuseReportId = allAbuseReports[0].id
-        console.log(abuseReportId)
+        // console.log(abuseReportId)
 
         let response = await request.delete(endPoints.deleteAbuseReport(abuseReportId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-
     });
 
+    test.skip('delete batch abuse reports', async ({ request }) => {
+        let allAbuseReportIds = (await apiUtils.getAllAbuseReports()).map(a => a.id)
+        // console.log(allAbuseReportIds)
 
-    // test('delete batch abuse reports', async ({ request }) => { //TODO
-    //     let apiUtils = new ApiUtils(request)
-    //     let [, productAdvertisementId] = await apiUtils.createProductAdvertisement()
-
-    //     let response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId))
-    //     expect(response.ok()).toBeTruthy()
-    //     expect(response.status()).toBe(200)
-
-    //     let responseBody = await response.json()
-    //     console.log(responseBody)
-
-    // });
-
-
-
+        let response = await request.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
 
 });
 

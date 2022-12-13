@@ -3,12 +3,11 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils: any;
-let productId: string;
+let apiUtils: any
+let productId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    await apiUtils.createProduct(payloads.createProduct())
     let [, id] = await apiUtils.createProduct(payloads.createProduct())
     productId = id
 });

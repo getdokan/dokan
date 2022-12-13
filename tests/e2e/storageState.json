@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "wordpress_f9bb350617bdc9412ec6f5c13ccb7293",
-      "value": "admin%7C1669797503%7CSzOIOleBke931FrNruGk45B8bLlWQmH5wQnXKsE0qg3%7Ce5f6a8cdbe45298afd8a37c089f01b3c6f2f0a28627a551b4cb9ab9019378994",
+      "value": "admin%7C1671088956%7CdPtKtrkVKHBEg3qS2W4f2Jf08IMFiEwZabSk6hMGenI%7C7677d064aadbd807f6beaf7bee12c55b906a7bae4ebd6c83eeebbfad00054ae6",
       "domain": "dokan1.test",
       "path": "/wp-content/plugins",
       "expires": -1,
@@ -12,7 +12,7 @@
     },
     {
       "name": "wordpress_f9bb350617bdc9412ec6f5c13ccb7293",
-      "value": "admin%7C1669797503%7CSzOIOleBke931FrNruGk45B8bLlWQmH5wQnXKsE0qg3%7Ce5f6a8cdbe45298afd8a37c089f01b3c6f2f0a28627a551b4cb9ab9019378994",
+      "value": "admin%7C1671088956%7CdPtKtrkVKHBEg3qS2W4f2Jf08IMFiEwZabSk6hMGenI%7C7677d064aadbd807f6beaf7bee12c55b906a7bae4ebd6c83eeebbfad00054ae6",
       "domain": "dokan1.test",
       "path": "/wp-admin",
       "expires": -1,
@@ -32,7 +32,7 @@
     },
     {
       "name": "wordpress_logged_in_f9bb350617bdc9412ec6f5c13ccb7293",
-      "value": "admin%7C1669797503%7CSzOIOleBke931FrNruGk45B8bLlWQmH5wQnXKsE0qg3%7C2997e4805cfe86a89aacb46ae1a0e55ed1f4d465e0f4cf8aeccff2315fe09a5d",
+      "value": "admin%7C1671088956%7CdPtKtrkVKHBEg3qS2W4f2Jf08IMFiEwZabSk6hMGenI%7C9936d0f971403efc2f1d02f580936aca68e066f8e603aec6de3589bac64e462f",
       "domain": "dokan1.test",
       "path": "/",
       "expires": -1,
@@ -42,7 +42,7 @@
     },
     {
       "name": "tk_ai",
-      "value": "woo%3A0Ptpd27JXCwTN96iGtZ7RB0B",
+      "value": "woo%3A9IcgPwhmY7lHK6%2F9XpBPPXxf",
       "domain": "dokan1.test",
       "path": "/",
       "expires": -1,
@@ -51,21 +51,11 @@
       "sameSite": "Lax"
     },
     {
-      "name": "wp-settings-1",
-      "value": "posts_list_mode%3Dlist",
-      "domain": "dokan1.test",
-      "path": "/",
-      "expires": 1701160707.026699,
-      "httpOnly": false,
-      "secure": false,
-      "sameSite": "Lax"
-    },
-    {
       "name": "wp-settings-time-1",
-      "value": "1669624705",
+      "value": "1670916157",
       "domain": "dokan1.test",
       "path": "/",
-      "expires": 1701160707.026737,
+      "expires": 1702452157.488679,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"

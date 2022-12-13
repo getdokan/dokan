@@ -1,6 +1,7 @@
 import { type APIRequestContext } from '@playwright/test'
 import { endPoints } from './apiEndPoints'
 import { payloads } from './payloads'
+import * as storageState from '../storageState.json';
 
 //TODO: update all predefine payload to function argument
 
@@ -10,6 +11,14 @@ export class ApiUtils {
 
     constructor(request: APIRequestContext) {
         this.request = request
+    }
+
+    // get cookie
+    async getCookie() {
+        let cookieName = String(storageState.cookies[3].name)
+        let cookieValue = String(storageState.cookies[3].value)
+        let cookie = cookieName + '=' + cookieValue
+        return cookie
     }
 
     // get basic auth
@@ -133,8 +142,8 @@ export class ApiUtils {
     }
 
     // create product
-    async createProduct(payload: object) {
-        let response = await this.request.post(endPoints.createProduct, { data: payload })
+    async createProduct(payload: object, auth?: any) {
+        let response = await this.request.post(endPoints.createProduct, { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
         let productId = responseBody.id
         // console.log(productId)

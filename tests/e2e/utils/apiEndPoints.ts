@@ -31,7 +31,7 @@ export const endPoints = {
     getAllProducts: `${SERVER_URL}/dokan/v1/products/`, // get
     getSingleProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,    // get 
     getAllRelatedProducts: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/related`,   // get
-    createProduct: `${SERVER_URL}/dokan/v1/products/`,  // post
+    createProduct: `${SERVER_URL}/dokan/v1/products`,  // post
     updateProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,   // post put patch
     deleteProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,   // delete
     // product variations
@@ -79,7 +79,7 @@ export const endPoints = {
     updateSettings: `${SERVER_URL}/dokan/v1/settings`,  // post put patch
     // dummy data
     getDummyDataStatus: `${SERVER_URL}/dokan/v1/dummy-data/status`, // get
-    // importDummyData: `${SERVER_URL}/dokan/v1/dummy-data/import`, // post
+    importDummyData: `${SERVER_URL}/dokan/v1/dummy-data/import`, // post
     clearDummyData: `${SERVER_URL}/dokan/v1/dummy-data/clear`,  // delete
     // store categories
     getDefaultStoreCategory: `${SERVER_URL}/dokan/v1/store-categories/default-category`,    // get 
@@ -125,7 +125,7 @@ export const endPoints = {
     approveRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/approve`,  // post put patch 
     cancelRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/cancel`,    // post put patch 
     deleteRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}`,   // delete
-    // updateBatchRefunds: `${SERVER_URL}/dokan/v1/refunds/batch`,  // post put patch  method: 
+    updateBatchRefunds: `${SERVER_URL}/dokan/v1/refunds/batch`,  // post put patch  method: completed, cancelled
     // follow store
     getStoreFollowStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/follow-store${QUERY}vendor_id=${sellerId}`, // get 
     followUnfollowStore: `${SERVER_URL}/dokan/v1/follow-store`, // post
@@ -133,7 +133,7 @@ export const endPoints = {
     getAllAbuseReportReasons: `${SERVER_URL}/dokan/v1/abuse-reports/abuse-reasons`, // get 
     getAllAbuseReports: `${SERVER_URL}/dokan/v1/abuse-reports`, // get 
     deleteAbuseReport: (abuseReportId: string) => `${SERVER_URL}/dokan/v1/abuse-reports/${abuseReportId}`,  // delete 
-    // deleteBatchAbuseReports: `${SERVER_URL}/dokan/v1/abuse-reports/batch`,   //  delete  // method: 
+    deleteBatchAbuseReports: `${SERVER_URL}/dokan/v1/abuse-reports/batch`,   //  delete  // method: items
     // product advertisements
     getAllProductAdvertisementStores: `${SERVER_URL}/dokan/v1/product_adv/stores`,  // get
     getAllProductAdvertisements: `${SERVER_URL}/dokan/v1/product_adv`,  // get 

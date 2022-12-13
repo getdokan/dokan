@@ -2,7 +2,11 @@ import { faker } from '@faker-js/faker'
 import { data } from './testData'
 
 let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+
+
 export const payloads = {
+
+  aAuth: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD),
 
   adminAuth: {
     Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD)
@@ -31,7 +35,7 @@ export const payloads = {
 
   createProduct: () => {
     return {
-      name: faker.commerce.productName() + (' (Simple)'),
+      name: faker.commerce.productName() + (' Simple'),
       type: data.product.type.simple,
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
@@ -135,7 +139,7 @@ export const payloads = {
     },
     line_items: [
       {
-        product_id: 93,
+        product_id: '',
         quantity: 1
       },
     ],
@@ -177,7 +181,7 @@ export const payloads = {
     },
     line_items: [
       {
-        product_id: 93,
+        product_id: '',
         quantity: 1
       },
     ],
@@ -193,6 +197,7 @@ export const payloads = {
   createRefund:
   {
     api_refund: false,
+    reason: 'testing refund',
     line_items: [
       {
         refund_total: 1
@@ -846,8 +851,43 @@ export const payloads = {
   createStoreCategory: () => { return { name: 'Test_Store_Category' + faker.datatype.uuid() } },
   updateStoreCategory: () => { return { name: 'Update_Test_Store_Category' + faker.datatype.uuid() } },
 
-  dummydata: {
 
+  dummydata: {
+    vendor_products: [
+      {
+        name: 'p1_d1',
+        type: 'simple',
+        status: 'publish',
+        regular_price: '10'
+      },
+      {
+        name: 'p2_d1',
+        type: 'simple',
+        status: 'publish',
+        regular_price: '20'
+      }
+    ],
+    vendor_data: {
+      email: 'dummystore1@yopmail.com',
+      password: '01dokan01',
+      store_name: 'dummyStore1',
+      social: [],
+      payment: [],
+      phone: '0123456789',
+      show_email: 'no',
+      address: [],
+      location: '',
+      banner: '',
+      icon: '',
+      gravatar: '',
+      show_more_tpab: 'yes',
+      show_ppp: 12,
+      enable_tnc: 'off',
+      store_seo: [],
+      dokan_store_time: [],
+      enabled: true,
+      trusted: true
+    }
   },
 
   createStore: () => {
@@ -1158,6 +1198,8 @@ export const payloads = {
       phone: '0123456789'
     },
   },
+
+
 
 
 }

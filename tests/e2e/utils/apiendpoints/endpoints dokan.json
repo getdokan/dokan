@@ -5,6 +5,7 @@
             "namespace": "dokan/v1",
             "methods": [
                 "GET"
+                
             ],
             "endpoints": [
                 {

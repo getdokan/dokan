@@ -22,12 +22,11 @@ test.describe('dummy Data api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-
-    // test('import dummy data', async ({ request }) => {
-    //     let response = await request.post(endPoints.importDummyData, { data: payloads.dummydata }) //TODO: payload
-    //     let responseBody = await apiUtils.getResponseBody(response)
-    //     expect(response.ok()).toBeTruthy()
-    // });
+    test('import dummy data', async ({ request }) => {
+        let response = await request.post(endPoints.importDummyData, { data: payloads.dummydata }) 
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
 
     test('clear dummuy data', async ({ request }) => {
         let response = await request.delete(endPoints.clearDummyData)

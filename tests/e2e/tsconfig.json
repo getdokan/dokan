@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-      // ... rest
-      "typeRoots": ["./node_modules/@types", "./src/types"]
+        // ... rest
+        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true
     }
-  }
-  
+}

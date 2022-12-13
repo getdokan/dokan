@@ -3,7 +3,7 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils: any;
+let apiUtils: any
 let couponId: string 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)

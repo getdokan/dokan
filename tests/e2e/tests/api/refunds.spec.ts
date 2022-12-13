@@ -3,12 +3,15 @@ import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
 import { payloads } from '../../utils/payloads'
 
-let apiUtils: any;
+let apiUtils: any
+let orderId: string
+let refundId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    // let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-    // await apiUtils.createRefund(orderId, payloads.createRefund)
+    orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+    let [, rid] = await apiUtils.createRefund('orderId', payloads.createRefund)
+    // refundId = rid
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -18,15 +21,12 @@ test.beforeAll(async ({ request }) => {
 
 test.describe.skip('refunds api test', () => {
 
-    //TODO: need to send vendor credentials for vendor info
-    //TODO: orders
-    //TODO: has more endpoints to cover
     //TODO: need to refund from dokan not via wc
 
 
     test('get all refunds', async ({ request }) => {
-        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-        await apiUtils.createRefund(orderId, payloads.createRefund)
+        // let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        // await apiUtils.createRefund(orderId, payloads.createRefund)
 
         let response = await request.get(endPoints.getAllRefunds)
         let responseBody = await apiUtils.getResponseBody(response)
@@ -42,18 +42,18 @@ test.describe.skip('refunds api test', () => {
 
     test('approve a refund', async ({ request }) => {
         // let refundId = await apiUtils.getRefundId()
-        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-        let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
-        console.log(orderId, refundId)
+        // let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        // let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
+
         let response = await request.put(endPoints.approveRefund(refundId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
     test('cancel a refund', async ({ request }) => {
-        let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-        let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
         // let refundId = await apiUtils.getRefundId()
+        // let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
+        // let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
 
         let response = await request.put(endPoints.cancelRefund(refundId))
         let responseBody = await apiUtils.getResponseBody(response)
@@ -61,9 +61,18 @@ test.describe.skip('refunds api test', () => {
     });
 
     test('delete a refund', async ({ request }) => {
-        let refundId = await apiUtils.getRefundId()
+        // let refundId = await apiUtils.getRefundId()
 
         let response = await request.delete(endPoints.deleteRefund(refundId))
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
+
+    test('update batch refunds', async ({ request }) => {
+        let allRefundIds = (await apiUtils.getAllRefunds()).map(a => a.id)
+        console.log(allRefundIds)
+
+        let response = await request.put(endPoints.updateBatchRefunds, { data: { cancelled: allRefundIds } })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });

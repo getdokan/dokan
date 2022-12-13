@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../../utils/apiUtils'
 import { endPoints } from '../../utils/apiEndPoints'
-import { payloads } from '../../utils/payloads'
+import qs from 'qs'
+import playwrightApiMatchers from 'odottaa';
+expect.extend(playwrightApiMatchers);
+
+
+
+
 
 let apiUtils;
 test.beforeAll(async ({ request }) => {
@@ -12,45 +18,26 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe(' api test', () => {
+test.describe.skip(' api test', () => {
 
-    // test('get all ', async ({ request }) => {
-    //     await request.post('http://dokan1.test/wp-admin', {
-    //         form: {
-    //             'user': 'admin',
-    //             'password': '01dokan01'
-    //         }
-    //     });
-    //     // Save signed-in state to 'storageState.json'.
-    //     await request.storageState({ path: 'storageState.json' });
-    //     await request.dispose();
 
-    // }); 
-    // test('get all ', async ({ request }) => {
-    //     let payload = JSON.stringify({
-    //         action: 'dokan_report_abuse_submit_form',
-    //         description: 'this is desc',
-    //         product_id: '347',
-    //         reason: 'Other'
-    //     })
+    test('a test ', async ({ request }) => {
 
-    //     let response = await request.post('http://dokan1.test/wp-admin/admin-ajax.php', {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'accept': 'application/json',
-    //             'X-Requested-With': 'XMLHttpRequest',
-    //             // 'X-WP-Nonce': '',
-    //             // 'cookie': ''
-    //         },
-    //         data: payload
-    //     })
-    //     console.log(response)
-    //     let responseBody = await response.json()
-    //     console.log(responseBody)
+        let a = {
+            x: 'abc',
+            y: 123,
+            z: true,  
+        }
 
-    //     // expect(response.ok()).toBeTruthy()
-    //     // expect(response.status()).toBe(200)
-    // });
+        expect(a).toContainJSON(a)
+  
+    });
+
+
+
+
+    
+
 
     //     test('get all ', async ({ request }) => {
 
@@ -74,4 +61,17 @@ test.describe(' api test', () => {
 
     // });
 
+    // test.use({ storageState: 'storageState.json' });
+
+    // test('get admin report overview', async ({ request, page }) => {
+    //     let response = await request.get(endPoints.getAdminReportOverview, {headers:{cookie:'storageState.json' }} )
+    //     let responseBody = await apiUtils.getResponseBody(response)
+    //     expect(response.ok()).toBeTruthy()
+    // });
+
+    test('get admin report overview', async ({ request, page }) => {
+        // let response = await request.get(endPoints.getAdminReportOverview, {headers:{cookie:'storageState.json' }} )
+        // let responseBody = await apiUtils.getResponseBody(response)
+        // expect(response.ok()).toBeTruthy()
+    });
 });
