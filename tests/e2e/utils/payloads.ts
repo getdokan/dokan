@@ -33,6 +33,7 @@ export const payloads = {
     password: process.env.CUSTOMER_PASSWORD,
   },
 
+
   createProduct: () => {
     return {
       name: faker.commerce.productName() + (' Simple'),
@@ -1199,11 +1200,74 @@ export const payloads = {
     },
   },
 
+  createQuoteRule: () => {
+    return {
+      rule_name: "QR_" + faker.random.alphaNumeric(5),
+      selected_user_role: ["customer"],
+      category_ids: [],
+      product_ids: [],
+      hide_price: "1",
+      hide_price_text: "Price is hidden",
+      hide_cart_button: "replace",
+      button_text: "Add to quote",
+      apply_on_all_product: "1",
+      rule_priority: "0",
+      status: "publish"
+    }
+  },
+
+  updateQuoteRule: {
+    rule_name: "updated_QR_" + faker.random.alphaNumeric(5),
+    selected_user_role: ["customer"],
+    hide_price: "0",
+    hide_price_text: "Price is covered",
+    hide_cart_button: "keep_and_add_new",
+    button_text: " To quote",
+    apply_on_all_product: "1",
+
+  },
+
+  createRequestQuote: () => {
+    return {
+      quote_title: "QT_" + faker.random.alphaNumeric(5),
+      customer_info: {
+        name_field: 'customer1',
+        email_field: 'customer1@yopmail.com',
+        company_field: 'c1',
+        phone_field: '0987654321',
+      },
+      product_ids: [''],
+      offer_price: ['50'],
+      offer_product_quantity: ['10'],
+    }
+  },
+
+  updateRequestQuote: {
+    quote_title: "updated_QT_" + faker.random.alphaNumeric(5),
+    customer_info: {
+      name_field: 'customer1',
+      email_field: 'customer1@yopmail.com',
+      company_field: 'c1',
+      phone_field: '0987654321',
+    },
+    user_id: '2',
+    product_ids: [''],
+    offer_price: ['30'],
+    offer_product_quantity: ['20'],
+
+  },
+
+  convetToOrder: {
+    quote_id: "10",
+    status: "converted"
+  },
+
+
+
 
 
 
 }
-
 
 
 

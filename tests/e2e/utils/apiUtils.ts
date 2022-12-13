@@ -32,10 +32,11 @@ export class ApiUtils {
         let responseBody: any
         try {
             responseBody = await response.json()
-            // console.log(responseBody)
+            console.log(responseBody)
         } catch (err) {
             console.log('Error: ', err.message)
-            console.log('Response text: ', await response.text())
+            console.log('Status Code: ', response.status())
+            // console.log('Response text: ', await response.text())
         }
         return responseBody
     }
@@ -706,7 +707,60 @@ export class ApiUtils {
         return responseBody
     }
 
+    /**
+    * quote rules api methods
+    */
 
+    // get all quote rules
+    async getAllQuoteRules() {
+        let response = await this.request.get(endPoints.getAllQuoteRules)
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // create quote rule
+    async createQuoteRule(payload: object) {
+        let response = await this.request.post(endPoints.createQuoteRule, { data: payload })
+        let responseBody = await this.getResponseBody(response)
+        let quoteRuleId = responseBody.id
+        // console.log(quoteRuleId)
+        return [responseBody, quoteRuleId]
+    }
+
+    // delete store review 
+    async deleteQuoteRule(quoteRuleId: string) {
+        let response = await this.request.delete(endPoints.deleteQuoteRule(quoteRuleId))
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+
+    /**
+    * request quote api methods
+    */
+
+    // get all quote rules
+    async getAllRequestQuotes() {
+        let response = await this.request.get(endPoints.getAllRequestQuotes)
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // create quote rule
+    async createRequestQuote(payload: object) {
+        let response = await this.request.post(endPoints.createRequestQuote, { data: payload })
+        let responseBody = await this.getResponseBody(response)
+        let quoteRuleId = responseBody[0].data.id
+        // console.log(quoteRuleId)
+        return [responseBody, quoteRuleId]
+    }
+
+    // delete store review 
+    async deleteRequestQuote(quoteRuleId: string) {
+        let response = await this.request.delete(endPoints.deleteRequestQuote(quoteRuleId))
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
 
 
 

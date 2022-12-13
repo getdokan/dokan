@@ -27,7 +27,7 @@ test.describe('reverse withdrawal api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test.only('get all reverse withdrawal stores', async ({ request }) => {
+    test.skip('get all reverse withdrawal stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllReverseWithdrawalStores)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
