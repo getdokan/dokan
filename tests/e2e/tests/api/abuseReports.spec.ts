@@ -22,7 +22,7 @@ test.describe('abuse report api test', () => {
         // expect(responseBody).toContainJSON(defaultPost) //TODO: implement this
     });
 
-    test.skip('get all abuse reports', async ({ request }) => {
+    test('get all abuse reports', async ({ request }) => {
         let response = await request.get(endPoints.getAllAbuseReports)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()

@@ -292,7 +292,8 @@ export class ApiUtils {
     async getMinimumWithdrawLimit() {
         let response = await this.request.get(endPoints.getBalanceDetails)
         let responseBody = await this.getResponseBody(response)
-        let minimumWithdrawLimit = responseBody.withdraw_limit
+        let minimumWithdrawLimit = String(Math.abs(responseBody.withdraw_limit))
+        console.log(minimumWithdrawLimit)
         return minimumWithdrawLimit
     }
 
