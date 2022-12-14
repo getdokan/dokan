@@ -19,7 +19,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.only('quote rules api test', () => {
+test.describe('quote rules api test', () => {
 
     test('get all quote rules', async ({ request }) => {
         let response = await request.get(endPoints.getAllQuoteRules)

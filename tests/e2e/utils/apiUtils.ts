@@ -527,6 +527,7 @@ export class ApiUtils {
 
     // create customer
     async createCustomer(payload: object) {
+        console.log('hellow customer')
         let response = await this.request.post(endPoints.createCustomer, { data: payload })
         let responseBody = await this.getResponseBody(response)
         let customerId = String(responseBody.id)
