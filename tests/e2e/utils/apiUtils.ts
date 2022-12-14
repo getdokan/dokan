@@ -729,6 +729,7 @@ export class ApiUtils {
 
     // create quote rule
     async createQuoteRule(payload: object) {
+        console.log(payload)
         let response = await this.request.post(endPoints.createQuoteRule, { data: payload })
         console.log(response.status())
         let responseBody = await this.getResponseBody(response)
