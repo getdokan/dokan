@@ -69,9 +69,9 @@ test.describe.skip(' api test', () => {
     //     expect(response.ok()).toBeTruthy()
     // });
 
-    test('get admin report overview', async ({ request, page }) => {
+    // test('get admin rep', async ({ request, page }) => {
         // let response = await request.get(endPoints.getAdminReportOverview, {headers:{cookie:'storageState.json' }} )
         // let responseBody = await apiUtils.getResponseBody(response)
         // expect(response.ok()).toBeTruthy()
-    });
+    // });
 });

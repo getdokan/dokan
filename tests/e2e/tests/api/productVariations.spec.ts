@@ -60,7 +60,7 @@ test.describe('product variation api test', () => {
         // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
-        let responseBody = await apiUtils.getResponseBody(response)
+        // let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 

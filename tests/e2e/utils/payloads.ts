@@ -207,7 +207,7 @@ export const payloads = {
   },
 
   createWithdraw: {
-    amount: "5",
+    amount: "50",
     notes: "Withdraw notes",
     method: "paypal"
   },

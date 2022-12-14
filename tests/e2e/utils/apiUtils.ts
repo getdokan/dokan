@@ -32,7 +32,7 @@ export class ApiUtils {
         let responseBody: any
         try {
             responseBody = await response.json()
-            console.log(responseBody)
+            // console.log(responseBody)
         } catch (err) {
             console.log('Error: ', err.message)
             console.log('Status Code: ', response.status())
@@ -289,6 +289,14 @@ export class ApiUtils {
      */
 
     // get all withdraws
+    async getMinimumWithdrawLimit() {
+        let response = await this.request.get(endPoints.getBalanceDetails)
+        let responseBody = await this.getResponseBody(response)
+        let minimumWithdrawLimit = responseBody.withdraw_limit
+        return minimumWithdrawLimit
+    }
+
+    // get all withdraws
     async getAllWithdraws() {
         let response = await this.request.get(endPoints.getAllWithdraws)
         let responseBody = await this.getResponseBody(response)
@@ -311,8 +319,8 @@ export class ApiUtils {
     }
 
     // create withdraw
-    async createWithdraw() {
-        let response = await this.request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
+    async createWithdraw(payload: object) {
+        let response = await this.request.post(endPoints.createWithdraw, { data: payload})
         let responseBody = await this.getResponseBody(response)
         let withdrawId = responseBody.id
         // console.log(couponId)

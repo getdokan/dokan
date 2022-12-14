@@ -5,11 +5,14 @@ import { payloads } from '../../utils/payloads'
 
 let apiUtils: any
 let withdrawId: string
+let minimumWithdrawLimit: string
+
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    minimumWithdrawLimit = await apiUtils.getMinimumWithdrawLimit()
     await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
-    let [, id] = await apiUtils.createWithdraw()
+    let [, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit })
     withdrawId = id
 });
 // test.afterAll(async ({ request }) => { });
@@ -33,14 +36,13 @@ test.describe('withdraw api test', () => {
 
     test('get single withdraw', async ({ request }) => {
         // let [, withdrawId] = await apiUtils.createWithdraw()
-
         let response = await request.get(endPoints.getSingleWithdraw(withdrawId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
     test('create a withdraw', async ({ request }) => {
-        let response = await request.post(endPoints.createWithdraw, { data: payloads.createWithdraw })
+        let response = await request.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
         expect(response.status()).toBe(201)
@@ -62,7 +64,7 @@ test.describe('withdraw api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test('update batch withdraws', async ({ request }) => { 
+    test('update batch withdraws', async ({ request }) => {
         let allWithdrawIds = (await apiUtils.getAllWithdraws()).map(a => a.id)
         // console.log(allWithdrawIds) 
 
