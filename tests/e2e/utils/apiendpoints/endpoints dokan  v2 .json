@@ -1,0 +1,1793 @@
+{
+    "namespace": "dokan/v2",
+    "routes": {
+        "/dokan/v2": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "namespace": {
+                            "default": "dokan/v2",
+                            "required": false
+                        },
+                        "context": {
+                            "default": "view",
+                            "required": false
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://dokan7.test/wp-json/dokan/v2"
+                    }
+                ]
+            }
+        },
+        "/dokan/v2/orders": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://dokan7.test/wp-json/dokan/v2/orders"
+                    }
+                ]
+            }
+        },
+        "/dokan/v2/orders/(?P<id>[\\d]+)": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Order Status",
+                            "required": true
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/orders/(?P<id>[\\d]+)/notes": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "parent_id": {
+                            "description": "Parent order ID.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "processing",
+                                "on-hold",
+                                "completed",
+                                "cancelled",
+                                "refunded",
+                                "failed",
+                                "checkout-draft"
+                            ],
+                            "required": false
+                        },
+                        "currency": {
+                            "default": "USD",
+                            "description": "Currency the order was created with, in ISO format.",
+                            "type": "string",
+                            "enum": [
+                                "AED",
+                                "AFN",
+                                "ALL",
+                                "AMD",
+                                "ANG",
+                                "AOA",
+                                "ARS",
+                                "AUD",
+                                "AWG",
+                                "AZN",
+                                "BAM",
+                                "BBD",
+                                "BDT",
+                                "BGN",
+                                "BHD",
+                                "BIF",
+                                "BMD",
+                                "BND",
+                                "BOB",
+                                "BRL",
+                                "BSD",
+                                "BTC",
+                                "BTN",
+                                "BWP",
+                                "BYR",
+                                "BYN",
+                                "BZD",
+                                "CAD",
+                                "CDF",
+                                "CHF",
+                                "CLP",
+                                "CNY",
+                                "COP",
+                                "CRC",
+                                "CUC",
+                                "CUP",
+                                "CVE",
+                                "CZK",
+                                "DJF",
+                                "DKK",
+                                "DOP",
+                                "DZD",
+                                "EGP",
+                                "ERN",
+                                "ETB",
+                                "EUR",
+                                "FJD",
+                                "FKP",
+                                "GBP",
+                                "GEL",
+                                "GGP",
+                                "GHS",
+                                "GIP",
+                                "GMD",
+                                "GNF",
+                                "GTQ",
+                                "GYD",
+                                "HKD",
+                                "HNL",
+                                "HRK",
+                                "HTG",
+                                "HUF",
+                                "IDR",
+                                "ILS",
+                                "IMP",
+                                "INR",
+                                "IQD",
+                                "IRR",
+                                "IRT",
+                                "ISK",
+                                "JEP",
+                                "JMD",
+                                "JOD",
+                                "JPY",
+                                "KES",
+                                "KGS",
+                                "KHR",
+                                "KMF",
+                                "KPW",
+                                "KRW",
+                                "KWD",
+                                "KYD",
+                                "KZT",
+                                "LAK",
+                                "LBP",
+                                "LKR",
+                                "LRD",
+                                "LSL",
+                                "LYD",
+                                "MAD",
+                                "MDL",
+                                "MGA",
+                                "MKD",
+                                "MMK",
+                                "MNT",
+                                "MOP",
+                                "MRU",
+                                "MUR",
+                                "MVR",
+                                "MWK",
+                                "MXN",
+                                "MYR",
+                                "MZN",
+                                "NAD",
+                                "NGN",
+                                "NIO",
+                                "NOK",
+                                "NPR",
+                                "NZD",
+                                "OMR",
+                                "PAB",
+                                "PEN",
+                                "PGK",
+                                "PHP",
+                                "PKR",
+                                "PLN",
+                                "PRB",
+                                "PYG",
+                                "QAR",
+                                "RON",
+                                "RSD",
+                                "RUB",
+                                "RWF",
+                                "SAR",
+                                "SBD",
+                                "SCR",
+                                "SDG",
+                                "SEK",
+                                "SGD",
+                                "SHP",
+                                "SLL",
+                                "SOS",
+                                "SRD",
+                                "SSP",
+                                "STN",
+                                "SYP",
+                                "SZL",
+                                "THB",
+                                "TJS",
+                                "TMT",
+                                "TND",
+                                "TOP",
+                                "TRY",
+                                "TTD",
+                                "TWD",
+                                "TZS",
+                                "UAH",
+                                "UGX",
+                                "USD",
+                                "UYU",
+                                "UZS",
+                                "VEF",
+                                "VES",
+                                "VND",
+                                "VUV",
+                                "WST",
+                                "XAF",
+                                "XCD",
+                                "XOF",
+                                "XPF",
+                                "YER",
+                                "ZAR",
+                                "ZMW"
+                            ],
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "customer_note": {
+                            "description": "Note left by customer during checkout.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "billing": {
+                            "description": "Billing address.",
+                            "type": "object",
+                            "properties": {
+                                "first_name": {
+                                    "description": "First name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "last_name": {
+                                    "description": "Last name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "company": {
+                                    "description": "Company name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "address_1": {
+                                    "description": "Address line 1",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "address_2": {
+                                    "description": "Address line 2",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "city": {
+                                    "description": "City name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "state": {
+                                    "description": "ISO code or name of the state, province or district.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "postcode": {
+                                    "description": "Postal code.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "country": {
+                                    "description": "Country code in ISO 3166-1 alpha-2 format.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "email": {
+                                    "description": "Email address.",
+                                    "type": "string",
+                                    "format": "email",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "phone": {
+                                    "description": "Phone number.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                }
+                            },
+                            "required": false
+                        },
+                        "shipping": {
+                            "description": "Shipping address.",
+                            "type": "object",
+                            "properties": {
+                                "first_name": {
+                                    "description": "First name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "last_name": {
+                                    "description": "Last name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "company": {
+                                    "description": "Company name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "address_1": {
+                                    "description": "Address line 1",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "address_2": {
+                                    "description": "Address line 2",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "city": {
+                                    "description": "City name.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "state": {
+                                    "description": "ISO code or name of the state, province or district.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "postcode": {
+                                    "description": "Postal code.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                },
+                                "country": {
+                                    "description": "Country code in ISO 3166-1 alpha-2 format.",
+                                    "type": "string",
+                                    "context": [
+                                        "view"
+                                    ]
+                                }
+                            },
+                            "required": false
+                        },
+                        "payment_method": {
+                            "description": "Payment method ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "payment_method_title": {
+                            "description": "Payment method title.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "transaction_id": {
+                            "description": "Unique transaction ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "meta_data": {
+                            "description": "Meta data.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "Meta ID.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "key": {
+                                        "description": "Meta key.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "value": {
+                                        "description": "Meta value.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": false
+                        },
+                        "line_items": {
+                            "description": "Line items data.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "Item ID.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "name": {
+                                        "description": "Product name.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "product_id": {
+                                        "description": "Product ID.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "variation_id": {
+                                        "description": "Variation ID, if applicable.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity ordered.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "tax_class": {
+                                        "description": "Tax class of product.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "subtotal": {
+                                        "description": "Line subtotal (before discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "subtotal_tax": {
+                                        "description": "Line subtotal tax (before discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "total": {
+                                        "description": "Line total (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "total_tax": {
+                                        "description": "Line total tax (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "taxes": {
+                                        "description": "Line taxes.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true,
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Tax rate ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "total": {
+                                                    "description": "Tax total.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "subtotal": {
+                                                    "description": "Tax subtotal.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "meta_data": {
+                                        "description": "Meta data.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Meta ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "key": {
+                                                    "description": "Meta key.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "description": "Meta value.",
+                                                    "type": "mixed",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "sku": {
+                                        "description": "Product SKU.",
+                                        "type": "string",
+                                        "context": [
+                                            "view",
+                                            "edit"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "price": {
+                                        "description": "Product price.",
+                                        "type": "number",
+                                        "context": [
+                                            "view",
+                                            "edit"
+                                        ],
+                                        "readonly": true
+                                    }
+                                }
+                            },
+                            "required": false
+                        },
+                        "shipping_lines": {
+                            "description": "Shipping lines data.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "Item ID.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "method_title": {
+                                        "description": "Shipping method name.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "method_id": {
+                                        "description": "Shipping method ID.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "total": {
+                                        "description": "Line total (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "total_tax": {
+                                        "description": "Line total tax (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "taxes": {
+                                        "description": "Line taxes.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true,
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Tax rate ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "total": {
+                                                    "description": "Tax total.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "meta_data": {
+                                        "description": "Meta data.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Meta ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "key": {
+                                                    "description": "Meta key.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "description": "Meta value.",
+                                                    "type": "mixed",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": false
+                        },
+                        "fee_lines": {
+                            "description": "Fee lines data.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "Item ID.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "name": {
+                                        "description": "Fee name.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "tax_class": {
+                                        "description": "Tax class of fee.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "tax_status": {
+                                        "description": "Tax status of fee.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "enum": [
+                                            "taxable",
+                                            "none"
+                                        ]
+                                    },
+                                    "total": {
+                                        "description": "Line total (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "total_tax": {
+                                        "description": "Line total tax (after discounts).",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "taxes": {
+                                        "description": "Line taxes.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true,
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Tax rate ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "total": {
+                                                    "description": "Tax total.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "subtotal": {
+                                                    "description": "Tax subtotal.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "meta_data": {
+                                        "description": "Meta data.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Meta ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "key": {
+                                                    "description": "Meta key.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "description": "Meta value.",
+                                                    "type": "mixed",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": false
+                        },
+                        "coupon_lines": {
+                            "description": "Coupons line data.",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "description": "Item ID.",
+                                        "type": "integer",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "code": {
+                                        "description": "Coupon code.",
+                                        "type": "mixed",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "discount": {
+                                        "description": "Discount total.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ]
+                                    },
+                                    "discount_tax": {
+                                        "description": "Discount total tax.",
+                                        "type": "string",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "readonly": true
+                                    },
+                                    "meta_data": {
+                                        "description": "Meta data.",
+                                        "type": "array",
+                                        "context": [
+                                            "view"
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Meta ID.",
+                                                    "type": "integer",
+                                                    "context": [
+                                                        "view"
+                                                    ],
+                                                    "readonly": true
+                                                },
+                                                "key": {
+                                                    "description": "Meta key.",
+                                                    "type": "string",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                },
+                                                "value": {
+                                                    "description": "Meta value.",
+                                                    "type": "mixed",
+                                                    "context": [
+                                                        "view"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": false
+                        },
+                        "set_paid": {
+                            "default": false,
+                            "description": "Define if the order is paid. It will set the status to processing and reduce stock items.",
+                            "type": "boolean",
+                            "required": false
+                        },
+                        "note": {
+                            "type": "string",
+                            "description": "Order note content.",
+                            "required": true
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/orders/(?P<id>[\\d]+)/notes/(?P<note_id>[\\d]+)": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "DELETE"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "note_id": {
+                            "description": "Unique identifier for the note object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "note_id": {
+                            "description": "Unique identifier for the note object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/orders/summary": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://dokan7.test/wp-json/dokan/v2/orders/summary"
+                    }
+                ]
+            }
+        },
+        "/dokan/v2/orders/(?P<id>[\\d]+)/downloads": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST",
+                "DELETE"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "context": {
+                            "description": "Scope under which the request is made; determines fields present in response.",
+                            "type": "string",
+                            "enum": [
+                                "view",
+                                "edit"
+                            ],
+                            "default": "view",
+                            "required": false
+                        },
+                        "page": {
+                            "description": "Current page of the collection.",
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1,
+                            "required": false
+                        },
+                        "per_page": {
+                            "description": "Maximum number of items to be returned in result set.",
+                            "type": "integer",
+                            "default": 10,
+                            "minimum": 1,
+                            "maximum": 100,
+                            "required": false
+                        },
+                        "search": {
+                            "description": "Limit results to those matching a string.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "seller_id": {
+                            "default": 1,
+                            "description": "Orders belongs to specific seller",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "status": {
+                            "default": "all",
+                            "description": "Order status.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date_created": {
+                            "default": null,
+                            "description": "The date the order was created, in the site's timezone.",
+                            "type": "date-time",
+                            "required": false
+                        },
+                        "customer_id": {
+                            "default": 0,
+                            "description": "User ID who owns the order. 0 for guests.",
+                            "type": "integer",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "ids": {
+                            "type": "array",
+                            "description": "Download IDs.",
+                            "items": {
+                                "type": "integer",
+                                "description": "Download product IDs.",
+                                "required": true
+                            },
+                            "required": true
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": {
+                        "id": {
+                            "description": "Unique identifier for the object.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "download_id": {
+                            "type": "string",
+                            "description": "Download ID.",
+                            "required": false
+                        },
+                        "product_id": {
+                            "type": "integer",
+                            "description": "Product ID.",
+                            "required": false
+                        },
+                        "permission_id": {
+                            "type": "integer",
+                            "description": "Permission ID.",
+                            "required": true
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/orders/bulk-actions": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "POST"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": {
+                        "order_ids": {
+                            "type": "array",
+                            "description": "Order ids",
+                            "required": true
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Order status",
+                            "required": true
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://dokan7.test/wp-json/dokan/v2/orders/bulk-actions"
+                    }
+                ]
+            }
+        },
+        "/dokan/v2/settings": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://dokan7.test/wp-json/dokan/v2/settings"
+                    }
+                ]
+            }
+        },
+        "/dokan/v2/settings/(?P<group_id>[\\w-]+)": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "type": {
+                            "required": false
+                        },
+                        "required": {
+                            "required": false
+                        },
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "Settings ID",
+                                    "required": true
+                                },
+                                "value": {
+                                    "type": [
+                                        "string",
+                                        "object"
+                                    ],
+                                    "description": "Option value",
+                                    "required": true
+                                }
+                            },
+                            "required": false
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/settings/(?P<group_id>[\\w-]+)/(?P<id>[\\w-]+)": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "id": {
+                            "description": "Settings ID.",
+                            "type": "string",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "id": {
+                            "description": "Settings ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "type": {
+                            "required": false
+                        },
+                        "required": {
+                            "required": false
+                        },
+                        "properties": {
+                            "required": false
+                        }
+                    }
+                }
+            ]
+        },
+        "/dokan/v2/settings/(?P<group_id>[\\w-]+)/(?P<parent_id>[\\w-]+)/(?P<id>[\\w-]+)": {
+            "namespace": "dokan/v2",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "parent": {
+                            "description": "Settings parent ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "id": {
+                            "description": "Settings ID.",
+                            "type": "string",
+                            "required": false
+                        }
+                    }
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": {
+                        "group": {
+                            "description": "Settings group ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "parent": {
+                            "description": "Settings parent ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "id": {
+                            "description": "Settings ID.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "type": {
+                            "required": false
+                        },
+                        "required": {
+                            "required": false
+                        },
+                        "properties": {
+                            "required": false
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "_links": {
+        "up": [
+            {
+                "href": "https://dokan7.test/wp-json/"
+            }
+        ]
+    }
+}

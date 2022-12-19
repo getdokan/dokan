@@ -9,7 +9,6 @@ let quoteRuleId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    console.log('hellllllllllllllo')
     let [, id] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
     quoteRuleId = id
 });

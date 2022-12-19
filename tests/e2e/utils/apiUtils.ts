@@ -293,7 +293,6 @@ export class ApiUtils {
         let response = await this.request.get(endPoints.getBalanceDetails)
         let responseBody = await this.getResponseBody(response)
         let minimumWithdrawLimit = String(Math.abs(responseBody.withdraw_limit))
-        console.log(minimumWithdrawLimit)
         return minimumWithdrawLimit
     }
 
@@ -527,11 +526,9 @@ export class ApiUtils {
 
     // create customer
     async createCustomer(payload: object) {
-        console.log('hellow customer')
         let response = await this.request.post(endPoints.createCustomer, { data: payload })
         let responseBody = await this.getResponseBody(response)
         let customerId = String(responseBody.id)
-
         return [responseBody, customerId]
     }
 
@@ -730,13 +727,13 @@ export class ApiUtils {
 
     // create quote rule
     async createQuoteRule(payload: object) {
-        console.log(payload)
+        // console.log(payload)
         let response = await this.request.post(endPoints.createQuoteRule, { data: payload })
-        console.log(response.status())
+        // console.log(response.status())
         let responseBody = await this.getResponseBody(response)
         let quoteRuleId = responseBody.id
-        console.log(responseBody)
-        console.log(quoteRuleId)
+        // console.log(responseBody)
+        // console.log(quoteRuleId)
         return [responseBody, quoteRuleId]
     }
 
