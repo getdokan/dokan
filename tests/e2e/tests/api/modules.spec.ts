@@ -18,7 +18,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('modules api test', () => {
+test.describe('modules api test', () => {
 
     test('get all modules', async ({ request }) => {
         let response = await request.get(endPoints.getAllModules)

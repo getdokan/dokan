@@ -9,6 +9,9 @@ let quoteRuleId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    let activePlugins = (await apiUtils.getAllPluginByStatus('active')).map(a => a.plugin)
+    console.log(activePlugins)
+
     let [, id] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
     quoteRuleId = id
 });
@@ -18,7 +21,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('quote rules api test', () => {
+test.describe.only('quote rules api test', () => {
 
     test('get all quote rules', async ({ request }) => {
         let response = await request.get(endPoints.getAllQuoteRules)

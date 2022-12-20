@@ -6,7 +6,7 @@
   "WP_DEBUG_DISPLAY": "true",
 
   "plugins": [
-    "https://downloads.wordpress.org/plugin/woocommerce.7.0.1.zip",
+    "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
     "../../",
     "../../plugins/dokan-pro",
     "https://demo.nurul.me/wp-content/uploads/2022/11/ba.zip",
