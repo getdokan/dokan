@@ -3,7 +3,6 @@
     width: 17%;
     _float: left;
     flex: 1 auto;
-    overflow: hidden;
     background-color: #242424;
 
     ul.dokan-dashboard-menu {
@@ -15,6 +14,7 @@
       li {
         margin: 0;
         position: relative;
+        cursor: pointer;
 
         a {
           padding: 10px 0 10px 18px;
@@ -27,12 +27,68 @@
           i {
             font-size: 17px;
             padding-right: 15px;
+
+            &.menu-dropdown {
+              &::before {
+                padding-left: 15px;
+              }
+            }
           }
         }
 
         &:hover {
           background: @mainColor;
           color: #fff;
+
+          ul.navigation-submenu {
+            position: relative;
+            top: auto;
+            left: auto;
+            right: auto;
+            bottom: auto;
+          }
+
+          &:not(.active) {
+            &.has-submenu {
+              &:after {
+                right: 0;
+                top: 1.3rem;
+                border: transparent solid;
+                content: ' ';
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+                border-color: transparent #242424eb transparent transparent;
+                border-left-color: #242424eb;
+                border-width: 16px 16px 16px 0;
+                margin-top: -16px;
+                z-index: 990;
+              }
+            }
+
+            ul.navigation-submenu {
+              position: absolute;
+              bottom: 0;
+              left: 100%;
+              min-width: 165px;
+              display: block;
+              background: #242424eb;
+              border-bottom: none;
+              padding: 1.5px;
+
+              li {
+                display: block;
+                padding-left: 0.5em;
+              }
+            }
+          }
+
+          a {
+            i.menu-dropdown {
+              display: none;
+            }
+          }
         }
 
         &.dokan-common-links {
@@ -57,13 +113,58 @@
           }
         }
 
+        ul.navigation-submenu {
+          list-style: none;
+          position: absolute;
+          top: -1000em;
+          left: 160px;
+          overflow: visible;
+          word-wrap: break-word;
+          z-index: 9999;
+          box-shadow: 0 3px 5px rgb(0 0 0 / 20%);
+          margin-left: 0;
+          background: #242424ed;
+          padding: 3px 0;
+
+          li {
+            padding-left: 1.3em;
+            line-height: 1;
+            background: #242424ed;
+
+            a {
+              font-size: 13px;
+            }
+
+            &:hover,
+            &.current {
+              background: inherit;
+
+              &:before {
+                left: 0.75%;
+                top: 4%;
+                border: transparent solid;
+                content: ' ';
+                height: 90%;
+                position: absolute;
+                pointer-events: none;
+                border-color: #fff;
+              }
+
+              a {
+                font-weight: 800 !important;
+                color: #fff;
+              }
+            }
+          }
+        }
+
         &.active {
           position: relative;
           background: @mainColor;
 
           &:after {
             left: 93%;
-            top: 50%;
+            top: 1.3rem;
             border: transparent solid;
             content: ' ';
             height: 0;
@@ -74,6 +175,42 @@
             border-left-color: #fff;
             border-width: 16px 16px 16px 0;
             margin-top: -16px;
+          }
+
+          ul.navigation-submenu {
+            position: relative;
+            z-index: 3;
+            top: auto;
+            left: auto;
+            right: auto;
+            bottom: auto;
+            border: 0 none;
+            border-bottom: 0.5px solid @mainColor;
+            margin-top: 0;
+            box-shadow: none;
+
+            li {
+              &:not(.current) {
+                a {
+                  font-weight: normal;
+                }
+              }
+
+              a {
+                &:focus {
+                  outline: none;
+                }
+              }
+            }
+          }
+
+          a {
+            padding-right: 16px;
+            font-weight: 800;
+
+            i.menu-dropdown {
+              display: none;
+            }
           }
         }
 
