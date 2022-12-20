@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.7.5\n"
+"Project-Id-Version: Dokan 3.7.7\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2022-11-03 06:36:34+00:00\n"
+"POT-Creation-Date: 2022-11-30 02:57:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: dokan.php:481 includes/Admin/AdminBar.php:81 includes/Admin/Menu.php:67
 #: includes/Dashboard/Templates/Settings.php:60
-#: includes/Dashboard/Templates/Settings.php:67 includes/template-tags.php:425
+#: includes/Dashboard/Templates/Settings.php:67 includes/template-tags.php:422
 #: src/admin/pages/Settings.vue:4
 msgid "Settings"
 msgstr ""
@@ -132,7 +132,7 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:63 includes/Admin/Menu.php:34
 #: includes/Admin/Menu.php:46 includes/Admin/SetupWizard.php:161
-#: includes/functions.php:2979 includes/template-tags.php:416
+#: includes/functions.php:2979 includes/template-tags.php:415
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
 msgstr ""
@@ -1076,7 +1076,7 @@ msgid "Introduction"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:151 includes/Vendor/SetupWizard.php:75
-#: includes/template-tags.php:439
+#: includes/template-tags.php:431
 msgid "Store"
 msgstr ""
 
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: includes/Admin/SetupWizardNoWC.php:176
 #: includes/ReverseWithdrawal/Helper.php:69 includes/Vendor/SetupWizard.php:80
-#: includes/template-tags.php:446
+#: includes/template-tags.php:438
 msgid "Payment"
 msgstr ""
 
@@ -1415,8 +1415,8 @@ msgid "Bank Address "
 msgstr ""
 
 #: includes/Admin/UserProfile.php:282 includes/Privacy.php:278
+#: includes/Withdraw/functions.php:294 includes/Withdraw/functions.php:295
 #: src/admin/pages/VendorPaymentFields.vue:39
-#: templates/settings/bank-payment-method-settings.php:53
 msgid "Routing Number"
 msgstr ""
 
@@ -1627,7 +1627,7 @@ msgstr ""
 msgid "Are you sure ?"
 msgstr ""
 
-#: includes/Assets.php:585 includes/Product/functions.php:497
+#: includes/Assets.php:585 includes/Product/functions.php:498
 #: src/admin/components/AdminNotice.vue:153
 msgid "Are you sure?"
 msgstr ""
@@ -2060,7 +2060,7 @@ msgstr ""
 #: templates/products/edit-product-single.php:246
 #: templates/products/new-product.php:232
 #: templates/products/tmpl-add-product-popup.php:68
-#: templates/settings/bank-payment-method-settings.php:134
+#: templates/settings/bank-payment-method-settings.php:139
 #: templates/store-lists-filter.php:86
 #: templates/withdraw/pending-request-listing-dashboard.php:20
 #: templates/withdraw/pending-request-listing-dashboard.php:40
@@ -2308,7 +2308,7 @@ msgid "You have no permission to view this page"
 msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:227
-#: includes/Product/functions.php:487
+#: includes/Product/functions.php:488
 msgid "Delete Permanently"
 msgstr ""
 
@@ -3356,29 +3356,30 @@ msgstr ""
 msgid "Account Name"
 msgstr ""
 
-#: includes/Privacy.php:275 src/admin/pages/VendorPaymentFields.vue:15
-#: templates/settings/bank-payment-method-settings.php:44
+#: includes/Privacy.php:275 includes/Withdraw/functions.php:290
+#: includes/Withdraw/functions.php:291
+#: src/admin/pages/VendorPaymentFields.vue:15
 msgid "Account Number"
 msgstr ""
 
-#: includes/Privacy.php:276 src/admin/pages/VendorPaymentFields.vue:29
+#: includes/Privacy.php:276 includes/Withdraw/functions.php:298
+#: src/admin/pages/VendorPaymentFields.vue:29
 #: src/admin/pages/VendorPaymentFields.vue:30
-#: templates/settings/bank-payment-method-settings.php:63
 msgid "Bank Name"
 msgstr ""
 
-#: includes/Privacy.php:277 src/admin/pages/VendorPaymentFields.vue:34
+#: includes/Privacy.php:277 includes/Withdraw/functions.php:302
+#: src/admin/pages/VendorPaymentFields.vue:34
 #: src/admin/pages/VendorPaymentFields.vue:35
-#: templates/settings/bank-payment-method-settings.php:73
 msgid "Bank Address"
 msgstr ""
 
-#: includes/Privacy.php:279 src/admin/pages/VendorPaymentFields.vue:44
-#: templates/settings/bank-payment-method-settings.php:87
+#: includes/Privacy.php:279 includes/Withdraw/functions.php:307
+#: src/admin/pages/VendorPaymentFields.vue:44
 msgid "IBAN"
 msgstr ""
 
-#: includes/Privacy.php:280
+#: includes/Privacy.php:280 includes/Withdraw/functions.php:311
 msgid "Swift Code"
 msgstr ""
 
@@ -3617,40 +3618,40 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: includes/Product/functions.php:479
+#: includes/Product/functions.php:480
 msgid "Edit"
 msgstr ""
 
-#: includes/Product/functions.php:503 templates/my-orders.php:107
+#: includes/Product/functions.php:504 templates/my-orders.php:107
 #: templates/orders/listing.php:162 templates/sub-orders.php:100
 msgid "View"
 msgstr ""
 
-#: includes/Product/functions.php:594
+#: includes/Product/functions.php:595
 msgid "Default sorting"
 msgstr ""
 
-#: includes/Product/functions.php:595
+#: includes/Product/functions.php:596
 msgid "Sort by popularity"
 msgstr ""
 
-#: includes/Product/functions.php:596
+#: includes/Product/functions.php:597
 msgid "Sort by average rating"
 msgstr ""
 
-#: includes/Product/functions.php:597
+#: includes/Product/functions.php:598
 msgid "Sort by latest"
 msgstr ""
 
-#: includes/Product/functions.php:598
+#: includes/Product/functions.php:599
 msgid "Sort by price: low to high"
 msgstr ""
 
-#: includes/Product/functions.php:599
+#: includes/Product/functions.php:600
 msgid "Sort by price: high to low"
 msgstr ""
 
-#: includes/Product/functions.php:607
+#: includes/Product/functions.php:608
 msgid "Relevance"
 msgstr ""
 
@@ -3760,13 +3761,13 @@ msgid "Vendors products data."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:172
-#: includes/REST/OrderController.php:875
+#: includes/REST/OrderController.php:879
 #: includes/REST/ProductController.php:1777
 msgid "Unique identifier for the resource."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:178
-#: includes/REST/OrderController.php:1224
+#: includes/REST/OrderController.php:1228
 #: includes/REST/ProductController.php:1783
 msgid "Product name."
 msgstr ""
@@ -4234,45 +4235,45 @@ msgid "Menu order, used to custom sort products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:751
-#: includes/REST/OrderController.php:1185
-#: includes/REST/OrderController.php:1297
-#: includes/REST/OrderController.php:1388
-#: includes/REST/OrderController.php:1474
-#: includes/REST/OrderController.php:1572
-#: includes/REST/OrderController.php:1630
+#: includes/REST/OrderController.php:1189
+#: includes/REST/OrderController.php:1301
+#: includes/REST/OrderController.php:1392
+#: includes/REST/OrderController.php:1478
+#: includes/REST/OrderController.php:1576
+#: includes/REST/OrderController.php:1634
 #: includes/REST/ProductController.php:2354
 msgid "Meta data."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:758
-#: includes/REST/OrderController.php:1192
-#: includes/REST/OrderController.php:1304
-#: includes/REST/OrderController.php:1395
-#: includes/REST/OrderController.php:1481
-#: includes/REST/OrderController.php:1579
-#: includes/REST/OrderController.php:1637
+#: includes/REST/OrderController.php:1196
+#: includes/REST/OrderController.php:1308
+#: includes/REST/OrderController.php:1399
+#: includes/REST/OrderController.php:1485
+#: includes/REST/OrderController.php:1583
+#: includes/REST/OrderController.php:1641
 #: includes/REST/ProductController.php:2361
 msgid "Meta ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:764
-#: includes/REST/OrderController.php:1198
-#: includes/REST/OrderController.php:1310
-#: includes/REST/OrderController.php:1401
-#: includes/REST/OrderController.php:1487
-#: includes/REST/OrderController.php:1585
-#: includes/REST/OrderController.php:1643
+#: includes/REST/OrderController.php:1202
+#: includes/REST/OrderController.php:1314
+#: includes/REST/OrderController.php:1405
+#: includes/REST/OrderController.php:1491
+#: includes/REST/OrderController.php:1589
+#: includes/REST/OrderController.php:1647
 #: includes/REST/ProductController.php:2367
 msgid "Meta key."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:769
-#: includes/REST/OrderController.php:1203
-#: includes/REST/OrderController.php:1315
-#: includes/REST/OrderController.php:1406
-#: includes/REST/OrderController.php:1492
-#: includes/REST/OrderController.php:1590
-#: includes/REST/OrderController.php:1648
+#: includes/REST/OrderController.php:1207
+#: includes/REST/OrderController.php:1319
+#: includes/REST/OrderController.php:1410
+#: includes/REST/OrderController.php:1496
+#: includes/REST/OrderController.php:1594
+#: includes/REST/OrderController.php:1652
 #: includes/REST/ProductController.php:2372
 msgid "Meta value."
 msgstr ""
@@ -4414,398 +4415,406 @@ msgstr ""
 msgid "Invalid order"
 msgstr ""
 
-#: includes/REST/OrderController.php:539 includes/REST/OrderController.php:645
-#: includes/REST/OrderController.php:677
+#: includes/REST/OrderController.php:543 includes/REST/OrderController.php:649
+#: includes/REST/OrderController.php:681
 msgid "You have no permission to view this notes"
 msgstr ""
 
-#: includes/REST/OrderController.php:543 includes/REST/OrderController.php:607
-#: includes/REST/OrderController.php:649 includes/REST/OrderController.php:681
+#: includes/REST/OrderController.php:547 includes/REST/OrderController.php:611
+#: includes/REST/OrderController.php:653 includes/REST/OrderController.php:685
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:596
+#: includes/REST/OrderController.php:600
 #: includes/REST/ProductController.php:300
 #. translators: 1) post type name
 #. translators: %s: product
 msgid "Cannot create existing %s."
 msgstr ""
 
-#: includes/REST/OrderController.php:603
+#: includes/REST/OrderController.php:607
 msgid "You have no permission to create this notes"
 msgstr ""
 
-#: includes/REST/OrderController.php:614
+#: includes/REST/OrderController.php:618
 msgid "Cannot create order note, please try again."
 msgstr ""
 
-#: includes/REST/OrderController.php:655 includes/REST/OrderController.php:687
+#: includes/REST/OrderController.php:659 includes/REST/OrderController.php:691
 msgid "Invalid resource ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:696
+#: includes/REST/OrderController.php:700
 msgid "Given order note cannot be deleted."
 msgstr ""
 
-#: includes/REST/OrderController.php:881
+#: includes/REST/OrderController.php:885
 msgid "Parent order ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:886
+#: includes/REST/OrderController.php:890
 msgid "Orders belongs to specific seller"
 msgstr ""
 
-#: includes/REST/OrderController.php:891
+#: includes/REST/OrderController.php:895
 msgid "Order number."
 msgstr ""
 
-#: includes/REST/OrderController.php:897
+#: includes/REST/OrderController.php:901
 msgid "Order key."
 msgstr ""
 
-#: includes/REST/OrderController.php:903
+#: includes/REST/OrderController.php:907
 msgid "Shows where the order was created."
 msgstr ""
 
-#: includes/REST/OrderController.php:909
+#: includes/REST/OrderController.php:913
 msgid "Version of WooCommerce which last updated the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:915
+#: includes/REST/OrderController.php:919
 msgid "Order status."
 msgstr ""
 
-#: includes/REST/OrderController.php:922
+#: includes/REST/OrderController.php:926
 msgid "Currency the order was created with, in ISO format."
 msgstr ""
 
-#: includes/REST/OrderController.php:929
+#: includes/REST/OrderController.php:933
 msgid "The date the order was created, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:936
+#: includes/REST/OrderController.php:940
 msgid "The date the order was created, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:942
+#: includes/REST/OrderController.php:946
 msgid "The date the order was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:948
+#: includes/REST/OrderController.php:952
 msgid "The date the order was last modified, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:954
+#: includes/REST/OrderController.php:958
 msgid "Total discount amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:960
+#: includes/REST/OrderController.php:964
 msgid "Total discount tax amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:966
+#: includes/REST/OrderController.php:970
 msgid "Total shipping amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:972
+#: includes/REST/OrderController.php:976
 msgid "Total shipping tax amount for the order."
 msgstr ""
 
-#: includes/REST/OrderController.php:978
+#: includes/REST/OrderController.php:982
 msgid "Sum of line item taxes only."
 msgstr ""
 
-#: includes/REST/OrderController.php:984
+#: includes/REST/OrderController.php:988
 msgid "Grand total."
 msgstr ""
 
-#: includes/REST/OrderController.php:990
+#: includes/REST/OrderController.php:994
 msgid "Sum of all taxes."
 msgstr ""
 
-#: includes/REST/OrderController.php:996
+#: includes/REST/OrderController.php:1000
 msgid "True the prices included tax during checkout."
 msgstr ""
 
-#: includes/REST/OrderController.php:1002
+#: includes/REST/OrderController.php:1006
 msgid "User ID who owns the order. 0 for guests."
 msgstr ""
 
-#: includes/REST/OrderController.php:1008
+#: includes/REST/OrderController.php:1012
 msgid "Customer's IP address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1014
+#: includes/REST/OrderController.php:1018
 msgid "User agent of the customer."
 msgstr ""
 
-#: includes/REST/OrderController.php:1020
+#: includes/REST/OrderController.php:1024
 msgid "Note left by customer during checkout."
 msgstr ""
 
-#: includes/REST/OrderController.php:1025
+#: includes/REST/OrderController.php:1029
 msgid "Billing address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1030
-#: includes/REST/OrderController.php:1093
+#: includes/REST/OrderController.php:1034
+#: includes/REST/OrderController.php:1097
 msgid "First name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1035
-#: includes/REST/OrderController.php:1098
+#: includes/REST/OrderController.php:1039
+#: includes/REST/OrderController.php:1102
 msgid "Last name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1040
-#: includes/REST/OrderController.php:1103
+#: includes/REST/OrderController.php:1044
+#: includes/REST/OrderController.php:1107
 msgid "Company name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1045
-#: includes/REST/OrderController.php:1108
+#: includes/REST/OrderController.php:1049
+#: includes/REST/OrderController.php:1112
 #: templates/admin-setup-wizard/step-store-wc-fields.php:37
 msgid "Address line 1"
 msgstr ""
 
-#: includes/REST/OrderController.php:1050
-#: includes/REST/OrderController.php:1113
+#: includes/REST/OrderController.php:1054
+#: includes/REST/OrderController.php:1117
 #: templates/admin-setup-wizard/step-store-wc-fields.php:44
 msgid "Address line 2"
 msgstr ""
 
-#: includes/REST/OrderController.php:1055
-#: includes/REST/OrderController.php:1118
+#: includes/REST/OrderController.php:1059
+#: includes/REST/OrderController.php:1122
 msgid "City name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1060
-#: includes/REST/OrderController.php:1123
+#: includes/REST/OrderController.php:1064
+#: includes/REST/OrderController.php:1127
 msgid "ISO code or name of the state, province or district."
 msgstr ""
 
-#: includes/REST/OrderController.php:1065
-#: includes/REST/OrderController.php:1128
+#: includes/REST/OrderController.php:1069
+#: includes/REST/OrderController.php:1132
 msgid "Postal code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1070
-#: includes/REST/OrderController.php:1133
+#: includes/REST/OrderController.php:1074
+#: includes/REST/OrderController.php:1137
 msgid "Country code in ISO 3166-1 alpha-2 format."
 msgstr ""
 
-#: includes/REST/OrderController.php:1075
+#: includes/REST/OrderController.php:1079
 msgid "Email address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1081
+#: includes/REST/OrderController.php:1085
 msgid "Phone number."
 msgstr ""
 
-#: includes/REST/OrderController.php:1088
+#: includes/REST/OrderController.php:1092
 msgid "Shipping address."
 msgstr ""
 
-#: includes/REST/OrderController.php:1140
+#: includes/REST/OrderController.php:1144
 msgid "Payment method ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1145
+#: includes/REST/OrderController.php:1149
 msgid "Payment method title."
 msgstr ""
 
-#: includes/REST/OrderController.php:1150
+#: includes/REST/OrderController.php:1154
 msgid "Unique transaction ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1155
+#: includes/REST/OrderController.php:1159
 msgid "The date the order was paid, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:1161
+#: includes/REST/OrderController.php:1165
 msgid "The date the order was paid, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:1167
+#: includes/REST/OrderController.php:1171
 msgid "The date the order was completed, in the site's timezone."
 msgstr ""
 
-#: includes/REST/OrderController.php:1173
+#: includes/REST/OrderController.php:1177
 msgid "The date the order was completed, as GMT."
 msgstr ""
 
-#: includes/REST/OrderController.php:1179
+#: includes/REST/OrderController.php:1183
 msgid "MD5 hash of cart items to ensure orders are not modified."
 msgstr ""
 
-#: includes/REST/OrderController.php:1211
+#: includes/REST/OrderController.php:1215
 msgid "Line items data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1218
-#: includes/REST/OrderController.php:1346
-#: includes/REST/OrderController.php:1424
-#: includes/REST/OrderController.php:1510
-#: includes/REST/OrderController.php:1608
+#: includes/REST/OrderController.php:1222
+#: includes/REST/OrderController.php:1350
+#: includes/REST/OrderController.php:1428
+#: includes/REST/OrderController.php:1514
+#: includes/REST/OrderController.php:1612
 msgid "Item ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1229
+#: includes/REST/OrderController.php:1233
 msgid "Product ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1234
+#: includes/REST/OrderController.php:1238
 msgid "Variation ID, if applicable."
 msgstr ""
 
-#: includes/REST/OrderController.php:1239
+#: includes/REST/OrderController.php:1243
 msgid "Quantity ordered."
 msgstr ""
 
-#: includes/REST/OrderController.php:1244
+#: includes/REST/OrderController.php:1248
 msgid "Tax class of product."
 msgstr ""
 
-#: includes/REST/OrderController.php:1249
+#: includes/REST/OrderController.php:1253
 msgid "Line subtotal (before discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1254
+#: includes/REST/OrderController.php:1258
 msgid "Line subtotal tax (before discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1260
-#: includes/REST/OrderController.php:1440
-#: includes/REST/OrderController.php:1532
+#: includes/REST/OrderController.php:1264
+#: includes/REST/OrderController.php:1444
+#: includes/REST/OrderController.php:1536
 msgid "Line total (after discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1265
-#: includes/REST/OrderController.php:1445
-#: includes/REST/OrderController.php:1537
+#: includes/REST/OrderController.php:1269
+#: includes/REST/OrderController.php:1449
+#: includes/REST/OrderController.php:1541
 msgid "Line total tax (after discounts)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1271
-#: includes/REST/OrderController.php:1451
-#: includes/REST/OrderController.php:1543
+#: includes/REST/OrderController.php:1275
+#: includes/REST/OrderController.php:1455
+#: includes/REST/OrderController.php:1547
 msgid "Line taxes."
 msgstr ""
 
-#: includes/REST/OrderController.php:1279
-#: includes/REST/OrderController.php:1358
-#: includes/REST/OrderController.php:1459
-#: includes/REST/OrderController.php:1551
+#: includes/REST/OrderController.php:1283
+#: includes/REST/OrderController.php:1362
+#: includes/REST/OrderController.php:1463
+#: includes/REST/OrderController.php:1555
 msgid "Tax rate ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1284
-#: includes/REST/OrderController.php:1465
-#: includes/REST/OrderController.php:1557
+#: includes/REST/OrderController.php:1288
+#: includes/REST/OrderController.php:1469
+#: includes/REST/OrderController.php:1561
 msgid "Tax total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1289
-#: includes/REST/OrderController.php:1563
+#: includes/REST/OrderController.php:1293
+#: includes/REST/OrderController.php:1567
 msgid "Tax subtotal."
 msgstr ""
 
-#: includes/REST/OrderController.php:1323
+#: includes/REST/OrderController.php:1327
 msgid "Product SKU."
 msgstr ""
 
-#: includes/REST/OrderController.php:1329
+#: includes/REST/OrderController.php:1333
 msgid "Product price."
 msgstr ""
 
-#: includes/REST/OrderController.php:1338
+#: includes/REST/OrderController.php:1342
 msgid "Tax lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1352
+#: includes/REST/OrderController.php:1356
 msgid "Tax rate code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1364
+#: includes/REST/OrderController.php:1368
 msgid "Tax rate label."
 msgstr ""
 
-#: includes/REST/OrderController.php:1370
+#: includes/REST/OrderController.php:1374
 msgid "Show if is a compound tax rate."
 msgstr ""
 
-#: includes/REST/OrderController.php:1376
+#: includes/REST/OrderController.php:1380
 msgid "Tax total (not including shipping taxes)."
 msgstr ""
 
-#: includes/REST/OrderController.php:1382
+#: includes/REST/OrderController.php:1386
 msgid "Shipping tax total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1417
+#: includes/REST/OrderController.php:1421
 msgid "Shipping lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1430
+#: includes/REST/OrderController.php:1434
 msgid "Shipping method name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1435
+#: includes/REST/OrderController.php:1439
 msgid "Shipping method ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1503
+#: includes/REST/OrderController.php:1507
 msgid "Fee lines data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1516
+#: includes/REST/OrderController.php:1520
 msgid "Fee name."
 msgstr ""
 
-#: includes/REST/OrderController.php:1521
+#: includes/REST/OrderController.php:1525
 msgid "Tax class of fee."
 msgstr ""
 
-#: includes/REST/OrderController.php:1526
+#: includes/REST/OrderController.php:1530
 msgid "Tax status of fee."
 msgstr ""
 
-#: includes/REST/OrderController.php:1601
+#: includes/REST/OrderController.php:1605
 msgid "Coupons line data."
 msgstr ""
 
-#: includes/REST/OrderController.php:1614
+#: includes/REST/OrderController.php:1618
 msgid "Coupon code."
 msgstr ""
 
-#: includes/REST/OrderController.php:1619
+#: includes/REST/OrderController.php:1623
 msgid "Discount total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1624
+#: includes/REST/OrderController.php:1628
 msgid "Discount total tax."
 msgstr ""
 
-#: includes/REST/OrderController.php:1659
+#: includes/REST/OrderController.php:1663
 msgid "List of refunds."
 msgstr ""
 
-#: includes/REST/OrderController.php:1667
+#: includes/REST/OrderController.php:1671
 msgid "Refund ID."
 msgstr ""
 
-#: includes/REST/OrderController.php:1673
+#: includes/REST/OrderController.php:1677
 msgid "Refund reason."
 msgstr ""
 
-#: includes/REST/OrderController.php:1679
+#: includes/REST/OrderController.php:1683
 msgid "Refund total."
 msgstr ""
 
-#: includes/REST/OrderController.php:1688
+#: includes/REST/OrderController.php:1692
 msgid ""
 "Define if the order is paid. It will set the status to processing and "
 "reduce stock items."
+msgstr ""
+
+#: includes/REST/OrderController.php:1747
+msgid "Limit response to resources published after a given ISO8601 compliant date."
+msgstr ""
+
+#: includes/REST/OrderController.php:1754
+msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
 #: includes/REST/ProductAttributeController.php:63
@@ -5660,7 +5669,7 @@ msgid "Dokan: Store Product Category Menu"
 msgstr ""
 
 #: includes/Widgets/StoreCategoryMenu.php:37
-#: includes/Widgets/StoreCategoryMenu.php:81 includes/template-tags.php:848
+#: includes/Widgets/StoreCategoryMenu.php:81 includes/template-tags.php:898
 msgid "Store Product Category"
 msgstr ""
 
@@ -5673,7 +5682,7 @@ msgid "Dokan: Store Contact Form"
 msgstr ""
 
 #: includes/Widgets/StoreContactForm.php:40
-#: includes/Widgets/StoreContactForm.php:118 includes/template-tags.php:887
+#: includes/Widgets/StoreContactForm.php:118 includes/template-tags.php:937
 msgid "Contact Vendor"
 msgstr ""
 
@@ -5686,7 +5695,7 @@ msgid "Dokan: Store Location"
 msgstr ""
 
 #: includes/Widgets/StoreLocation.php:40 includes/Widgets/StoreLocation.php:101
-#: includes/template-tags.php:861
+#: includes/template-tags.php:911
 msgid "Store Location"
 msgstr ""
 
@@ -5699,7 +5708,7 @@ msgid "Dokan: Store Opening Closing Time Widget"
 msgstr ""
 
 #: includes/Widgets/StoreOpenClose.php:39
-#: includes/Widgets/StoreOpenClose.php:110 includes/template-tags.php:874
+#: includes/Widgets/StoreOpenClose.php:110 includes/template-tags.php:924
 msgid "Store Time"
 msgstr ""
 
@@ -5817,7 +5826,7 @@ msgid "E-mail"
 msgstr ""
 
 #: includes/Withdraw/functions.php:140
-#: templates/settings/bank-payment-method-settings.php:138
+#: templates/settings/bank-payment-method-settings.php:143
 msgid "Disconnect"
 msgstr ""
 
@@ -5829,36 +5838,81 @@ msgstr ""
 msgid "Add Account"
 msgstr ""
 
-#: includes/Withdraw/functions.php:217
+#: includes/Withdraw/functions.php:218
 msgid "Account holder name is required"
 msgstr ""
 
-#: includes/Withdraw/functions.php:218
+#: includes/Withdraw/functions.php:219
 msgid "Please select account type"
 msgstr ""
 
-#: includes/Withdraw/functions.php:219
+#: includes/Withdraw/functions.php:220
 msgid "Account number is required"
 msgstr ""
 
-#: includes/Withdraw/functions.php:220
+#: includes/Withdraw/functions.php:221
 msgid "Routing number is required"
 msgstr ""
 
-#: includes/Withdraw/functions.php:239
+#: includes/Withdraw/functions.php:240
 msgid "This field is required."
 msgstr ""
 
-#: includes/Withdraw/functions.php:380
+#: includes/Withdraw/functions.php:282
+msgid "Account Holder"
+msgstr ""
+
+#: includes/Withdraw/functions.php:283
+msgid "Your bank account name"
+msgstr ""
+
+#: includes/Withdraw/functions.php:286 includes/Withdraw/functions.php:287
+#: src/admin/pages/VendorPaymentFields.vue:20
+msgid "Account Type"
+msgstr ""
+
+#: includes/Withdraw/functions.php:299
+msgid "Name of bank"
+msgstr ""
+
+#: includes/Withdraw/functions.php:303
+msgid "Address of your bank"
+msgstr ""
+
+#: includes/Withdraw/functions.php:306
+msgid "Bank IBAN"
+msgstr ""
+
+#: includes/Withdraw/functions.php:310
+msgid "Bank Swift Code"
+msgstr ""
+
+#: includes/Withdraw/functions.php:314
+msgid ""
+"I attest that I am the owner and have full authorization to this bank "
+"account"
+msgstr ""
+
+#: includes/Withdraw/functions.php:318
+msgid "Please double-check your account information!"
+msgstr ""
+
+#: includes/Withdraw/functions.php:319
+msgid ""
+"Incorrect or mismatched account name and number can result in withdrawal "
+"delays and fees"
+msgstr ""
+
+#: includes/Withdraw/functions.php:437
 msgid "No information found."
 msgstr ""
 
-#: includes/Withdraw/functions.php:386
+#: includes/Withdraw/functions.php:443
 #. translators: 1: Email address for withdraw method.
 msgid "( %1$s )"
 msgstr ""
 
-#: includes/Withdraw/functions.php:390
+#: includes/Withdraw/functions.php:447
 #. translators: 1: Bank account holder name. 2: Bank name. 1: Bank account
 #. number
 msgid "- %1$s - %2$s - ****%3$s"
@@ -6335,20 +6389,20 @@ msgstr ""
 msgid "Failed (%d)"
 msgstr ""
 
-#: includes/template-tags.php:433
-msgid "Back to Dashboard"
+#: includes/template-tags.php:573 includes/template-tags.php:601
+msgid "No title"
 msgstr ""
 
-#: includes/template-tags.php:576 templates/settings/header.php:14
+#: includes/template-tags.php:626 templates/settings/header.php:14
 #: templates/store-lists-loop.php:105
 msgid "Visit Store"
 msgstr ""
 
-#: includes/template-tags.php:577 templates/global/header-menu.php:54
+#: includes/template-tags.php:627 templates/global/header-menu.php:54
 msgid "Edit Account"
 msgstr ""
 
-#: includes/template-tags.php:578
+#: includes/template-tags.php:628
 msgid "Log out"
 msgstr ""
 
@@ -7482,23 +7536,18 @@ msgid ""
 "Slug and Keyword to appear in search engine results."
 msgstr ""
 
-#: src/admin/pages/VendorPaymentFields.vue:20
-#: templates/settings/bank-payment-method-settings.php:30
-msgid "Account Type"
-msgstr ""
-
 #: src/admin/pages/VendorPaymentFields.vue:22
-#: templates/settings/bank-payment-method-settings.php:35
+#: templates/settings/bank-payment-method-settings.php:36
 msgid "Please Select..."
 msgstr ""
 
 #: src/admin/pages/VendorPaymentFields.vue:23
-#: templates/settings/bank-payment-method-settings.php:36
+#: templates/settings/bank-payment-method-settings.php:37
 msgid "Personal"
 msgstr ""
 
 #: src/admin/pages/VendorPaymentFields.vue:24
-#: templates/settings/bank-payment-method-settings.php:37
+#: templates/settings/bank-payment-method-settings.php:38
 msgid "Business"
 msgstr ""
 
@@ -9195,60 +9244,8 @@ msgstr ""
 msgid "State "
 msgstr ""
 
-#: templates/settings/bank-payment-method-settings.php:20
-msgid "Account Holder"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:24
-msgid "Your bank account name"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:47
-msgid "Account number"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:57
-msgid "Routing number"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:67
-msgid "Name of bank"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:77
-msgid "Address of your bank"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:83
-msgid "Bank IBAN"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:93
-msgid "Bank Swift Code"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:97
-msgid "Swift code"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:102
+#: templates/settings/bank-payment-method-settings.php:103
 msgid "bank check"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:108
-msgid ""
-"I attest that I am the owner and have full authorization to this bank "
-"account"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:120
-msgid "Please double-check your account information!"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:122
-msgid ""
-"Incorrect or mismatched account name and number can result in withdrawal "
-"delays and fees"
 msgstr ""
 
 #: templates/settings/payment-manage.php:16

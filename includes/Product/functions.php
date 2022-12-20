@@ -385,19 +385,22 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
     $type_join     = '';
     $type_where    = '';
     $users_where   = '';
+    $query_args    = [ $like_term, $like_term, $like_term ];
 
     if ( $type ) {
         if ( in_array( $type, [ 'virtual', 'downloadable' ], true ) ) {
             $type_join  = " LEFT JOIN {$wpdb->postmeta} postmeta_type ON posts.ID = postmeta_type.post_id ";
-            $type_where = " AND ( postmeta_type.meta_key = '_{$type}' AND postmeta_type.meta_value = 'yes' ) ";
+            $type_where = " AND ( postmeta_type.meta_key = %s AND postmeta_type.meta_value = 'yes' ) ";
+            $query_args[] = "_{$type}";
         }
     }
 
-    if ( $user_ids ) {
+    if ( ! empty( $user_ids ) ) {
         if ( is_array( $user_ids ) ) {
-            $users_where = " AND posts.post_author IN ('" . implode( "','", $user_ids ) . "')";
-        } else {
-            $users_where = " AND posts.post_author = '$user_ids'";
+            $users_where = " AND posts.post_author IN ('" . implode( "','", array_filter( array_map( 'absint', $user_ids ) ) ) . "')";
+        } elseif ( is_numeric( $user_ids ) ) {
+            $users_where = ' AND posts.post_author = %d';
+            $query_args[] = $user_ids;
         }
     }
     // phpcs:ignore WordPress.DB.PreparedSQL
@@ -420,9 +423,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $users_where
             ORDER BY posts.post_parent ASC, posts.post_title ASC
             ",
-            $like_term,
-            $like_term,
-            $like_term
+            $query_args
         )
         // phpcs:enable
     );
