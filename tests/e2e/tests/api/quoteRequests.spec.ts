@@ -43,7 +43,7 @@ test.describe('request quote api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test('update a request quote', async ({ request }) => {
+    test.skip('update a request quote', async ({ request }) => {
         // let [, requestQuoteId] = await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId })
 
         let response = await request.put(endPoints.updateRequestQuote(requestQuoteId), { data: { ...payloads.updateRequestQuote, product_ids: productId } })
