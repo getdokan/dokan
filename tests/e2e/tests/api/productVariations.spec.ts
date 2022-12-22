@@ -56,7 +56,7 @@ test.describe('product variation api test', () => {
     });
 
 
-    test('delete a product variation', async ({ request }) => {
+    test.skip('delete a product variation', async ({ request }) => {
         // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
