@@ -2,7 +2,6 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 require('dotenv').config();
 
-
 // api 
 let username = process.env.ADMIN
 let password = process.env.ADMIN_PASSWORD

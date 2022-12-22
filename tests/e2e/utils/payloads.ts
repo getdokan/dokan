@@ -6,14 +6,18 @@ let basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(u
 
 export const payloads = {
 
+  // user auth
+
   aAuth: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD),
 
   adminAuth: {
     Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD)
   },
+
   vendorAuth: {
     Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD)
   },
+
   customerAuth: {
     Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD)
   },
@@ -33,11 +37,24 @@ export const payloads = {
     password: process.env.CUSTOMER_PASSWORD,
   },
 
+  setupStore: {
+    store_name: 'admin_store',
+    trusted: true,
+    enabled: true,
+    payment: {
+      paypal: {
+        0: "email",
+        email: "paypal@g.c"
+      }
+    }
+  },
+
+  // product
 
   createProduct: () => {
     return {
       name: faker.commerce.productName() + (' Simple'),
-      type: data.product.type.simple,
+      type: 'simple',
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
         {
@@ -50,7 +67,7 @@ export const payloads = {
   createVariableProduct: () => {
     return {
       name: faker.commerce.productName() + (' (Variable)'),
-      type: data.product.type.variable,
+      type: 'variable',
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
         {
@@ -62,7 +79,7 @@ export const payloads = {
 
   createProductVariation: {
     // id: '47',
-    regular_price: data.product.price.price_random(),
+    regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
     categories: [{
       //  id: 48
     }],
@@ -74,11 +91,11 @@ export const payloads = {
   },
 
   updateProduct: () => {
-    return { regular_price: data.product.price.price_random(), }
+    return { regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), }
   },
 
   updateProductVariation: () => {
-    return { regular_price: data.product.price.price_random(), }
+    return { regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), }
   },
 
   createProductReview: () => {
@@ -90,6 +107,45 @@ export const payloads = {
       rating: faker.datatype.number({ min: 1, max: 5 }),
     }
   },
+
+  // product review
+
+  updateReview: {
+    review: () => 'review_message_' + faker.datatype.uuid(),
+    rating: faker.datatype.number({ min: 1, max: 5 }),
+    name: 'customer1',
+    email: 'customer1@g.com',
+    verified: true
+  },
+
+  // product category
+
+  createCategory: {
+    name: "Clothing",
+  },
+
+  updateCategory: {
+    name: "Clothing",
+  },
+
+  // attribute
+
+  updateBatchAttributesTemplate: () => {
+    return {
+      id: '',
+      description: 'updated description (batch req)'
+    }
+  },
+
+  updateBatchAttributeTermsTemplate: () => {
+    return {
+      id: '',
+      order_by: 'menu_order'
+    }
+  },
+
+
+  // coupon
 
   createCoupon: () => {
     return {
@@ -104,12 +160,11 @@ export const payloads = {
     return { amount: faker.datatype.number({ min: 1, max: 10 },).toString(), }
   },
 
+  // order
 
   updateOrder: {
     status: 'wc-pending'
   },
-
-
 
   createOrder: {
     payment_method: "bacs",
@@ -138,12 +193,14 @@ export const payloads = {
       postcode: "94103",
       country: "US"
     },
+
     line_items: [
       {
         product_id: '',
         quantity: 1
       },
     ],
+
     shipping_lines: [
       {
         method_id: "flat_rate",
@@ -195,6 +252,14 @@ export const payloads = {
     ]
   },
 
+  createOrderNote: {
+    status: "processing",
+    note: "test order note"
+  },
+
+
+  // refund
+
   createRefund:
   {
     api_refund: false,
@@ -205,6 +270,8 @@ export const payloads = {
       }
     ]
   },
+
+  // withdraw
 
   createWithdraw: {
     amount: "50",
@@ -218,8 +285,10 @@ export const payloads = {
     method: "paypal"
   },
 
+  // settings
+
   updateSettings: {
-    // store_name: 'vendorstore2',
+    // store_name: 'vendorStore',
     social: {
       fb: 'http://dokan.test',
       youtube: 'http://dokan.test',
@@ -254,10 +323,9 @@ export const payloads = {
       zip: '10003',
       state: 'NY',
       country: 'US',
-      // country: 'AF'
       location_name: 'Default'
     },
-    location: '40.7127753,-74.0059728',
+    location: '40.7127753,-74.0059728', //NY
     // location: '23.709921,90.407143', //dhaka
     banner: '',
     icon: '',
@@ -300,7 +368,7 @@ export const payloads = {
         phone_val: 10,
         map_val: 15,
         payment_method_val: 15,
-        social_val: [Object]
+        social_val: [{}]
       }
     },
     setting_minimum_order_amount: '',
@@ -335,6 +403,8 @@ export const payloads = {
     store_locations: []
   },
 
+  //attribute
+
   createAttribute: () => {
     return {
       name: 'Test_attribute_' + faker.random.alpha(8),
@@ -358,29 +428,7 @@ export const payloads = {
 
   },
 
-
-  createOrderNote: {
-    status: "processing",
-    note: "test order note"
-  },
-
-
-  updateReview: {
-    review: data.product.review.reviewMessage(),
-    rating: data.product.review.rating,
-    name: 'customer1',
-    email: 'customer1@g.com',
-    verified: true
-  },
-
-  createCategory: {
-    name: "Clothing",
-  },
-
-  updateCategory: {
-    name: "Clothing",
-  },
-
+  // user
 
   createUser: {
     username: '',
@@ -391,6 +439,8 @@ export const payloads = {
     password: '',
   },
 
+  // vendor
+
   createVendor: {
     username: 'vendor2',
     first_name: 'vendor2',
@@ -400,17 +450,20 @@ export const payloads = {
     password: 'password',
   },
 
+  // plugin
+
   updatePlugin: {
     plugin: 'dokan/dokan',
-    // plugin: 'dokan-pro/dokan-pro',
     status: 'active',
     // status: 'inactive',
   },
 
+  // site settings
+
   siteSettings: {
-    // title: 'dokan1',
+    // title: 'dokan',
     // description: 'Just another WordPress site',
-    // url: 'http://dokan1.test',
+    // url: 'http://dokan.test',
     // email: 'shashwata@wedevs.com',
     timezone: 'Asia/Dhaka',
     date_format: 'F j, Y',
@@ -430,6 +483,7 @@ export const payloads = {
     // site_icon: 0
   },
 
+  // shipping
 
   createShippingZone: {
     name: "US",
@@ -442,26 +496,30 @@ export const payloads = {
       type: 'country',
     }
   ],
-  // flat_rate, free_shipping, local_pickup, dokan_table_rate_shipping, dokan_distance_rate_shipping, dokan_product_shipping, dokan_vendor_shipping
+
   addShippingZoneMethodFlatRate: {
     method_id: "flat_rate"
   },
+
   addShippingZoneMethodFreeShipping: {
     method_id: "free_shipping"
   },
+
   addShippingZoneMethodLocalPickup: {
     method_id: "local_pickup"
   },
+
   addShippingZoneMethodDokanTableRateShipping: {
     method_id: "dokan_table_rate_shipping"
   },
-  addShippingZoneMethodDokanistanceRateShipping: {
+
+  addShippingZoneMethodDokanDistanceRateShipping: {
     method_id: "dokan_distance_rate_shipping"
   },
+
   addShippingZoneMethodDokanVendorShipping: {
     method_id: "dokan_vendor_shipping"
   },
-
 
   createTaxRate: {
     country: '',
@@ -479,8 +537,10 @@ export const payloads = {
     cities: [],
   },
 
+  // woocommerce settings: general , products, tax, shipping, checkout, account
 
-  // general , products, tax, shipping, checkout, account
+  // general 
+
   general: {
     update: [
       {
@@ -518,6 +578,8 @@ export const payloads = {
     ]
   },
 
+  // account
+
   account: {
     update: [
       {
@@ -548,155 +610,161 @@ export const payloads = {
     enabled: true,
     // method_title: 'Cash on delivery',
   },
-  // payPal: {
-  //   id: 'dokan_paypal_marketplace',
-  //   title: 'PayPal Marketplace',
-  //   enabled: false,
-  //   method_title: 'Dokan PayPal Marketplace',
-  //   settings: {
-  //     shipping_tax_fee_recipient_notice: [Object],
-  //     title: [Object],
-  //     partner_id: [Object],
-  //     api_details: [Object],
-  //     test_mode: [Object],
-  //     app_user: [Object],
-  //     app_pass: [Object],
-  //     test_app_user: [Object],
-  //     test_app_pass: [Object],
-  //     bn_code: [Object],
-  //     disbursement_mode: [Object],
-  //     disbursement_delay_period: [Object],
-  //     button_type: [Object],
-  //     ucc_mode_notice: [Object],
-  //     ucc_mode: [Object],
-  //     marketplace_logo: [Object],
-  //     display_notice_on_vendor_dashboard: [Object],
-  //     display_notice_to_non_connected_sellers: [Object],
-  //     display_notice_interval: [Object],
-  //     webhook_message: [Object]
-  //   },
-  // },
-  // stripeConnect: {
-  //   id: 'dokan-stripe-connect',
-  //   title: 'Dokan Credit card (Stripe)',
-  //   enabled: false,
-  //   method_title: 'Dokan Stripe Connect',
-  //   settings: {
-  //     title: [Object],
-  //     allow_non_connected_sellers: [Object],
-  //     display_notice_to_non_connected_sellers: [Object],
-  //     display_notice_interval: [Object],
-  //     enable_3d_secure: [Object],
-  //     seller_pays_the_processing_fee: [Object],
-  //     testmode: [Object],
-  //     stripe_checkout: [Object],
-  //     stripe_checkout_locale: [Object],
-  //     stripe_checkout_image: [Object],
-  //     stripe_checkout_label: [Object],
-  //     saved_cards: [Object],
-  //     'live-credentials-title': [Object],
-  //     publishable_key: [Object],
-  //     secret_key: [Object],
-  //     client_id: [Object],
-  //     'test-credentials-title': [Object],
-  //     test_publishable_key: [Object],
-  //     test_secret_key: [Object],
-  //     test_client_id: [Object]
-  //   },
-  // },
-  // mangopay: {
-  //   id: 'dokan_mangopay',
-  //   title: 'MangoPay',
-  //   enabled: false,
-  //   method_title: 'Dokan MangoPay',
-  //   settings: {
-  //     title: [Object],
-  //     api_details: [Object],
-  //     sandbox_mode: [Object],
-  //     client_id: [Object],
-  //     api_key: [Object],
-  //     sandbox_client_id: [Object],
-  //     sandbox_api_key: [Object],
-  //     payment_options: [Object],
-  //     cards: [Object],
-  //     direct_pay: [Object],
-  //     saved_cards: [Object],
-  //     platform_fees: [Object],
-  //     fund_transfers: [Object],
-  //     disburse_mode: [Object],
-  //     disbursement_delay_period: [Object],
-  //     instant_payout: [Object],
-  //     user_types: [Object],
-  //     default_vendor_status: [Object],
-  //     default_business_type: [Object],
-  //     advanced: [Object],
-  //     notice_on_vendor_dashboard: [Object],
-  //     announcement_to_sellers: [Object],
-  //     notice_interval: [Object]
-  //   },
-  // },
-  //razorpay: {
-  //   id: 'dokan_razorpay',
-  //   title: 'Razorpay',
-  //   description: null,
-  //   enabled: false,
-  //   method_title: 'Dokan Razorpay',
-  //   settings: {
-  //     title: [Object],
-  //     api_details: [Object],
-  //     test_mode: [Object],
-  //     key_id: [Object],
-  //     key_secret: [Object],
-  //     test_key_id: [Object],
-  //     test_key_secret: [Object],
-  //     enable_route_transfer: [Object],
-  //     disbursement_mode: [Object],
-  //     razorpay_disbursement_delay_period: [Object],
-  //     seller_pays_the_processing_fee: [Object],
-  //     display_notice_on_vendor_dashboard: [Object],
-  //     display_notice_to_non_connected_sellers: [Object],
-  //     display_notice_interval: [Object]
-  //   },
-  // },
-  //stripteExpress {
-  //   id: 'dokan_stripe_express',
-  //   title: 'Credit/Debit Card',
-  //   enabled: false,
-  //   settings: {
-  //     title: [Object],
-  //     api_details: [Object],
-  //     testmode: [Object],
-  //     publishable_key: [Object],
-  //     secret_key: [Object],
-  //     test_publishable_key: [Object],
-  //     test_secret_key: [Object],
-  //     webhook: [Object],
-  //     webhook_key: [Object],
-  //     test_webhook_key: [Object],
-  //     payment_options: [Object],
-  //     enabled_payment_methods: [Object],
-  //     sellers_pay_processing_fee: [Object],
-  //     saved_cards: [Object],
-  //     capture: [Object],
-  //     disburse_mode: [Object],
-  //     disbursement_delay_period: [Object],
-  //     statement_descriptor: [Object],
-  //     appearance: [Object],
-  //     element_theme: [Object],
-  //     payment_request_options: [Object],
-  //     payment_request: [Object],
-  //     payment_request_button_type: [Object],
-  //     payment_request_button_theme: [Object],
-  //     payment_request_button_locations: [Object],
-  //     payment_request_button_size: [Object],
-  //     advanced: [Object],
-  //     notice_on_vendor_dashboard: [Object],
-  //     announcement_to_sellers: [Object],
-  //     notice_interval: [Object],
-  //     debug: [Object]
-  //   },
-  // }
 
+  payPal: {
+    id: 'dokan_paypal_marketplace',
+    title: 'PayPal Marketplace',
+    enabled: false,
+    method_title: 'Dokan PayPal Marketplace',
+    settings: {
+      shipping_tax_fee_recipient_notice: [{}],
+      title: [{}],
+      partner_id: [{}],
+      api_details: [{}],
+      test_mode: [{}],
+      app_user: [{}],
+      app_pass: [{}],
+      test_app_user: [{}],
+      test_app_pass: [{}],
+      bn_code: [{}],
+      disbursement_mode: [{}],
+      disbursement_delay_period: [{}],
+      button_type: [{}],
+      ucc_mode_notice: [{}],
+      ucc_mode: [{}],
+      marketplace_logo: [{}],
+      display_notice_on_vendor_dashboard: [{}],
+      display_notice_to_non_connected_sellers: [{}],
+      display_notice_interval: [{}],
+      webhook_message: [{}]
+    },
+  },
+
+  stripeConnect: {
+    id: 'dokan-stripe-connect',
+    title: 'Dokan Credit card (Stripe)',
+    enabled: false,
+    method_title: 'Dokan Stripe Connect',
+    settings: {
+      title: [{}],
+      allow_non_connected_sellers: [{}],
+      display_notice_to_non_connected_sellers: [{}],
+      display_notice_interval: [{}],
+      enable_3d_secure: [{}],
+      seller_pays_the_processing_fee: [{}],
+      testmode: [{}],
+      stripe_checkout: [{}],
+      stripe_checkout_locale: [{}],
+      stripe_checkout_image: [{}],
+      stripe_checkout_label: [{}],
+      saved_cards: [{}],
+      'live-credentials-title': [{}],
+      publishable_key: [{}],
+      secret_key: [{}],
+      client_id: [{}],
+      'test-credentials-title': [{}],
+      test_publishable_key: [{}],
+      test_secret_key: [{}],
+      test_client_id: [{}]
+    },
+  },
+
+  mangoPay: {
+    id: 'dokan_mangopay',
+    title: 'MangoPay',
+    enabled: false,
+    method_title: 'Dokan MangoPay',
+    settings: {
+      title: [{}],
+      api_details: [{}],
+      sandbox_mode: [{}],
+      client_id: [{}],
+      api_key: [{}],
+      sandbox_client_id: [{}],
+      sandbox_api_key: [{}],
+      payment_options: [{}],
+      cards: [{}],
+      direct_pay: [{}],
+      saved_cards: [{}],
+      platform_fees: [{}],
+      fund_transfers: [{}],
+      disburse_mode: [{}],
+      disbursement_delay_period: [{}],
+      instant_payout: [{}],
+      user_types: [{}],
+      default_vendor_status: [{}],
+      default_business_type: [{}],
+      advanced: [{}],
+      notice_on_vendor_dashboard: [{}],
+      announcement_to_sellers: [{}],
+      notice_interval: [{}]
+    },
+  },
+
+  razorpay: {
+    id: 'dokan_razorpay',
+    title: 'Razorpay',
+    description: null,
+    enabled: false,
+    method_title: 'Dokan Razorpay',
+    settings: {
+      title: [{}],
+      api_details: [{}],
+      test_mode: [{}],
+      key_id: [{}],
+      key_secret: [{}],
+      test_key_id: [{}],
+      test_key_secret: [{}],
+      enable_route_transfer: [{}],
+      disbursement_mode: [{}],
+      razorpay_disbursement_delay_period: [{}],
+      seller_pays_the_processing_fee: [{}],
+      display_notice_on_vendor_dashboard: [{}],
+      display_notice_to_non_connected_sellers: [{}],
+      display_notice_interval: [{}]
+    },
+  },
+
+  stripeExpress: {
+    id: 'dokan_stripe_express',
+    title: 'Credit/Debit Card',
+    enabled: false,
+    settings: {
+      title: [{}],
+      api_details: [{}],
+      testmode: [{}],
+      publishable_key: [{}],
+      secret_key: [{}],
+      test_publishable_key: [{}],
+      test_secret_key: [{}],
+      webhook: [{}],
+      webhook_key: [{}],
+      test_webhook_key: [{}],
+      payment_options: [{}],
+      enabled_payment_methods: [{}],
+      sellers_pay_processing_fee: [{}],
+      saved_cards: [{}],
+      capture: [{}],
+      disburse_mode: [{}],
+      disbursement_delay_period: [{}],
+      statement_descriptor: [{}],
+      appearance: [{}],
+      element_theme: [{}],
+      payment_request_options: [{}],
+      payment_request: [{}],
+      payment_request_button_type: [{}],
+      payment_request_button_theme: [{}],
+      payment_request_button_locations: [{}],
+      payment_request_button_size: [{}],
+      advanced: [{}],
+      notice_on_vendor_dashboard: [{}],
+      announcement_to_sellers: [{}],
+      notice_interval: [{}],
+      debug: [{}]
+    },
+  },
+
+  // customer
 
   createCustomer: () => {
     return {
@@ -733,6 +801,7 @@ export const payloads = {
       }
     }
   },
+
   updateCustomer: () => {
     return {
       email: faker.internet.email(),
@@ -777,27 +846,18 @@ export const payloads = {
     }
   },
 
-  updateBatchAttributesTemplate: () => {
-    return {
-      id: '',
-      description: 'updated description (batch req)'
-    }
-  },
-
-  updateBatchAttributeTermsTemplate: () => {
-    return {
-      id: '',
-      order_by: 'menu_order'
-    }
-  },
+  // wholesale customer
 
   updateWholesaleCustomer: {
-    status: "activate"  // activate, deacticate, delete
+    status: "activate"  // activate, deactivate, delete
   },
 
   deleteWholesaleCustomer: {
     status: "delete"
   },
+
+
+  // support ticket
 
   createSupportTicketComment: {
     replay: "sp replay...1",
@@ -805,17 +865,19 @@ export const payloads = {
     selected_user: "vendor"
   },
 
-  updateSuppotTicketStatus: {
+  updateSupportTicketStatus: {
     status: "close"
   },
 
-  updateSuppotTicketEmailNotification: {
+  updateSupportTicketEmailNotification: {
     notification: true
   },
 
-  updateBatchSuppotTickets: {
+  updateBatchSupportTickets: {
     close: [247, 248]
   },
+
+  // module
 
   deactivateModule: {
     module: ["booking"]
@@ -825,7 +887,9 @@ export const payloads = {
     module: ["booking"]
   },
 
-  createAnnouncemnt: {
+  // announcement 
+
+  createAnnouncement: {
     title: "test announcement title",
     content: "<p>This is announcement content</p>",
     status: "publish",
@@ -839,9 +903,13 @@ export const payloads = {
     sender_type: "all_seller"
   },
 
+  // product review
+
   updateProductReview: {
     status: "approved"
   },
+
+  // store review
 
   updateStoreReview: {
     title: "Updated Test review title",
@@ -849,11 +917,14 @@ export const payloads = {
     status: "publish"
   },
 
+  // store category
+
   createStoreCategory: () => { return { name: 'Test_Store_Category' + faker.datatype.uuid() } },
   updateStoreCategory: () => { return { name: 'Update_Test_Store_Category' + faker.datatype.uuid() } },
 
+  // dummy data
 
-  dummydata: {
+  dummyData: {
     vendor_products: [
       {
         name: 'p1_d1',
@@ -890,6 +961,8 @@ export const payloads = {
       trusted: true
     }
   },
+
+  // store
 
   createStore: () => {
     return {
@@ -1061,7 +1134,7 @@ export const payloads = {
 
   createStoreReview: {
     title: "Test store review",
-    content: "Test store review contant",
+    content: "Test store review content",
     rating: 2,
     // approved: true
   },
@@ -1076,7 +1149,7 @@ export const payloads = {
     "message": "Test admin connect with vendor message"
   },
 
-  adminEnailStore: {
+  adminEmailStore: {
     "subject": "Test email sub",
     "body": "Test email body"
   },
@@ -1200,6 +1273,8 @@ export const payloads = {
     },
   },
 
+  // quote rule
+
   createQuoteRule: () => {
     return {
       rule_name: "QR_" + faker.random.alphaNumeric(5),
@@ -1226,6 +1301,8 @@ export const payloads = {
     apply_on_all_product: "1",
 
   },
+
+  // request quote
 
   createRequestQuote: () => {
     return {
@@ -1257,71 +1334,10 @@ export const payloads = {
 
   },
 
-  convetToOrder: {
+  convertToOrder: {
     quote_id: "10",
     status: "converted"
   },
 
 
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// {
-//   id: 'flat_rate',
-//   title: 'Flat rate',
-//   description: 'Lets you charge a fixed rate for shipping.',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'free_shipping',
-//   title: 'Free shipping',
-//   description: 'Free shipping is a special method which can be triggered with coupons and minimum spends.',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'local_pickup',
-//   title: 'Local pickup',
-//   description: 'Allow customers to pick up orders themselves. By default, when using local pickup store base taxes will apply regardless of customer address.',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'dokan_table_rate_shipping',
-//   title: 'Vendor Table Rate Shipping',
-//   description: 'Charge varying rates based on user defined conditions',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'dokan_distance_rate_shipping',
-//   title: 'Vendor Distance Rate Shipping',
-//   description: 'Charge varying rates based on user defined conditions',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'dokan_product_shipping',
-//   title: 'Dokan Shipping',
-//   description: 'Enable vendors to set shipping cost per product and per country',
-//   _links: { self: [Array], collection: [Array] }
-// },
-// {
-//   id: 'dokan_vendor_shipping',
-//   title: 'Vendor Shipping',
-//   description: 'Charge varying rates based on user defined conditions',
-//   _links: { self: [Array], collection: [Array] }
-// }
-// ]

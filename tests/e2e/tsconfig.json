@@ -3,6 +3,10 @@
         // ... rest
         "typeRoots": ["./node_modules/@types", "./src/types"],
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        // "lib": ["es6",],
+        // "target": "es5",
+        "allowJs": true
+
     }
 }

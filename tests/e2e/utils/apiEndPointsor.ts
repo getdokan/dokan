@@ -7,7 +7,7 @@ const SERVER_URL = process.env.BASE_URL ? process.env.BASE_URL : 'http://localho
 // http://localhost:8888/index.php?rest_route=/dokan/{{version}}/admin/changelog/lite
 
 export const endPoints = {
-    serverlUrl: `${SERVER_URL}`,
+    serverUrl: `${SERVER_URL}`,
     getAllStoresCheck: `${SERVER_URL}/wp-json/dokan/v1/stores/check`,      // get
     getAllStores: `${SERVER_URL}/wp-json/dokan/v1/stores`,        // get 
     getSingleStore: (sellerId: string) => `${SERVER_URL}/wp-json/dokan/v1/stores/${sellerId}`,  // get
@@ -159,7 +159,7 @@ export const endPoints = {
     // request quote rules
     // getAllQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/`,
     // getSingleQuoteRule: (quoteId: string) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}`,
-    // createlQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/`,
+    // createQuoteRules: `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/`,
     // updateQuoteRule: (quoteId: string) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}`,
     // deleteQuoteRule: (quoteId: string) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}`,
     // restoreQuoteRule: (quoteId: string) => `${SERVER_URL}/wp-json/dokan/v1/dokan-quote-rule/${quoteId}/restore`,
