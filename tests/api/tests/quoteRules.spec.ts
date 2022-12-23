@@ -26,21 +26,25 @@ test.describe('quote rules api test', () => {
     });
 
     test('get single quote rule @pro', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because of plain permalink') 
         // let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
-        
+
         let response = await request.get(endPoints.getSingleQuoteRule(quoteRuleId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
     test('create a quote rule @pro', async ({ request }) => {
-        test.fail(!!process.env.ADMIN, 'fail because of plain permalink')
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because of plain permalink') 
+        
         let response = await request.post(endPoints.createQuoteRule, { data: payloads.createQuoteRule() })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
     test('update a quote rule @pro', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because of plain permalink') 
+
         // let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 
         let response = await request.put(endPoints.updateQuoteRule(quoteRuleId), { data: payloads.updateQuoteRule })
@@ -50,6 +54,8 @@ test.describe('quote rules api test', () => {
     });
 
     test('delete a quote rule @pro', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because of plain permalink') 
+
         // let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 
         let response = await request.delete(endPoints.deleteQuoteRule(quoteRuleId))
@@ -58,6 +64,8 @@ test.describe('quote rules api test', () => {
     });
 
     test('restore a deleted quote rule @pro', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because of plain permalink') 
+        
         // let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
         // await apiUtils.deleteQuoteRule(quoteRuleId)
 

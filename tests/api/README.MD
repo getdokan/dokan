@@ -1,6 +1,6 @@
 # Dokan API Tests (Playwright)
 
-Automated API tests for Dokan endpoints.
+Automated API tests for Dokan API endpoints.
 
 ## Table of contents
 
@@ -18,7 +18,7 @@ Automated API tests for Dokan endpoints.
 
 ### Install Node.js
 
-    Follow [instructions on the node.js site](https://nodejs.org/en/download/) to install Node.js.
+Follow [instructions on the node.js site](https://nodejs.org/en/download/) to install Node.js.
 
 ### Install NVM
 
@@ -26,7 +26,7 @@ Follow instructions in the [NVM repository](https://github.com/nvm-sh/nvm) to in
 
 ### Install Docker
 
-Follow instructions on the [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/) to install Docker
+Follow instructions on the [Docker Desktop](https://docs.docker.com/docker-for-mac/install/) to install Docker
 
 ## Running tests
 
