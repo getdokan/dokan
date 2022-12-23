@@ -72,15 +72,15 @@ jobs:
           npm ci
           npm run start-env
 
-      - name: Activate storefront
-        run: |
-          cd tests/api 
-          npm run activate-sf-test
+      # - name: Activate storefront
+      #   run: |
+      #     cd tests/api 
+      #     npm run activate-sf-test
 
-      - name: Setup for api tests
-        run: |
-          cd tests/api 
-          npm run test:api-setup
+      # - name: Setup for api tests
+      #   run: |
+      #     cd tests/api 
+      #     npm run test:api-setup
 
       # - name: Running the api tests
       #   uses: nick-fields/retry@v2
@@ -92,16 +92,15 @@ jobs:
 
       - name: Running the api tests
         run: |
-          cd tests/api && npm run test tests/api
+          cd tests/api && npm run test tests
 
         env:
           CI: true
           ADMIN: ${{ secrets.ADMIN }}
           ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
           VENDOR: ${{ secrets.VENDOR }}
-          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           CUSTOMER: ${{ secrets.CUSTOMER }}
-          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: Publish Test Report

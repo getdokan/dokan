@@ -14,11 +14,11 @@ export const payloads = {
   },
 
   vendorAuth: {
-    Authorization: basicAuth(process.env.VENDOR, process.env.VENDOR_PASSWORD)
+    Authorization: basicAuth(process.env.VENDOR, process.env.USER_PASSWORD)
   },
 
   customerAuth: {
-    Authorization: basicAuth(process.env.CUSTOMER, process.env.CUSTOMER_PASSWORD)
+    Authorization: basicAuth(process.env.CUSTOMER, process.env.USER_PASSWORD)
   },
 
   admin: {
@@ -28,12 +28,12 @@ export const payloads = {
 
   vendor: {
     username: process.env.VENDOR,
-    password: process.env.VENDOR_PASSWORD,
+    password: process.env.USER_PASSWORD,
   },
 
   customer: {
     username: process.env.CUSTOMER,
-    password: process.env.CUSTOMER_PASSWORD,
+    password: process.env.USER_PASSWORD,
   },
 
   setupStore: {
@@ -1155,7 +1155,7 @@ export const payloads = {
 
   createStore1: {
     user_login: process.env.VENDOR,
-    user_pass: process.env.VENDOR_PASSWORD,
+    user_pass: process.env.USER_PASSWORD,
     role: "seller",
     email: process.env.VENDOR + '@yopmail.com',
     store_name: process.env.VENDOR + 'store',
@@ -1244,7 +1244,7 @@ export const payloads = {
     last_name: 'c1',
     role: 'customer',
     username: process.env.CUSTOMER,
-    password: process.env.CUSTOMER_PASSWORD,
+    password: process.env.USER_PASSWORD,
     billing: {
       first_name: process.env.CUSTOMER,
       last_name: 'cus',
