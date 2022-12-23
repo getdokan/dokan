@@ -40,7 +40,6 @@ const config: PlaywrightTestConfig = {
         // storageState: 'storageState.json',  //location of sign in state
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889',  //Base URL 
         ignoreHTTPSErrors: true,  //Whether to ignore HTTPS errors during navigation.
-        trace: 'on-first-retry',  //Record trace only when retrying a test for the first time.
         // api request headers 
         extraHTTPHeaders: {
             'Accept': '*/*',

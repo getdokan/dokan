@@ -173,6 +173,7 @@ Temporary Items
 /test-results/
 /playwright-report/
 /playwright/.cache/
+storageState.json
 
 # vscode
 .vscode/

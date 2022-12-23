@@ -173,6 +173,7 @@ Temporary Items
 /test-results/
 /playwright-report/
 /playwright/.cache/
+storageState.json
 
 # vscode
 .vscode/
@@ -186,4 +187,5 @@ artifacts/
 jest-stare/
 allure-results/
 plugins/
+_test.spec.ts
 
