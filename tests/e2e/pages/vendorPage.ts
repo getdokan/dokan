@@ -1021,31 +1021,31 @@ export class VendorPage extends BasePage {
         expect(successMessage).toMatch(data.urls.saveSuccessMessage)
     }
 
-    // // vendor set rma settings
-    // async setRmaSettings(rma: { label: any; type: any; rmaLength: any; lengthValue: any; lengthDuration: any; refundPolicyHtmlBody: any; saveSuccessMessage: any; }): Promise<void> {
-    //     await this.goToVendorDashboard()
-    //
-    //     await this.click(selector.vendor.vDashboard.settings)
-    //     await this.click(selector.vendor.vSettings.rma)
-    //
-    //     await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label)
-    //     await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type)
-    //     await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength)
-    //     await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue)
-    //     await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration)
-    //
-    //     let refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasons)
-    //     if (refundReasonIsVisible) {
-    //         await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons)
-    //     }
-    //     let iframe = await this.switchToIframe(selector.vendor.vRmaSettings.refundPolicyIframe)
-    //     await this.iframeClearAndType(iframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
-    //     await this.click(selector.vendor.vRmaSettings.rmaSaveChanges)
-    //
-    //     let successMessage = await this.getElementText(selector.vendor.vRmaSettings.updateSettingsSuccessMessage)
-    //     expect(successMessage).toMatch(rma.saveSuccessMessage)
-    //
-    // }
+    // vendor set rma settings
+    async setRmaSettings(rma: { label: any; type: any; rmaLength: any; lengthValue: any; lengthDuration: any; refundPolicyHtmlBody: any; saveSuccessMessage: any; }): Promise<void> {
+        await this.goToVendorDashboard()
+    
+        await this.click(selector.vendor.vDashboard.settings)
+        await this.click(selector.vendor.vSettings.rma)
+    
+        await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label)
+        await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type)
+        await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength)
+        await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue)
+        await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration)
+    
+        let refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasons)
+        if (refundReasonIsVisible) {
+            await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons)
+        }
+        let iframe = await this.switchToIframe(selector.vendor.vRmaSettings.refundPolicyIframe)
+        await this.iframeClearAndType(iframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
+        await this.click(selector.vendor.vRmaSettings.rmaSaveChanges)
+    
+        let successMessage = await this.getElementText(selector.vendor.vRmaSettings.updateSettingsSuccessMessage)
+        expect(successMessage).toMatch(rma.saveSuccessMessage)
+    
+    }
 
 
     // vendor functions

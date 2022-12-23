@@ -8,6 +8,7 @@ let quoteRuleId: string
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    test.fail(!!process.env.ADMIN, 'fail because of plain permalink')
     let [, id] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
     quoteRuleId = id
 });
@@ -17,7 +18,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe.skip('quote rules api test', () => {
+test.describe('quote rules api test', () => {
 
     test('get all quote rules @pro', async ({ request }) => {
         let response = await request.get(endPoints.getAllQuoteRules)
@@ -34,6 +35,7 @@ test.describe.skip('quote rules api test', () => {
     });
 
     test('create a quote rule @pro', async ({ request }) => {
+        test.fail(!!process.env.ADMIN, 'fail because of plain permalink')
         let response = await request.post(endPoints.createQuoteRule, { data: payloads.createQuoteRule() })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
