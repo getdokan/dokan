@@ -1,5 +1,5 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
-import { devices } from '@playwright/test';
+// import { devices } from '@playwright/test';
 require('dotenv').config();
 
 /**
@@ -48,13 +48,13 @@ const config: PlaywrightTestConfig = {
     },
 
     /* Configure projects for major browsers */
-    projects: [
-        {
-            name: 'chromium',
-            use: {
-                ...devices['Desktop Chrome'],
-            },
-        },
+    // projects: [
+    //     {
+    //         name: 'chromium',
+    //         use: {
+    //             ...devices['Desktop Chrome'],
+    //         },
+    //     },
 
         // {
         //   name: 'firefox',
@@ -97,7 +97,7 @@ const config: PlaywrightTestConfig = {
         //     channel: 'chrome',
         //   },
         // },
-    ],
+    // ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     // outputDir: 'test-results/',

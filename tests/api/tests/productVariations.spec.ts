@@ -54,7 +54,9 @@ test.describe('product variation api test', () => {
 
     });
 
-    test.skip('delete a product variation', async ({ request }) => {
+    test('delete a product variation', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet') 
+
         // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
         let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
