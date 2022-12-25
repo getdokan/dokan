@@ -20,7 +20,7 @@ const config: PlaywrightTestConfig = {
         timeout: 2000
     },
     /* Run tests in files in parallel */
-    fullyParallel: true,
+    // fullyParallel: true,
 
     /* Opt out of parallel tests on CI. */
     // workers: process.env.CI ? 1 : undefined,

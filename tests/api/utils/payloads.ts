@@ -52,7 +52,7 @@ export const payloads = {
 
   createProduct: () => {
     return {
-      name: faker.commerce.productName() + (' Simple'),
+      name: faker.commerce.productName() + ' (Simple)',
       type: 'simple',
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
@@ -65,8 +65,22 @@ export const payloads = {
 
   createVariableProduct: () => {
     return {
-      name: faker.commerce.productName() + (' (Variable)'),
+      name: faker.commerce.productName() + ' (Variable)',
       type: 'variable',
+      regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+      categories: [
+        {
+          // id: 48
+        }
+      ],
+    }
+  },
+
+  createDownloadableProduct: () => {
+    return {
+      name: faker.commerce.productName() + ' (Downloadable)',
+      type: 'simple',
+      downloadable: true,
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       categories: [
         {
@@ -1339,4 +1353,29 @@ export const payloads = {
   },
 
 
+  //settings
+  updateSettingsGroup: {
+    "items": [
+      {
+        "id": "store_name",
+        "value": "adminStore1"
+      },
+      {
+        "id": "phone",
+        "value": "164877665544433"
+      }
+    ]
+  },
+
+  updateSubSettingFromSingleSettingGroup: {
+    "value": "adminStore1"
+  },
+
+  updateSubSubSettingFromSingleSettingGroup: {
+    "value": "zzz street"
+  },
+
+  setDefaultAttribute:{
+
+  }
 }

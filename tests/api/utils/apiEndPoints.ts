@@ -250,7 +250,7 @@ export const endPoints = {
     getVendorProfileProgressBarData: `${SERVER_URL}/dokan/v1/vendor-dashboard/profile-progressbar`,
 
     // rank math
-    rankMath: (productId: string) => `${SERVER_URL}/dokan/v1/rank-math/${productId}/store-current-editable-post`,
+    rankMath: (productId: string) => `${SERVER_URL}/dokan/v1/rank-math/${productId}/store-current-editable-post`, 
 
     // v2
 
@@ -262,7 +262,7 @@ export const endPoints = {
     // all orders & order notes from v1 also work with v2
     updateBatchOrders: `${SERVER_URL}/dokan/v2/orders/bulk-actions`,
 
-    // order notes
+    // order downloads
     getAllOrderDownloads: (orderId: string) => `${SERVER_URL}/dokan/v2/orders/${orderId}/downloads`,
     createOrderDownload: (orderId: string) => `${SERVER_URL}/dokan/v2/orders/${orderId}/downloads`,
     deleteOrderDownload: (orderId: string) => `${SERVER_URL}/dokan/v2/orders/${orderId}/downloads`,

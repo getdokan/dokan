@@ -6,7 +6,7 @@ async function globalSetup(config: FullConfig) {
     // get site url structure
     var serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889'
     var query = '?'
-    const context = await request.newContext({})
+    const context = await request.newContext({ignoreHTTPSErrors : true})
     let head = await context.head(serverUrl)
     let headers = head.headers()
     let link = headers.link

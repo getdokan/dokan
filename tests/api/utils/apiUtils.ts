@@ -28,7 +28,7 @@ export class ApiUtils {
         let responseBody: any
         try {
             responseBody = await response.json()
-            // console.log(responseBody)
+            console.log('ResponseBody: ',responseBody)
         } catch (err) {
             console.log('Error: ', err.message)
             console.log('Status Code: ', response.status())
@@ -174,6 +174,13 @@ export class ApiUtils {
         return responseBody
     }
 
+    // get single attribute
+    async getSingleAttribute(attributeId: string, auth?: any) {
+        let response = await this.request.get(endPoints.getSingleAttribute(attributeId), { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
     // get attributeId
     async getAttributeId(auth?: any) {
         let allAttributes = await this.getAllAttributes(auth)
@@ -200,6 +207,13 @@ export class ApiUtils {
     // get all attribute terms
     async getAllAttributeTerms(attributeId: string, auth?: any) {
         let response = await this.request.get(endPoints.getAllAttributeTerms(attributeId), { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // get single attribute term
+    async getSingleAttributeTerm(attributeId: string, attributeTermId: string, auth?: any) {
+        let response = await this.request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId), { headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
     }
@@ -754,6 +768,29 @@ export class ApiUtils {
     }
 
 
+    /**
+    * order downloads  api methods
+    */
+
+
+    // get all order download
+    async getAllOrderDownloads(orderId: string, auth?: any) {
+        let response = await this.request.get(endPoints.getAllOrderDownloads(orderId), { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // create order download
+    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any): Promise<[object, string]> {
+        let response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts } })
+        let responseBody = await this.getResponseBody(response)
+        // let downloadId = responseBody[0].data.id
+        // console.log(downloadId)
+        // return [responseBody, downloadId]
+    }
+
+
+
 
 
     /**
@@ -1087,5 +1124,5 @@ export class ApiUtils {
         let response = await this.request.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
-    }ß
+    }
 }
