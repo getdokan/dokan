@@ -154,7 +154,7 @@ class Manager {
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
             $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-            $where        .= ' AND p.post_title LIKE %s';
+            $where        .= ' AND p.ID LIKE %s';
             $query_args[] = $search;
         }
 
