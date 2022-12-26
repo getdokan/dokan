@@ -510,14 +510,14 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => array( 'view' ),
                 ),
                 'after' => array(
-                    'description' => __( "Start date to show orders", 'dokan-lite' ),
+                    'description' => __( 'Start date to show orders', 'dokan-lite' ),
                     'type'        => 'date-time',
                     'default'     => null,
                     'context'     => array( 'view' ),
                     'readonly'    => true,
                 ),
                 'before' => array(
-                    'description' => __( "End date to show orders", 'dokan-lite' ),
+                    'description' => __( 'End date to show orders', 'dokan-lite' ),
                     'type'        => 'date-time',
                     'default'     => null,
                     'context'     => array( 'view' ),
