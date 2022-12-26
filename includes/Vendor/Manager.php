@@ -150,7 +150,6 @@ class Manager {
      */
     public function create( $data = [] ) {
         $defaults = [
-            'role'       => 'seller',
             'user_login' => '', // dokan_generate_username()
             'user_pass'  => wp_generate_password(),
         ];
@@ -161,6 +160,7 @@ class Manager {
         }
 
         $vendor_data = wp_parse_args( $data, $defaults );
+        $vendor_data['role'] = 'seller'; // this value can't be edited
         $vendor_id   = wp_insert_user( $vendor_data );
 
         if ( is_wp_error( $vendor_id ) ) {
