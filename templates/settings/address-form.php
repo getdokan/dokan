@@ -15,8 +15,8 @@ $address_zip     = isset( $profile_info['address']['zip'] ) ? $profile_info['add
 $address_country = isset( $profile_info['address']['country'] ) ? $profile_info['address']['country'] : '';
 $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['address']['state'] : '';
 
-$label_class     = ! is_account_page() ? 'dokan-w3' : 'dokan-hide';
-$field_class     = ! is_account_page() ? 'dokan-w5' : '';
+$label_class     = dokan_is_seller_dashboard() ? 'dokan-w3' : 'dokan-hide';
+$field_class     = dokan_is_seller_dashboard() ? 'dokan-w5' : '';
 
 ?>
 
@@ -117,7 +117,7 @@ $field_class     = ! is_account_page() ? 'dokan-w5' : '';
 
         if ( $seller_address_fields['country'] ) {
             $country_obj = new WC_Countries();
-            $countries   = $country_obj->countries;
+            $countries   = $country_obj->get_allowed_countries();
             $states      = $country_obj->states;
             ?>
             <div class="dokan-form-group">
