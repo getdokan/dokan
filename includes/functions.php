@@ -2298,13 +2298,15 @@ add_filter( 'woocommerce_email_recipient_no_stock', 'dokan_wc_email_recipient_ad
 add_filter( 'woocommerce_email_recipient_low_stock', 'dokan_wc_email_recipient_add_seller_no_stock', 10, 2 );
 
 /**
- * Display a monthly dropdown for filtering product listing on seller dashboard
+ * Get all the months of products of a vendor.
  *
- * @since 2.1
+ * @since DOKAN_LITE
  *
  * @param int $user_id
+ *
+ * @return object
  */
-function dokan_product_listing_filter_months_dropdown( $user_id ) {
+function dokan_get_products_listing_months_for_vendor( $user_id ) {
     global $wpdb, $wp_locale;
 
     $months = $wpdb->get_results(
@@ -2325,7 +2327,20 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
      *
      * @param object $months the months drop-down query results
      */
-    $months      = apply_filters( 'months_dropdown_results', $months, 'product' );
+    return apply_filters( 'months_dropdown_results', $months, 'product' );
+}
+
+/**
+ * Display a monthly dropdown for filtering product listing on seller dashboard
+ *
+ * @since 2.1
+ *
+ * @param int $user_id
+ */
+function dokan_product_listing_filter_months_dropdown( $user_id ) {
+    global $wp_locale;
+
+    $months      = dokan_get_products_listing_months_for_vendor($user_id);
     $month_count = count( $months );
 
     if ( ! $month_count || ( 1 === $month_count && 0 === (int) $months[0]->month ) ) {
