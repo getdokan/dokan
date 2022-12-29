@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.8',
+        'released' => '2022-12-26',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Single Store Page store header menu and search fields style break on mobile devices',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard total sales wasn’t displaying decimal values',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Set user role as seller while creating vendor from api call',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'order note date issue under vendor dashboard order details page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.7',
         'released' => '2022-11-30',
         'changes'  => [

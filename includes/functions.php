@@ -412,7 +412,7 @@ function dokan_author_total_sales( $seller_id ) {
     $earnings    = Cache::get( $cache_key, $cache_group );
 
     if ( false === $earnings ) {
-        $earnings = (int) $wpdb->get_var(
+        $earnings = (float) $wpdb->get_var(
             $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
 
