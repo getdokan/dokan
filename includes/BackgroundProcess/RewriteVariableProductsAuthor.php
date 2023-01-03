@@ -1,15 +1,17 @@
 <?php
 
-namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
+namespace WeDevs\Dokan\BackgroundProcess;
+
+defined( 'ABSPATH' ) || exit;
 
 use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 
 /**
- * Dokan variable product variations author updater class.
+ * RewriteVariableProductsAuthor Class.
  *
  * @since DOKAN_LITE_SINCE
  */
-class V_3_7_9_VariableProductsAuthor extends DokanBackgroundProcesses {
+class RewriteVariableProductsAuthor extends DokanBackgroundProcesses {
 
     /**
      * Perform updates.
@@ -25,7 +27,7 @@ class V_3_7_9_VariableProductsAuthor extends DokanBackgroundProcesses {
             return false;
         }
 
-        if ( 'variable_product_variations_author_ids' === $item['updating'] ) {
+        if ( 'dokan_variable_product_variations_author_ids' === $item['updating'] ) {
             return $this->rewrite_variable_product_variations_author_ids( $item['page'] );
         }
 
@@ -62,7 +64,7 @@ class V_3_7_9_VariableProductsAuthor extends DokanBackgroundProcesses {
         }
 
         return [
-            'updating' => 'variable_product_variations_author_ids',
+            'updating' => 'dokan_variable_product_variations_author_ids',
             'page'     => ++$page,
         ];
     }

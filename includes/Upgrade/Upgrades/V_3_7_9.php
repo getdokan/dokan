@@ -2,8 +2,9 @@
 
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
+defined( 'ABSPATH' ) || exit;
+
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_7_9_VariableProductsAuthor;
 
 /**
  * Upgrader Class.
@@ -20,10 +21,10 @@ class V_3_7_9 extends DokanUpgrader {
      * @return void
      */
     public static function rewrite_variable_product_variations_author_ids() {
-        $processor = new V_3_7_9_VariableProductsAuthor();
+        $processor = dokan()->background_process->manager()->rewrite_variable_products_author();
 
         $args = [
-            'updating' => 'variable_product_variations_author_ids',
+            'updating' => 'dokan_variable_product_variations_author_ids',
             'page'     => 1
         ];
 
