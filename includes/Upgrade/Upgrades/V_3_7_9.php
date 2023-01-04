@@ -21,13 +21,13 @@ class V_3_7_9 extends DokanUpgrader {
      * @return void
      */
     public static function rewrite_variable_product_variations_author_ids() {
-        $processor = dokan()->background_process->manager()->rewrite_variable_products_author();
+        $bg_processor = dokan()->bg_process->rewrite_variable_products_author;
 
         $args = [
-            'updating' => 'dokan_variable_product_variations_author_ids',
+            'updating' => 'dokan_update_variable_product_variations_author_ids',
             'page'     => 1
         ];
 
-        $processor->push_to_queue( $args )->dispatch_process();
+        $bg_processor->push_to_queue( $args )->save()->dispatch();
     }
 }

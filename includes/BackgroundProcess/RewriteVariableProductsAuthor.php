@@ -4,31 +4,64 @@ namespace WeDevs\Dokan\BackgroundProcess;
 
 defined( 'ABSPATH' ) || exit;
 
-use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
+if ( ! class_exists( 'WC_Background_Process', false ) ) {
+    include_once dirname( WC_PLUGIN_FILE ) . 'includes/abstracts/class-wc-background-process.php';
+}
+
+use WC_Background_Process;
 
 /**
  * RewriteVariableProductsAuthor Class.
  *
  * @since DOKAN_LITE_SINCE
  */
-class RewriteVariableProductsAuthor extends DokanBackgroundProcesses {
+class RewriteVariableProductsAuthor extends WC_Background_Process {
+
+    /**
+     * Initiate new background process.
+     */
+    public function __construct() {
+        $this->action = 'dokan_update_variable_product_variations_author_ids';
+
+        parent::__construct();
+    }
+
+    /**
+     * Dispatch updater.
+     *
+     * Updater will still run via cron job if this fails for any reason.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    public function dispatch() {
+        $dispatched = parent::dispatch();
+
+        if ( is_wp_error( $dispatched ) ) {
+            dokan_log(
+                sprintf( 'Unable to dispatch Dokan variable product variations author update: %s', $dispatched->get_error_message() ),
+                'error'
+            );
+        }
+    }
 
     /**
      * Perform updates.
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param mixed $item
+     * @param array $args
      *
      * @return bool|array
      */
-    public function task( $item ) {
-        if ( empty( $item ) ) {
+    public function task( $args ) {
+        if ( empty( $args['updating'] ) || empty( $args['page'] ) ) {
             return false;
         }
 
-        if ( 'dokan_variable_product_variations_author_ids' === $item['updating'] ) {
-            return $this->rewrite_variable_product_variations_author_ids( $item['page'] );
+        if ( 'dokan_update_variable_product_variations_author_ids' === $args['updating'] ) {
+            return $this->rewrite_variable_product_variations_author_ids( $args['page'] );
         }
 
         return false;
@@ -64,8 +97,20 @@ class RewriteVariableProductsAuthor extends DokanBackgroundProcesses {
         }
 
         return [
-            'updating' => 'dokan_variable_product_variations_author_ids',
+            'updating' => 'dokan_update_variable_product_variations_author_ids',
             'page'     => ++$page,
         ];
+    }
+
+    /**
+     * Complete the process.
+     *
+     * @since DOKAN_LITE_SINCE
+     *
+     * @return void
+     */
+    protected function complete() {
+        dokan_log( 'Variable product variations author updated successfully', 'info' );
+        parent::complete();
     }
 }
