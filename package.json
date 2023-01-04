@@ -66,7 +66,7 @@
     "vue-slick": "^1.2.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.7.10",
-    "webpack": "^3.12.0",
+    "webpack": "^5.75.0",
     "wp-vue-i18n": "^1.1.4"
   }
 }
