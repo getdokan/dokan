@@ -76,11 +76,11 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
      *
      * @return bool|array
      */
-    function rewrite_variable_product_variations_author_ids( $page = 1 ) {
+    protected function rewrite_variable_product_variations_author_ids( $page = 1 ) {
         $args = [
             'type'  => 'variable',
             'limit' => 50,
-            'page'  => $page
+            'page'  => $page,
         ];
 
         $variable_products = wc_get_products( $args );
@@ -89,7 +89,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
             return false;
         }
 
-        foreach( $variable_products as $variable_product ) {
+        foreach ( $variable_products as $variable_product ) {
             $product_author = get_post_field( 'post_author', $variable_product->get_id() );
 
             // Rewrite author of variable product.

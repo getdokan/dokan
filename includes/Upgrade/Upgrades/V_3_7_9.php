@@ -25,7 +25,7 @@ class V_3_7_9 extends DokanUpgrader {
 
         $args = [
             'updating' => 'dokan_update_variable_product_variations_author_ids',
-            'page'     => 1
+            'page'     => 1,
         ];
 
         $bg_processor->push_to_queue( $args )->save()->dispatch();
