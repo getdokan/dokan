@@ -110,6 +110,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
      * @return void
      */
     protected function complete() {
+        set_transient( 'dokan_variable_products_author_updated', true, HOUR_IN_SECONDS );
         dokan_log( 'Variable product variations author updated successfully', 'info' );
         parent::complete();
     }
