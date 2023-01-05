@@ -66,8 +66,8 @@ class Manager {
 
         $notices[] = [
             'type'        => 'success',
-            'title'       => __( 'Dokan Variable Products Updated', 'dokan' ),
-            'description' => __( 'Dokan variable products author IDs regenerated successfully!', 'dokan' ),
+            'title'       => __( 'Dokan Variable Products Updated', 'dokan-lite' ),
+            'description' => __( 'Dokan variable products author IDs regenerated successfully!', 'dokan-lite' ),
             'priority'    => 0,
         ];
 
