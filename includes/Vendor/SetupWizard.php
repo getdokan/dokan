@@ -365,9 +365,7 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings = $this->store_info;
 
         $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
-
         $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : [];
-
         $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         // Check address and add manually values on Profile Completion also increase progress value
