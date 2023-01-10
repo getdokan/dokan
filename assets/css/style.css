@@ -6007,6 +6007,7 @@ p.vendor-customer-registration .radio:hover {
   width: -moz-available;
   width: -webkit-fill-available;
   width: fill-available;
+  object-fit: cover;
 }
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller {
   width: 100%;
