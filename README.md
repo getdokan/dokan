@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes  
 **Requires at least:** 5.4  
-**Tested up to:** 6.1  
+**Tested up to:** 6.1.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.0.1  
+**WC tested up to:** 7.2.2  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.5  
+**Stable tag:** 3.7.8  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.8 ( Oct 27, 2022 ) ###
+
+- **fix:** Single Store Page store header menu and search fields style break on mobile devices
+- **fix:** Vendor dashboard total sales wasn’t displaying decimal values
+- **fix:** Set user role as seller while creating vendor from api call
+- **fix:** order note date issue under vendor dashboard order details page
+
+
+### v3.7.7 ( Nov 30, 2022 ) ###
+
+- **update:** Added  date filter - `after/before` for Order REST API
+- **update:** Added `dokan_bank_payment_fields_placeholders` Filter to change the label and placeholder of bank payment fields
+- **update:** Updated UI/UX of vendor dashboard submenu
+- **update:** Added section, sub-section label, description search under Dokan admin settings
+
+### v3.7.6 ( Nov 14, 2022 ) ###
+
+- **fix:** Fixed a sql security issue while searching for products via ajax from vendor dashboard
 
 ### v3.7.5 ( Nov 03, 2022 ) ###
 
