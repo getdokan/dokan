@@ -83,7 +83,7 @@ if ( 'layout3' === $profile_layout ) {
                                 </li>
                             <?php } ?>
 
-                            <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) && $store_user->show_email() === 'yes' ) { ?>
+                            <?php if ( ! dokan_is_vendor_info_hidden( 'email' ) && $store_user->show_email() ) { ?>
                                 <li class="dokan-store-email">
                                     <i class="far fa-envelope"></i>
                                     <a href="mailto:<?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?>"><?php echo esc_attr( antispambot( $store_user->get_email() ) ); ?></a>
