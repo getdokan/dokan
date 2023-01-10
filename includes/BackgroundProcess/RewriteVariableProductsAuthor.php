@@ -92,8 +92,8 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
         foreach ( $variable_products as $variable_product ) {
             $product_author = get_post_field( 'post_author', $variable_product->get_id() );
 
-            // Rewrite author of variable product.
-            dokan_override_product_author( $variable_product, $product_author );
+            // Rewrite authors of the variations.
+            dokan_override_author_for_product_variations( $variable_product, $product_author );
         }
 
         return [
