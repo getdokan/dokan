@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.9',
+        'released' => '2023-01-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Last-page and first-page pagination icon inconsistency under single store page product listing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Adjusted store banner image stretching issue under store list page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor email address is not showing up on the store header',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.8',
         'released' => '2022-12-26',
         'changes'  => [
@@ -67,7 +89,7 @@ $changelog = [
         'version'  => 'Version 3.7.5',
         'released' => '2022-11-03',
         'changes'  => [
-            'New' => [
+            'New'    => [
                 [
                     'title'       => 'Added a new hook named dokan_store_product_search_results to filter out store product search results closes.',
                     'description' => '',
@@ -79,7 +101,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'    => [
                 [
                     'title'       => 'SweetAlert library is conflicting with the WooCommerce Conversion Tracking plugin',
                     'description' => '',
@@ -141,7 +163,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page',
                     'description' => '',

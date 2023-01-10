@@ -138,7 +138,7 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
         echo '</li>';
 
         if ( $end_page < $max_page ) {
-            $last_page_text = '&rarr;';
+            $last_page_text = '&raquo;';
             echo '<li class="next"><a href="' . esc_url( get_pagenum_link( $max_page ) ) . '" title="Last">' . esc_html( $last_page_text ) . '</a></li>';
         }
 
