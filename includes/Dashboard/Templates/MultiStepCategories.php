@@ -15,9 +15,7 @@ class MultiStepCategories {
      * @since 3.6.2
      */
     public function __construct() {
-        add_action( 'dokan_before_product_content_area', [ $this, 'load_add_category_modal' ], 10 );
-        add_action( 'dokan_before_new_product_content_area', [ $this, 'load_add_category_modal' ], 10 );
-        add_action( 'dokan_before_listing_product', [ $this, 'load_add_category_modal' ], 10 );
+        add_action( 'wp_footer', [ $this, 'load_add_category_modal' ], 10 );
     }
 
     /**
