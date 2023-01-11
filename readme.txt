@@ -7,7 +7,7 @@ Tested up to: 6.1.1
 WC requires at least: 5.0.0
 WC tested up to: 7.2.2
 Requires PHP: 7.2
-Stable tag: 3.7.8
+Stable tag: 3.7.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.9 ( Jan 10, 2023 ) =
+
+- **update:** Last-page and first-page pagination icon inconsistency under single store page product listing
+- **update:** Adjusted store banner image stretching issue under store list page
+- **fix:** Vendor email address is not showing up on the store header.
 
 = v3.7.8 ( Oct 27, 2022 ) =
 
