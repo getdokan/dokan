@@ -201,7 +201,11 @@ class OrderControllerV2 extends OrderController {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            $files   = $product->get_downloads();
+            if ( ! $product ) {
+                continue;
+            }
+
+            $files = $product->get_downloads();
 
             foreach ( $files as $download_id => $file ) {
                 $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );

@@ -112,10 +112,16 @@ class Processor {
             return $single_settings;
         }
 
+        $error = new WP_Error( 'dokan_rest_setting_option_not_found', __( 'Setting Option not found', 'dokan-lite' ), [ 'status' => 404 ] );
+
+        if ( ! isset( $single_settings['fields'] ) ) {
+            return $error;
+        }
+
         $single_fields_array_position_in_settings_array = array_search( $id, array_column( $single_settings['fields'], 'id' ), true );
 
         if ( false === $single_fields_array_position_in_settings_array ) {
-            return new WP_Error( 'dokan_rest_setting_option_not_found', __( 'Setting Option not found', 'dokan-lite' ), [ 'status' => 404 ] );
+            return $error;
         }
 
         return $single_settings['fields'][ $single_fields_array_position_in_settings_array ];
