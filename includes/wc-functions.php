@@ -1132,33 +1132,13 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
-        return;
-    }
-
-    $status = sanitize_text_field( wp_unslash( $_POST['status'] ) );
-    $orders = array_map( 'sanitize_text_field', wp_unslash( $_POST['bulk_orders'] ) );
-
-    // -1 means bluk action option value
-    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
-
-    if ( in_array( $status, $excluded_status, true ) ) {
-        return;
-    }
-
-    foreach ( $orders as $order ) {
-        $the_order = new WC_Order( $order );
-
-        if ( $the_order->get_status() === $status ) {
-            continue;
-        }
-
-        if ( in_array( $the_order->get_status(), $excluded_status, true ) ) {
-            continue;
-        }
-
-        $the_order->update_status( $status );
-    }
+    // Doing the bulk action for orders.
+    dokan_apply_bulk_order_status_change(
+        [
+            'status'      => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
+            'bulk_orders' => isset( $_POST['bulk_orders'] ) ? array_map( 'absint', $_POST['bulk_orders'] ) : [],
+        ]
+    );
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );

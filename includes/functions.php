@@ -4469,6 +4469,45 @@ function is_tweleve_hour_format() {
 }
 
 /**
+ * Updates bulk orders status by orders ids.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $postdata
+ *
+ * @return void
+ */
+function dokan_apply_bulk_order_status_change( $postdata ) {
+    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
+    $orders = array_map( 'absint', $postdata['bulk_orders'] );
+
+    // -1 means bluk action option value
+    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
+
+    if ( in_array( $status, $excluded_status, true ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order instanceof \WC_Order ) {
+            continue;
+        }
+
+        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
+            continue;
+        }
+
+        $order->update_status( $status );
+    }
+}
+
+/**
  * Sanitize phone number.
  * Allows only numbers and "+" (plus sign) "." (full stop) "(" ")" "-".
  *

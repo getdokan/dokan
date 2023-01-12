@@ -43,12 +43,14 @@ function dokan_withdraw_get_methods() {
 /**
  * Get active withdraw methods.( Default is paypal )
  *
+ * @since DOKAN_SINCE To filter out all the active payment methods only.
+ *
  * @return array
  */
 function dokan_withdraw_get_active_methods() {
     $methods = dokan_get_option( 'withdraw_methods', 'dokan_withdraw', [ 'paypal' ] );
 
-    return apply_filters( 'dokan_get_active_withdraw_methods', $methods );
+    return array_filter( apply_filters( 'dokan_get_active_withdraw_methods', $methods ) );
 }
 
 /**
