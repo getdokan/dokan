@@ -64,7 +64,8 @@ class InstallerHelper {
 
         // get advertisement product id from option table
         $product_id = (int) get_option( Helper::get_base_product_option_key(), 0 );
-        if ( $product_id ) {
+        $product = wc_get_product( $product_id );
+        if ( $product ) {
             return;
         }
 

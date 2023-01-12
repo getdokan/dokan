@@ -436,6 +436,10 @@ class OrderController extends DokanRESTController {
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
             'seller_id'   => dokan_get_current_user_id(),
+            'date'        => [
+                'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
+                'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
+            ]
         ];
 
         if ( ! empty( $request['search'] ) ) {
@@ -1759,6 +1763,20 @@ class OrderController extends DokanRESTController {
             'default'     => $schema_properties['search']['default'],
             'description' => $schema_properties['search']['description'],
             'type'        => $schema_properties['search']['type'],
+        );
+
+        $params['after'] = array(
+            'description'        => __( 'Limit response to resources published after a given ISO8601 compliant date.', 'dokan-lite' ),
+            'type'               => 'string',
+            'format'             => 'date-time',
+            'validate_callback'  => 'rest_validate_request_arg',
+        );
+
+        $params['before'] = array(
+            'description'        => __( 'Limit response to resources published before a given ISO8601 compliant date.', 'dokan-lite' ),
+            'type'               => 'string',
+            'format'             => 'date-time',
+            'validate_callback'  => 'rest_validate_request_arg',
         );
 
         return $query_params;

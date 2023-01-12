@@ -640,7 +640,7 @@ class Ajax {
         check_ajax_referer( 'search-products', 'security' );
 
         $term     = ! empty( $_GET['term'] ) ? sanitize_text_field( wp_unslash( $_GET['term'] ) ) : '';
-        $user_ids = ! empty( $_GET['user_ids'] ) ? sanitize_text_field( wp_unslash( $_GET['user_ids'] ) ) : false;
+        $user_ids = ! empty( $_GET['user_ids'] ) ? array_filter( array_map( 'absint', (array) wp_unslash( $_GET['user_ids'] ) ) ) : false;
 
         if ( empty( $term ) ) {
             wp_die();

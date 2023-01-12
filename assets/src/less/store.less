@@ -701,7 +701,25 @@
     }
 
     .dokan-store-tabs {
-        ul {
+        text-align: center;
+
+        ul.dokan-modules-button {
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row-reverse;
+            justify-content: center;
+            margin: 0;
+            padding: 10px 0;
+            border: 1px solid #EDEDED;
+
+            li {
+                display: inline-block;
+            }
+        }
+
+        ul.dokan-list-inline {
+            display: flex;
             background-color: #fff;
             border-width: 0 1px 1px 1px;
             border-color: @borderColor;
@@ -709,13 +727,20 @@
             margin: 0;
             padding: 0;
             margin-bottom: 20px;
+            font-size: 14px;
 
             li {
                 display: inline-block;
+                flex: auto;
                 border-right: 1px solid @borderColor;
                 margin-right: -4px;
 
+                &:last-child {
+                    border-right: unset;
+                }
+
                 a {
+                    width: 100%;
                     text-decoration: none;
                     color: #666;
                     padding: 10px 15px;
