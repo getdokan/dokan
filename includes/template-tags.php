@@ -138,7 +138,7 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
         echo '</li>';
 
         if ( $end_page < $max_page ) {
-            $last_page_text = '&rarr;';
+            $last_page_text = '&raquo;';
             echo '<li class="next"><a href="' . esc_url( get_pagenum_link( $max_page ) ) . '" title="Last">' . esc_html( $last_page_text ) . '</a></li>';
         }
 
@@ -553,8 +553,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
     if ( $hamburger_menu ) {
         $menu .= '<div id="dokan-navigation" aria-label="Menu">';
-        $menu .= '<label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">&#9776;</label>';
-        $menu .= '<input id="toggle-mobile-menu" type="checkbox" />';
+        $hamburger = apply_filters(
+            'dokan_vendor_dashboard_menu_hamburger',
+            '<label id="mobile-menu-icon" for="toggle-mobile-menu" aria-label="Menu">&#9776;</label><input id="toggle-mobile-menu" type="checkbox" />'
+        );
+
+        $menu .= $hamburger;
     }
 
     $menu .= '<ul class="dokan-dashboard-menu">';
