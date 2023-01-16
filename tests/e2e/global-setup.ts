@@ -1,10 +1,11 @@
 require('dotenv').config();
-import { chromium, FullConfig, request } from '@playwright/test';
-import { BasePage } from "./pages/basePage";
-import { data } from './utils/testData';
-import { selector } from './pages/selectors';
+import { chromium, FullConfig, request } from '@playwright/test'
+import { BasePage } from "./pages/basePage"
+import { data } from './utils/testData'
+import { selector } from './pages/selectors'
 import { payloads } from './utils/payloads'
 import { ApiUtils } from './utils/apiUtils'
+import cookie from './storageState.json'
 
 async function globalSetup(config: FullConfig) {
     // get site url structure
@@ -34,20 +35,28 @@ async function globalSetup(config: FullConfig) {
     // let productName = (arBody.name).replace(/ /g, "-")
     // process.env.arPid = arBody.id
 
-
-    // // get storageState
-    // const browser = await chromium.launch();
-    // const page = await browser.newPage();
-    // await page.goto(process.env.BASE_URL + '/wp-admin');
-    // await page.fill(selector.backend.email, 'admin')
-    // await page.fill(selector.backend.password, '01dokan01')
-    // await page.click(selector.backend.login)
-    // // await page.waitForTimeout(3 * 1000)
-    // await page.waitForLoadState('networkidle')
-    // // process.env.nonce = await page.evaluate('wpApiSettings.nonce')
-    // // console.log('nonce:', process.env.nonce)
-    // // Save signed-in state to 'storageState.json'.
-    // await page.context().storageState({ path: 'storageState.json' });
+    // get storageState if expired
+    let expTime = cookie.cookies[6].expires
+    let currentTime = Date.now() / 1000
+    console.log(expTime)
+    console.log((new Date(expTime * 1000)).toUTCString())
+    console.log(currentTime)
+    console.log((new Date(currentTime * 1000)).toUTCString())
+    if (currentTime > expTime) {
+        // get storageState
+        const browser = await chromium.launch();
+        const page = await browser.newPage();
+        await page.goto(process.env.BASE_URL + '/wp-admin');
+        await page.fill(selector.backend.email, 'admin')
+        await page.fill(selector.backend.password, '01dokan01')
+        await page.click(selector.backend.login)
+        // await page.waitForTimeout(3 * 1000)
+        await page.waitForLoadState('networkidle')
+        // process.env.nonce = await page.evaluate('wpApiSettings.nonce')
+        // console.log('nonce:', process.env.nonce)
+        // Save signed-in state to 'storageState.json'.
+        await page.context().storageState({ path: 'storageState.json' });
+    }
     // // await page.waitForTimeout(3 * 1000)
     // // console.log(process.env.BASE_URL + '/'+ product)
 

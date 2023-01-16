@@ -28,7 +28,7 @@ export class ApiUtils {
         let responseBody: any
         try {
             responseBody = await response.json()
-            console.log('ResponseBody: ',responseBody)
+            console.log('ResponseBody: ', responseBody)
         } catch (err) {
             console.log('Error: ', err.message)
             console.log('Status Code: ', response.status())
@@ -46,6 +46,13 @@ export class ApiUtils {
     // get all stores
     async getAllStores(auth?: any) {
         let response = await this.request.get(endPoints.getAllStores, { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // get single store
+    async getSingleStore(orderId: string, auth?: any) {
+        let response = await this.request.get(endPoints.getSingleStore(orderId), { headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
     }
@@ -312,6 +319,13 @@ export class ApiUtils {
     // get all orders
     async getAllOrders(auth?: any) {
         let response = await this.request.get(endPoints.getAllOrders, { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+    // get single order
+    async getSingleOrder(orderId: string, auth?: any) {
+        let response = await this.request.get(endPoints.getSingleOrder(orderId), { headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
     }
@@ -1006,7 +1020,8 @@ export class ApiUtils {
 
     // create order
     async createOrder(product: object, order: any, auth?: any): Promise<[object, string]> {
-        let [, productId] = await this.createProduct(product, auth)
+        // let [, productId] = await this.createProduct(product, auth)
+        let productId = product
         let payload = order
         payload.line_items[0].product_id = productId
         let response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth })

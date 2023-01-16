@@ -236,8 +236,8 @@ export const endPoints = {
     // product
     getProductBlockDetails: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/products/${productId}`,
     getVariableProductBlockDetails: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/product-variation/${productId}`,
-    setDefaultAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/product-variation/${productId}`,
-    updateProductAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/product-variation/${productId}`,
+    setDefaultAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/set-default/${productId}`,
+    updateProductAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/edit-product/${productId}`,
 
 
     // vendor dashboard
@@ -250,9 +250,13 @@ export const endPoints = {
     getVendorProfileProgressBarData: `${SERVER_URL}/dokan/v1/vendor-dashboard/profile-progressbar`,
 
     // rank math
-    rankMath: (productId: string) => `${SERVER_URL}/dokan/v1/rank-math/${productId}/store-current-editable-post`, 
+    rankMath: (productId: string) => `${SERVER_URL}/dokan/v1/rank-math/${productId}/store-current-editable-post`,
 
     // v2
+
+    // product filter
+    getProductsFilterByData: `${SERVER_URL}/dokan/v2/products/filter-by-data`,
+    getFilteredProducts: `${SERVER_URL}/dokan/v2/products`,
 
     // withdraw
     getWithdrawSettings: `${SERVER_URL}/dokan/v2/withdraw/settings`,

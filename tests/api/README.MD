@@ -11,6 +11,8 @@ Automated API tests for Dokan API endpoints.
     -   [Prep work for running tests](#prep-work-for-running-tests)
     -   [How to run tests](#how-to-run-tests)
     -   [How to skip tests](#how-to-skip-tests)
+    -   [How to debug tests](#how-to-debug-tests)
+    -   [How to server reports](#how-to-serve-reports)
 
 ## Pre-requisites
 
@@ -58,12 +60,44 @@ Run files that have report or customer in the file name
 
 Run the test with the title
 
-    npx playwright test -g "get summary report"
+    npx playwright test -g "user login"
 
 Run group of tests with certain tag
 
     npx playwright test --grep @pro
 
+Run multiple groups of tags 
+
+    npx playwright test --grep @lite | @pro
+
 Skip the tests with a certain tag:
 
     npx playwright test --grep-invert @pro
+
+Run tests on specific browser
+    
+    npx playwright test --project=chromium
+
+Run tests in headed mode
+
+    npx playwright test --headed
+
+
+## Debugging tests
+
+
+Debugging all tests
+
+    npx playwright test --debug
+
+Debug single test file
+
+    npx playwright test coupons.spec.ts --debug
+
+Debug start form specific test line number [where the test(.. is defined]
+
+    npx playwright test coupons.spec.ts:20 --debug
+
+## How to server reports
+
+    npx playwright show-report

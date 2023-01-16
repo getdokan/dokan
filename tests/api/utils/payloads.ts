@@ -82,6 +82,9 @@ export const payloads = {
       type: 'simple',
       downloadable: true,
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+      downloads: [],
+      download_limit: 100,
+      download_expiry: 100,
       categories: [
         {
           // id: 48
@@ -1377,5 +1380,10 @@ export const payloads = {
 
   setDefaultAttribute:{
 
-  }
+  },
+
+  filterParams : {
+    product_type: 'simple'
+},
+
 }

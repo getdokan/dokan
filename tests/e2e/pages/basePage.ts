@@ -80,7 +80,7 @@ export class BasePage {
     }
 
     // Create a New URL
-    async createUrl(subPath) {
+    async createUrl(subPath: string) {
         // let url = new URL(process.env.BASE_URL)
         // url.pathname = url.pathname + subPath + '/'
         // return url.href
@@ -119,7 +119,7 @@ export class BasePage {
 
     // get current page url
     async getCurrentUrl(): Promise<string> {
-        return await this.page.url()
+        return this.page.url()
     }
 
     // get current page title
@@ -134,7 +134,7 @@ export class BasePage {
 
     // get the browser context that the page belongs to.
     async getPageContext(): Promise<BrowserContext> {
-        return await this.page.context()
+        return this.page.context()
     }
 
     // assign html markup to the current page
@@ -219,9 +219,15 @@ export class BasePage {
         await this.page.waitForSelector(selector)
     }
 
-    // locator //TODO: need to update this
+    // get locator //TODO: need to update this
     async getLocator(selector: string): Promise<object> {
         return this.page.locator(selector)
+    }
+
+    // get locators  //TODO: need to test 
+    async getLocators(selector: string): Promise<object> {
+        return this.page.locator(selector).elementHandles()
+        return this.page.$$(selector)
     }
 
     // returns whether the element is visible
@@ -336,6 +342,12 @@ export class BasePage {
         return texts
     }
 
+    // get element bounding box
+    async getElementBoundingBox(selector: string) {
+        let boundingBox = await this.page.locator(selector).boundingBox()
+        return boundingBox
+    }
+
 
     /**
      * timeout methods
@@ -343,12 +355,12 @@ export class BasePage {
 
     // change default maximum time(seconds) for all the methods
     async setDefaultNavigationTimeout(timeout: number): Promise<void> {
-        await this.page.setDefaultTimeout(timeout * 1000)
+        this.page.setDefaultTimeout(timeout * 1000)
     }
 
     // change default maximum navigation time(seconds) for all navigation methods [goto, goBack, goForward, ...]
     async setDefaultTimeout(timeout: number): Promise<void> {
-        await this.page.setDefaultTimeout(timeout * 1000)
+        this.page.setDefaultTimeout(timeout * 1000)
     }
 
     // waits for the given timeout in seconds
@@ -360,8 +372,9 @@ export class BasePage {
      * Input field methods
      */
 
-    // clear input fields
+    // clear input field
     async clearInputField(selector: string): Promise<void> {
+        await this.page.fill(selector, '')
     }
 
     // clear input field and type
@@ -369,14 +382,21 @@ export class BasePage {
         await this.page.fill(selector, text)
     }
 
-    // type in input fields
+    // type in input field
     async type(selector: string, text: string) {
         await this.page.type(selector, text)
     }
 
-    // fill in input fields
+    // fill in input field
     async fill(selector: string, text: string) {
         await this.page.fill(selector, text)
+    }
+
+    // append in input filed
+    async append(selector: string, text: string) {
+        await this.focus(selector)
+        await this.press('End')
+        await this.page.type(selector, text)
     }
 
     // check/uncheck input fields [checkbox/radio] based on choice
@@ -424,13 +444,13 @@ export class BasePage {
     }
 
     // select by label
-    async selectBylabel(selector: string, value: string): Promise<string[]> {
+    async selectByLabel(selector: string, value: string): Promise<string[]> {
         // console.log(selector,value)
         return await this.page.selectOption(selector, { label: value })
     }
 
     // select by number
-    async selectBynumber(selector: string, value: number): Promise<string[]> {
+    async selectByNumber(selector: string, value: number): Promise<string[]> {
         return await this.page.selectOption(selector, { index: value })
     }
 
@@ -447,14 +467,64 @@ export class BasePage {
      */
 
     // upload file
-    async uploadFile(selector: string, file: string): Promise<void> {
-        await this.page.setInputFiles(selector, file)
+    async uploadFile(selector: string, files: []): Promise<void> {
+        await this.page.setInputFiles(selector, files)
     }
 
-    // take screenshots
-    async screenshot(): Promise<void> {
-        await this.page.screenshot()
+    // upload file
+    async uploadBuffer(selector: string, fileName: string, mimeType: string, buffer: Buffer): Promise<void> {
+        await this.page.setInputFiles(selector, {
+            name: fileName,
+            mimeType: mimeType,
+            buffer: Buffer.from(buffer)
+        })
     }
+
+    // upload files when input file element is missing
+    async uploadFileViaListener(selector: string, files: []): Promise<void> {
+        this.page.on('filechooser', async (fileChooser: any) => {
+            await fileChooser.setFiles(files)
+        })
+        await this.page.click(selector)  //    invokes the filechooser
+    }
+
+    async uploadFileViaListener1(selector: string, files: []): Promise<void> {
+        // Start waiting for file chooser before clicking. Note no await.
+        const fileChooserPromise = this.page.waitForEvent('filechooser')  //Note: no await on listener
+        await this.page.click(selector)  //    invokes the filechooser 
+        const fileChooser = await fileChooserPromise
+        await fileChooser.setFiles(files)
+
+        // or
+        // const fileChooserPromise = await Promise.all([
+        //     this.page.waitForEvent('filechooser') 
+        //     this.page.click(selector)  
+        // ])
+        // await fileChooser.setFiles(files)
+    }
+
+    // remove selected files to upload 
+    async removeSelectedFileToUpload(selector: string, file: []): Promise<void> {
+        await this.page.setInputFiles(selector, [])
+    }
+
+    // get screenshot
+    async getScreenshot(path: string, fullPage: boolean = false): Promise<void> {
+        await this.page.screenshot({ path: path, fullPage: fullPage })
+    }
+
+    // get screenshots as buffer
+    async getScreenshotBuffer(path: string): Promise<string> {
+        const screenshot = await this.page.screenshot({ path: path })
+        let buffer = screenshot.toString('base64')
+        return buffer
+    }
+
+    // get screenshot
+    async getElementScreenshot(selector: string, path: string,): Promise<void> {
+        await this.page.locator(selector).screenshot({ path: path })
+    }
+
 
     // generate a pdf of the page
     async pdf(): Promise<void> {
@@ -467,12 +537,19 @@ export class BasePage {
 
     //  get all frames attached to the page
     async getAllFrames(): Promise<Frame[]> {
-        return await this.page.frames()
+        return this.page.frames()
     }
 
     // get frame
     async getFrame(frame: string): Promise<Frame | null> {
-        return await this.page.frame(frame)
+        return this.page.frame(frame)
+    }
+
+    // get child frames
+    async getChildFrames(frame: string): Promise<Frame[] | null> {
+        const parentFrame = this.page.frame(frame)
+        let childFrames = parentFrame.childFrames()
+        return childFrames
     }
 
     // get frame
@@ -591,13 +668,13 @@ export class BasePage {
     // filter locator through inner locator or text
     async filterLocator(selector: string, filterOptions: object): Promise<Locator> {
         let locator = this.page.locator(selector)
-        return await locator.filter(filterOptions)
+        return locator.filter(filterOptions)
     }
 
     // get first matching locator
     async firstLocator(selector: string): Promise<Locator> {
         let locator = this.page.locator(selector)
-        return await locator.first()
+        return locator.first()
     }
 
     // focus locator
@@ -705,7 +782,7 @@ export class BasePage {
     // get the page locator belongs to
     async pageOfLocator(selector: string): Promise<Page> {
         let locator = this.page.locator(selector)
-        return await locator.page()
+        return locator.page()
     }
 
     // key press on locator
@@ -762,7 +839,7 @@ export class BasePage {
         return await locator.textContent()
     }
 
-    // type on inout locator
+    // type on input locator
     async typeOnLocator(selector: string, text: string): Promise<void> {
         let locator = this.page.locator(selector)
         await locator.type(text)
@@ -787,51 +864,51 @@ export class BasePage {
 
     // accept alert
     async acceptAlert(): Promise<void> {
-        this.page.on('dialog', async dialog => {
-            await dialog.accept()
+        this.page.on('dialog', dialog => {
+            dialog.accept()
         })
     }
 
     // dismiss alert
     async dismissAlert(): Promise<void> {
-        this.page.on('dialog', async dialog => {
-            await dialog.dismiss()
+        this.page.on('dialog', dialog => {
+            dialog.dismiss()
         })
     }
 
     // type on prompt box/alert
     async fillAlert(value: string): Promise<void> {
-        this.page.on('dialog', async dialog => {
-            await dialog.accept(value)
+        this.page.on('dialog', dialog => {
+            dialog.accept(value)
         })
     }
 
-    // // get default prompt value. Otherwise, returns empty string.
-    // async getDefaultPromptValue(): Promise<string> {
-    //     let value: string
-    //     this.page.on('dialog', async dialog => {
-    //         value = await dialog.defaultValue()
-    //     })
-    //     return value
-    // }
+    // get default prompt value. Otherwise, returns empty string.
+    async getDefaultPromptValue(): Promise<string> {
+        let value: string
+        this.page.on('dialog', dialog => {
+            value = dialog.defaultValue()
+        })
+        return value
+    }
 
-    // // get dialog's type [alert, beforeunload, confirm or prompt]
-    // async getDialogType(): Promise<string> {
-    //     let type: string
-    //     this.page.on('dialog', async dialog => {
-    //         type = await dialog.type()
-    //     })
-    //     return type
-    // }
+    // get dialog's type [alert, beforeunload, confirm or prompt]
+    async getDialogType(): Promise<string> {
+        let type: string
+        this.page.on('dialog', dialog => {
+            type = dialog.type()
+        })
+        return type
+    }
 
-    // // get dialog's message
-    // async getDialogMessage(): Promise<string> {
-    //     let message: string
-    //     this.page.on('dialog', async (dialog) => {
-    //         message = await dialog.message()
-    //     })
-    //     return message
-    // }
+    // get dialog's message
+    async getDialogMessage(): Promise<string> {
+        let message: string
+        this.page.on('dialog', (dialog) => {
+            message = dialog.message()
+        })
+        return message
+    }
 
 
     /**
@@ -858,7 +935,7 @@ export class BasePage {
 
 
     /**
-     * drodown methods
+     * dropdown methods
      */
 
     // set dropdown option  span dropdown
@@ -882,6 +959,15 @@ export class BasePage {
     async pause(): Promise<void> {
         await this.page.pause()
     }
+
+
+
+
+
+
+
+
+
 
     /**
      * custom methods
@@ -973,5 +1059,26 @@ export class BasePage {
             await element.click()
         }
     }
+
+
+
+
+    //   TODO:: NEW methods
+
+    /**
+     * page methods
+    */
+
+    // get all pages
+    async getAllPages() {
+        let pages = this.page.context().pages()
+        return pages
+    }
+
+
+
+
+
+
 
 }

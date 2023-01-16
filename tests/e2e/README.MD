@@ -67,6 +67,10 @@ Run group of tests with certain tag
 
     npx playwright test --grep @pro
 
+Run multiple groups of tags 
+
+    npx playwright test --grep @lite | @pro
+
 Skip the tests with a certain tag:
 
     npx playwright test --grep-invert @pro

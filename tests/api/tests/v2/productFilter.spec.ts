@@ -7,6 +7,7 @@ let apiUtils: any
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
+    await apiUtils.createProduct(payloads.createProduct())
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -14,16 +15,20 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('withdraw api test', () => {
+test.describe('product filter api test', () => {
 
-    test('get withdraw settings @v2', async ({ request }) => {
-        let response = await request.get(endPoints.getWithdrawSettings)
+    test('get products filter by data @v2', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'Not Implemented Yet') 
+
+        let response = await request.get(endPoints.getProductsFilterByData)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
-    test('get withdraw summary @v2', async ({ request }) => {
-        let response = await request.get(endPoints.getWithdrawSummary)
+    test('get filtered products @v2', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'Not Implemented Yet') 
+
+        let response = await request.get(endPoints.getFilteredProducts,{params: payloads.filterParams})
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });

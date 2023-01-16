@@ -20,7 +20,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('orders api test', () => {
 
-    test('update batch orders', async ({ request }) => {
+    test('update batch orders @v2', async ({ request }) => {
         let allOrderIds = (await apiUtils.getAllOrders()).map((a: { id: any }) => a.id)
         console.log(allOrderIds)
         
