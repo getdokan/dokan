@@ -184,6 +184,11 @@ class ProductControllerV2 extends ProductController {
         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
         $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
 
+        // If any vendor it trying to access other products then we need to replace author id by current user id.
+        if ( $request->get_param( 'author' ) && ! current_user_can( dokana_admin_menu_capability() ) ) {
+            $args['author'] = dokan_get_current_user_id();
+        }
+
         // Pagination page number.
         if ( $request->get_param( 'page' ) ) {
             $args['paged'] = $request->get_param( 'page' );
