@@ -8,12 +8,7 @@
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
     "../../",
-    "../../plugins/dokan-pro",
-    "https://shashwata.ajaira.website/wp-content/uploads/2023/01/ba.zip",
-    "https://shashwata.ajaira.website/wp-content/uploads/2023/01/wa.zip",
-    "https://shashwata.ajaira.website/wp-content/uploads/2023/01/wb.zip",
-    "https://shashwata.ajaira.website/wp-content/uploads/2023/01/wps.zip",
-    "https://shashwata.ajaira.website/wp-content/uploads/2023/01/ws.zip"
+    "../../plugins/dokan-pro"
   ],
   "themes": [
     "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
