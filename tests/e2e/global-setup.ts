@@ -78,11 +78,11 @@ import cookie from './storageState.json'
 
 
 
-async function globalSetup(config: FullConfig) {
+// async function globalSetup(config: FullConfig) {
 
 
 
 
-}
+// }
 
-export default globalSetup;
+// export default globalSetup;

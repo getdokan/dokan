@@ -72,6 +72,13 @@ jobs:
           npm ci
           npm run start-env
 
+      - name: Test results
+        if: failure()
+        run: |
+          cd tests/api
+          npm run reset-env
+          npm run start-env
+
       # - name: Activate storefront
       #   run: |
       #     cd tests/api 
