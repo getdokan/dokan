@@ -231,7 +231,7 @@ class ProductControllerV2 extends ProductController {
             );
         }
 
-        return apply_filters( 'dokan_api_pre_product_listing_args', $args, $request );
+        return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
     }
 
     /**
