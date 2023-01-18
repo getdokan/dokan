@@ -255,6 +255,9 @@ class OrderController extends DokanRESTController {
         // Format the order status.
         $data['status'] = 'wc-' === substr( $data['status'], 0, 3 ) ? substr( $data['status'], 3 ) : $data['status'];
 
+        // Order shipment status.
+        $data['order_shipment'] = function_exists( 'dokan_get_order_shipment_current_status' ) ? dokan_get_order_shipment_current_status( $data['id'], true ) : '--';
+
         // Format line items.
         foreach ( $format_line_items as $key ) {
             $data[ $key ] = array_values( array_map( array( $this, 'get_order_item_data' ), $data[ $key ] ) );
@@ -312,6 +315,7 @@ class OrderController extends DokanRESTController {
             'fee_lines'            => $data['fee_lines'],
             'coupon_lines'         => $data['coupon_lines'],
             'refunds'              => $data['refunds'],
+            'order_shipment'       => $data['order_shipment'],
         );
     }
 
@@ -438,6 +442,10 @@ class OrderController extends DokanRESTController {
             ]
         ];
 
+        if ( ! empty( $request['search'] ) ) {
+            $args['search'] = absint( $request['search'] );
+        }
+
         $orders = dokan()->order->all( $args );
 
         $data_objects = array();
@@ -497,6 +505,7 @@ class OrderController extends DokanRESTController {
         // Add SKU and PRICE to products.
         if ( is_callable( array( $item, 'get_product' ) ) ) {
             $data['sku']   = $item->get_product() ? $item->get_product()->get_sku() : null;
+            $data['image'] = ( is_a( $item->get_product(), \WC_Product::class ) && wp_get_attachment_image_url( $item->get_product()->get_image_id() ) ) ? wp_get_attachment_image_url( $item->get_product()->get_image_id(), 'full' ) : wc_placeholder_img_src();
             $data['price'] = (float) ( $item->get_total() / max( 1, $item->get_quantity() ) );
         }
 
@@ -1006,6 +1015,12 @@ class OrderController extends DokanRESTController {
                     'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
                     'type'        => 'integer',
                     'default'     => 0,
+                    'context'     => array( 'view' ),
+                ),
+                'search'          => array(
+                    'description' => __( 'Order id to search order', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'default'     => '',
                     'context'     => array( 'view' ),
                 ),
                 'customer_ip_address'  => array(
@@ -1741,6 +1756,13 @@ class OrderController extends DokanRESTController {
             'default'     => $schema_properties['customer_id']['default'],
             'description' => $schema_properties['customer_id']['description'],
             'type'        => $schema_properties['customer_id']['type'],
+        );
+
+        $query_params['search'] = array(
+            'required'    => false,
+            'default'     => $schema_properties['search']['default'],
+            'description' => $schema_properties['search']['description'],
+            'type'        => $schema_properties['search']['type'],
         );
 
         $params['after'] = array(

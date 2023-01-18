@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.4
 Tested up to: 6.1.1
 WC requires at least: 5.0.0
-WC tested up to: 7.1.0
+WC tested up to: 7.2.2
 Requires PHP: 7.2
-Stable tag: 3.7.7
+Stable tag: 3.7.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.9 ( Jan 10, 2023 ) =
+
+- **update:** Last-page and first-page pagination icon inconsistency under single store page product listing
+- **update:** Adjusted store banner image stretching issue under store list page
+- **fix:** Vendor email address is not showing up on the store header.
+
+= v3.7.8 ( Oct 27, 2022 ) =
+
+- **fix:** Single Store Page store header menu and search fields style break on mobile devices
+- **fix:** Vendor dashboard total sales wasn’t displaying decimal values
+- **fix:** Set user role as seller while creating vendor from api call
+- **fix:** order note date issue under vendor dashboard order details page
+
 
 = v3.7.7 ( Nov 30, 2022 ) =
 

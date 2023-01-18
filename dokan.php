@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.7.7
+ * Version: 3.7.9
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 7.1.0
+ * WC tested up to: 7.2.2
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.7.7';
+    public $version = '3.7.9';
 
     /**
      * Instance of self
@@ -314,6 +314,11 @@ final class WeDevs_Dokan {
         require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
         require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
+
+        if ( ! function_exists( 'dokan_pro' ) ) {
+            require_once DOKAN_INC_DIR . '/reports.php';
+        }
+
         require_once DOKAN_INC_DIR . '/Order/functions.php';
         require_once DOKAN_INC_DIR . '/Product/functions.php';
         require_once DOKAN_INC_DIR . '/Withdraw/functions.php';
@@ -360,6 +365,7 @@ final class WeDevs_Dokan {
             new \WeDevs\Dokan\ThemeSupport\Manager();
         }
 
+        $this->container['product_block']       = new \WeDevs\Dokan\Blocks\ProductBlock();
         $this->container['pageview']            = new \WeDevs\Dokan\PageViews();
         $this->container['seller_wizard']       = new \WeDevs\Dokan\Vendor\SetupWizard();
         $this->container['core']                = new \WeDevs\Dokan\Core();
