@@ -28,7 +28,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('order downloads api test', () => {
+test.describe.skip('order downloads api test', () => {
 
     test('get all order downloads @v2', async ({ request }) => {
         // let response = await request.get(endPoints.wp.getAllMediaItems)

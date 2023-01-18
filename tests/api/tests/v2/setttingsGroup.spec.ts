@@ -9,7 +9,13 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
 });
 
-// test.afterAll(async ({ request }) => { });
+test.afterAll(async ({ request }) => {
+    // TODO: remove after update setting cause disable selling fix
+    let response = await request.put(endPoints.updateSettings, { data: payloads.setupStore })
+    let responseBody = await apiUtils.getResponseBody(response)
+    expect(response.ok()).toBeTruthy()
+ });
+
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
@@ -47,7 +53,6 @@ test.describe('new settings api test', () => {
     });
 
     test('get sub sub settings from single settings group @v2', async ({ request }) => {
-        console.log(endPoints.getSubSubSettingFromSingleSettingGroup('store', 'store_name', 'street_1'))
         let response = await request.get(endPoints.getSubSubSettingFromSingleSettingGroup('store', 'address', 'street_1'))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
