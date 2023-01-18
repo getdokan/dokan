@@ -314,7 +314,6 @@ export class ApiUtils {
     async cancelWithdraw(withdrawId: string) {
         let response = await this.request.delete(endPoints.cancelAWithdraw(withdrawId))
         let responseBody = await this.getResponseBody(response)
-        console.log('canceled previous withdraw')
         return responseBody
     }
 
