@@ -37,7 +37,7 @@ test.describe('coupon api test', () => {
     });
 
     test('create a coupon', async ({ request }) => {
-        let response = await request.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: '216' } })
+        let response = await request.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
