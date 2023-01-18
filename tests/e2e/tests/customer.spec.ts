@@ -14,7 +14,7 @@ import {VendorPage} from '../pages/vendorPage'
 test.describe('Customer functionality test', () => {
 
 
-    test.only('customer register', async ({page}) => {
+    test('customer register', async ({page}) => {
         const loginPage = new LoginPage(page)
         const customerPage = new CustomerPage(page)
         await customerPage.customerRegister(data.customer.customerInfo)
@@ -79,7 +79,7 @@ test.describe('Customer functionality test', () => {
         await customerPage.searchProduct(data.predefined.simpleProduct.product1.name)
     })
 
-    test.only('customer buy product', async ({page}) => {
+    test('customer buy product', async ({page}) => {
         const loginPage = new LoginPage(page)
         const customerPage = new CustomerPage(page)
         await loginPage.login(data.customer)
