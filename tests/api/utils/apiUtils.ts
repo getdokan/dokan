@@ -28,11 +28,11 @@ export class ApiUtils {
         let responseBody: any
         try {
             responseBody = await response.json()
-            console.log('ResponseBody: ', responseBody)
+            // console.log('Status Code: ', response.status())
+            // console.log('ResponseBody: ', responseBody)
         } catch (err) {
             console.log('Error: ', err.message)
-            console.log('Status Code: ', response.status())
-            // console.log('Response text: ', await response.text())
+
         }
         return responseBody
     }
@@ -294,9 +294,9 @@ export class ApiUtils {
     }
 
     // get withdrawId
-    async getWithdrawId(auth?: any) {
-        let allProducts = await this.getAllWithdrawsByStatus('pending')
-        let withdrawId = allProducts[0].id
+    async getPendingWithdrawId(auth?: any) {
+        let withdraw = await this.getAllWithdrawsByStatus('pending')
+        let withdrawId = withdraw[0].id
         // console.log(withdrawId)
         return withdrawId
     }
@@ -308,6 +308,14 @@ export class ApiUtils {
         let withdrawId = responseBody.id
         // console.log(couponId)
         return [responseBody, withdrawId]
+    }
+
+    // cancel withdraw
+    async cancelWithdraw(withdrawId: string) {
+        let response = await this.request.delete(endPoints.cancelAWithdraw(withdrawId))
+        let responseBody = await this.getResponseBody(response)
+        console.log('canceled previous withdraw')
+        return responseBody
     }
 
 
@@ -795,7 +803,8 @@ export class ApiUtils {
     }
 
     // create order download
-    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any): Promise<[object, string]> {
+    // async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any): Promise<[object, string]> {
+    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any) {
         let response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts } })
         let responseBody = await this.getResponseBody(response)
         // let downloadId = responseBody[0].data.id
@@ -1020,8 +1029,8 @@ export class ApiUtils {
 
     // create order
     async createOrder(product: object, order: any, auth?: any): Promise<[object, string]> {
-        // let [, productId] = await this.createProduct(product, auth)
-        let productId = product
+        let [, productId] = await this.createProduct(product, auth)
+        // let productId = product
         let payload = order
         payload.line_items[0].product_id = productId
         let response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth })

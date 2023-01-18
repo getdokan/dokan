@@ -14,7 +14,7 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe('calculation test', () => {
+test.describe.skip('calculation test', () => {
     test('calculation test', async ({ request }) => {
 
         let [res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder)

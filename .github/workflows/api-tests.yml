@@ -92,7 +92,7 @@ jobs:
 
       - name: Running the api tests
         run: |
-          cd tests/api && npm run test tests --grep-invert @v2
+          cd tests/api && npm run test tests 
 
         env:
           CI: true

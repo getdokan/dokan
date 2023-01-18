@@ -8,7 +8,14 @@ let apiUtils: any
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
 });
-// test.afterAll(async ({ request }) => { });
+
+test.afterAll(async ({ request }) => {
+    // TODO: remove after update setting cause disable selling fix
+    let response = await request.put(endPoints.updateSettings, { data: payloads.setupStore })
+    let responseBody = await apiUtils.getResponseBody(response)
+    expect(response.ok()).toBeTruthy()
+ });
+ 
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 

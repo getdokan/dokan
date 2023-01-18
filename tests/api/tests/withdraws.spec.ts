@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import { ApiUtils } from '../utils/apiUtils'
 import { endPoints } from '../utils/apiEndPoints'
 import { payloads } from '../utils/payloads'
+import { helpers } from '../utils/helpers'
 
 let apiUtils: any
 let withdrawId: string
@@ -11,8 +12,8 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     minimumWithdrawLimit = await apiUtils.getMinimumWithdrawLimit()
     await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed')
-    let [, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit })
-    withdrawId = id
+    let [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit })
+    withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getPendingWithdrawId() : id
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -42,16 +43,10 @@ test.describe('withdraw api test', () => {
 
     test('get single withdraw', async ({ request }) => {
         // let [, withdrawId] = await apiUtils.createWithdraw()
+
         let response = await request.get(endPoints.getSingleWithdraw(withdrawId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
-    });
-
-    test('create a withdraw', async ({ request }) => {
-        let response = await request.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(201)
     });
 
     test('update a withdraw', async ({ request }) => {
@@ -79,5 +74,16 @@ test.describe('withdraw api test', () => {
         expect(response.ok()).toBeTruthy()
 
     });
+
+    test('create a withdraw', async ({ request }) => {
+        // cancel any pending withdraw 
+         let pendingRequest = await apiUtils.getAllWithdrawsByStatus('pending')
+         helpers.isEmpty(pendingRequest) === false && await apiUtils.cancelWithdraw(withdrawId)
+ 
+         let response = await request.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } })
+         let responseBody = await apiUtils.getResponseBody(response)
+         expect(response.ok()).toBeTruthy()
+         expect(response.status()).toBe(201)
+     });
 
 });
