@@ -6,7 +6,8 @@
   "WP_DEBUG_DISPLAY": "true",
 
   "plugins": [
-    "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip"
+    "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
+    // "../../",
 
   ],
   "themes": [
