@@ -70,6 +70,7 @@ jobs:
         run: |
           cd tests/api
           npm ci
+          npm run reset-db
           npm run start-env
 
       # - name: Activate storefront
