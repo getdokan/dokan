@@ -99,7 +99,7 @@ jobs:
 
       - name: Running the api tests
         run: |
-          cd tests/api && npm run test tests/api/tests/_setup.spec.ts
+          cd tests/api && npm run test tests/_setup.spec.ts
 
         env:
           CI: true

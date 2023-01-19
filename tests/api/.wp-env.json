@@ -7,7 +7,6 @@
 
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
-    "../../plugins/dokan-pro",
     "../../",
     "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
     "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
