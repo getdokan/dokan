@@ -40,7 +40,7 @@ jobs:
           repository: weDevsOfficial/dokan-pro
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
-          ref: "develop/52e916a70f7d9afeb498032280866e547a4b59bc"
+          ref: "develop"
           fetch-depth: 0
 
 
@@ -59,6 +59,7 @@ jobs:
       - name: Composer install and build (Dokan-pro)
         run: |
           cd plugins/dokan-pro
+          git checkout 52e916a70f7d9afeb498032280866e547a4b59bc
           composer install
           composer update
           composer dump-autoload -o
