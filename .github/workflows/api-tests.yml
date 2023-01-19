@@ -108,7 +108,7 @@ jobs:
           VENDOR: ${{ secrets.VENDOR }}
           CUSTOMER: ${{ secrets.CUSTOMER }}
           USER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          # BASE_URL: ${{ secrets.BASE_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
