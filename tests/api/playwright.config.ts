@@ -29,7 +29,8 @@ const config: PlaywrightTestConfig = {
     // forbidOnly: !!process.env.CI,
 
     /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
+    // retries: process.env.CI ? 2 : 0,
+    retries: 0,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],

@@ -17,6 +17,7 @@ test.beforeAll(async ({ request }) => {
 test.describe(' api test', () => {
 
     test('setup test store settings', async ({ request }) => {
+        console.log(endPoints.updateSettings)
         let response = await request.put(endPoints.updateSettings, { data: payloads.setupStore })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
