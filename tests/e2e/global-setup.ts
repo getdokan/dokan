@@ -5,7 +5,7 @@ import { data } from './utils/testData'
 import { selector } from './pages/selectors'
 import { payloads } from './utils/payloads'
 import { ApiUtils } from './utils/apiUtils'
-import cookie from './storageState.json'
+// import cookie from './storageState.json'
 
 // async function globalSetup(config: FullConfig) {
 //     // get site url structure

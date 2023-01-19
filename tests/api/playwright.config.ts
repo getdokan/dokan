@@ -39,7 +39,7 @@ const config: PlaywrightTestConfig = {
     globalSetup: require.resolve('./global-setup'),
     use: {
         // storageState: 'storageState.json',  //location of sign in state
-        baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889',  //Base URL 
+        baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8888',  //Base URL 
         ignoreHTTPSErrors: true,  //Whether to ignore HTTPS errors during navigation.
         // api request headers 
         extraHTTPHeaders: {
