@@ -152,7 +152,7 @@ jobs:
 
       - name: Publish HTML report to GH Pages
         if: always() # We want this to always run, even if test fail prior to this step running
-        uses: peaceiris/actions-gh-pages@v3.7.3
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: tests/api/playwright-report # This is where index.html will be output
