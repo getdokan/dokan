@@ -11,7 +11,7 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
  *
  * @since DOKAN_LITE_SINCE
  */
-class V_3_7_9 extends DokanUpgrader {
+class V_3_7_10 extends DokanUpgrader {
 
     /**
      * Rewrite variable product variations author IDs.
