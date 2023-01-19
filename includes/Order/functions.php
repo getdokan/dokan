@@ -358,7 +358,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
     // get order instance
     $order = wc_get_order( $order_id );
 
-    if ( ! $order instanceof WC_Abstract_Order ) {
+    if ( ! $order ) {
         return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
     }
 
