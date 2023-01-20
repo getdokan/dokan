@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: "e2e-pw"
-          # fetch-depth: 0
+          fetch-depth: 0
 
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
@@ -40,7 +40,7 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
           ref: "develop"
-          # fetch-depth: 0
+          fetch-depth: 0
 
       - name: Composer install and build (Dokan-lite)
         run: |
@@ -64,6 +64,7 @@ jobs:
       - name: Npm install and build (Dokan-pro)
         run: |
           cd plugins/dokan-pro
+          git checkout 52e916a70f7d9afeb498032280866e547a4b59bc
           npm i
           npm run dev:build
           npm run build
