@@ -627,7 +627,7 @@ class Settings {
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                 ],
             ],
-            'dokan_appearance'  => [
+            'dokan_appearance' => [
                 'appearance_options'         => [
                     'name'        => 'appearance_options',
                     'type'        => 'sub_section',
