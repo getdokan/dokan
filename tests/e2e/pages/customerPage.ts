@@ -83,7 +83,7 @@ export class CustomerPage extends BasePage {
         let subscriptionPackIsVisible = await this.isVisible(selector.customer.cDashboard.subscriptionPack)    //TODO: uncmment after fix css issue
         if (subscriptionPackIsVisible) {
             // await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())
-            await this.select(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring)
+            await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring)
         }
         await this.click(selector.customer.cDashboard.becomeAVendor)
 
@@ -230,11 +230,11 @@ export class CustomerPage extends BasePage {
         let currentStoreFollowStatus = await this.getElementText(selector.customer.cStoreList.currentStoreFollowStatus(vendorName))
         // unfollow if not already
         if (currentStoreFollowStatus == 'Following') {
-            await this.click(selector.customer.cStoreList.followUnFollowStore(vendorName))
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName))
+            let response = await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName))
+            expect(response.ok()).toBeTruthy()
         }
-        await this.click(selector.customer.cStoreList.followUnFollowStore(vendorName))
-        let v = await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName))
+        let response = await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName))
+        expect(response.ok()).toBeTruthy()
         let storeFollowStatus = await this.getElementText(selector.customer.cStoreList.currentStoreFollowStatus(vendorName))
         expect(storeFollowStatus).toMatch('Following')
     }
@@ -727,7 +727,7 @@ export class CustomerPage extends BasePage {
 
         await this.click(selector.customer.cOrders.warrantyRequestItemCheckbox(productName))
         // await this.type(selector.customer.cOrders.warrantyRequestItemQuantity(productName), refund.itemQuantity)
-        await this.select(selector.customer.cOrders.warrantyRequestType, refund.refundRequestType)
+        await this.selectByLabel(selector.customer.cOrders.warrantyRequestType, refund.refundRequestType)
         // await this.select(selector.customer.cOrders.warrantyRequestReason, refund.refundRequestReasons)
         await this.type(selector.customer.cOrders.warrantyRequestDetails, refund.refundRequestDetails)
         await this.click(selector.customer.cOrders.warrantySubmitRequest)

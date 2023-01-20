@@ -17,7 +17,7 @@ const config: PlaywrightTestConfig = {
     testDir: './tests',
 
     /* Maximum time one test can run for. */
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
     // timeout: 40 * 1000,
     expect: {
         /**
@@ -45,7 +45,7 @@ const config: PlaywrightTestConfig = {
     // reporter: [['html', { open: 'never' }]],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    // globalSetup: require.resolve('./global-setup'),
+    globalSetup: require.resolve('./global-setup'),
     use: {
         // storageState: 'storageState.json',  //location of sign in state
         headless: process.env.CI ? !!process.env.CI : false,  //Whether to run tests on headless or non-headless mode
@@ -58,7 +58,7 @@ const config: PlaywrightTestConfig = {
         // viewport: { width: 1440, height: 900 },
         // launch options
         launchOptions: {
-            slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) : 0,  //whether to slow down test execution by provided seconds
+            slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) : 1000,  //whether to slow down test execution by provided seconds
         },
         // api request headers 
         extraHTTPHeaders: {

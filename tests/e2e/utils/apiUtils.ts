@@ -62,9 +62,9 @@ export class ApiUtils {
     async createStore(payload: object, auth?: any) {
         let response = await this.request.post(endPoints.createStore, { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
-        let sellerId = responseBody.id
-        // console.log(sellerId)
-        return [responseBody, sellerId]
+        // let sellerId = responseBody.id
+        // // console.log(sellerId)
+        return [responseBody, response.status()]
     }
 
     // create store review
@@ -236,12 +236,13 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(productId: string, coupon: any, auth?: any): Promise<[object, string]> {
+    async createCoupon(productId: string, coupon: object, auth?: any) {
         let response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId }, headers: auth })
         let responseBody = await this.getResponseBody(response)
-        let couponId = responseBody.id
-        // console.log(couponId)
-        return [responseBody, couponId]
+        // let couponId = responseBody.id
+        // // console.log(couponId)
+        // return [responseBody, couponId]
+        return [responseBody, response.status()]
     }
 
 
@@ -487,11 +488,10 @@ export class ApiUtils {
     }
 
     // create customer
-    async createCustomer(payload: object, auth?: any): Promise<[object, string]> {
+    async createCustomer(payload: object, auth?: any) {
         let response = await this.request.post(endPoints.createCustomer, { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
-        let customerId = String(responseBody.id)
-        return [responseBody, customerId]
+        return [responseBody, response.status()]
     }
 
     // delete customer
@@ -1087,5 +1087,5 @@ export class ApiUtils {
         let response = await this.request.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
-    }ß
+    } ß
 }

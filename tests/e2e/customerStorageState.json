@@ -1,0 +1,95 @@
+{
+  "cookies": [
+    {
+      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
+      "value": "customer1%7C1674324977%7CPSS0GNEeORDd0OnzpKkDm87SpSF17R7OteqjSu3LLA9%7Ce8fe7d52301b2de1e6eb10d4c98744ce712e850c5c4afa8352d1323f1d10e3dd",
+      "domain": "dokan9.test",
+      "path": "/wp-content/plugins",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
+      "value": "customer1%7C1674324977%7CPSS0GNEeORDd0OnzpKkDm87SpSF17R7OteqjSu3LLA9%7Ce8fe7d52301b2de1e6eb10d4c98744ce712e850c5c4afa8352d1323f1d10e3dd",
+      "domain": "dokan9.test",
+      "path": "/wp-admin",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dokan_pro_dokan_quote_32c202001c96143014ae88e12f52cd4c",
+      "value": "0c46ad922c17de6221759119986dc182%7C%7C1674324973%7C%7Cfd4f03d8eefc92d3ff54899a71e70a6d%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": 1674324973.812358,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_logged_in_32c202001c96143014ae88e12f52cd4c",
+      "value": "customer1%7C1674324977%7CPSS0GNEeORDd0OnzpKkDm87SpSF17R7OteqjSu3LLA9%7C43a99891ac544b9076a3250c620e0e303ececd427c7f67f45842d7619f4bd33b",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "woocommerce_items_in_cart",
+      "value": "1",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "woocommerce_cart_hash",
+      "value": "001c7f8aabe0dece6103cdedfdd07a2d",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wp_woocommerce_session_32c202001c96143014ae88e12f52cd4c",
+      "value": "2%7C%7C1674324978%7C%7C1674321378%7C%7Cb16c896c32e5828ebc752ba8acfe7969",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": 1674324978.545361,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dokan_pro_vendor_verify_32c202001c96143014ae88e12f52cd4c",
+      "value": "c8cdd2f2391b939a78265a86cd280daa%7C%7C1674152478%7C%7Cee067b88ecba3ac57160f50c99d60bb2%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan9.test",
+      "path": "/",
+      "expires": 1674152478.545392,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://dokan9.test",
+      "localStorage": [
+        {
+          "name": "wc_cart_hash_2e5f4d79f0a86482169bf1d5d9a188d7",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}

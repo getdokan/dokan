@@ -6,10 +6,10 @@ import {CustomerPage} from '../pages/customerPage'
 import {VendorPage} from '../pages/vendorPage'
 
 
-// test.beforeAll(async ({ page }) => { });
-// test.afterAll(async ({ page }) => { });
-// test.beforeEach(async ({ page }) => { });
-// test.afterEach(async ({ page }) => { });
+// test.beforeAll(async ({ }) => { });
+// test.afterAll(async ({ }) => { });
+// test.beforeEach(async ({ }) => { });
+// test.afterEach(async ({ }) => { });
 
 
 test.describe('Calculation functionality test', () => {

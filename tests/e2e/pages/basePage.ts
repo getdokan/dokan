@@ -92,7 +92,7 @@ export class BasePage {
 
         if (!await this.isCurrentUrl(subPath)) {
             let url = await this.createUrl(subPath)
-            await this.page.goto(url)
+            await this.page.goto(url, { waitUntil: 'networkidle' })
 
             let currentUrl = await this.getCurrentUrl()
             expect(currentUrl).toMatch(subPath)
@@ -177,8 +177,10 @@ export class BasePage {
     }
 
     // click & wait for response
-    async clickAndWaitForResponse(url: string, selector: string): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(url), this.page.click(selector)])
+    async clickAndWaitForResponse(subUrl: string, selector: string): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === 200),
+            this.page.click(selector)])
         // console.log(await response.json())
         return response
     }
@@ -567,6 +569,7 @@ export class BasePage {
     async typeFrameSelector(frame: string, frameSelector: string, text: string): Promise<void> {
         const locator = this.page.frameLocator(frame).locator(frameSelector)
         await locator.fill(text)
+        await locator.type(text)
     }
 
 

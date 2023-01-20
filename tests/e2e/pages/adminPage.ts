@@ -21,6 +21,10 @@ export class AdminPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.dokanSettings)
     }
 
+    async goToWooCommerceProducts() {
+        await this.goIfNotThere(data.subUrls.backend.woocommerceProducts)
+    }
+
     async goToWooCommerceSettings() {
         await this.goIfNotThere(data.subUrls.backend.woocommerceSettings)
     }
@@ -48,7 +52,7 @@ export class AdminPage extends BasePage {
 
     // Admin Set Wordpress Site Settings
     async setWpSettings(wpSettings) {
-        await this.setWpGeneralSettings(wpSettings.general)
+        // await this.setWpGeneralSettings(wpSettings.general)
         await this.goToAdminDashboard()
         await this.setPermalinkSettings(wpSettings.permalink)
 
@@ -196,7 +200,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.pageSettings)
 
         // this Settings
-        await this.selectByValue(selector.admin.dokan.settings.termsAndConditionsPage, page.termsAndConditionsPage)
+        await this.selectByLabel(selector.admin.dokan.settings.termsAndConditionsPage, page.termsAndConditionsPage)
         await this.click(selector.admin.dokan.settings.pageSaveChanges)
 
         let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
@@ -205,7 +209,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Appearance Settings
-    async setDokanAppearanceSettings(appreance) {
+    async setDokanAppearanceSettings(appearance) {
         await this.goToDokanSettings()
 
         await this.click(selector.admin.dokan.settings.appearance)
@@ -213,17 +217,17 @@ export class AdminPage extends BasePage {
         // Appearance Settings
         await this.enableSwitcher(selector.admin.dokan.settings.showMapOnStorePage)
         await this.click(selector.admin.dokan.settings.mapApiSourceGoogleMaps)
-        await this.clearAndType(selector.admin.dokan.settings.googleMapApiKey, appreance.googleMapApiKey)
+        await this.clearAndType(selector.admin.dokan.settings.googleMapApiKey, appearance.googleMapApiKey)
         await this.click(selector.admin.dokan.settings.storeHeaderTemplate2)
         await this.click(selector.admin.dokan.settings.storeHeaderTemplate1)
-        await this.clearAndType(selector.admin.dokan.settings.storeBannerWidth, appreance.storeBannerWidth)
-        await this.clearAndType(selector.admin.dokan.settings.storeBannerHeight, appreance.storeBannerHeight)
+        await this.clearAndType(selector.admin.dokan.settings.storeBannerWidth, appearance.storeBannerWidth)
+        await this.clearAndType(selector.admin.dokan.settings.storeBannerHeight, appearance.storeBannerHeight)
         await this.enableSwitcher(selector.admin.dokan.settings.storeOpeningClosingTimeWidget)
         await this.enableSwitcher(selector.admin.dokan.settings.showVendorInfo)
         await this.click(selector.admin.dokan.settings.appearanceSaveChanges)
 
         let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
-        expect(apiKey).toMatch(appreance.googleMapApiKey)
+        expect(apiKey).toMatch(appearance.googleMapApiKey)
     }
 
     // Admin Set Dokan Privacy Policy Settings
@@ -307,13 +311,12 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Eu Compliance Settings
-    async setDokanEuComplianceSettings() {
+    async setDokanEuComplianceSettings(euCompliance) {
         await this.goToDokanSettings()
 
         await this.click(selector.admin.dokan.settings.euComplianceFields)
 
         // Eu Compliance Settings
-
         await this.enableSwitcher(selector.admin.dokan.settings.vendorExtraFieldsCompanyName)
         await this.enableSwitcher(selector.admin.dokan.settings.vendorExtraFieldsCompanyIdOrEuidNumber)
         await this.enableSwitcher(selector.admin.dokan.settings.vendorExtraFieldsVatOrTaxNumber)
@@ -329,7 +332,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.euComplianceFieldsSaveChanges)
 
         let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(data.dokanSettings.euCompliance.saveSuccessMessage)
+        expect(successMessage).toMatch(euCompliance.saveSuccessMessage)
     }
 
     // Admin Set Dokan Delivery Time Settings
@@ -983,6 +986,8 @@ export class AdminPage extends BasePage {
 
     // Admin Add Categories
     async addCategory(categoryName) {
+        await this.goToAdminDashboard()
+
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.categoriesMenu)
 
@@ -1001,6 +1006,8 @@ export class AdminPage extends BasePage {
 
     // Admin Add Attributes
     async addAttributes(attribute) {
+        await this.goToAdminDashboard()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.attributesMenu)
 
@@ -1033,8 +1040,14 @@ export class AdminPage extends BasePage {
 
     // Admin Add Simple Product
     async addSimpleProduct(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New Simple Product
         // Name
@@ -1047,9 +1060,9 @@ export class AdminPage extends BasePage {
         if (product.stockStatus) {
             await this.editStockStatus(data.product.stockStatus.outOfStock)
         }
-        // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        await this.scrollToTop()
+        // // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
 
         switch (product.status) {
@@ -1088,8 +1101,16 @@ export class AdminPage extends BasePage {
 
     // Admin Add Variable Product
     async addVariableProduct(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
+
+
 
         // Add New Variable Product
         // Name
@@ -1126,7 +1147,7 @@ export class AdminPage extends BasePage {
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1138,8 +1159,14 @@ export class AdminPage extends BasePage {
 
     // Admin Add Simple Subscription Product
     async addSimpleSubscription(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New Simple Subscription
         // Name
@@ -1154,7 +1181,7 @@ export class AdminPage extends BasePage {
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1167,8 +1194,15 @@ export class AdminPage extends BasePage {
 
     // Admin Add External Product
     async addExternalProduct(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New External Product
         // Name
@@ -1180,7 +1214,7 @@ export class AdminPage extends BasePage {
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1193,8 +1227,14 @@ export class AdminPage extends BasePage {
 
     // Admin Add Dokan Subscription Product
     async addDokanSubscription(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New Dokan Subscription Product
         // Name
@@ -1210,7 +1250,7 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.expireAfterDays, product.expireAfterDays)
         await this.click(selector.admin.products.product.recurringPayment)
         // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1223,8 +1263,14 @@ export class AdminPage extends BasePage {
 
     // Admin Add Auction Product
     async addAuctionProduct(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New Auction Product
         // Name
@@ -1241,7 +1287,7 @@ export class AdminPage extends BasePage {
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1254,8 +1300,14 @@ export class AdminPage extends BasePage {
 
     // Admin Add Booking Product
     async addBookingProduct(product) {
+        await this.goToWooCommerceProducts()
+        
         await this.hover(selector.admin.aDashboard.products)
         await this.click(selector.admin.products.addNewMenu)
+        
+        // Vendor Store Name
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Add New Booking Product
         // Name
@@ -1271,9 +1323,9 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.products.product.blockCost, product.blockCost)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name
-        await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        await this.scrollToTop()
+        // Vendor Store Name //TODO: fix this
+        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // await this.scrollToTop()
 
         // Publish
         await this.click(selector.admin.products.product.publish)
@@ -1296,7 +1348,7 @@ export class AdminPage extends BasePage {
     async adminApproveWholesaleRequest(customer) {
         await this.hover(selector.admin.aDashboard.dokan)
         await this.click(selector.admin.dokan.wholesaleCustomerMenu)
-        await this.click(selector.admin.dokan.wholesaleCustomer.statusSlider)
+        await this.click(selector.admin.dokan.wholesaleCustomer.statusSlider(customer))
         // await this.wait(5)
 
         let enableStatusSuccessMessage = await this.getElementText(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)
@@ -1393,7 +1445,7 @@ export class AdminPage extends BasePage {
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
         // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
         // await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
         // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
         // // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)

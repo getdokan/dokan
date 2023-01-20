@@ -5,10 +5,14 @@ import {AdminPage} from '../pages/adminPage'
 import {CustomerPage} from '../pages/customerPage'
 import {VendorPage} from '../pages/vendorPage'
 
-// test.beforeAll(async ({ page }) => { });
-// test.afterAll(async ({ page }) => { });
-// test.beforeEach(async ({ page }) => { });
-// test.afterEach(async ({ page }) => { });
+// test.use({ storageState: 'customerStorageState.json' })
+
+// test.beforeAll(async ({ }) => { });
+// test.afterAll(async ({ }) => { });
+// test.beforeEach(async ({ }) => { });
+// test.afterEach(async ({ }) => { });
+
+
 
 
 test.describe('Customer functionality test', () => {
@@ -131,7 +135,7 @@ test.describe('Customer functionality test', () => {
         await customerPage.applyCoupon(data.predefined.coupon.coupon1)
     })
 
-    test('customer can follow vendor', async ({page}) => {
+    test('customer can follow vendor @pro', async ({page}) => {
         const loginPage = new LoginPage(page)
         const customerPage = new CustomerPage(page)
         await loginPage.login(data.customer)

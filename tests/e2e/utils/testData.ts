@@ -649,7 +649,7 @@ export const data = {
             termsAndConditionsPage: 'Sample Page',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
-        appreance: {
+        appearance: {
             googleMapApiKey: String(process.env.GOOGLE_MAP_API_KEY),
             mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
             storeBannerWidth: '625',
@@ -783,6 +783,7 @@ export const data = {
             adminDashboard: 'wp-admin',
             dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
             woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
+            woocommerceProducts: 'wp-admin',
             permalinks: 'wp-admin/options-permalink.php',
             plugins: 'wp-admin/plugins.php',
         },
@@ -795,7 +796,7 @@ export const data = {
             dashboard: 'dashboard',
 
         },
-        ajax: 'https://dokan2.test/wp-admin/admin-ajax.php'
+        ajax: '/admin-ajax.php'
     },
 
 
@@ -1146,30 +1147,39 @@ export const data = {
             productfrac1: 'p1_F1_v1 (simple)',
             productfrac2: 'p2_F2_v1 (simple)'
         },
+        
         variableProduct: {
             product1: 'p1_v1 (variable)'
         },
+
         simpleSubscription: {
             product1: 'p1_v1 (simple subscription)'
         },
+
         variableSubscription: {
             product1: 'p1_v1 (variable subscription)'
         },
+
         externalProduct: {
             product1: 'p1_v1 (external/affiliate)'
         },
+
         auctionProduct: {
             product1: 'p1_v1 (auction)'
         },
+
         bookingProduct: {
             product1: 'p1_v1 (booking)'
         },
+
         saleProduct: {
             product1: 'p1_v1 (sale)'
         },
+
         vendorSubscription: {
             nonRecurring: 'Dokan_Subscription_Non_recurring'
         },
+
         coupon: {
             coupon1: {
                 title: 'c1_v1',
@@ -1184,7 +1194,7 @@ export const data = {
 
         vendorStores: {
             vendor1: 'vendorStore1',
-            venor2: 'vendorStore2'
+            vendor2: 'vendorStore2'
         },
         customerInfo: {
             firstName: () => 'customer1',
