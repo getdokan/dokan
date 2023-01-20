@@ -302,25 +302,25 @@ class VendorDashboardController extends \WP_REST_Controller {
         $customer_id = ! empty( $request['customer_id'] ) ? absint( $request['customer_id'] ) : 0;
 
         $args = [
-            'return' => 'count',
+            'return'    => 'count',
             'seller_id' => dokan_get_current_user_id(),
-            'date' => [
+            'date'      => [
                 'from' => $start_date,
                 'to'   => $end_date,
             ],
             'customer_id' => $customer_id,
-            'status' => 'all',
+            'status'      => 'all',
         ];
 
+        $dokan_order = dokan()->order;
         $result = [];
+        $result['total'] = $dokan_order->all( $args );
 
-        $result['total']         = dokan()->order->all( $args );
-        $result['wc-completed']  = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-completed' ] ) );
-        $result['wc-on-hold']    = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-on-hold' ] ) );
-        $result['wc-processing'] = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-processing' ] ) );
-        $result['wc-refunded']   = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-refunded' ] ) );
-        $result['wc-cancelled']  = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-cancelled' ] ) );
-        $result['wc-failed']     = dokan()->order->all( array_merge( $args, [ 'status' => 'wc-failed' ] ) );
+        $order_statuses = wc_get_order_statuses();
+        foreach ( $order_statuses as $key => $status ) {
+            $args['status'] = $key;
+            $result[ $key ] = $dokan_order->all( $args );
+        }
 
         return rest_ensure_response( $result );
     }
