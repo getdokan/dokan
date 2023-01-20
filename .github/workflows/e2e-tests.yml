@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: "e2e-pw"
-          fetch-depth: 0
+          # fetch-depth: 0
 
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
@@ -40,7 +40,7 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
           ref: "develop"
-          fetch-depth: 0
+          # fetch-depth: 0
 
       - name: Composer install and build (Dokan-lite)
         run: |
@@ -57,7 +57,6 @@ jobs:
       - name: Composer install and build (Dokan-pro)
         run: |
           cd plugins/dokan-pro
-          git checkout 52e916a70f7d9afeb498032280866e547a4b59bc
           composer install
           composer update
           composer dump-autoload -o
@@ -72,14 +71,13 @@ jobs:
       - name: Install dependencies & Setup WordPress Env
         run: |
           cd tests/e2e 
-          ls
           npm ci
           npm run start-env
 
       - name: Resetting wp-env
         if: failure()
         run: |
-          cd tests/api
+          cd tests/e2e
           npm run destroy al
           npm run start-env
 
@@ -153,7 +151,7 @@ jobs:
 
       - name: Publish HTML report to GH Pages
         if: always() # We want this to always run, even if test fail prior to this step running
-        uses: peaceiris/actions-gh-pages@v3.7.3
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: tests/e2e/playwright-report # This is where index.html will be output
@@ -178,7 +176,7 @@ jobs:
 
   #     - name: Publish HTML report to GH Pages
   #       if: always() # We want this to always run, even if test fail prior to this step running
-  #       uses: peaceiris/actions-gh-pages@v3.7.3
+  #       uses: peaceiris/actions-gh-pages@v3
   #       with:
   #         github_token: ${{ secrets.GITHUB_TOKEN }}
   #         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
