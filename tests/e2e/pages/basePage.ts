@@ -84,7 +84,7 @@ export class BasePage {
         // let url = new URL(process.env.BASE_URL)
         // url.pathname = url.pathname + subPath + '/'
         // return url.href
-        return process.env.BASE_URL + '/' + subPath + '/'
+        return process.env.BASE_URL + '/' + subPath
     }
 
     // goto subPath if not already there
@@ -150,6 +150,7 @@ export class BasePage {
     // scroll to top
     async scrollToTop() {  //TODO: crosscheck
         await this.page.evaluate(() => { window.scroll(0, 0); });
+        await this.page.waitForTimeout(1000)
     }
 
     /**
@@ -177,9 +178,9 @@ export class BasePage {
     }
 
     // click & wait for response
-    async clickAndWaitForResponse(subUrl: string, selector: string): Promise<Response> {
+    async clickAndWaitForResponse(subUrl: string, selector: string, code: number = 200): Promise<Response> {
         const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === 200),
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
             this.page.click(selector)])
         // console.log(await response.json())
         return response
@@ -456,11 +457,11 @@ export class BasePage {
         return await this.page.selectOption(selector, { index: value })
     }
 
-    // set value based on select options text 
-    async selectByText(selectSelector: string, optionSelector: string, text: string) {
-        let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
-        await this.selectByValue(selectSelector, optionValue);
-    }
+    // // set value based on select options text 
+    // async selectByText(selectSelector: string, optionSelector: string, text: string) {
+    //     let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
+    //     await this.selectByValue(selectSelector, optionValue);
+    // }
 
 
 
@@ -976,6 +977,12 @@ export class BasePage {
      * custom methods
      */
 
+    // dokan select2
+    async select2ByText(selectSelector: string, optionSelector: string, text: string) {
+        await this.click(selectSelector)
+        await this.type(optionSelector, text)
+        await this.press('Enter')
+    }
 
     // admin enable switcher , if enabled then Skip : admin settings switcher
     async enableSwitcher(selector: string): Promise<void> {

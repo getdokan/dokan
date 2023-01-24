@@ -16,7 +16,7 @@ export const selector = {
         samplePage: "//a[contains(text(),'Sample Page')]",
         shop: "//a[contains(text(),'Shop')]",
         storeList: "//a[contains(text(),'Store List')]",
-   
+
         // Go to Vendor Dashboard
         goToVendorDashboard: ".dokan-btn.dokan-btn-theme.vendor-dashboard",
 
@@ -751,15 +751,18 @@ export const selector = {
 
                 // Delivery Time
                 allowVendorSettings: ".allow_vendor_override_settings .switch",
+                homeDelivery: "//div[contains(text(), 'Home Delivery')]//label[@class='switch tips']",
+                storePickup: "//div[contains(text(), 'Store Pickup')]//label[@class='switch tips']",
                 deliveryDateLabel: "#dokan_delivery_time\\[delivery_date_label\\]",
                 deliveryBlockedBuffer: "#dokan_delivery_time\\[preorder_date\\]",
-                deliveryBoxInfo: "#dokan_delivery_time\\[delivery_box_info\\]",
-                requireDeliveryDateAndTime: ".selection_required .switch",
-                deliveryDay: (day: string) => `//div[contains(text(), '${day}')]//label[@class='switch tips']`,
-                openingTime: "#dokan_delivery_time\\[opening_time\\]",
-                closingTime: "#dokan_delivery_time\\[closing_time\\]",
                 timeSlot: "#dokan_delivery_time\\[time_slot_minutes\\]",
                 orderPerSlot: "#dokan_delivery_time\\[order_per_slot\\]",
+                deliveryBoxInfo: "#dokan_delivery_time\\[delivery_box_info\\]",
+                requireDeliveryDateAndTime: ".selection_required .switch",
+                deliveryDay: (day: string) => `//h3[contains(text(), '${day}')]/../..//label[@class='switch tips']`,
+                openingTime: (day: string) => `#dokan_delivery_time\\[delivery_day_${day.toLowerCase()}\\]\\[opening_time\\]`,
+                closingTime: (day: string) => `#dokan_delivery_time\\[delivery_day_${day.toLowerCase()}\\]\\[closing_time\\]`,
+
                 deliveryTimeSaveChanges: "#submit",
 
                 // Product Advertising
@@ -1315,8 +1318,10 @@ export const selector = {
                 adminCommissionSingle: '.show_if_simple #admin_commission',
                 adminCommissionCombined: '.additional_fee > .input-text',
                 // Vendor
-                storeName: '#dokan_product_author_override',
-                storeNameOptions: '#dokan_product_author_override option',
+                // storeName: '#dokan_product_author_override',
+                storeName: '.select2-selection__arrow',
+                // storeNameOptions: '#dokan_product_author_override option',
+                storeNameInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 storeNameOption: (text: string) => `//select[@id='dokan_product_author_override']//option[contains(text(),'${text}')]`, // Select Option by text
 
                 // Category
@@ -1330,7 +1335,7 @@ export const selector = {
                 // Publish
                 saveDraft: '#save-post',
                 preview: '#post-preview',
-                publish: '#publish',
+                publish: '#publishing-action #publish',
                 updatedSuccessMessage: ".updated.notice.notice-success p",
             },
 
@@ -1488,7 +1493,7 @@ export const selector = {
             billingPostcode: "#billing_postcode",
             // billingCountryOrRegion: "#select2-billing_country-container",
             billingCountryOrRegion: ".select2-selection__arrow",
-            
+
             billingCountryOrRegionValues: ".select2-results ul li",
             billingState: "#billing_state",
             billingPhone: "#billing_phone",
@@ -3043,7 +3048,7 @@ export const selector = {
 
         // shipStation settings
         vShipStationSettings: {
-            exportOrderStatuses: ".select2-search__field",
+            exportOrderStatuses: ".select2-search.select2-search--dropdown .select2-search__field",
             shippedOrderStatus: "#select2--container",
             saveChanges: "#dokan-store-shipstation-form-submit",
         },
@@ -3215,14 +3220,14 @@ export const selector = {
             billingBankIban: "#billing_dokan_bank_iban",
             // billingCountryOrRegion: "#select2-billing_country-container",
             billingCountryOrRegion: ".select2-selection__arrow",
-            billingCountryOrRegionInput: '.select2-search__field',
+            billingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
             billingCountryOrRegionValues: ".select2-results ul li",
             billingStreetAddress: "#billing_address_1",
             billingStreetAddress2: "#billing_address_2",
             billingTownCity: "#billing_city",
             // billingState: "#select2-billing_state-container",
             billingState: ".select2-selection__arrow",
-            billingStateInput: '.select2-search__field',
+            billingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
             billingStateValues: ".select2-results ul li",
             billingZipCode: "#billing_postcode",
             billingPhone: "#billing_phone",
@@ -3236,14 +3241,14 @@ export const selector = {
             shippingCompanyName: "#shipping_company",
             // shippingCountryOrRegion: "#select2-shipping_country-container",
             shippingCountryOrRegion: ".select2-selection__arrow",
-            shippingCountryOrRegionInput: '.select2-search__field',
+            shippingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
             shippingCountryOrRegionValues: ".select2-results ul li",
             shippingStreetAddress: "#shipping_address_1",
             shippingStreetAddress2: "#shipping_address_2",
             shippingTownCity: "#shipping_city",
             // shippingState: "#select2-shipping_state-container",
             shippingState: ".select2-selection__arrow",
-            shippingStateInput: '.select2-search__field',
+            shippingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
             shippingStateValues: ".select2-results ul li",
             shippingZipCode: "#shipping_postcode",
             shippingSaveAddress: "//button[@name='save_address']",
@@ -3528,7 +3533,7 @@ export const selector = {
             shippingCompanyName: "#shipping_company",
             // shippingCountryOrRegion: "#select2-shipping_country-container",
             shippingCountryOrRegion: ".select2-selection__arrow",
-            
+
             shippingCountryOrRegionValues: ".select2-results ul li",
             shippingStreetAddress: "#shipping_address_1",
             shippingStreetAddress2: "#shipping_address_2",

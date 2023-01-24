@@ -99,16 +99,16 @@ async function globalSetup(config: FullConfig) {
 
 
     // // get storageState: admin
-    // const browser = await chromium.launch()
-    // const adminPage = await browser.newPage()
-    // // log in
-    // await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
-    // await adminPage.fill(selector.backend.email, 'admin')
-    // await adminPage.fill(selector.backend.password, '01dokan01')
-    // await adminPage.click(selector.backend.login)
-    // await adminPage.waitForLoadState('networkidle')
-    // await adminPage.context().storageState({ path: 'adminStorageState.json' })
-    // console.log('Stored adminStorageState')
+    const browser = await chromium.launch()
+    const adminPage = await browser.newPage()
+    // log in
+    await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
+    await adminPage.fill(selector.backend.email, 'admin')
+    await adminPage.fill(selector.backend.password, '01dokan01')
+    await adminPage.click(selector.backend.login)
+    await adminPage.waitForLoadState('networkidle')
+    await adminPage.context().storageState({ path: 'adminStorageState.json' })
+    console.log('Stored adminStorageState')
 
     // // get storageState: customer
     // const customerPage = await browser.newPage();
@@ -128,9 +128,9 @@ async function globalSetup(config: FullConfig) {
     // await vendorPage.fill(selector.frontend.userPassword, '01dokan01')
     // await vendorPage.click(selector.frontend.logIn)
     // await vendorPage.context().storageState({ path: 'vendorStorageState.json' })
-    // await browser.close()
-    // console.log('Stored vendorStorageState')
 
+    // console.log('Stored vendorStorageState')
+    await browser.close()
     console.log('Global Setup Finished!')
 }
 

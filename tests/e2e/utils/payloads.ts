@@ -558,14 +558,14 @@ export const payloads = {
       {
         id: 'woocommerce_price_thousand_sep',
         // label: 'Thousand separator',
-        value: ',',
+        value: '.',
         // value: '.',
       },
 
       {
         id: 'woocommerce_price_decimal_sep',
         // label: 'Decimal separator',
-        value: '.',
+        value: ',',
         // value: ',',
 
       },
@@ -574,6 +574,17 @@ export const payloads = {
         // label: 'Number of decimals',
         value: '2',
         // value: '4',
+      }
+    ]
+  },
+
+  enableTaxRate: {
+    update: [
+      {
+        id: 'woocommerce_calc_taxes',
+        // label: 'Enable taxes',
+        value: 'yes',
+        // value: 'no',
       }
     ]
   },

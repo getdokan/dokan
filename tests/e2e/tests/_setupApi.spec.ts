@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/loginPage'
 import { AdminPage } from '../pages/adminPage'
 import { CustomerPage } from '../pages/customerPage'
 import { VendorPage } from '../pages/vendorPage'
+import { helpers } from '../utils/helpers'
 
 
 // test.beforeAll(async ({ }) => { });
@@ -15,6 +16,7 @@ import { VendorPage } from '../pages/vendorPage'
 // test.beforeEach(async ({ }) => { });
 // test.afterEach(async ({ }) => { });
 
+//TODO: add more assertion, and move api assertion to function level
 
 test.describe('setup test api', () => {
 
@@ -34,44 +36,91 @@ test.describe('setup test api', () => {
 
     test('set wc settings', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        await apiUtils.updateBatchWcSettingsOptions('general', payloads.general)  // todo: should currency be separated on not
-        await apiUtils.updateBatchWcSettingsOptions('account', payloads.account)
+        let [generalSettingsResponse,] = await apiUtils.updateBatchWcSettingsOptions('general', payloads.general)
+        expect(generalSettingsResponse.ok()).toBeTruthy()
+        let [accountSettingsResponse,] = await apiUtils.updateBatchWcSettingsOptions('account', payloads.account)
+        expect(accountSettingsResponse.ok()).toBeTruthy()
     })
 
     test('set tax rate', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        await apiUtils.updateBatchWcSettingsOptions('general', payloads.general) //todo:  payload: only enable tax should be on payload
-        let taxRate = await apiUtils.createTaxRate(payloads.createTaxRate)
-        // expect(taxRate).toContain(expect.objectContaining(payloads.createTaxRate)) //todo: assertion
+
+        // enable tax rate 
+        await apiUtils.updateBatchWcSettingsOptions('general', payloads.enableTaxRate)
+
+        // delete previous tax rates
+        let allTaxRateIds = (await apiUtils.getAllTaxRates()).map((a: { id: any }) => a.id)
+        if (allTaxRateIds.length) {
+            await apiUtils.updateBatchTaxRates('delete', allTaxRateIds)
+        }
+
+        // create tax rate
+        let taxRateResponse = await apiUtils.createTaxRate(payloads.createTaxRate)
+        expect(parseInt(taxRateResponse.rate)).toBe(parseInt(payloads.createTaxRate.rate))
     })
 
     test('set shipping methods', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
+
+        // delete previous shipping zones
+        let allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: any }) => a.id)
+        // allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // remove default zone id
+        if (allShippingZoneIds.length) {
+            for (let shippingZoneId of allShippingZoneIds) {
+                await apiUtils.deleteShippingZone(shippingZoneId)
+            }
+        }
+
+        // create shipping zone, location and method
         let [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone)
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation)
-        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFlatRate)
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping)
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup)
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping)
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping)
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping)
+        let flatRateResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFlatRate)
+        expect(flatRateResponseBody.enabled).toBe(true)
+        // let freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping)
+        // expect(freeShippingResponseBody.enabled).toBe(true)
+        // let localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup)
+        // expect(localPickupResponseBody.enabled).toBe(true)
+        // let tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping)
+        // expect(tableRateShippingResponseBody.enabled).toBe(true)
+        // let distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping)
+        // expect(distanceRateShippingResponseBody.enabled).toBe(true)
+        // let dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping)
+        // expect(dokanVendorShippingResponseBody.enabled).toBe(true)
     })
 
 
     test('set basic payments', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
-        await apiUtils.updatePaymentGateway('bacs', payloads.bcs)
-        await apiUtils.updatePaymentGateway('cheque', payloads.cheque)
-        await apiUtils.updatePaymentGateway('cod', payloads.cod)
+        let [bacsResponse,] = await apiUtils.updatePaymentGateway('bacs', payloads.bcs)
+        expect(bacsResponse.ok()).toBeTruthy()
+        let [chequeResponse,] = await apiUtils.updatePaymentGateway('cheque', payloads.cheque)
+        expect(chequeResponse.ok()).toBeTruthy()
+        let [codResponse,] = await apiUtils.updatePaymentGateway('cod', payloads.cod)
+        expect(codResponse.ok()).toBeTruthy()
     })
 
     test('add categories and attributes', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
+
+        // delete previous categories
+        let allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: any }) => a.id)
+        await apiUtils.updateBatchCategories('delete', allCategoryIds)
+
+        // delete previous attributes
+        let allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: any }) => a.id)
+        await apiUtils.updateBatchAttributes('delete', allAttributeIds)
+
+        // create category
         await apiUtils.createCategory(payloads.createCategory)
-        let [, attributeId] = await apiUtils.createAttribute({ name: 'size' })
-        await request.post(endPoints.createAttributeTerm(attributeId), { data: { name: 's' } })
-        await request.post(endPoints.createAttributeTerm(attributeId), { data: { name: 'l' } })
-        await request.post(endPoints.createAttributeTerm(attributeId), { data: { name: 'm' } })
+
+        // create attribute, attribute term
+        let [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' })
+        let [responseS, responseBodyS,] = await apiUtils.createAttributeTerm(attributeId, { name: 's' })
+        expect(responseS.ok()).toBeTruthy()
+        let [responseL, responseBodyL,] = await apiUtils.createAttributeTerm(attributeId, { name: 'l' })
+        expect(responseL.ok()).toBeTruthy()
+        let [responseM, responseBodyM,] = await apiUtils.createAttributeTerm(attributeId, { name: 'm' })
+        expect(responseM.ok()).toBeTruthy()
 
     })
 
@@ -129,7 +178,7 @@ test.describe('setup test e2e', () => {
     let loginPage: any
     let adminPage: any
     let page: any
-    
+
     test.beforeAll(async ({ browser }) => {
         page = await browser.newPage();
         loginPage = new LoginPage(page)
@@ -141,11 +190,6 @@ test.describe('setup test e2e', () => {
         // await loginPage.adminLogin(data.admin)
         await adminPage.setWpSettings(data.wpSettings)
     })
-
-    // test.skip('admin add dokan subscription', async ({  }) => {
-    //     await loginPage.adminLogin(data.admin)
-    //     await adminPage.addDokanSubscription({ ...data.product.vendorSubscription, ...data.predefined.vendorSubscription.nonRecurring })
-    // })
 
     test('admin set dokan general settings', async ({ }) => {
         // await loginPage.adminLogin(data.admin)
@@ -227,4 +271,8 @@ test.describe('setup test e2e', () => {
         await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription)
     })
 
+    test.skip('admin add dokan subscription', async ({  }) => {
+        await loginPage.adminLogin(data.admin)
+        await adminPage.addDokanSubscription({ ...data.product.vendorSubscription, productName: data.predefined.vendorSubscription.nonRecurring })
+    })
 })

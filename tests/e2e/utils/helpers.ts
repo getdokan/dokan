@@ -19,6 +19,9 @@ export const helpers = {
     // random array element
     randomItem: (array: string | any[]) => array[Math.floor(Math.random() * array.length)],
 
+    // remove array element
+    removeItem: (arr: any[], removeItem: any) => arr.filter(item => item !== removeItem),
+
     // opens the url in the default browser 
     openUrl: (url: any) => open('url'),
 
@@ -35,14 +38,14 @@ export const helpers = {
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     currentDateTime: new Date().toLocaleString('en-CA', {
-        year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: "numeric", minute: "numeric"
+        year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: "numeric", minute: "numeric"
     }),
 
     // add two input days
     addDays(date: string | number | Date, days: number) {
         var result = new Date(date)
         result.setDate(result.getDate() + days)
-        return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hour12: false, hour: "numeric", minute: "numeric" })
+        return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: "numeric", minute: "numeric" })
     },
 
     // add two days
@@ -51,10 +54,13 @@ export const helpers = {
         result.setDate(result.getDate() + days)
         return result.toLocaleDateString('en-CA')
     },
+
     // round to two decimal places
-    roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+    // roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+
     //calculate percentage
     percentage(number: number, percentage: number) { return this.roundToTwo(number * (percentage / 100)) },
+
     //calculate percentage
     percentage1(number: number, percentage: number) { return ((number * (percentage / 100)).toFixed(2)) },
 

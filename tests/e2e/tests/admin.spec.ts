@@ -46,7 +46,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.setDokanSetupWizard(data.dokanSetupWizard)
     })
 
@@ -54,7 +53,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addVendor(data.vendor.vendorInfo)
     })
 
@@ -62,7 +60,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addSimpleProduct(data.product.simple)
     })
 
@@ -70,7 +67,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addVariableProduct(data.product.variable)
     })
 
@@ -78,7 +74,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addSimpleSubscription(data.product.simpleSubscription)
     })
 
@@ -86,7 +81,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addVariableSubscription(data.product.variableSubscription)
     })
 
@@ -94,7 +88,6 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addExternalProduct(data.product.external)
     })
 
@@ -102,39 +95,34 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addDokanSubscription(data.product.vendorSubscription)
     })
 
-    test.skip('admin can add auction product', async ({ }) => {
+    test('admin can add auction product', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addAuctionProduct(data.product.auction)
     })
 
-    test.skip('admin can add booking product', async ({ }) => {
+    test('admin can add booking product', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addBookingProduct(data.product.booking)
     })
 
-    test('admin can add categories', async ({ }) => {
+    test.skip('admin can add categories', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addCategory(data.product.category.clothings)
     })
 
-    test('admin can add attributes', async ({ }) => {
+    test.skip('admin can add attributes', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addAttributes(data.product.attribute.size)
     })
 
@@ -142,11 +130,10 @@ test.describe('Admin functionality test', () => {
     // settings
 
     // tax settings
-    test('admin can set standard tax rate', async ({ }) => {
+    test.skip('admin can set standard tax rate', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-
         await adminPage.addStandardTaxRate(data.tax)
     })
 
@@ -155,7 +142,6 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.flatRate)
     // })
 
@@ -163,7 +149,6 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.freeShipping)
     // })
 
@@ -171,7 +156,6 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.localPickup)
     // })
 
@@ -179,7 +163,6 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.tableRateShipping)
     // })
 
@@ -187,7 +170,6 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.distanceRateShipping)
     // })
 
@@ -195,49 +177,47 @@ test.describe('Admin functionality test', () => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.vendorShipping)
     // })
 
     // payment
 
-    // test('admin can add basic payment methods', async ({ }) => {
+    // test.only('admin can add basic payment methods', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
-
     //     await adminPage.setupBasicPaymentMethods(data.payment)
     // })
 
-    // test('admin can add strip payment method', async ({ }) => {
+    // test.only('admin can add strip payment method', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
     //     await adminPage.setupStripeConnect(data.payment)
     // })
 
-    // test.skip('admin can add paypal marketplace payment method', async ({ }) => {
+    // test.only('admin can add paypal marketplace payment method', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
     //     await adminPage.setupPaypalMarketPlace(data.payment)
     // })
 
-    // test('admin can add mangopay payment method', async ({ }) => {
+    // test.only('admin can add mangopay payment method', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
     //     await adminPage.setupMangoPay(data.payment)
     // })
 
-    // test('admin can add razorpay payment method', async ({ }) => {
+    // test.only('admin can add razorpay payment method', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
     //     await adminPage.setupRazorpay(data.payment)
     // })
 
-    // test('admin can add strip express payment method', async ({ }) => {
+    // test.only('admin can add strip express payment method', async ({ }) => {
     //     // const loginPage = new LoginPage(page)
     //     // const adminPage = new AdminPage(page)
     //     // await loginPage.adminLogin(data.admin)
@@ -266,7 +246,6 @@ test.describe('Admin functionality test', () => {
         // await loginPage.adminLogin(data.admin)
         await adminPage.setDokanWithdrawSettings(data.dokanSettings.withdraw)
     })
-
 
     test('admin can set dokan page settings', async ({ }) => {
         // const loginPage = new LoginPage(page)
@@ -321,7 +300,7 @@ test.describe('Admin functionality test', () => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-        await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime)
+        await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime) //TODO: need to fix
     })
 
     test('admin can set dokan product advertising settings', async ({ }) => {
@@ -352,7 +331,7 @@ test.describe('Admin functionality test', () => {
         await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv)
     })
 
-    test.skip('admin can set dokan vendor subscription settings', async ({ }) => {
+    test('admin can set dokan vendor subscription settings', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)

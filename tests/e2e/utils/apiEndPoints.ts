@@ -364,7 +364,7 @@ export const endPoints = {
         getSingleShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
         createShippingZone: `${SERVER_URL}/wc/v3/shipping/zones/`,
         updateShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
-        deleteShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
+        deleteShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}${QUERY}force=true`,
         // shipping zone locations   
         getAllShippingZoneLocations: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}/locations`,
         addShippingZoneLocation: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}/locations`,

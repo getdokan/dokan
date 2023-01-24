@@ -1,12 +1,15 @@
 {
     "compilerOptions": {
-        // ... rest
-        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "target": "es2016",
+        "rootDir": "./",
+        "module": "commonjs",
+        "typeRoots": ["./node_modules/@types", "./types"],
+        // "strict": true,
+        "allowJs": true,
+        "checkJs": true,
+        "moduleResolution": "node",
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
-        // "lib": ["es6",],
-        // "target": "es5",
-        "allowJs": true
-
+        "sourceMap": true
     }
 }

@@ -21,8 +21,16 @@ export class AdminPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.dokanSettings)
     }
 
-    async goToWooCommerceProducts() {
-        await this.goIfNotThere(data.subUrls.backend.woocommerceProducts)
+    async goToWcAddNewProducts() {
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
+    }
+
+    async goToWcAddNewCategories() {
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewCategories)
+    }
+
+    async goToWcAddNewAttributes() {
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewAttributes)
     }
 
     async goToWooCommerceSettings() {
@@ -74,7 +82,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Permalink Settings
-    async setPermalinkSettings(permalink) {
+    async setPermalinkSettings(permalink: any) {
         // await this.hover(selector.admin.aDashboard.settings)
         await this.hoverOnLocator(selector.admin.aDashboard.settings)
         // await this.goToPermalinks()
@@ -93,7 +101,7 @@ export class AdminPage extends BasePage {
     // Dokan Settings
 
     // Admin Set Dokan General Settings
-    async setDokanGeneralSettings(general) {
+    async setDokanGeneralSettings(general: any) {
         await this.goToDokanSettings()
 
         await this.click(selector.admin.dokan.settings.general)
@@ -344,21 +352,36 @@ export class AdminPage extends BasePage {
         // Delivery Time Settings
 
         await this.enableSwitcher(selector.admin.dokan.settings.allowVendorSettings)
+        await this.enableSwitcher(selector.admin.dokan.settings.homeDelivery)
+        await this.enableSwitcher(selector.admin.dokan.settings.storePickup)
         await this.clearAndType(selector.admin.dokan.settings.deliveryDateLabel, deliveryTime.deliveryDateLabel)
         await this.clearAndType(selector.admin.dokan.settings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer)
-        await this.clearAndType(selector.admin.dokan.settings.deliveryBoxInfo, deliveryTime.deliveryBoxInfo)
-        await this.enableSwitcher(selector.admin.dokan.settings.requireDeliveryDateAndTime)
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.sunday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.monday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.tuesday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.wednesday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.thursday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.friday))
-        await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.saturday))
-        await this.clearAndType(selector.admin.dokan.settings.openingTime, deliveryTime.openingTime)
-        await this.clearAndType(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
         await this.clearAndType(selector.admin.dokan.settings.timeSlot, deliveryTime.timeSlot)
         await this.clearAndType(selector.admin.dokan.settings.orderPerSlot, deliveryTime.orderPerSlot)
+        await this.clearAndType(selector.admin.dokan.settings.deliveryBoxInfo, deliveryTime.deliveryBoxInfo)
+        await this.enableSwitcher(selector.admin.dokan.settings.requireDeliveryDateAndTime)
+
+        for (let day in deliveryTime.deliveryDay) {
+            await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay[day]))
+            // await this.clearAndType(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]), deliveryTime.openingTime)
+            await this.click(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]))
+            await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'12:00 am')]")
+            // await this.clearAndType(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]), deliveryTime.closingTime)
+            await this.click(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]))
+            await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'11:30 pm')]")
+        }
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.monday))
+        // await this.type(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay.monday), deliveryTime.openingTime)
+        // await this.type(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay.monday), deliveryTime.closingTime)
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.tuesday))
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.wednesday))
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.thursday))
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.friday))
+        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.saturday))
+        // await this.clearAndType(selector.admin.dokan.settings.openingTime, deliveryTime.openingTime)
+        // await this.clearAndType(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
+        await this.wait(2)
+        await this.hover(selector.admin.dokan.settings.deliveryTimeSaveChanges)
         await this.click(selector.admin.dokan.settings.deliveryTimeSaveChanges)
 
         let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
@@ -927,18 +950,18 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.dokan.vendors.lastName, vendorInfo.lastName())
         await this.type(selector.admin.dokan.vendors.storeName, vendorInfo.storeName)
         // await this.type(selector.admin.dokan.vendors.storeUrl, vendorInfo.storeName)
-        const [response0] = await Promise.all([ this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?store_slug=${vendorInfo.storeName}`),
+        const [response0] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?store_slug=${vendorInfo.storeName}`),
         await this.clearAndType(selector.admin.dokan.vendors.storeUrl, vendorInfo.storeName)])
         await this.type(selector.admin.dokan.vendors.phoneNumber, vendorInfo.phoneNumber)
         // await this.type(selector.admin.dokan.vendors.email, email)
-        const [response] = await Promise.all([ this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/`)
-            ,await this.type(selector.admin.dokan.vendors.email, email) ])
+        const [response] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/`)
+            , await this.type(selector.admin.dokan.vendors.email, email)])
         await this.click(selector.admin.dokan.vendors.generatePassword)
         await this.clearAndType(selector.admin.dokan.vendors.password, vendorInfo.password)
         // await this.type(selector.admin.dokan.vendors.username, firstName)
-        const [response1] = await Promise.all([ this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?username=${firstName}`)
-        ,await this.type(selector.admin.dokan.vendors.username, firstName) ])
-        console.log(response.status,response1.status)
+        const [response1] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?username=${firstName}`)
+            , await this.type(selector.admin.dokan.vendors.username, firstName)])
+        console.log(response.status, response1.status)
         await this.type(selector.admin.dokan.vendors.companyName, vendorInfo.companyName)
         await this.type(selector.admin.dokan.vendors.companyIdEuidNumber, vendorInfo.companyId)
         await this.type(selector.admin.dokan.vendors.vatOrTaxNumber, vendorInfo.vatNumber)
@@ -986,10 +1009,10 @@ export class AdminPage extends BasePage {
 
     // Admin Add Categories
     async addCategory(categoryName) {
-        await this.goToAdminDashboard()
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.categoriesMenu)
 
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.categoriesMenu)
+        await this.goToWcAddNewCategories()
 
         let categoryIsVisible = await this.isVisible(selector.admin.products.category.categoryCell(categoryName))
         if (!categoryIsVisible) {
@@ -1006,10 +1029,10 @@ export class AdminPage extends BasePage {
 
     // Admin Add Attributes
     async addAttributes(attribute) {
-        await this.goToAdminDashboard()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.attributesMenu)
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.attributesMenu)
+
+        await this.goToWcAddNewAttributes()
 
         let attributeIsVisible = await this.isVisible(selector.admin.products.attribute.attributeCell(attribute.attributeName))
         if (!attributeIsVisible) {
@@ -1039,15 +1062,13 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Simple Product
-    async addSimpleProduct(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addSimpleProduct(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
+
 
         // Add New Simple Product
         // Name
@@ -1060,15 +1081,16 @@ export class AdminPage extends BasePage {
         if (product.stockStatus) {
             await this.editStockStatus(data.product.stockStatus.outOfStock)
         }
-        // // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        await this.scrollToTop()
 
 
         switch (product.status) {
             case 'publish':
                 // Publish
-                await this.click(selector.admin.products.product.publish)
+                let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
                 let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
                 expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
@@ -1100,17 +1122,12 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Variable Product
-    async addVariableProduct(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
+    async addVariableProduct(product: any) {
 
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
 
-
+        await this.goToWcAddNewProducts()
 
         // Add New Variable Product
         // Name
@@ -1146,27 +1163,25 @@ export class AdminPage extends BasePage {
 
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
         expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Add Simple Subscription Product
-    async addSimpleSubscription(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addSimpleSubscription(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
 
         // Add New Simple Subscription
         // Name
@@ -1180,29 +1195,25 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.products.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
-
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
         expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Add External Product
-    async addExternalProduct(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addExternalProduct(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
 
         // Add New External Product
         // Name
@@ -1213,28 +1224,25 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.regularPrice, product.regularPrice())
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
-
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
         expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Add Dokan Subscription Product
-    async addDokanSubscription(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addDokanSubscription(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
 
         // Add New Dokan Subscription Product
         // Name
@@ -1249,28 +1257,25 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.advertisementSlot, product.advertisementSlot)
         await this.type(selector.admin.products.product.expireAfterDays, product.expireAfterDays)
         await this.click(selector.admin.products.product.recurringPayment)
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
-
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
         expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Add Auction Product
-    async addAuctionProduct(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addAuctionProduct(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
 
         // Add New Auction Product
         // Name
@@ -1286,28 +1291,25 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.auctionDatesTo, product.endDate)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
+        // Vendor Store Name //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
-
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(product.publishSuccessMessage)
+        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Add Booking Product
-    async addBookingProduct(product) {
-        await this.goToWooCommerceProducts()
-        
-        await this.hover(selector.admin.aDashboard.products)
-        await this.click(selector.admin.products.addNewMenu)
-        
-        // Vendor Store Name
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+    async addBookingProduct(product: any) {
+
+        // await this.hover(selector.admin.aDashboard.products)
+        // await this.click(selector.admin.products.addNewMenu)
+
+        await this.goToWcAddNewProducts()
 
         // Add New Booking Product
         // Name
@@ -1318,21 +1320,20 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.products.product.calendarDisplayMode, product.calendarDisplayMode)
         // Costs
         await this.click(selector.admin.products.product.bookingCosts)
-
         await this.clearAndType(selector.admin.products.product.baseCost, product.baseCost)
         await this.clearAndType(selector.admin.products.product.blockCost, product.blockCost)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name //TODO: fix this
-        // await this.selectByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameOptions, product.storeName)
-        // await this.scrollToTop()
+        // Vendor Store Name  //TODO: uncomment after fix
+        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        await this.scrollToTop()
 
         // Publish
-        await this.click(selector.admin.products.product.publish)
-
+        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        expect(response.status()).toBe(302)
 
         let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(product.publishSuccessMessage)
+        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
     }
 
     // Admin Update Product Stock Status

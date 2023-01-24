@@ -1,4 +1,4 @@
-import { type APIRequestContext } from '@playwright/test'
+import { expect, type APIRequestContext } from '@playwright/test'
 import { endPoints } from './apiEndPoints'
 
 
@@ -32,7 +32,7 @@ export class ApiUtils {
         } catch (err) {
             console.log('Error: ', err.message)
             console.log('Status Code: ', response.status())
-            // console.log('Response text: ', await response.text())
+            console.log('Response text: ', await response.text())
         }
         return responseBody
     }
@@ -113,6 +113,7 @@ export class ApiUtils {
     // create product
     async createProduct(payload: object, auth?: any) {
         let response = await this.request.post(endPoints.createProduct, { data: payload, headers: auth })
+        expect(response.ok()).toBeTruthy()
         let responseBody = await this.getResponseBody(response)
         let productId = responseBody.id
         // console.log(productId)
@@ -192,6 +193,14 @@ export class ApiUtils {
     }
 
 
+    // update batch attributes
+    async updateBatchAttributes(action: string, allIds: string[], auth?: any) {
+        let response = await this.request.post(endPoints.wc.updateBatchAttributes, { data: { [action]: allIds }, headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return [response, responseBody]
+    }
+
+
     /**
      * attribute term api methods
      */
@@ -205,13 +214,14 @@ export class ApiUtils {
     }
 
     // create attribute term
-    async createAttributeTerm(attribute: object, attributeTerm: object, auth?: any) {
-        let [, attributeId] = await this.createAttribute(attribute)
-        let response = await this.request.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth })
+    async createAttributeTerm(attribute: object | number, attributeTerm: object, auth?: any) {
+        let attributeId: number
+        typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute) : attributeId = attribute
+        let response = await this.request.post(endPoints.createAttributeTerm(String(attributeId)), { data: attributeTerm, headers: auth })
         let responseBody = await this.getResponseBody(response)
         let attributeTermId = responseBody.id
         // console.log(attributeTermId)
-        return [responseBody, attributeId, attributeTermId]
+        return [response, responseBody, attributeId, attributeTermId]
     }
 
 
@@ -707,12 +717,10 @@ export class ApiUtils {
 
     // create quote rule
     async createQuoteRule(payload: object, auth?: any) {
-        // console.log(payload)
         let response = await this.request.post(endPoints.createQuoteRule, { data: payload, headers: auth })
         // console.log(response.status())
         let responseBody = await this.getResponseBody(response)
         let quoteRuleId = responseBody.id
-        // console.log(responseBody)
         // console.log(quoteRuleId)
         return [responseBody, quoteRuleId]
     }
@@ -902,7 +910,7 @@ export class ApiUtils {
     async updateBatchWcSettingsOptions(groupId: string, payload: object, auth?: any) {
         let response = await this.request.post(endPoints.wc.updateBatchSettingOptions(groupId), { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
-        return responseBody
+        return [response, responseBody]
     }
 
     // reviews
@@ -936,7 +944,7 @@ export class ApiUtils {
     // get categoryId
     async getCategoryId(categoryName: string, auth?: any) {
         let allCustomers = await this.getAllCustomers()
-        let customerId = (allCustomers.find(o => o.name === categoryName)).id
+        let customerId = (allCustomers.find((o: { name: string; }) => o.name === categoryName)).id
         // console.log(customerId)
         return customerId
     }
@@ -962,6 +970,13 @@ export class ApiUtils {
         let response = await this.request.delete(endPoints.wc.deleteCategory(categoryId), { headers: auth })
         let responseBody = await this.getResponseBody(response)
         return responseBody
+    }
+
+    // update batch categories
+    async updateBatchCategories(action: string, allIds: string[], auth?: any) {
+        let response = await this.request.post(endPoints.wc.updateBatchCategories, { data: { [action]: allIds }, headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return [response, responseBody]
     }
 
 
@@ -1003,6 +1018,13 @@ export class ApiUtils {
 
     // tax
 
+    // get all tax rate
+    async getAllTaxRates(auth?: any) {
+        let response = await this.request.get(endPoints.wc.getAllTaxRates, { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
 
     // create tax rate
     async createTaxRate(payload: object, auth?: any) {
@@ -1011,6 +1033,14 @@ export class ApiUtils {
         return responseBody
     }
 
+    // update batch tax rates
+    async updateBatchTaxRates(action: string, allIds: string[], auth?: any) {
+        let response = await this.request.put(endPoints.wc.updateBatchTaxRates, { data: { [action]: allIds }, headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+
 
     // shipping
 
@@ -1018,6 +1048,7 @@ export class ApiUtils {
     async getAllShippingZones(auth?: any) {
         let response = await this.request.get(endPoints.wc.getAllShippingZones, { headers: auth })
         let responseBody = await this.getResponseBody(response)
+        // console.log(responseBody)
         return responseBody
     }
 
@@ -1037,6 +1068,15 @@ export class ApiUtils {
         // console.log(shippingZoneId)
         return [responseBody, shippingZoneId]
     }
+
+    // delete shipping zone 
+    async deleteShippingZone(zoneId: string, auth?: any) {
+        let response = await this.request.delete(endPoints.wc.deleteShippingZone(zoneId), { headers: auth })
+        let responseBody = await this.getResponseBody(response)
+        return responseBody
+    }
+
+
 
     // get all shipping zone locations
     async getAllShippingZoneLocations(zoneId: string, auth?: any) {
@@ -1083,9 +1123,9 @@ export class ApiUtils {
     }
 
     // update payment gateway
-    async updatePaymentGateway(paymentGatewayId: string, payload: object, auth?: any): Promise<object> {
+    async updatePaymentGateway(paymentGatewayId: string, payload: object, auth?: any) {
         let response = await this.request.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
-        return responseBody
-    } ß
+        return [response, responseBody]
+    }
 }

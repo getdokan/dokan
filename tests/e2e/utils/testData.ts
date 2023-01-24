@@ -346,7 +346,7 @@ export const data = {
             reservedPrice: () => (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
             buyItNowPrice: () => (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
             startDate: helpers.currentDateTime.replace(/,/g, ''),
-            endDate: helpers.addDays(helpers.currentDateTime, 60).replace(/,/g, ''),
+            endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
             saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
         },
 
@@ -684,16 +684,16 @@ export const data = {
             deliveryBlockedBuffer: '0',
             deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
             deliveryDay: {
-                sunday: 'Sunday',
                 monday: 'Monday',
                 tuesday: 'Tuesday',
                 wednesday: 'Wednesday',
                 thursday: 'Thursday',
                 friday: 'Friday',
-                saturday: 'Saturday'
+                saturday: 'Saturday',
+                sunday: 'Sunday',
             },
-            openingTime: '12:00 AM',
-            closingTime: '11:30 PM',
+            openingTime: '12:00 am',
+            closingTime: '11:30 pm',
             timeSlot: '30',
             orderPerSlot: '0',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -783,7 +783,9 @@ export const data = {
             adminDashboard: 'wp-admin',
             dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
             woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
-            woocommerceProducts: 'wp-admin',
+            wcAddNewProducts: 'wp-admin/post-new.php?post_type=product',
+            wcAddNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
+            wcAddNewAttributes: 'wp-admin/edit.php?post_type=product&page=product_attributes',
             permalinks: 'wp-admin/options-permalink.php',
             plugins: 'wp-admin/plugins.php',
         },
@@ -796,7 +798,8 @@ export const data = {
             dashboard: 'dashboard',
 
         },
-        ajax: '/admin-ajax.php'
+        ajax: '/admin-ajax.php',
+        post: '/post.php'
     },
 
 
@@ -856,7 +859,7 @@ export const data = {
             },
             vacation: {
                 vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 365)),
-                vacationDayTo: () => helpers.addDays(data.vendor.vendorInfo.vacation.vacationDayFrom, 31),
+                vacationDayTo: () => helpers.addDays(data.vendor.vendorInfo.vacation.vacationDayFrom(), 31),
                 closingStyle: 'datewise',
                 vacationMessage: 'We are currently out of order',
 
@@ -1144,10 +1147,10 @@ export const data = {
                 productName: () => 'p1_v1 (simple)',
             },
             product2: 'p2_v1 (simple)',
-            productfrac1: 'p1_F1_v1 (simple)',
-            productfrac2: 'p2_F2_v1 (simple)'
+            productFrac1: 'p1_F1_v1 (simple)',
+            productFrac2: 'p2_F2_v1 (simple)'
         },
-        
+
         variableProduct: {
             product1: 'p1_v1 (variable)'
         },

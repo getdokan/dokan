@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674372126%7CV1oE8oL8mE9g3Ok3BakaDr5BCrs9oCXGov4Dc1ckISe%7C916087ed61f0d78e70547cc80f13a3887b00516e916ecba6108dcc780e1dea83",
+      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cec1bae1e6fa92b6c8b9a8d699e6b03b249b341011b350db271c54b8ab9e3279b",
       "domain": "dokan9.test",
       "path": "/wp-content/plugins",
       "expires": -1,
@@ -12,7 +12,7 @@
     },
     {
       "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674372126%7CV1oE8oL8mE9g3Ok3BakaDr5BCrs9oCXGov4Dc1ckISe%7C916087ed61f0d78e70547cc80f13a3887b00516e916ecba6108dcc780e1dea83",
+      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cec1bae1e6fa92b6c8b9a8d699e6b03b249b341011b350db271c54b8ab9e3279b",
       "domain": "dokan9.test",
       "path": "/wp-admin",
       "expires": -1,
@@ -32,7 +32,7 @@
     },
     {
       "name": "wordpress_logged_in_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674372126%7CV1oE8oL8mE9g3Ok3BakaDr5BCrs9oCXGov4Dc1ckISe%7C5dac9c9c5fbb66247dcfbdb03b7bdadea1bbcd9a6ec334fd6c9f6684e5707d0c",
+      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cfa29f3e290feb235392bcaa36dd7f6072c1ba4eb8e900ee176ce7aed8ad71983",
       "domain": "dokan9.test",
       "path": "/",
       "expires": -1,
@@ -52,10 +52,10 @@
     },
     {
       "name": "wp-settings-time-1",
-      "value": "1674199327",
+      "value": "1674576857",
       "domain": "dokan9.test",
       "path": "/",
-      "expires": 1705735328.649768,
+      "expires": 1706112858.174645,
       "httpOnly": false,
       "secure": true,
       "sameSite": "Lax"

@@ -11,7 +11,7 @@
         "allowSyntheticDefaultImports": true,
 
         "sourceMap": true, 
-         "removeComments": true
+        "removeComments": true
     },
     "include": ["src"] 
 }
