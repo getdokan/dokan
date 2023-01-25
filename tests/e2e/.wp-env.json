@@ -9,11 +9,11 @@
     "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
     "../../",
     "../../plugins/dokan-pro",
-    "https://demo.nurul.me/wp-content/uploads/2022/11/ba.zip",
-    "https://demo.nurul.me/wp-content/uploads/2022/11/wa.zip",
-    "https://demo.nurul.me/wp-content/uploads/2022/11/wb.zip",
-    "https://demo.nurul.me/wp-content/uploads/2022/11/wps.zip",
-    "https://demo.nurul.me/wp-content/uploads/2022/11/ws.zip"
+    "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
+    "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
+    "https://github.com/shashwatahalder01/TestUtils/raw/main/wb.zip",
+    "https://github.com/shashwatahalder01/TestUtils/raw/main/wps.zip",
+    "https://github.com/shashwatahalder01/TestUtils/raw/main/ws.zip"
   ],
   "themes": [
     "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
