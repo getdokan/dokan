@@ -386,6 +386,7 @@ final class WeDevs_Dokan {
         $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
         $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
         $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
+        $this->container['bg_process']          = new \WeDevs\Dokan\BackgroundProcess\Manager();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
