@@ -4,7 +4,6 @@ on:
   pull_request:
   push:
     branches:
-      - develop
       - e2e-pw
   workflow_dispatch:
 # Cancels all previous workflow runs for pull requests that have not completed.
