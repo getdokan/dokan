@@ -164,14 +164,15 @@ function dokan_count_orders( $user_id ) {
 
     if ( false === $counts ) {
         $counts = [
-            'wc-pending'    => 0,
-            'wc-completed'  => 0,
-            'wc-on-hold'    => 0,
-            'wc-processing' => 0,
-            'wc-refunded'   => 0,
-            'wc-cancelled'  => 0,
-            'wc-failed'     => 0,
-            'total'         => 0,
+            'wc-pending'        => 0,
+            'wc-completed'      => 0,
+            'wc-on-hold'        => 0,
+            'wc-processing'     => 0,
+            'wc-refunded'       => 0,
+            'wc-cancelled'      => 0,
+            'wc-failed'         => 0,
+            'wc-checkout-draft' => 0,
+            'total'             => 0,
         ];
 
         $counts = apply_filters( 'dokan_order_status_count', $counts );
