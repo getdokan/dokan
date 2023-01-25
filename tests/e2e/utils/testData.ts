@@ -796,6 +796,20 @@ export const data = {
             cart: 'cart',
             checkout: 'checkout',
             dashboard: 'dashboard',
+            product: 'dashboard/products',
+            coupon: 'dashboard/coupons',
+            withdraw: 'dashboard/withdraw',
+            auction: 'dashboard/auction',
+            booking: 'dashboard/booking',
+            settingsStore: 'settings/store',
+            settingsAddon: 'settings/product-addon',
+            settingsPayment: 'settings/payment',
+            settingsVerification: 'settings/verification',
+            settingsShipping: 'settings/shipping/#',
+            settingsSocialProfile: 'settings/social',
+            settingsRma: 'settings/rma',
+
+
 
         },
         ajax: '/admin-ajax.php',

@@ -12,18 +12,18 @@ import { VendorPage } from '../pages/vendorPage'
 // test.beforeEach(async ({ }) => { });
 // test.afterEach(async ({ }) => { });
 
-// test('admin can login', async ({ page }) => {
-//     const loginPage = new LoginPage(page)
-//     const adminPage = new AdminPage(page)
-//     await loginPage.adminLogin(data.admin)
-// })
+test('admin can login', async ({ page }) => {
+    const loginPage = new LoginPage(page)
+    const adminPage = new AdminPage(page)
+    await loginPage.adminLogin(data.admin)
+})
 
-// test('admin can logout', async ({ page }) => {
-//     const loginPage = new LoginPage(page)
-//     const adminPage = new AdminPage(page)
-//     await loginPage.adminLogin(data.admin)
-//     await loginPage.adminLogout()
-// })
+test('admin can logout', async ({ page }) => {
+    const loginPage = new LoginPage(page)
+    const adminPage = new AdminPage(page)
+    await loginPage.adminLogin(data.admin)
+    await loginPage.adminLogout()
+})
 
 
 

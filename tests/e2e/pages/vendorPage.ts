@@ -1,11 +1,11 @@
-import {expect, type Page} from '@playwright/test';
-import {BasePage} from "./basePage";
-import {LoginPage} from './loginPage'
-import {AdminPage} from "./adminPage"
-import {CustomerPage} from './customerPage'
-import {selector} from './selectors'
-import {data} from '../utils/testData'
-import {helpers} from '../utils/helpers'
+import { expect, type Page } from '@playwright/test';
+import { BasePage } from "./basePage";
+import { LoginPage } from './loginPage'
+import { AdminPage } from "./adminPage"
+import { CustomerPage } from './customerPage'
+import { selector } from './selectors'
+import { data } from '../utils/testData'
+import { helpers } from '../utils/helpers'
 
 export class VendorPage extends BasePage {
 
@@ -135,8 +135,11 @@ export class VendorPage extends BasePage {
 
     // vendor add simple product
     async addSimpleProduct(product): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.products)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.products)
+
+        await this.goIfNotThere(data.subUrls.frontend.product)
+
         let productName = product.productName()
         // add new simple product
         await this.click(selector.vendor.product.addNewProduct)
@@ -244,9 +247,11 @@ export class VendorPage extends BasePage {
 
     // vendor add auction product
     async addAuctionProduct(product: { productName: any; productType?: string; category?: string; itemCondition: any; auctionType: any; regularPrice: any; bidIncrement: any; reservedPrice: any; buyItNowPrice: any; startDate: any; endDate: any; saveSuccessMessage: any; }): Promise<void> {
-        await this.goToVendorDashboard()
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.auction)
 
-        await this.click(selector.vendor.vDashboard.auction)
+        await this.goIfNotThere(data.subUrls.frontend.auction)
+
         // add new auction product
         await this.click(selector.vendor.vAuction.addNewActionProduct)
         await this.type(selector.vendor.vAuction.productName, product.productName())
@@ -269,10 +274,13 @@ export class VendorPage extends BasePage {
 
     // vendor add booking product
     async addBookingProduct(product: { productName: any; productType?: string; category?: string; bookingDurationType: any; bookingDuration?: string; bookingDurationMax: any; bookingDurationUnit: any; calendarDisplayMode: any; maxBookingsPerBlock: any; minimumBookingWindowIntoTheFutureDate: any; minimumBookingWindowIntoTheFutureDateUnit: any; maximumBookingWindowIntoTheFutureDate: any; maximumBookingWindowIntoTheFutureDateUnit: any; baseCost: any; blockCost: any; }): Promise<void> {
-        await this.goToVendorDashboard()
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.booking)
+
+        await this.goIfNotThere(data.subUrls.frontend.booking)
 
         let productName = product.productName()
-        await this.click(selector.vendor.vDashboard.booking)
+
         await this.click(selector.vendor.vBooking.addNewBookingProduct)
         // add new booking product
         await this.type(selector.vendor.vBooking.productName, productName)
@@ -310,10 +318,12 @@ export class VendorPage extends BasePage {
     // coupons
 
     // vendor add coupon
-    async addCoupon(coupon: { title: string; amount: string; existingCouponErrorMessage: string; }): Promise<void> {
-        await this.goToVendorDashboard()
+    async addCoupon(coupon: any): Promise<void> {
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.coupons)
 
-        await this.click(selector.vendor.vDashboard.coupons)
+        await this.goIfNotThere(data.subUrls.frontend.coupon)
+
         await this.click(selector.vendor.vCoupon.addNewCoupon)
         await this.type(selector.vendor.vCoupon.couponTitle, coupon.title)
         await this.type(selector.vendor.vCoupon.amount, coupon.amount)
@@ -336,8 +346,10 @@ export class VendorPage extends BasePage {
 
     // vendor request withdraw
     async requestWithdraw(withdraw: { withdrawMethod: any; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod?: string; preferredSchedule?: string; minimumWithdrawAmount?: string; reservedBalance?: string; }): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.withdraw)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.withdraw)
+
+        await this.goIfNotThere(data.subUrls.frontend.withdraw)
 
         let canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest)
         if (canRequestIsVisible) {
@@ -376,8 +388,11 @@ export class VendorPage extends BasePage {
 
     // vendor add auto withdraw disbursement schedule
     async addAutoWithdrawDisbursementSchedule(withdraw: { withdrawMethod?: { default: string; paypal: string; skrill: string; }; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod: any; preferredSchedule: any; minimumWithdrawAmount: any; reservedBalance: any; }): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.withdraw)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.withdraw)
+
+        await this.goIfNotThere(data.subUrls.frontend.withdraw)
+
         await this.click(selector.vendor.vWithdraw.editSchedule)
         await this.selectByValue(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod)
         await this.click(selector.vendor.vWithdraw[withdraw.preferredSchedule])
@@ -388,8 +403,11 @@ export class VendorPage extends BasePage {
 
     // vendor add default withdraw payment methods
     async addDefaultWithdrawPaymentMethods(preferredSchedule: string): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.withdraw)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.withdraw)
+
+        await this.goIfNotThere(data.subUrls.frontend.withdraw)
+
         let defaultMethod = await this.isVisible(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule))
         console.log(defaultMethod)
         if (defaultMethod) {
@@ -416,8 +434,10 @@ export class VendorPage extends BasePage {
 
     // vendor set store settings
     async setStoreSettings(vendorInfo: { email?: () => string; emailDomain?: string; password?: string; password1?: string; firstName?: () => string; lastName?: () => string; userName?: string; shopName?: string; shopUrl?: string; companyName?: string; companyId?: string; vatNumber?: string; bankName?: string; bankIban?: string; phoneNumber?: string; street1?: string; street2?: string; country?: string; countrySelectValue?: string; stateSelectValue?: string; city?: string; zipCode?: string; state?: string; accountName?: string; accountNumber?: string; bankAddress?: string; routingNumber?: string; swiftCode?: string; iban?: string; banner?: string; profilePicture?: string; storeName?: string; productsPerPage?: string; mapLocation: any; termsAndConditions: any; biography: any; supportButtonText: any; openingClosingTime: any; vacation: any; discount: any; minMax: any; storeSettingsSaveSuccessMessage: any; }): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.settings)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.settings)
+
+        await this.goIfNotThere(data.subUrls.frontend.settingsStore)
 
         await this.basicInfoSettings(vendorInfo)
         await this.mapSettings(vendorInfo.mapLocation)
@@ -437,8 +457,11 @@ export class VendorPage extends BasePage {
 
     // vendor set store address
     async setStoreAddress(vendorInfo: { street1: string; street2: string; city: string; zipCode: string; countrySelectValue: string; stateSelectValue: string; storeSettingsSaveSuccessMessage: string | RegExp; }): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.settings)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.settings)
+
+        await this.goIfNotThere(data.subUrls.frontend.settingsStore)
+
         // store address
         await this.clearAndType(selector.vendor.vStoreSettings.street, vendorInfo.street1)
         await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2)
@@ -582,10 +605,12 @@ export class VendorPage extends BasePage {
 
     // vendor add addons
     async addAddon(addon: { name: any; priority: any; category: any; type: any; displayAs: any; titleRequired: any; formatTitle: any; addDescription: any; enterAnOption: any; optionPriceType: any; optionPriceInput: any; saveSuccessMessage: any; }): Promise<string> {
-        await this.goToVendorDashboard()
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.settings)
+        // await this.click(selector.vendor.vSettings.addons)
 
-        await this.click(selector.vendor.vDashboard.settings)
-        await this.click(selector.vendor.vSettings.addons)
+        await this.goIfNotThere(data.subUrls.frontend.settingsAddon)
+
         // add addon
         let addonName = addon.name()
         await this.click(selector.vendor.vAddonSettings.createNewAddon)
@@ -1024,16 +1049,16 @@ export class VendorPage extends BasePage {
     // vendor set rma settings
     async setRmaSettings(rma: { label: any; type: any; rmaLength: any; lengthValue: any; lengthDuration: any; refundPolicyHtmlBody: any; saveSuccessMessage: any; }): Promise<void> {
         await this.goToVendorDashboard()
-    
+
         await this.click(selector.vendor.vDashboard.settings)
         await this.click(selector.vendor.vSettings.rma)
-    
+
         await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label)
         await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type)
         await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength)
         await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue)
         await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration)
-    
+
         let refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasons)
         if (refundReasonIsVisible) {
             await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons)
@@ -1041,10 +1066,10 @@ export class VendorPage extends BasePage {
         let iframe = await this.switchToIframe(selector.vendor.vRmaSettings.refundPolicyIframe)
         await this.iframeClearAndType(iframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.click(selector.vendor.vRmaSettings.rmaSaveChanges)
-    
+
         let successMessage = await this.getElementText(selector.vendor.vRmaSettings.updateSettingsSuccessMessage)
         expect(successMessage).toMatch(rma.saveSuccessMessage)
-    
+
     }
 
 
@@ -1141,8 +1166,10 @@ export class VendorPage extends BasePage {
 
     // vendor search product
     async searchProduct(productName): Promise<void> {
-        await this.goToVendorDashboard()
-        await this.click(selector.vendor.vDashboard.products)
+        // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.products)
+
+        await this.goIfNotThere(data.subUrls.frontend.product)
         //search product
         await this.type(selector.vendor.product.searchProduct, productName)
         await this.click(selector.vendor.product.search)
