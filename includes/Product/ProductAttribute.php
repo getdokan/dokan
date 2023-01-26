@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 *
 * @package dokan
 *
-* @since DOKAN_SINCE
+* @since 3.7.10
 */
 class ProductAttribute {
 
     /**
      * Request attributes.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @var array
      */
@@ -28,7 +28,7 @@ class ProductAttribute {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $attrs
      */
@@ -39,7 +39,7 @@ class ProductAttribute {
     /**
      * Set request attributes.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $attrs
      *
@@ -54,7 +54,7 @@ class ProductAttribute {
     /**
      * Get product attributes by product id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param int    $post_id
      * @return array $product_attributes
@@ -138,7 +138,7 @@ class ProductAttribute {
     /**
      * Set and save product attributes.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param WC_Product $product
      * @param boolean    $needs_save
@@ -250,7 +250,7 @@ class ProductAttribute {
     /**
      * Set default attribute for product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param WC_Product $product
      * @param boolean    $needs_save

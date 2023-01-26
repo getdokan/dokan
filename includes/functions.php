@@ -4486,7 +4486,7 @@ function is_tweleve_hour_format() {
 /**
  * Updates bulk orders status by orders ids.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  *
  * @param array $postdata
  *

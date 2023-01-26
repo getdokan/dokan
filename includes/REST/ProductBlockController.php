@@ -55,7 +55,7 @@ class ProductBlockController extends ProductController {
     /**
      * Get Product detail item for block.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param \WP_Request $request
      * @return void

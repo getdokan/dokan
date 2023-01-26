@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Vendor Settings Payment processor.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 abstract class Gateways {
 
@@ -36,7 +36,7 @@ abstract class Gateways {
     /**
      * Render the settings page with tab, cad, fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $settings Settings to render.
      *

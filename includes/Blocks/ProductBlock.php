@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Blocks;
 /**
  * Dokan Block For Products.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class ProductBlock {
 
     /**
      * Get Product configurations.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array
      */
