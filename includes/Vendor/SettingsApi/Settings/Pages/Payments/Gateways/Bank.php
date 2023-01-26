@@ -10,14 +10,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Payment processor Bank.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class Bank extends Gateways {
 
     /**
      * Render the settings page for bank.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $settings Settings to render.
      *

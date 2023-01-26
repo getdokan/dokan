@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Payment processor PayPal.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class PayPal extends Gateways {
 
     /**
      * Render the settings for PayPal.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $settings Settings to render.
      *

@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dokan Vendor Settings API Processor.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class Processor {
 
     /**
      * The Vendor Of the Settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @var Vendor
      */
@@ -44,7 +44,7 @@ class Processor {
     /**
      * Get main Settings page list.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array
      */
@@ -77,7 +77,7 @@ class Processor {
     /**
      * Get A single Settings Element.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param string $group_id Group or page key.
      * @param string $id Settings Element id.
@@ -97,7 +97,7 @@ class Processor {
     /**
      * Get Single Settings Fiend from a settings Section.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param string $group_id Group or page key.
      * @param string $parent_id Settings Element ID.
@@ -280,7 +280,7 @@ class Processor {
     /**
      * Save settings group value.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $settings Settings to save.
      * @param string $group_id Settings group ID.
@@ -372,7 +372,7 @@ class Processor {
     /**
      * Search Group by Group or page key.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param string $group_id Group or page key.
      *
@@ -391,7 +391,7 @@ class Processor {
     /**
      * Search Single Settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param string $group_id Group or page key.
      * @param string $id Settings Element id.

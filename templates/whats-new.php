@@ -4,6 +4,48 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.10',
+        'released' => '2023-01-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Extended REST API support for Dokan',
+                    'description' => '-- https://example.com/wp-json/dokan/v1/orders?after=2022-10-01&before=2022-10-30
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/sales?from=2021-08-02T04:13:05Z&to=2021-12-02T04:13:05Z
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/orders
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/products
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/profile
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/preferences
+-- https://example.com/wp-json/dokan/v2/orders/{order_id}/downloads
+-- https://example.com/wp-json/dokan/v2/orders/
+-- https://example.com/wp-json/dokan//v2/orders/bulk-actions
+-- https://example.com/wp-json/dokan/v1/products/attributes/edit-product/{id}
+-- https://example.com/wp-json/dokan/v1/products/attributes/set-default/{id}
+-- https://example.com/wp-json/dokan/v1/blocks/products/{id}
+-- https://example.com/wp-json/dokan/v2/settings
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{id}
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{parent_id}/{id}
+-- https://example.com/wp-json/dokan/v2/withdraw/settings
+-- https://example.com/wp-json/dokan/v2/withdraw/summary
+-- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data'
+                    ,
+                ]
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Multiple store category modal wasn’t working for some theme',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Recreate reverse withdrawal payment product if no product found with stored product id',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.9',
         'released' => '2023-01-10',
         'changes'  => [
