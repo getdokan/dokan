@@ -33,8 +33,19 @@ export class ApiUtils {
         } catch (err) {
             console.log('Status Code: ', response.status())
             console.log('Error: ', err.message)
-            // console.log('Response text: ', await response.text())
+            console.log('Response text: ', await response.text())
         }
+        return responseBody
+    }
+
+
+    /**
+     * dummy data api methods
+     */
+
+    async importDummyData(payload: object) {
+        let response = await this.request.post(endPoints.importDummyData, { data: payload })
+        let responseBody = await this.getResponseBody(response)
         return responseBody
     }
 
@@ -80,7 +91,6 @@ export class ApiUtils {
         let response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth })
         let responseBody = await this.getResponseBody(response)
         let reviewId = responseBody.id
-        // console.log(reviewId)
         return [responseBody, reviewId]
     }
 

@@ -195,20 +195,22 @@ test.describe('stores api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test('get store reviews', async ({ request }) => {
-        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-        // let [, sellerId] = await apiUtils.getCurrentUser()
-        // await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
 
-        let response = await request.get(endPoints.getStoreReviews(sellerId))
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
 
     test('create a store review', async ({ request }) => {
         // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
         let response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview })
+        let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
+    });
+
+    test('get store reviews', async ({ request }) => {
+        // let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+        // let [, sellerId] = await apiUtils.getCurrentUser()
+        await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth)
+
+        let response = await request.get(endPoints.getStoreReviews(sellerId))
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });

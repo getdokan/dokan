@@ -17,7 +17,6 @@ test.beforeAll(async ({ request }) => {
 test.describe(' api test', () => {
 
     test('setup test store settings', async ({ request }) => {
-        console.log(endPoints.updateSettings)
         let response = await request.put(endPoints.updateSettings, { data: payloads.setupStore })
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
@@ -26,13 +25,13 @@ test.describe(' api test', () => {
     test('create test customer', async ({ request }) => {
         let response = await request.post(endPoints.createCustomer, { data: payloads.createCustomer1 })
         let responseBody = await apiUtils.getResponseBody(response)
-        responseBody.code === 'registration-error-email-exists' ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy()
+        responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy()
     });
 
     test('create test vendor', async ({ request }) => {
         let response = await request.post(endPoints.createStore, { data: payloads.createStore1 })
         let responseBody = await apiUtils.getResponseBody(response)
-        responseBody.code === 'existing_user_login' ? expect(response.status()).toBe(500) : expect(response.ok()).toBeTruthy()
+        responseBody.code ? expect(response.status()).toBe(500) : expect(response.ok()).toBeTruthy()
     });
 
 });

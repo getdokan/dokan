@@ -12,7 +12,7 @@ let attributeTerm: any
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
-    let [, pId] = await apiUtils.createProduct(payloads.createProduct())
+    let [res, pId] = await apiUtils.createProduct(payloads.createProduct())
     productId = pId
     let [body, aId, atId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm())
     attributeTerm = body

@@ -12,7 +12,7 @@ test.beforeAll(async ({ request }) => {
     // let [, sId] = await apiUtils.createStore(payloads.createStore())
     let [, sId] = await apiUtils.getCurrentUser()
     sellerId = sId
-    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview)
+    let [, rId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth)
     reviewId = rId
 });
 

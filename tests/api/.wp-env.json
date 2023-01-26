@@ -1,5 +1,5 @@
 {
-  "phpVersion": "8.0",
+  "phpVersion": "7.4",
   "WP_DEBUG": "true",
   "SCRIPT_DEBUG": "true",
   "WP_DEBUG_LOG": "true",
@@ -7,7 +7,7 @@
 
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/d.zip",
+    "../../",
     "../../plugins/dokan-pro",
     "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
     "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
