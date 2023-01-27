@@ -480,7 +480,7 @@ class Manager {
     /**
      * Returns users withdraws summary.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param int $user_id
      *

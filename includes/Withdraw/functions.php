@@ -43,7 +43,7 @@ function dokan_withdraw_get_methods() {
 /**
  * Get active withdraw methods.( Default is paypal )
  *
- * @since DOKAN_SINCE To filter out all the active payment methods only.
+ * @since 3.7.10 To filter out all the active payment methods only.
  *
  * @return array
  */

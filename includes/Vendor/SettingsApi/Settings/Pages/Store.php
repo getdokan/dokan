@@ -18,7 +18,7 @@ class Store extends Page {
     /**
      * Render the settings page with tab, cad, fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $groups Settings Group or page to render.
      *
@@ -39,7 +39,7 @@ class Store extends Page {
     /**
      * Render the store settings page.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      */
     public function render_settings( array $settings ): array {
         $general_tab   = [];

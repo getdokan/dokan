@@ -25,7 +25,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Register all routes related with stores
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -59,7 +59,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Product API query parameters collections.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array Query parameters.
      */
@@ -128,7 +128,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Returns data by which products can be filtered.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array
      */

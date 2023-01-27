@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Vendor Settings API Manager.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class Manager {
 
@@ -26,7 +26,7 @@ class Manager {
     /**
      * Initialize the class instance.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
