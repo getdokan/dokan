@@ -105,6 +105,7 @@ async function globalSetup(config: FullConfig) {
     let adminPage = await browser.newPage()
     // log in
     await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
+    await adminPage.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
     await adminPage.fill(selector.backend.email, 'admin')
     await adminPage.fill(selector.backend.password, '01dokan01')
     await adminPage.click(selector.backend.login)
@@ -116,6 +117,7 @@ async function globalSetup(config: FullConfig) {
     let customerPage = await browser.newPage();
     // log in
     await customerPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    await customerPage.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
     await customerPage.fill(selector.frontend.username, 'customer1')
     await customerPage.fill(selector.frontend.userPassword, '01dokan01')
     await customerPage.click(selector.frontend.logIn)
@@ -126,6 +128,7 @@ async function globalSetup(config: FullConfig) {
     let vendorPage = await browser.newPage()
     // log in
     await vendorPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    await vendorPage.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
     await vendorPage.fill(selector.frontend.username, 'vendor1')
     await vendorPage.fill(selector.frontend.userPassword, '01dokan01')
     await vendorPage.click(selector.frontend.logIn)
