@@ -55,14 +55,14 @@ test.describe('product variation api test', () => {
 
     });
 
-    test.only('delete a product variation', async ({ request }) => {
-        // !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet') 
+    test('delete a product variation', async ({ request }) => {
+        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet') 
 
-        // // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
+        // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
-        // let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
-        // // let responseBody = await apiUtils.getResponseBody(response)
-        // expect(response.ok()).toBeTruthy()
+        let response = await request.delete(endPoints.deleteProductVariation(productId, variationId))
+        // let responseBody = await apiUtils.getResponseBody(response)
+        expect(response.ok()).toBeTruthy()
     });
 
 });
