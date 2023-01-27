@@ -549,7 +549,7 @@ class Store extends Page {
             'type'      => 'card',
             'parent_id' => 'store',
             'tab'       => 'advanced',
-            'editable'  => true,
+            'editable'  => false,
         ];
         $terms_and_conditions_card[] = [
             'id'        => 'enable_tnc',
@@ -577,6 +577,7 @@ class Store extends Page {
             'parent_id'   => 'store',
             'tab'         => 'advanced',
             'card'        => 'terms_and_conditions',
+            'editing'     => true,
         ];
 
         $terms_and_conditions_card = apply_filters( 'dokan_vendor_settings_api_terms_and_conditions_card', $terms_and_conditions_card );

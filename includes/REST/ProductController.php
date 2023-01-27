@@ -817,6 +817,7 @@ class ProductController extends DokanRESTController {
                 'avatar'  => $store->get_avatar(),
                 'address' => $store->get_address(),
             ],
+            'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
 
         $response = rest_ensure_response( $data );
