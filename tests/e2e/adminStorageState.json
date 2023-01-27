@@ -1,49 +1,49 @@
 {
   "cookies": [
     {
-      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cec1bae1e6fa92b6c8b9a8d699e6b03b249b341011b350db271c54b8ab9e3279b",
-      "domain": "dokan9.test",
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1674960249%7CsjU2TEClyOJbBBBZJWb8Q6zmFOqpTG6oVG1RMCrFDEe%7C6b25882bb3257625208e372a3982e81b276591ee7453525782138f5054e70a2a",
+      "domain": "dokan4.test",
       "path": "/wp-content/plugins",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cec1bae1e6fa92b6c8b9a8d699e6b03b249b341011b350db271c54b8ab9e3279b",
-      "domain": "dokan9.test",
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1674960249%7CsjU2TEClyOJbBBBZJWb8Q6zmFOqpTG6oVG1RMCrFDEe%7C6b25882bb3257625208e372a3982e81b276591ee7453525782138f5054e70a2a",
+      "domain": "dokan4.test",
       "path": "/wp-admin",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "wordpress_test_cookie",
       "value": "WP%20Cookie%20check",
-      "domain": "dokan9.test",
+      "domain": "dokan4.test",
       "path": "/",
       "expires": -1,
       "httpOnly": false,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "wordpress_logged_in_32c202001c96143014ae88e12f52cd4c",
-      "value": "admin%7C1674749656%7CQv8xsWUC8QGLdX4b1y7Mmte8j8zdIPWiLls3G70HFjO%7Cfa29f3e290feb235392bcaa36dd7f6072c1ba4eb8e900ee176ce7aed8ad71983",
-      "domain": "dokan9.test",
+      "name": "wordpress_logged_in_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1674960249%7CsjU2TEClyOJbBBBZJWb8Q6zmFOqpTG6oVG1RMCrFDEe%7C525070a643c63f9d7260564abd9830f92e068a1dd48fa8b3658fb302e78bca5d",
+      "domain": "dokan4.test",
       "path": "/",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "tk_ai",
-      "value": "woo%3AnaUgnLxyTgc2qx3k0HLzUzXY",
-      "domain": "dokan9.test",
+      "value": "woo%3AUMPL4qWvLA3%2BlLb8agEbCvPe",
+      "domain": "dokan4.test",
       "path": "/",
       "expires": -1,
       "httpOnly": false,
@@ -52,12 +52,12 @@
     },
     {
       "name": "wp-settings-time-1",
-      "value": "1674576857",
-      "domain": "dokan9.test",
+      "value": "1674787450",
+      "domain": "dokan4.test",
       "path": "/",
-      "expires": 1706112858.174645,
+      "expires": 1706323451.524829,
       "httpOnly": false,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     }
   ],

@@ -142,11 +142,11 @@ export class VendorPage extends BasePage {
 
         let productName = product.productName()
         // add new simple product
-        await this.click(selector.vendor.product.addNewProduct)
+        await this.click(selector.vendor.product.addNewProduct) // TODO: wait for popup
         await this.type(selector.vendor.product.productName, productName)
         await this.type(selector.vendor.product.productPrice, product.regularPrice())
-        // await this.addCategory(product.category)
-        await this.click(selector.vendor.product.createProduct)
+        // await this.addCategory(product.category) // TODO: need to fix
+        await this.clickAndWaitForNavigation(selector.vendor.product.createProduct)
 
         let createdProduct = await this.getElementValue(selector.vendor.product.title)
         expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase())
@@ -223,10 +223,11 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.product.go)
         await this.waitForSelector(selector.vendor.product.variationPrice)
         await this.type(selector.vendor.product.variationPrice, product.regularPrice())
-        await this.click(selector.vendor.product.okVariationPrice)
+        await this.click(selector.vendor.product.okVariationPrice) // todo : add waitForResponse with click
 
-        await this.waitForSelector(selector.vendor.product.saveProduct)
         await this.click(selector.vendor.product.saveProduct)
+
+        await this.waitForSelector(selector.vendor.product.updatedSuccessMessage)
         let productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage)
         expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage)
     }
@@ -301,8 +302,11 @@ export class VendorPage extends BasePage {
         // costs
         await this.type(selector.vendor.vBooking.baseCost, product.baseCost)
         await this.type(selector.vendor.vBooking.blockCost, product.blockCost)
+
+        // await this.clickAndWaitForResponse( 'booking/new-product',selector.vendor.vBooking.saveProduct,200)
         await this.click(selector.vendor.vBooking.saveProduct)
 
+        await this.waitForSelector(selector.vendor.vBooking.productName)
         let createdProduct = await this.getElementValue(selector.vendor.vBooking.productName)
         expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase())
     }
@@ -324,9 +328,11 @@ export class VendorPage extends BasePage {
 
         await this.goIfNotThere(data.subUrls.frontend.coupon)
 
+        let couponCode = coupon.title()
+
         await this.click(selector.vendor.vCoupon.addNewCoupon)
-        await this.type(selector.vendor.vCoupon.couponTitle, coupon.title)
-        await this.type(selector.vendor.vCoupon.amount, coupon.amount)
+        await this.type(selector.vendor.vCoupon.couponTitle, couponCode)
+        await this.type(selector.vendor.vCoupon.amount, coupon.amount())
         await this.click(selector.vendor.vCoupon.selectAll)
         await this.click(selector.vendor.vCoupon.applyForNewProducts)
         await this.click(selector.vendor.vCoupon.showOnStore)
@@ -339,7 +345,7 @@ export class VendorPage extends BasePage {
             }
         }
         let createdCoupon = await this.getElementText(selector.vendor.vCoupon.createdCoupon)
-        expect(createdCoupon.toLowerCase()).toBe(coupon.title.toLowerCase())
+        expect(createdCoupon.toLowerCase()).toBe(couponCode.toLowerCase())
     }
 
     // withdraw
@@ -440,9 +446,9 @@ export class VendorPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.settingsStore)
 
         await this.basicInfoSettings(vendorInfo)
-        await this.mapSettings(vendorInfo.mapLocation)
+        // await this.mapSettings(vendorInfo.mapLocation)
         await this.termsAndConditionsSettings(vendorInfo.termsAndConditions)
-        await this.openingClosingTimeSettings(vendorInfo.openingClosingTime)
+        // await this.openingClosingTimeSettings(vendorInfo.openingClosingTime) //TODO: update according to new ui
         await this.vacationSettings(vendorInfo.vacation)
         await this.discountSettings(vendorInfo.discount)
         await this.biographySettings(vendorInfo.biography)
@@ -502,11 +508,11 @@ export class VendorPage extends BasePage {
         await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue)
         await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue)
         // company info //TODO: uncomment after ui fix
-        // await this.clearAndType(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName)
-        // await this.clearAndType(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId)
-        // await this.clearAndType(selector.vendor.vStoreSettings.vatOrTaxNumber, vendorInfo.vatNumber)
-        // await this.clearAndType(selector.vendor.vStoreSettings.nameOfBank, vendorInfo.bankName)
-        // await this.clearAndType(selector.vendor.vStoreSettings.bankIban, vendorInfo.bankIban)
+        await this.clearAndType(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName)
+        await this.clearAndType(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId)
+        await this.clearAndType(selector.vendor.vStoreSettings.vatOrTaxNumber, vendorInfo.vatNumber)
+        await this.clearAndType(selector.vendor.vStoreSettings.nameOfBank, vendorInfo.bankName)
+        await this.clearAndType(selector.vendor.vStoreSettings.bankIban, vendorInfo.bankIban)
         // email
         await this.check(selector.vendor.vStoreSettings.email)
         // show more products
@@ -640,10 +646,12 @@ export class VendorPage extends BasePage {
 
     // vendor edit addons
     async editAddon(addon: { name: any; priority: any; category: any; type: any; displayAs: any; titleRequired: any; formatTitle: any; addDescription: any; enterAnOption: any; optionPriceType: any; optionPriceInput: any; saveSuccessMessage: any; }, addonName: string): Promise<void> {
-        await this.goToVendorDashboard()
+         // await this.goToVendorDashboard()
+        // await this.click(selector.vendor.vDashboard.settings)
+        // await this.click(selector.vendor.vSettings.addons)
 
-        await this.click(selector.vendor.vDashboard.settings)
-        await this.click(selector.vendor.vSettings.addons)
+        await this.goIfNotThere(data.subUrls.frontend.settingsAddon)
+
         // add addon
         await this.click(selector.vendor.vAddonSettings.editAddon(addonName))
         // await this.click(selector.vendor.vAddonSettings.firstAddon)

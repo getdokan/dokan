@@ -56,7 +56,7 @@ export const helpers = {
     },
 
     // round to two decimal places
-    // roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+    roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
 
     //calculate percentage
     percentage(number: number, percentage: number) { return this.roundToTwo(number * (percentage / 100)) },

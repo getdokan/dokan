@@ -29,7 +29,7 @@ export class BasePage {
 
     // wait for navigation to complete
     async waitForNavigation(): Promise<void> {
-        await this.page.waitForNavigation()
+        await this.page.waitForNavigation({ waitUntil: 'networkidle' })
     }
 
     // wait for request
@@ -159,7 +159,8 @@ export class BasePage {
 
     // click on element
     async click(selector: string): Promise<void> {
-        await this.page.click(selector)
+        await this.page.locator(selector).click()
+        // await this.page.click(selector)
     }
 
     // double click on element
@@ -169,26 +170,34 @@ export class BasePage {
 
     // click & wait for navigation to complete
     async clickAndWaitForNavigation(selector: string): Promise<void> {
-        await Promise.all([this.page.waitForNavigation(), this.page.click(selector)])
+        await Promise.all([this.page.waitForNavigation({ waitUntil: 'networkidle' }), this.page.locator(selector).click()])
     }
 
     // click & wait for request
     async clickAndWaitForRequest(url: string, selector: string): Promise<void> {
-        await Promise.all([this.page.waitForRequest(url), this.page.click(selector)])
+        await Promise.all([this.page.waitForRequest(url), this.page.locator(selector).click()])
     }
 
     // click & wait for response
     async clickAndWaitForResponse(subUrl: string, selector: string, code: number = 200): Promise<Response> {
         const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.page.click(selector)])
+            this.page.locator(selector).click()])
         // console.log(await response.json())
         return response
     }
 
+    // click & wait for event
+    async clickAndWaitForEvent(event: any, selector: string): Promise<void> {
+        await Promise.all([this.page.waitForEvent(event), this.page.locator(selector).click()])
+        // const popupPromise = this.page.waitForEvent(event)
+        // this.page.locator(selector).click()
+        // const popup = await popupPromise
+    }
+
     // click & wait for load state
     async clickAndWaitForLoadState(url: string, selector: string): Promise<void> {
-        await Promise.all([this.page.waitForLoadState(), this.page.click(selector)])
+        await Promise.all([this.page.waitForLoadState(), this.page.locator(selector).click()])
     }
 
     // click if visible
@@ -326,8 +335,9 @@ export class BasePage {
     async removeAttribute(selector: string, attribute: string): Promise<void> {    //TODO: update with playwright method
         // let element = await this.getElement(selector)
         // await this.page.evaluate((element, attribute) => element.removeAttribute(attribute), element, attribute)
-        let element = this.page.locator(selector)
-        await element.evaluate(element => element.removeAttribute(attribute))
+        let elementHandle = await this.page.$(selector)
+        // let elementHandle = await this.page.waitForSelector(selector)
+        await elementHandle.evaluate(element => element.removeAttribute(attribute))
     }
 
     // get element property value: background color
@@ -488,20 +498,20 @@ export class BasePage {
         this.page.on('filechooser', async (fileChooser: any) => {
             await fileChooser.setFiles(files)
         })
-        await this.page.click(selector)  //    invokes the filechooser
+        await this.page.locator(selector).click()  //    invokes the filechooser
     }
 
     async uploadFileViaListener1(selector: string, files: []): Promise<void> {
         // Start waiting for file chooser before clicking. Note no await.
         const fileChooserPromise = this.page.waitForEvent('filechooser')  //Note: no await on listener
-        await this.page.click(selector)  //    invokes the filechooser 
+        await this.page.locator(selector).click()  //    invokes the filechooser 
         const fileChooser = await fileChooserPromise
         await fileChooser.setFiles(files)
 
         // or
         // const fileChooserPromise = await Promise.all([
         //     this.page.waitForEvent('filechooser') 
-        //     this.page.click(selector)  
+        //     this.page.locator(selector).click()  
         // ])
         // await fileChooser.setFiles(files)
     }

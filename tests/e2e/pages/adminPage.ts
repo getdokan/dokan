@@ -1090,7 +1090,7 @@ export class AdminPage extends BasePage {
             case 'publish':
                 // Publish
                 let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
+                expect(response.status()).toBe(302)
 
                 let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
                 expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)

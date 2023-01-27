@@ -1,62 +1,62 @@
 {
   "cookies": [
     {
-      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "vendor1%7C1674324986%7CHcozk6LXEWRPNsIYeImjaUUIwz0E4AGPaZuCv90vZe4%7Ca5b643fc263ae430f6af763a2c39270d51e3b5d019fd6b97eda0747d6b8bc47b",
-      "domain": "dokan9.test",
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1674960265%7C9PUFbhONeFgMCa0zvnsh5p9FCLuL67WnV3F2PhDFg45%7Ce67223f9abf301e335ed22f8e50ff69988166f7c3a3025c5b9188047d643c990",
+      "domain": "dokan4.test",
       "path": "/wp-content/plugins",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "wordpress_sec_32c202001c96143014ae88e12f52cd4c",
-      "value": "vendor1%7C1674324986%7CHcozk6LXEWRPNsIYeImjaUUIwz0E4AGPaZuCv90vZe4%7Ca5b643fc263ae430f6af763a2c39270d51e3b5d019fd6b97eda0747d6b8bc47b",
-      "domain": "dokan9.test",
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1674960265%7C9PUFbhONeFgMCa0zvnsh5p9FCLuL67WnV3F2PhDFg45%7Ce67223f9abf301e335ed22f8e50ff69988166f7c3a3025c5b9188047d643c990",
+      "domain": "dokan4.test",
       "path": "/wp-admin",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "dokan_pro_dokan_quote_32c202001c96143014ae88e12f52cd4c",
-      "value": "c8329dda477c77b10d72653b8e33ab0d%7C%7C1674324981%7C%7C2525f8158405f9e9213735dee710f584%7C%7Ca%3A0%3A%7B%7D",
-      "domain": "dokan9.test",
+      "name": "dokan_pro_dokan_quote_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "5dde793eb52fcf000551c354265a4e6a%7C%7C1674960262%7C%7C331ec54b47e6eaf1f0bfb5e3e31a5b4d%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan4.test",
       "path": "/",
-      "expires": 1674324981.497069,
+      "expires": 1674960262.930484,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "wordpress_logged_in_32c202001c96143014ae88e12f52cd4c",
-      "value": "vendor1%7C1674324986%7CHcozk6LXEWRPNsIYeImjaUUIwz0E4AGPaZuCv90vZe4%7C04d96d1f8514e02bf717eee7238aba379216321b9c4cd414e931024cefdc6c1e",
-      "domain": "dokan9.test",
+      "name": "wordpress_logged_in_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1674960265%7C9PUFbhONeFgMCa0zvnsh5p9FCLuL67WnV3F2PhDFg45%7C1b2e75695733d4ebd2fbfe50cce07dc48a38f4affdd32a98a4471271f9145d3f",
+      "domain": "dokan4.test",
       "path": "/",
       "expires": -1,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     },
     {
-      "name": "dokan_pro_vendor_verify_32c202001c96143014ae88e12f52cd4c",
-      "value": "0f6abd8f0d43cd16aa4ab4d3253531b4%7C%7C1674152486%7C%7C0c84b10c48848ad2183ae08c114ac78b%7C%7Ca%3A0%3A%7B%7D",
-      "domain": "dokan9.test",
+      "name": "dokan_pro_vendor_verify_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "c303f1b264fd2f15469b95554f723059%7C%7C1674787765%7C%7C1b0dfab257b6523cfce337fe56e844bc%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan4.test",
       "path": "/",
-      "expires": 1674152486.645596,
+      "expires": 1674787766.102732,
       "httpOnly": true,
-      "secure": true,
+      "secure": false,
       "sameSite": "Lax"
     }
   ],
   "origins": [
     {
-      "origin": "https://dokan9.test",
+      "origin": "http://dokan4.test",
       "localStorage": [
         {
-          "name": "wc_cart_hash_2e5f4d79f0a86482169bf1d5d9a188d7",
+          "name": "wc_cart_hash_9526c5b7d95af353041ac37823f3ebd1",
           "value": ""
         }
       ]

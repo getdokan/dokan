@@ -23,11 +23,11 @@ test.describe('setup test api', () => {
     test('check active plugins ', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let activePlugins = (await apiUtils.getAllPluginByStatus('active')).map((a: { plugin: any }) => a.plugin)
-        expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins))
+        expect(activePlugins).toEqual(data.plugin.plugins)
         // console.log(activePlugins)
     })
 
-    test('set wp settings', async ({ page, request }) => {
+    test('set wp settings', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
         let siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings)
         expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings))
@@ -76,18 +76,17 @@ test.describe('setup test api', () => {
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation)
         let flatRateResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFlatRate)
         expect(flatRateResponseBody.enabled).toBe(true)
-        // let freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping)
-        // expect(freeShippingResponseBody.enabled).toBe(true)
-        // let localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup)
-        // expect(localPickupResponseBody.enabled).toBe(true)
-        // let tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping)
-        // expect(tableRateShippingResponseBody.enabled).toBe(true)
-        // let distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping)
-        // expect(distanceRateShippingResponseBody.enabled).toBe(true)
-        // let dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping)
-        // expect(dokanVendorShippingResponseBody.enabled).toBe(true)
+        let freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping)
+        expect(freeShippingResponseBody.enabled).toBe(true)
+        let localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup)
+        expect(localPickupResponseBody.enabled).toBe(true)
+        let tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping)
+        expect(tableRateShippingResponseBody.enabled).toBe(true)
+        let distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping)
+        expect(distanceRateShippingResponseBody.enabled).toBe(true)
+        let dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping)
+        expect(dokanVendorShippingResponseBody.enabled).toBe(true)
     })
-
 
     test('set basic payments', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
@@ -143,12 +142,12 @@ test.describe('setup test api', () => {
         couponResponseBody.code === 'woocommerce_rest_coupon_code_already_exists' ? expect(couponResponseStatus).toBe(400) : expect(couponResponseStatus).toBe(200)
     })
 
-    // test('add test vendor1 rma settings', async ({ page }) => {
-    //     const loginPage = new LoginPage(page)
-    //     const vendorPage = new VendorPage(page)
-    //     await loginPage.login(data.vendor)
-    //     await vendorPage.setRmaSettings(data.vendor.rma)
-    // })
+    test.fixme('add test vendor1 rma settings', async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        const vendorPage = new VendorPage(page)
+        await loginPage.login(data.vendor)
+        await vendorPage.setRmaSettings(data.vendor.rma)
+    })
 
     test('admin add test vendor products ', async ({ request }) => {
         let apiUtils = new ApiUtils(request)
@@ -266,12 +265,12 @@ test.describe('setup test e2e', () => {
         await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv)
     })
 
-    test.skip('admin set dokan vendor subscription settings', async ({ }) => {
+    test.fixme('admin set dokan vendor subscription settings', async ({ }) => {
         // await loginPage.adminLogin(data.admin)
         await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription)
     })
 
-    test.skip('admin add dokan subscription', async ({  }) => {
+    test.skip('admin add dokan subscription', async ({ }) => {
         await loginPage.adminLogin(data.admin)
         await adminPage.addDokanSubscription({ ...data.product.vendorSubscription, productName: data.predefined.vendorSubscription.nonRecurring })
     })

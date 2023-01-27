@@ -2375,7 +2375,7 @@ export const selector = {
             saveProduct: ".dokan-btn-lg",
 
             // All Booking Product
-            addNewBookingProduct: ".dokan-btn-theme",
+            addNewBookingProduct: ".dokan-add-product-link .dokan-btn-theme",
             addNewBooking: ".dokan-btn-theme",
             // Add Booking
             addBooking: {
@@ -2384,7 +2384,7 @@ export const selector = {
                 createANewCorrespondingOrderForThisNewBooking: "//input[@name='booking_order' and @value='new']",
                 assignThisBookingToAnExistingOrderWithThisId: "//input[@name='booking_order' and @value='existing']",
                 bookingOrderId: ".text",
-                DontCreateAnOrderForThisBooking: "//label[normalize-space()='Don\'t create an order for this booking.']/..//input",
+                dontCreateAnOrderForThisBooking: "//label[normalize-space()='Don\'t create an order for this booking.']/..//input",
                 next: ".button-primary",
             },
 
@@ -2492,7 +2492,7 @@ export const selector = {
             draft: "//ul[contains(@class,'dokan-listing-filter')]//a[contains(text(),'Draft')]",
 
             // Create Auction Product
-            addNewActionProduct: ".dokan-btn-theme",
+            addNewActionProduct: ".dokan-add-product-link .dokan-btn-theme",
             productName: "#post-title",
             productShortDescription: "#content > .col-full",
             ProductImage: ".dokan-feat-image-btn",
