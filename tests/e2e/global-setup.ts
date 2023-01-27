@@ -99,7 +99,7 @@ async function globalSetup(config: FullConfig) {
 
 
     // get user signed in state
-    const browser = await chromium.launch()
+    const browser = await chromium.launch({ headless: true })
 
     // get storageState: admin
     let adminPage = await browser.newPage()

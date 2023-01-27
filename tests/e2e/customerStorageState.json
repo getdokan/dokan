@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
-      "value": "customer1%7C1674960260%7Cp55q2geDjioJl0GtB4WS3ie4PkCeCHIqbQDOYh1e2K9%7Cf1aa3fafb999035d89d2d6ed64efc13a94e1dd5c82265241ee688c9e3197a075",
+      "value": "customer1%7C1674982998%7CFSlZ0vnANj42iQ8tvrwiwy6HVYEDyV7Pusb2BrnOOrP%7C47d0601231d213df5d53a4221add027c01a1361abc20c1a5663f0e150191d1c2",
       "domain": "dokan4.test",
       "path": "/wp-content/plugins",
       "expires": -1,
@@ -12,7 +12,7 @@
     },
     {
       "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
-      "value": "customer1%7C1674960260%7Cp55q2geDjioJl0GtB4WS3ie4PkCeCHIqbQDOYh1e2K9%7Cf1aa3fafb999035d89d2d6ed64efc13a94e1dd5c82265241ee688c9e3197a075",
+      "value": "customer1%7C1674982998%7CFSlZ0vnANj42iQ8tvrwiwy6HVYEDyV7Pusb2BrnOOrP%7C47d0601231d213df5d53a4221add027c01a1361abc20c1a5663f0e150191d1c2",
       "domain": "dokan4.test",
       "path": "/wp-admin",
       "expires": -1,
@@ -22,17 +22,17 @@
     },
     {
       "name": "dokan_pro_dokan_quote_60ddd22fbfe1e4577a4a9512ec50a2d3",
-      "value": "3ac21f49883ba1d196ba181e47a35efc%7C%7C1674960258%7C%7Ccb6b1973d6b75042295f0edfc1c35080%7C%7Ca%3A0%3A%7B%7D",
+      "value": "fbb13c6e8665459b0578e39cf9d89196%7C%7C1674982994%7C%7C1ed22b5671a6d3ddd59449a7b0f1a325%7C%7Ca%3A0%3A%7B%7D",
       "domain": "dokan4.test",
       "path": "/",
-      "expires": 1674960258.325748,
+      "expires": 1674982994.838379,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "wordpress_logged_in_60ddd22fbfe1e4577a4a9512ec50a2d3",
-      "value": "customer1%7C1674960260%7Cp55q2geDjioJl0GtB4WS3ie4PkCeCHIqbQDOYh1e2K9%7C0ea6582c3f2eff4b107eb3cff1bc23fb5b0ac36ae3c3d86b266ad3e18f90d51e",
+      "value": "customer1%7C1674982998%7CFSlZ0vnANj42iQ8tvrwiwy6HVYEDyV7Pusb2BrnOOrP%7Cb8b78b90f5a8f857601a4e0f181ce6e697fcab4ca892a56bd157d2560cdb018c",
       "domain": "dokan4.test",
       "path": "/",
       "expires": -1,
@@ -42,10 +42,10 @@
     },
     {
       "name": "dokan_pro_vendor_verify_60ddd22fbfe1e4577a4a9512ec50a2d3",
-      "value": "ce186c705623a7cd4e2ef7ccd9ccc18a%7C%7C1674787761%7C%7Cd3858040011714274d1c60ef07d61abe%7C%7Ca%3A0%3A%7B%7D",
+      "value": "589d6fd2d7a362ca2c1dcb029a2c212f%7C%7C1674810499%7C%7C86a0d21881be5273e8fe36ca44995690%7C%7Ca%3A0%3A%7B%7D",
       "domain": "dokan4.test",
       "path": "/",
-      "expires": 1674787761.16065,
+      "expires": 1674810499.596538,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
