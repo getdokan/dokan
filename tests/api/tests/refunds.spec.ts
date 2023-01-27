@@ -69,7 +69,7 @@ test.describe.skip('refunds api test', () => {
 
     test('update batch refunds @pro', async ({ request }) => {
         let allRefundIds = (await apiUtils.getAllRefunds()).map((a: { id: any }) => a.id)
-        console.log(allRefundIds)
+        // console.log(allRefundIds)
 
         let response = await request.put(endPoints.updateBatchRefunds, { data: { cancelled: allRefundIds } })
         let responseBody = await apiUtils.getResponseBody(response)

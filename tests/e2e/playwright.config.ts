@@ -45,7 +45,7 @@ const config: PlaywrightTestConfig = {
     // reporter: [['html', { open: 'never' }]],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    globalSetup: require.resolve('./global-setup'),
+    // globalSetup: require.resolve('./global-setup'),
     use: {
         // storageState: 'storageState.json',  //location of sign in state
         headless: process.env.CI ? !!process.env.CI : false,  //Whether to run tests on headless or non-headless mode

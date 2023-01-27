@@ -11,7 +11,6 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request)
     let [pId, vId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
     productId = pId
-    console.log(productId)
     variationId = vId
 });
 
@@ -56,7 +55,7 @@ test.describe('product variation api test', () => {
     });
 
     test('delete a product variation', async ({ request }) => {
-        !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet') 
+        // !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet') 
 
         // let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
