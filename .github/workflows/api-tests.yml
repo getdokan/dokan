@@ -80,8 +80,7 @@ jobs:
         if: failure()
         run: |
           cd tests/api
-          npm run destroy al
-          npm run start-env
+          npm run restart-env
 
       # - name: Activate storefront
       #   run: |
