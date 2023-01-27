@@ -10,7 +10,7 @@ declare global {
             VENDOR_PASSWORD: string;
             CUSTOMER: string;
             CUSTOMER_PASSWORD: string;
-            GOOGLE_MAP_API_KEY: string;
+            GMAP: string;
             BASE_URL:string
             HEADLESS: string;
             SLOWMO: string;

@@ -112,6 +112,7 @@ jobs:
           CUSTOMER: ${{ secrets.CUSTOMER }}
           CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           BASE_URL: ${{ secrets.BASE_URL }}
+          GMAP : ${{secrets.GMAP}}
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3

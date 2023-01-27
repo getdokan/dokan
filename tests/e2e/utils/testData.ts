@@ -650,7 +650,7 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
         appearance: {
-            googleMapApiKey: String(process.env.GOOGLE_MAP_API_KEY),
+            googleMapApiKey: String(process.env.GMAP),
             mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
             storeBannerWidth: '625',
             storeBannerHeight: '300',
@@ -747,7 +747,7 @@ export const data = {
         shippingFeeRecipient: 'seller',
         taxFeeRecipient: 'seller',
         mapApiSource: 'google_maps',
-        googleMapApiKey: String(process.env.GOOGLE_MAP_API_KEY),
+        googleMapApiKey: String(process.env.GMAP),
         sellingProductTypes: 'sell_both',
         commissionType: 'percentage',
         adminCommission: '10',

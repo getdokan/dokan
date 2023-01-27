@@ -1,5 +1,5 @@
 {
-  "phpVersion": "8.0",
+  "phpVersion": "7.4",
   "WP_DEBUG": "true",
   "SCRIPT_DEBUG": "true",
   "WP_DEBUG_LOG": "true",
