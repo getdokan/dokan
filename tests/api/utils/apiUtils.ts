@@ -1,6 +1,6 @@
 import { type APIRequestContext } from '@playwright/test'
 import { endPoints } from './apiEndPoints'
-
+import fs from 'fs'
 
 export class ApiUtils {
 
@@ -753,12 +753,9 @@ export class ApiUtils {
 
     // create quote rule
     async createQuoteRule(payload: object, auth?: any) {
-        // console.log(payload)
         let response = await this.request.post(endPoints.createQuoteRule, { data: payload, headers: auth })
-        // console.log(response.status())
         let responseBody = await this.getResponseBody(response)
         let quoteRuleId = responseBody.id
-        // console.log(responseBody)
         // console.log(quoteRuleId)
         return [responseBody, quoteRuleId]
     }
@@ -813,13 +810,12 @@ export class ApiUtils {
     }
 
     // create order download
-    // async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any): Promise<[object, string]> {
-    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any) {
+    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: any): Promise<[object, string]> {
         let response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts } })
         let responseBody = await this.getResponseBody(response)
-        // let downloadId = responseBody[0].data.id
+        let downloadId = String((Object.keys(responseBody))[0])
         // console.log(downloadId)
-        // return [responseBody, downloadId]
+        return [responseBody, downloadId]
     }
 
 
@@ -937,6 +933,38 @@ export class ApiUtils {
         return responseBody
     }
 
+    // upload media
+    async uploadMedia(filePath: string, auth?: any) {  //TODO: handle different file upload, hardcoded: image
+        let payload = {
+            headers: {
+                Accept: "*/*",
+                ContentType: "multipart/form-data",
+                // Authorization: auth.Authorization
+            },
+            multipart: {
+                file: {
+                    name: String((filePath.split('/')).pop()),
+                    mimeType: "image/" + (filePath.split('.')).pop(),
+                    buffer: fs.readFileSync(filePath)
+                },
+            },
+        }
+        let response = await this.request.post(endPoints.wp.createMediaItem, payload)
+        let responseBody = await this.getResponseBody(response)
+        let mediaId = responseBody.id
+        return [responseBody, mediaId]
+    }
+
+    // upload media
+    async uploadMedia2(filePath: string, auth?: any) { 
+        let payload = fs.readFileSync(filePath)
+        let headers = { "content-disposition": `attachment; filename=${String((filePath.split('/')).pop())}` }
+        let response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers: headers })
+        let responseBody = await this.getResponseBody(response)
+        let mediaId = responseBody.id
+        return [responseBody, mediaId]
+    }
+
 
 
 
@@ -1038,7 +1066,7 @@ export class ApiUtils {
     // order
 
     // create order
-    async createOrder(product: object, order: any, auth?: any): Promise<[object, string]> {
+    async createOrder(product: object, order: any, auth?: any): Promise<[object, string, string]> {
         let [, productId] = await this.createProduct(product, auth)
         // let productId = product
         let payload = order
@@ -1047,7 +1075,7 @@ export class ApiUtils {
         let responseBody = await this.getResponseBody(response)
         let orderId = responseBody.id
         // console.log(orderId)
-        return [responseBody, orderId]
+        return [responseBody, orderId, productId]
     }
 
     // create complete order

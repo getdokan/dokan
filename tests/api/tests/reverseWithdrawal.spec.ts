@@ -26,19 +26,19 @@ test.describe('reverse withdrawal api test', () => {
         expect(response.ok()).toBeTruthy()
     });
 
-    test.skip('get all reverse withdrawal stores', async ({ request }) => {
+    test('get all reverse withdrawal stores', async ({ request }) => {
         let response = await request.get(endPoints.getAllReverseWithdrawalStores)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
-    test.skip('get all reverse withdrawal store balance', async ({ request }) => {
+    test('get all reverse withdrawal store balance', async ({ request }) => {
         let response = await request.get(endPoints.getAllReverseWithdrawalStoreBalance)
         let responseBody = await apiUtils.getResponseBody(response)
         expect(response.ok()).toBeTruthy()
     });
 
-    test.skip('getAllReverseWithdrawalTransactions', async ({ request }) => {
+    test('get all reverse withdrawal transactions', async ({ request }) => {
         let storeId = await apiUtils.getReverseWithdrawalStoreId()
         // console.log(storeId)
 

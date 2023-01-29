@@ -83,8 +83,8 @@ export const payloads = {
       downloadable: true,
       regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
       downloads: [],
-      download_limit: 100,
-      download_expiry: 100,
+      // download_limit: 100,
+      // download_expiry: 100,
       categories: [
         {
           // id: 48
@@ -182,32 +182,32 @@ export const payloads = {
     status: 'wc-pending'
   },
 
-  createOrder: {
+   createOrder: {
     payment_method: "bacs",
     payment_method_title: "Direct Bank Transfer",
     set_paid: true,
     billing: {
-      first_name: "John",
-      last_name: "Doe",
-      address_1: "969 Market",
-      address_2: "",
-      city: "San Francisco",
-      state: "CA",
-      postcode: "94103",
-      country: "US",
-      email: "john.doe@example.com",
+      first_name: "customer1",
+      last_name: "c1",
+      address_1: 'abc street',
+      address_2: 'xyz street',
+      city: 'New York',
+      state: 'NY',
+      postcode: '10003',
+      country: 'US',
+      email: "customer1@yopmail.com",
       phone: "(555) 555-5555"
     },
 
     shipping: {
-      first_name: "John",
-      last_name: "Doe",
-      address_1: "969 Market",
-      address_2: "",
-      city: "San Francisco",
-      state: "CA",
-      postcode: "94103",
-      country: "US"
+      first_name: "customer1",
+      last_name: "c1",
+      address_1: 'abc street',
+      address_2: 'xyz street',
+      city: 'New York',
+      state: 'NY',
+      postcode: '10003',
+      country: 'US',
     },
 
     line_items: [
@@ -231,32 +231,32 @@ export const payloads = {
     payment_method_title: "Cash on delivery",
     set_paid: true,
     billing: {
-      first_name: "John",
-      last_name: "Doe",
-      address_1: "969 Market",
-      address_2: "",
-      city: "San Francisco",
-      state: "CA",
-      postcode: "94103",
-      country: "US",
-      email: "john.doe@example.com",
+      first_name: "customer1",
+      last_name: "c1",
+      address_1: 'abc street',
+      address_2: 'xyz street',
+      city: 'New York',
+      state: 'NY',
+      postcode: '10003',
+      country: 'US',
+      email: "customer1@yopmail.com",
       phone: "(555) 555-5555"
     },
 
     shipping: {
-      first_name: "John",
-      last_name: "Doe",
-      address_1: "969 Market",
-      address_2: "",
-      city: "San Francisco",
-      state: "CA",
-      postcode: "94103",
-      country: "US"
+      first_name: "customer1",
+      last_name: "c1",
+      address_1: 'abc street',
+      address_2: 'xyz street',
+      city: 'New York',
+      state: 'NY',
+      postcode: '10003',
+      country: 'US',
     },
     line_items: [
       {
         product_id: '',
-        quantity: 1
+        quantity: 20
       },
     ],
     shipping_lines: [

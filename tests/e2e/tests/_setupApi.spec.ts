@@ -4,10 +4,12 @@ import { endPoints } from '../utils/apiEndPoints'
 import { payloads } from '../utils/payloads'
 import { data } from '../utils/testData'
 
+
 import { LoginPage } from '../pages/loginPage'
 import { AdminPage } from '../pages/adminPage'
 import { CustomerPage } from '../pages/customerPage'
 import { VendorPage } from '../pages/vendorPage'
+import { selector } from '../pages/selectors'
 import { helpers } from '../utils/helpers'
 
 
@@ -114,11 +116,11 @@ test.describe('setup test api', () => {
 
         // create attribute, attribute term
         let [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' })
-        let [responseS, responseBodyS,] = await apiUtils.createAttributeTerm(attributeId, { name: 's' })
+        let [responseS,] = await apiUtils.createAttributeTerm(attributeId, { name: 's' })
         expect(responseS.ok()).toBeTruthy()
-        let [responseL, responseBodyL,] = await apiUtils.createAttributeTerm(attributeId, { name: 'l' })
+        let [responseL,] = await apiUtils.createAttributeTerm(attributeId, { name: 'l' })
         expect(responseL.ok()).toBeTruthy()
-        let [responseM, responseBodyM,] = await apiUtils.createAttributeTerm(attributeId, { name: 'm' })
+        let [responseM,] = await apiUtils.createAttributeTerm(attributeId, { name: 'm' })
         expect(responseM.ok()).toBeTruthy()
 
     })
@@ -166,7 +168,70 @@ test.describe('setup test api', () => {
         responseBody.code === 'registration-error-email-exists' ? expect(status).toBe(400) : expect(status).toBe(200)
     })
 
+
+    // test('storageState', async ({ page }) => {
+    //     // get user signed in state
+    //     const browser = await chromium.launch({ headless: true })
+
+    //     // get storageState: admin
+    //     let adminPage = await browser.newPage()
+    //     // log in
+    //     await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
+    //     await adminPage.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
+    //     await adminPage.fill(selector.backend.email, 'admin')
+    //     await adminPage.fill(selector.backend.password, '01dokan01')
+    //     await adminPage.click(selector.backend.login)
+    //     await adminPage.waitForLoadState('networkidle')
+    //     await adminPage.context().storageState({ path: 'adminStorageState.json' })
+    //     console.log('Stored adminStorageState')
+
+    //     // get storageState: customer
+    //     let customerPage = await browser.newPage();
+    //     // log in
+    //     await customerPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    //     await customerPage.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
+    //     await customerPage.fill(selector.frontend.username, 'customer1')
+    //     await customerPage.fill(selector.frontend.userPassword, '01dokan01')
+    //     await customerPage.click(selector.frontend.logIn)
+    //     await customerPage.context().storageState({ path: 'customerStorageState.json' })
+    //     console.log('Stored customerStorageState')
+
+    //     // get storageState: vendor
+    //     let vendorPage = await browser.newPage()
+    //     // log in
+    //     await vendorPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    //     await vendorPage.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+    //     await vendorPage.fill(selector.frontend.username, 'vendor1')
+    //     await vendorPage.fill(selector.frontend.userPassword, '01dokan01')
+    //     await vendorPage.click(selector.frontend.logIn)
+    //     await vendorPage.context().storageState({ path: 'vendorStorageState.json' })
+    //     console.log('Stored vendorStorageState')
+
+    //     await browser.close()
+    // })
+
+    test('admin can login', async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        await loginPage.adminLogin(data.admin)
+        await page.context().storageState({ path: 'adminStorageState.json' })
+    })
+
+    test('vendor can login', async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        await loginPage.login(data.vendor)
+        await page.context().storageState({ path: 'vendorStorageState.json' })
+    })
+
+    test('customer login', async ({ page }) => {
+        const loginPage = new LoginPage(page)
+        await loginPage.login(data.customer)
+        await page.context().storageState({ path: 'customerStorageState.json' })
+    })
+
 })
+
+
+
 
 
 
@@ -274,4 +339,4 @@ test.describe('setup test e2e', () => {
         await loginPage.adminLogin(data.admin)
         await adminPage.addDokanSubscription({ ...data.product.vendorSubscription, productName: data.predefined.vendorSubscription.nonRecurring })
     })
-})
+});
