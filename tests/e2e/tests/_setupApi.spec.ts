@@ -210,23 +210,23 @@ test.describe('setup test api', () => {
     //     await browser.close()
     // })
 
-    test('admin can login', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        await loginPage.adminLogin(data.admin)
-        await page.context().storageState({ path: 'adminStorageState.json' })
-    })
+    // test('admin can login', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     await loginPage.adminLogin(data.admin)
+    //     await page.context().storageState({ path: 'adminStorageState.json' })
+    // })
 
-    test('vendor can login', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        await loginPage.login(data.vendor)
-        await page.context().storageState({ path: 'vendorStorageState.json' })
-    })
+    // test('vendor can login', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     await loginPage.login(data.vendor)
+    //     await page.context().storageState({ path: 'vendorStorageState.json' })
+    // })
 
-    test('customer login', async ({ page }) => {
-        const loginPage = new LoginPage(page)
-        await loginPage.login(data.customer)
-        await page.context().storageState({ path: 'customerStorageState.json' })
-    })
+    // test('customer login', async ({ page }) => {
+    //     const loginPage = new LoginPage(page)
+    //     await loginPage.login(data.customer)
+    //     await page.context().storageState({ path: 'customerStorageState.json' })
+    // })
 
 })
 

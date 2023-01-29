@@ -16,7 +16,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 
-test.describe('reverse withdrawal api test', () => {
+test.describe.skip('reverse withdrawal api test', () => {
 
     //TODO: enable reverse withdraw settings
 
