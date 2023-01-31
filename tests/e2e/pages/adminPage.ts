@@ -50,16 +50,17 @@ export class AdminPage extends BasePage {
     // Admin Set Wordpress Site Settings
     async setWpSettings(wpSettings) {
         // await this.setWpGeneralSettings(wpSettings.general)
-        await this.goToAdminDashboard()
         await this.setPermalinkSettings(wpSettings.permalink)
 
     }
 
     // Set Wp General Settings
     async setWpGeneralSettings(general) {
-        await this.hover(selector.admin.aDashboard.settings)
+        // await this.hover(selector.admin.aDashboard.settings)
+        // await this.click(selector.admin.settings.general)
+
         // Set General Settings
-        await this.click(selector.admin.settings.general)
+        await this.goto(data.subUrls.backend.general)
         // Enable User Registration
         await this.check(selector.admin.settings.membership)
         // Timezone
@@ -70,11 +71,13 @@ export class AdminPage extends BasePage {
 
     // Admin Set Permalink Settings
     async setPermalinkSettings(permalink: any) {
-        // await this.hover(selector.admin.aDashboard.settings)
-        await this.hoverOnLocator(selector.admin.aDashboard.settings)
-        // await this.goToPermalinks()
+        // // await this.hover(selector.admin.aDashboard.settings)
+        // await this.hoverOnLocator(selector.admin.aDashboard.settings)
+        // // await this.goToPermalinks()
+        // await this.click(selector.admin.settings.permalinks)
+
+        await this.goto(data.subUrls.backend.permalinks)
         // Set Permalinks Settings
-        await this.click(selector.admin.settings.permalinks)
         await this.click(selector.admin.settings.postName)
         await this.click(selector.admin.settings.customBase)
         await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
@@ -211,7 +214,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.appearanceSaveChanges)
 
         let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
-        expect(apiKey).–(appearance.googleMapApiKey)
+        expect(apiKey).toBe(appearance.googleMapApiKey)
     }
 
     // Admin Set Dokan Privacy Policy Settings
@@ -713,7 +716,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.stripe.stripeSaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
-        
+
     }
 
     // Admin Setup Dokan Paypal Marketplace
@@ -1264,16 +1267,16 @@ export class AdminPage extends BasePage {
 
         await this.click(selector.admin.dokan.dokanSetupWizard.letsGo)
         // Store
-        await this.clearAndType(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
-        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
-        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
-        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
-        await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
-        await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
-        await this.click(selector.admin.dokan.dokanSetupWizard.continue)
-        await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
+        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
+        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
+        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
+        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
+        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
+        // await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
+        // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
+        // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
 
         // // Selling
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.newVendorEnableSelling)

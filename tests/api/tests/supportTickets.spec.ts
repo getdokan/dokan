@@ -1,92 +1,86 @@
-import { test, expect } from '@playwright/test'
-import { ApiUtils } from '../utils/apiUtils'
-import { endPoints } from '../utils/apiEndPoints'
-import { payloads } from '../utils/payloads'
+import { test, expect } from '@playwright/test';
+import { ApiUtils } from '../utils/apiUtils';
+import { endPoints } from '../utils/apiEndPoints';
+import { payloads } from '../utils/payloads';
 
-let apiUtils: any
+let apiUtils: any;
 
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request)
-});
+test.beforeAll( async ( { request } ) => {
+	apiUtils = new ApiUtils( request );
+} );
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
+test.describe.skip( 'support ticket api test', () => {
+	//TODO: prerequisite => multiple support tickets
 
-test.describe.skip('support ticket api test', () => {
+	test( 'get all support ticket customers', async ( { request } ) => {
+		const response = await request.get( endPoints.getAllSupportTicketCustomers );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    //TODO: prerequisite => multiple support tickets
+	test( 'get all support tickets', async ( { request } ) => {
+		const response = await request.get( endPoints.getAllSupportTickets );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    test('get all support ticket customers', async ({ request }) => {
-        let response = await request.get(endPoints.getAllSupportTicketCustomers)
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+	test( 'get single support ticket', async ( { request } ) => {
+		const [ supportTicketId, sellerId ] = await apiUtils.getSupportTicketId();
 
-    test('get all support tickets', async ({ request }) => {
-        let response = await request.get(endPoints.getAllSupportTickets)
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+		const response = await request.get( endPoints.getSingleSupportTicket( supportTicketId, sellerId ) );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    test('get single support ticket', async ({ request }) => {
-        let [supportTicketId, sellerId] = await apiUtils.getSupportTicketId()
+	test( 'create a support ticket comment', async ( { request } ) => {
+		const [ supportTicketId ] = await apiUtils.getSupportTicketId();
 
-        let response = await request.get(endPoints.getSingleSupportTicket(supportTicketId, sellerId))
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+		const response = await request.post( endPoints.createSupportTicketComment( supportTicketId ), { data: payloads.createSupportTicketComment } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
+	test( 'update support ticket status', async ( { request } ) => {
+		const [ supportTicketId ] = await apiUtils.getSupportTicketId();
 
-    test('create a support ticket comment', async ({ request }) => {
-        let [supportTicketId,] = await apiUtils.getSupportTicketId()
+		const response = await request.post( endPoints.updateSupportTicketStatus( supportTicketId ), { data: payloads.updateSupportTicketStatus } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
 
-        let response = await request.post(endPoints.createSupportTicketComment(supportTicketId), { data: payloads.createSupportTicketComment })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+		//reopen support ticket
+		await apiUtils.updateSupportTicketStatus( supportTicketId, 'open' );
+	} );
 
+	test( 'update a support ticket email notification', async ( { request } ) => {
+		const [ supportTicketId ] = await apiUtils.getSupportTicketId();
 
-    test('update support ticket status', async ({ request }) => {
-        let [supportTicketId,] = await apiUtils.getSupportTicketId()
+		const response = await request.post( endPoints.updateSupportTicketEmailNotification( supportTicketId ), { data: payloads.updateSupportTicketEmailNotification } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-        let response = await request.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: payloads.updateSupportTicketStatus })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
+	test( 'delete a support ticket comment', async ( { request } ) => {
+		const supportTicketCommentId = await apiUtils.createSupportTicketComment( payloads.createSupportTicketComment );
 
-        //reopen support ticket
-        await apiUtils.updateSupportTicketStatus(supportTicketId, 'open')
-    });
+		const response = await request.delete( endPoints.deleteSupportTicketComment( supportTicketCommentId ) );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    test('update a support ticket email notification', async ({ request }) => {
-        let [supportTicketId,] = await apiUtils.getSupportTicketId()
+	test( 'update batch support tickets', async ( { request } ) => {
+		const allSupportTicketIds = ( await apiUtils.getAllSupportTickets() ).map( ( a: { ID: any } ) => a.ID );
+		console.log( allSupportTicketIds );
 
-        let response = await request.post(endPoints.updateSupportTicketEmailNotification(supportTicketId), { data: payloads.updateSupportTicketEmailNotification })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+		const response = await request.put( endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
 
-
-    test('delete a support ticket comment', async ({ request }) => {
-        let supportTicketCommentId = await apiUtils.createSupportTicketComment(payloads.createSupportTicketComment)
-
-        let response = await request.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId))
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
-
-    test('update batch support tickets', async ({ request }) => {
-        let allSupportTicketIds = (await apiUtils.getAllSupportTickets()).map((a: { ID: any }) => a.ID)
-        console.log(allSupportTicketIds)
-
-        let response = await request.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-
-        // reopen all support tickets
-        for (let supportTicketId of allSupportTicketIds) {
-            await apiUtils.updateSupportTicketStatus(supportTicketId, 'open')
-        }
-    });
-
-});
+		// reopen all support tickets
+		for ( const supportTicketId of allSupportTicketIds ) {
+			await apiUtils.updateSupportTicketStatus( supportTicketId, 'open' );
+		}
+	} );
+} );

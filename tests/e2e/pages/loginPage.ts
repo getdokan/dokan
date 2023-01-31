@@ -1,94 +1,92 @@
-import {expect, type Page} from '@playwright/test'
-import {BasePage} from "./basePage"
-import {data, user} from '../utils/testData'
-import {selector} from './selectors'
-import { helpers } from '../utils/helpers'
+import { expect, type Page } from '@playwright/test';
+import { BasePage } from './basePage';
+import { data, user } from '../utils/testData';
+import { selector } from './selectors';
+import { helpers } from '../utils/helpers';
 
 export class LoginPage extends BasePage {
+	constructor( page: Page ) {
+		super( page );
+	}
 
-    constructor(page: Page) {
-        super(page);
-    }
+	// user login
+	async login( user: user ): Promise<void> {
+		await this.loginFronted( user );
+	}
 
-    // user login
-    async login(user: user): Promise<void> {
-        await this.loginFronted(user)
-    }
+	// user loginFronted
+	async loginFronted( user: user ): Promise<void> {
+		await this.goIfBlank( data.subUrls.frontend.myAccount );
+		const currentUser = await this.getCurrentUser();
+		// skip if user is already logged in
+		if ( user.username === currentUser ) {
+			return;
+		}
+		// logout if other user is already logged in
+		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) {
+			await this.logoutFrontend();
+		}
+		// login user
+		await this.clearAndType( selector.frontend.username, user.username );
+		await this.clearAndType( selector.frontend.userPassword, user.password );
+		await this.click( selector.frontend.logIn );
 
-    // user loginFronted
-    async loginFronted(user: user): Promise<void> {
-        await this.goIfBlank(data.subUrls.frontend.myAccount)
-        let currentUser = await this.getCurrentUser()
-        // skip if user is already logged in
-        if (user.username === currentUser) {
-            return
-        }
-        // logout if other user is already logged in
-        else if ((user.username !== currentUser) && (currentUser !== undefined)) {
-            await this.logoutFrontend()
-        }
-        // login user
-        await this.clearAndType(selector.frontend.username, user.username)
-        await this.clearAndType(selector.frontend.userPassword, user.password)
-        await this.click(selector.frontend.logIn)
+		const loggedInUser = await this.getCurrentUser();
+		expect( loggedInUser ).toBe( user.username );
+	}
 
-        let loggedInUser = await this.getCurrentUser()
-        expect(loggedInUser).toBe(user.username)
+	// user loginBackend
+	async loginBackend( user: user ): Promise<void> {
+		await this.goIfNotThere( data.subUrls.backend.login );
+		await this.loginWpDashboard( user );
+	}
 
-    }
+	async loginWpDashboard( user: user ): Promise<void> {
+		const emailField = await this.isVisible( selector.backend.email );
+		if ( emailField ) {
+			await this.clearAndType( selector.backend.email, user.username );
+			await this.clearAndType( selector.backend.password, user.password );
+			await this.click( selector.backend.login );
 
-    // user loginBackend
-    async loginBackend(user: user): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.login)
-        await this.loginWpDashboard(user)
-    }
+			const loggedInUser = await this.getCurrentUser();
+			expect( loggedInUser ).toBe( user.username );
+		}
+	}
 
-    async loginWpDashboard(user: user): Promise<void> {
-        let emailField = await this.isVisible(selector.backend.email)
-        if (emailField) {
-            await this.clearAndType(selector.backend.email, user.username)
-            await this.clearAndType(selector.backend.password, user.password)
-            await this.click(selector.backend.login)
+	// user logout
+	async logout(): Promise<void> {
+		await this.logoutFrontend();
+	}
 
-            let loggedInUser = await this.getCurrentUser()
-            expect(loggedInUser).toBe(user.username)
-        }
-    }
+	// user logoutFrontend
+	async logoutFrontend(): Promise<void> {
+		await this.goIfNotThere( data.subUrls.frontend.myAccount );
+		await this.click( selector.frontend.customerLogout );
 
-    // user logout
-    async logout(): Promise<void> {
-        await this.logoutFrontend()
-    }
+		const loggedInUser = await this.getCurrentUser();
+		expect( loggedInUser ).toBeUndefined();
+	}
 
-    // user logoutFrontend
-    async logoutFrontend(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.myAccount)
-        await this.click(selector.frontend.customerLogout)
+	// admin login
+	async adminLogin( user: user ) {
+		await this.goIfNotThere( data.subUrls.backend.adminLogin );
+		await this.loginWpDashboard( user );
+	}
 
-        let loggedInUser = await this.getCurrentUser()
-        expect(loggedInUser).toBeUndefined()
-    }
+	// admin logout
+	async adminLogout(): Promise<void> {
+		await this.hover( selector.backend.userMenu );
+		await this.click( selector.backend.logout );
 
-    // admin login
-    async adminLogin(user: user) {
-        await this.goIfNotThere(data.subUrls.backend.adminLogin)
-        await this.loginWpDashboard(user)
-    }
+		const loggedInUser = await this.getCurrentUser();
+		expect( loggedInUser ).toBeUndefined();
+	}
 
-    // admin logout
-    async adminLogout(): Promise<void> {
-        await this.hover(selector.backend.userMenu)
-        await this.click(selector.backend.logout)
-
-        let loggedInUser = await this.getCurrentUser()
-        expect(loggedInUser).toBeUndefined()
-    }
-
-    // switch user
-    async switchUser(user: user): Promise<void> {
-        let currentUser = await this.getCurrentUser()
-        if (currentUser !== user.username) {
-            await this.loginBackend(user)
-        }
-    }
+	// switch user
+	async switchUser( user: user ): Promise<void> {
+		const currentUser = await this.getCurrentUser();
+		if ( currentUser !== user.username ) {
+			await this.loginBackend( user );
+		}
+	}
 }

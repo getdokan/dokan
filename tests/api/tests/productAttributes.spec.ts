@@ -1,76 +1,71 @@
-import { test, expect } from '@playwright/test'
-import { ApiUtils } from '../utils/apiUtils'
-import { endPoints } from '../utils/apiEndPoints'
-import { payloads } from '../utils/payloads'
+import { test, expect } from '@playwright/test';
+import { ApiUtils } from '../utils/apiUtils';
+import { endPoints } from '../utils/apiEndPoints';
+import { payloads } from '../utils/payloads';
 
-let apiUtils: any
-let attributeId: string
+let apiUtils: any;
+let attributeId: string;
 
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request)
-    let [, id] = await apiUtils.createAttribute(payloads.createAttribute())
-    attributeId = id
-});
+test.beforeAll( async ( { request } ) => {
+	apiUtils = new ApiUtils( request );
+	const [ , id ] = await apiUtils.createAttribute( payloads.createAttribute() );
+	attributeId = id;
+} );
 
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
+test.describe( 'attribute api test', () => {
+	test( 'get all attributes', async ( { request } ) => {
+		const response = await request.get( endPoints.getAllAttributes );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-test.describe('attribute api test', () => {
+	test( 'get single attribute', async ( { request } ) => {
+		// let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
-    test('get all attributes', async ({ request }) => {
-        let response = await request.get(endPoints.getAllAttributes)
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+		const response = await request.get( endPoints.getSingleAttribute( attributeId ) );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    test('get single attribute', async ({ request }) => {
-        // let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
+	test( 'create an attribute', async ( { request } ) => {
+		const response = await request.post( endPoints.createAttribute, { data: payloads.createAttribute() } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+		expect( response.status() ).toBe( 201 );
+	} );
 
-        let response = await request.get(endPoints.getSingleAttribute(attributeId))
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+	test( 'update an attribute', async ( { request } ) => {
+		// let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
+		const response = await request.put( endPoints.updateAttribute( attributeId ), { data: payloads.updateAttribute() } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-    test('create an attribute', async ({ request }) => {
-        let response = await request.post(endPoints.createAttribute, { data: payloads.createAttribute() })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-        expect(response.status()).toBe(201)
-    });
+	test( 'delete an attribute', async ( { request } ) => {
+		// let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
 
-    test('update an attribute', async ({ request }) => {
-        // let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
+		const response = await request.delete( endPoints.deleteAttribute( attributeId ) );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
 
-        let response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
+	test( 'update batch attributes', async ( { request } ) => {
+		const allAttributeIds = ( await apiUtils.getAllAttributes() ).map( ( a: { id: any } ) => a.id );
+		// console.log(allAttributeIds)
 
-    test('delete an attribute', async ({ request }) => {
-        // let [, attributeId] = await apiUtils.createAttribute(payloads.createAttribute())
+		const batchAttributes = [];
+		for ( const attributeId of allAttributeIds.slice( 0, 2 ) ) {
+			batchAttributes.push( { ...payloads.updateBatchAttributesTemplate(), id: attributeId } );
+		}
+		// console.log(batchAttributes)
 
-        let response = await request.delete(endPoints.deleteAttribute(attributeId))
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-    });
-
-    test('update batch attributes', async ({ request }) => { 
-        let allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: any }) => a.id)
-        // console.log(allAttributeIds)
-        
-        let batchAttributes = []
-        for (let attributeId of allAttributeIds.slice(0, 2)) {
-            batchAttributes.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeId })
-        }
-        // console.log(batchAttributes)
-
-        let response = await request.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } })
-        let responseBody = await apiUtils.getResponseBody(response)
-        expect(response.ok()).toBeTruthy()
-
-    });
-
-});
+		const response = await request.put( endPoints.batchUpdateAttributes, { data: { update: batchAttributes } } );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
+	} );
+} );
