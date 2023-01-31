@@ -1,9 +1,10 @@
-import {expect, type Page} from '@playwright/test'
-import {BasePage} from "./basePage"
-import {LoginPage} from './loginPage'
-import {AdminPage} from "./adminPage"
-import {selector} from './selectors'
-import {data} from '../utils/testData'
+import { expect, type Page } from '@playwright/test'
+import { BasePage } from "./basePage"
+import { LoginPage } from './loginPage'
+import { AdminPage } from "./adminPage"
+import { selector } from './selectors'
+import { helpers } from '../utils/helpers'
+import { data } from '../utils/testData'
 
 
 export class CustomerPage extends BasePage {
@@ -41,7 +42,7 @@ export class CustomerPage extends BasePage {
 
     // customer register
     async customerRegister(customerInfo: { lastName: () => string; country: string; zipCode: string; emailDomain: string; city: string; accountName: string; companyName: string; storename: () => string; bankIban: string; swiftCode: string; bankName: string; password: any; countrySelectValue: string; street1: string; password1: string; street2: string; state: string; email: string; addressChangeSuccessMessage: string; getSupport: { supportSubmitSuccessMessage: string; subject: string; message: string }; accountNumber: string; bankAddress: string; stateSelectValue: string; firstName: () => string; routingNumber: string; companyId: string; phone: string; iban: string; username: () => string; vatNumber: string }): Promise<void> {
-        let username : string = customerInfo.firstName()
+        let username: string = customerInfo.firstName()
         await this.goToMyAccount()
         let loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail)
         if (!loginIsVisible) {
@@ -354,7 +355,7 @@ export class CustomerPage extends BasePage {
         expect(successMessage).toMatch(enquiry.enquirySubmitSuccessMessage)
     }
 
-    async buyProduct(productName: string, couponCode: boolean = false, getOrderDetails: boolean = false, paymentMethod: string = 'bank', paymentDetails): Promise<void | object> {
+    async buyProduct(productName: string, couponCode: boolean = false, getOrderDetails: boolean = false, paymentMethod: string = 'bank', paymentDetails: any): Promise<void | object> {
         // clear cart before buying
         await this.clearCart()
         // buy product
@@ -608,69 +609,91 @@ export class CustomerPage extends BasePage {
 
     // }
 
-    // // get order details after purchase
-    // async getOrderDetailsAfterPlaceOrder(): Promise<object> {
-    //     let cOrderDetails: { orderNumber: string | null, subtotal: number, shippingCost: number, shippingMethod: string | null, tax: number, paymentMethod: string | null, orderTotal: number } = {}
-    //     cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderNumber)
-    //     cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.subTotal))
+    // get order details after purchase
+    async getOrderDetailsAfterPlaceOrder(): Promise<object> {
+        let cOrderDetails: { orderNumber: string, subtotal: number, shippingCost: number, shippingMethod: string , tax: number, paymentMethod: string , orderTotal: number } = {
+            orderNumber: '',
+            subtotal: 0,
+            shippingCost: 0,
+            shippingMethod: '',
+            tax: 0,
+            paymentMethod: '',
+            orderTotal: 0
+        }
+        cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderNumber)
+        cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.subTotal))
 
-    //     // let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
-    //     // if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
+        // let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
+        // if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
 
-    //     let shippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shippingCost)
-    //     if (shippingIsVisible) {
-    //         cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrderReceived.shippingCost))
-    //         cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shippingMethod)
-    //     }
-    //     let taxIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)
-    //     if (taxIsVisible) cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrderReceived.tax))
+        let shippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shippingCost)
+        if (shippingIsVisible) {
+            cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrderReceived.shippingCost))
+            cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shippingMethod)
+        }
+        let taxIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)
+        if (taxIsVisible) cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrderReceived.tax))
 
-    //     cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrderReceived.orderPaymentMethod)
-    //     cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.orderTotal))
+        cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrderReceived.orderPaymentMethod)
+        cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.orderTotal))
 
-    //     return cOrderDetails
-    // }
+        return cOrderDetails
+    }
 
-    // // get order details
-    // async getOrderDetails(orderNumber): Promise<void> {
-    //     await this.goToMyAccount()
+    // get order details
+    async getOrderDetails(orderNumber: any): Promise<object> {
+        await this.goToMyAccount()
 
-    //     await this.click(selector.customer.cMyAccount.orders)
-    //     await this.click(selector.customer.cOrders.OrderDetailsLInk(orderNumber))
+        await this.click(selector.customer.cMyAccount.orders)
+        await this.click(selector.customer.cOrders.OrderDetailsLInk(orderNumber))
 
-    //     let cOrderDetails = {}
-    //     cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrders.orderNumber)
-    //     cOrderDetails.orderDate = await this.getElementText(selector.customer.cOrders.orderDate)
-    //     cOrderDetails.orderStatus = await this.getElementText(selector.customer.cOrders.orderStatus)
-    //     cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrders.subTotal))
+        let cOrderDetails = {
+            orderNumber: '',
+            orderDate: '',
+            orderStatus: '',
+            subtotal: 0,
+            shippingCost: 0,
+            shippingMethod: '',
+            tax: 0,
+            orderDiscount: 0,
+            quantityDiscount: 0,
+            discount: 0,
+            paymentMethod: '',
+            orderTotal: 0,
+        }
 
-    //     // let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrders.shipping)//TODO:delete this line when shipping is fixed
-    //     // if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrders.shippingMethod)//TODO:delete this line when shipping is fixed
+        cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrders.orderNumber)
+        cOrderDetails.orderDate = await this.getElementText(selector.customer.cOrders.orderDate)
+        cOrderDetails.orderStatus = await this.getElementText(selector.customer.cOrders.orderStatus)
+        cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrders.subTotal))
 
-    //     let shippingIsVisible = await this.isVisible(selector.customer.cOrders.shippingCost)
-    //     if (shippingIsVisible) {
-    //         cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrders.shippingCost))
-    //         cOrderDetails.shippingMethod = (await this.getElementText(selector.customer.cOrders.shippingMethod)).replace('via ', '')
-    //     }
+        // let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrders.shipping)//TODO:delete this line when shipping is fixed
+        // if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrders.shippingMethod)//TODO:delete this line when shipping is fixed
 
-    //     let taxIsVisible = await this.isVisible(selector.customer.cOrders.tax)
-    //     if (taxIsVisible) cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrders.tax))
+        let shippingIsVisible = await this.isVisible(selector.customer.cOrders.shippingCost)
+        if (shippingIsVisible) {
+            cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrders.shippingCost))
+            cOrderDetails.shippingMethod = (await this.getElementText(selector.customer.cOrders.shippingMethod)).replace('via ', '')
+        }
 
-    //     let orderDiscount = await this.isVisible(selector.customer.cOrders.orderDiscount)
-    //     if (orderDiscount) cOrderDetails.orderDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.orderDiscount))
+        let taxIsVisible = await this.isVisible(selector.customer.cOrders.tax)
+        if (taxIsVisible) cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrders.tax))
 
-    //     let quantityDiscount = await this.isVisible(selector.customer.cOrders.quantityDiscount)
-    //     if (quantityDiscount) cOrderDetails.quantityDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.quantityDiscount))
+        let orderDiscount = await this.isVisible(selector.customer.cOrders.orderDiscount)
+        if (orderDiscount) cOrderDetails.orderDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.orderDiscount))
 
-    //     let discount = await this.isVisible(selector.customer.cOrders.discount)
-    //     if (discount) cOrderDetails.discount = helpers.price(await this.getElementText(selector.customer.cOrders.discount))
+        let quantityDiscount = await this.isVisible(selector.customer.cOrders.quantityDiscount)
+        if (quantityDiscount) cOrderDetails.quantityDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.quantityDiscount))
 
-    //     cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrders.paymentMethod)
-    //     cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrders.orderTotal))
+        let discount = await this.isVisible(selector.customer.cOrders.discount)
+        if (discount) cOrderDetails.discount = helpers.price(await this.getElementText(selector.customer.cOrders.discount))
 
-    //     // console.log(cOrderDetails)
-    //     return cOrderDetails
-    // }
+        cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrders.paymentMethod)
+        cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrders.orderTotal))
+
+        // console.log(cOrderDetails)
+        return cOrderDetails
+    }
 
     // customer add billing address in checkout
     async addBillingAddressInCheckout(billingInfo): Promise<void> {
@@ -715,7 +738,6 @@ export class CustomerPage extends BasePage {
         await this.type(selector.customer.cAddress.shippingStateInput, shippingInfo.state)
         await this.press(data.key.enter)
         await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode)
-
     }
 
     // customer ask for warranty
@@ -731,7 +753,6 @@ export class CustomerPage extends BasePage {
         // await this.select(selector.customer.cOrders.warrantyRequestReason, refund.refundRequestReasons)
         await this.type(selector.customer.cOrders.warrantyRequestDetails, refund.refundRequestDetails)
         await this.click(selector.customer.cOrders.warrantySubmitRequest)
-
 
         let successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage)
         expect(successMessage).toMatch(refund.refundSubmitSuccessMessage)

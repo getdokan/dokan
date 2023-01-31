@@ -29,38 +29,38 @@ async function globalSetup(config: FullConfig) {
     // get user signed in state
     const browser = await chromium.launch({ headless: true })
 
-    // get storageState: admin
-    let adminPage = await browser.newPage()
-    // log in
-    await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
-    await adminPage.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
-    await adminPage.fill(selector.backend.email, 'admin')
-    await adminPage.fill(selector.backend.password, '01dokan01')
-    await adminPage.click(selector.backend.login)
-    await adminPage.waitForLoadState('networkidle')
-    await adminPage.context().storageState({ path: 'adminStorageState.json' })
-    console.log('Stored adminStorageState')
+    // // get storageState: admin
+    // let admin = await browser.newPage()
+    // // log in
+    // await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
+    // await admin.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
+    // await admin.fill(selector.backend.email, 'admin')
+    // await admin.fill(selector.backend.password, '01dokan01')
+    // await admin.click(selector.backend.login)
+    // await admin.waitForLoadState('networkidle')
+    // await admin.context().storageState({ path: 'adminStorageState.json' })
+    // console.log('Stored adminStorageState')
 
     // // get storageState: customer
-    // let customerPage = await browser.newPage();
+    // let customer = await browser.newPage();
     // // log in
-    // await customerPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-    // await customerPage.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
-    // await customerPage.fill(selector.frontend.username, 'customer1')
-    // await customerPage.fill(selector.frontend.userPassword, '01dokan01')
-    // await customerPage.click(selector.frontend.logIn)
-    // await customerPage.context().storageState({ path: 'customerStorageState.json' })
+    // await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    // await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
+    // await customer.fill(selector.frontend.username, 'customer1')
+    // await customer.fill(selector.frontend.userPassword, '01dokan01')
+    // await customer.click(selector.frontend.logIn)
+    // await customer.context().storageState({ path: 'customerStorageState.json' })
     // console.log('Stored customerStorageState')
 
     // // get storageState: vendor
-    // let vendorPage = await browser.newPage()
+    // let vendor = await browser.newPage()
     // // log in
-    // await vendorPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-    // await vendorPage.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
-    // await vendorPage.fill(selector.frontend.username, 'vendor1')
-    // await vendorPage.fill(selector.frontend.userPassword, '01dokan01')
-    // await vendorPage.click(selector.frontend.logIn)
-    // await vendorPage.context().storageState({ path: 'vendorStorageState.json' })
+    // await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
+    // await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+    // await vendor.fill(selector.frontend.username, 'vendor1')
+    // await vendor.fill(selector.frontend.userPassword, '01dokan01')
+    // await vendor.click(selector.frontend.logIn)
+    // await vendor.context().storageState({ path: 'vendorStorageState.json' })
     // console.log('Stored vendorStorageState')
 
     await browser.close()

@@ -21,18 +21,6 @@ export class AdminPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.dokanSettings)
     }
 
-    async goToWcAddNewProducts() {
-        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
-    }
-
-    async goToWcAddNewCategories() {
-        await this.goIfNotThere(data.subUrls.backend.wcAddNewCategories)
-    }
-
-    async goToWcAddNewAttributes() {
-        await this.goIfNotThere(data.subUrls.backend.wcAddNewAttributes)
-    }
-
     async goToWooCommerceSettings() {
         await this.goIfNotThere(data.subUrls.backend.woocommerceSettings)
     }
@@ -933,45 +921,34 @@ export class AdminPage extends BasePage {
     }
 
 
-    // Vendors
+    // vendors
 
-    // Admin Add New Vendors
-    async addVendor(vendorInfo) {
+    // admin add new vendors
+    async addVendor(vendorInfo: any) {
+        await this.goIfNotThere(data.subUrls.backend.dokanVendors)
 
         let firstName = vendorInfo.firstName()
         let email = vendorInfo.email()
-        await this.hover(selector.admin.aDashboard.dokan)
-        await this.click(selector.admin.dokan.vendorsMenu)
 
-        // Add New Vendor
+        // add new vendor
         await this.click(selector.admin.dokan.vendors.addNewVendor)
-        // Account Info
+        // account info
         await this.type(selector.admin.dokan.vendors.firstName, firstName)
         await this.type(selector.admin.dokan.vendors.lastName, vendorInfo.lastName())
-        await this.type(selector.admin.dokan.vendors.storeName, vendorInfo.storeName)
-        // await this.type(selector.admin.dokan.vendors.storeUrl, vendorInfo.storeName)
-        const [response0] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?store_slug=${vendorInfo.storeName}`),
-        await this.clearAndType(selector.admin.dokan.vendors.storeUrl, vendorInfo.storeName)])
+        await this.type(selector.admin.dokan.vendors.storeName, vendorInfo.shopName)
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.storeUrl, vendorInfo.shopName)
         await this.type(selector.admin.dokan.vendors.phoneNumber, vendorInfo.phoneNumber)
-        // await this.type(selector.admin.dokan.vendors.email, email)
-        const [response] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/`)
-            , await this.type(selector.admin.dokan.vendors.email, email)])
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.email, email)
         await this.click(selector.admin.dokan.vendors.generatePassword)
         await this.clearAndType(selector.admin.dokan.vendors.password, vendorInfo.password)
-        // await this.type(selector.admin.dokan.vendors.username, firstName)
-        const [response1] = await Promise.all([this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?username=${firstName}`)
-            , await this.type(selector.admin.dokan.vendors.username, firstName)])
-        console.log(response.status, response1.status)
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.username, firstName)
         await this.type(selector.admin.dokan.vendors.companyName, vendorInfo.companyName)
         await this.type(selector.admin.dokan.vendors.companyIdEuidNumber, vendorInfo.companyId)
         await this.type(selector.admin.dokan.vendors.vatOrTaxNumber, vendorInfo.vatNumber)
         await this.type(selector.admin.dokan.vendors.nameOfBank, vendorInfo.bankName)
         await this.type(selector.admin.dokan.vendors.bankIban, vendorInfo.bankIban)
-        // await this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?email=${email}`)
-        // await this.page.waitForResponse(`http://dokan4.test/wp-json/dokan/v1/stores/check?username=${firstName}`)
-        // await this.wait(3)
         await this.click(selector.admin.dokan.vendors.next)
-        // Address
+        // address
         await this.type(selector.admin.dokan.vendors.street1, vendorInfo.street1)
         await this.type(selector.admin.dokan.vendors.street2, vendorInfo.street2)
         await this.type(selector.admin.dokan.vendors.city, vendorInfo.city)
@@ -979,11 +956,10 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.vendors.country)
         await this.type(selector.admin.dokan.vendors.countryInput, vendorInfo.country)
         await this.press(data.key.enter)
-        await this.wait(2)
         await this.click(selector.admin.dokan.vendors.state)
         await this.type(selector.admin.dokan.vendors.state, vendorInfo.state)
         await this.click(selector.admin.dokan.vendors.next)
-        // Payment Options
+        // payment options
         await this.type(selector.admin.dokan.vendors.accountName, vendorInfo.accountName)
         await this.type(selector.admin.dokan.vendors.accountNumber, vendorInfo.accountNumber)
         await this.type(selector.admin.dokan.vendors.bankName, vendorInfo.bankName)
@@ -991,197 +967,128 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.dokan.vendors.routingNumber, vendorInfo.routingNumber)
         await this.type(selector.admin.dokan.vendors.iban, vendorInfo.iban)
         await this.type(selector.admin.dokan.vendors.swift, vendorInfo.swiftCode)
-        await this.type(selector.admin.dokan.vendors.payPalEmail, vendorInfo.email)
+        await this.fill(selector.admin.dokan.vendors.payPalEmail, vendorInfo.email())
         await this.check(selector.admin.dokan.vendors.enableSelling)
         await this.check(selector.admin.dokan.vendors.publishProductDirectly)
         await this.check(selector.admin.dokan.vendors.makeVendorFeature)
-        // Create Vendor
-        await this.click(selector.admin.dokan.vendors.createVendor)
-        await this.click(selector.admin.dokan.vendors.editVendorInfo)
-
-        let vendorEmail = await this.getElementValue(selector.admin.dokan.vendors.editVendor.email)
-        expect(vendorEmail).toBe(email)
-
+        // create vendor
+        await this.clickAndWaitForResponse('/dokan/v1/stores', selector.admin.dokan.vendors.createVendor);
+        await this.click(selector.admin.dokan.vendors.closeSweetAlert);
+        // await this.click(selector.admin.dokan.vendors.editVendorInfo)
+        // let vendorEmail = await this.getElementValue(selector.admin.dokan.vendors.editVendor.email)
+        // expect(vendorEmail).toBe(email)
     }
 
-    // Products
+    // admin add categories
+    async addCategory(categoryName: string) {
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewCategories);
 
+        // add new category
+        await this.fill(selector.admin.products.category.name, categoryName);
+        await this.fill(selector.admin.products.category.slug, categoryName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.category.addNewCategory);
+        await expect(this.page.locator(selector.admin.products.category.categoryCell(categoryName))).toBeVisible();
+    }
 
-    // Admin Add Categories
-    async addCategory(categoryName) {
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.categoriesMenu)
+    // admin add attributes
+    async addAttributes(attribute: any) {
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewAttributes);
 
-        await this.goToWcAddNewCategories()
+        // add new attribute
+        await this.fill(selector.admin.products.attribute.name, attribute.attributeName);
+        await this.fill(selector.admin.products.attribute.slug, attribute.attributeName);
+        await this.clickAndWaitForResponse(data.subUrls.backend.wcAddNewAttributes, selector.admin.products.attribute.addAttribute);
+        await expect(this.page.locator(selector.admin.products.attribute.attributeCell(attribute.attributeName))).toBeVisible();
+        await this.clickAndWaitForResponse('wp-admin/edit-tags.php?taxonomy', selector.admin.products.attribute.configureTerms(attribute.attributeName));
 
-        let categoryIsVisible = await this.isVisible(selector.admin.products.category.categoryCell(categoryName))
-        if (!categoryIsVisible) {
-            // Add New Category
-            await this.type(selector.admin.products.category.name, categoryName)
-            await this.type(selector.admin.products.category.slug, categoryName)
-            await this.click(selector.admin.products.category.addNewCategory)
-
-            await this.waitForSelector(selector.admin.products.category.categoryCell(categoryName))
-            let categoryIsVisible = await this.isVisible(selector.admin.products.category.categoryCell(categoryName))
-            expect(categoryIsVisible).toBe(true)
+        // add new term
+        for (let attributeTerm of attribute.attributeTerms) {
+            await this.fill(selector.admin.products.attribute.attributeTerm, attributeTerm);
+            await this.fill(selector.admin.products.attribute.attributeTermSlug, attributeTerm);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.attribute.addAttributeTerm);
+            await expect(this.page.locator(selector.admin.products.attribute.attributeTermCell(attributeTerm))).toBeVisible();
         }
     }
 
-    // Admin Add Attributes
-    async addAttributes(attribute) {
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.attributesMenu)
-
-        await this.goToWcAddNewAttributes()
-
-        let attributeIsVisible = await this.isVisible(selector.admin.products.attribute.attributeCell(attribute.attributeName))
-        if (!attributeIsVisible) {
-            // Add New Attribute
-            await this.type(selector.admin.products.attribute.name, attribute.attributeName)
-            await this.type(selector.admin.products.attribute.slug, attribute.attributeName)
-            await this.click(selector.admin.products.attribute.addAttribute)
-
-            await this.waitForSelector(selector.admin.products.attribute.attributeCell(attribute.attributeName))
-            let attributeIsVisible = await this.isVisible(selector.admin.products.attribute.attributeCell(attribute.attributeName))
-            expect(attributeIsVisible).toBe(true)
-
-            await this.click(selector.admin.products.attribute.configureTerms(attribute.attributeName))
-
-            // Add New Term
-            for (let attributeTerm of attribute.attributeTerms) {
-
-                await this.type(selector.admin.products.attribute.attributeTerm, attributeTerm)
-                await this.type(selector.admin.products.attribute.attributeTermSlug, attributeTerm)
-                await this.click(selector.admin.products.attribute.addAttributeTerm)
-
-                await this.waitForSelector(selector.admin.products.attribute.attributeTermCell(attributeTerm))
-                let attributeTermIsVisible = await this.isVisible(selector.admin.products.attribute.attributeTermCell(attributeTerm))
-                expect(attributeTermIsVisible).toBe(true)
-            }
-        }
-    }
-
-    // Admin Add Simple Product
+    // admin add simple product
     async addSimpleProduct(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
-        await this.goToWcAddNewProducts()
-
-
-        // Add New Simple Product
-        // Name
+        // add new simple product
         await this.type(selector.admin.products.product.productName, product.productName())
         await this.selectByValue(selector.admin.products.product.productType, product.productType)
         await this.type(selector.admin.products.product.regularPrice, product.regularPrice())
-        // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Stock status
-        if (product.stockStatus) {
-            await this.editStockStatus(data.product.stockStatus.outOfStock)
-        }
-        // Vendor Store Name //TODO: uncomment after fix
+        // stock status
+        product.stockStatus && await this.editStockStatus(data.product.stockStatus.outOfStock)
+        // vendor store name //TODO: uncomment after fix
         // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
-
         switch (product.status) {
             case 'publish':
-                // Publish
-                let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-                expect(response.status()).toBe(302)
-
-                let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-                expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+                await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+                await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
                 break
 
             case 'draft':
-                // Draft
                 await this.click(selector.admin.products.product.saveDraft)
-
-                let draftProductCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-                expect(draftProductCreateSuccessMessage).toMatch(data.product.draftUpdateSuccessMessage)
+                await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.draftUpdateSuccessMessage)
                 break
 
             case 'pending':
-                // Pending
                 await this.click(selector.admin.products.product.editStatus)
                 await this.selectByValue(selector.admin.products.product.status, data.product.status.pending)
-
                 await this.click(selector.admin.products.product.saveDraft)
-
-                let pendingProductCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-                expect(pendingProductCreateSuccessMessage).toMatch(data.product.pendingProductUpdateSuccessMessage)
+                await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.pendingProductUpdateSuccessMessage)
                 break
 
             default:
                 break
         }
-
     }
 
-    // Admin Add Variable Product
+    // admin add variable product
     async addVariableProduct(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
-        await this.goToWcAddNewProducts()
-
-        // Add New Variable Product
-        // Name
+        // add new variable product
+        // name
         await this.type(selector.admin.products.product.productName, product.productName())
         await this.selectByValue(selector.admin.products.product.productType, product.productType)
-
-
-        // Add Attributes
-
+        // add attributes
         await this.click(selector.admin.products.product.attributes)
-
-        await this.selectByValue(selector.admin.products.product.customProductAttribute, `pa_${product.attribute}`)
-
-        await this.click(selector.admin.products.product.addAttribute)
-
-        await this.click(selector.admin.products.product.selectAll)
+        await this.clickAndWaitForResponse('wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes', selector.admin.products.product.addExistingAttribute)
+        await this.typeAndWaitForResponse('wp-admin/admin-ajax.php?term', selector.admin.products.product.addExistingAttributeInput, product.attribute)
+        await this.pressAndWaitForResponse(data.subUrls.ajax, data.key.enter)
+        await this.clickAndWaitForResponse('wp-admin/admin-ajax.php?action=woocommerce_json_search_taxonomy_terms', selector.admin.products.product.selectAll)
         await this.click(selector.admin.products.product.usedForVariations)
-
-        await this.click(selector.admin.products.product.saveAttributes)
-
-
-        // Add Variations
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.saveAttributes)
+        // add variations
         await this.click(selector.admin.products.product.variations)
         await this.selectByValue(selector.admin.products.product.addVariations, product.variations.linkAllVariation)
-
-        await this.acceptAlert()
+        // await this.fillAlert('120')
         await this.click(selector.admin.products.product.go)
 
         await this.selectByValue(selector.admin.products.product.addVariations, product.variations.variableRegularPrice)
-
+        await this.fillAlert('120')
         await this.click(selector.admin.products.product.go)
-        await this.fillAlert('120') // Don't work
 
-        // Category
+        // category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name //TODO: uncomment after fix
         // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
-
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
-
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Add Simple Subscription Product
     async addSimpleSubscription(product: any) {
-
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
-
-        await this.goToWcAddNewProducts()
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
         // Add New Simple Subscription
         // Name
@@ -1200,20 +1107,15 @@ export class AdminPage extends BasePage {
         await this.scrollToTop()
 
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
 
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Add External Product
     async addExternalProduct(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
-
-        await this.goToWcAddNewProducts()
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
         // Add New External Product
         // Name
@@ -1229,20 +1131,15 @@ export class AdminPage extends BasePage {
         await this.scrollToTop()
 
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
 
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Add Dokan Subscription Product
     async addDokanSubscription(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
-
-        await this.goToWcAddNewProducts()
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
         // Add New Dokan Subscription Product
         // Name
@@ -1262,20 +1159,14 @@ export class AdminPage extends BasePage {
         await this.scrollToTop()
 
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
-
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Add Auction Product
     async addAuctionProduct(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
-
-        await this.goToWcAddNewProducts()
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
         // Add New Auction Product
         // Name
@@ -1296,20 +1187,14 @@ export class AdminPage extends BasePage {
         await this.scrollToTop()
 
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
-
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Add Booking Product
     async addBookingProduct(product: any) {
 
-        // await this.hover(selector.admin.aDashboard.products)
-        // await this.click(selector.admin.products.addNewMenu)
-
-        await this.goToWcAddNewProducts()
+        await this.goIfNotThere(data.subUrls.backend.wcAddNewProducts)
 
         // Add New Booking Product
         // Name
@@ -1329,11 +1214,8 @@ export class AdminPage extends BasePage {
         await this.scrollToTop()
 
         // Publish
-        let response = await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
-        expect(response.status()).toBe(302)
-
-        let productCreateSuccessMessage = await this.getElementText(selector.admin.products.product.updatedSuccessMessage)
-        expect(productCreateSuccessMessage).toMatch(data.product.publishSuccessMessage)
+        await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
+        await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
     }
 
     // Admin Update Product Stock Status
@@ -1429,27 +1311,27 @@ export class AdminPage extends BasePage {
     // Dokan Setup Wizard
 
     // Admin Set Dokan Setup Wizard
-    async setDokanSetupWizard(dokanSetupWizard) {
-        await this.goto('http://dokan4.test/wp-admin/admin.php?page=dokan-setup')
-
+    async setDokanSetupWizard(dokanSetupWizard: any) {
         // await this.hover(selector.admin.aDashboard.dokan)
         // await this.click(selector.admin.dokan.toolsMenu)
 
         // Open Dokan Setup Wizard
         // await this.click(selector.admin.dokan.tools.openSetupWizard)
 
+        await this.goto(data.subUrls.backend.dokanSetupWizard)
+
         await this.click(selector.admin.dokan.dokanSetupWizard.letsGo)
-        // // Store
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
-        // // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
+        // Store
+        await this.clearAndType(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
+        await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
+        await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
+        await this.click(selector.admin.dokan.dokanSetupWizard.continue)
+        await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
 
         // // Selling
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.newVendorEnableSelling)

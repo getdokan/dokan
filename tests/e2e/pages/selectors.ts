@@ -197,7 +197,7 @@ export const selector = {
                 next: '.button.button-primary',
 
                 // Account Info
-                addNewVendor: '.page-title-action',
+                addNewVendor: "//button[contains(text(), 'Add New')]",
                 vendorPicture: ".profile-image .dokan-upload-image",
                 banner: '.banner-image .dokan-upload-image button',
                 firstName: '#first-name',
@@ -219,9 +219,11 @@ export const selector = {
                 street2: '#street-2',
                 city: '#city',
                 zip: '#zip',
-                country: '.multiselect__single',
+                // country: '.multiselect__single',
+                country: "//label[@for='country']/..//div[@class='multiselect__select']",
                 countryInput: '#country',
-                state: '#state',
+                // state: '#state',
+                state: "//label[@for='state']/..//div[@class='multiselect__select']",
                 // Payment Options
                 accountName: '#account-name',
                 accountNumber: '#account-number',
@@ -1296,6 +1298,9 @@ export const selector = {
                 upSells: '//label[contains(text(),"Grouped products")]/..//input[@class="select2-search__field"]',
                 crossSells: '//label[contains(text(),"Upsells")]/..//input[@class="select2-search__field"]',
                 // Attributes
+                addExistingAttribute:'#product_attributes .select2-selection__arrow',
+                addExistingAttributeInput:'.select2-search.select2-search--dropdown .select2-search__field',
+                addExistingAttributeValues:".select2-results ul li",
                 customProductAttribute: '.attribute_taxonomy',
                 addAttribute: '.add_attribute',
                 attributeName: '.attribute_name .attribute_name',

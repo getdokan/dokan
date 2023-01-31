@@ -115,6 +115,18 @@
 
 // global setup
 
+	// let cookie: any = false, expTime: number = 0, currentTime: number = Date.now() / 1000
+	// if (fs.existsSync('./storageState.json')) {
+	// 	cookie = require('./storageState.json')
+	// 	expTime = cookie.cookies[6].expires
+	// }
+
+	// if (cookie && currentTime < expTime) {
+	// 	console.log('Cookie Exists')
+	// 	return
+	// }
+    
+
     // // create a product
     // let response = await context.post(process.env.SERVER_URL + '/dokan/v1/products', {
     //     data: payloads.createProduct(),

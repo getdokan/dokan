@@ -11,6 +11,7 @@ import {
     type JSHandle,
     type ElementHandle
 } from '@playwright/test'
+import { helpers } from '../utils/helpers'
 import { selector } from './selectors'
 require('dotenv').config();
 
@@ -182,8 +183,29 @@ export class BasePage {
     async clickAndWaitForResponse(subUrl: string, selector: string, code: number = 200): Promise<Response> {
         const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.page.locator(selector).click()])
-        // console.log(await response.json())
+            this.page.locator(selector).click()
+        ])
+        expect(response.status()).toBe(code)
+        return response
+    }
+
+    // type & wait for response
+    async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code: number = 200): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
+            await this.page.type(selector, text)
+        ])
+        expect(response.status()).toBe(code)
+        return response
+    }
+
+    // type & wait for response
+    async pressAndWaitForResponse(subUrl: string, key: string, code: number = 200): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
+            this.press(key)
+        ])
+        expect(response.status()).toBe(code)
         return response
     }
 
@@ -631,7 +653,7 @@ export class BasePage {
     }
 
     // dispatches event('click', 'dragstart',...) on the element
-    async locator(selector: string, event: string): Promise<void> {
+    async dispatchEvent(selector: string, event: string): Promise<void> {
         let locator = this.page.locator(selector)
         locator.dispatchEvent(event)
     }
@@ -778,13 +800,13 @@ export class BasePage {
     // get last matching locator
     async lastLocator(selector: string): Promise<Locator> {
         let locator = this.page.locator(selector)
-        return await locator.last()
+        return locator.last()
     }
 
     // get child locator
     async locatorOfLocator(parentSelector: string, childSelector: string): Promise<Locator> {
-        let locator = await this.page.locator(parentSelector)
-        return await locator.locator(childSelector)
+        let locator = this.page.locator(parentSelector)
+        return locator.locator(childSelector)
     }
 
     // get n-th matching locator

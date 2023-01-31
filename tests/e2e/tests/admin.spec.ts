@@ -1,74 +1,62 @@
-import { test, expect, type Page } from '@playwright/test'
-import { data } from '../utils/testData'
-import { LoginPage } from '../pages/loginPage'
-import { AdminPage } from '../pages/adminPage'
-import { CustomerPage } from '../pages/customerPage'
-import { VendorPage } from '../pages/vendorPage'
+import { test } from '@playwright/test';
+import { data } from '../utils/testData';
+import { LoginPage } from '../pages/loginPage';
+import { AdminPage } from '../pages/adminPage';
 
-
-
-// test.beforeAll(async ({ }) => { });
 // test.afterAll(async ({ }) => { });
 // test.beforeEach(async ({ }) => { });
 // test.afterEach(async ({ }) => { });
 
 test('admin can login', async ({ page }) => {
-    const loginPage = new LoginPage(page)
-    const adminPage = new AdminPage(page)
-    await loginPage.adminLogin(data.admin)
+    let loginPage = new LoginPage(page);
+    await loginPage.adminLogin(data.admin);
 })
 
 test('admin can logout', async ({ page }) => {
-    const loginPage = new LoginPage(page)
-    const adminPage = new AdminPage(page)
-    await loginPage.adminLogin(data.admin)
-    await loginPage.adminLogout()
+    let loginPage = new LoginPage(page);
+    await loginPage.adminLogin(data.admin);
+    await loginPage.adminLogout();
 })
-
-
 
 test.describe('Admin functionality test', () => {
 
-    test.use({ storageState: 'adminStorageState.json' })
+    test.use({ storageState: 'adminStorageState.json' });
 
-    let loginPage: any
-    let adminPage: any
-    let page: any
+    let adminPage: any;
 
     test.beforeAll(async ({ browser }) => {
-        page = await browser.newPage();
-        loginPage = new LoginPage(page)
-        adminPage = new AdminPage(page)
+        let admin = await browser.newPage();
+        adminPage = new AdminPage(admin);
     });
 
 
-    test.skip('admin can set dokan setup wizard', async ({ }) => { //todo:fix it
+    test('admin can set dokan setup wizard', async ({ }) => { //todo:fix it
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
         await adminPage.setDokanSetupWizard(data.dokanSetupWizard)
     })
 
-    test.skip('admin can add vendor', async ({ }) => {  //todo: fix it
+    test('admin can add vendor', async ({ }) => { 
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
         await adminPage.addVendor(data.vendor.vendorInfo)
     })
 
-    test('admin can add simple product', async ({ }) => {
+    test.only('admin can add simple product', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
         await adminPage.addSimpleProduct(data.product.simple)
     })
 
-    test.skip('admin can add variable product', async ({ }) => {
-        // const loginPage = new LoginPage(page)
-        // const adminPage = new AdminPage(page)
-        // await loginPage.adminLogin(data.admin)
-        await adminPage.addVariableProduct(data.product.variable)
-    })
+    // test.only('admin can add variable product', async ({ }) => {
+    //     // const loginPage = new LoginPage(page)
+    //     // const adminPage = new AdminPage(page)
+    //     // await loginPage.adminLogin(data.admin)
+    //     await adminPage.addVariableProduct(data.product.variable)
+    // })
 
     test('admin can add simple subscription ', async ({ }) => {
         // const loginPage = new LoginPage(page)
@@ -112,30 +100,30 @@ test.describe('Admin functionality test', () => {
         await adminPage.addBookingProduct(data.product.booking)
     })
 
-    test.skip('admin can add categories', async ({ }) => {
+    test('admin can add categories', async ({ }) => {
         // const loginPage = new LoginPage(page)
-        // const adminPage = new AdminPage(page)
+        // const adminPage = new AdminPage(page)s
         // await loginPage.adminLogin(data.admin)
-        await adminPage.addCategory(data.product.category.clothings)
+        await adminPage.addCategory(data.product.category.randomCategory())
     })
 
-    test.skip('admin can add attributes', async ({ }) => {
+    test('admin can add attributes', async ({ }) => {
         // const loginPage = new LoginPage(page)
         // const adminPage = new AdminPage(page)
         // await loginPage.adminLogin(data.admin)
-        await adminPage.addAttributes(data.product.attribute.size)
+        await adminPage.addAttributes(data.product.attribute.randomAttribute())
     })
 
 
     // settings
 
-    // tax settings
-    test.skip('admin can set standard tax rate', async ({ }) => {
-        // const loginPage = new LoginPage(page)
-        // const adminPage = new AdminPage(page)
-        // await loginPage.adminLogin(data.admin)
-        await adminPage.addStandardTaxRate(data.tax)
-    })
+    // // tax settings
+    // test.skip('admin can set standard tax rate', async ({ }) => {
+    //     // const loginPage = new LoginPage(page)
+    //     // const adminPage = new AdminPage(page)
+    //     // await loginPage.adminLogin(data.admin)
+    //     await adminPage.addStandardTaxRate(data.tax)
+    // })
 
     // shipping settings
     // test('admin can set flat rate shipping', async ({ }) => {

@@ -1,5 +1,5 @@
-import { expect, type Page } from '@playwright/test';
-import { BasePage } from "./basePage";
+import { expect, type Page } from '@playwright/test'
+import { BasePage } from "./basePage"
 import { LoginPage } from './loginPage'
 import { AdminPage } from "./adminPage"
 import { CustomerPage } from './customerPage'

@@ -56,7 +56,8 @@ export const helpers = {
     },
 
     // round to two decimal places
-    roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+    // roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+    roundToTwo(num: string | number) { return Math.round((Number(num) + Number.EPSILON) * 100) / 100 },  
 
     //calculate percentage
     percentage(number: number, percentage: number) { return this.roundToTwo(number * (percentage / 100)) },
@@ -64,6 +65,12 @@ export const helpers = {
     //calculate percentage
     percentage1(number: number, percentage: number) { return ((number * (percentage / 100)).toFixed(2)) },
 
+    //subtotal
+    subtotal(price: number[], quantity: number[]) {
+        let subtotal = price.map((e, index) => e * quantity[index])
+        return subtotal.reduce((a, b) => a + b, 0)
+    },
+    
     //tax
     tax(taxRate: any, subtotal: any, shipping = 0) {
         let tax = this.percentage(subtotal, taxRate) + this.percentage(shipping, taxRate)
@@ -77,22 +84,19 @@ export const helpers = {
     },
 
     //calculate admin commission
-    adminCommission(subTotal: any, commissionRate: any, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
-        //TODO: handle different commission
-        if (taxReceiver == 'vendor') tax = 0
-        if (taxReceiver == 'vendor') shipping = 0
-        if (gatewayFeeGiver == 'vendor') gatewayFee = 0
+    adminCommission(subTotal: any, commissionRate: any, tax: number = 0, shipping: number = 0, gatewayFee: number = 0, taxReceiver: string = 'vendor', shippingReceiver: string = 'vendor', gatewayFeeGiver: string = 'vendor') {
+        if (taxReceiver === 'vendor') tax = 0
+        if (shippingReceiver === 'vendor') shipping = 0
+        if (gatewayFeeGiver === 'vendor') gatewayFee = 0
 
         let adminCommission = this.percentage(subTotal, commissionRate) - gatewayFee + tax + shipping
         return this.roundToTwo(adminCommission)
     },
 
     //calculate vendor earning
-    vendorEarning(subTotal: number, commission: number, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
-        // console.log(subTotal, commission, tax, shipping)
-        //TODO: handle gateway fee deduct from
+    vendorEarning(subTotal: number, commission: number, tax: number = 0, shipping: number = 0, gatewayFee: number = 0, taxReceiver: string = 'vendor', shippingReceiver: string = 'vendor', gatewayFeeGiver: string = 'vendor') {
         if (taxReceiver !== 'vendor') tax = 0
-        if (taxReceiver !== 'vendor') shipping = 0
+        if (shippingReceiver !== 'vendor') shipping = 0
         if (gatewayFeeGiver !== 'vendor') gatewayFee = 0
 
         let vendorEarning = subTotal - commission - gatewayFee + tax + shipping

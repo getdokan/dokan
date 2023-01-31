@@ -1,7 +1,8 @@
-import {expect, type Page} from '@playwright/test';
-import {BasePage} from "./basePage";
-import {data, user} from '../utils/testData';
-import {selector} from './selectors';
+import {expect, type Page} from '@playwright/test'
+import {BasePage} from "./basePage"
+import {data, user} from '../utils/testData'
+import {selector} from './selectors'
+import { helpers } from '../utils/helpers'
 
 export class LoginPage extends BasePage {
 

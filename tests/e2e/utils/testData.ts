@@ -203,6 +203,8 @@ export const data = {
         category: {
             unCategorized: 'Uncategorized',
             clothings: 'Clothings',
+            randomCategory1: () => faker.commerce.productAdjective(),
+            randomCategory: () => 'category_' + faker.random.alpha(5),
             categories: faker.helpers.arrayElement(["Electronic Devices", "Electronic Accessories", "Men's Fashion", "Clothings", "Women's Fashion"]),
         },
         store: {
@@ -216,13 +218,18 @@ export const data = {
                 attributeName: 'size',
                 attributeTerms: ['s', 'l', 'm'],
             },
+
             color: {
                 attributeName: 'color',
                 attributeTerms: ["red", "blue", "black", "yellow", "white"]
             },
 
-            attributeName: faker.random.alpha(),
-            attributeTerm: faker.random.alpha(),
+            randomAttribute: () => {
+                return {
+                    attributeName: 'attribute_' + faker.random.alpha(5),
+                    attributeTerms: ['attributeTerm_' + faker.random.alpha(5)]
+                }
+            }
 
         },
 
@@ -782,6 +789,8 @@ export const data = {
             adminLogin: 'wp-admin',
             adminDashboard: 'wp-admin',
             dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
+            dokanVendors: 'wp-admin/admin.php?page=dokan#/vendors',
+            dokanSetupWizard: 'wp-admin/admin.php?page=dokan-setup',
             woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
             wcAddNewProducts: 'wp-admin/post-new.php?post_type=product',
             wcAddNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
@@ -833,7 +842,7 @@ export const data = {
             password1: String(process.env.VENDOR_PASSWORD) + '1',
             firstName: () => faker.name.firstName('male'),
             lastName: () => faker.name.lastName('male'),
-            userName: faker.name.firstName('male'), //TODO: update all faker with function, also handle assignin one member value to other
+            userName: faker.name.firstName('male'),
             shopName: faker.company.name(),
             shopUrl: faker.company.name(),
             companyName: faker.company.name(),
@@ -871,6 +880,7 @@ export const data = {
                 openingTime: '06:00 AM',
                 closingTime: '11:30 PM',
             },
+
             vacation: {
                 vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 365)),
                 vacationDayTo: () => helpers.addDays(data.vendor.vendorInfo.vacation.vacationDayFrom(), 31),
