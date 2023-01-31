@@ -241,6 +241,7 @@ export const selector = {
                 createAnother: '.swal2-confirm',  // Sweet Alert Confirm 
                 editVendorInfo: '.swal2-cancel',  // Sweet Alert Cancel
                 closeSweetAlert: '.swal2-close', // Sweet Alert Close
+                sweetAlertTitle: '#swal2-title', // sweet alert title
 
                 // Edit Vendor Form
                 editVendor: {

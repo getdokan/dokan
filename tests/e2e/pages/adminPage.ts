@@ -40,8 +40,9 @@ export class AdminPage extends BasePage {
     async checkActivePlugins(plugin) {
         await this.goToPlugins()
         for (let pluginSlug of plugin.pluginSlugList) {
-            let classValue = await this.getClassValue(selector.admin.plugins.plugin(pluginSlug))
-            expect(classValue).toMatch(plugin.activeClass)
+            // let classValue = await this.getClassValue(selector.admin.plugins.plugin(pluginSlug))
+            // expect(classValue).toMatch(plugin.activeClass)
+            await expect(this.page.locator(selector.admin.plugins.plugin(pluginSlug))).toHaveClass(plugin.activeClass)
         }
     }
 
@@ -64,9 +65,7 @@ export class AdminPage extends BasePage {
         // Timezone
         await this.selectByValue(selector.admin.settings.timezone, general.timezone)
         await this.click(selector.admin.settings.generalSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(general.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(general.saveSuccessMessage)
     }
 
     // Admin Set Permalink Settings
@@ -80,10 +79,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.settings.customBase)
         await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
         await this.click(selector.admin.settings.permalinkSaveChanges)
-
-        let permalinkSuccessMessage = await this.getElementText(selector.admin.settings.updatedSuccessMessage)
-        expect(permalinkSuccessMessage).toMatch(permalink.saveSuccessMessage)
-
+        await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(permalink.saveSuccessMessage)
     }
 
     // Dokan Settings
@@ -91,7 +87,6 @@ export class AdminPage extends BasePage {
     // Admin Set Dokan General Settings
     async setDokanGeneralSettings(general: any) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.general)
 
         // Site Options
@@ -106,14 +101,12 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.storCategory(general.storCategory))
         await this.click(selector.admin.dokan.settings.generalSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(general.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(general.saveSuccessMessage)
     }
 
     // Admin Set Dokan Selling Settings
     async setDokanSellingSettings(selling) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.sellingOptions)
 
         // Commission Settings
@@ -139,14 +132,14 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enableMinMaxAmount)
         await this.click(selector.admin.dokan.settings.sellingOptionsSaveChanges)
 
-        let commission = await this.getElementValue(selector.admin.dokan.settings.adminCommission)
-        expect(commission).toMatch(selling.adminCommission)
+        // let commission = await this.getElementValue(selector.admin.dokan.settings.adminCommission)
+        // expect(commission).toMatch(selling.adminCommission)
+        await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
     }
 
     // Admin Set Dokan Withdraw Settings
     async setDokanWithdrawSettings(withdraw) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.withdrawOptions)
 
         // Withdraw Options
@@ -185,29 +178,24 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.dokan.settings.weeklyScheduleDay, withdraw.weeklyScheduleDay)
         await this.click(selector.admin.dokan.settings.withdrawSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(withdraw.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(withdraw.saveSuccessMessage)
     }
 
     // Admin Set Dokan Page Settings
     async setPageSettings(page) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.pageSettings)
 
         // this Settings
         await this.selectByLabel(selector.admin.dokan.settings.termsAndConditionsPage, page.termsAndConditionsPage)
         await this.click(selector.admin.dokan.settings.pageSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(page.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(page.saveSuccessMessage)
 
     }
 
     // Admin Set Dokan Appearance Settings
     async setDokanAppearanceSettings(appearance) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.appearance)
 
         // Appearance Settings
@@ -223,13 +211,12 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.appearanceSaveChanges)
 
         let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
-        expect(apiKey).toMatch(appearance.googleMapApiKey)
+        expect(apiKey).–(appearance.googleMapApiKey)
     }
 
     // Admin Set Dokan Privacy Policy Settings
     async setDokanPrivacyPolicySettings(privacyPolicy) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.privacyPolicy)
 
         // Privacy Policy Settings
@@ -242,14 +229,13 @@ export class AdminPage extends BasePage {
 
         await this.click(selector.admin.dokan.settings.privacyPolicySaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(privacyPolicy.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(privacyPolicy.saveSuccessMessage)
+
     }
 
     // Admin Set Dokan Store Support Settings
     async setDokanStoreSupportSettings(storeSupport) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.storeSupport)
 
         // Store Support Settings
@@ -259,15 +245,12 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.dokan.settings.supportButtonLabel, storeSupport.supportButtonLabel)
         await this.enableSwitcher(selector.admin.dokan.settings.supportTicketEmailNotification)
         await this.click(selector.admin.dokan.settings.storeSupportSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(storeSupport.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(storeSupport.saveSuccessMessage)
     }
 
     // Admin Set Dokan Rma Settings
     async setDokanRmaSettings(rma) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.rma)
 
         // Rma Settings
@@ -286,14 +269,13 @@ export class AdminPage extends BasePage {
         await this.typeFrameSelector(selector.admin.dokan.settings.refundPolicyIframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.click(selector.admin.dokan.settings.rmaSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(rma.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(rma.saveSuccessMessage)
+
     }
 
     // Admin Set Dokan Wholesale Settings
     async setDokanWholesaleSettings(wholesale) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.wholesale)
 
         // Wholesale Settings
@@ -301,15 +283,12 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.showWholesalePriceOnShopArchive)
         await this.enableSwitcher(selector.admin.dokan.settings.needApprovalForCustomer)
         await this.click(selector.admin.dokan.settings.wholesaleSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(wholesale.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(wholesale.saveSuccessMessage)
     }
 
     // Admin Set Dokan Eu Compliance Settings
     async setDokanEuComplianceSettings(euCompliance) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.euComplianceFields)
 
         // Eu Compliance Settings
@@ -326,15 +305,12 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enableGermanizedSupportForVendors)
         await this.enableSwitcher(selector.admin.dokan.settings.vendorsWillBeAbleToOverrideInvoiceNumber)
         await this.click(selector.admin.dokan.settings.euComplianceFieldsSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(euCompliance.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(euCompliance.saveSuccessMessage)
     }
 
     // Admin Set Dokan Delivery Time Settings
     async setDokanDeliveryTimeSettings(deliveryTime) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.deliveryTime)
 
         // Delivery Time Settings
@@ -371,15 +347,12 @@ export class AdminPage extends BasePage {
         await this.wait(2)
         await this.hover(selector.admin.dokan.settings.deliveryTimeSaveChanges)
         await this.click(selector.admin.dokan.settings.deliveryTimeSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(deliveryTime.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(deliveryTime.saveSuccessMessage)
     }
 
     // Admin Set Dokan Product Advertising Settings
     async setDokanProductAdvertisingSettings(productAdvertising) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.productAdvertising)
 
         // Product Advertising Settings
@@ -392,15 +365,12 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.displayAdvertisedProductOnTop)
         await this.enableSwitcher(selector.admin.dokan.settings.outOfStockVisibility)
         await this.click(selector.admin.dokan.settings.productAdvertisingSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(productAdvertising.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(productAdvertising.saveSuccessMessage)
     }
 
     // Admin Set Dokan Geolocation Settings
     async setDokanGeolocationSettings(geolocation) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.geolocation)
 
         // Geolocation Settings
@@ -417,15 +387,12 @@ export class AdminPage extends BasePage {
         await this.press(data.key.arrowDown)
         await this.press(data.key.enter)
         await this.click(selector.admin.dokan.settings.geolocationSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(geolocation.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(geolocation.saveSuccessMessage)
     }
 
     // Admin Set Dokan Product Report Abuse Settings
     async setDokanProductReportAbuseSettings(productReportAbuse) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.productReportAbuse)
 
         // Product Report Abuse Settings
@@ -433,15 +400,12 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.dokan.settings.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport)
         await this.click(selector.admin.dokan.settings.reasonsForAbuseReportAdd)
         await this.click(selector.admin.dokan.settings.productReportAbuseSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(productReportAbuse.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(productReportAbuse.saveSuccessMessage)
     }
 
     // Admin Set Dokan Spmv Settings
     async setDokanSpmvSettings(spmv) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.singleProductMultiVendor)
 
         await this.enableSwitcher(selector.admin.dokan.settings.enableSingleProductMultipleVendor)
@@ -450,15 +414,13 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.dokan.settings.availableVendorSectionDisplayPosition, spmv.availableVendorSectionDisplayPosition)
         await this.selectByValue(selector.admin.dokan.settings.showSpmvProducts, spmv.showSpmvProducts)
         await this.click(selector.admin.dokan.settings.singleProductMultiVendorSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(spmv.saveSuccessMessage)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(spmv.saveSuccessMessage)
     }
 
     // Admin Set Dokan Vendor Subscription Settings
     async setDokanVendorSubscriptionSettings(subscription: any) {
         await this.goToDokanSettings()
-
         await this.click(selector.admin.dokan.settings.vendorSubscription)
 
         // Vendor Subscription Settings
@@ -474,11 +436,10 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.dokan.settings.alertEmailBody, subscription.alertEmailBody)
         await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.dokan.settings.dokanUpdateSuccessMessage)
-        expect(successMessage).toMatch(subscription.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(subscription.saveSuccessMessage)
 
         // Disabling Vendor Subscription
-        await this.disableSwitcher(selector.admin.dokan.settings.enableProductSubscription)
+        await this.disableSwitcher(selector.admin.dokan.settings.enableProductSubscription) // TODO: handle with flag
         await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
     }
 
@@ -488,13 +449,10 @@ export class AdminPage extends BasePage {
     // Admin Enable-Disable Tax
     async enableTax(enableTax = true) {
         await this.goToWooCommerceSettings()
-
         // Enable-Disable Tax
         enableTax ? await this.check(selector.admin.wooCommerce.settings.enableTaxes) : await this.uncheck(selector.admin.wooCommerce.settings.enableTaxes)
         await this.click(selector.admin.wooCommerce.settings.generalSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(data.tax.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(data.tax.saveSuccessMessage)
     }
 
     // Admin Add Standard Tax Rate
@@ -547,9 +505,7 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.accounts)
         await this.uncheck(selector.admin.wooCommerce.settings.automaticPasswordGeneration)
         await this.click(selector.admin.wooCommerce.settings.accountSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(woocommerce.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(woocommerce.saveSuccessMessage)
     }
 
     // Shipping Methods
@@ -560,15 +516,13 @@ export class AdminPage extends BasePage {
 
         await this.goToWooCommerceSettings()
         await this.click(selector.admin.wooCommerce.settings.enableShipping)
-        if (enableShipping) {
+        if (enableShipping) {  //TODO: is this needed
             await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.enableShippingValues, data.shipping.enableShipping)
         } else {
             await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.enableShippingValues, data.shipping.disableShipping)
         }
         await this.click(selector.admin.wooCommerce.settings.generalSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(data.shipping.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(data.shipping.saveSuccessMessage)
 
     }
 
@@ -696,9 +650,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.decimalSeparator, currency.currencyOptions.decimalSeparator)
         await this.clearAndType(selector.admin.wooCommerce.settings.numberOfDecimals, currency.currencyOptions.numberOfDecimals)
         await this.click(selector.admin.wooCommerce.settings.generalSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(currency.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(currency.saveSuccessMessage)
 
     }
 
@@ -711,9 +663,7 @@ export class AdminPage extends BasePage {
             await this.type(selector.admin.wooCommerce.settings.currency, currency)
             await this.press(data.key.enter)
             await this.click(selector.admin.wooCommerce.settings.generalSaveChanges)
-
-            let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-            expect(successMessage).toMatch(data.payment.currency.saveSuccessMessage)
+            await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(data.payment.currency.saveSuccessMessage)
         }
     }
 
@@ -730,9 +680,7 @@ export class AdminPage extends BasePage {
         await this.enablePaymentMethod(selector.admin.wooCommerce.settings.enableCashOnDelivery)
 
         await this.click(selector.admin.wooCommerce.settings.paymentMethodsSaveChanges)
-
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Stripe
@@ -764,8 +712,8 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.stripe.testClientId, payment.stripeConnect.testClientId)
         await this.click(selector.admin.wooCommerce.settings.stripe.stripeSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
+        
     }
 
     // Admin Setup Dokan Paypal Marketplace
@@ -796,8 +744,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.paypalMarketPlace.paypalMarketPlaceSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Mangopay
@@ -841,8 +788,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.dokanMangoPay.dokanMangopaySaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Razorpay
@@ -869,8 +815,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.dokanRazorpay.dokanRazorpaySaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Stripe Express
@@ -916,8 +861,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.stripeExpress.stripeExpressSaveChanges)
 
-        let successMessage = await this.getElementText(selector.admin.wooCommerce.settings.updatedSuccessMessage)
-        expect(successMessage).toMatch(payment.saveSuccessMessage)
+        await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
 
@@ -973,6 +917,7 @@ export class AdminPage extends BasePage {
         await this.check(selector.admin.dokan.vendors.makeVendorFeature)
         // create vendor
         await this.clickAndWaitForResponse('/dokan/v1/stores', selector.admin.dokan.vendors.createVendor);
+        await expect(this.page.locator(selector.admin.dokan.vendors.sweetAlertTitle)).toContainText('Vendor Created');
         await this.click(selector.admin.dokan.vendors.closeSweetAlert);
         // await this.click(selector.admin.dokan.vendors.editVendorInfo)
         // let vendorEmail = await this.getElementValue(selector.admin.dokan.vendors.editVendor.email)
@@ -1228,14 +1173,11 @@ export class AdminPage extends BasePage {
     // Wholesale Customer
 
     // Admin Approve Wholesale Request
-    async adminApproveWholesaleRequest(customer) {
+    async adminApproveWholesaleRequest(customer: string) {
         await this.hover(selector.admin.aDashboard.dokan)
         await this.click(selector.admin.dokan.wholesaleCustomerMenu)
         await this.click(selector.admin.dokan.wholesaleCustomer.statusSlider(customer))
-        // await this.wait(5)
-
-        let enableStatusSuccessMessage = await this.getElementText(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)
-        expect(enableStatusSuccessMessage).toMatch(data.wholesale.wholesaleCapabilityActivate)
+        await expect(this.page.locator(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)).toContainText(data.wholesale.wholesaleCapabilityActivate)
     }
 
     async getOrderDetails(orderNumber) {
@@ -1373,11 +1315,9 @@ export class AdminPage extends BasePage {
 
         await this.click(selector.admin.dokan.modules.inActive)
 
-
         let noModulesMessage = await this.isVisible(selector.admin.dokan.modules.noModulesFound)
         if (noModulesMessage) {
-            let noModulesMessageText = await this.getElementText(selector.admin.dokan.modules.noModulesFound)
-            expect(noModulesMessageText).toMatch(data.module.noModuleMessage)
+            await expect(this.page.locator(selector.admin.dokan.modules.noModulesFound)).toContainText(data.module.noModuleMessage)
         } else {
             let inActiveModuleNames = await this.getMultipleElementTexts(selector.admin.dokan.modules.moduleName)
             throw new Error("Inactive modules: " + inActiveModuleNames)
