@@ -43,9 +43,10 @@ async function globalSetup(config: FullConfig) {
 	// change permalink
 	// await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
 	console.log(admin.url());
-	await this.hover(selector.admin.aDashboard.settings)
+	await admin.locator(selector.admin.aDashboard.settings).hover()
+	await admin.waitForTimeout(1000)
 	// Set Permalinks Settings
-	await this.click(selector.admin.settings.permalinks)
+	await admin.locator(selector.admin.settings.permalinks).click()
 	await admin.locator('#permalink-input-post-name').click();
 	await admin.locator('#submit').click();
 	console.log(admin.url());
