@@ -234,7 +234,7 @@ test.describe( 'setup test e2e', () => {
 		adminPage = new AdminPage( page );
 	} );
 
-	test( 'admin set WpSettings', async ( { } ) => {
+	test.only( 'admin set WpSettings', async ( { } ) => {
 		await adminPage.setPermalinkSettings( data.wpSettings.permalink );
 	} );
 

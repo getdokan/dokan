@@ -42,18 +42,18 @@ async function globalSetup(config: FullConfig) {
 
 	// change permalink
 	// await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
-	console.log(admin.url());
-	await admin.locator(selector.admin.aDashboard.settings).hover()
-	await admin.waitForTimeout(1000)
-	// Set Permalinks Settings
-	await admin.locator(selector.admin.settings.permalinks).click()
-	await admin.locator('#permalink-input-post-name').click();
-	await admin.locator('#submit').click();
-	console.log(admin.url());
-	console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
-	await expect(admin.getByText('Permalink structure updated.')).toBeVisible();
-	await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
-	console.log('permalink updated');
+	// console.log(admin.url());
+	// await admin.locator(selector.admin.aDashboard.settings).hover()
+	// await admin.waitForTimeout(1000)
+	// // Set Permalinks Settings
+	// await admin.locator(selector.admin.settings.permalinks).click()
+	// await admin.locator('#permalink-input-post-name').click();
+	// await admin.locator('#submit').click();
+	// console.log(admin.url());
+	// console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
+	// await expect(admin.getByText('Permalink structure updated.')).toBeVisible();
+	// await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
+	// console.log('permalink updated');
 
 	// // get storageState: customer
 	// let customer = await browser.newPage();

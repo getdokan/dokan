@@ -7,7 +7,7 @@ import { AdminPage } from '../pages/adminPage';
 // test.beforeEach(async ({ }) => { });
 // test.afterEach(async ({ }) => { });
 
-test.only( 'admin can login', async ( { page } ) => {
+test( 'admin can login', async ( { page } ) => {
 	const loginPage = new LoginPage( page );
 	await loginPage.adminLogin( data.admin );
 } );
