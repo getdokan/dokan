@@ -1,22 +1,22 @@
-require( 'dotenv' ).config();
-import { chromium, FullConfig, request } from '@playwright/test';
+require('dotenv').config();
+import { chromium, expect, FullConfig, request } from '@playwright/test';
 import { BasePage } from './pages/basePage';
 import { data } from './utils/testData';
 import { selector } from './pages/selectors';
 import { payloads } from './utils/payloads';
 import { ApiUtils } from './utils/apiUtils';
 
-async function globalSetup( config: FullConfig ) {
-	console.log( 'Global Setup running....' );
+async function globalSetup(config: FullConfig) {
+	console.log('Global Setup running....');
 
 	// get site url structure
 	let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889';
 	let query = '?';
-	const context = await request.newContext( { ignoreHTTPSErrors: true } );
-	const head = await context.head( serverUrl );
+	const context = await request.newContext({ ignoreHTTPSErrors: true });
+	const head = await context.head(serverUrl);
 	const headers = head.headers();
 	const link = headers.link;
-	if ( link.includes( 'rest_route' ) ) {
+	if (link.includes('rest_route')) {
 		serverUrl = serverUrl + '?rest_route=';
 		query = '&';
 	} else {
@@ -26,7 +26,7 @@ async function globalSetup( config: FullConfig ) {
 	process.env.QUERY = query;
 
 	// get user signed in state
-	const browser = await chromium.launch( { headless: true } );
+	const browser = await chromium.launch({ headless: true });
 
 	// get storageState: admin
 	let admin = await browser.newPage()
@@ -39,6 +39,17 @@ async function globalSetup( config: FullConfig ) {
 	await admin.waitForLoadState('networkidle')
 	await admin.context().storageState({ path: 'adminStorageState.json' })
 	console.log('Stored adminStorageState')
+
+	// change permalink
+	await admin.goto(serverUrl + '/wp-admin/options-permalink.php');
+	console.log(admin.url());
+	await admin.click('#permalink-input-post-name');
+	await admin.click('#submit');
+	console.log(admin.url());
+	console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
+	await expect(admin.getByText('Permalink structure updated.')).toBeVisible();
+	await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
+	console.log('permalink updated');
 
 	// // get storageState: customer
 	// let customer = await browser.newPage();
@@ -63,7 +74,7 @@ async function globalSetup( config: FullConfig ) {
 	// console.log('Stored vendorStorageState')
 
 	await browser.close();
-	console.log( 'Global Setup Finished!' );
+	console.log('Global Setup Finished!');
 }
 
 export default globalSetup;

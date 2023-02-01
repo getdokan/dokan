@@ -42,7 +42,7 @@ test.describe( 'Admin functionality test', () => {
 		await adminPage.addVendor( data.vendor.vendorInfo );
 	} );
 
-	test.only( 'admin can add simple product', async ( { } ) => {
+	test( 'admin can add simple product', async ( { } ) => {
 		// const loginPage = new LoginPage(page)
 		// const adminPage = new AdminPage(page)
 		// await loginPage.adminLogin(data.admin)

@@ -234,87 +234,71 @@ test.describe( 'setup test e2e', () => {
 		adminPage = new AdminPage( page );
 	} );
 
-	test.only( 'admin set WpSettings', async ( { } ) => {
-		await adminPage.setWpSettings( data.wpSettings );
+	test( 'admin set WpSettings', async ( { } ) => {
+		await adminPage.setPermalinkSettings( data.wpSettings.permalink );
 	} );
 
 	test( 'admin set dokan general settings', async ( { } ) => {
-
 		await adminPage.setDokanGeneralSettings( data.dokanSettings.general );
 	} );
-
+ß
 	test( 'admin set dokan selling settings', async ( { } ) => {
-
 		await adminPage.setDokanSellingSettings( data.dokanSettings.selling );
 	} );
 
 	test( 'admin set dokan withdraw settings', async ( { } ) => {
-
 		await adminPage.setDokanWithdrawSettings( data.dokanSettings.withdraw );
 	} );
 
 	test( 'admin set dokan page settings', async ( { } ) => {
-
 		await adminPage.setPageSettings( data.dokanSettings.page );
 	} );
 
 	test( 'admin set dokan appearance settings', async ( { } ) => {
-
 		await adminPage.setDokanAppearanceSettings( data.dokanSettings.appearance );
 	} );
 
 	test( 'admin set dokan privacy policy settings', async ( { } ) => {
-
 		await adminPage.setDokanPrivacyPolicySettings( data.dokanSettings.privacyPolicy );
 	} );
 
 	test( 'admin set dokan store support settings', async ( { } ) => {
-
 		await adminPage.setDokanStoreSupportSettings( data.dokanSettings.storeSupport );
 	} );
 
 	test( 'admin set dokan rma settings', async ( { } ) => {
-
 		await adminPage.setDokanRmaSettings( data.dokanSettings.rma );
 	} );
 
 	test( 'admin set dokan wholesale settings', async ( { } ) => {
-
 		await adminPage.setDokanWholesaleSettings( data.dokanSettings.wholesale );
 	} );
 
 	test( 'admin set dokan eu compliance settings', async ( { } ) => {
-
 		await adminPage.setDokanEuComplianceSettings( data.dokanSettings.euCompliance );
 	} );
 
 	test.skip( 'admin set dokan delivery time settings', async ( { } ) => {
-
 		await adminPage.setDokanDeliveryTimeSettings( data.dokanSettings.deliveryTime );
 	} );
 
 	test( 'admin set dokan product advertising settings', async ( { } ) => {
-
 		await adminPage.setDokanProductAdvertisingSettings( data.dokanSettings.productAdvertising );
 	} );
 
 	test( 'admin set dokan geolocation settings', async ( { } ) => {
-
 		await adminPage.setDokanGeolocationSettings( data.dokanSettings.geolocation );
 	} );
 
 	test( 'admin set dokan product report abuse settings', async ( { } ) => {
-
 		await adminPage.setDokanProductReportAbuseSettings( data.dokanSettings.productReportAbuse );
 	} );
 
 	test( 'admin set dokan spmv settings', async ( { } ) => {
-
 		await adminPage.setDokanSpmvSettings( data.dokanSettings.spmv );
 	} );
 
 	test.fixme( 'admin set dokan vendor subscription settings', async ( { } ) => {
-
 		await adminPage.setDokanVendorSubscriptionSettings( data.dokanSettings.vendorSubscription );
 	} );
 

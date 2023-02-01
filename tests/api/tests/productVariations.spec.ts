@@ -20,12 +20,12 @@ test.beforeAll( async ( { request } ) => {
 // test.afterEach(async ({ request }) => { });
 
 test.describe( 'product variation api test', () => {
-	test.only( 'get all product variations', async ( { request } ) => {
+	test( 'get all product variations', async ( { request } ) => {
 		// // let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
-		// const response = await request.get( endPoints.getAllProductVariations( productId ) );
-		// const responseBody = await apiUtils.getResponseBody( response );
-		// expect( response.ok() ).toBeTruthy();
+		const response = await request.get( endPoints.getAllProductVariations( productId ) );
+		const responseBody = await apiUtils.getResponseBody( response );
+		expect( response.ok() ).toBeTruthy();
 	} );
 
 	test( 'get single product variation', async ( { request } ) => {
@@ -53,12 +53,13 @@ test.describe( 'product variation api test', () => {
 	} );
 
 	test( 'delete a product variation', async ( { request } ) => {
-		// !!process.env.CI && test.fail(!!process.env.ADMIN, 'fail because issue isn\'t fixed yet')
+        test.fail(!!process.env.CI, 'failed because not merged with develop yet')
 
 		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
 		const response = await request.delete( endPoints.deleteProductVariation( productId, variationId ) );
 		// let responseBody = await apiUtils.getResponseBody(response)
 		expect( response.ok() ).toBeTruthy();
+
 	} );
 } );

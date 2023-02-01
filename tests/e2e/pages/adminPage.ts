@@ -37,11 +37,9 @@ export class AdminPage extends BasePage {
     // Wordpress Site Settings
 
     // Plugin Activation Check
-    async checkActivePlugins(plugin) {
+    async checkActivePlugins(plugin: any) {
         await this.goToPlugins()
         for (let pluginSlug of plugin.pluginSlugList) {
-            // let classValue = await this.getClassValue(selector.admin.plugins.plugin(pluginSlug))
-            // expect(classValue).toMatch(plugin.activeClass)
             await expect(this.page.locator(selector.admin.plugins.plugin(pluginSlug))).toHaveClass(plugin.activeClass)
         }
     }
@@ -49,19 +47,15 @@ export class AdminPage extends BasePage {
 
     // Admin Set Wordpress Site Settings
     async setWpSettings(wpSettings) {
-        // await this.setWpGeneralSettings(wpSettings.general)
+        await this.setWpGeneralSettings(wpSettings.general)
         await this.setPermalinkSettings(wpSettings.permalink)
-
     }
 
-    // Set Wp General Settings
+    // sst wp general settings
     async setWpGeneralSettings(general) {
-        // await this.hover(selector.admin.aDashboard.settings)
-        // await this.click(selector.admin.settings.general)
-
-        // Set General Settings
         await this.goto(data.subUrls.backend.general)
-        // Enable User Registration
+
+        // enable user registration
         await this.check(selector.admin.settings.membership)
         // Timezone
         await this.selectByValue(selector.admin.settings.timezone, general.timezone)
@@ -69,15 +63,11 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(general.saveSuccessMessage)
     }
 
-    // Admin Set Permalink Settings
+    // admin set permalink settings
     async setPermalinkSettings(permalink: any) {
-        // // await this.hover(selector.admin.aDashboard.settings)
-        // await this.hoverOnLocator(selector.admin.aDashboard.settings)
-        // // await this.goToPermalinks()
-        // await this.click(selector.admin.settings.permalinks)
-
         await this.goto(data.subUrls.backend.permalinks)
-        // Set Permalinks Settings
+
+        // set permalinks settings
         await this.click(selector.admin.settings.postName)
         await this.click(selector.admin.settings.customBase)
         await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
@@ -135,8 +125,6 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enableMinMaxAmount)
         await this.click(selector.admin.dokan.settings.sellingOptionsSaveChanges)
 
-        // let commission = await this.getElementValue(selector.admin.dokan.settings.adminCommission)
-        // expect(commission).toMatch(selling.adminCommission)
         await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
     }
 
