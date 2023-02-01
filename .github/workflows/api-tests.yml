@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - e2e-pw
+      # - e2e-pw
   workflow_dispatch:
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:

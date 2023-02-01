@@ -72,7 +72,7 @@ test.describe.skip( 'support ticket api test', () => {
 
 	test( 'update batch support tickets', async ( { request } ) => {
 		const allSupportTicketIds = ( await apiUtils.getAllSupportTickets() ).map( ( a: { ID: any } ) => a.ID );
-		console.log( allSupportTicketIds );
+		// console.log( allSupportTicketIds );
 
 		const response = await request.put( endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } } );
 		const responseBody = await apiUtils.getResponseBody( response );

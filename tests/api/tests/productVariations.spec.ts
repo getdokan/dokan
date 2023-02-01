@@ -12,7 +12,6 @@ test.beforeAll( async ( { request } ) => {
 	const [ pId, vId ] = await apiUtils.createVariableProductWithVariation( payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct() );
 	productId = pId;
 	variationId = vId;
-	console.log(productId)
 } );
 
 // test.afterAll(async ({ request }) => { });
@@ -21,7 +20,7 @@ test.beforeAll( async ( { request } ) => {
 
 test.describe( 'product variation api test', () => {
 	test( 'get all product variations', async ( { request } ) => {
-		// // let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
+		// let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
 		const response = await request.get( endPoints.getAllProductVariations( productId ) );
 		const responseBody = await apiUtils.getResponseBody( response );
@@ -53,8 +52,6 @@ test.describe( 'product variation api test', () => {
 	} );
 
 	test( 'delete a product variation', async ( { request } ) => {
-        // test.fail(!!process.env.CI, 'failed because not merged with develop yet')
-
 		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
 		const response = await request.delete( endPoints.deleteProductVariation( productId, variationId ) );

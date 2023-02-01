@@ -20,7 +20,7 @@ test.describe.skip( 'calculation test', () => {
 			gatewayFee = 0;
 
 		const [ res, oid ] = await apiUtils.createOrder( payloads.createProduct(), payloads.createOrder );
-		console.log( res );
+		// console.log( res );
 		discountTotal = res.discount_total;
 		discountTax = res.discount_tax;
 		shippingTotal = res.shipping_total;

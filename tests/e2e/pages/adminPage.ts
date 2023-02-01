@@ -1,9 +1,8 @@
 import { expect, type Page } from '@playwright/test';
 import { BasePage } from "./basePage";
-import { LoginPage } from './loginPage'
-import { selector } from './selectors'
-import { data } from '../utils/testData'
-import { helpers } from '../utils/helpers'
+import { selector } from './selectors';
+import { data } from '../utils/testData';
+import { helpers } from '../utils/helpers';
 
 export class AdminPage extends BasePage {
 
@@ -11,53 +10,44 @@ export class AdminPage extends BasePage {
         super(page);
     }
 
-    // Navigation
+    // navigation
 
     async goToAdminDashboard() {
-        await this.goIfNotThere(data.subUrls.backend.adminDashboard)
+        await this.goIfNotThere(data.subUrls.backend.adminDashboard);
     }
 
     async goToDokanSettings() {
-        await this.goIfNotThere(data.subUrls.backend.dokanSettings)
+        await this.goIfNotThere(data.subUrls.backend.dokanSettings);
     }
 
     async goToWooCommerceSettings() {
-        await this.goIfNotThere(data.subUrls.backend.woocommerceSettings)
-    }
-
-    async goToPlugins() {
-        await this.goIfNotThere(data.subUrls.backend.plugins)
-    }
-
-    async goToPermalinks() {
-        await this.goIfNotThere(data.subUrls.backend.permalinks)
+        await this.goIfNotThere(data.subUrls.backend.woocommerceSettings);
     }
 
 
-    // Wordpress Site Settings
+    // wordpress site settings
 
-    // Plugin Activation Check
-    async checkActivePlugins(plugin: any) {
-        await this.goToPlugins()
-        for (let pluginSlug of plugin.pluginSlugList) {
-            await expect(this.page.locator(selector.admin.plugins.plugin(pluginSlug))).toHaveClass(plugin.activeClass)
+    // plugin activation check
+    async checkActivePlugins(plugins: any) {
+        await this.goIfNotThere(data.subUrls.backend.plugins);
+        for (let pluginSlug of plugins.pluginSlugList) {
+            await expect(this.page.locator(selector.admin.plugins.plugin(pluginSlug))).toHaveClass(plugins.activeClass)
         }
     }
 
-
-    // Admin Set Wordpress Site Settings
-    async setWpSettings(wpSettings) {
+    // admin set wordpress site settings
+    async setWpSettings(wpSettings:any) {
         await this.setWpGeneralSettings(wpSettings.general)
         await this.setPermalinkSettings(wpSettings.permalink)
     }
 
     // sst wp general settings
-    async setWpGeneralSettings(general) {
+    async setWpGeneralSettings(general:any) {
         await this.goto(data.subUrls.backend.general)
 
         // enable user registration
         await this.check(selector.admin.settings.membership)
-        // Timezone
+        // timezone
         await this.selectByValue(selector.admin.settings.timezone, general.timezone)
         await this.click(selector.admin.settings.generalSaveChanges)
         await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(general.saveSuccessMessage)
@@ -75,9 +65,9 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(permalink.saveSuccessMessage)
     }
 
-    // Dokan Settings
+    // dokan settings
 
-    // Admin Set Dokan General Settings
+    // admin set dokan general settings
     async setDokanGeneralSettings(general: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.general)
