@@ -241,7 +241,7 @@ test.describe( 'setup test e2e', () => {
 	test( 'admin set dokan general settings', async ( { } ) => {
 		await adminPage.setDokanGeneralSettings( data.dokanSettings.general );
 	} );
-ß
+
 	test( 'admin set dokan selling settings', async ( { } ) => {
 		await adminPage.setDokanSellingSettings( data.dokanSettings.selling );
 	} );
