@@ -53,7 +53,7 @@ test.describe( 'product variation api test', () => {
 	} );
 
 	test( 'delete a product variation', async ( { request } ) => {
-        test.fail(!!process.env.CI, 'failed because not merged with develop yet')
+        // test.fail(!!process.env.CI, 'failed because not merged with develop yet')
 
 		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
