@@ -72,12 +72,12 @@ export class AdminPage extends BasePage {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.general)
 
-        // Site Options
+        // site options
         await this.enableSwitcher(selector.admin.dokan.settings.adminAreaAccess)
         await this.clearAndFill(selector.admin.dokan.settings.vendorStoreUrl, general.vendorStoreUrl)
         await this.click(selector.admin.dokan.settings.sellingProductTypes(general.sellingProductTypes))
 
-        // Vendor Store Options
+        // vendor store options
         await this.enableSwitcher(selector.admin.dokan.settings.storeTermsAndConditions)
         await this.clearAndFill(selector.admin.dokan.settings.storeProductPerPage, general.storeProductPerPage)
         await this.enableSwitcher(selector.admin.dokan.settings.enableTermsAndCondition)
@@ -87,18 +87,18 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(general.saveSuccessMessage)
     }
 
-    // Admin Set Dokan Selling Settings
+    // admin set dokan selling settings
     async setDokanSellingSettings(selling: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.sellingOptions)
 
-        // Commission Settings
+        // commission settings
         await this.selectByValue(selector.admin.dokan.settings.commissionType, selling.commissionType)
         await this.clearAndFill(selector.admin.dokan.settings.adminCommission, selling.adminCommission)
         await this.click(selector.admin.dokan.settings.shippingFeeRecipient(selling.shippingFeeRecipient))
         await this.click(selector.admin.dokan.settings.taxFeeRecipient(selling.taxFeeRecipient))
 
-        // Vendor Capability
+        // vendor capability
         await this.enableSwitcher(selector.admin.dokan.settings.newVendorProductUpload)
         await this.enableSwitcher(selector.admin.dokan.settings.orderStatusChange)
         await this.click(selector.admin.dokan.settings.newProductStatus(selling.newProductStatus))

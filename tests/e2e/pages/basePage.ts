@@ -479,13 +479,11 @@ export class BasePage {
 
 	// select by value
 	async selectByValue(selector: string, value: string): Promise<string[]> {
-		// console.log(selector,value)
 		return await this.page.selectOption(selector, { value });
 	}
 
 	// select by label
 	async selectByLabel(selector: string, value: string): Promise<string[]> {
-		// console.log(selector,value)
 		return await this.page.selectOption(selector, { label: value });
 	}
 
