@@ -428,7 +428,6 @@ export class AdminPage extends BasePage {
 
     // Admin Add Standard Tax Rate
     async addStandardTaxRate(tax: any) {
-
         await this.goToWooCommerceSettings()
 
         // Enable Tax
