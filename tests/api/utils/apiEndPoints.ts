@@ -253,7 +253,7 @@ export const endPoints = {
 	// v2
 
 	// product duplicate 
-	createDuplicateProduct: ( productId: string ) => `${ SERVER_URL }/dokan/v2/products${ productId }/duplicate`,
+	createDuplicateProduct: ( productId: string ) => `${ SERVER_URL }/dokan/v2/products/${ productId }/duplicate`,
 
 	// product filter
 	getProductsFilterByData: `${ SERVER_URL }/dokan/v2/products/filter-by-data`,

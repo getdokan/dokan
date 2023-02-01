@@ -19,9 +19,9 @@ test.beforeAll( async ( { request } ) => {
 
 test.describe( 'product duplicate api test', () => {
 	test( 'create duplicate product @v2', async ( { request } ) => {
-        // test.fail(!!process.env.CI, 'failed because not merged with develop yet')
-		console.log(endPoints.createDuplicateProduct( productId))
-		const response = await request.get( endPoints.createDuplicateProduct( productId) );
+        test.fail(!!process.env.CI, 'failed because feature not merged with develop yet')
+
+		const response = await request.post( endPoints.createDuplicateProduct( productId) );
 		const responseBody = await apiUtils.getResponseBody( response );
         console.log(responseBody)
 		expect( response.ok() ).toBeTruthy();
