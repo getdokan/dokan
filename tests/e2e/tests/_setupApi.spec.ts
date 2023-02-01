@@ -231,10 +231,10 @@ test.describe('setup test e2e', () => {
 	let adminPage: any;
 	let page: any;
 
-	// test.beforeAll(async ({ browser }) => {
-	// 	page = await browser.newPage();
-	// 	adminPage = new AdminPage(page);
-	// });
+	test.beforeAll(async ({ browser }) => {
+		page = await browser.newPage();
+		adminPage = new AdminPage(page);
+	});
 
 	test.only('admin set WpSettings', async ({ }) => {
 
