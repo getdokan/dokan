@@ -173,10 +173,10 @@ Temporary Items
 /test-results/
 /playwright-report/
 /playwright/.cache/
-storageState.json
-adminStorageState.json
-customerStorageState.json
-vendorStorageState.json
+# storageState.json
+# adminStorageState.json
+# customerStorageState.json
+# vendorStorageState.json
 
 # vscode
 .vscode/

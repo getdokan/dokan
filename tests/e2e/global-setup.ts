@@ -38,7 +38,7 @@ async function globalSetup(config: FullConfig) {
 	await admin.locator(selector.backend.login).click()
 	await admin.waitForLoadState('networkidle')
 	await admin.context().storageState({ path: 'adminStorageState.json' })
-	// console.log('Stored adminStorageState')
+	console.log('Stored adminStorageState')
 
 	// change permalink
 	// await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
@@ -77,8 +77,8 @@ async function globalSetup(config: FullConfig) {
 	// await vendor.context().storageState({ path: 'vendorStorageState.json' })
 	// console.log('Stored vendorStorageState')
 
-	await browser.close();
-	console.log('Global Setup Finished!');
+	// await browser.close();
+	// console.log('Global Setup Finished!');
 }
 
 export default globalSetup;

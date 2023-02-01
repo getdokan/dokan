@@ -1,0 +1,45 @@
+{
+  "cookies": [
+    {
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1675419727%7CEOXcUwHL2msLHdWPBEW0n5Y3zrlW9KkfCLzbpn5o6id%7Cbcae0f51463f59616233183607547279f6104c4585c4e0f3ef36b20b93988071",
+      "domain": "dokan4.test",
+      "path": "/wp-content/plugins",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1675419727%7CEOXcUwHL2msLHdWPBEW0n5Y3zrlW9KkfCLzbpn5o6id%7Cbcae0f51463f59616233183607547279f6104c4585c4e0f3ef36b20b93988071",
+      "domain": "dokan4.test",
+      "path": "/wp-admin",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_logged_in_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "vendor1%7C1675419727%7CEOXcUwHL2msLHdWPBEW0n5Y3zrlW9KkfCLzbpn5o6id%7C33e0469e630407299dfa23446e9970d72190ea383eeadf785409b0ec74cf2224",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://dokan4.test",
+      "localStorage": [
+        {
+          "name": "wc_cart_hash_9526c5b7d95af353041ac37823f3ebd1",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}

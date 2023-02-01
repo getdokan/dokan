@@ -1,0 +1,75 @@
+{
+  "cookies": [
+    {
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1675419704%7CTVGV2HQaOsebx2aT0DJSbwoVzwMqwCrgkvMqUBhpnxc%7C461dcaa92653c311b66bb6ef93a64cf9cd57b3034455da9e3e08b06c090e16ab",
+      "domain": "dokan4.test",
+      "path": "/wp-content/plugins",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1675419704%7CTVGV2HQaOsebx2aT0DJSbwoVzwMqwCrgkvMqUBhpnxc%7C461dcaa92653c311b66bb6ef93a64cf9cd57b3034455da9e3e08b06c090e16ab",
+      "domain": "dokan4.test",
+      "path": "/wp-admin",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_test_cookie",
+      "value": "WP%20Cookie%20check",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_logged_in_60ddd22fbfe1e4577a4a9512ec50a2d3",
+      "value": "admin%7C1675419704%7CTVGV2HQaOsebx2aT0DJSbwoVzwMqwCrgkvMqUBhpnxc%7C88061edd204dbf5b022d2f04075c935ce23561e407d76ae609b55568733362c4",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "tk_ai",
+      "value": "woo%3AUMPL4qWvLA3%2BlLb8agEbCvPe",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wp-settings-1",
+      "value": "libraryContent%3Dbrowse",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": 1706782907.644436,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wp-settings-time-1",
+      "value": "1675246907",
+      "domain": "dokan4.test",
+      "path": "/",
+      "expires": 1706782907.644486,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}
