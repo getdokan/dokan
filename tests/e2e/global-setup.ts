@@ -35,16 +35,19 @@ async function globalSetup(config: FullConfig) {
 	await admin.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
 	await admin.fill(selector.backend.email, 'admin')
 	await admin.fill(selector.backend.password, '01dokan01')
-	await admin.click(selector.backend.login)
+	await admin.locator(selector.backend.login).click()
 	await admin.waitForLoadState('networkidle')
 	await admin.context().storageState({ path: 'adminStorageState.json' })
-	console.log('Stored adminStorageState')
+	// console.log('Stored adminStorageState')
 
 	// change permalink
-	await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php');
+	// await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
 	console.log(admin.url());
-	await admin.click('#permalink-input-post-name');
-	await admin.click('#submit');
+	await this.hover(selector.admin.aDashboard.settings)
+	// Set Permalinks Settings
+	await this.click(selector.admin.settings.permalinks)
+	await admin.locator('#permalink-input-post-name').click();
+	await admin.locator('#submit').click();
 	console.log(admin.url());
 	console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
 	await expect(admin.getByText('Permalink structure updated.')).toBeVisible();
