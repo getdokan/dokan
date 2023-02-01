@@ -60,7 +60,7 @@ export class AdminPage extends BasePage {
         // set permalinks settings
         await this.click(selector.admin.settings.postName)
         await this.click(selector.admin.settings.customBase)
-        await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput)
+        await this.clearAndFill(selector.admin.settings.customBaseInput, permalink.customBaseInput)
         await this.click(selector.admin.settings.permalinkSaveChanges)
         await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(permalink.saveSuccessMessage)
     }
@@ -74,12 +74,12 @@ export class AdminPage extends BasePage {
 
         // Site Options
         await this.enableSwitcher(selector.admin.dokan.settings.adminAreaAccess)
-        await this.clearAndType(selector.admin.dokan.settings.vendorStoreUrl, general.vendorStoreUrl)
+        await this.clearAndFill(selector.admin.dokan.settings.vendorStoreUrl, general.vendorStoreUrl)
         await this.click(selector.admin.dokan.settings.sellingProductTypes(general.sellingProductTypes))
 
         // Vendor Store Options
         await this.enableSwitcher(selector.admin.dokan.settings.storeTermsAndConditions)
-        await this.clearAndType(selector.admin.dokan.settings.storeProductPerPage, general.storeProductPerPage)
+        await this.clearAndFill(selector.admin.dokan.settings.storeProductPerPage, general.storeProductPerPage)
         await this.enableSwitcher(selector.admin.dokan.settings.enableTermsAndCondition)
         await this.click(selector.admin.dokan.settings.storCategory(general.storCategory))
         await this.click(selector.admin.dokan.settings.generalSaveChanges)
@@ -88,13 +88,13 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Selling Settings
-    async setDokanSellingSettings(selling) {
+    async setDokanSellingSettings(selling: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.sellingOptions)
 
         // Commission Settings
         await this.selectByValue(selector.admin.dokan.settings.commissionType, selling.commissionType)
-        await this.clearAndType(selector.admin.dokan.settings.adminCommission, selling.adminCommission)
+        await this.clearAndFill(selector.admin.dokan.settings.adminCommission, selling.adminCommission)
         await this.click(selector.admin.dokan.settings.shippingFeeRecipient(selling.shippingFeeRecipient))
         await this.click(selector.admin.dokan.settings.taxFeeRecipient(selling.taxFeeRecipient))
 
@@ -119,7 +119,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Withdraw Settings
-    async setDokanWithdrawSettings(withdraw) {
+    async setDokanWithdrawSettings(withdraw: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.withdrawOptions)
 
@@ -128,12 +128,12 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.withdrawMethodsBankTransfer)
         await this.enableSwitcher(selector.admin.dokan.settings.withdrawMethodsDokanCustom)
         await this.enableSwitcher(selector.admin.dokan.settings.withdrawMethodsSkrill)
-        await this.clearAndType(selector.admin.dokan.settings.customMethodName, withdraw.customMethodName)
-        await this.clearAndType(selector.admin.dokan.settings.customMethodType, withdraw.customMethodType)
-        await this.clearAndType(selector.admin.dokan.settings.minimumWithdrawAmount, withdraw.minimumWithdrawAmount)
+        await this.clearAndFill(selector.admin.dokan.settings.customMethodName, withdraw.customMethodName)
+        await this.clearAndFill(selector.admin.dokan.settings.customMethodType, withdraw.customMethodType)
+        await this.clearAndFill(selector.admin.dokan.settings.minimumWithdrawAmount, withdraw.minimumWithdrawAmount)
         await this.enableSwitcher(selector.admin.dokan.settings.orderStatusForWithdrawCompleted)
         await this.enableSwitcher(selector.admin.dokan.settings.orderStatusForWithdrawProcessing)
-        await this.clearAndType(selector.admin.dokan.settings.withdrawThreshold, withdraw.withdrawThreshold)
+        await this.clearAndFill(selector.admin.dokan.settings.withdrawThreshold, withdraw.withdrawThreshold)
 
         // Disbursement Schedule Settings
         await this.enableSwitcher(selector.admin.dokan.settings.withdrawDisbursementManual)
@@ -163,7 +163,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Page Settings
-    async setPageSettings(page) {
+    async setPageSettings(page:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.pageSettings)
 
@@ -175,18 +175,18 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Appearance Settings
-    async setDokanAppearanceSettings(appearance) {
+    async setDokanAppearanceSettings(appearance:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.appearance)
 
         // Appearance Settings
         await this.enableSwitcher(selector.admin.dokan.settings.showMapOnStorePage)
         await this.click(selector.admin.dokan.settings.mapApiSourceGoogleMaps)
-        await this.clearAndType(selector.admin.dokan.settings.googleMapApiKey, appearance.googleMapApiKey)
+        await this.clearAndFill(selector.admin.dokan.settings.googleMapApiKey, appearance.googleMapApiKey)
         await this.click(selector.admin.dokan.settings.storeHeaderTemplate2)
         await this.click(selector.admin.dokan.settings.storeHeaderTemplate1)
-        await this.clearAndType(selector.admin.dokan.settings.storeBannerWidth, appearance.storeBannerWidth)
-        await this.clearAndType(selector.admin.dokan.settings.storeBannerHeight, appearance.storeBannerHeight)
+        await this.clearAndFill(selector.admin.dokan.settings.storeBannerWidth, appearance.storeBannerWidth)
+        await this.clearAndFill(selector.admin.dokan.settings.storeBannerHeight, appearance.storeBannerHeight)
         await this.enableSwitcher(selector.admin.dokan.settings.storeOpeningClosingTimeWidget)
         await this.enableSwitcher(selector.admin.dokan.settings.showVendorInfo)
         await this.click(selector.admin.dokan.settings.appearanceSaveChanges)
@@ -196,7 +196,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Privacy Policy Settings
-    async setDokanPrivacyPolicySettings(privacyPolicy) {
+    async setDokanPrivacyPolicySettings(privacyPolicy:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.privacyPolicy)
 
@@ -205,7 +205,7 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.dokan.settings.privacyPage, privacyPolicy.privacyPage)
 
         // let iframe = await this.switchToIframe(selector.admin.dokan.settings.privacyPolicyIframe)
-        // await this.iframeClearAndType(iframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
+        // await this.iframeclearAndFill(iframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
         await this.typeFrameSelector(selector.admin.dokan.settings.privacyPolicyIframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
 
         await this.click(selector.admin.dokan.settings.privacyPolicySaveChanges)
@@ -215,7 +215,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Store Support Settings
-    async setDokanStoreSupportSettings(storeSupport) {
+    async setDokanStoreSupportSettings(storeSupport:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.storeSupport)
 
@@ -223,14 +223,14 @@ export class AdminPage extends BasePage {
         //required
         await this.enableSwitcher(selector.admin.dokan.settings.displayOnOrderDetails)
         await this.selectByValue(selector.admin.dokan.settings.displayOnSingleProductPage, storeSupport.displayOnSingleProductPage)
-        await this.clearAndType(selector.admin.dokan.settings.supportButtonLabel, storeSupport.supportButtonLabel)
+        await this.clearAndFill(selector.admin.dokan.settings.supportButtonLabel, storeSupport.supportButtonLabel)
         await this.enableSwitcher(selector.admin.dokan.settings.supportTicketEmailNotification)
         await this.click(selector.admin.dokan.settings.storeSupportSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(storeSupport.saveSuccessMessage)
     }
 
     // Admin Set Dokan Rma Settings
-    async setDokanRmaSettings(rma) {
+    async setDokanRmaSettings(rma:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.rma)
 
@@ -241,12 +241,12 @@ export class AdminPage extends BasePage {
 
         for (let rmaReason of rma.rmaReasons) {
             await this.deleteIfExists(selector.admin.dokan.settings.reasonsForRmaSingle(rmaReason))
-            await this.clearAndType(selector.admin.dokan.settings.reasonsForRmaInput, rmaReason)
+            await this.clearAndFill(selector.admin.dokan.settings.reasonsForRmaInput, rmaReason)
             await this.click(selector.admin.dokan.settings.reasonsForRmaAdd)
         }
 
         // let iframe = await this.switchToIframe(selector.admin.dokan.settings.refundPolicyIframe)
-        // await this.iframeClearAndType(iframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
+        // await this.iframeclearAndFill(iframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.typeFrameSelector(selector.admin.dokan.settings.refundPolicyIframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.click(selector.admin.dokan.settings.rmaSaveChanges)
 
@@ -255,7 +255,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Wholesale Settings
-    async setDokanWholesaleSettings(wholesale) {
+    async setDokanWholesaleSettings(wholesale:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.wholesale)
 
@@ -268,7 +268,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Eu Compliance Settings
-    async setDokanEuComplianceSettings(euCompliance) {
+    async setDokanEuComplianceSettings(euCompliance:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.euComplianceFields)
 
@@ -290,7 +290,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Delivery Time Settings
-    async setDokanDeliveryTimeSettings(deliveryTime) {
+    async setDokanDeliveryTimeSettings(deliveryTime:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.deliveryTime)
 
@@ -299,19 +299,19 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.allowVendorSettings)
         await this.enableSwitcher(selector.admin.dokan.settings.homeDelivery)
         await this.enableSwitcher(selector.admin.dokan.settings.storePickup)
-        await this.clearAndType(selector.admin.dokan.settings.deliveryDateLabel, deliveryTime.deliveryDateLabel)
-        await this.clearAndType(selector.admin.dokan.settings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer)
-        await this.clearAndType(selector.admin.dokan.settings.timeSlot, deliveryTime.timeSlot)
-        await this.clearAndType(selector.admin.dokan.settings.orderPerSlot, deliveryTime.orderPerSlot)
-        await this.clearAndType(selector.admin.dokan.settings.deliveryBoxInfo, deliveryTime.deliveryBoxInfo)
+        await this.clearAndFill(selector.admin.dokan.settings.deliveryDateLabel, deliveryTime.deliveryDateLabel)
+        await this.clearAndFill(selector.admin.dokan.settings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer)
+        await this.clearAndFill(selector.admin.dokan.settings.timeSlot, deliveryTime.timeSlot)
+        await this.clearAndFill(selector.admin.dokan.settings.orderPerSlot, deliveryTime.orderPerSlot)
+        await this.clearAndFill(selector.admin.dokan.settings.deliveryBoxInfo, deliveryTime.deliveryBoxInfo)
         await this.enableSwitcher(selector.admin.dokan.settings.requireDeliveryDateAndTime)
 
         for (let day in deliveryTime.deliveryDay) {
             await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay[day]))
-            // await this.clearAndType(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]), deliveryTime.openingTime)
+            // await this.clearAndFill(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]), deliveryTime.openingTime)
             await this.click(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]))
             await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'12:00 am')]")
-            // await this.clearAndType(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]), deliveryTime.closingTime)
+            // await this.clearAndFill(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]), deliveryTime.closingTime)
             await this.click(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]))
             await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'11:30 pm')]")
         }
@@ -323,8 +323,8 @@ export class AdminPage extends BasePage {
         // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.thursday))
         // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.friday))
         // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.saturday))
-        // await this.clearAndType(selector.admin.dokan.settings.openingTime, deliveryTime.openingTime)
-        // await this.clearAndType(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
+        // await this.clearAndFill(selector.admin.dokan.settings.openingTime, deliveryTime.openingTime)
+        // await this.clearAndFill(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
         await this.wait(2)
         await this.hover(selector.admin.dokan.settings.deliveryTimeSaveChanges)
         await this.click(selector.admin.dokan.settings.deliveryTimeSaveChanges)
@@ -332,15 +332,15 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Product Advertising Settings
-    async setDokanProductAdvertisingSettings(productAdvertising) {
+    async setDokanProductAdvertisingSettings(productAdvertising:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.productAdvertising)
 
         // Product Advertising Settings
-        await this.clearAndType(selector.admin.dokan.settings.noOfAvailableSlot, productAdvertising.noOfAvailableSlot)
-        await this.clearAndType(selector.admin.dokan.settings.expireAfterDays, productAdvertising.expireAfterDays)
+        await this.clearAndFill(selector.admin.dokan.settings.noOfAvailableSlot, productAdvertising.noOfAvailableSlot)
+        await this.clearAndFill(selector.admin.dokan.settings.expireAfterDays, productAdvertising.expireAfterDays)
         await this.enableSwitcher(selector.admin.dokan.settings.vendorCanPurchaseAdvertisement)
-        await this.clearAndType(selector.admin.dokan.settings.advertisementCost, productAdvertising.advertisementCost)
+        await this.clearAndFill(selector.admin.dokan.settings.advertisementCost, productAdvertising.advertisementCost)
         await this.enableSwitcher(selector.admin.dokan.settings.enableAdvertisementInSubscription)
         await this.enableSwitcher(selector.admin.dokan.settings.markAdvertisedProductAsFeatured)
         await this.enableSwitcher(selector.admin.dokan.settings.displayAdvertisedProductOnTop)
@@ -350,7 +350,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Geolocation Settings
-    async setDokanGeolocationSettings(geolocation) {
+    async setDokanGeolocationSettings(geolocation:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.geolocation)
 
@@ -360,10 +360,10 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.showFiltersBeforeLocationMap)
         await this.enableSwitcher(selector.admin.dokan.settings.productLocationTab)
         await this.click(selector.admin.dokan.settings.radiusSearchUnit(geolocation.radiusSearchUnit))
-        await this.clearAndType(selector.admin.dokan.settings.radiusSearchMinimumDistance, geolocation.radiusSearchMinimumDistance)
-        await this.clearAndType(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
-        await this.clearAndType(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
-        await this.clearAndType(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
+        await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMinimumDistance, geolocation.radiusSearchMinimumDistance)
+        await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
+        await this.clearAndFill(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
+        await this.clearAndFill(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
 
         await this.press(data.key.arrowDown)
         await this.press(data.key.enter)
@@ -372,26 +372,26 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Product Report Abuse Settings
-    async setDokanProductReportAbuseSettings(productReportAbuse) {
+    async setDokanProductReportAbuseSettings(productReportAbuse:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.productReportAbuse)
 
         // Product Report Abuse Settings
         await this.deleteIfExists(selector.admin.dokan.settings.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport))
-        await this.clearAndType(selector.admin.dokan.settings.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport)
+        await this.clearAndFill(selector.admin.dokan.settings.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport)
         await this.click(selector.admin.dokan.settings.reasonsForAbuseReportAdd)
         await this.click(selector.admin.dokan.settings.productReportAbuseSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(productReportAbuse.saveSuccessMessage)
     }
 
     // Admin Set Dokan Spmv Settings
-    async setDokanSpmvSettings(spmv) {
+    async setDokanSpmvSettings(spmv:any){
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.singleProductMultiVendor)
 
         await this.enableSwitcher(selector.admin.dokan.settings.enableSingleProductMultipleVendor)
-        await this.clearAndType(selector.admin.dokan.settings.sellItemButtonText, spmv.sellItemButtonText)
-        await this.clearAndType(selector.admin.dokan.settings.availableVendorDisplayAreaTitle, spmv.availableVendorDisplayAreaTitle)
+        await this.clearAndFill(selector.admin.dokan.settings.sellItemButtonText, spmv.sellItemButtonText)
+        await this.clearAndFill(selector.admin.dokan.settings.availableVendorDisplayAreaTitle, spmv.availableVendorDisplayAreaTitle)
         await this.selectByValue(selector.admin.dokan.settings.availableVendorSectionDisplayPosition, spmv.availableVendorSectionDisplayPosition)
         await this.selectByValue(selector.admin.dokan.settings.showSpmvProducts, spmv.showSpmvProducts)
         await this.click(selector.admin.dokan.settings.singleProductMultiVendorSaveChanges)
@@ -409,12 +409,12 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enableProductSubscription)
         await this.enableSwitcher(selector.admin.dokan.settings.enableSubscriptionInRegistrationForm)
         await this.enableSwitcher(selector.admin.dokan.settings.enableEmailNotification)
-        await this.clearAndType(selector.admin.dokan.settings.noOfDays, subscription.noOfDays)
+        await this.clearAndFill(selector.admin.dokan.settings.noOfDays, subscription.noOfDays)
         await this.selectByValue(selector.admin.dokan.settings.productStatus, subscription.productStatus)
-        await this.clearAndType(selector.admin.dokan.settings.cancellingEmailSubject, subscription.cancellingEmailSubject)
-        await this.clearAndType(selector.admin.dokan.settings.cancellingEmailBody, subscription.cancellingEmailBody)
-        await this.clearAndType(selector.admin.dokan.settings.alertEmailSubject, subscription.alertEmailSubject)
-        await this.clearAndType(selector.admin.dokan.settings.alertEmailBody, subscription.alertEmailBody)
+        await this.clearAndFill(selector.admin.dokan.settings.cancellingEmailSubject, subscription.cancellingEmailSubject)
+        await this.clearAndFill(selector.admin.dokan.settings.cancellingEmailBody, subscription.cancellingEmailBody)
+        await this.clearAndFill(selector.admin.dokan.settings.alertEmailSubject, subscription.alertEmailSubject)
+        await this.clearAndFill(selector.admin.dokan.settings.alertEmailBody, subscription.alertEmailBody)
         await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
 
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(subscription.saveSuccessMessage)
@@ -437,7 +437,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Standard Tax Rate
-    async addStandardTaxRate(tax) {
+    async addStandardTaxRate(tax:any){
 
         await this.goToWooCommerceSettings()
 
@@ -451,7 +451,7 @@ export class AdminPage extends BasePage {
         if (!taxIsVisible) {
             await this.click(selector.admin.wooCommerce.settings.insertRow)
         }
-        await this.clearAndType(selector.admin.wooCommerce.settings.taxRate, tax.taxRate)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.taxRate, tax.taxRate)
         await this.click(selector.admin.wooCommerce.settings.taxTable)
 
         await this.click(selector.admin.wooCommerce.settings.taxRateSaveChanges)
@@ -466,7 +466,7 @@ export class AdminPage extends BasePage {
     // Woocommerce Settings
 
     // Admin Setup Woocommerce Settings
-    async setWoocommerceSettings(data) {
+    async setWoocommerceSettings(data:any){
         await this.enablePasswordInputField(data)
         await this.addStandardTaxRate(data.tax)
         await this.setCurrencyOptions(data.currency)
@@ -481,7 +481,7 @@ export class AdminPage extends BasePage {
     }
 
     // Enable Password Field
-    async enablePasswordInputField(woocommerce) {
+    async enablePasswordInputField(woocommerce:any){
         await this.goToWooCommerceSettings()
         await this.click(selector.admin.wooCommerce.settings.accounts)
         await this.uncheck(selector.admin.wooCommerce.settings.automaticPasswordGeneration)
@@ -508,7 +508,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Shipping Method
-    async addShippingMethod(shipping) {
+    async addShippingMethod(shipping:any){
         await this.goToWooCommerceSettings()
 
         await this.click(selector.admin.wooCommerce.settings.shipping)
@@ -517,7 +517,7 @@ export class AdminPage extends BasePage {
         if (!zoneIsVisible) {
             // Add Shipping Zone
             await this.click(selector.admin.wooCommerce.settings.addShippingZone)
-            await this.clearAndType(selector.admin.wooCommerce.settings.zoneName, shipping.shippingZone)
+            await this.clearAndFill(selector.admin.wooCommerce.settings.zoneName, shipping.shippingZone)
             // await this.selectByValue(selector.admin.wooCommerce.settings.zoneRegions, shippingCountry) //use select values  'country:US',
             await this.click(selector.admin.wooCommerce.settings.zoneRegions)
             await this.type(selector.admin.wooCommerce.settings.zoneRegions, shipping.shippingCountry)
@@ -544,39 +544,39 @@ export class AdminPage extends BasePage {
         switch (shipping.selectShippingMethod) {
             case 'flat_rate':
                 // Flat Rate
-                await this.clearAndType(selector.admin.wooCommerce.settings.flatRateMethodTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.flatRateMethodTitle, shipping.shippingMethod)
                 await this.selectByValue(selector.admin.wooCommerce.settings.flatRateTaxStatus, shipping.taxStatus)
-                await this.clearAndType(selector.admin.wooCommerce.settings.flatRateCost, shipping.shippingCost)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.flatRateCost, shipping.shippingCost)
                 break
 
             case 'free_shipping':
                 // Free Shipping
-                await this.clearAndType(selector.admin.wooCommerce.settings.freeShippingTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.freeShippingTitle, shipping.shippingMethod)
                 // await this.selectByValue(selector.admin.wooCommerce.settings.freeShippingRequires, shipping.freeShippingRequires)
-                // await this.clearAndType(selector.admin.wooCommerce.settings.freeShippingMinimumOrderAmount,shipping.freeShippingMinimumOrderAmount)
+                // await this.clearAndFill(selector.admin.wooCommerce.settings.freeShippingMinimumOrderAmount,shipping.freeShippingMinimumOrderAmount)
                 // await this.check(selector.admin.wooCommerce.settings.freeShippingCouponsDiscounts)
                 break
 
             case 'local_pickup':
                 // Local Pickup
-                await this.clearAndType(selector.admin.wooCommerce.settings.localPickupTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.localPickupTitle, shipping.shippingMethod)
                 await this.selectByValue(selector.admin.wooCommerce.settings.localPickupTaxStatus, shipping.taxStatus)
-                await this.clearAndType(selector.admin.wooCommerce.settings.localPickupCost, shipping.shippingCost)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.localPickupCost, shipping.shippingCost)
                 break
 
             case 'dokan_table_rate_shipping':
                 // Dokan Table Rate Shipping
-                await this.clearAndType(selector.admin.wooCommerce.settings.dokanTableRateShippingMethodTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.dokanTableRateShippingMethodTitle, shipping.shippingMethod)
                 break
 
             case 'dokan_distance_rate_shipping':
                 // Dokan Distance Rate Shipping
-                await this.clearAndType(selector.admin.wooCommerce.settings.dokanDistanceRateShippingMethodTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.dokanDistanceRateShippingMethodTitle, shipping.shippingMethod)
                 break
 
             case 'dokan_vendor_shipping':
                 // Vendor Shipping
-                await this.clearAndType(selector.admin.wooCommerce.settings.vendorShippingMethodTitle, shipping.shippingMethod)
+                await this.clearAndFill(selector.admin.wooCommerce.settings.vendorShippingMethodTitle, shipping.shippingMethod)
                 await this.selectByValue(selector.admin.wooCommerce.settings.vendorShippingTaxStatus, shipping.taxStatus)
                 break
 
@@ -593,7 +593,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Delete Shipping Zone
-    async deleteShippingZone(shippingZone) {
+    async deleteShippingZone(shippingZone:any){
         await this.click(selector.admin.wooCommerce.settings.shipping)
 
         await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shippingZone))
@@ -606,7 +606,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Delete Shipping Method
-    async deleteShippingMethod(shipping) {
+    async deleteShippingMethod(shipping:any){
         await this.click(selector.admin.wooCommerce.settings.shipping)
 
         await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shipping.shippingZone))
@@ -623,20 +623,20 @@ export class AdminPage extends BasePage {
     // Payment Methods
 
     // Admin Set Currency Options
-    async setCurrencyOptions(currency) {
+    async setCurrencyOptions(currency:any){
         await this.goToWooCommerceSettings()
 
         // Set Currency Options
-        await this.clearAndType(selector.admin.wooCommerce.settings.thousandSeparator, currency.currencyOptions.thousandSeparator)
-        await this.clearAndType(selector.admin.wooCommerce.settings.decimalSeparator, currency.currencyOptions.decimalSeparator)
-        await this.clearAndType(selector.admin.wooCommerce.settings.numberOfDecimals, currency.currencyOptions.numberOfDecimals)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.thousandSeparator, currency.currencyOptions.thousandSeparator)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.decimalSeparator, currency.currencyOptions.decimalSeparator)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.numberOfDecimals, currency.currencyOptions.numberOfDecimals)
         await this.click(selector.admin.wooCommerce.settings.generalSaveChanges)
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(currency.saveSuccessMessage)
 
     }
 
     // Admin Set Currency
-    async setCurrency(currency) {
+    async setCurrency(currency:any){
         await this.goToWooCommerceSettings()
         let currentCurrency = await this.getElementText(selector.admin.wooCommerce.settings.currency)
         if (currentCurrency !== currency) {
@@ -649,7 +649,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Basic Payment Methods
-    async setupBasicPaymentMethods(payment) {
+    async setupBasicPaymentMethods(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.click(selector.admin.wooCommerce.settings.payments)
@@ -665,7 +665,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Stripe
-    async setupStripeConnect(payment) {
+    async setupStripeConnect(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -674,11 +674,11 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.setupDokanStripeConnect)
         // Setup Strip Connect
         await this.check(selector.admin.wooCommerce.settings.stripe.enableDisableStripe)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.title, payment.stripeConnect.title)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.description, payment.stripeConnect.description)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.title, payment.stripeConnect.title)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.description, payment.stripeConnect.description)
         await this.check(selector.admin.wooCommerce.settings.stripe.nonConnectedSellers)
         await this.check(selector.admin.wooCommerce.settings.stripe.displayNoticeToConnectSeller)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval)
         await this.check(selector.admin.wooCommerce.settings.stripe.threeDSecureAndSca)
         await this.check(selector.admin.wooCommerce.settings.stripe.sellerPaysTheProcessingFeeIn3DsMode)
         await this.check(selector.admin.wooCommerce.settings.stripe.testMode)
@@ -688,9 +688,9 @@ export class AdminPage extends BasePage {
         await this.press(data.key.enter)
         await this.check(selector.admin.wooCommerce.settings.stripe.savedCards)
         // Test Credentials
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.testPublishableKey, payment.stripeConnect.testPublishableKey)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.testSecretKey, payment.stripeConnect.testSecretKey)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripe.testClientId, payment.stripeConnect.testClientId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.testPublishableKey, payment.stripeConnect.testPublishableKey)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.testSecretKey, payment.stripeConnect.testSecretKey)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripe.testClientId, payment.stripeConnect.testClientId)
         await this.click(selector.admin.wooCommerce.settings.stripe.stripeSaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
@@ -698,7 +698,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Dokan Paypal Marketplace
-    async setupPaypalMarketPlace(payment) {
+    async setupPaypalMarketPlace(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -707,29 +707,29 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.setupDokanPayPalMarketplace)
         // Setup Paypal Marketplace
         await this.check(selector.admin.wooCommerce.settings.paypalMarketPlace.enableDisablePayPalMarketplace)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.title, payment.paypalMarketPlace.title)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.description, payment.paypalMarketPlace.description)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.payPalMerchantId, payment.paypalMarketPlace.payPalMerchantId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.title, payment.paypalMarketPlace.title)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.description, payment.paypalMarketPlace.description)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.payPalMerchantId, payment.paypalMarketPlace.payPalMerchantId)
         // API Credentials
         await this.check(selector.admin.wooCommerce.settings.paypalMarketPlace.payPalSandbox)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.sandboxClientId, payment.paypalMarketPlace.sandboxClientId)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.sandBoxClientSecret, payment.paypalMarketPlace.sandBoxClientSecret)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.payPalPartnerAttributionId, payment.paypalMarketPlace.payPalPartnerAttributionId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.sandboxClientId, payment.paypalMarketPlace.sandboxClientId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.sandBoxClientSecret, payment.paypalMarketPlace.sandBoxClientSecret)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.payPalPartnerAttributionId, payment.paypalMarketPlace.payPalPartnerAttributionId)
         await this.click(selector.admin.wooCommerce.settings.paypalMarketPlace.disbursementMode)
         await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.paypalMarketPlace.disbursementModeValues, payment.paypalMarketPlace.disbursementMode)
         await this.click(selector.admin.wooCommerce.settings.paypalMarketPlace.paymentButtonType)
         await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.paypalMarketPlace.paymentButtonTypeValues, payment.paypalMarketPlace.paymentButtonType)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.marketplaceLogo, await this.getBaseUrl() + payment.paypalMarketPlace.marketplaceLogoPath)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.marketplaceLogo, await this.getBaseUrl() + payment.paypalMarketPlace.marketplaceLogoPath)
         await this.check(selector.admin.wooCommerce.settings.paypalMarketPlace.displayNoticeToConnectSeller)
         await this.check(selector.admin.wooCommerce.settings.paypalMarketPlace.sendAnnouncementToConnectSeller)
-        await this.clearAndType(selector.admin.wooCommerce.settings.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.paypalMarketPlace.paypalMarketPlaceSaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Mangopay
-    async setupMangoPay(payment) {
+    async setupMangoPay(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.euro)
@@ -738,12 +738,12 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.setupDokanMangoPay)
         // Setup Mangopay
         await this.check(selector.admin.wooCommerce.settings.dokanMangoPay.enableDisableMangoPayPayment)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.title, payment.mangoPay.title)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.description, payment.mangoPay.description)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanMangoPay.title, payment.mangoPay.title)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanMangoPay.description, payment.mangoPay.description)
         // API Credentials
         await this.check(selector.admin.wooCommerce.settings.dokanMangoPay.mangoPaySandbox)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.sandboxClientId, payment.mangoPay.sandboxClientId)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.sandBoxApiKey, payment.mangoPay.sandBoxApiKey)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanMangoPay.sandboxClientId, payment.mangoPay.sandboxClientId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanMangoPay.sandBoxApiKey, payment.mangoPay.sandBoxApiKey)
         // Payment Options
         await this.click(selector.admin.wooCommerce.settings.dokanMangoPay.chooseAvailableCreditCards)
         // await this.type(selector.admin.wooCommerce.settings.dokanMangoPay.chooseAvailableCreditCards, 'CB/Visa/Mastercard')
@@ -766,14 +766,14 @@ export class AdminPage extends BasePage {
         // Advanced Settings
         await this.check(selector.admin.wooCommerce.settings.dokanMangoPay.displayNoticeToNonConnectedSellers)
         await this.check(selector.admin.wooCommerce.settings.dokanMangoPay.sendAnnouncementToNonConnectedSellers)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.dokanMangoPay.dokanMangopaySaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Razorpay
-    async setupRazorpay(payment) {
+    async setupRazorpay(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.rupee)
@@ -782,25 +782,25 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.wooCommerce.settings.setupDokanRazorpay)
         // Setup Razorpay
         await this.check(selector.admin.wooCommerce.settings.dokanRazorpay.enableDisableDokanRazorpay)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.title, payment.razorPay.title)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.description, payment.razorPay.description)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanRazorpay.title, payment.razorPay.title)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanRazorpay.description, payment.razorPay.description)
         // API Credentials
         await this.check(selector.admin.wooCommerce.settings.dokanRazorpay.razorpaySandbox)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.testKeyId, payment.razorPay.testKeyId)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.testKeySecret, payment.razorPay.testKeySecret)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanRazorpay.testKeyId, payment.razorPay.testKeyId)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanRazorpay.testKeySecret, payment.razorPay.testKeySecret)
         await this.click(selector.admin.wooCommerce.settings.dokanRazorpay.disbursementMode)
         await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.dokanRazorpay.disbursementModeValues, payment.razorPay.disbursementMode)
         await this.check(selector.admin.wooCommerce.settings.dokanRazorpay.sellerPaysTheProcessingFee)
         await this.check(selector.admin.wooCommerce.settings.dokanRazorpay.displayNoticeToConnectSeller)
         await this.check(selector.admin.wooCommerce.settings.dokanRazorpay.sendAnnouncementToConnectSeller)
-        await this.clearAndType(selector.admin.wooCommerce.settings.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.dokanRazorpay.dokanRazorpaySaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
     }
 
     // Admin Setup Stripe Express
-    async setupStripeExpress(payment) {
+    async setupStripeExpress(payment:any){
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -810,13 +810,13 @@ export class AdminPage extends BasePage {
 
         // Stripe Express
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.enableOrDisableStripeExpress)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.title, payment.stripeExpress.title)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.description, payment.stripeExpress.description)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.title, payment.stripeExpress.title)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.description, payment.stripeExpress.description)
         // API Credentials
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.testMode)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.testPublishableKey, payment.stripeExpress.testPublishableKey)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.testSecretKey, payment.stripeExpress.testSecretKey)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.testWebhookSecret, payment.stripeExpress.testWebhookSecret)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.testPublishableKey, payment.stripeExpress.testPublishableKey)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.testSecretKey, payment.stripeExpress.testSecretKey)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.testWebhookSecret, payment.stripeExpress.testWebhookSecret)
         // Payment and Disbursement
         await this.click(selector.admin.wooCommerce.settings.stripeExpress.choosePaymentMethods)
         await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.stripeExpress.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.card)
@@ -827,7 +827,7 @@ export class AdminPage extends BasePage {
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.capturePaymentsManually)
         await this.click(selector.admin.wooCommerce.settings.stripeExpress.disburseFunds)
         await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.stripeExpress.disbursementModeValues, payment.stripeExpress.disbursementMode)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.customerBankStatement, payment.stripeExpress.customerBankStatement)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.customerBankStatement, payment.stripeExpress.customerBankStatement)
         // Payment Request Options (Apple Pay/Google Pay)
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.paymentRequestButtons)
         await this.selectByValue(selector.admin.wooCommerce.settings.stripeExpress.buttonType, payment.stripeExpress.paymentRequestButtonType)
@@ -839,7 +839,7 @@ export class AdminPage extends BasePage {
         // Advanced Settings
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.displayNoticeToNonConnectedSellers)
         await this.check(selector.admin.wooCommerce.settings.stripeExpress.sendAnnouncementToNonConnectedSellers)
-        await this.clearAndType(selector.admin.wooCommerce.settings.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval)
+        await this.clearAndFill(selector.admin.wooCommerce.settings.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval)
         await this.click(selector.admin.wooCommerce.settings.stripeExpress.stripeExpressSaveChanges)
 
         await expect(this.page.locator(selector.admin.wooCommerce.settings.updatedSuccessMessage)).toContainText(payment.saveSuccessMessage)
@@ -865,7 +865,7 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.dokan.vendors.phoneNumber, vendorInfo.phoneNumber)
         await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.email, email)
         await this.click(selector.admin.dokan.vendors.generatePassword)
-        await this.clearAndType(selector.admin.dokan.vendors.password, vendorInfo.password)
+        await this.clearAndFill(selector.admin.dokan.vendors.password, vendorInfo.password)
         await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.username, firstName)
         await this.type(selector.admin.dokan.vendors.companyName, vendorInfo.companyName)
         await this.type(selector.admin.dokan.vendors.companyIdEuidNumber, vendorInfo.companyId)
@@ -1127,12 +1127,12 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.productName, product.productName())
         await this.selectByValue(selector.admin.products.product.productType, product.productType)
         await this.selectByValue(selector.admin.products.product.bookingDurationType, product.bookingDurationType)
-        await this.clearAndType(selector.admin.products.product.bookingDurationMax, product.bookingDurationMax)
+        await this.clearAndFill(selector.admin.products.product.bookingDurationMax, product.bookingDurationMax)
         await this.selectByValue(selector.admin.products.product.calendarDisplayMode, product.calendarDisplayMode)
         // Costs
         await this.click(selector.admin.products.product.bookingCosts)
-        await this.clearAndType(selector.admin.products.product.baseCost, product.baseCost)
-        await this.clearAndType(selector.admin.products.product.blockCost, product.blockCost)
+        await this.clearAndFill(selector.admin.products.product.baseCost, product.baseCost)
+        await this.clearAndFill(selector.admin.products.product.blockCost, product.blockCost)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name  //TODO: uncomment after fix
@@ -1145,7 +1145,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Update Product Stock Status
-    async editStockStatus(status) {
+    async editStockStatus(status:any){
         await this.click(selector.admin.products.product.inventory)
         await this.selectByValue(selector.admin.products.product.stockStatus, status)
     }
@@ -1161,7 +1161,7 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)).toContainText(data.wholesale.wholesaleCapabilityActivate)
     }
 
-    async getOrderDetails(orderNumber) {
+    async getOrderDetails(orderNumber:any){
         let subMenuOpened = await this.getClassValue(selector.admin.aDashboard.dokanMenu)
         if (subMenuOpened.includes('opensub')) {
             await this.hover(selector.admin.aDashboard.dokan)
@@ -1216,7 +1216,7 @@ export class AdminPage extends BasePage {
     }
 
     // Search Refund Request
-    async searchRefundRequest(orderNumber) {
+    async searchRefundRequest(orderNumber:any){
         await this.hover(selector.admin.aDashboard.dokan)
         await this.click(selector.admin.dokan.refundsMenu)
 
@@ -1245,11 +1245,11 @@ export class AdminPage extends BasePage {
 
         await this.click(selector.admin.dokan.dokanSetupWizard.letsGo)
         // Store
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
+        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
+        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
         // await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
@@ -1259,7 +1259,7 @@ export class AdminPage extends BasePage {
         // // Selling
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.newVendorEnableSelling)
         // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.commissionType, dokanSetupWizard.commissionType)
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.adminCommission, dokanSetupWizard.adminCommission)
+        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.adminCommission, dokanSetupWizard.adminCommission)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusChange)
         // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
         // // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
@@ -1270,7 +1270,7 @@ export class AdminPage extends BasePage {
         // // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.stripe)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.custom)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.skrill)
-        // await this.clearAndType(selector.admin.dokan.dokanSetupWizard.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit)
+        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawCompleted)
         // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawProcessing)
         // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
