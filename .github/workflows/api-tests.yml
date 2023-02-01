@@ -45,8 +45,7 @@ jobs:
 
       - name: Composer install and build (Dokan-lite)
         run: |
-          composer install
-          composer update
+          composer install --no-dev
           composer dump-autoload -o
 
       - name: Npm install and build (Dokan-lite)
@@ -60,7 +59,6 @@ jobs:
         run: |
           cd plugins/dokan-pro
           composer install
-          composer update
           composer dump-autoload -o
 
       - name: Npm install and build (Dokan-pro)
