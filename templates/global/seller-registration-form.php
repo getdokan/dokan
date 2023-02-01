@@ -37,7 +37,6 @@
     /**
      * Store Address Fields
      */
-    $is_address_enabled = dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'on' );
 
     if ( 'on' === dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'off' ) ) {
         dokan_seller_address_fields( false, true );

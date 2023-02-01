@@ -672,6 +672,10 @@ class Assets {
             wp_enqueue_script( 'dokan-vendor-address' );
         }
 
+        if ( dokan_is_seller_dashboard() && isset( $wp->query_vars['settings'] ) && 'store' === $wp->query_vars['settings'] ) {
+            wp_enqueue_script( 'dokan-vendor-address' );
+        }
+
         // Scripts for contact form widget google recaptcha
         if ( dokan_is_store_page() || is_product() ) {
             // Checks if recaptcha site key and secret key exist
