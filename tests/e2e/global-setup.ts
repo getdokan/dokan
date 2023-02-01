@@ -1,10 +1,6 @@
 require('dotenv').config();
 import { chromium, expect, FullConfig, request } from '@playwright/test';
-import { BasePage } from './pages/basePage';
-import { data } from './utils/testData';
 import { selector } from './pages/selectors';
-import { payloads } from './utils/payloads';
-import { ApiUtils } from './utils/apiUtils';
 
 async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
@@ -29,56 +25,55 @@ async function globalSetup(config: FullConfig) {
 	const browser = await chromium.launch({ headless: true });
 
 	// get storageState: admin
-	let admin = await browser.newPage()
+	let admin = await browser.newPage();
 	// log in
-	await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
+	await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
 	await admin.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
-	await admin.fill(selector.backend.email, 'admin')
-	await admin.fill(selector.backend.password, '01dokan01')
-	await admin.locator(selector.backend.login).click()
-	await admin.waitForLoadState('networkidle')
-	await admin.context().storageState({ path: 'adminStorageState.json' })
-	console.log('Stored adminStorageState')
+	await admin.fill(selector.backend.email, process.env.ADMIN);
+	await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
+	await admin.locator(selector.backend.login).click();
+	await admin.waitForLoadState('networkidle');
+	await admin.context().storageState({ path: 'adminStorageState.json' });
+	console.log('Stored adminStorageState');
 
 	// change permalink
-	// await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
-	// console.log(admin.url());
-	// await admin.locator(selector.admin.aDashboard.settings).hover()
-	// await admin.waitForTimeout(1000)
-	// // Set Permalinks Settings
-	// await admin.locator(selector.admin.settings.permalinks).click()
-	// await admin.locator('#permalink-input-post-name').click();
-	// await admin.locator('#submit').click();
-	// console.log(admin.url());
-	// console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
+	// set Permalinks Settings
+	await admin.goto(process.env.BASE_URL +  '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
+	console.log('permalink page url: ',admin.url());
+	// await admin.locator(selector.admin.aDashboard.settings).hover();
+	// await admin.locator(selector.admin.settings.permalinks).click();
+	await admin.locator('#permalink-input-post-name').click();
+	await admin.locator('#submit').click();
+	console.log('permalink page url: ',admin.url());
+	console.log(await admin.locator('#setting-error-settings_updated strong').textContent());
 	// await expect(admin.getByText('Permalink structure updated.')).toBeVisible();
-	// await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
-	// console.log('permalink updated');
+	await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
+	console.log('permalink updated');
 
-	// // get storageState: customer
-	// let customer = await browser.newPage();
-	// // log in
-	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-	// await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
-	// await customer.fill(selector.frontend.username, 'customer1')
-	// await customer.fill(selector.frontend.userPassword, '01dokan01')
-	// await customer.click(selector.frontend.logIn)
-	// await customer.context().storageState({ path: 'customerStorageState.json' })
-	// console.log('Stored customerStorageState')
+	// get storageState: customer
+	let customer = await browser.newPage();
+	// log in
+	await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
+	await customer.fill(selector.frontend.username, process.env.CUSTOMER);
+	await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
+	await customer.click(selector.frontend.logIn);
+	await customer.context().storageState({ path: 'customerStorageState.json' });
+	console.log('Stored customerStorageState');
 
-	// // get storageState: vendor
-	// let vendor = await browser.newPage()
-	// // log in
-	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-	// await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
-	// await vendor.fill(selector.frontend.username, 'vendor1')
-	// await vendor.fill(selector.frontend.userPassword, '01dokan01')
-	// await vendor.click(selector.frontend.logIn)
-	// await vendor.context().storageState({ path: 'vendorStorageState.json' })
-	// console.log('Stored vendorStorageState')
+	// get storageState: vendor
+	let vendor = await browser.newPage();
+	// log in
+	await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+	await vendor.fill(selector.frontend.username, process.env.VENDOR);
+	await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
+	await vendor.click(selector.frontend.logIn);
+	await vendor.context().storageState({ path: 'vendorStorageState.json' });
+	console.log('Stored vendorStorageState');
 
-	// await browser.close();
-	// console.log('Global Setup Finished!');
+	await browser.close();
+	console.log('Global Setup Finished!');
 }
 
 export default globalSetup;

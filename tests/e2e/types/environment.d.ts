@@ -11,13 +11,14 @@ declare global {
             CUSTOMER: string;
             CUSTOMER_PASSWORD: string;
             GMAP: string;
-            BASE_URL:string
+            BASE_URL:string;
+            QUERY:string;
             HEADLESS: string;
             SLOWMO: string;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;
-            SERVER_URL: string
+            SERVER_URL: string;
             ADMIN_AUTH: any;
             VENDOR_AUTH: any;
             CUSTOMER_AUTH: any;

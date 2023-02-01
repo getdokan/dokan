@@ -16,8 +16,9 @@ const config: PlaywrightTestConfig = {
 	testDir: './tests',
 
 	/* Maximum time one test can run for. */
-	timeout: 60 * 1000,
-	// timeout: 40 * 1000,
+	// timeout: 60 * 1000,
+	timeout: 40 * 1000,
+
 	expect: {
 		/**
 		 * Maximum time expect() should wait for the condition to be met.
@@ -25,6 +26,7 @@ const config: PlaywrightTestConfig = {
 		 */
 		timeout: 2000,
 	},
+
 	/* Run tests in files in parallel */
 	// fullyParallel: true,
 
@@ -33,32 +35,32 @@ const config: PlaywrightTestConfig = {
 
 	/* Retry on CI only */
 	// retries: process.env.CI ? 2 : 0,
-	// retries: 0,
 
 	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? 1 : undefined,
+	workers: process.env.CI ? 1 : 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	// reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }],['list']],
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
-	// reporter: [['html', { open: 'never' }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
+
 	use: {
-		// storageState: 'storageState.json',  //location of sign in state
-		headless: process.env.CI ? !! process.env.CI : false, //Whether to run tests on headless or non-headless mode
+		// storageState: 'storageState.json',  // location of sign in state
+		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL
-		ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
-		trace: 'on-first-retry', //Record trace only when retrying a test for the first time.
-		screenshot: 'only-on-failure', //Capture screenshot after each test failure.
-		video: 'on-first-retry', //Record video only when retrying a test for the first time.
+		ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
+		trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
+		screenshot: 'only-on-failure', // Capture screenshot after each test failure.
+		video: 'on-first-retry', // Record video only when retrying a test for the first time.
 		// viewport: { width: 1440, height: 900 },
+
 		// launch options
 		launchOptions: {
 			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 30000, //whether to slow down test execution by provided seconds
 		},
+		
 		// api request headers
 		extraHTTPHeaders: {
 			Accept: '*/*',
