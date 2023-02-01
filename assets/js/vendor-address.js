@@ -1,11 +1,11 @@
 ( function($){
-    var dokan_address_wrapper = $( '.dokan-address-fields' );
-    var dokan_address_select = {
+    const dokan_address_wrapper = $( '.dokan-address-fields' );
+    const dokan_address_select = {
         init: function () {
             dokan_address_wrapper.on( 'change', 'select.country_to_state', this.state_select );
         },
         state_select: function () {
-            var states_json = wc_country_select_params.countries.replace( /&quot;/g, '"' ),
+            let states_json = wc_country_select_params.countries.replace( /&quot;/g, '"' ),
                 states = $.parseJSON( states_json ),
                 $statebox = $( '#dokan_address_state' ),
                 input_name = $statebox.attr( 'name' ),
@@ -30,16 +30,16 @@
                 } else {
                     input_selected_state = '';
 
-                    var options = '',
+                    let options = '',
                         state = states[ country ];
 
-                    for ( var index in state ) {
+                    for ( let index in state ) {
                         if ( state.hasOwnProperty( index ) ) {
                             if ( selected_state ) {
                                 if ( selected_state == index ) {
-                                    var selected_value = 'selected="selected"';
+                                    let selected_value = 'selected="selected"';
                                 } else {
-                                    var selected_value = '';
+                                    let selected_value = '';
                                 }
                             }
                             options = options + '<option value="' + index + '"' + selected_value + '>' + state[ index ] + '</option>';

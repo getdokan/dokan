@@ -39,10 +39,9 @@
      */
     $is_address_enabled = dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'on' );
 
-    if ( $is_address_enabled == 'on' ) {
+    if ( 'on' === dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'off' ) ) {
         dokan_seller_address_fields( false, true );
     }
-
     /**
      * @since 3.2.8
      */

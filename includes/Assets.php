@@ -543,7 +543,7 @@ class Assets {
                 'src'     => $asset_url . '/js/vendor-address.js',
                 'deps'    => [ 'jquery', 'wc-country-select' ],
                 'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
-             ],
+            ],
             'dokan-admin-product'       => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
                 'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
