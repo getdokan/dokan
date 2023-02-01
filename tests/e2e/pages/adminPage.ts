@@ -36,13 +36,13 @@ export class AdminPage extends BasePage {
     }
 
     // admin set wordpress site settings
-    async setWpSettings(wpSettings:any) {
+    async setWpSettings(wpSettings: any) {
         await this.setWpGeneralSettings(wpSettings.general)
         await this.setPermalinkSettings(wpSettings.permalink)
     }
 
     // sst wp general settings
-    async setWpGeneralSettings(general:any) {
+    async setWpGeneralSettings(general: any) {
         await this.goto(data.subUrls.backend.general)
 
         // enable user registration
@@ -163,7 +163,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Page Settings
-    async setPageSettings(page:any){
+    async setPageSettings(page: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.pageSettings)
 
@@ -171,11 +171,10 @@ export class AdminPage extends BasePage {
         await this.selectByLabel(selector.admin.dokan.settings.termsAndConditionsPage, page.termsAndConditionsPage)
         await this.click(selector.admin.dokan.settings.pageSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(page.saveSuccessMessage)
-
     }
 
     // Admin Set Dokan Appearance Settings
-    async setDokanAppearanceSettings(appearance:any){
+    async setDokanAppearanceSettings(appearance: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.appearance)
 
@@ -196,31 +195,25 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Privacy Policy Settings
-    async setDokanPrivacyPolicySettings(privacyPolicy:any){
+    async setDokanPrivacyPolicySettings(privacyPolicy: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.privacyPolicy)
 
         // Privacy Policy Settings
         await this.enableSwitcher(selector.admin.dokan.settings.enablePrivacyPolicy)
         await this.selectByValue(selector.admin.dokan.settings.privacyPage, privacyPolicy.privacyPage)
-
-        // let iframe = await this.switchToIframe(selector.admin.dokan.settings.privacyPolicyIframe)
-        // await this.iframeclearAndFill(iframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
         await this.typeFrameSelector(selector.admin.dokan.settings.privacyPolicyIframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
-
         await this.click(selector.admin.dokan.settings.privacyPolicySaveChanges)
 
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(privacyPolicy.saveSuccessMessage)
-
     }
 
     // Admin Set Dokan Store Support Settings
-    async setDokanStoreSupportSettings(storeSupport:any){
+    async setDokanStoreSupportSettings(storeSupport: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.storeSupport)
 
         // Store Support Settings
-        //required
         await this.enableSwitcher(selector.admin.dokan.settings.displayOnOrderDetails)
         await this.selectByValue(selector.admin.dokan.settings.displayOnSingleProductPage, storeSupport.displayOnSingleProductPage)
         await this.clearAndFill(selector.admin.dokan.settings.supportButtonLabel, storeSupport.supportButtonLabel)
@@ -230,7 +223,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Rma Settings
-    async setDokanRmaSettings(rma:any){
+    async setDokanRmaSettings(rma: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.rma)
 
@@ -245,17 +238,14 @@ export class AdminPage extends BasePage {
             await this.click(selector.admin.dokan.settings.reasonsForRmaAdd)
         }
 
-        // let iframe = await this.switchToIframe(selector.admin.dokan.settings.refundPolicyIframe)
-        // await this.iframeclearAndFill(iframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.typeFrameSelector(selector.admin.dokan.settings.refundPolicyIframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
         await this.click(selector.admin.dokan.settings.rmaSaveChanges)
 
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(rma.saveSuccessMessage)
-
     }
 
     // Admin Set Dokan Wholesale Settings
-    async setDokanWholesaleSettings(wholesale:any){
+    async setDokanWholesaleSettings(wholesale: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.wholesale)
 
@@ -268,7 +258,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Eu Compliance Settings
-    async setDokanEuComplianceSettings(euCompliance:any){
+    async setDokanEuComplianceSettings(euCompliance: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.euComplianceFields)
 
@@ -290,7 +280,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Delivery Time Settings
-    async setDokanDeliveryTimeSettings(deliveryTime:any){
+    async setDokanDeliveryTimeSettings(deliveryTime: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.deliveryTime)
 
@@ -332,7 +322,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Product Advertising Settings
-    async setDokanProductAdvertisingSettings(productAdvertising:any){
+    async setDokanProductAdvertisingSettings(productAdvertising: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.productAdvertising)
 
@@ -350,7 +340,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Geolocation Settings
-    async setDokanGeolocationSettings(geolocation:any){
+    async setDokanGeolocationSettings(geolocation: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.geolocation)
 
@@ -372,7 +362,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Product Report Abuse Settings
-    async setDokanProductReportAbuseSettings(productReportAbuse:any){
+    async setDokanProductReportAbuseSettings(productReportAbuse: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.productReportAbuse)
 
@@ -385,7 +375,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Dokan Spmv Settings
-    async setDokanSpmvSettings(spmv:any){
+    async setDokanSpmvSettings(spmv: any) {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.singleProductMultiVendor)
 
@@ -437,7 +427,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Standard Tax Rate
-    async addStandardTaxRate(tax:any){
+    async addStandardTaxRate(tax: any) {
 
         await this.goToWooCommerceSettings()
 
@@ -466,7 +456,7 @@ export class AdminPage extends BasePage {
     // Woocommerce Settings
 
     // Admin Setup Woocommerce Settings
-    async setWoocommerceSettings(data:any){
+    async setWoocommerceSettings(data: any) {
         await this.enablePasswordInputField(data)
         await this.addStandardTaxRate(data.tax)
         await this.setCurrencyOptions(data.currency)
@@ -481,7 +471,7 @@ export class AdminPage extends BasePage {
     }
 
     // Enable Password Field
-    async enablePasswordInputField(woocommerce:any){
+    async enablePasswordInputField(woocommerce: any) {
         await this.goToWooCommerceSettings()
         await this.click(selector.admin.wooCommerce.settings.accounts)
         await this.uncheck(selector.admin.wooCommerce.settings.automaticPasswordGeneration)
@@ -508,7 +498,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Add Shipping Method
-    async addShippingMethod(shipping:any){
+    async addShippingMethod(shipping: any) {
         await this.goToWooCommerceSettings()
 
         await this.click(selector.admin.wooCommerce.settings.shipping)
@@ -593,7 +583,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Delete Shipping Zone
-    async deleteShippingZone(shippingZone:any){
+    async deleteShippingZone(shippingZone: any) {
         await this.click(selector.admin.wooCommerce.settings.shipping)
 
         await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shippingZone))
@@ -606,7 +596,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Delete Shipping Method
-    async deleteShippingMethod(shipping:any){
+    async deleteShippingMethod(shipping: any) {
         await this.click(selector.admin.wooCommerce.settings.shipping)
 
         await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shipping.shippingZone))
@@ -623,7 +613,7 @@ export class AdminPage extends BasePage {
     // Payment Methods
 
     // Admin Set Currency Options
-    async setCurrencyOptions(currency:any){
+    async setCurrencyOptions(currency: any) {
         await this.goToWooCommerceSettings()
 
         // Set Currency Options
@@ -636,7 +626,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Set Currency
-    async setCurrency(currency:any){
+    async setCurrency(currency: any) {
         await this.goToWooCommerceSettings()
         let currentCurrency = await this.getElementText(selector.admin.wooCommerce.settings.currency)
         if (currentCurrency !== currency) {
@@ -649,7 +639,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Basic Payment Methods
-    async setupBasicPaymentMethods(payment:any){
+    async setupBasicPaymentMethods(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.click(selector.admin.wooCommerce.settings.payments)
@@ -665,7 +655,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Stripe
-    async setupStripeConnect(payment:any){
+    async setupStripeConnect(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -698,7 +688,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Dokan Paypal Marketplace
-    async setupPaypalMarketPlace(payment:any){
+    async setupPaypalMarketPlace(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -729,7 +719,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Mangopay
-    async setupMangoPay(payment:any){
+    async setupMangoPay(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.euro)
@@ -773,7 +763,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Razorpay
-    async setupRazorpay(payment:any){
+    async setupRazorpay(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.rupee)
@@ -800,7 +790,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Setup Stripe Express
-    async setupStripeExpress(payment:any){
+    async setupStripeExpress(payment: any) {
         await this.goToWooCommerceSettings()
 
         await this.setCurrency(payment.currency.dollar)
@@ -1145,7 +1135,7 @@ export class AdminPage extends BasePage {
     }
 
     // Admin Update Product Stock Status
-    async editStockStatus(status:any){
+    async editStockStatus(status: any) {
         await this.click(selector.admin.products.product.inventory)
         await this.selectByValue(selector.admin.products.product.stockStatus, status)
     }
@@ -1161,7 +1151,7 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)).toContainText(data.wholesale.wholesaleCapabilityActivate)
     }
 
-    async getOrderDetails(orderNumber:any){
+    async getOrderDetails(orderNumber: any) {
         let subMenuOpened = await this.getClassValue(selector.admin.aDashboard.dokanMenu)
         if (subMenuOpened.includes('opensub')) {
             await this.hover(selector.admin.aDashboard.dokan)
@@ -1216,7 +1206,7 @@ export class AdminPage extends BasePage {
     }
 
     // Search Refund Request
-    async searchRefundRequest(orderNumber:any){
+    async searchRefundRequest(orderNumber: any) {
         await this.hover(selector.admin.aDashboard.dokan)
         await this.click(selector.admin.dokan.refundsMenu)
 
