@@ -41,7 +41,7 @@ async function globalSetup(config: FullConfig) {
 	console.log('Stored adminStorageState')
 
 	// change permalink
-	await admin.goto(serverUrl + '/wp-admin/options-permalink.php');
+	await admin.goto(process.env.BASE_URL + + '/wp-admin/options-permalink.php');
 	console.log(admin.url());
 	await admin.click('#permalink-input-post-name');
 	await admin.click('#submit');
