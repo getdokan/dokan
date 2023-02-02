@@ -44,6 +44,23 @@ class WithdrawControllerV2 extends WithdrawController {
                 ],
             ]
         );
+
+        // Returns withdraw disbursement.
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/disbursement', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_withdraw_disbursement' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'args'                => $this->get_product_collection_params(),
+                    'callback'            => [ $this, 'save_withdraw_disbursement' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -84,5 +101,95 @@ class WithdrawControllerV2 extends WithdrawController {
     public function get_withdraw_summary() {
         $summary = dokan()->withdraw->get_user_withdraw_summary();
         return rest_ensure_response( $summary );
+    }
+
+    /**
+     * Returns withdraw disbursement data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_withdraw_disbursement() {
+        $withdraw_disbursement['enabled']                  = false;
+        $withdraw_disbursement['selected_schedule']        = '';
+        $withdraw_disbursement['schedules']                = [];
+        $withdraw_disbursement['minimum_amount_list']      = [];
+        $withdraw_disbursement['minimum_amount_selected']  = 0;
+        $withdraw_disbursement['reserve_balance_list']     = [];
+        $withdraw_disbursement['reserve_balance_selected'] = 0;
+        $withdraw_disbursement['active_methods']           = [];
+        $withdraw_disbursement['default_method']           = '';
+        $withdraw_disbursement['method_additional_info']   = [];
+
+        return apply_filters( 'dokan_withdraw_disbursement_data', $withdraw_disbursement );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param  \WP_REST_Request $requests Request object.
+     *
+     * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function save_withdraw_disbursement( $requests ) {
+        $data = [
+            'schedule' => $requests->get_param('schedule'),
+            'minimum'  => $requests->get_param('minimum'),
+            'reserve'  => $requests->get_param('reserve'),
+            'method'   => $requests->get_param('method'),
+        ];
+
+        do_action( 'dokan_rest_save_withdraw_disbursement', $data );
+
+        return rest_ensure_response( array( 'success' => true ) );
+    }
+
+
+    /**
+     * Disbursement save API query parameters collections.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Query parameters.
+     */
+    public function get_product_collection_params() {
+        $params = parent::get_collection_params();
+
+        $params['schedule'] = array(
+            'description'       => __( 'Preferred Payment Schedule', 'dokan-lite' ),
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'validate_callback' => 'rest_validate_request_arg',
+            'required'          => true,
+        );
+
+        $params['minimum'] = array(
+            'description'       => __( 'Only When Balance Is', 'dokan-lite' ),
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+            'validate_callback' => 'rest_validate_request_arg',
+            'required'          => true,
+        );
+
+        $params['reserve'] = array(
+            'description'       => __( 'Maintain Reserve Balance', 'dokan-lite' ),
+            'type'              => 'integer',
+            'sanitize_callback' => 'absint',
+            'validate_callback' => 'rest_validate_request_arg',
+            'required'          => true,
+        );
+
+        $params['method'] = array(
+            'description'       => __( 'Preferred Payment Method', 'dokan-lite' ),
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'validate_callback' => 'rest_validate_request_arg',
+            'required'          => true,
+        );
+
+        return $params;
     }
 }
