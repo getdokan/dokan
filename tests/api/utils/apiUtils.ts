@@ -767,6 +767,44 @@ export class ApiUtils {
 	}
 
 	/**
+	 * seller badge  api methods
+	 */
+
+	// get all seller badges
+	async getAllSellerBadges(auth?: any) {
+		const response = await this.request.get(endPoints.getAllSellerBadges, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get all seller badges
+	async getSellerBadgeId(eventType:string, auth?: any) {
+		const allBadges = await this.getAllSellerBadges(auth);
+		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
+		// const badgeId = allBadgeIds[0].id;
+		// console.log(badgeId);
+		return badgeId;
+	}
+
+	// create seller badge
+	async createSellerBadge(payload: any, auth?: any): Promise<[object, string]> {
+		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type) : responseBody.id;
+		// console.log(badgeId)
+		return [responseBody, badgeId];
+	}
+
+	// update batch seller badges
+	async updateBatchSellerBadges(action: string, allIds: string[], auth?: any) {
+		const response = await this.request.put(endPoints.updateBatchSellerBadges, { data: { [action]: allIds }, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+
+
+	/**
 	 * wp  api methods
 	 */
 
