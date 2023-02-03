@@ -136,10 +136,10 @@ class WithdrawControllerV2 extends WithdrawController {
      */
     public function save_withdraw_disbursement( $requests ) {
         $data = [
-            'schedule' => $requests->get_param('schedule'),
-            'minimum'  => $requests->get_param('minimum'),
-            'reserve'  => $requests->get_param('reserve'),
-            'method'   => $requests->get_param('method'),
+            'schedule' => $requests->get_param( 'schedule' ),
+            'minimum'  => $requests->get_param( 'minimum' ),
+            'reserve'  => $requests->get_param( 'reserve' ),
+            'method'   => $requests->get_param( 'method' ),
         ];
 
         do_action( 'dokan_rest_save_withdraw_disbursement', $data );
