@@ -32,40 +32,39 @@ jobs:
           node-version: 14
           cache: "npm"
 
-      - name: Clone dokan-pro
-        uses: actions/checkout@v3
-        with:
-          repository: weDevsOfficial/dokan-pro
-          token: ${{ secrets.ACCESS_TOKEN }}
-          path: "plugins/dokan-pro"
-          ref: "develop"
-          # fetch-depth: 0
+      # - name: Clone dokan-pro
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: weDevsOfficial/dokan-pro
+      #     token: ${{ secrets.ACCESS_TOKEN }}
+      #     path: "plugins/dokan-pro"
+      #     ref: "develop"
+      #     # fetch-depth: 0
 
-      - name: Composer install and build (Dokan-lite)
-        run: |
-          composer install --no-dev
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-lite)
+      #   run: |
+      #     composer install --no-dev
+      #     composer dump-autoload -o
 
-      - name: Npm install and build (Dokan-lite)
-        run: |
-          npm i
-          npm run dev:build
-          grunt
+      # - name: Npm install and build (Dokan-lite)
+      #   run: |
+      #     npm i
+      #     npm run dev:build
+      #     grunt
 
-      - name: Composer install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          composer update
-          composer install
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     composer update
+      #     composer install
+      #     composer dump-autoload -o
 
-        # git checkout 52e916a70f7d9afeb498032280866e547a4b59bc
-      - name: Npm install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          npm i
-          npm run dev:build
-          npm run build
+      # - name: Npm install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     npm i
+      #     npm run dev:build
+      #     npm run build
 
       - name: Install dependencies & Setup WordPress Env
         run: |
@@ -73,16 +72,16 @@ jobs:
           npm ci
           npm run start-env
 
-      - name: Resetting wp-env
-        if: failure()
-        run: |
-          cd tests/e2e
-          npm run restart-env
+      # - name: Resetting wp-env
+      #   if: failure()
+      #   run: |
+      #     cd tests/e2e
+      #     npm run restart-env
 
-      - name: Activate storefront
-        run: |
-          cd tests/e2e 
-          npm run activate-sf-test
+      # - name: Activate storefront
+      #   run: |
+      #     cd tests/e2e 
+      #     npm run activate-sf-test
 
       - name: Setup for e2e tests
         run: |

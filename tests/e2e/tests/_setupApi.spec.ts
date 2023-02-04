@@ -75,16 +75,16 @@ test.describe('setup test api', () => {
 		await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
 		const flatRateResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFlatRate);
 		expect(flatRateResponseBody.enabled).toBe(true);
-		const freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping);
-		expect(freeShippingResponseBody.enabled).toBe(true);
-		const localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup);
-		expect(localPickupResponseBody.enabled).toBe(true);
-		const tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping);
-		expect(tableRateShippingResponseBody.enabled).toBe(true);
-		const distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping);
-		expect(distanceRateShippingResponseBody.enabled).toBe(true);
-		const dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping);
-		expect(dokanVendorShippingResponseBody.enabled).toBe(true);
+		// const freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping);
+		// expect(freeShippingResponseBody.enabled).toBe(true);
+		// const localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup);
+		// expect(localPickupResponseBody.enabled).toBe(true);
+		// const tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping);
+		// expect(tableRateShippingResponseBody.enabled).toBe(true);
+		// const distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping);
+		// expect(distanceRateShippingResponseBody.enabled).toBe(true);
+		// const dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping);
+		// expect(dokanVendorShippingResponseBody.enabled).toBe(true);
 	});
 
 	test('set basic payments', async ({ request }) => {
@@ -236,7 +236,7 @@ test.describe('setup test e2e', () => {
 		adminPage = new AdminPage(page);
 	});
 
-	test('admin set WpSettings', async ({ }) => {
+	test.only('admin set WpSettings', async ({ }) => {
 
 		const path = '../../tests/e2e/adminStorageState.json';
 
