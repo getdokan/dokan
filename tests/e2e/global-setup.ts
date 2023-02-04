@@ -50,27 +50,27 @@ async function globalSetup(config: FullConfig) {
 	// await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
 	// console.log('permalink updated');
 
-	// // get storageState: customer
-	// let customer = await browser.newPage();
-	// // log in
-	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	// await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
-	// await customer.fill(selector.frontend.username, process.env.CUSTOMER);
-	// await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
-	// await customer.click(selector.frontend.logIn);
-	// await customer.context().storageState({ path: 'customerStorageState.json' });
-	// console.log('Stored customerStorageState');
+	// get storageState: customer
+	let customer = await browser.newPage();
+	// log in
+	await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
+	await customer.fill(selector.frontend.username, process.env.CUSTOMER);
+	await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
+	await customer.click(selector.frontend.logIn);
+	await customer.context().storageState({ path: 'customerStorageState.json' });
+	console.log('Stored customerStorageState');
 
-	// // get storageState: vendor
-	// let vendor = await browser.newPage();
-	// // log in
-	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	// await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
-	// await vendor.fill(selector.frontend.username, process.env.VENDOR);
-	// await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
-	// await vendor.click(selector.frontend.logIn);
-	// await vendor.context().storageState({ path: 'vendorStorageState.json' });
-	// console.log('Stored vendorStorageState');
+	// get storageState: vendor
+	let vendor = await browser.newPage();
+	// log in
+	await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+	await vendor.fill(selector.frontend.username, process.env.VENDOR);
+	await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
+	await vendor.click(selector.frontend.logIn);
+	await vendor.context().storageState({ path: 'vendorStorageState.json' });
+	console.log('Stored vendorStorageState');
 
 	await browser.close();
 	console.log('Global Setup Finished!');

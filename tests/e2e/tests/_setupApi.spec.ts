@@ -236,7 +236,7 @@ test.describe('setup test e2e', () => {
 		adminPage = new AdminPage(page);
 	});
 
-	test.only('admin set WpSettings', async ({ }) => {
+	test('admin set WpSettings', async ({ }) => {
 
 		const path = '../../tests/e2e/adminStorageState.json';
 

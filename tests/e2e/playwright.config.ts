@@ -60,7 +60,6 @@ const config: PlaywrightTestConfig = {
 		// launch options
 		launchOptions: {
 			// slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 30000, //whether to slow down test execution by provided seconds
-			slowMo: process.env.SLOWMO ? 1000 : 30000, //whether to slow down test execution by provided seconds
 		},
 		
 		// api request headers
