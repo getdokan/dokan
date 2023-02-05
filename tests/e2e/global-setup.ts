@@ -33,8 +33,8 @@ async function globalSetup(config: FullConfig) {
 	await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
 	await admin.locator(selector.backend.login).click();
 	await admin.waitForLoadState('networkidle');
-	// await admin.context().storageState({ path: 'adminStorageState.json' });
-	// console.log('Stored adminStorageState');
+	await admin.context().storageState({ path: 'adminStorageState.json' });
+	console.log('Stored adminStorageState');
 
 	// change permalink
 	// set Permalinks Settings
