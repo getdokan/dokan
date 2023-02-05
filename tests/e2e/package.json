@@ -31,6 +31,6 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@playwright/test": "^1.30.0",
-    "@wordpress/env": "^5.0.0"
+    "@wordpress/env": "^4.9.0"
   }
 }
