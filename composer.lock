@@ -1034,12 +1034,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c0a8cb85666cf8c07b5bd1340cf284d9c0668dae"
+                "reference": "9fa4e5249fa2686555356da47804355dc54bb2de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c0a8cb85666cf8c07b5bd1340cf284d9c0668dae",
-                "reference": "c0a8cb85666cf8c07b5bd1340cf284d9c0668dae",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9fa4e5249fa2686555356da47804355dc54bb2de",
+                "reference": "9fa4e5249fa2686555356da47804355dc54bb2de",
                 "shasum": ""
             },
             "require": {
@@ -1123,7 +1123,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-10T09:02:18+00:00"
+            "time": "2023-01-24T14:14:38+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2006,12 +2006,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "4aa600078a44885a4e2d351ae11b25ef16a11714"
+                "reference": "546f59c67854589bb8f6b49a30e642e75ff419ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/4aa600078a44885a4e2d351ae11b25ef16a11714",
-                "reference": "4aa600078a44885a4e2d351ae11b25ef16a11714",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/546f59c67854589bb8f6b49a30e642e75ff419ad",
+                "reference": "546f59c67854589bb8f6b49a30e642e75ff419ad",
                 "shasum": ""
             },
             "require": {
@@ -2027,6 +2027,9 @@
                 "phpcompatibility/php-compatibility": "^9.0",
                 "phpcsstandards/phpcsdevtools": "^1.2.0",
                 "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "suggest": {
+                "ext-mbstring": "For improved results"
             },
             "default-branch": true,
             "type": "phpcodesniffer-standard",
@@ -2052,7 +2055,7 @@
                 "source": "https://github.com/WordPress/WordPress-Coding-Standards",
                 "wiki": "https://github.com/WordPress/WordPress-Coding-Standards/wiki"
             },
-            "time": "2023-01-09T07:44:57+00:00"
+            "time": "2023-01-13T13:37:27+00:00"
         }
     ],
     "aliases": [],

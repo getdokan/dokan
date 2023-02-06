@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Blocks;
 /**
  * Dokan Block For Products.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.10
  */
 class ProductBlock {
 
     /**
      * Get Product configurations.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array
      */
@@ -49,6 +49,8 @@ class ProductBlock {
                 'category' => [
                     'default' => get_term( get_option( 'default_product_cat' ) ),
                 ],
+                'can_export' => false,
+                'can_import' => false,
             ]
         );
     }

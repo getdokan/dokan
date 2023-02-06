@@ -99,7 +99,7 @@ class StoreSettingControllerV2 extends StoreSettingController {
     /**
      * Update Settings Group or Page.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param WP_REST_Request $request The request object.
      *
@@ -115,7 +115,7 @@ class StoreSettingControllerV2 extends StoreSettingController {
     /**
      * Update Store single settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param WP_REST_Request $request
      *
@@ -132,7 +132,7 @@ class StoreSettingControllerV2 extends StoreSettingController {
     /**
      * Update Store single settings field.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param WP_REST_Request $request
      *

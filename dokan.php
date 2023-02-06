@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://wordpress.org/plugins/dokan-lite/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.7.9
+ * Version: 3.7.10
  * Author: weDevs
  * Author URI: https://wedevs.com/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 7.2.2
+ * WC tested up to: 7.3.0
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -56,7 +56,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.7.9';
+    public $version = '3.7.10';
 
     /**
      * Instance of self
@@ -386,6 +386,7 @@ final class WeDevs_Dokan {
         $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
         $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
         $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
+        $this->container['bg_process']          = new \WeDevs\Dokan\BackgroundProcess\Manager();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {

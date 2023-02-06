@@ -18,7 +18,7 @@ class WithdrawControllerV2 extends WithdrawController {
     /**
      * Register all routes releated with stores.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class WithdrawControllerV2 extends WithdrawController {
     /**
      * Returns withdraw settings for vendors.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return WP_REST_Response|WP_Error
      */
@@ -94,7 +94,7 @@ class WithdrawControllerV2 extends WithdrawController {
     /**
      * Returns withdraw summary.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return WP_REST_Response|WP_Error
      */

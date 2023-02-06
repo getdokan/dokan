@@ -1223,3 +1223,45 @@ function send_email_for_order_cancellation( $recipient, $order ) {
 }
 
 add_filter( 'woocommerce_email_recipient_cancelled_order', 'send_email_for_order_cancellation', 10, 2 );
+
+
+/**
+ * Modify order counts for vendor.
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param object $counts
+ *
+ * @return object $counts
+ */
+function dokan_modify_vendor_order_counts( $counts ) {
+    global $pagenow;
+
+    if ( 'edit.php' !== $pagenow || 'shop_order' !== get_query_var( 'post_type' ) ) {
+        return $counts;
+    }
+
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        return $counts;
+    }
+
+    $vendor_id = dokan_get_current_user_id();
+
+    if ( empty( $vendor_id ) ) {
+        return $counts;
+    }
+
+    // Current order counts for the vendor.
+    $vendor_order_counts = dokan_count_orders( $vendor_id );
+
+    // Modify WP dashboard order counts as per vendor's order counts.
+    foreach ( $vendor_order_counts as $count_key => $count_value ) {
+        if ( 'total' !== $count_key ) {
+            $counts->{$count_key} = $count_value;
+        }
+    }
+
+    return $counts;
+}
+
+add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );

@@ -25,7 +25,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Register all routes related with stores
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -59,7 +59,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Product API query parameters collections.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array Query parameters.
      */
@@ -128,7 +128,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Returns data by which products can be filtered.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return array
      */
@@ -166,7 +166,6 @@ class ProductControllerV2 extends ProductController {
                 'posts_per_page' => 10,
                 'paged'          => 1,
                 'author'         => dokan_get_current_user_id(),
-                'post_status'    => $this->post_status,
                 'orderby'        => 'post_date',
                 'post_type'      => 'product',
                 'date_query'     => [],

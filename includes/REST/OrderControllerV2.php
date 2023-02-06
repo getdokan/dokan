@@ -9,7 +9,7 @@ use WP_REST_Server;
 /**
 * Dokan Order ControllerV2 Class
 *
-* @since DOKAN_SINCE
+* @since 3.7.10
 *
 * @package dokan
 */
@@ -18,7 +18,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Endpoint namespace
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @var string
      */
@@ -28,7 +28,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Register the routes for orders.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -116,7 +116,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Get Order Downloads.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param  \WP_REST_Request $requests Request object.
      *
@@ -186,7 +186,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Grant downloadable product access to the given order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param \WP_REST_Request $requests Request object.
      *
@@ -229,7 +229,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Revoke downloadable product access to the given order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param \WP_REST_Request $requests Request object.
      *
@@ -255,7 +255,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Updates bulk orders status.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param \WP_REST_Request $requests Request object.
      *
@@ -275,7 +275,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Sanitizes order ids.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $order_ids
      *

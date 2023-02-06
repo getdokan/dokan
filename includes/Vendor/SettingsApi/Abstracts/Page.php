@@ -35,7 +35,7 @@ abstract class Page {
     /**
      * Render the settings page with tab, cad, fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $settings Settings to render.
      *
@@ -47,7 +47,7 @@ abstract class Page {
     /**
      * Render the settings page with tab, cad, fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.10
      *
      * @param array $groups Settings Group or page to render.
      *

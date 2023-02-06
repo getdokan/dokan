@@ -5,9 +5,9 @@
 **Requires at least:** 5.4  
 **Tested up to:** 6.1.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.2.2  
+**WC tested up to:** 7.3.0  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.9  
+**Stable tag:** 3.7.10  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,34 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.10 ( Jan 26, 2023 ) ###
+
+- **new:** Extended REST API support for Dokan
+-- https://example.com/wp-json/dokan/v1/orders?after=2022-10-01&before=2022-10-30
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/sales?from=2021-08-02T04:13:05Z&to=2021-12-02T04:13:05Z
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/orders
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/products
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/profile
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/preferences
+-- https://example.com/wp-json/dokan/v2/orders/{order_id}/downloads
+-- https://example.com/wp-json/dokan/v2/orders/
+-- https://example.com/wp-json/dokan//v2/orders/bulk-actions
+-- https://example.com/wp-json/dokan/v1/products/attributes/edit-product/{id}
+-- https://example.com/wp-json/dokan/v1/products/attributes/set-default/{id}
+-- https://example.com/wp-json/dokan/v1/blocks/products/{id}
+-- https://example.com/wp-json/dokan/v2/settings
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{id}
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{parent_id}/{id}
+-- https://example.com/wp-json/dokan/v2/withdraw/settings
+-- https://example.com/wp-json/dokan/v2/withdraw/summary
+-- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data
+
+- **fix:** Multiple store category modal wasn’t working for some theme
+- **fix:** Recreate reverse withdrawal payment product if no product found with stored product id
+
 
 ### v3.7.9 ( Jan 10, 2023 ) ###
 
