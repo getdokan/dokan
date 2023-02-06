@@ -23,7 +23,7 @@ test.beforeAll(async ({ request }) => {
 test.describe('seller badge api test', () => {
 
     test('get verified-seller verification types @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.get(endPoints.getVerifiedSellerVerificationTypes);
         const responseBody = await apiUtils.getResponseBody(response);
@@ -31,7 +31,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('get all seller badge events @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.get(endPoints.getAllSellerBadgeEvents);
         const responseBody = await apiUtils.getResponseBody(response);
@@ -39,7 +39,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('get all seller badges @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.get(endPoints.getAllSellerBadges);
         const responseBody = await apiUtils.getResponseBody(response);
@@ -47,7 +47,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('get single seller badge @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.get(endPoints.getSingleSellerBadge(badgeId));
         const responseBody = await apiUtils.getResponseBody(response);
@@ -55,7 +55,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('get vendor unseen seller badges @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.get(endPoints.getVendorUnseenSellerBadges(currentUserId));
         const responseBody = await apiUtils.getResponseBody(response);
@@ -63,7 +63,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('set vendor seller badges as seen @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.put(endPoints.setSellerBadgeAsSeen, { data: { vendor_id: currentUserId, badge_id: badgeId } });
         const responseBody = await apiUtils.getResponseBody(response);
@@ -71,7 +71,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('create a seller badge @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.post(endPoints.createSellerBadge, { data: payloads.createSellerBadge1 });
         const responseBody = await apiUtils.getResponseBody(response);
@@ -79,7 +79,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('update a seller badge @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.put(endPoints.updateSellerBadge(badgeId), { data: payloads.updateSellerBadge });
         const responseBody = await apiUtils.getResponseBody(response);
@@ -87,7 +87,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('update row actions @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.put(endPoints.setSellerBadgeRowActions, { data: { ids: badgeId, action: 'draft' } });
         const responseBody = await apiUtils.getResponseBody(response);
@@ -95,7 +95,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('delete a seller badge @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
 
         const response = await request.delete(endPoints.deleteSellerBadge(badgeId));
         const responseBody = await apiUtils.getResponseBody(response);
@@ -103,7 +103,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('update batch seller badges @pro', async ({ request }) => {
-        test.fail(!!process.env.CI, 'fail because of plain permalink');
+        test.fail(!!process.env.CI, 'feature not merged yet');
         
         const allBadgeIds = (await apiUtils.getAllSellerBadges()).map((a: { id: any }) => a.id);
         // console.log(allBadgeIds)

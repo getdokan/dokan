@@ -275,6 +275,8 @@ export const endPoints = {
 	// withdraw
 	getWithdrawSettings: `${SERVER_URL}/dokan/v2/withdraw/settings`,
 	getWithdrawSummary: `${SERVER_URL}/dokan/v2/withdraw/summary`,
+	getWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
+	updateWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
 
 	// orders
 	// all orders & order notes from v1 also work with v2

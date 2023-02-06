@@ -298,6 +298,13 @@ export const payloads = {
 		method: 'paypal',
 	},
 
+	updateWithdrawDisbursementSettings: {
+		schedule: 'quarterly',
+		minimum: 50,
+		reserve: 0,
+		method: 'paypal'
+	},
+
 	// settings
 
 	updateSettings: {
