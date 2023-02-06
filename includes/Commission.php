@@ -273,7 +273,7 @@ class Commission {
         }
 
         if ( $context === $this->get_shipping_fee_recipient( $order->get_id() ) ) {
-            $earning += floatval( $order->get_shipping_total() ) - $order->get_total_shipping_refunded();
+            $earning += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
         }
 
         if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
