@@ -149,10 +149,23 @@ class Helper {
             return;
         }
 
+        /**
+         * By passing true in this filter hook anyone can enable capability to select any middle category in dokan product
+         * multi-step category selection. In other words if middle category selection is enabled then we will not assign all
+         * the parent categories of the selected category.
+         */
+        $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
+
         // we need to assign all ancestor of chosen category to add to the given product
         $all_ancestors = [];
         foreach ( $chosen_categories as $term_id ) {
-            $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
+            $categories = [ $term_id ];
+
+            if ( false === $middle_category_selection ) {
+                $categories = array_merge( get_ancestors( $term_id, 'product_cat' ), $categories );
+            }
+
+            $all_ancestors = array_merge( $all_ancestors, $categories );
         }
 
         // save chosen cat to database
