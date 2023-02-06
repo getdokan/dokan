@@ -207,10 +207,10 @@
              * By passing true in this filter hook anyone can enable capability to select aby middle category in dokan product
              * multi-step category selection.
              */
-            const middleCategorySelection = wp.hooks.applyFilters( 'dokan_middle_category_selection', false );
+            const middleCategorySelection = wp.hooks.applyFilters( 'dokan_middle_category_selection', true );
 
             // If selected category has no child OR middle category selection is true then enable the category select done button else disable.
-            if ( ! haschild || middleCategorySelection ) {
+            if ( ! haschild || true === middleCategorySelection ) {
                 ProductCategory.disableDoneBtn(false);
             } else {
                 ProductCategory.disableDoneBtn();
