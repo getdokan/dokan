@@ -156,16 +156,17 @@ class Helper {
          */
         $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
 
-        // we need to assign all ancestor of chosen category to add to the given product
+
         $all_ancestors = [];
-        foreach ( $chosen_categories as $term_id ) {
-            $categories = [ $term_id ];
 
-            if ( false === $middle_category_selection ) {
-                $categories = array_merge( get_ancestors( $term_id, 'product_cat' ), $categories );
+        // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
+        if ( $middle_category_selection ) {
+            $all_ancestors = $chosen_categories;
+        } else {
+            // we need to assign all ancestor of chosen category to add to the given product
+            foreach ( $chosen_categories as $term_id ) {
+                $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
             }
-
-            $all_ancestors = array_merge( $all_ancestors, $categories );
         }
 
         // save chosen cat to database
