@@ -3869,6 +3869,7 @@ function dokan_redirect_to_admin_setup_wizard() {
  */
 function dokan_generate_ratings( $rating, $stars ) {
     $result = '';
+	$rating = wc_format_decimal( floatval( $rating ), 2 );
 
     for ( $i = 1; $i <= $stars; $i ++ ) {
         if ( $rating >= $i ) {
