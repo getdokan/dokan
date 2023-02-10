@@ -110,6 +110,13 @@
                     </div>
                 </div>
 
+                <!-- Add other payment fields here -->
+                <component v-for="(component, index) in afterFeaturedCheckbox"
+                    :key="index"
+                    :is="component"
+                    :vendorInfo="vendorInfo"
+                />
+
             </div>
 
             <!-- Add other payment fields here -->
@@ -165,6 +172,7 @@ export default {
             },
             getBankFields: dokan.hooks.applyFilters( 'getVendorBankFields', [] ),
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
+            afterFeaturedCheckbox: dokan.hooks.applyFilters( 'afterFeaturedCheckbox', [] ),
         }
     },
 
