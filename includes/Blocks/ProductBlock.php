@@ -49,6 +49,8 @@ class ProductBlock {
                 'category' => [
                     'default' => get_term( get_option( 'default_product_cat' ) ),
                 ],
+                'can_export' => false,
+                'can_import' => false,
             ]
         );
     }

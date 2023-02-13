@@ -139,6 +139,7 @@ class Registration {
             'store_name'     => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'social'         => $social_profiles,
             'payment'        => [],
+            'address'        => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : '',
             'phone'          => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
             'show_email'     => 'no',
             'location'       => '',
@@ -150,8 +151,9 @@ class Registration {
         // Intially add values on profile completion progress bar
         $dokan_settings['profile_completion']['store_name']    = 10;
         $dokan_settings['profile_completion']['phone']         = 10;
+        $dokan_settings['profile_completion']['address']       = 10;
         $dokan_settings['profile_completion']['next_todo']     = 'banner_val';
-        $dokan_settings['profile_completion']['progress']      = 20;
+        $dokan_settings['profile_completion']['progress']      = 30;
         $dokan_settings['profile_completion']['progress_vals'] = [
             'banner_val'          => 15,
             'profile_picture_val' => 15,

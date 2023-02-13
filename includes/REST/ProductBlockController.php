@@ -89,6 +89,7 @@ class ProductBlockController extends ProductController {
                     'description'         => 'view' === $context ? wpautop( do_shortcode( $product->get_description() ) ) : $product->get_description( $context ),
                     'short_description'   => 'view' === $context ? apply_filters( 'woocommerce_short_description', $product->get_short_description() ) : $product->get_short_description( $context ),
                     'post_status'         => $product->get_status( $context ),
+                    'status'              => $product->get_status( $context ),
                     'catalog_visibility'  => $product->get_catalog_visibility( $context ),
                     'categories'          => $this->get_taxonomy_terms( $product ),
                 ],

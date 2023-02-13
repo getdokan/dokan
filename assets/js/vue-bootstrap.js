@@ -719,6 +719,7 @@ if (false) {(function () {
   inheritAttrs: false,
   props: {
     src: {
+      type: String,
       default: dokan.urls.assetsUrl + '/images/store-pic.png'
     },
     showButton: {
@@ -744,9 +745,27 @@ if (false) {(function () {
       }
     };
   },
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('resetDokanUploadImage', function (obj) {
+      _this.resetImage(obj);
+    });
+  },
+  mounted: function mounted() {},
   methods: {
+    getDefaultImageSrc: function getDefaultImageSrc() {
+      return dokan.urls.assetsUrl + '/images/store-pic.png';
+    },
     uploadImage: function uploadImage() {
       this.openMediaManager(this.onSelectImage);
+    },
+    resetImage: function resetImage() {
+      var _obj$src;
+
+      var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.image.src = (_obj$src = obj.src) !== null && _obj$src !== void 0 ? _obj$src : this.getDefaultImageSrc();
+      this.image.id = 0;
     },
     onSelectImage: function onSelectImage(image) {
       this.image.src = image.url;
@@ -1322,6 +1341,13 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1355,7 +1381,8 @@ if (false) {(function () {
         label: this.__('Flat', 'dokan-lite')
       },
       getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
-      getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
+      getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', []),
+      afterFeaturedCheckbox: dokan.hooks.applyFilters('afterFeaturedCheckbox', [])
     };
   },
   created: function created() {
@@ -3670,7 +3697,15 @@ var render = function() {
                   ],
                   1
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.afterFeaturedCheckbox, function(component, index) {
+                return _c(component, {
+                  key: index,
+                  tag: "component",
+                  attrs: { vendorInfo: _vm.vendorInfo }
+                })
+              })
             ],
             2
           ),

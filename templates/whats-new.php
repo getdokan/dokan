@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.11',
+        'released' => '2023-02-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Vendor search doesn\'t work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The number of orders on the backend is not appearing depending on the vendor\'s own order count.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while creating an order from the admin dashboard with no data',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Added vendor address-related fields under vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.10',
         'released' => '2023-01-26',
         'changes'  => [
