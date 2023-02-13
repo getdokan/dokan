@@ -461,7 +461,7 @@ function dokan_products_array_filter_editable( $product ) {
  * Get row action for product
  *
  * @since 2.7.3
- * @since DOKAN_SINCE Added `$format_html` as an optional parameter
+ * @since 3.7.11 Added `$format_html` as an optional parameter
  *
  * @param object|int|string $post
  * @param bool              $format_html (Optional)

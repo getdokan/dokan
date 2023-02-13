@@ -7,7 +7,7 @@
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 7.3.0  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.10  
+**Stable tag:** 3.7.11  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -313,6 +313,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.7.11 ( Feb 13, 2023 ) ###
+
+- **fix:** Vendor search doesn't work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page
+- **fix:** The number of orders on the backend is not appearing depending on the vendor's own order count.
+- **fix:** Fixed a fatal error while creating an order from the admin dashboard with no data
+
+- **update:** Added vendor address-related fields under vendor registration form
+- **update:** Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`
+
 ### v3.7.10 ( Jan 26, 2023 ) ###
 
 - **new:** Extended REST API support for Dokan
@@ -340,14 +349,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Multiple store category modal wasn’t working for some theme
 - **fix:** Recreate reverse withdrawal payment product if no product found with stored product id
 
-
 ### v3.7.9 ( Jan 10, 2023 ) ###
 
 - **update:** Last-page and first-page pagination icon inconsistency under single store page product listing
 - **update:** Adjusted store banner image stretching issue under store list page
 - **fix:** Vendor email address is not showing up on the store header.
 
-### v3.7.8 ( Oct 27, 2022 ) ###
+### v3.7.8 ( Dec 27, 2022 ) ###
 
 - **fix:** Single Store Page store header menu and search fields style break on mobile devices
 - **fix:** Vendor dashboard total sales wasn’t displaying decimal values
