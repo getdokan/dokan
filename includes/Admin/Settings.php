@@ -452,6 +452,13 @@ class Settings {
                     'default' => '12',
                     'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
+                'enabled_address_on_reg'             => [
+                    'name'    => 'enabled_address_on_reg',
+                    'label'   => __( 'Enable Address Fields', 'dokan-lite' ),
+                    'desc'    => __( 'Add Address Fields on the Vendor Registration form', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
+                ],
             ]
         );
 

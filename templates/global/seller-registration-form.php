@@ -30,9 +30,17 @@
         <strong id="url-alart-mgs" class="pull-right"></strong>
         <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php echo ! empty( $data['shopurl'] ) ? esc_attr( $data['shopurl'] ) : ''; ?>" required="required" />
         <small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"></strong></small>
-    </p>
+    </p>                                   
 
     <?php
+
+    /**
+     * Store Address Fields
+     */
+
+    if ( 'on' === dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'off' ) ) {
+        dokan_seller_address_fields( false, true );
+    }
     /**
      * @since 3.2.8
      */
