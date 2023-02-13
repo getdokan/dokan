@@ -523,11 +523,11 @@ class Settings {
                 ],
                 'new_seller_enable_selling' => [
                     'name'    => 'new_seller_enable_selling',
-                    'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
-                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
+                    'label'   => __( 'Enable Selling', 'dokan-lite' ),
+                    'desc'    => __( 'Immediately enable selling for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
-                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from Dashboard -> Vendors.', 'dokan-lite' ),
+                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
