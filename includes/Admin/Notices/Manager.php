@@ -47,7 +47,6 @@ class Manager {
         add_action( 'admin_enqueue_scripts', [ $this, 'load_dokan_admin_notices_styles' ] );
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ] );
-        add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
     }
 
     /**
@@ -94,36 +93,5 @@ class Manager {
                 ]
             );
         }
-    }
-
-    /**
-     * Display permalink format not working for Dokan notice
-     *
-     * @since 3.3.3
-     *
-     * @param array $notices
-     *
-     * @return array
-     */
-    public function show_permalink_setting_notice( $notices ) {
-        $structure = get_option( 'permalink_structure' );
-
-        if ( empty( $structure ) || '/archives/%post_id%' === $structure ) {
-            $notices[] = [
-                'type'        => 'alert',
-                /* translators: %s permalink settings url */
-                'description' => sprintf( __( 'The <strong>Plain and Numeric</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href="%s">Settings > Permalinks</a>', 'dokan-lite' ), admin_url( 'options-permalink.php' ) ),
-                'priority'    => 1,
-                'actions'     => [
-                    [
-                        'type'   => 'primary',
-                        'text'   => __( 'Go to Settings', 'dokan-lite' ),
-                        'action' => admin_url( 'options-permalink.php' ),
-                    ],
-                ],
-            ];
-        }
-
-        return $notices;
     }
 }

@@ -2152,7 +2152,7 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
-    $url = get_permalink( $page_id );
+    $url = rtrim( get_permalink( $page_id ) ) . '/';
 
     if ( ! empty( $name ) ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
