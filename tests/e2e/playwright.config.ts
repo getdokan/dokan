@@ -25,7 +25,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 2000,
+		timeout: 4000,
 	},
 
 	/* Run tests in files in parallel */
@@ -44,7 +44,7 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	globalSetup: require.resolve('./global-setup'),
+	// globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state

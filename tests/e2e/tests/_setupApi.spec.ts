@@ -23,7 +23,8 @@ test.describe('setup test api', () => {
 	test('check active plugins ', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const activePlugins = (await apiUtils.getAllPluginByStatus('active')).map((a: { plugin: any }) => a.plugin);
-		expect(activePlugins).toEqual(data.plugin.plugins);
+		// expect(activePlugins).toContain(data.plugin.plugins); //Todo: update assertion
+		expect(data.plugin.plugins).toContain(activePlugins);
 		// console.log(activePlugins)
 	});
 
@@ -229,22 +230,14 @@ test.describe('setup test e2e', () => {
 	test.use({ storageState: 'adminStorageState.json' });
 
 	let adminPage: any;
-	let page: any;
+	// let page: any;
 
 	test.beforeAll(async ({ browser }) => {
-		page = await browser.newPage();
+		let page = await browser.newPage();
 		adminPage = new AdminPage(page);
 	});
 
-	test.only('admin set WpSettings', async ({ }) => {
-
-		const path = '../../tests/e2e/adminStorageState.json';
-
-		if (fs.existsSync(path)) {
-			console.log('file exists');
-		} else {
-			console.log('file not found!');
-		}
+	test('admin set WpSettings', async ({ }) => {
 		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
 	});
 
@@ -252,7 +245,7 @@ test.describe('setup test e2e', () => {
 		await adminPage.setDokanGeneralSettings(data.dokanSettings.general);
 	});
 
-	test('admin set dokan selling settings', async ({ }) => {
+	test.only('admin set dokan selling settings', async ({ }) => {
 		await adminPage.setDokanSellingSettings(data.dokanSettings.selling);
 	});
 

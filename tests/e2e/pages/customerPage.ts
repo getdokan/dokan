@@ -7,201 +7,207 @@ import { helpers } from '../utils/helpers';
 import { data } from '../utils/testData';
 
 export class CustomerPage extends BasePage {
-	constructor( page: Page ) {
-		super( page );
+	constructor(page: Page) {
+		super(page);
 	}
 
-	loginPage = new LoginPage( this.page );
-	adminPage = new AdminPage( this.page );
+	loginPage = new LoginPage(this.page);
+	adminPage = new AdminPage(this.page);
 
 	// navigation
 
 	async goToMyAccount(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.myAccount );
+		await this.goIfNotThere(data.subUrls.frontend.myAccount);
 	}
 
 	async goToCart(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.cart );
+		await this.goIfNotThere(data.subUrls.frontend.cart);
 	}
 
 	async goToCheckout(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.checkout );
+		await this.goIfNotThere(data.subUrls.frontend.checkout);
 	}
 
 	async goToShop(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.shop );
+		await this.goIfNotThere(data.subUrls.frontend.shop);
 	}
 
 	async goToStoreList(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.storeListing );
+		await this.goIfNotThere(data.subUrls.frontend.storeListing);
 	}
 
 	// customer details
 
 	// customer register
-	async customerRegister( customerInfo: { lastName: () => string; country: string; zipCode: string; emailDomain: string; city: string; accountName: string; companyName: string; storename: () => string; bankIban: string; swiftCode: string; bankName: string; password: any; countrySelectValue: string; street1: string; password1: string; street2: string; state: string; email: string; addressChangeSuccessMessage: string; getSupport: { supportSubmitSuccessMessage: string; subject: string; message: string }; accountNumber: string; bankAddress: string; stateSelectValue: string; firstName: () => string; routingNumber: string; companyId: string; phone: string; iban: string; username: () => string; vatNumber: string } ): Promise<void> {
+	async customerRegister(customerInfo: { lastName: () => string; country: string; zipCode: string; emailDomain: string; city: string; accountName: string; companyName: string; storename: () => string; bankIban: string; swiftCode: string; bankName: string; password: any; countrySelectValue: string; street1: string; password1: string; street2: string; state: string; email: string; addressChangeSuccessMessage: string; getSupport: { supportSubmitSuccessMessage: string; subject: string; message: string }; accountNumber: string; bankAddress: string; stateSelectValue: string; firstName: () => string; routingNumber: string; companyId: string; phone: string; iban: string; username: () => string; vatNumber: string }): Promise<void> {
 		const username: string = customerInfo.firstName();
 		await this.goToMyAccount();
-		const loginIsVisible = await this.isVisible( selector.customer.cRegistration.regEmail );
-		if ( ! loginIsVisible ) {
+		const loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
+		if (!loginIsVisible) {
 			await this.loginPage.logout();
 		}
-		await this.clearAndType( selector.customer.cRegistration.regEmail, username + data.customer.customerInfo.emailDomain );
-		await this.clearAndType( selector.customer.cRegistration.regPassword, customerInfo.password );
-		await this.click( selector.customer.cRegistration.regCustomer );
-		await this.click( selector.customer.cRegistration.register );
+		await this.clearAndType(selector.customer.cRegistration.regEmail, username + data.customer.customerInfo.emailDomain);
+		await this.clearAndType(selector.customer.cRegistration.regPassword, customerInfo.password);
+		await this.click(selector.customer.cRegistration.regCustomer);
+		await this.click(selector.customer.cRegistration.register);
 
-		const registrationErrorIsVisible = await this.isVisible( selector.customer.cWooSelector.wooCommerceError );
-		if ( registrationErrorIsVisible ) {
-			const errorMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceError );
-			if ( errorMessage.includes( data.customer.registrationErrorMessage ) ) {
+		const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
+		if (registrationErrorIsVisible) {
+			const errorMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceError);
+			if (errorMessage.includes(data.customer.registrationErrorMessage)) {
 				return;
 			}
 		}
 		const loggedInUser = await this.getCurrentUser();
-		expect( username.toLowerCase() ).toBe( loggedInUser );
+		expect(username.toLowerCase()).toBe(loggedInUser);
 	}
 
 	// customer become vendor
-	async customerBecomeVendor( customerInfo ): Promise<void> {
+	async customerBecomeVendor(customerInfo): Promise<void> {
 		const firstName = customerInfo.firstName();
-		await this.click( selector.customer.cDashboard.becomeVendor );
+		await this.click(selector.customer.cDashboard.becomeVendor);
 		// vendor registration form
-		await this.type( selector.customer.cDashboard.firstName, firstName );
-		await this.type( selector.customer.cDashboard.lastName, customerInfo.lastName() );
-		await this.type( selector.customer.cDashboard.shopName, customerInfo.storename() );
-		await this.click( selector.customer.cDashboard.shopUrl );
-		await this.type( selector.customer.cDashboard.address, customerInfo.street1 );
-		await this.type( selector.customer.cDashboard.phone, customerInfo.phone );
-		await this.type( selector.customer.cDashboard.companyName, customerInfo.companyName );
-		await this.type( selector.customer.cDashboard.companyId, customerInfo.companyId );
-		await this.type( selector.customer.cDashboard.vatNumber, customerInfo.vatNumber );
-		await this.type( selector.customer.cDashboard.bankName, customerInfo.bankName );
-		await this.type( selector.customer.cDashboard.bankIban, customerInfo.bankIban );
-		await this.clickIfVisible( selector.customer.cDashboard.termsAndConditions );
-		const subscriptionPackIsVisible = await this.isVisible( selector.customer.cDashboard.subscriptionPack ); //TODO: uncmment after fix css issue
-		if ( subscriptionPackIsVisible ) {
+		await this.type(selector.customer.cDashboard.firstName, firstName);
+		await this.type(selector.customer.cDashboard.lastName, customerInfo.lastName());
+		await this.type(selector.customer.cDashboard.shopName, customerInfo.storename());
+		await this.click(selector.customer.cDashboard.shopUrl);
+		await this.type(selector.customer.cDashboard.address, customerInfo.street1);
+		await this.type(selector.customer.cDashboard.phone, customerInfo.phone);
+		await this.type(selector.customer.cDashboard.companyName, customerInfo.companyName);
+		await this.type(selector.customer.cDashboard.companyId, customerInfo.companyId);
+		await this.type(selector.customer.cDashboard.vatNumber, customerInfo.vatNumber);
+		await this.type(selector.customer.cDashboard.bankName, customerInfo.bankName);
+		await this.type(selector.customer.cDashboard.bankIban, customerInfo.bankIban);
+		await this.clickIfVisible(selector.customer.cDashboard.termsAndConditions);
+		const subscriptionPackIsVisible = await this.isVisible(selector.customer.cDashboard.subscriptionPack); //TODO: uncmment after fix css issue
+		if (subscriptionPackIsVisible) {
 			// await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())
-			await this.selectByLabel( selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring );
+			await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		}
-		await this.click( selector.customer.cDashboard.becomeAVendor );
+		await this.click(selector.customer.cDashboard.becomeAVendor);
 
-		if ( subscriptionPackIsVisible ) {
-			await this.placeOrder( 'bank', false, false, true );
+		if (subscriptionPackIsVisible) {
+			await this.placeOrder('bank', false, false, true);
 
 			// skip vendor setup wizard
-			await this.click( selector.vendor.vSetup.notRightNow );
+			await this.click(selector.vendor.vSetup.notRightNow);
 
-			const dashboardIsVisible = await this.isVisible( selector.vendor.vDashboard.dashboard );
-			expect( dashboardIsVisible ).toBe( true );
+			// const dashboardIsVisible = await this.isVisible(selector.vendor.vDashboard.dashboard);
+			// expect(dashboardIsVisible).toBe(true);
+			await expect(this.page.locator(selector.vendor.vDashboard.dashboard)).toBeVisible();
 		}
 	}
 
 	// customer become wholesale customer
 	async customerBecomeWholesaleCustomer(): Promise<void> {
 		const currentUser = await this.getCurrentUser();
-		await this.click( selector.customer.cDashboard.becomeWholesaleCustomer );
-		const returnMessage = await this.getElementText( selector.customer.cDashboard.wholesaleRequestReturnMessage );
-		if ( returnMessage != data.wholesale.wholesaleRequestSendMessage ) {
-			const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-			expect( successMessage ).toMatch( data.wholesale.becomeWholesaleCustomerSuccessMessage );
+		await this.click(selector.customer.cDashboard.becomeWholesaleCustomer);
+		const returnMessage = await this.getElementText(selector.customer.cDashboard.wholesaleRequestReturnMessage);
+		if (returnMessage != data.wholesale.wholesaleRequestSendMessage) {
+			// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+			// expect(successMessage).toMatch(data.wholesale.becomeWholesaleCustomerSuccessMessage);
+			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.becomeWholesaleCustomerSuccessMessage)
 		} else {
-			await this.loginPage.switchUser( data.admin );
+			await this.loginPage.switchUser(data.admin);
 			// await this.adminPage.adminApproveWholesaleRequest(currentUser)
 		}
 	}
 
 	// customer add billing address
-	async addBillingAddress( billingInfo ): Promise<void> {
+	async addBillingAddress(billingInfo): Promise<void> {
 		await this.goToMyAccount();
 
-		await this.click( selector.customer.cMyAccount.addresses );
+		await this.click(selector.customer.cMyAccount.addresses);
 		//billing address
-		await this.click( selector.customer.cAddress.editBillingAddress );
-		await this.clearAndType( selector.customer.cAddress.billingFirstName, billingInfo.firstName() );
-		await this.clearAndType( selector.customer.cAddress.billingLastName, billingInfo.lastName() );
-		await this.clearAndType( selector.customer.cAddress.billingCompanyName, billingInfo.companyName );
-		await this.clearAndType( selector.customer.cAddress.billingCompanyID, billingInfo.companyId );
-		await this.clearAndType( selector.customer.cAddress.billingVatOrTaxNumber, billingInfo.vatNumber );
-		await this.clearAndType( selector.customer.cAddress.billingNameOfBank, billingInfo.bankName );
-		await this.clearAndType( selector.customer.cAddress.billingBankIban, billingInfo.bankIban );
-		await this.click( selector.customer.cAddress.billingCountryOrRegion );
-		await this.type( selector.customer.cAddress.billingCountryOrRegionInput, billingInfo.country );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.billingStreetAddress, billingInfo.street1 );
-		await this.clearAndType( selector.customer.cAddress.billingStreetAddress2, billingInfo.street2 );
-		await this.clearAndType( selector.customer.cAddress.billingTownCity, billingInfo.city );
-		await this.click( selector.customer.cAddress.billingState );
-		await this.type( selector.customer.cAddress.billingStateInput, billingInfo.state );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.billingZipCode, billingInfo.zipCode );
-		await this.clearAndType( selector.customer.cAddress.billingPhone, billingInfo.phone );
-		await this.clearAndType( selector.customer.cAddress.billingEmailAddress, billingInfo.email );
-		await this.click( selector.customer.cAddress.billingSaveAddress );
+		await this.click(selector.customer.cAddress.editBillingAddress);
+		await this.clearAndType(selector.customer.cAddress.billingFirstName, billingInfo.firstName());
+		await this.clearAndType(selector.customer.cAddress.billingLastName, billingInfo.lastName());
+		await this.clearAndType(selector.customer.cAddress.billingCompanyName, billingInfo.companyName);
+		await this.clearAndType(selector.customer.cAddress.billingCompanyID, billingInfo.companyId);
+		await this.clearAndType(selector.customer.cAddress.billingVatOrTaxNumber, billingInfo.vatNumber);
+		await this.clearAndType(selector.customer.cAddress.billingNameOfBank, billingInfo.bankName);
+		await this.clearAndType(selector.customer.cAddress.billingBankIban, billingInfo.bankIban);
+		await this.click(selector.customer.cAddress.billingCountryOrRegion);
+		await this.type(selector.customer.cAddress.billingCountryOrRegionInput, billingInfo.country);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
+		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
+		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
+		await this.click(selector.customer.cAddress.billingState);
+		await this.type(selector.customer.cAddress.billingStateInput, billingInfo.state);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.billingZipCode, billingInfo.zipCode);
+		await this.clearAndType(selector.customer.cAddress.billingPhone, billingInfo.phone);
+		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email);
+		await this.click(selector.customer.cAddress.billingSaveAddress);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( data.customer.customerInfo.addressChangeSuccessMessage );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(data.customer.customerInfo.addressChangeSuccessMessage);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
 	}
 
 	// customer add shipping address
-	async addShippingAddress( shippingInfo ): Promise<void> {
+	async addShippingAddress(shippingInfo): Promise<void> {
 		await this.goToMyAccount();
 
-		await this.click( selector.customer.cMyAccount.addresses );
+		await this.click(selector.customer.cMyAccount.addresses);
 		//shipping address
-		await this.click( selector.customer.cAddress.editShippingAddress );
-		await this.clearAndType( selector.customer.cAddress.shippingFirstName, shippingInfo.firstName() );
-		await this.clearAndType( selector.customer.cAddress.shippingLastName, shippingInfo.lastName() );
-		await this.clearAndType( selector.customer.cAddress.shippingCompanyName, shippingInfo.companyName );
-		await this.click( selector.customer.cAddress.shippingCountryOrRegion );
-		await this.type( selector.customer.cAddress.shippingCountryOrRegionInput, shippingInfo.country );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1 );
-		await this.clearAndType( selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2 );
-		await this.clearAndType( selector.customer.cAddress.shippingTownCity, shippingInfo.city );
-		await this.click( selector.customer.cAddress.shippingState );
-		await this.type( selector.customer.cAddress.shippingStateInput, shippingInfo.state );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode );
-		await this.click( selector.customer.cAddress.shippingSaveAddress );
+		await this.click(selector.customer.cAddress.editShippingAddress);
+		await this.clearAndType(selector.customer.cAddress.shippingFirstName, shippingInfo.firstName());
+		await this.clearAndType(selector.customer.cAddress.shippingLastName, shippingInfo.lastName());
+		await this.clearAndType(selector.customer.cAddress.shippingCompanyName, shippingInfo.companyName);
+		await this.click(selector.customer.cAddress.shippingCountryOrRegion);
+		await this.type(selector.customer.cAddress.shippingCountryOrRegionInput, shippingInfo.country);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1);
+		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2);
+		await this.clearAndType(selector.customer.cAddress.shippingTownCity, shippingInfo.city);
+		await this.click(selector.customer.cAddress.shippingState);
+		await this.type(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode);
+		await this.click(selector.customer.cAddress.shippingSaveAddress);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( data.customer.customerInfo.addressChangeSuccessMessage );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(data.customer.customerInfo.addressChangeSuccessMessage);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
 	}
 
 	// customer Send Rma Request
-	async sendRmaMessage( message: string ): Promise<void> {
-		await this.click( selector.customer.cMyAccount.rmaRequests );
+	async sendRmaMessage(message: string): Promise<void> {
+		await this.click(selector.customer.cMyAccount.rmaRequests);
 
-		await this.type( selector.customer.cRma.message, message );
-		await this.click( selector.customer.cRma.sendMessage );
+		await this.type(selector.customer.cRma.message, message);
+		await this.click(selector.customer.cRma.sendMessage);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( data.customer.rma.sendMessage );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(data.customer.rma.sendMessage);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.rma.sendMessage)
 	}
 
 	// customer update password
-	async updatePassword( currentPassword: string, newPassword: string ): Promise<void> {
-		await this.clearAndType( selector.customer.cAccountDetails.currentPassword, currentPassword );
-		await this.clearAndType( selector.customer.cAccountDetails.NewPassword, newPassword );
-		await this.clearAndType( selector.customer.cAccountDetails.confirmNewPassword, newPassword );
-		await this.click( selector.customer.cAccountDetails.saveChanges );
+	async updatePassword(currentPassword: string, newPassword: string): Promise<void> {
+		await this.clearAndType(selector.customer.cAccountDetails.currentPassword, currentPassword);
+		await this.clearAndType(selector.customer.cAccountDetails.NewPassword, newPassword);
+		await this.clearAndType(selector.customer.cAccountDetails.confirmNewPassword, newPassword);
+		await this.click(selector.customer.cAccountDetails.saveChanges);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( data.customer.account.updateSuccessMessage );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(data.customer.account.updateSuccessMessage);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.account.updateSuccessMessage)
 	}
 
 	// customer add customer details
-	async addCustomerDetails( customerInfo ): Promise<void> {
+	async addCustomerDetails(customerInfo): Promise<void> {
 		await this.goToMyAccount();
 
-		await this.click( selector.customer.cMyAccount.accountDetails );
+		await this.click(selector.customer.cMyAccount.accountDetails);
 
-		await this.clearAndType( selector.customer.cAccountDetails.firstName, customerInfo.firstName() );
-		await this.clearAndType( selector.customer.cAccountDetails.lastName, customerInfo.lastName() );
-		await this.clearAndType( selector.customer.cAccountDetails.displayName, customerInfo.firstName() );
+		await this.clearAndType(selector.customer.cAccountDetails.firstName, customerInfo.firstName());
+		await this.clearAndType(selector.customer.cAccountDetails.lastName, customerInfo.lastName());
+		await this.clearAndType(selector.customer.cAccountDetails.displayName, customerInfo.firstName());
 		// await this.clearAndType(selector.customer.cAccountDetails.email, customerInfo.email())
-		await this.updatePassword( customerInfo.password, customerInfo.password1 );
+		await this.updatePassword(customerInfo.password, customerInfo.password1);
 
 		// cleanup
 		// await this.click(selector.customer.cMyAccount.accountDetails)
@@ -209,323 +215,336 @@ export class CustomerPage extends BasePage {
 	}
 
 	// customer search vendor
-	async searchVendor( vendorName: string ): Promise<void> {
+	async searchVendor(vendorName: string): Promise<void> {
 		await this.goToStoreList();
 
-		await this.click( selector.customer.cStoreList.filter );
-		await this.type( selector.customer.cStoreList.searchVendors, vendorName );
-		await this.click( selector.customer.cStoreList.apply );
+		await this.click(selector.customer.cStoreList.filter);
+		await this.type(selector.customer.cStoreList.searchVendors, vendorName);
+		await this.click(selector.customer.cStoreList.apply);
 
-		await this.waitForSelector( selector.customer.cStoreList.visitStore( vendorName ) );
-		const cartIsVisible = await this.isVisible( selector.customer.cStoreList.visitStore( vendorName ) );
-		expect( cartIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cStoreList.visitStore(vendorName));
+		// const cartIsVisible = await this.isVisible(selector.customer.cStoreList.visitStore(vendorName));
+		// expect(cartIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cStoreList.visitStore(vendorName))).toBeVisible();
 	}
 
 	// customer follow vendor
-	async followVendor( vendorName: string ): Promise<void> {
-		await this.searchVendor( vendorName );
-		const currentStoreFollowStatus = await this.getElementText( selector.customer.cStoreList.currentStoreFollowStatus( vendorName ) );
+	async followVendor(vendorName: string): Promise<void> {
+		await this.searchVendor(vendorName);
+		const currentStoreFollowStatus = await this.getElementText(selector.customer.cStoreList.currentStoreFollowStatus(vendorName));
 		// unfollow if not already
-		if ( currentStoreFollowStatus == 'Following' ) {
-			const response = await this.clickAndWaitForResponse( data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore( vendorName ) );
-			expect( response.ok() ).toBeTruthy();
+		if (currentStoreFollowStatus == 'Following') {
+			const response = await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName));
+			expect(response.ok()).toBeTruthy();
 		}
-		const response = await this.clickAndWaitForResponse( data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore( vendorName ) );
-		expect( response.ok() ).toBeTruthy();
-		const storeFollowStatus = await this.getElementText( selector.customer.cStoreList.currentStoreFollowStatus( vendorName ) );
-		expect( storeFollowStatus ).toMatch( 'Following' );
+		const response = await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(vendorName));
+		expect(response.ok()).toBeTruthy();
+		const storeFollowStatus = await this.getElementText(selector.customer.cStoreList.currentStoreFollowStatus(vendorName));
+		expect(storeFollowStatus).toMatch('Following');
 	}
 
 	// customer review store
-	async reviewStore( vendorName: string, store ): Promise<void> {
-		await this.searchVendor( vendorName );
+	async reviewStore(vendorName: string, store): Promise<void> {
+		await this.searchVendor(vendorName);
 
-		await this.click( selector.customer.cStoreList.visitStore( vendorName ) );
+		await this.click(selector.customer.cStoreList.visitStore(vendorName));
 
 		const reviewMessage = store.reviewMessage();
-		await this.clickAndWaitForNavigation( selector.customer.cSingleStore.reviews );
+		await this.clickAndWaitForNavigation(selector.customer.cSingleStore.reviews);
 
-		const writeAReviewIsVisible = await this.isVisible( selector.customer.cSingleStore.writeAReview );
-		if ( writeAReviewIsVisible ) {
-			await this.click( selector.customer.cSingleStore.writeAReview );
+		const writeAReviewIsVisible = await this.isVisible(selector.customer.cSingleStore.writeAReview);
+		if (writeAReviewIsVisible) {
+			await this.click(selector.customer.cSingleStore.writeAReview);
 		} else {
-			await this.click( selector.customer.cSingleStore.editReview );
+			await this.click(selector.customer.cSingleStore.editReview);
 		}
 
 		// await this.setElementAttributeValue(selector.customer.cSingleStore.rating, 'style', store.rating) //TODO
-		await this.clearAndType( selector.customer.cSingleStore.reviewTitle, store.reviewTitle );
-		await this.clearAndType( selector.customer.cSingleStore.reviewMessage, reviewMessage );
-		await this.click( selector.customer.cSingleStore.submitReview );
+		await this.clearAndType(selector.customer.cSingleStore.reviewTitle, store.reviewTitle);
+		await this.clearAndType(selector.customer.cSingleStore.reviewMessage, reviewMessage);
+		await this.click(selector.customer.cSingleStore.submitReview);
 
-		const submittedReviewMessage = await this.getElementText( selector.customer.cSingleStore.submittedReview( reviewMessage ) );
-		expect( submittedReviewMessage ).toMatch( reviewMessage );
+		const submittedReviewMessage = await this.getElementText(selector.customer.cSingleStore.submittedReview(reviewMessage));
+		expect(submittedReviewMessage).toMatch(reviewMessage);
 	}
 
 	// customer ask for get support
-	async askForGetSupport( vendorName: string, getSupport ): Promise<void> {
-		await this.searchVendor( vendorName );
+	async askForGetSupport(vendorName: string, getSupport): Promise<void> {
+		await this.searchVendor(vendorName);
 
-		await this.click( selector.customer.cStoreList.visitStore( vendorName ) );
+		await this.click(selector.customer.cStoreList.visitStore(vendorName));
 
-		await this.click( selector.customer.cSingleStore.getSupport );
+		await this.click(selector.customer.cSingleStore.getSupport);
 
-		await this.type( selector.customer.cSingleStore.subject, getSupport.subject );
-		await this.type( selector.customer.cSingleStore.message, getSupport.message );
-		await this.click( selector.customer.cSingleStore.submitGetSupport );
+		await this.type(selector.customer.cSingleStore.subject, getSupport.subject);
+		await this.type(selector.customer.cSingleStore.message, getSupport.message);
+		await this.click(selector.customer.cSingleStore.submitGetSupport);
 
-		const successMessage = await this.getElementText( selector.customer.cDokanSelector.dokanAlertSuccessMessage );
-		expect( successMessage ).toMatch( getSupport.supportSubmitSuccessMessage );
+		const successMessage = await this.getElementText(selector.customer.cDokanSelector.dokanAlertSuccessMessage);
+		expect(successMessage).toMatch(getSupport.supportSubmitSuccessMessage);
 
 		// close popup
-		await this.click( selector.customer.cDokanSelector.dokanAlertClose );
+		await this.click(selector.customer.cDokanSelector.dokanAlertClose);
 	}
 
 	// customer add customer support ticket
-	async addCustomerSupportTicket( message: string ): Promise<void> {
-		await this.click( selector.customer.cMyAccount.sellerSupportTickets );
-		await this.click( selector.customer.cSupportTickets.openTickets );
-		await this.click( selector.customer.cSupportTickets.firstOpenTicket );
+	async addCustomerSupportTicket(message: string): Promise<void> {
+		await this.click(selector.customer.cMyAccount.sellerSupportTickets);
+		await this.click(selector.customer.cSupportTickets.openTickets);
+		await this.click(selector.customer.cSupportTickets.firstOpenTicket);
 
-		await this.clearAndType( selector.customer.cSupportTickets.addReply, message );
-		await this.click( selector.customer.cSupportTickets.submitReply );
+		await this.clearAndType(selector.customer.cSupportTickets.addReply, message);
+		await this.click(selector.customer.cSupportTickets.submitReply);
 
-		const chatTextIsVisible = await this.isVisible( selector.customer.cSupportTickets.chatText( message ) );
-		expect( chatTextIsVisible ).toBe( true );
+		// const chatTextIsVisible = await this.isVisible(selector.customer.cSupportTickets.chatText(message));
+		// expect(chatTextIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cSupportTickets.chatText(message))).toBeVisible();	
 	}
 
 	// customer rate & review product
-	async reviewProduct( productName: string, review ): Promise<void> {
-		await this.goToProductDetails( productName );
+	async reviewProduct(productName: string, review): Promise<void> {
+		await this.goToProductDetails(productName);
 		let reviewMessage: string;
-		reviewMessage = await this.rateProduct( review );
-		const duplicateCommentAlertIsVisible = await this.isVisible( selector.customer.cSingleProduct.duplicateCommentAlert );
-		if ( duplicateCommentAlertIsVisible ) {
-			await this.click( selector.customer.cSingleProduct.backFromDuplicateCommentAlert );
-			reviewMessage = await this.rateProduct( review );
+		reviewMessage = await this.rateProduct(review);
+		const duplicateCommentAlertIsVisible = await this.isVisible(selector.customer.cSingleProduct.duplicateCommentAlert);
+		if (duplicateCommentAlertIsVisible) {
+			await this.click(selector.customer.cSingleProduct.backFromDuplicateCommentAlert);
+			reviewMessage = await this.rateProduct(review);
 		}
 
-		const submittedReviewMessage = await this.getElementText( selector.customer.cSingleProduct.submittedReview( reviewMessage ) );
-		expect( submittedReviewMessage ).toMatch( reviewMessage );
+		const submittedReviewMessage = await this.getElementText(selector.customer.cSingleProduct.submittedReview(reviewMessage));
+		expect(submittedReviewMessage).toMatch(reviewMessage);
 	}
 
 	// rate product
-	async rateProduct( review ): Promise<string> {
+	async rateProduct(review): Promise<string> {
 		const reviewMessage = review.reviewMessage();
-		await this.click( selector.customer.cSingleProduct.reviews );
+		await this.click(selector.customer.cSingleProduct.reviews);
 
-		await this.click( selector.customer.cSingleProduct.rating( review.rating ) );
-		await this.clearAndType( selector.customer.cSingleProduct.reviewMessage, reviewMessage );
-		await this.click( selector.customer.cSingleProduct.submitReview );
+		await this.click(selector.customer.cSingleProduct.rating(review.rating));
+		await this.clearAndType(selector.customer.cSingleProduct.reviewMessage, reviewMessage);
+		await this.click(selector.customer.cSingleProduct.submitReview);
 		return reviewMessage;
 	}
 
 	// customer report product
-	async reportProduct( productName: string, report ): Promise<void> {
-		await this.goToProductDetails( productName );
+	async reportProduct(productName: string, report): Promise<void> {
+		await this.goToProductDetails(productName);
 
-		await this.click( selector.customer.cSingleProduct.reportAbuse );
-		await this.click( selector.customer.cSingleProduct.reportReasonByName( report.reportReason ) );
-		await this.type( selector.customer.cSingleProduct.reportDescription, report.reportReasonDescription );
-		await this.click( selector.customer.cSingleProduct.reportSubmit );
+		await this.click(selector.customer.cSingleProduct.reportAbuse);
+		await this.click(selector.customer.cSingleProduct.reportReasonByName(report.reportReason));
+		await this.type(selector.customer.cSingleProduct.reportDescription, report.reportReasonDescription);
+		await this.click(selector.customer.cSingleProduct.reportSubmit);
 
-		const successMessage = await this.getElementText( selector.customer.cSingleProduct.reportSubmitSuccessMessage );
-		expect( successMessage ).toMatch( report.reportSubmitSuccessMessage );
+		const successMessage = await this.getElementText(selector.customer.cSingleProduct.reportSubmitSuccessMessage);
+		expect(successMessage).toMatch(report.reportSubmitSuccessMessage);
 
 		// close popup
-		await this.click( selector.customer.cSingleProduct.confirmReportSubmit );
+		await this.click(selector.customer.cSingleProduct.confirmReportSubmit);
 	}
 
 	// customer enquire product
-	async enquireProduct( productName: string, enquiry ): Promise<void> {
-		await this.goToProductDetails( productName );
+	async enquireProduct(productName: string, enquiry): Promise<void> {
+		await this.goToProductDetails(productName);
 
-		await this.click( selector.customer.cSingleProduct.productEnquiry );
-		await this.type( selector.customer.cSingleProduct.enquiryMessage, enquiry.enquiryDetails );
-		await this.click( selector.customer.cSingleProduct.submitEnquiry );
+		await this.click(selector.customer.cSingleProduct.productEnquiry);
+		await this.type(selector.customer.cSingleProduct.enquiryMessage, enquiry.enquiryDetails);
+		await this.click(selector.customer.cSingleProduct.submitEnquiry);
 
-		const successMessage = await this.getElementText( selector.customer.cSingleProduct.submitEnquirySuccessMessage );
-		expect( successMessage ).toMatch( enquiry.enquirySubmitSuccessMessage );
+		const successMessage = await this.getElementText(selector.customer.cSingleProduct.submitEnquirySuccessMessage);
+		expect(successMessage).toMatch(enquiry.enquirySubmitSuccessMessage);
 	}
 
-	async buyProduct( productName: string, couponCode: boolean = false, getOrderDetails: boolean = false, paymentMethod: string = 'bank', paymentDetails: any ): Promise<void | object> {
+	async buyProduct(productName: string, couponCode: boolean = false, getOrderDetails: boolean = false, paymentMethod: string = 'bank', paymentDetails: any): Promise<void | object> {
 		// clear cart before buying
 		await this.clearCart();
 		// buy product
-		await this.searchProduct( productName );
-		await this.addProductToCartFromShop( productName );
+		await this.searchProduct(productName);
+		await this.addProductToCartFromShop(productName);
 		await this.goToCartFromShop();
-		if ( couponCode ) {
-			await this.applyCoupon( couponCode );
+		if (couponCode) {
+			await this.applyCoupon(couponCode);
 		}
 		await this.goToCheckoutFromCart();
-		return await this.placeOrder( paymentMethod, getOrderDetails, paymentDetails );
+		return await this.placeOrder(paymentMethod, getOrderDetails, paymentDetails);
 	}
 
 	// customer search product
-	async searchProduct( productName ): Promise<void> {
+	async searchProduct(productName): Promise<void> {
 		await this.goToShop();
 
-		await this.type( selector.customer.cShop.searchProduct, productName );
-		await this.click( selector.customer.cShop.search );
+		await this.type(selector.customer.cShop.searchProduct, productName);
+		await this.click(selector.customer.cShop.search);
 
-		const searchedProductName = await this.getElementText( selector.customer.cShop.searchedProductName );
-		expect( searchedProductName ).toMatch( productName );
+		const searchedProductName = await this.getElementText(selector.customer.cShop.searchedProductName);
+		expect(searchedProductName).toMatch(productName);
 	}
 
 	// customer go to product(single) details
-	async goToProductDetails( productName ): Promise<void> {
-		await this.searchProduct( productName );
+	async goToProductDetails(productName): Promise<void> {
+		await this.searchProduct(productName);
 
-		await this.click( selector.customer.cShop.productDetailsViewLink );
+		await this.click(selector.customer.cShop.productDetailsViewLink);
 
-		const productTitle = await this.getElementText( selector.customer.cSingleProduct.productTitle );
-		expect( productTitle ).toMatch( productName );
+		const productTitle = await this.getElementText(selector.customer.cSingleProduct.productTitle);
+		expect(productTitle).toMatch(productName);
 	}
 
 	// customer add product to cart from shop page
-	async addProductToCartFromShop( productName ): Promise<void> {
+	async addProductToCartFromShop(productName): Promise<void> {
 		await this.goToShop();
-		await this.searchProduct( productName );
+		await this.searchProduct(productName);
 
-		await this.click( selector.customer.cShop.addToCart );
+		await this.click(selector.customer.cShop.addToCart);
 
-		await this.waitForSelector( selector.customer.cShop.viewCart );
-		const cartIsVisible = await this.isVisible( selector.customer.cShop.viewCart );
-		expect( cartIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cShop.viewCart);
+		// const cartIsVisible = await this.isVisible(selector.customer.cShop.viewCart);
+		// expect(cartIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cShop.viewCart)).toBeVisible();
 	}
 
 	// customer check whether product is on cart
-	async productIsOnCart( productName ): Promise<void> {
-		const productIsVisible = await this.isVisible( selector.customer.cCart.cartItem( productName ) );
-		expect( productIsVisible ).toBe( true );
+	async productIsOnCart(productName): Promise<void> {
+		// const productIsVisible = await this.isVisible(selector.customer.cCart.cartItem(productName));
+		// expect(productIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cCart.cartItem(productName))).toBeVisible();
 	}
 
 	// customer add product to cart from product details page
-	async addProductToCartFromSingleProductPage( productName ): Promise<void> {
-		await this.click( selector.customer.cSingleProduct.addToCart );
+	async addProductToCartFromSingleProductPage(productName): Promise<void> {
+		await this.click(selector.customer.cSingleProduct.addToCart);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( `“${ productName }” has been added to your cart.` );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(`“${productName}” has been added to your cart.`);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(`“${productName}” has been added to your cart.`)
 	}
 
 	// go to cart from shop page
 	async goToCartFromShop(): Promise<void> {
-		await this.click( selector.customer.cShop.viewCart );
+		await this.click(selector.customer.cShop.viewCart);
 
-		await this.waitForSelector( selector.customer.cCart.cartPageHeader );
-		const cartIsVisible = await this.isVisible( selector.customer.cCart.cartPageHeader );
-		expect( cartIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cCart.cartPageHeader);
+		// const cartIsVisible = await this.isVisible(selector.customer.cCart.cartPageHeader);
+		// expect(cartIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cCart.cartPageHeader)).toBeVisible();
 	}
 
 	// go to cart from product details page
 	async goToCartFromSingleProductPage(): Promise<void> {
-		await this.click( selector.customer.cSingleProduct.viewCart );
+		await this.click(selector.customer.cSingleProduct.viewCart);
 
-		await this.waitForSelector( selector.customer.cCart.cartPageHeader );
-		const cartIsVisible = await this.isVisible( selector.customer.cCart.cartPageHeader );
-		expect( cartIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cCart.cartPageHeader);
+		// const cartIsVisible = await this.isVisible(selector.customer.cCart.cartPageHeader);
+		// expect(cartIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cCart.cartPageHeader)).toBeVisible();
 	}
 
 	// got to checkout from cart
 	async goToCheckoutFromCart(): Promise<void> {
-		await this.click( selector.customer.cCart.proceedToCheckout );
+		await this.click(selector.customer.cCart.proceedToCheckout);
 
-		await this.waitForSelector( selector.customer.cCheckout.checkoutPageHeader );
-		const checkoutIsVisible = await this.isVisible( selector.customer.cCheckout.checkoutPageHeader );
-		expect( checkoutIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cCheckout.checkoutPageHeader);
+		// const checkoutIsVisible = await this.isVisible(selector.customer.cCheckout.checkoutPageHeader);
+		// expect(checkoutIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cCheckout.checkoutPageHeader)).toBeVisible();
 	}
 
 	// clear cart
 	async clearCart(): Promise<void> {
 		await this.goToCart();
-		const cartProductIsVisible = await this.isVisible( selector.customer.cCart.productCrossIcon );
-		if ( cartProductIsVisible ) {
-			await this.click( selector.customer.cCart.productCrossIcon );
-			const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-			expect( successMessage ).toContain( 'removed. Undo?' );
+		const cartProductIsVisible = await this.isVisible(selector.customer.cCart.productCrossIcon);
+		if (cartProductIsVisible) {
+			await this.click(selector.customer.cCart.productCrossIcon);
+			// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+			// expect(successMessage).toContain('removed. Undo?');
+			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('removed. Undo?')
 			await this.clearCart();
 		} else {
-			const successMessage = await this.getElementText( selector.customer.cCart.cartEmptyMessage );
-			expect( successMessage ).toMatch( 'Your cart is currently empty.' );
+			// const successMessage = await this.getElementText(selector.customer.cCart.cartEmptyMessage);
+			// expect(successMessage).toMatch('Your cart is currently empty.');
+			await expect(this.page.locator(selector.customer.cCart.cartEmptyMessage)).toContainText('Your cart is currently empty.')
 		}
 	}
 
 	// Update product quantity from cart
-	async updateProductQuantityOnCart( productName, quantity ): Promise<void> {
-		await this.clearAndType( selector.customer.cCart.quantity( productName ), quantity );
-		await this.click( selector.customer.cCart.updateCart );
+	async updateProductQuantityOnCart(productName, quantity): Promise<void> {
+		await this.clearAndType(selector.customer.cCart.quantity(productName), quantity);
+		await this.click(selector.customer.cCart.updateCart);
 
 		// let successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage)
 		// expect(successMessage).toMatch("Cart updated.")
-		const updateProductQuantity = await this.getElementValue( selector.customer.cCart.quantity( productName ) );
-		expect( updateProductQuantity ).toMatch( quantity );
+		const updateProductQuantity = await this.getElementValue(selector.customer.cCart.quantity(productName));
+		expect(updateProductQuantity).toMatch(quantity);
 	}
 
 	// customer apply coupon
-	async applyCoupon( coupon ): Promise<void> {
-		const couponIsApplied = await this.isVisible( selector.customer.cCart.removeCoupon( coupon.title ) );
-		if ( couponIsApplied ) {
-			await this.removeAppliedCoupon( coupon.title );
+	async applyCoupon(coupon): Promise<void> {
+		const couponIsApplied = await this.isVisible(selector.customer.cCart.removeCoupon(coupon.title));
+		if (couponIsApplied) {
+			await this.removeAppliedCoupon(coupon.title);
 		}
-		await this.type( selector.customer.cCart.couponCode, coupon.title );
-		await this.click( selector.customer.cCart.applyCoupon );
+		await this.type(selector.customer.cCart.couponCode, coupon.title);
+		await this.click(selector.customer.cCart.applyCoupon);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( 'Coupon code applied successfully.' );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch('Coupon code applied successfully.');
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('Coupon code applied successfully.')
 	}
 
 	// customer remove applied coupon
-	async removeAppliedCoupon( couponCode ): Promise<void> {
-		await this.click( selector.customer.cCart.removeCoupon( couponCode ) );
+	async removeAppliedCoupon(couponCode): Promise<void> {
+		await this.click(selector.customer.cCart.removeCoupon(couponCode));
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( 'Coupon has been removed.' );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch('Coupon has been removed.');
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('Coupon has been removed.')
 	}
 
 	// customer place order
-	async placeOrder( paymentMethod: string = 'bank', getOrderDetails: boolean = false, billingDetails: boolean = false, shippingDetails: boolean = false ): Promise<void | object> {
-		if ( billingDetails ) {
-			await this.addBillingAddressInCheckout( data.customer.customerInfo );
+	async placeOrder(paymentMethod: string = 'bank', getOrderDetails: boolean = false, billingDetails: boolean = false, shippingDetails: boolean = false): Promise<void | object> {
+		if (billingDetails) {
+			await this.addBillingAddressInCheckout(data.customer.customerInfo);
 		}
-		if ( shippingDetails ) {
-			await this.addShippingAddressInCheckout( data.customer.customerInfo );
+		if (shippingDetails) {
+			await this.addShippingAddressInCheckout(data.customer.customerInfo);
 		}
 
-		switch ( paymentMethod ) {
+		switch (paymentMethod) {
 			case 'bank':
-				await this.click( selector.customer.cCheckout.directBankTransfer );
-				await this.click( selector.customer.cCheckout.placeOrder );
+				await this.click(selector.customer.cCheckout.directBankTransfer);
+				await this.click(selector.customer.cCheckout.placeOrder);
 				break;
 			case 'check':
-				await this.click( selector.customer.cCheckout.checkPayments );
-				await this.click( selector.customer.cCheckout.placeOrder );
+				await this.click(selector.customer.cCheckout.checkPayments);
+				await this.click(selector.customer.cCheckout.placeOrder);
 				break;
 			case 'cod':
-				await this.click( selector.customer.cCheckout.cashOnDelivery );
-				await this.click( selector.customer.cCheckout.placeOrder );
+				await this.click(selector.customer.cCheckout.cashOnDelivery);
+				await this.click(selector.customer.cCheckout.placeOrder);
 				break;
-				// case 'stripe':
-				//     await this.payWithStripe(paymentDetails)
-				//     break
-				// case 'paypalMarketPlace':
-				//     await this.payWithPaypalMarketPlace()
-				//     break
-				// case 'razorPay':
-				//     await this.payWithRazorPay()
-				//     break
-				// case 'mangoPay':
-				//     await this.payWithMangoPay()
-				//     break
-				// case 'stripeExpress':
-				//     await this.payWithStripeExpress(paymentDetails)
-				//     break
+			// case 'stripe':
+			//     await this.payWithStripe(paymentDetails)
+			//     break
+			// case 'paypalMarketPlace':
+			//     await this.payWithPaypalMarketPlace()
+			//     break
+			// case 'razorPay':
+			//     await this.payWithRazorPay()
+			//     break
+			// case 'mangoPay':
+			//     await this.payWithMangoPay()
+			//     break
+			// case 'stripeExpress':
+			//     await this.payWithStripeExpress(paymentDetails)
+			//     break
 			default:
 				break;
 		}
 
-		await this.waitForSelector( selector.customer.cOrderReceived.orderReceivedPageHeader );
-		const orderReceivedIsVisible = await this.isVisible( selector.customer.cOrderReceived.orderReceivedPageHeader );
-		expect( orderReceivedIsVisible ).toBe( true );
+		await this.waitForSelector(selector.customer.cOrderReceived.orderReceivedPageHeader);
+		// const orderReceivedIsVisible = await this.isVisible(selector.customer.cOrderReceived.orderReceivedPageHeader);
+		// expect(orderReceivedIsVisible).toBe(true);
+		await expect(this.page.locator(selector.customer.cOrderReceived.orderReceivedPageHeader)).toBeVisible();
 
 		// if (getOrderDetails) {
 		//     return await this.getOrderDetailsAfterPlaceOrder()
@@ -609,34 +628,34 @@ export class CustomerPage extends BasePage {
 			paymentMethod: '',
 			orderTotal: 0,
 		};
-		cOrderDetails.orderNumber = await this.getElementText( selector.customer.cOrderReceived.orderNumber );
-		cOrderDetails.subtotal = helpers.price( await this.getElementText( selector.customer.cOrderReceived.subTotal ) );
+		cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderNumber);
+		cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.subTotal));
 
 		// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
 		// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
 
-		const shippingIsVisible = await this.isVisible( selector.customer.cOrderReceived.shippingCost );
-		if ( shippingIsVisible ) {
-			cOrderDetails.shippingCost = helpers.price( await this.getElementText( selector.customer.cOrderReceived.shippingCost ) );
-			cOrderDetails.shippingMethod = await this.getElementText( selector.customer.cOrderReceived.shippingMethod );
+		const shippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shippingCost);
+		if (shippingIsVisible) {
+			cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrderReceived.shippingCost));
+			cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shippingMethod);
 		}
-		const taxIsVisible = await this.isVisible( selector.customer.cOrderReceived.shipping );
-		if ( taxIsVisible ) {
-			cOrderDetails.tax = helpers.price( await this.getElementText( selector.customer.cOrderReceived.tax ) );
+		const taxIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping);
+		if (taxIsVisible) {
+			cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrderReceived.tax));
 		}
 
-		cOrderDetails.paymentMethod = await this.getElementText( selector.customer.cOrderReceived.orderPaymentMethod );
-		cOrderDetails.orderTotal = helpers.price( await this.getElementText( selector.customer.cOrderReceived.orderTotal ) );
+		cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrderReceived.orderPaymentMethod);
+		cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.orderTotal));
 
 		return cOrderDetails;
 	}
 
 	// get order details
-	async getOrderDetails( orderNumber: any ): Promise<object> {
+	async getOrderDetails(orderNumber: any): Promise<object> {
 		await this.goToMyAccount();
 
-		await this.click( selector.customer.cMyAccount.orders );
-		await this.click( selector.customer.cOrders.OrderDetailsLInk( orderNumber ) );
+		await this.click(selector.customer.cMyAccount.orders);
+		await this.click(selector.customer.cOrders.OrderDetailsLInk(orderNumber));
 
 		const cOrderDetails = {
 			orderNumber: '',
@@ -653,105 +672,106 @@ export class CustomerPage extends BasePage {
 			orderTotal: 0,
 		};
 
-		cOrderDetails.orderNumber = await this.getElementText( selector.customer.cOrders.orderNumber );
-		cOrderDetails.orderDate = await this.getElementText( selector.customer.cOrders.orderDate );
-		cOrderDetails.orderStatus = await this.getElementText( selector.customer.cOrders.orderStatus );
-		cOrderDetails.subtotal = helpers.price( await this.getElementText( selector.customer.cOrders.subTotal ) );
+		cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrders.orderNumber);
+		cOrderDetails.orderDate = await this.getElementText(selector.customer.cOrders.orderDate);
+		cOrderDetails.orderStatus = await this.getElementText(selector.customer.cOrders.orderStatus);
+		cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrders.subTotal));
 
 		// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrders.shipping)//TODO:delete this line when shipping is fixed
 		// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrders.shippingMethod)//TODO:delete this line when shipping is fixed
 
-		const shippingIsVisible = await this.isVisible( selector.customer.cOrders.shippingCost );
-		if ( shippingIsVisible ) {
-			cOrderDetails.shippingCost = helpers.price( await this.getElementText( selector.customer.cOrders.shippingCost ) );
-			cOrderDetails.shippingMethod = ( await this.getElementText( selector.customer.cOrders.shippingMethod ) ).replace( 'via ', '' );
+		const shippingIsVisible = await this.isVisible(selector.customer.cOrders.shippingCost);
+		if (shippingIsVisible) {
+			cOrderDetails.shippingCost = helpers.price(await this.getElementText(selector.customer.cOrders.shippingCost));
+			cOrderDetails.shippingMethod = (await this.getElementText(selector.customer.cOrders.shippingMethod)).replace('via ', '');
 		}
 
-		const taxIsVisible = await this.isVisible( selector.customer.cOrders.tax );
-		if ( taxIsVisible ) {
-			cOrderDetails.tax = helpers.price( await this.getElementText( selector.customer.cOrders.tax ) );
+		const taxIsVisible = await this.isVisible(selector.customer.cOrders.tax);
+		if (taxIsVisible) {
+			cOrderDetails.tax = helpers.price(await this.getElementText(selector.customer.cOrders.tax));
 		}
 
-		const orderDiscount = await this.isVisible( selector.customer.cOrders.orderDiscount );
-		if ( orderDiscount ) {
-			cOrderDetails.orderDiscount = helpers.price( await this.getElementText( selector.customer.cOrders.orderDiscount ) );
+		const orderDiscount = await this.isVisible(selector.customer.cOrders.orderDiscount);
+		if (orderDiscount) {
+			cOrderDetails.orderDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.orderDiscount));
 		}
 
-		const quantityDiscount = await this.isVisible( selector.customer.cOrders.quantityDiscount );
-		if ( quantityDiscount ) {
-			cOrderDetails.quantityDiscount = helpers.price( await this.getElementText( selector.customer.cOrders.quantityDiscount ) );
+		const quantityDiscount = await this.isVisible(selector.customer.cOrders.quantityDiscount);
+		if (quantityDiscount) {
+			cOrderDetails.quantityDiscount = helpers.price(await this.getElementText(selector.customer.cOrders.quantityDiscount));
 		}
 
-		const discount = await this.isVisible( selector.customer.cOrders.discount );
-		if ( discount ) {
-			cOrderDetails.discount = helpers.price( await this.getElementText( selector.customer.cOrders.discount ) );
+		const discount = await this.isVisible(selector.customer.cOrders.discount);
+		if (discount) {
+			cOrderDetails.discount = helpers.price(await this.getElementText(selector.customer.cOrders.discount));
 		}
 
-		cOrderDetails.paymentMethod = await this.getElementText( selector.customer.cOrders.paymentMethod );
-		cOrderDetails.orderTotal = helpers.price( await this.getElementText( selector.customer.cOrders.orderTotal ) );
+		cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrders.paymentMethod);
+		cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrders.orderTotal));
 
 		// console.log(cOrderDetails)
 		return cOrderDetails;
 	}
 
 	// customer add billing address in checkout
-	async addBillingAddressInCheckout( billingInfo ): Promise<void> {
+	async addBillingAddressInCheckout(billingInfo): Promise<void> {
 		// Billing Address
-		await this.clearAndType( selector.customer.cAddress.billingFirstName, billingInfo.firstName() );
-		await this.clearAndType( selector.customer.cAddress.billingLastName, billingInfo.lastName() );
-		await this.clearAndType( selector.customer.cAddress.billingCompanyName, billingInfo.companyName );
-		await this.clearAndType( selector.customer.cAddress.billingCompanyID, billingInfo.companyId );
-		await this.clearAndType( selector.customer.cAddress.billingVatOrTaxNumber, billingInfo.vatNumber );
-		await this.clearAndType( selector.customer.cAddress.billingNameOfBank, billingInfo.bankName );
-		await this.clearAndType( selector.customer.cAddress.billingBankIban, billingInfo.bankIban );
-		await this.click( selector.customer.cAddress.billingCountryOrRegion );
-		await this.type( selector.customer.cAddress.billingCountryOrRegionInput, billingInfo.country );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.billingStreetAddress, billingInfo.street1 );
-		await this.clearAndType( selector.customer.cAddress.billingStreetAddress2, billingInfo.street2 );
-		await this.clearAndType( selector.customer.cAddress.billingTownCity, billingInfo.city );
-		await this.click( selector.customer.cAddress.billingState );
-		await this.type( selector.customer.cAddress.billingStateInput, billingInfo.state );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.billingZipCode, billingInfo.zipCode );
-		await this.clearAndType( selector.customer.cAddress.billingPhone, billingInfo.phone );
-		await this.clearAndType( selector.customer.cAddress.billingEmailAddress, billingInfo.email );
+		await this.clearAndType(selector.customer.cAddress.billingFirstName, billingInfo.firstName());
+		await this.clearAndType(selector.customer.cAddress.billingLastName, billingInfo.lastName());
+		await this.clearAndType(selector.customer.cAddress.billingCompanyName, billingInfo.companyName);
+		await this.clearAndType(selector.customer.cAddress.billingCompanyID, billingInfo.companyId);
+		await this.clearAndType(selector.customer.cAddress.billingVatOrTaxNumber, billingInfo.vatNumber);
+		await this.clearAndType(selector.customer.cAddress.billingNameOfBank, billingInfo.bankName);
+		await this.clearAndType(selector.customer.cAddress.billingBankIban, billingInfo.bankIban);
+		await this.click(selector.customer.cAddress.billingCountryOrRegion);
+		await this.type(selector.customer.cAddress.billingCountryOrRegionInput, billingInfo.country);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
+		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
+		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
+		await this.click(selector.customer.cAddress.billingState);
+		await this.type(selector.customer.cAddress.billingStateInput, billingInfo.state);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.billingZipCode, billingInfo.zipCode);
+		await this.clearAndType(selector.customer.cAddress.billingPhone, billingInfo.phone);
+		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email);
 	}
 
 	// customer add shipping address in checkout
-	async addShippingAddressInCheckout( shippingInfo ): Promise<void> {
-		await this.click( selector.customer.cCheckout.shipToADifferentAddress );
+	async addShippingAddressInCheckout(shippingInfo): Promise<void> {
+		await this.click(selector.customer.cCheckout.shipToADifferentAddress);
 		// shipping address
-		await this.clearAndType( selector.customer.cAddress.shippingFirstName, shippingInfo.firstName() );
-		await this.clearAndType( selector.customer.cAddress.shippingLastName, shippingInfo.lastName() );
-		await this.clearAndType( selector.customer.cAddress.shippingCompanyName, shippingInfo.companyName );
-		await this.click( selector.customer.cAddress.shippingCountryOrRegion );
-		await this.type( selector.customer.cAddress.shippingCountryOrRegionInput, shippingInfo.country );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1 );
-		await this.clearAndType( selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2 );
-		await this.clearAndType( selector.customer.cAddress.shippingTownCity, shippingInfo.city );
-		await this.click( selector.customer.cAddress.shippingState );
-		await this.type( selector.customer.cAddress.shippingStateInput, shippingInfo.state );
-		await this.press( data.key.enter );
-		await this.clearAndType( selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode );
+		await this.clearAndType(selector.customer.cAddress.shippingFirstName, shippingInfo.firstName());
+		await this.clearAndType(selector.customer.cAddress.shippingLastName, shippingInfo.lastName());
+		await this.clearAndType(selector.customer.cAddress.shippingCompanyName, shippingInfo.companyName);
+		await this.click(selector.customer.cAddress.shippingCountryOrRegion);
+		await this.type(selector.customer.cAddress.shippingCountryOrRegionInput, shippingInfo.country);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1);
+		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2);
+		await this.clearAndType(selector.customer.cAddress.shippingTownCity, shippingInfo.city);
+		await this.click(selector.customer.cAddress.shippingState);
+		await this.type(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
+		await this.press(data.key.enter);
+		await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode);
 	}
 
 	// customer ask for warranty
-	async sendWarrantyRequest( orderNumber, productName, refund ): Promise<void> {
+	async sendWarrantyRequest(orderNumber, productName, refund): Promise<void> {
 		await this.goToMyAccount();
 
-		await this.click( selector.customer.cMyAccount.orders );
-		await this.click( selector.customer.cOrders.ordersWarrantyRequest( orderNumber ) );
+		await this.click(selector.customer.cMyAccount.orders);
+		await this.click(selector.customer.cOrders.ordersWarrantyRequest(orderNumber));
 
-		await this.click( selector.customer.cOrders.warrantyRequestItemCheckbox( productName ) );
+		await this.click(selector.customer.cOrders.warrantyRequestItemCheckbox(productName));
 		// await this.type(selector.customer.cOrders.warrantyRequestItemQuantity(productName), refund.itemQuantity)
-		await this.selectByLabel( selector.customer.cOrders.warrantyRequestType, refund.refundRequestType );
+		await this.selectByLabel(selector.customer.cOrders.warrantyRequestType, refund.refundRequestType);
 		// await this.select(selector.customer.cOrders.warrantyRequestReason, refund.refundRequestReasons)
-		await this.type( selector.customer.cOrders.warrantyRequestDetails, refund.refundRequestDetails );
-		await this.click( selector.customer.cOrders.warrantySubmitRequest );
+		await this.type(selector.customer.cOrders.warrantyRequestDetails, refund.refundRequestDetails);
+		await this.click(selector.customer.cOrders.warrantySubmitRequest);
 
-		const successMessage = await this.getElementText( selector.customer.cWooSelector.wooCommerceSuccessMessage );
-		expect( successMessage ).toMatch( refund.refundSubmitSuccessMessage );
+		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+		// expect(successMessage).toMatch(refund.refundSubmitSuccessMessage);
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(refund.refundSubmitSuccessMessage)
 	}
 }

@@ -597,6 +597,18 @@ export const payloads = {
 		],
 	},
 
+	enableTaxRate: {
+		update: [
+			{
+				id: 'woocommerce_calc_taxes',
+				// label: 'Enable taxes',
+				value: 'yes',
+				// value: 'no',
+			},
+		],
+	},
+
+
 	// account
 
 	account: {

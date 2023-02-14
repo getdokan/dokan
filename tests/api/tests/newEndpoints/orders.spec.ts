@@ -20,7 +20,6 @@ test.describe( 'orders api test', () => {
 	test( 'update batch orders @v2', async ( { request } ) => {
 		const allOrderIds = ( await apiUtils.getAllOrders() ).map( ( a: { id: any } ) => a.id );
 		// console.log(allOrderIds)
-
 		const response = await request.post( endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } } );
 		const responseBody = await apiUtils.getResponseBody( response );
 		expect( response.ok() ).toBeTruthy();

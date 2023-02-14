@@ -1,4 +1,4 @@
-import { type APIRequestContext } from '@playwright/test';
+import { expect, type APIRequestContext } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 
@@ -23,7 +23,7 @@ export class ApiUtils {
 	}
 
 	// get responseBody
-	async getResponseBody(response: any) {
+	async getResponseBody(response: any, assert = true) {
 		let responseBody: any;
 		try {
 			responseBody = await response.json();
@@ -34,6 +34,7 @@ export class ApiUtils {
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
 		}
+		assert && expect(response.ok()).toBeTruthy();
 		return responseBody;
 	}
 
@@ -295,7 +296,7 @@ export class ApiUtils {
 	// create withdraw
 	async createWithdraw(payload: object, auth?: any): Promise<[object, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.getResponseBody(response, false);
 		const withdrawId = responseBody.id;
 		// console.log(couponId);
 		return [responseBody, withdrawId];
@@ -354,6 +355,28 @@ export class ApiUtils {
 		// console.log(orderNoteId);
 		return [responseBody, orderId, orderNoteId];
 	}
+
+	/**
+	 * admin api methods
+	*/
+
+	// get all order logs
+	async getAllOrderLogs(auth?: any) {
+		const response = await this.request.get(endPoints.getAdminLogs, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get single order log
+	async getSingleOrderLog(orderId: string, auth?: any) {
+		const allOrderLogs = await this.getAllOrderLogs();
+		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
+		// console.log(singleOrderLog);
+		return singleOrderLog;
+	}
+
+
+
 
 	/**
 	 * refund api methods
@@ -778,7 +801,7 @@ export class ApiUtils {
 	}
 
 	// get all seller badges
-	async getSellerBadgeId(eventType:string, auth?: any) {
+	async getSellerBadgeId(eventType: string, auth?: any) {
 		const allBadges = await this.getAllSellerBadges(auth);
 		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
 		// const badgeId = allBadgeIds[0].id;
@@ -789,7 +812,7 @@ export class ApiUtils {
 	// create seller badge
 	async createSellerBadge(payload: any, auth?: any): Promise<[object, string]> {
 		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.getResponseBody(response, false);
 		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type) : responseBody.id;
 		// console.log(badgeId)
 		return [responseBody, badgeId];
@@ -1074,11 +1097,42 @@ export class ApiUtils {
 
 	// tax
 
+	// get all tax rate
+	async getAllTaxRates(auth?: any) {
+		const response = await this.request.get(endPoints.wc.getAllTaxRates, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
 	// create tax rate
 	async createTaxRate(payload: object, auth?: any) {
 		const response = await this.request.post(endPoints.wc.createTaxRate, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
+	}
+
+	// update batch tax rates
+	async updateBatchTaxRates(action: string, allIds: string[], auth?: any) {
+		const response = await this.request.put(endPoints.wc.updateBatchTaxRates, { data: { [action]: allIds }, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// setup tax 
+	async setUpTaxRate(enableTaxPayload: any, taxPayload: any) {
+		// enable tax rate
+		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
+
+		// delete previous tax rates
+		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: any }) => a.id);
+		if (allTaxRateIds.length) {
+			await this.updateBatchTaxRates('delete', allTaxRateIds);
+		}
+
+		// create tax rate
+		const taxRateResponse = await this.createTaxRate(taxPayload);
+		expect(parseInt(taxRateResponse.rate)).toBe(parseInt(taxPayload.rate));
+		return Number(taxPayload.rate)
 	}
 
 	// shipping

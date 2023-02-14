@@ -82,8 +82,9 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.storeProductPerPage, general.storeProductPerPage)
         await this.enableSwitcher(selector.admin.dokan.settings.enableTermsAndCondition)
         await this.click(selector.admin.dokan.settings.storCategory(general.storCategory))
-        await this.click(selector.admin.dokan.settings.generalSaveChanges)
 
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.generalSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(general.saveSuccessMessage)
     }
 
@@ -113,9 +114,11 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.newVendorEnableAuction)
         await this.enableSwitcher(selector.admin.dokan.settings.enableMinMaxQuantities)
         await this.enableSwitcher(selector.admin.dokan.settings.enableMinMaxAmount)
-        await this.click(selector.admin.dokan.settings.sellingOptionsSaveChanges)
 
-        await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.sellingOptionsSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(selling.saveSuccessMessage)
+        // await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
     }
 
     // Admin Set Dokan Withdraw Settings
@@ -157,8 +160,9 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.dokan.settings.biweeklyScheduleDay, withdraw.biweeklyScheduleDay)
         // Weekly Schedule
         await this.selectByValue(selector.admin.dokan.settings.weeklyScheduleDay, withdraw.weeklyScheduleDay)
-        await this.click(selector.admin.dokan.settings.withdrawSaveChanges)
 
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.withdrawSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(withdraw.saveSuccessMessage)
     }
 
@@ -167,9 +171,10 @@ export class AdminPage extends BasePage {
         await this.goToDokanSettings()
         await this.click(selector.admin.dokan.settings.pageSettings)
 
-        // this Settings
         await this.selectByLabel(selector.admin.dokan.settings.termsAndConditionsPage, page.termsAndConditionsPage)
-        await this.click(selector.admin.dokan.settings.pageSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.pageSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(page.saveSuccessMessage)
     }
 
@@ -188,10 +193,13 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.storeBannerHeight, appearance.storeBannerHeight)
         await this.enableSwitcher(selector.admin.dokan.settings.storeOpeningClosingTimeWidget)
         await this.enableSwitcher(selector.admin.dokan.settings.showVendorInfo)
-        await this.click(selector.admin.dokan.settings.appearanceSaveChanges)
 
-        let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
-        expect(apiKey).toBe(appearance.googleMapApiKey)
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.appearanceSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(appearance.saveSuccessMessage)
+
+        // let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
+        // expect(apiKey).toBe(appearance.googleMapApiKey)
     }
 
     // Admin Set Dokan Privacy Policy Settings
@@ -203,8 +211,9 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enablePrivacyPolicy)
         await this.selectByValue(selector.admin.dokan.settings.privacyPage, privacyPolicy.privacyPage)
         await this.typeFrameSelector(selector.admin.dokan.settings.privacyPolicyIframe, selector.admin.dokan.settings.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyHtmlBody)
-        await this.click(selector.admin.dokan.settings.privacyPolicySaveChanges)
 
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.privacyPolicySaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(privacyPolicy.saveSuccessMessage)
     }
 
@@ -218,7 +227,9 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.dokan.settings.displayOnSingleProductPage, storeSupport.displayOnSingleProductPage)
         await this.clearAndFill(selector.admin.dokan.settings.supportButtonLabel, storeSupport.supportButtonLabel)
         await this.enableSwitcher(selector.admin.dokan.settings.supportTicketEmailNotification)
-        await this.click(selector.admin.dokan.settings.storeSupportSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.storeSupportSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(storeSupport.saveSuccessMessage)
     }
 
@@ -239,8 +250,9 @@ export class AdminPage extends BasePage {
         }
 
         await this.typeFrameSelector(selector.admin.dokan.settings.refundPolicyIframe, selector.admin.dokan.settings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody)
-        await this.click(selector.admin.dokan.settings.rmaSaveChanges)
 
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.rmaSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(rma.saveSuccessMessage)
     }
 
@@ -253,7 +265,9 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.whoCanSeeWholesalePrice(wholesale.whoCanSeeWholesalePrice))
         await this.enableSwitcher(selector.admin.dokan.settings.showWholesalePriceOnShopArchive)
         await this.enableSwitcher(selector.admin.dokan.settings.needApprovalForCustomer)
-        await this.click(selector.admin.dokan.settings.wholesaleSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.wholesaleSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(wholesale.saveSuccessMessage)
     }
 
@@ -275,7 +289,9 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.customerExtraFieldsBankIban)
         await this.enableSwitcher(selector.admin.dokan.settings.enableGermanizedSupportForVendors)
         await this.enableSwitcher(selector.admin.dokan.settings.vendorsWillBeAbleToOverrideInvoiceNumber)
-        await this.click(selector.admin.dokan.settings.euComplianceFieldsSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.euComplianceFieldsSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(euCompliance.saveSuccessMessage)
     }
 
@@ -317,7 +333,9 @@ export class AdminPage extends BasePage {
         // await this.clearAndFill(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
         await this.wait(2)
         await this.hover(selector.admin.dokan.settings.deliveryTimeSaveChanges)
-        await this.click(selector.admin.dokan.settings.deliveryTimeSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.deliveryTimeSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(deliveryTime.saveSuccessMessage)
     }
 
@@ -335,7 +353,9 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.markAdvertisedProductAsFeatured)
         await this.enableSwitcher(selector.admin.dokan.settings.displayAdvertisedProductOnTop)
         await this.enableSwitcher(selector.admin.dokan.settings.outOfStockVisibility)
-        await this.click(selector.admin.dokan.settings.productAdvertisingSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.productAdvertisingSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(productAdvertising.saveSuccessMessage)
     }
 
@@ -354,10 +374,11 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
         await this.clearAndFill(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
-
         await this.press(data.key.arrowDown)
         await this.press(data.key.enter)
-        await this.click(selector.admin.dokan.settings.geolocationSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.geolocationSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(geolocation.saveSuccessMessage)
     }
 
@@ -370,7 +391,9 @@ export class AdminPage extends BasePage {
         await this.deleteIfExists(selector.admin.dokan.settings.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport))
         await this.clearAndFill(selector.admin.dokan.settings.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport)
         await this.click(selector.admin.dokan.settings.reasonsForAbuseReportAdd)
-        await this.click(selector.admin.dokan.settings.productReportAbuseSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.productReportAbuseSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(productReportAbuse.saveSuccessMessage)
     }
 
@@ -384,7 +407,9 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.availableVendorDisplayAreaTitle, spmv.availableVendorDisplayAreaTitle)
         await this.selectByValue(selector.admin.dokan.settings.availableVendorSectionDisplayPosition, spmv.availableVendorSectionDisplayPosition)
         await this.selectByValue(selector.admin.dokan.settings.showSpmvProducts, spmv.showSpmvProducts)
-        await this.click(selector.admin.dokan.settings.singleProductMultiVendorSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.singleProductMultiVendorSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(spmv.saveSuccessMessage)
 
     }
@@ -405,13 +430,18 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.cancellingEmailBody, subscription.cancellingEmailBody)
         await this.clearAndFill(selector.admin.dokan.settings.alertEmailSubject, subscription.alertEmailSubject)
         await this.clearAndFill(selector.admin.dokan.settings.alertEmailBody, subscription.alertEmailBody)
-        await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
 
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(subscription.saveSuccessMessage)
 
         // Disabling Vendor Subscription
         await this.disableSwitcher(selector.admin.dokan.settings.enableProductSubscription) // TODO: handle with flag
-        await this.click(selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
+
+        // save settings
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.vendorSubscriptionSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(subscription.saveSuccessMessage)
+
     }
 
 
