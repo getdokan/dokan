@@ -282,9 +282,9 @@ export default {
 
     methods: {
         updatedCounts( xhr ) {
-            this.counts.debit  = parseInt( xhr.getResponseHeader('X-Status-Debit') ?? 0 );
-            this.counts.credit = parseInt( xhr.getResponseHeader('X-Status-Credit') ?? 0 );
-            this.counts.balance = parseInt( xhr.getResponseHeader('X-Status-Balance') ?? 0 );
+            this.counts.debit  = parseFloat( xhr.getResponseHeader('X-Status-Debit') ?? 0 );
+            this.counts.credit = parseFloat( xhr.getResponseHeader('X-Status-Credit') ?? 0 );
+            this.counts.balance = parseFloat( xhr.getResponseHeader('X-Status-Balance') ?? 0 );
             this.counts.total_transactions = parseInt( xhr.getResponseHeader('X-Status-Total-Transactions') ?? 0 );
         },
 
