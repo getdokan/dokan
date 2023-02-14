@@ -9,9 +9,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  *
  * Uninstalling Dokan deletes user roles, tables, pages, meta data and options.
  *
- * @package Dokan\Uninstaller
+ * @since   3.2.15
  *
- * @since 3.2.15
+ * @package Dokan\Uninstaller
  */
 class Dokan_Uninstaller {
     /**
@@ -22,7 +22,7 @@ class Dokan_Uninstaller {
     public function __construct() {
         global $wpdb;
         $general_options = get_option( 'dokan_general', [] );
-        $setting = array_key_exists( 'data_clear_on_uninstall', $general_options ) ? $general_options['data_clear_on_uninstall'] : 'off';
+        $setting         = array_key_exists( 'data_clear_on_uninstall', $general_options ) ? $general_options['data_clear_on_uninstall'] : 'off';
 
         /*
          * Only remove data when Dokan data clear setting is enabled by admin
@@ -189,10 +189,22 @@ class Dokan_Uninstaller {
      */
     private function change_vendor_role_to_customer() {
         global $wpdb;
-        $ids = $wpdb->get_col( "SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_key = 'dokan_enable_selling'" ); // phpcs:ignore
+
+        $args       = [
+            'role__in' => [ 'seller' ],
+            'number'   => - 1,
+            'fields'   => 'ids',
+        ];
+        $user_query = new WP_User_Query( $args );
+        $results = $user_query->get_results();
+
+        if ( empty( $results ) ) {
+            return;
+        }
+
         $capabilities = maybe_serialize( [ 'customer' => 1 ] );
 
-        $wpdb->query( "UPDATE {$wpdb->prefix}usermeta SET meta_value = '{$capabilities}' WHERE meta_key = 'wp_capabilities' AND user_id IN ('" . implode( "','", $ids ) . "')" ); // phpcs:ignore
+        $wpdb->query( "UPDATE {$wpdb->prefix}usermeta SET meta_value = '{$capabilities}' WHERE meta_key = '{$wpdb->prefix}capabilities' AND user_id IN (" . implode( ",", $results ) . ")" ); // phpcs:ignore
     }
 }
 
