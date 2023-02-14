@@ -88,7 +88,7 @@ class Dashboard extends DokanShortcode {
             return ob_get_clean();
         }
 
-        if ( isset( $wp->query_vars['page'] ) ) {
+        if ( isset( $wp->query_vars['page_id'] ) ) {
             if ( ! current_user_can( 'dokan_view_overview_menu' ) ) {
                 dokan_get_template_part( 'global/no-permission' );
             } else {
