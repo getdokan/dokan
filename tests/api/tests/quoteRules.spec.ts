@@ -23,7 +23,6 @@ test.describe('quote rules api test', () => {
 	});
 
 	test('get single quote rule @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'fail because of plain permalink');
 		// let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 
 		const response = await request.get(endPoints.getSingleQuoteRule(quoteRuleId));
@@ -32,16 +31,12 @@ test.describe('quote rules api test', () => {
 	});
 
 	test('create a quote rule @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'fail because of plain permalink');
-
 		const response = await request.post(endPoints.createQuoteRule, { data: payloads.createQuoteRule() });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
 	test('update a quote rule @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'fail because of plain permalink');
-
 		// let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 
 		const response = await request.put(endPoints.updateQuoteRule(quoteRuleId), { data: payloads.updateQuoteRule });
@@ -50,8 +45,6 @@ test.describe('quote rules api test', () => {
 	});
 
 	test('delete a quote rule @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'fail because of plain permalink');
-
 		// let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 
 		const response = await request.delete(endPoints.deleteQuoteRule(quoteRuleId));
@@ -60,8 +53,6 @@ test.describe('quote rules api test', () => {
 	});
 
 	test('restore a deleted quote rule @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'fail because of plain permalink');
-
 		// let [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule())
 		// await apiUtils.deleteQuoteRule(quoteRuleId)
 
@@ -73,7 +64,6 @@ test.describe('quote rules api test', () => {
 	test('update batch quote rules @pro', async ({ request }) => {
 		const allQuoteRuleIds = (await apiUtils.getAllQuoteRules()).map((a: { id: any }) => a.id);
 		// console.log(allQuoteRuleIds)
-
 		const response = await request.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds } });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

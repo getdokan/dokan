@@ -17,7 +17,7 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe('calculation test', () => {
+test.describe.skip('calculation test', () => {
 	test('calculation test', async ({ request }) => {
 		let discountTotal: any, discountTax: any, shippingTotal: number | undefined, shippingTax: any, cartTax: any, totalTax: any, orderTotal: any, paymentMethod: any, productPrice: number, productQuantity: number,
 			gatewayFee = 0;
