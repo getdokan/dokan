@@ -8,7 +8,7 @@ async function globalSetup(config: FullConfig) {
 	// get user signed in state
 	const browser = await chromium.launch({ headless: true });
 	const context = await browser.newContext();
-	await context.tracing.start( { screenshots: true, snapshots: true } ); //TODO : test context is working for multiple page or not like admin, vendor , customer
+	await context.tracing.start( { screenshots: true, snapshots: true } ); //TODO : test context is working for multiple page or not like admin, vendor & customer
 
 	// get storageState: admin
 	let admin = await browser.newPage();
