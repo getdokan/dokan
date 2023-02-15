@@ -9,7 +9,7 @@ let taxRate: number;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	
+
 	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
 });
 
@@ -24,6 +24,8 @@ test.describe('calculation test', () => {
 
 		const [res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 		// console.log( res );
+		console.log( 'Cal: order id:',oid );
+
 		discountTotal = res.discount_total;
 		discountTax = res.discount_tax;
 		shippingTotal = res.shipping_total;
@@ -35,14 +37,9 @@ test.describe('calculation test', () => {
 		productPrice = res.line_items[0].subtotal;
 		productQuantity = res.line_items[0].quantity;
 
-
 		let orderReport = await apiUtils.getSingleOrderLog(String(oid))
 		let adminCommission = orderReport.commission
 		let vendorEarning = orderReport.vendor_earning
-
-		// let oRes = await apiUtils.getSingleOrder(oid)
-		// let [, uid] = await apiUtils.getCurrentUser()
-		// let sRes = await apiUtils.getSingleStore(uid)
 
 		const commissionRate = 10;
 

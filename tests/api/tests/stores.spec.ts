@@ -7,30 +7,28 @@ let apiUtils: any;
 let sellerId: string;
 let reviewId: string;
 
-test.beforeAll( async ( { request } ) => {
-	apiUtils = new ApiUtils( request );
-	const [ , id ] = await apiUtils.createStore( payloads.createStore() );
+test.beforeAll(async ({ request }) => {
+	apiUtils = new ApiUtils(request);
+	[, sellerId] = await apiUtils.createStore(payloads.createStore());
 	// let [, id] = await apiUtils.getCurrentUser()
-	sellerId = id;
-	const [ , rId ] = await apiUtils.createStoreReview( sellerId, payloads.createStoreReview, payloads.customerAuth );
-	reviewId = rId;
-} );
+	[, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
+});
 
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe( 'stores api test', () => {
-	test( 'get store availability status', async ( { request } ) => {
-		const response = await request.get( endPoints.getAllStoresCheck );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+test.describe('stores api test', () => {
+	test('get store availability status', async ({ request }) => {
+		const response = await request.get(endPoints.getAllStoresCheck);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get all stores', async ( { request } ) => {
-		const response = await request.get( endPoints.getAllStores );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
+	test('get all stores', async ({ request }) => {
+		const response = await request.get(endPoints.getAllStores);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
 		// expect(responseBody[0]).toContainEqual(expect.objectContaining(
 		//     {
 		//         id: expect.any(Number),
@@ -81,14 +79,14 @@ test.describe( 'stores api test', () => {
 		//             collection: expect.any(Array),
 		//         }),
 		//     }))
-	} );
+	});
 
-	test( 'get single store', async ( { request } ) => {
+	test('get single store', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.get( endPoints.getSingleStore( sellerId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
+		const response = await request.get(endPoints.getSingleStore(sellerId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
 		// expect(responseBody1).toEqual(expect.objectContaining(
 		// {
 		// id: expect.any(Number),
@@ -136,110 +134,110 @@ test.describe( 'stores api test', () => {
 		//         admin_commission_type: expect.any(String),
 		//         _links: expect.any(Object),
 		//     }))
-	} );
+	});
 
-	test( 'create a store', async ( { request } ) => {
-		const response = await request.post( endPoints.createStore, { data: payloads.createStore() } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+	test('create a store', async ({ request }) => {
+		const response = await request.post(endPoints.createStore, { data: payloads.createStore() });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'update a store', async ( { request } ) => {
+	test('update a store', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.put( endPoints.updateStore( sellerId ), { data: payloads.updateStore() } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.put(endPoints.updateStore(sellerId), { data: payloads.updateStore() });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'delete a store', async ( { request } ) => {
-		const [ , sId ] = await apiUtils.createStore( payloads.createStore() );
+	test('delete a store', async ({ request }) => {
+		const [, sId] = await apiUtils.createStore(payloads.createStore());
 
-		const response = await request.delete( endPoints.deleteStore( sId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.delete(endPoints.deleteStore(sId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get store current visitor', async ( { request } ) => {
-		const response = await request.get( endPoints.getStoreCurrentVisitor );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+	test('get store current visitor', async ({ request }) => {
+		const response = await request.get(endPoints.getStoreCurrentVisitor);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get store stats', async ( { request } ) => {
+	test('get store stats', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.get( endPoints.getStoreStats( sellerId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.get(endPoints.getStoreStats(sellerId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get store categories', async ( { request } ) => {
+	test('get store categories', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.get( endPoints.getStoreCategories( sellerId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.get(endPoints.getStoreCategories(sellerId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get store products', async ( { request } ) => {
+	test('get store products', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-		const [ , sId ] = await apiUtils.getCurrentUser();
-		await apiUtils.createProduct( payloads.createProduct() );
+		const [, sId] = await apiUtils.getCurrentUser();
+		await apiUtils.createProduct(payloads.createProduct());
 
-		const response = await request.get( endPoints.getStoreProducts( sId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.get(endPoints.getStoreProducts(sId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'create a store review', async ( { request } ) => {
+	test('create a store review', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.post( endPoints.createStoreReview( sellerId ), { data: payloads.createStoreReview } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'get store reviews', async ( { request } ) => {
+	test('get store reviews', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 		// let [, sellerId] = await apiUtils.getCurrentUser()
-		await apiUtils.createStoreReview( sellerId, payloads.createStoreReview, payloads.customerAuth );
+		await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
 
-		const response = await request.get( endPoints.getStoreReviews( sellerId ) );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.get(endPoints.getStoreReviews(sellerId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'update a store status', async ( { request } ) => {
+	test('update a store status', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.put( endPoints.updateStoreStatus( sellerId ), { data: payloads.updateStoreStatus } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'admin contact store', async ( { request } ) => {
+	test('admin contact store', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.post( endPoints.adminContactStore( sellerId ), { data: payloads.adminContactStore } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.post(endPoints.adminContactStore(sellerId), { data: payloads.adminContactStore });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'admin email store', async ( { request } ) => {
+	test('admin email store', async ({ request }) => {
 		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
 
-		const response = await request.post( endPoints.adminEmailStore( sellerId ), { data: payloads.adminEmailStore } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.post(endPoints.adminEmailStore(sellerId), { data: payloads.adminEmailStore });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'update batch stores', async ( { request } ) => {
-		const allStoreIds = ( await apiUtils.getAllStores() ).map( ( a: { id: any } ) => a.id );
+	test('update batch stores', async ({ request }) => {
+		const allStoreIds = (await apiUtils.getAllStores()).map((a: { id: any }) => a.id);
 		// console.log(allStoreIds)
 
-		const response = await request.put( endPoints.updateBatchStores, { data: { approved: allStoreIds } } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
-} );
+		const response = await request.put(endPoints.updateBatchStores, { data: { approved: allStoreIds } });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+});

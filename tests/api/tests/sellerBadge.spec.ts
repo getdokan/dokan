@@ -10,10 +10,8 @@ let currentUserId: string;
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
-    let [, uId] = await apiUtils.getCurrentUser();
-    currentUserId = uId;
-    let [, bId] = await apiUtils.createSellerBadge(payloads.createSellerBadge);
-    badgeId = bId;
+    [, currentUserId] = await apiUtils.getCurrentUser();
+    [, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadge);
 });
 
 // test.afterAll(async ({ request }) => { });
@@ -60,8 +58,8 @@ test.describe('seller badge api test', () => {
 
     test('create a seller badge @pro', async ({ request }) => {
         const response = await request.post(endPoints.createSellerBadge, { data: payloads.createSellerBadge1 });
-        const responseBody = await apiUtils.getResponseBody(response,false);
-        responseBody.code === 'invalid-event-type' ? expect(response.status()).toBe(500)  : expect(response.ok()).toBeTruthy();
+        const responseBody = await apiUtils.getResponseBody(response, false);
+        responseBody.code === 'invalid-event-type' ? expect(response.status()).toBe(500) : expect(response.ok()).toBeTruthy();
     });
 
     test('update a seller badge @pro', async ({ request }) => {
@@ -77,7 +75,7 @@ test.describe('seller badge api test', () => {
     });
 
     test('delete a seller badge @pro', async ({ request }) => {
-        
+
 
         const response = await request.delete(endPoints.deleteSellerBadge(badgeId));
         const responseBody = await apiUtils.getResponseBody(response);
@@ -85,8 +83,8 @@ test.describe('seller badge api test', () => {
     });
 
     test('update batch seller badges @pro', async ({ request }) => {
-        
-        
+
+
         const allBadgeIds = (await apiUtils.getAllSellerBadges()).map((a: { id: any }) => a.id);
         // console.log(allBadgeIds)
 

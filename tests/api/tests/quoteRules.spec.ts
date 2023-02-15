@@ -8,8 +8,7 @@ let quoteRuleId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	const [, id] = await apiUtils.createQuoteRule(payloads.createQuoteRule());
-	quoteRuleId = id;
+	[, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule());
 });
 
 // test.afterAll(async ({ request }) => { });

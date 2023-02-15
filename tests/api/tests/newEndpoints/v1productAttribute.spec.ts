@@ -10,23 +10,19 @@ let attributeTermId: string;
 let attribute: any;
 let attributeTerm: any;
 
-test.beforeAll( async ( { request } ) => {
-	apiUtils = new ApiUtils( request );
-	const [ , pId ] = await apiUtils.createProduct( payloads.createProduct() );
-	productId = pId;
-	const [ body, aId, atId ] = await apiUtils.createAttributeTerm( payloads.createAttribute(), payloads.createAttributeTerm() );
-	attributeTerm = body;
-	attributeId = aId;
-	attributeTermId = atId;
-	attribute = await apiUtils.getSingleAttribute( attributeId );
-} );
+test.beforeAll(async ({ request }) => {
+	apiUtils = new ApiUtils(request);
+	[, productId] = await apiUtils.createProduct(payloads.createProduct());
+	[attributeTerm, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
+	attribute = await apiUtils.getSingleAttribute(attributeId);
+});
 
 // test.afterAll(async ({ request }) => { });
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe( 'product attribute api test', () => {
-	test( 'set default attribute', async ( { request } ) => {
+test.describe('product attribute api test', () => {
+	test('set default attribute', async ({ request }) => {
 		const payload = {
 			id: attribute.id,
 			name: attribute.name,
@@ -34,12 +30,12 @@ test.describe( 'product attribute api test', () => {
 			options: [],
 		};
 
-		const response = await request.put( endPoints.setDefaultAttribute( productId ), { data: { attributes: [ payload ] } } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
+		const response = await request.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
 
-	test( 'update product attribute', async ( { request } ) => {
+	test('update product attribute', async ({ request }) => {
 		const payload = {
 			attributes: [
 				{
@@ -53,7 +49,7 @@ test.describe( 'product attribute api test', () => {
 					],
 					id: attribute.id,
 					name: attribute.name,
-					options: [ attributeTerm.name ],
+					options: [attributeTerm.name],
 					slug: attribute.slug,
 					taxonomy: true,
 					variation: false,
@@ -61,8 +57,8 @@ test.describe( 'product attribute api test', () => {
 				},
 			],
 		};
-		const response = await request.post( endPoints.updateProductAttribute( productId ), { data: payload } );
-		const responseBody = await apiUtils.getResponseBody( response );
-		expect( response.ok() ).toBeTruthy();
-	} );
-} );
+		const response = await request.post(endPoints.updateProductAttribute(productId), { data: payload });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+});

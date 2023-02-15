@@ -54,6 +54,7 @@ export const payloads = {
 			name: faker.commerce.productName() + ' (Simple)',
 			type: 'simple',
 			regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+			// regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
 			categories: [
 				{
 					// id: 48

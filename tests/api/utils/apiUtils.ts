@@ -28,7 +28,8 @@ export class ApiUtils {
 		try {
 			responseBody = await response.json();
 			// console.log('Status Code: ', response.status());
-			// console.log('ResponseBody: ', responseBody);
+			// console.log('ResponseBody: ', responseBody); 
+			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 		} catch (err) {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
@@ -1065,9 +1066,9 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(product: object, order: any, auth?: any): Promise<[object, string, string]> {
-		const [, productId] = await this.createProduct(product, auth);
-		const payload = order;
+	async createOrder(productPayload: object, orderPayload: any, auth?: any): Promise<[object, string, string]> {
+		const [, productId] = await this.createProduct(productPayload, auth);
+		const payload = orderPayload;
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
