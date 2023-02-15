@@ -48,7 +48,7 @@ class Dokan_Uninstaller {
             $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '%dokan%';" );
 
             // Delete Dokan related user_meta
-            $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%dokan%';" );
+            $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%dokan%' AND meta_key NOT LIKE '%capabilities%'" );
 
             // Clear any cached data that has been removed.
             wp_cache_flush();
@@ -160,6 +160,16 @@ class Dokan_Uninstaller {
             'dokan_shipping_zone_locations',
             'dokan_shipping_tracking',
             'dokan_delivery_time',
+            'dokan_seller_badge',
+            'dokan_seller_badge_level',
+            'dokan_seller_badge_acquired',
+            'dokan_request_quotes',
+            'dokan_request_quote_rules',
+            'dokan_request_quote_details',
+            'dokan_reverse_withdrawal',
+            'dokan_advertised_products',
+            'dokan_table_rate_shipping',
+            'dokan_distance_rate_shipping',
         ];
     }
 
