@@ -997,13 +997,16 @@
             let sale_price = $( 'input.dokan-product-sales-price' ).val();
             let earning_suggestion = $('.simple-product span.vendor-price');
 
+            // Format product and sale prices to float point format.
+            let float_point_formatted_product_price = get_float_point_formatted_price( product_price );
+            let float_point_formatted_sale_price = get_float_point_formatted_price( sale_price );
+
             earning_suggestion.html( dokan.i18n_calculating );
 
             $.get( dokan.ajaxurl, {
                 action: 'get_vendor_earning',
                 product_id: product_id,
-                product_price: product_price,
-                product_price: sale_price ? sale_price : product_price,
+                product_price: float_point_formatted_sale_price ? float_point_formatted_sale_price : float_point_formatted_product_price,
                 _wpnonce: dokan.nonce
             } )
             .done( ( response ) => {
@@ -1013,6 +1016,19 @@
                     callback();
                 }
             } );
+        }
+
+        // Float point formatted price getter function.
+        function get_float_point_formatted_price( price = 0, char_to_replace = dokan.decimal_point ) {
+            if ( ! price ) {
+                return 0.00;
+            }
+
+            if ( "." === char_to_replace ) {
+                return price;
+            }
+
+            return price.replace( char_to_replace, "." );
         }
 
         $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
