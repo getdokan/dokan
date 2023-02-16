@@ -38,6 +38,9 @@ class Dokan_Uninstaller {
             // Drop Dokan related Tables
             $this->drop_tables();
 
+            // delete user metas related to dokan and dokan pro
+            $this->delete_usermeta();
+
             // Delete Pages created by dokan
             $pages = get_option( 'dokan_pages', [] );
             foreach ( $pages as $page_id ) {
@@ -46,9 +49,6 @@ class Dokan_Uninstaller {
 
             // Delete Dokan related options
             $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '%dokan%';" );
-
-            // Delete Dokan related user_meta
-            $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%dokan%' AND meta_key NOT LIKE '%capabilities%'" );
 
             // Clear any cached data that has been removed.
             wp_cache_flush();
@@ -70,7 +70,6 @@ class Dokan_Uninstaller {
             $capabilities = array_merge( $capabilities, array_keys( $cap ) );
         }
         $capabilities[] = 'dokandar';
-        $capabilities[] = 'seller';
 
         /* Capabilities added from RMA module */
         $capabilities = array_merge( $capabilities, [ 'dokan_view_store_rma_menu', 'dokan_view_store_rma_settings_menu' ] );
@@ -215,6 +214,62 @@ class Dokan_Uninstaller {
         $capabilities = maybe_serialize( [ 'customer' => 1 ] );
 
         $wpdb->query( "UPDATE {$wpdb->prefix}usermeta SET meta_value = '{$capabilities}' WHERE meta_key = '{$wpdb->prefix}capabilities' AND user_id IN (" . implode( ",", $results ) . ")" ); // phpcs:ignore
+    }
+
+    /**
+     * Delete Dokan and Dokan Pro related user metas
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    private function delete_usermeta() {
+        global $wpdb;
+
+        $user_metas = [
+            'dokan_enable_selling',
+            'dokan_profile_settings',
+            'dokan_store_name',
+            'dokan_geo_latitude',
+            'dokan_geo_longitude',
+            'dokan_geo_public',
+            'dokan_geo_address',
+            'dokan_company_name',
+            'dokan_vat_number',
+            'dokan_company_id_number',
+            'dokan_bank_name',
+            'dokan_bank_iban',
+            'dokan_feature_seller',
+            'dokan_publishing',
+            'dokan_admin_percentage_type',
+            'dokan_admin_percentage',
+            'dokan_admin_additional_fee',
+            'dokan_vendor_verification_folder_hash',
+            'dokan_stripe_customer_id',
+            'billing_dokan_company_id_number',
+            'billing_dokan_vat_number',
+            'billing_dokan_bank_name',
+            'billing_dokan_bank_iban',
+            'dokan_has_active_cancelled_subscrption',
+            'dokan_vendor_seen_setup_wizard',
+            'dokan_wcpdf_documents_settings_invoice',
+            'dokan_disable_auction',
+            'dokan_verification_status',
+            '_dokan_mangopay_account_id_sandbox',
+            '_dokan_mangopay_user_birthday',
+            '_dokan_mangopay_user_nationality',
+            '_dokan_mangopay_user_status',
+            '_dokan_mangopay_bank_account_id_IBAN_sandbox',
+            '_dokan_mangopay_active_bank_account_sandbox',
+            '_dokan_vendor_delivery_time_settings',
+            '_dokan_paypal_create_partner_referral_debug_id',
+            '_dokan_rma_settings',
+            '_dokan_vendor_delivery_time_slots',
+        ];
+
+        // Delete Dokan related user_meta
+        $meta_keys = "'" . implode( "','", $user_metas ) . "'";
+        $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key IN ($meta_keys)" ); //phpcs:ignore
     }
 }
 
