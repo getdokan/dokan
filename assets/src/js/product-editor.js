@@ -999,7 +999,7 @@
 
             // Format product and sale prices to float point format.
             let float_point_formatted_product_price = get_float_point_formatted_price( product_price );
-            let float_point_formatted_sale_price = get_float_point_formatted_price( sale_price );
+            let float_point_formatted_sale_price    = get_float_point_formatted_price( sale_price );
 
             earning_suggestion.html( dokan.i18n_calculating );
 
