@@ -55,6 +55,14 @@ class Registration {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
+        $shop_url = isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '';
+
+        if ( empty( $shop_url ) ) {
+            return new WP_Error( 'shop-url-error', __( 'Shop URL cannot be empty', 'dokan-lite' ) );
+        } else if ( ! empty( get_user_by( 'slug', $shop_url ) ) ) {
+            return new WP_Error( 'shop-url-error', __( 'Shop URL not available', 'dokan-lite' ) );
+        }
+
         $role = sanitize_text_field( wp_unslash( $_POST['role'] ) );
 
         $required_fields = apply_filters(
