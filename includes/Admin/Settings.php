@@ -740,6 +740,7 @@ class Settings {
                 'hide_vendor_info'           => [
                     'name'    => 'hide_vendor_info',
                     'label'   => __( 'Hide Vendor Info', 'dokan-lite' ),
+                    'desc'    => __( 'Hide vendor contact info from single store page.', 'dokan-lite' ),
                     'type'    => 'multicheck',
                     'default' => [
                         'email'   => '',
