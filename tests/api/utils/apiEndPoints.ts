@@ -261,7 +261,7 @@ export const endPoints = {
 	getVendorProfileProgressBarData: `${SERVER_URL}/dokan/v1/vendor-dashboard/profile-progressbar`,
 
 	// rank math
-	rankMath: (productId: string) => `${SERVER_URL}/dokan/v1/rank-math/${productId}/store-current-editable-post`,
+	rankMath: (productId: string) => `${SERVER_URL}/dokan/v2/rank-math/${productId}/store-current-editable-post`,
 
 	// v2
 

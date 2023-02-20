@@ -15,7 +15,7 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe.skip('rank math api test', () => {
+test.describe('rank math api test', () => {
 	test('rank math', async ({ request }) => {
 		const response = await request.post(endPoints.rankMath(productId), { data: {} });
 		const responseBody = await apiUtils.getResponseBody(response);
