@@ -2707,7 +2707,7 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
     // get the redirect url from $_GET
     if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
         $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
-    } elseif ( user_can( $user, 'dokandar' ) ) {
+    } elseif ( user_can( $user, 'dokandar' ) && wc_get_page_permalink( 'checkout' ) !== $redirect_to ) {
         $seller_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages' );
 
         if ( $seller_dashboard !== - 1 ) {
