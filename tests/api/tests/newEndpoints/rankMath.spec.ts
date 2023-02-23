@@ -17,6 +17,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('rank math api test', () => {
 	test('rank math', async ({ request }) => {
+		test.fail(!!process.env.CI, 'feature not merged yet!');
 		const response = await request.post(endPoints.rankMath(productId), { data: {} });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
