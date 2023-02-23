@@ -461,12 +461,18 @@ function dokan_products_array_filter_editable( $product ) {
  * Get row action for product
  *
  * @since 2.7.3
+ * @since 3.7.11 Added `$format_html` as an optional parameter
  *
- * @param object $post
+ * @param object|int|string $post
+ * @param bool              $format_html (Optional)
  *
  * @return array
  */
-function dokan_product_get_row_action( $post ) {
+function dokan_product_get_row_action( $post, $format_html = true ) {
+    if ( is_numeric( $post ) ) {
+        $post = get_post( $post );
+    }
+
     if ( empty( $post->ID ) ) {
         return [];
     }
@@ -510,6 +516,10 @@ function dokan_product_get_row_action( $post ) {
     $row_action = apply_filters( 'dokan_product_row_actions', $row_action, $post );
 
     if ( empty( $row_action ) ) {
+        return $row_action;
+    }
+
+    if ( ! $format_html ) {
         return $row_action;
     }
 

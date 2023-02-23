@@ -1,6 +1,6 @@
 <template>
     <div class="dokan-upload-image" @click="uploadImage">
-        <img v-if="! showButton" :src="image.src ? image.src : src" :style="">
+        <img v-if="! showButton" :src="image.src ? image.src : src">
 
         <button v-if="showButton" @click.prevent="uploadImage">
             {{ buttonLabel }}
@@ -16,6 +16,7 @@ export default {
 
     props: {
         src: {
+            type: String,
             default: dokan.urls.assetsUrl + '/images/store-pic.png',
         },
         showButton: {
@@ -43,9 +44,28 @@ export default {
         }
     },
 
+    created() {
+        this.$root.$on('resetDokanUploadImage', ( obj ) => {
+            this.resetImage( obj );
+        } );
+    },
+
+    mounted() {
+
+    },
+
     methods: {
+        getDefaultImageSrc() {
+            return dokan.urls.assetsUrl + '/images/store-pic.png';
+        },
+
         uploadImage() {
             this.openMediaManager( this.onSelectImage );
+        },
+
+        resetImage( obj = {} ) {
+            this.image.src = obj.src ?? this.getDefaultImageSrc();
+            this.image.id = 0;
         },
 
         onSelectImage( image ) {

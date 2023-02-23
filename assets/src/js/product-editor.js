@@ -342,6 +342,7 @@
                         $( '#dokan-add-product-popup' ).iziModal('close');
                         window.location.href = resp.data;
                     } else {
+                        product_featured_frame = undefined;
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
                         Dokan_Editor.modal.iziModal('resetContent');
                         Dokan_Editor.openProductPopup();

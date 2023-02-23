@@ -164,14 +164,15 @@ function dokan_count_orders( $user_id ) {
 
     if ( false === $counts ) {
         $counts = [
-            'wc-pending'    => 0,
-            'wc-completed'  => 0,
-            'wc-on-hold'    => 0,
-            'wc-processing' => 0,
-            'wc-refunded'   => 0,
-            'wc-cancelled'  => 0,
-            'wc-failed'     => 0,
-            'total'         => 0,
+            'wc-pending'        => 0,
+            'wc-completed'      => 0,
+            'wc-on-hold'        => 0,
+            'wc-processing'     => 0,
+            'wc-refunded'       => 0,
+            'wc-cancelled'      => 0,
+            'wc-failed'         => 0,
+            'wc-checkout-draft' => 0,
+            'total'             => 0,
         ];
 
         $counts = apply_filters( 'dokan_order_status_count', $counts );
@@ -254,10 +255,10 @@ function dokan_sync_insert_order( $order_id ) {
         return;
     }
 
-    $order        = dokan()->order->get( $order_id );
+    $order        = wc_get_order( $order_id );
     $seller_id    = dokan_get_seller_id_by_order( $order_id );
     $order_total  = $order->get_total();
-    $order_status = dokan_get_prop( $order, 'status' );
+    $order_status = $order->get_status();
 
     if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
         $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );

@@ -166,7 +166,6 @@ class ProductControllerV2 extends ProductController {
                 'posts_per_page' => 10,
                 'paged'          => 1,
                 'author'         => dokan_get_current_user_id(),
-                'post_status'    => $this->post_status,
                 'orderby'        => 'post_date',
                 'post_type'      => 'product',
                 'date_query'     => [],

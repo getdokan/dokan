@@ -605,7 +605,7 @@ class ProductController extends DokanRESTController {
         $args = parent::prepare_objects_query( $request );
 
         // Set post_status.
-        $args['post_status'] = isset( $request['status'] ) ? $request['status'] : $this->post_status;
+        $args['post_status'] = ! empty( $request['status'] ) ? $request['status'] : $this->post_status;
 
         // Taxonomy query to filter products by type, category,
         // tag, shipping class, and attribute.
@@ -817,6 +817,7 @@ class ProductController extends DokanRESTController {
                 'avatar'  => $store->get_avatar(),
                 'address' => $store->get_address(),
             ],
+            'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
 
         $response = rest_ensure_response( $data );
