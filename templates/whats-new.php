@@ -49,6 +49,10 @@ $changelog = [
                     'title'       => 'Dokan Dashboard menu wasn’t loading if the permalink doesn’t include / at the end of the URL',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Fixed product image thumbnail gets image height squeezed on add new product popup under vendor dashboard',
+                    'description' => '',
+                ],
             ],
         ],
     ],
