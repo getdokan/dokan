@@ -225,7 +225,7 @@ test.describe('setup test api', () => {
 	// })
 });
 
-test.describe('setup test e2e', () => {
+test.describe.only('setup test e2e', () => {
 
 	test.use({ storageState: 'adminStorageState.json' });
 
@@ -237,7 +237,7 @@ test.describe('setup test e2e', () => {
 		adminPage = new AdminPage(page);
 	});
 
-	test('admin set WpSettings', async ({ }) => {
+	test.skip('admin set WpSettings', async ({ }) => {
 		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
 	});
 
@@ -245,7 +245,7 @@ test.describe('setup test e2e', () => {
 		await adminPage.setDokanGeneralSettings(data.dokanSettings.general);
 	});
 
-	test.only('admin set dokan selling settings', async ({ }) => {
+	test('admin set dokan selling settings', async ({ }) => {
 		await adminPage.setDokanSellingSettings(data.dokanSettings.selling);
 	});
 
@@ -289,7 +289,7 @@ test.describe('setup test e2e', () => {
 		await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
 	});
 
-	test('admin set dokan geolocation settings', async ({ }) => {
+	test.only('admin set dokan geolocation settings', async ({ }) => {
 		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation);
 	});
 

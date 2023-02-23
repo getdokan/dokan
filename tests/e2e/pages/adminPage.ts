@@ -116,9 +116,11 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.enableMinMaxAmount)
 
         // save settings
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.sellingOptionsSaveChanges)
-        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(selling.saveSuccessMessage)
-        // await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
+
+        // await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.sellingOptionsSaveChanges)
+        // await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(selling.saveSuccessMessage)
+        await this.clickAndWaitForNavigation(selector.admin.dokan.settings.sellingOptionsSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.adminCommission)).toHaveValue(selling.adminCommission)
     }
 
     // Admin Set Dokan Withdraw Settings
@@ -195,11 +197,13 @@ export class AdminPage extends BasePage {
         await this.enableSwitcher(selector.admin.dokan.settings.showVendorInfo)
 
         // save settings
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.appearanceSaveChanges)
-        await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(appearance.saveSuccessMessage)
+        // await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.appearanceSaveChanges)
+        // await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(appearance.saveSuccessMessage)
 
         // let apiKey = await this.getElementValue(selector.admin.dokan.settings.googleMapApiKey)
         // expect(apiKey).toBe(appearance.googleMapApiKey)
+        await this.clickAndWaitForNavigation(selector.admin.dokan.settings.appearanceSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.googleMapApiKey)).toHaveValue(appearance.googleMapApiKey)
     }
 
     // Admin Set Dokan Privacy Policy Settings
@@ -373,7 +377,8 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMinimumDistance, geolocation.radiusSearchMinimumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
-        await this.clearAndFill(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
+        await this.clearAndType(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
+        await this.wait(1)
         await this.press(data.key.arrowDown)
         await this.press(data.key.enter)
 
