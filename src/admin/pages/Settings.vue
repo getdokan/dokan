@@ -341,12 +341,12 @@
                 }
 
                 return Swal.fire({
-                    title: this.__( 'Withdraw Disbursement Schedule Changed', 'dokan-lite' ),
-                    text: this.__( 'Do you want to send an announcement to vendors about the removal of currently active disbursement schedule options?', 'dokan-lite' ),
+                    title: this.__( 'Disbursement Schedule Updated', 'dokan-lite' ),
+                    text: this.__( 'Do you want to inform your vendors about the removal of the previous disbursement schedule by sending them an announcement?', 'dokan-lite' ),
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: this.__('Save & send announcement', 'dokan-lite'),
-                    cancelButtonText: this.__( 'Save only', 'dokan-lite' ),
+                    confirmButtonText: this.__('Save and Send Announcement', 'dokan-lite'),
+                    cancelButtonText: this.__( 'Save Only', 'dokan-lite' ),
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 });
