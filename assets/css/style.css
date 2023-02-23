@@ -4100,6 +4100,7 @@ div.media-sidebar a.edit-attachment {
   max-width: 100%;
   width: 292px;
   height: 212px;
+  object-fit: cover;
 }
 .dokan-add-new-product-popup .product-form-container .dokan-feat-image-upload img:hover a.close {
   display: block;
