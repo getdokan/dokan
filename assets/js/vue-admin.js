@@ -9049,9 +9049,9 @@ var swal = Swal.mixin({
     updatedCounts: function updatedCounts(xhr) {
       var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4, _xhr$getResponseHeade5;
 
-      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
-      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
-      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.debit = parseFloat((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseFloat((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseFloat((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
       this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
       this.counts.total_vendors = parseInt((_xhr$getResponseHeade5 = xhr.getResponseHeader('X-Status-Total-Vendors')) !== null && _xhr$getResponseHeade5 !== void 0 ? _xhr$getResponseHeade5 : 0);
     },
@@ -9484,9 +9484,9 @@ var swal = Swal.mixin({
     updatedCounts: function updatedCounts(xhr) {
       var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4;
 
-      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
-      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
-      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.debit = parseFloat((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseFloat((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseFloat((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
       this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
     },
     updatePagination: function updatePagination(xhr) {

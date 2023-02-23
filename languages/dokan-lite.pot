@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.7.11\n"
+"Project-Id-Version: Dokan 3.7.12\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2023-02-13 11:30:29+00:00\n"
+"POT-Creation-Date: 2023-02-22 15:33:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -228,15 +228,15 @@ msgstr ""
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:115
+#: includes/Admin/Notices/Manager.php:113
 #. translators: %s permalink settings url
 msgid ""
-"The <strong>Plain and Numeric</strong> permalink structure is not working "
-"for the Dokan plugin. Please change your permalink structure from <a "
-"href=\"%s\">Settings > Permalinks</a>"
+"The <strong>Plain</strong> permalink structure is not working for the Dokan "
+"plugin. Please change your permalink structure from <a href=\"%s\">Settings "
+"> Permalinks</a>"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:120
+#: includes/Admin/Notices/Manager.php:118
 msgid "Go to Settings"
 msgstr ""
 
@@ -432,7 +432,7 @@ msgstr ""
 msgid "You have no permission to get settings value"
 msgstr ""
 
-#: includes/Admin/Settings.php:120 includes/Admin/Settings.php:838
+#: includes/Admin/Settings.php:120 includes/Admin/Settings.php:839
 msgid "You are not authorized to perform this action."
 msgstr ""
 
@@ -536,7 +536,7 @@ msgid ""
 "from."
 msgstr ""
 
-#: includes/Admin/Settings.php:353 includes/Admin/Settings.php:774
+#: includes/Admin/Settings.php:353 includes/Admin/Settings.php:775
 msgid "Privacy Policy"
 msgstr ""
 
@@ -838,7 +838,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:609 includes/Admin/Settings.php:616
 #: includes/Admin/Settings.php:624 includes/Admin/Settings.php:634
-#: includes/Admin/Settings.php:769
+#: includes/Admin/Settings.php:770
 msgid "Select page"
 msgstr ""
 
@@ -1005,78 +1005,82 @@ msgstr ""
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings.php:750
+#: includes/Admin/Settings.php:743
+msgid "Hide vendor contact info from single store page."
+msgstr ""
+
+#: includes/Admin/Settings.php:751
 msgid "Email Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:751 includes/Admin/UserProfile.php:211
+#: includes/Admin/Settings.php:752 includes/Admin/UserProfile.php:211
 #: src/admin/pages/VendorAccountFields.vue:65
 #: templates/account/vendor-registration.php:33
 #: templates/global/seller-registration-form.php:51
 msgid "Phone Number"
 msgstr ""
 
-#: includes/Admin/Settings.php:752
+#: includes/Admin/Settings.php:753
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:249
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:250
 msgid "Store Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:759
+#: includes/Admin/Settings.php:760
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:761
+#: includes/Admin/Settings.php:762
 msgid "Enable privacy policy for vendor store contact form"
 msgstr ""
 
-#: includes/Admin/Settings.php:766
+#: includes/Admin/Settings.php:767
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:768
+#: includes/Admin/Settings.php:769
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:776 includes/functions.php:3618
+#: includes/Admin/Settings.php:777 includes/functions.php:3618
 msgid ""
 "Your personal data will be used to support your experience throughout this "
 "website, to manage access to your account, and for other purposes described "
 "in our [dokan_privacy_policy]"
 msgstr ""
 
-#: includes/Admin/Settings.php:777
+#: includes/Admin/Settings.php:778
 msgid "Customize the Privacy Policy text that will be displayed on your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:849
+#: includes/Admin/Settings.php:850
 msgid "Both section and field params are required."
 msgstr ""
 
-#: includes/Admin/Settings.php:858
+#: includes/Admin/Settings.php:859
 msgid "No filter found to refresh the setting options"
 msgstr ""
 
-#: includes/Admin/Settings.php:890
+#: includes/Admin/Settings.php:891
 msgid "Minimum Withdraw Limit can't be negative value."
 msgstr ""
 
-#: includes/Admin/Settings.php:901
+#: includes/Admin/Settings.php:902
 #: includes/ReverseWithdrawal/Admin/Settings.php:214
 msgid "Validation error"
 msgstr ""
 
-#: includes/Admin/Settings.php:919
+#: includes/Admin/Settings.php:920
 msgid "Data Clear"
 msgstr ""
 
-#: includes/Admin/Settings.php:920
+#: includes/Admin/Settings.php:921
 msgid ""
 "Delete all data and tables related to Dokan and Dokan Pro plugin while "
 "deleting the Dokan plugin."
 msgstr ""
 
-#: includes/Admin/Settings.php:923
+#: includes/Admin/Settings.php:924
 msgid ""
 "Check this to remove Dokan related data and table from the database upon "
 "deleting the plugin. When you delete the Dokan lite version, it will also "
@@ -3744,11 +3748,11 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/ProductCategory/Helper.php:216
+#: includes/ProductCategory/Helper.php:230
 msgid "Select a category"
 msgstr ""
 
-#: includes/ProductCategory/Helper.php:217
+#: includes/ProductCategory/Helper.php:231
 msgid "This category has already been selected"
 msgstr ""
 
@@ -5633,8 +5637,8 @@ msgid "Refund"
 msgstr ""
 
 #: includes/ReverseWithdrawal/Helper.php:328
-#: includes/ReverseWithdrawal/Manager.php:366
-#: includes/ReverseWithdrawal/Manager.php:402
+#: includes/ReverseWithdrawal/Manager.php:373
+#: includes/ReverseWithdrawal/Manager.php:409
 msgid "No vendor id provided"
 msgstr ""
 
@@ -5684,24 +5688,24 @@ msgid ""
 "longer able to sell any products."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:487
+#: includes/ReverseWithdrawal/Manager.php:494
 msgid "No reverse withdrawal data found with given id."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:519
+#: includes/ReverseWithdrawal/Manager.php:526
 msgid "Transaction id is required."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:523
+#: includes/ReverseWithdrawal/Manager.php:530
 msgid "Invalid transaction type is provide. Please check your input."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:527
-#: includes/ReverseWithdrawal/Manager.php:648
+#: includes/ReverseWithdrawal/Manager.php:534
+#: includes/ReverseWithdrawal/Manager.php:655
 msgid "Invalid vendor id provide. Please provide a valid vendor id."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:557
+#: includes/ReverseWithdrawal/Manager.php:564
 msgid ""
 "Something went wrong while inserting reverse withdrawal data. Please "
 "contact site admin."
