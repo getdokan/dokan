@@ -723,6 +723,13 @@ class Settings {
                     ],
                     'default' => 'default',
                 ],
+                'default_store_banner'           => [
+                    'name'    => 'default_store_banner',
+                    'label'   => __( 'Default Store Banner', 'dokan-lite' ),
+                    'type'    => 'file',
+                    'desc'    => sprintf( __( '%sRestore Default Banner Image%s', 'dokan-lite' ), '<a href="#" id="restoreDefaultBanner">', '</a>' ),
+                    'default' => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
                     'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
