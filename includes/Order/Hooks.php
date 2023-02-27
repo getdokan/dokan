@@ -40,7 +40,7 @@ class Hooks {
         add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 3 );
 
         if ( is_admin() ) {
-            add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order' );
+            add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order', 60 );
         }
 
         // restore order stock if it's been reduced by twice
