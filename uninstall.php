@@ -219,7 +219,7 @@ class Dokan_Uninstaller {
     /**
      * Delete Dokan and Dokan Pro related user metas
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.12
      *
      * @return void
      */
