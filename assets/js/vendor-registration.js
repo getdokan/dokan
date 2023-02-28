@@ -181,6 +181,7 @@ var Dokan_Vendor_Registration = {
         // Create a new instance of `MutationObserver` named `observer`.
         const observer = new MutationObserver( ( mutationList, observer ) => {
             for ( const mutation of mutationList ) {
+                // Check if the mutation element class list contains at least an allowed class names.
                 if ( AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
                     this.ensureShopSlugAvailability();
                 }
@@ -193,8 +194,15 @@ var Dokan_Vendor_Registration = {
 
     ensureShopSlugAvailability: function() {
         const slugAvailabilityStatus = $( '#url-alart-mgs' ).hasClass( 'text-success' ),
+              registrationRoleInput  = $( '.vendor-customer-registration input[name="role"]:checked' ),
               submitButton           = $( '.woocommerce-form-register__submit' );
 
+        // Check if the registration role is `seller`.
+        if ( 'seller' !== registrationRoleInput.val() ) {
+            return;
+        }
+
+        // Enable/disable submit button based on shop slug availability.
         if ( slugAvailabilityStatus ) {
             submitButton.prop( 'disabled', false );
         } else {
