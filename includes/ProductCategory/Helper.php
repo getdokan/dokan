@@ -28,17 +28,17 @@ class Helper {
      * @since 3.6.2
      *
      * @param integer $post_id
+     * @param boolean $get_default_cat
      *
      * @return array
      */
-    public static function get_saved_products_category( $post_id = 0 ) {
+    public static function get_saved_products_category( $post_id = 0, $get_default_cat = true ) {
         $is_single           = self::product_category_selection_is_single();
         $chosen_cat          = self::get_product_chosen_category( $post_id );
-        $default_product_cat = get_term( get_option( 'default_product_cat' ) );
         $data                = [
             'chosen_cat'          => [],
             'is_single'           => $is_single,
-            'default_product_cat' => $default_product_cat,
+            'default_product_cat' => $get_default_cat ? get_term( get_option( 'default_product_cat' ) ) : null,
         ];
 
         // if post id is empty return default data
