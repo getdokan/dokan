@@ -999,7 +999,7 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
     }
 
     global $wpdb;
-    $products   = implode( ',', $products );
+    $products   = implode( ',', array_map( 'absint', (array) $products ) );
     $seller_ids = $wpdb->get_col( "SELECT DISTINCT post_author from {$wpdb->posts} WHERE ID in ($products)" ); // phpcs:ignore
 
     foreach ( $seller_ids as $seller_id ) {

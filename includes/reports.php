@@ -115,7 +115,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
         WHERE   posts.post_type     = 'shop_order'
         AND     posts.post_status   != 'trash'
         AND     do.seller_id = {$current_user}
-        AND     do.order_status IN ('" . implode( "','", apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) . "')
+        AND     do.order_status IN ('" . implode( "','", esc_sql( apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) ) . "')
         ";
 
 		if ( $filter_range && ! empty( $start_date ) && ! empty( $end_date ) ) {
