@@ -213,7 +213,7 @@ class Dokan_Uninstaller {
 
         $capabilities = maybe_serialize( [ 'customer' => 1 ] );
 
-        $wpdb->query( "UPDATE {$wpdb->prefix}usermeta SET meta_value = '{$capabilities}' WHERE meta_key = '{$wpdb->prefix}capabilities' AND user_id IN (" . implode( ",", $results ) . ")" ); // phpcs:ignore
+        $wpdb->query( "UPDATE {$wpdb->prefix}usermeta SET meta_value = '{$capabilities}' WHERE meta_key = '{$wpdb->prefix}capabilities' AND user_id IN (" . implode( ",", array_map( 'absint',  $results ) ) . ")" ); // phpcs:ignore
     }
 
     /**
@@ -336,7 +336,7 @@ class Dokan_Uninstaller {
         ];
 
         // Delete Dokan related user_meta
-        $meta_keys = "'" . implode( "','", $user_metas ) . "'";
+        $meta_keys = "'" . implode( "','", esc_sql( $user_metas ) ) . "'";
         $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key IN ($meta_keys)" ); //phpcs:ignore
     }
 }
