@@ -33,9 +33,9 @@ array_push( $chosen_cat, $initial_category_for_modal );
                 </div>
             <?php endif; ?>
             <span class="dokan-cat-inputs-holder dokan-cih-level-<?php echo esc_attr( $key ); ?>" >
-                <?php if ( ! empty( $term_id ) ): ?>
+                <?php if ( ! empty( $term_id ) ) : ?>
                     <input data-field-name="chosen_product_cat" type="hidden" class="dokan_chosen_product_cat dokan_chosen_product_cat_<?php echo esc_attr( $term_id ); ?>" name="chosen_product_cat[]" value="<?php echo esc_attr( $term_id ); ?>"/>
-                <?php endif;?>
+                <?php endif; ?>
             </span>
         </div>
     <?php endforeach; ?>
