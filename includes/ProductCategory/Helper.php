@@ -150,11 +150,9 @@ class Helper {
         }
 
         /**
-         * By passing true in this filter hook anyone can enable capability to select any middle category in dokan product
-         * multi-step category selection. In other words if middle category selection is enabled then we will not assign all
-         * the parent categories of the selected category.
+         * If enabled any one middle category in dokan product multi-step category selection.
          */
-        $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
+        $middle_category_selection = 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'off' );
 
 
         $all_ancestors = [];
@@ -226,6 +224,7 @@ class Helper {
         $data = [
             'categories' => $all_categories,
             'is_single'  => self::product_category_selection_is_single(),
+            'middle_category_selection'  => 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'off' ),
             'i18n'       => [
                 'select_a_category' => __( 'Select a category', 'dokan-lite' ),
                 'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
