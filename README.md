@@ -5,9 +5,9 @@
 **Requires at least:** 5.4  
 **Tested up to:** 6.1.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.4.0  
+**WC tested up to:** 7.4.1  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.12  
+**Stable tag:** 3.7.13  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -312,6 +312,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.13 ( Mar 01, 2023 ) ###
+
+- **fix:** fix a SQL injection issue
 
 ### v3.7.12 ( Feb 23, 2023 ) ###
 
