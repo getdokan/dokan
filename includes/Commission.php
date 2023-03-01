@@ -197,15 +197,18 @@ class Commission {
         if ( ! $product instanceof WC_Product ) {
             $product = wc_get_product( $product );
         }
+        /**
+         * Todo: add proper error checking if product has been deleted.
+         * right now, we are calling this method anytime whether this feature is used or not
+         * commission calculation must be done with saved data and this method should be called
+         * one time after an order has been created.
+         */
 
-        if ( ! $product ) {
-            return new WP_Error( __( 'Product not found', 'dokan-lite' ), 404 );
-        }
+        $product_price = is_null( $price ) && $product ? (float) $product->get_price() : (float) $price;
+        $vendor_id     = (int) dokan_get_vendor_by_product( $product, true );
+        $product_id    = $product ? $product->get_id() : 0;
 
-        $product_price = is_null( $price ) ? (float) $product->get_price() : (float) $price;
-        $vendor        = dokan_get_vendor_by_product( $product );
-
-        $earning = $this->calculate_commission( $product->get_id(), $product_price, $vendor->get_id() );
+        $earning = $this->calculate_commission( $product_id, $product_price, $vendor_id );
         $earning = 'admin' === $context ? $product_price - $earning : $earning;
 
         return apply_filters( 'dokan_get_earning_by_product', $earning, $product, $context );
