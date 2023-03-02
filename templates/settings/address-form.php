@@ -154,9 +154,9 @@ $address_state   = isset( $profile_info['address']['state'] ) ? $profile_info['a
                     if ( $seller_address_fields['state']['required'] ) {
                         $required_attr = 'required';
                         ?>
-                    <?php }?>
+                    <?php } ?>
 
-                    <span class="required" style="display: <?php $required_attr ? 'inline' : 'none' ?>;"> *</span>
+                    <span class="required" style="display: <?php $required_attr ? 'inline' : 'none'; ?>;"> *</span>
                 </label>
                 <?php
                 if ( $is_input ) {
