@@ -11,7 +11,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.2",
     "appsero/client": "dev-develop",
     "jakeasmith/http_build_url": "^1"
   },
@@ -20,11 +20,11 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "tareq1988/wp-php-cs-fixer": "dev-master",
     "phpcompatibility/phpcompatibility-wp": "dev-master",
-    "phpunit/phpunit": ">=6.5.14"
+    "phpunit/phpunit": "^8.5.31"
   },
   "config": {
     "platform": {
-      "php": "7.0"
+      "php": "7.2"
     },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true

@@ -898,69 +898,6 @@ jQuery(function($) {
   };
 
   bulkItemsSelection.init();
-
-  $('.product-cat-stack-dokan li.has-children').on(
-    'click',
-    '> a span.caret-icon',
-    function(e) {
-      e.preventDefault();
-      var self = $(this),
-        liHasChildren = self.closest('li.has-children');
-
-      if (!liHasChildren.find('> ul.children').is(':visible')) {
-        self.find('i.fa').addClass('fa-rotate-90');
-        if (liHasChildren.find('> ul.children').hasClass('level-0')) {
-          self.closest('a').css({ borderBottom: 'none' });
-        }
-      }
-
-      liHasChildren.find('> ul.children').slideToggle('fast', function() {
-        if (!$(this).is(':visible')) {
-          self.find('i.fa').removeClass('fa-rotate-90');
-
-          if (liHasChildren.find('> ul.children').hasClass('level-0')) {
-            self.closest('a').css({ borderBottom: '1px solid #eee' });
-          }
-        }
-      });
-    }
-  );
-
-  $('.store-cat-stack-dokan li.has-children').on(
-    'click',
-    '> a span.caret-icon',
-    function(e) {
-      e.preventDefault();
-      var self = $(this),
-        liHasChildren = self.closest('li.has-children');
-
-      if (!liHasChildren.find('> ul.children').is(':visible')) {
-        self.find('i.fa').addClass('fa-rotate-90');
-        if (liHasChildren.find('> ul.children').hasClass('level-0')) {
-          self.closest('a').css({ borderBottom: 'none' });
-        }
-      }
-
-      liHasChildren.find('> ul.children').slideToggle('fast', function() {
-        if (!$(this).is(':visible')) {
-          self.find('i.fa').removeClass('fa-rotate-90');
-
-          if (liHasChildren.find('> ul.children').hasClass('level-0')) {
-            self.closest('a').css({ borderBottom: '1px solid #eee' });
-          }
-        }
-      });
-    }
-  );
-
-  $(document).ready(function() {
-    var selectedLi = $('#cat-drop-stack ul').find('a.selected');
-    selectedLi.css({ fontWeight: 'bold' });
-
-    selectedLi.parents('ul.children').each(function(i, val) {
-      $(val).css({ display: 'block' });
-    });
-  });
 })(jQuery);
 
 (function($) {
@@ -1204,6 +1141,86 @@ jQuery(function($) {
           .css('cursor', 'help');
       });
     });
+
+    // Submenu navigation on vendor dashboard
+    $( '#dokan-navigation .dokan-dashboard-menu li.has-submenu:not(.active)' )
+    .on( 'mouseover', (e) => {
+        dokanNavigateSubmenu(e);
+    } )
+    .on( 'mouseout', (e) => {
+        dokanNavigateSubmenu( e, true );
+    } );
+
+    /**
+     * Navigates submenu on hovering the parent menu.
+     *
+     * @param {event}   evt  The dom event
+     * @param {boolean} hide Hide or show sub menu
+     *
+     * @return {void}
+     */
+    function dokanNavigateSubmenu( evt, hide ) {
+        const elem = $( evt.target ).closest( 'li.has-submenu' );
+
+        elem.find( '.navigation-submenu' ).each( ( index, subElem ) => {
+            if ( ! hide ) {
+                elem.addClass( 'submenu-hovered' );
+
+                let elemRect        = elem[0].getBoundingClientRect(),
+                    subElemRect     = subElem.getBoundingClientRect(),
+                    dashboard       = $( '.dokan-dashboard-wrap' ),
+                    dashboardRect   = dashboard[0].getBoundingClientRect(),
+                    dashboardHeight = Math.min( dashboardRect.bottom, dashboardRect.height );
+
+                if ( dashboardHeight < subElemRect.height ) {
+                    let extendedHeight = subElemRect.height - dashboardHeight;
+                    if ( elemRect.top < elemRect.height ) {
+                        extendedHeight += elemRect.top;
+                    }
+                    dashboard.css( 'height', dashboardRect.height + extendedHeight );
+                } else {
+                    dashboard.css( 'height', '' );
+                }
+
+                if ( elemRect.top < elemRect.height ) {
+                    $(subElem).css( 'bottom', 'unset' );
+                    $(subElem).css( 'top', 0 );
+                } else {
+                    $(subElem).css( 'top', 'unset' );
+
+                    let dist = elemRect.top - subElemRect.height;
+                    if ( dist > 0 ) {
+                        $(subElem).css( 'bottom', 0 );
+
+                        subElemRect = subElem.getBoundingClientRect();
+                        if ( subElemRect.top < 0 ) {
+                            $(subElem).css( 'bottom', 'unset' );
+                            $(subElem).css( 'top', 0 );
+                        }
+                    } else {
+                        $(subElem).css( 'bottom', dist );
+
+                        let navRect             = $( '.dokan-dash-sidebar' )[0].getBoundingClientRect(),
+                            navElderSiblingRect = $( '.entry-header' )[0].getBoundingClientRect();
+                        subElemRect = subElem.getBoundingClientRect();
+
+                        if ( subElemRect.bottom > navRect.bottom ) {
+                            dist += subElemRect.bottom - navRect.bottom;
+                        } else if ( subElemRect.bottom - navElderSiblingRect.bottom < subElemRect.height ) {
+                            dist += subElemRect.bottom - navElderSiblingRect.bottom - subElemRect.height - 20;
+                        }
+
+                        $(subElem).css( 'bottom', dist );
+                    }
+                }
+            } else {
+                elem.removeClass( 'submenu-hovered' );
+                $( '.dokan-dashboard-wrap' ).css( 'height', '' );
+                $(subElem).css( 'bottom', 0 );
+                $(subElem).removeAttr( 'style' );
+            }
+        } );
+    }
 })(jQuery);
 /**
  * Show Delete Button Prompt
@@ -1231,4 +1248,3 @@ jQuery(function($) {
     return false;
   }
 }
-

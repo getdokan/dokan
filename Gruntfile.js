@@ -74,6 +74,7 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/reverse-withdrawal.js',
             '!<%= dirs.devJsSrc %>/product-category-ui.js',
             '!<%= dirs.devJsSrc %>/dokan-admin-product.js',
+            '!<%= dirs.devJsSrc %>/dokan-frontend.js',
           ],
           '<%= dirs.js %>/login-form-popup.js': [
             '<%= dirs.devJsSrc %>/login-form-popup.js'
@@ -96,6 +97,12 @@ module.exports = function(grunt) {
       helper: {
         files: {
           '<%= dirs.js %>/helper.js': '<%= dirs.devJsSrc %>/helper.js'
+        }
+      },
+
+      dokan_frontend: {
+        files: {
+          '<%= dirs.js %>/dokan-frontend.js': '<%= dirs.devJsSrc %>/dokan-frontend.js'
         }
       }
 

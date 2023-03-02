@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce, yith, yithemes
 Requires at least: 5.4
-Tested up to: 6.0.3
+Tested up to: 6.1.1
 WC requires at least: 5.0.0
-WC tested up to: 7.0.0
-Requires PHP: 7.0
-Stable tag: 3.7.4
+WC tested up to: 7.4.0
+Requires PHP: 7.2
+Stable tag: 3.7.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,93 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.12 ( Feb 23, 2023 ) =
+
+- **new:** Added a new js hook `dokan_middle_category_selection` by using this hook if anyone passes true in this hook user will be able to select any category in Dokan multi-step category and a new WordPress hook `dokan_middle_category_selection` where you also have to pass true select middle category.
+- **update:** [LoginRedirection] Keep the sellers on the checkout page if they login from the checkout page.
+- **update:** Added sub-description to the `hide vendor info` section under Dokan admin appearance settings
+- **fix:** [AddNewProductPopup] Create & Add a new product button does not allow adding a product image during the time of adding more than one product has been fixed
+- **fix:** Fixed a fatal error if the order is created from WooCommerce admin dashboard without adding any line items.
+- **fix:** Fixed admin user permission/capability issue after permanently deleting the Dokan plugin.
+- **fix:** [ReverseWithdrawal] Refund amount wasn’t subtracted from `Total Collected Values` for reverse withdrawal under the Admin Reverse Withdrawal menu.
+- **fix:** [ReverseWithdrawal] The decimal value is not included under the `Total Collected` section of the admin dashboard Reverse Withdrawal menu.
+- **fix:** Dokan Dashboard menu wasn’t loading if the permalink doesn’t include / at the end of the URL
+- **fix:** Fixed product image thumbnail gets image height squeezed on add new product popup under vendor dashboard
+
+= v3.7.11 ( Feb 13, 2023 ) =
+
+- **fix:** Vendor search doesn't work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page
+- **fix:** The number of orders on the backend is not appearing depending on the vendor's own order count.
+- **fix:** Fixed a fatal error while creating an order from the admin dashboard with no data
+
+- **update:** Added vendor address-related fields under vendor registration form
+- **update:** Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`
+
+= v3.7.10 ( Jan 26, 2023 ) =
+
+- **new:** Extended REST API support for Dokan
+-- https://example.com/wp-json/dokan/v1/orders?after=2022-10-01&before=2022-10-30
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/sales?from=2021-08-02T04:13:05Z&to=2021-12-02T04:13:05Z
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/orders
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/products
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/profile
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/preferences
+-- https://example.com/wp-json/dokan/v2/orders/{order_id}/downloads
+-- https://example.com/wp-json/dokan/v2/orders/
+-- https://example.com/wp-json/dokan//v2/orders/bulk-actions
+-- https://example.com/wp-json/dokan/v1/products/attributes/edit-product/{id}
+-- https://example.com/wp-json/dokan/v1/products/attributes/set-default/{id}
+-- https://example.com/wp-json/dokan/v1/blocks/products/{id}
+-- https://example.com/wp-json/dokan/v2/settings
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{id}
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{parent_id}/{id}
+-- https://example.com/wp-json/dokan/v2/withdraw/settings
+-- https://example.com/wp-json/dokan/v2/withdraw/summary
+-- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data
+
+- **fix:** Multiple store category modal wasn’t working for some theme
+- **fix:** Recreate reverse withdrawal payment product if no product found with stored product id
+
+= v3.7.9 ( Jan 10, 2023 ) =
+
+- **update:** Last-page and first-page pagination icon inconsistency under single store page product listing
+- **update:** Adjusted store banner image stretching issue under store list page
+- **fix:** Vendor email address is not showing up on the store header.
+
+= v3.7.8 ( Dec 27, 2022 ) =
+
+- **fix:** Single Store Page store header menu and search fields style break on mobile devices
+- **fix:** Vendor dashboard total sales wasn’t displaying decimal values
+- **fix:** Set user role as seller while creating vendor from api call
+- **fix:** order note date issue under vendor dashboard order details page
+
+
+= v3.7.7 ( Nov 30, 2022 ) =
+
+- **update:** Added  date filter - `after/before` for Order REST API
+- **update:** Added `dokan_bank_payment_fields_placeholders` Filter to change the label and placeholder of bank payment fields
+- **update:** Updated UI/UX of vendor dashboard submenu
+- **update:** Added section, sub-section label, description search under Dokan admin settings
+
+= v3.7.6 ( Nov 14, 2022 ) =
+
+- **fix:** Fixed a sql security issue while searching for products via ajax from vendor dashboard
+
+= v3.7.5 ( Nov 03, 2022 ) =
+
+- **new:** Added a new hook named dokan_store_product_search_results to filter out store product search results closes
+- **update:** Sort product categories under the vendor dashboard alphabetically
+- **fix:** SweetAlert library is conflicting with the WooCommerce Conversion Tracking plugin
+- **fix:** [BestSellingProductWidget] Products are being shown on the widget even when the catalog visibility is set to hidden.
+- **fix:** [VendorDashboardProducts] Products of different statuses are not displayed in the appropriate tab from the vendor dashboard.
+- **fix:** [ProductCategoryWidget] Sub Category dropdown on the Dokan Product Category widget doesn't work
+- **fix:** [AdminProduct] When editing a product in the WordPress backend, the vendor select dropdown doesn't contain any data.
+- **fix:** Fixed a fatal error on the report page if the same day is selected for both the start and end date to generate reports
+- **fix:** [VendorSoreSettings] Store settings update button wasn't working if the Dokan Pro plugin isn't activated.
+- **fix:** Store filtering using category was not working
 
 = v3.7.4 ( Oct 27, 2022 ) =
 

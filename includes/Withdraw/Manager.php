@@ -476,4 +476,44 @@ class Manager {
     public function export( $args ) {
         return new Export\Manager( $args );
     }
+
+    /**
+     * Returns users withdraws summary.
+     *
+     * @since 3.7.10
+     *
+     * @param int $user_id
+     *
+     * @return array
+     */
+    public function get_user_withdraw_summary( $user_id = '' ) {
+        global $wpdb;
+
+        if ( empty( $user_id ) ) {
+            $user_id = dokan_get_current_user_id();
+        }
+
+        $results = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    count(*) AS total,
+                    sum(status = '0') AS pending,
+                    sum(status = '1') AS approved,
+                    sum(status = '2') AS cancelled
+                FROM {$wpdb->prefix}dokan_withdraw AS dw
+                WHERE dw.user_id = %d",
+                $user_id
+            ),
+            ARRAY_A
+        );
+
+        $summary = [
+            'total'     => ! empty( $results['total'] ) ? absint( $results['total'] ) : 0,
+            'pending'   => ! empty( $results['pending'] ) ? absint( $results['pending'] ) : 0,
+            'approved'  => ! empty( $results['approved'] ) ? absint( $results['approved'] ) : 0,
+            'cancelled' => ! empty( $results['cancelled'] ) ? absint( $results['cancelled'] ) : 0,
+        ];
+
+        return $summary;
+    }
 }

@@ -14,5 +14,8 @@ class Hooks {
     public function __construct() {
         // Init Vendor Cache Class
         new VendorCache();
+
+        // init Vendor Settings Manager
+        new SettingsApi\Manager();
     }
 }

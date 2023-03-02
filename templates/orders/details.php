@@ -292,7 +292,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                     <p class="meta">
                                         <?php
                                         // translators: 1) human-readable date
-                                        printf( esc_html__( 'added %s ago', 'dokan-lite' ), esc_textarea( human_time_diff( dokan_current_datetime()->modify( $note->comment_date_gmt )->getTimestamp(), time() ) ) );
+                                        printf( esc_html__( 'added %s ago', 'dokan-lite' ), esc_textarea( human_time_diff( dokan_current_datetime()->setTimezone( new DateTimeZone( 'UTC' ) )->modify( $note->comment_date_gmt )->getTimestamp(), time() ) ) );
                                         ?>
                                         <?php if ( current_user_can( 'dokan_manage_order_note' ) ) : ?>
                                             <a href="#" class="delete_note"><?php esc_html_e( 'Delete note', 'dokan-lite' ); ?></a>

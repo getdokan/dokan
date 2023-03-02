@@ -774,6 +774,7 @@ if (false) {(function () {
   inheritAttrs: false,
   props: {
     src: {
+      type: String,
       default: dokan.urls.assetsUrl + '/images/store-pic.png'
     },
     showButton: {
@@ -799,9 +800,27 @@ if (false) {(function () {
       }
     };
   },
+  created: function created() {
+    var _this = this;
+
+    this.$root.$on('resetDokanUploadImage', function (obj) {
+      _this.resetImage(obj);
+    });
+  },
+  mounted: function mounted() {},
   methods: {
+    getDefaultImageSrc: function getDefaultImageSrc() {
+      return dokan.urls.assetsUrl + '/images/store-pic.png';
+    },
     uploadImage: function uploadImage() {
       this.openMediaManager(this.onSelectImage);
+    },
+    resetImage: function resetImage() {
+      var _obj$src;
+
+      var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.image.src = (_obj$src = obj.src) !== null && _obj$src !== void 0 ? _obj$src : this.getDefaultImageSrc();
+      this.image.id = 0;
     },
     onSelectImage: function onSelectImage(image) {
       this.image.src = image.url;
@@ -1377,6 +1396,13 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1410,7 +1436,8 @@ if (false) {(function () {
         label: this.__('Flat', 'dokan-lite')
       },
       getBankFields: dokan.hooks.applyFilters('getVendorBankFields', []),
-      getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', [])
+      getPyamentFields: dokan.hooks.applyFilters('AfterPyamentFields', []),
+      afterFeaturedCheckbox: dokan.hooks.applyFilters('afterFeaturedCheckbox', [])
     };
   },
   created: function created() {
@@ -3527,7 +3554,15 @@ var render = function() {
                   ],
                   1
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.afterFeaturedCheckbox, function(component, index) {
+                return _c(component, {
+                  key: index,
+                  tag: "component",
+                  attrs: { vendorInfo: _vm.vendorInfo }
+                })
+              })
             ],
             2
           ),
@@ -6203,7 +6238,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                 }));
 
               case 5:
-                return _context2.abrupt("return", swal.fire({
+                return _context2.abrupt("return", Swal.fire({
                   title: _this2.__('Withdraw Method Changed', 'dokan-lite'),
                   text: _this2.__('Do you want to send an announcement to vendors about the removal of currently active payment method?', 'dokan-lite'),
                   icon: 'warning',
@@ -6320,7 +6355,12 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       if (!this.awaitingSearch) {
         setTimeout(function () {
-          var searchText = _this4.$refs.searchInSettings.value.toLowerCase();
+          var searchText = _this4.$refs.searchInSettings.value; // If more than two (space/tab) found, replace with space > trim > lowercase.
+
+          searchText = searchText.replace(/\s\s+/g, ' ').trim().toLowerCase(); // Create an empty string search first to resolve all previous-state issues.
+
+          _this4.doSearch(''); // Search now with searchText.
+
 
           _this4.doSearch(searchText);
 
@@ -6337,21 +6377,33 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       var settingFields = {};
       var filteredSettingSections = [];
       var settingSections = [];
-      var dokan_setting_fields = dokan.settings_fields;
-      Object.keys(dokan_setting_fields).forEach(function (section, index) {
-        Object.keys(dokan_setting_fields[section]).forEach(function (field, i) {
-          if (dokan_setting_fields[section][field].type === "sub_section") {
-            return;
-          }
+      var dokanSettingFields = dokan.settings_fields;
+      var dokanSettingSections = dokan.settings_sections;
+      Object.keys(dokanSettingFields).forEach(function (section, index) {
+        Object.keys(dokanSettingFields[section]).forEach(function (field) {
+          var label = ''; // Append section field label and description.
 
-          var label = dokan_setting_fields[section][field]['label'].toLowerCase();
+          if ('sub_section' !== dokanSettingFields[section][field].type) {
+            label += " ".concat(dokanSettingFields[section][field]['label'], " ").concat(dokanSettingFields[section][field]['desc']);
+          } // Append section label and description.
+
+
+          Object.keys(dokanSettingSections).forEach(function (foundSectionIndex) {
+            var foundSection = dokanSettingSections[foundSectionIndex];
+
+            if ((foundSection === null || foundSection === void 0 ? void 0 : foundSection.id) === section) {
+              label += " ".concat(foundSection.title, " ").concat(foundSection.description, " ").concat(foundSection.settings_description);
+            }
+          }); // Make the label lowercase, as `searchText` is also like that.
+
+          label = label.toLocaleLowerCase();
 
           if (label && label.includes(searchText)) {
             if (!settingFields[section]) {
               settingFields[section] = {};
             }
 
-            settingFields[section][field] = dokan_setting_fields[section][field];
+            settingFields[section][field] = dokanSettingFields[section][field];
 
             if (filteredSettingSections.indexOf(section) === -1) {
               filteredSettingSections.push(section);
@@ -6360,7 +6412,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         });
       });
       var currentTab = 0;
-      Object.keys(dokan.settings_sections).forEach(function (section, index) {
+      Object.keys(dokan.settings_sections).forEach(function (section) {
         if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
           if (!currentTab) {
             _this5.changeTab(dokan.settings_sections[section]);
@@ -6397,7 +6449,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
     this.$root.$on('onFieldSwitched', function (value, fieldName) {
       if ('on' === value && 'dokan_general' in _this6.settingValues && 'data_clear_on_uninstall' === fieldName) {
-        swal.fire({
+        Swal.fire({
           icon: 'warning',
           html: _this6.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
           title: _this6.__('Are you sure?', 'dokan-lite'),
@@ -7498,7 +7550,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return this.$route.query.order || 'desc';
     },
     storeCategory: function storeCategory() {
-      return this.$route.query.store_category || null;
+      return this.$route.query.store_categories || null;
     }
   },
   created: function created() {
@@ -7577,7 +7629,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         status: self.currentStatus,
         orderby: self.sortBy,
         order: self.sortOrder,
-        store_category: self.storeCategory
+        store_categories: self.storeCategory
       };
       data = dokan.hooks.applyFilters('DokanGetVendorArgs', data, this.$route.query);
       dokan.api.get('/stores', data).done(function (response, status, xhr) {
@@ -7822,7 +7874,7 @@ var Loading = dokan_get_lib('Loading');
       return this.$route.params.id;
     },
     showAlert: function showAlert($title, $des, $status) {
-      swal.fire($title, $des, $status);
+      Swal.fire($title, $des, $status);
     },
     createVendor: function createVendor() {
       var _this2 = this;
@@ -7836,7 +7888,7 @@ var Loading = dokan_get_lib('Loading');
         dokan.api.post('/stores/', this.store).done(function (response) {
           _this2.$root.$emit('vendorAdded', response);
 
-          swal.fire({
+          Swal.fire({
             icon: 'success',
             title: _this2.__('Vendor Created', 'dokan-lite'),
             text: _this2.__('A vendor has been created successfully!', 'dokan-lite'),
@@ -7848,7 +7900,7 @@ var Loading = dokan_get_lib('Loading');
           }).then(function (result) {
             if (result.value) {
               _this2.$root.$emit('addAnotherVendor');
-            } else if (result.dismiss === swal.DismissReason.cancel) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
               if (_this2.hasPro) {
                 _this2.$router.push({
                   path: 'vendors/' + response.id,
@@ -8017,7 +8069,7 @@ var Loading = dokan_get_lib('Loading');
         var message = window.dokan_handle_ajax_error(jqXHR);
 
         if (message) {
-          swal.fire(message, '', 'error');
+          Swal.fire(message, '', 'error');
         }
       });
     },
@@ -8071,7 +8123,7 @@ var Loading = dokan_get_lib('Loading');
         var message = window.dokan_handle_ajax_error(jqXHR);
 
         if (message) {
-          swal.fire(message, '', 'error');
+          Swal.fire(message, '', 'error');
         }
       });
     },
@@ -8177,8 +8229,8 @@ var Loading = dokan_get_lib('Loading');
                       timer: 3000,
                       timerProgressBar: true,
                       didOpen: function didOpen(toast) {
-                        toast.addEventListener('mouseenter', swal.stopTimer);
-                        toast.addEventListener('mouseleave', swal.resumeTimer);
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
                       }
                     });
                     self.resetToImport();
@@ -8186,7 +8238,7 @@ var Loading = dokan_get_lib('Loading');
                     var message = window.dokan_handle_ajax_error(jqXHR);
 
                     if (message) {
-                      swal.fire(message, '', 'error');
+                      Swal.fire(message, '', 'error');
                     }
                   });
                 }
@@ -8997,9 +9049,9 @@ var swal = Swal.mixin({
     updatedCounts: function updatedCounts(xhr) {
       var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4, _xhr$getResponseHeade5;
 
-      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
-      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
-      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.debit = parseFloat((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseFloat((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseFloat((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
       this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
       this.counts.total_vendors = parseInt((_xhr$getResponseHeade5 = xhr.getResponseHeader('X-Status-Total-Vendors')) !== null && _xhr$getResponseHeade5 !== void 0 ? _xhr$getResponseHeade5 : 0);
     },
@@ -9432,9 +9484,9 @@ var swal = Swal.mixin({
     updatedCounts: function updatedCounts(xhr) {
       var _xhr$getResponseHeade, _xhr$getResponseHeade2, _xhr$getResponseHeade3, _xhr$getResponseHeade4;
 
-      this.counts.debit = parseInt((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
-      this.counts.credit = parseInt((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
-      this.counts.balance = parseInt((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
+      this.counts.debit = parseFloat((_xhr$getResponseHeade = xhr.getResponseHeader('X-Status-Debit')) !== null && _xhr$getResponseHeade !== void 0 ? _xhr$getResponseHeade : 0);
+      this.counts.credit = parseFloat((_xhr$getResponseHeade2 = xhr.getResponseHeader('X-Status-Credit')) !== null && _xhr$getResponseHeade2 !== void 0 ? _xhr$getResponseHeade2 : 0);
+      this.counts.balance = parseFloat((_xhr$getResponseHeade3 = xhr.getResponseHeader('X-Status-Balance')) !== null && _xhr$getResponseHeade3 !== void 0 ? _xhr$getResponseHeade3 : 0);
       this.counts.total_transactions = parseInt((_xhr$getResponseHeade4 = xhr.getResponseHeader('X-Status-Total-Transactions')) !== null && _xhr$getResponseHeade4 !== void 0 ? _xhr$getResponseHeade4 : 0);
     },
     updatePagination: function updatePagination(xhr) {

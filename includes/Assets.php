@@ -539,11 +539,21 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
+            'dokan-vendor-address'      => [
+                'src'     => $asset_url . '/js/vendor-address.js',
+                'deps'    => [ 'jquery', 'wc-country-select' ],
+                'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
+            ],
             'dokan-admin-product'       => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
                 'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
+            ],
+            'dokan-frontend'       => [
+                'src'     => $asset_url . '/js/dokan-frontend.js',
+                'deps'    => [ 'jquery' ],
+                'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
             ],
         ];
 
@@ -659,6 +669,11 @@ class Assets {
 
         if ( is_account_page() && ! is_user_logged_in() ) {
             wp_enqueue_script( 'dokan-vendor-registration' );
+            wp_enqueue_script( 'dokan-vendor-address' );
+        }
+
+        if ( dokan_is_seller_dashboard() && isset( $wp->query_vars['settings'] ) && 'store' === $wp->query_vars['settings'] ) {
+            wp_enqueue_script( 'dokan-vendor-address' );
         }
 
         // Scripts for contact form widget google recaptcha
@@ -913,12 +928,12 @@ class Assets {
      */
     public function conditional_localized_args( $default_args ) {
         if ( dokan_is_seller_dashboard()
-             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
-             || dokan_is_store_page()
-             || is_account_page()
-             || is_product()
-             || dokan_is_store_listing()
-             || apply_filters( 'dokan_force_load_extra_args', false )
+            || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
+            || dokan_is_store_page()
+            || is_account_page()
+            || is_product()
+            || dokan_is_store_listing()
+            || apply_filters( 'dokan_force_load_extra_args', false )
         ) {
             $general_settings = get_option( 'dokan_general', [] );
 

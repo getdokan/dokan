@@ -4,6 +4,265 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.12',
+        'released' => '2023-02-23',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new js hook `dokan_middle_category_selection` by using this hook if anyone passes true in this hook user will be able to select any category in Dokan multi-step category and a new WordPress hook `dokan_middle_category_selection` where you also have to pass true select middle category.',
+                    'description' => '',
+                ],
+
+            ],
+            'Improvement' => [
+                [
+                    'title'       => '[LoginRedirection] Keep the sellers on the checkout page if they login from the checkout page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added sub-description to the `hide vendor info` section under Dokan admin appearance settings',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[AddNewProductPopup] Create & Add a new product button does not allow adding a product image during the time of adding more than one product has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error if the order is created from WooCommerce admin dashboard without adding any line items.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed admin user permission/capability issue after permanently deleting the Dokan plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] Refund amount wasn’t subtracted from `Total Collected Values` for reverse withdrawal under the Admin Reverse Withdrawal menu.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] The decimal value is not included under the `Total Collected` section of the admin dashboard Reverse Withdrawal menu.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan Dashboard menu wasn’t loading if the permalink doesn’t include / at the end of the URL',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed product image thumbnail gets image height squeezed on add new product popup under vendor dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.11',
+        'released' => '2023-02-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Vendor search doesn\'t work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The number of orders on the backend is not appearing depending on the vendor\'s own order count.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while creating an order from the admin dashboard with no data',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Added vendor address-related fields under vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.10',
+        'released' => '2023-01-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Extended REST API support for Dokan',
+                    'description' => '-- https://example.com/wp-json/dokan/v1/orders?after=2022-10-01&before=2022-10-30
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/sales?from=2021-08-02T04:13:05Z&to=2021-12-02T04:13:05Z
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/orders
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/products
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/profile
+-- https://example.com/wp-json/dokan/v1/vendor-dashboard/preferences
+-- https://example.com/wp-json/dokan/v2/orders/{order_id}/downloads
+-- https://example.com/wp-json/dokan/v2/orders/
+-- https://example.com/wp-json/dokan//v2/orders/bulk-actions
+-- https://example.com/wp-json/dokan/v1/products/attributes/edit-product/{id}
+-- https://example.com/wp-json/dokan/v1/products/attributes/set-default/{id}
+-- https://example.com/wp-json/dokan/v1/blocks/products/{id}
+-- https://example.com/wp-json/dokan/v2/settings
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{id}
+-- https://example.com/wp-json/dokan/v2/settings/{group_id}/{parent_id}/{id}
+-- https://example.com/wp-json/dokan/v2/withdraw/settings
+-- https://example.com/wp-json/dokan/v2/withdraw/summary
+-- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data'
+                    ,
+                ]
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Multiple store category modal wasn’t working for some theme',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Recreate reverse withdrawal payment product if no product found with stored product id',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.9',
+        'released' => '2023-01-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Last-page and first-page pagination icon inconsistency under single store page product listing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Adjusted store banner image stretching issue under store list page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor email address is not showing up on the store header',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.8',
+        'released' => '2022-12-26',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Single Store Page store header menu and search fields style break on mobile devices',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard total sales wasn’t displaying decimal values',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Set user role as seller while creating vendor from api call',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'order note date issue under vendor dashboard order details page',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.7',
+        'released' => '2022-11-30',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added  date filter - `after/before` for Order REST API',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added `dokan_bank_payment_fields_placeholders` Filter to change the label and placeholder of bank payment fields',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated UI/UX of vendor dashboard submenu',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added section, sub-section label, description search under Dokan admin settings',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.6',
+        'released' => '2022-11-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a sql security issue while searching for products via ajax from vendor dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.5',
+        'released' => '2022-11-03',
+        'changes'  => [
+            'New'    => [
+                [
+                    'title'       => 'Added a new hook named dokan_store_product_search_results to filter out store product search results closes.',
+                    'description' => '',
+                ],
+            ],
+            'Update' => [
+                [
+                    'title'       => 'Sort product categories under the vendor dashboard alphabetically.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'    => [
+                [
+                    'title'       => 'SweetAlert library is conflicting with the WooCommerce Conversion Tracking plugin',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[BestSellingProductWidget] Products are being shown on the widget even when the catalog visibility is set to hidden.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorDashboardProducts] Products of different statuses are not displayed in the appropriate tab from the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductCategoryWidget] Sub Category dropdown on the Dokan Product Category widget doesn\'t work',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[AdminProduct] When editing a product in the WordPress backend, the vendor select dropdown doesn\'t contain any data.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error on the report page if the same day is selected for both the start and end date to generate reports',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorSoreSettings] Store settings update button wasn\'t working if the Dokan Pro plugin isn\'t activated.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store filtering using category was not working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.3',
         'released' => '2022-10-27',
         'changes'  => [
@@ -29,7 +288,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[AdminCommission] - Percentage Commission does not support "comma" as decimal separator under Dokan admin settings `Selling Options` page',
                     'description' => '',

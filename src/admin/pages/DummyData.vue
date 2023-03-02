@@ -184,7 +184,7 @@ export default {
             .fail( ( jqXHR ) => {
                 let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
-                    swal.fire( message, '', 'error' );
+                    Swal.fire( message, '', 'error' );
                 }
             });
         },
@@ -244,7 +244,7 @@ export default {
             .fail( ( jqXHR ) => {
                 let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
-                    swal.fire( message, '', 'error' );
+                    Swal.fire( message, '', 'error' );
                 }
             });
         },
@@ -355,8 +355,8 @@ export default {
                         timer: 3000,
                         timerProgressBar: true,
                         didOpen: ( toast ) => {
-                            toast.addEventListener( 'mouseenter', swal.stopTimer )
-                            toast.addEventListener( 'mouseleave', swal.resumeTimer )
+                            toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
                         }
                     } );
 
@@ -365,7 +365,7 @@ export default {
                 .fail( ( jqXHR ) => {
                     let message = window.dokan_handle_ajax_error( jqXHR );
                     if ( message ) {
-                        swal.fire( message, '', 'error' );
+                        Swal.fire( message, '', 'error' );
                     }
                 });
             }

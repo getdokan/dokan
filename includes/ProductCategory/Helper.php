@@ -109,13 +109,13 @@ class Helper {
                     $current_chosen        = array_merge( [ $term_id ], $all_children );
                     $common_children_count = count( array_intersect( $existing_chosen, $current_chosen ) );
 
-                    // If current term and saved chosen cat terms are same blood line category and current term,
-                    // has more ancestors means current term is more youngest term.
+                    // If current term and saved chosen cat terms are same bloodline category and current term,
+                    // has more ancestors means current term is the youngest term.
                     if ( $common_children_count > 0 && count( $all_ancestors ) > count( $item['ancestors'] ) ) {
                         unset( $all_parents[ $old_parent ][ $item_id ] );
 
                         $all_parents[ $old_parent ][ $term_id ] = self::get_formatted_chosen_cat( $all_children, $all_ancestors );
-                        // If current term and saved chosen cat terms are same blood line category but not the youngest child.
+                        // If current term and saved chosen cat terms are same bloodline category but not the youngest child.
                     } elseif ( $common_children_count > 0 && count( $all_ancestors ) < count( $item['ancestors'] ) ) {
                         break;
                     } elseif ( $common_children_count < 1 ) {
@@ -149,10 +149,24 @@ class Helper {
             return;
         }
 
-        // we need to assign all ancestor of chosen category to add to the given product
+        /**
+         * By passing true in this filter hook anyone can enable capability to select any middle category in dokan product
+         * multi-step category selection. In other words if middle category selection is enabled then we will not assign all
+         * the parent categories of the selected category.
+         */
+        $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
+
+
         $all_ancestors = [];
-        foreach ( $chosen_categories as $term_id ) {
-            $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
+
+        // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
+        if ( $middle_category_selection ) {
+            $all_ancestors = $chosen_categories;
+        } else {
+            // we need to assign all ancestor of chosen category to add to the given product
+            foreach ( $chosen_categories as $term_id ) {
+                $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
+            }
         }
 
         // save chosen cat to database

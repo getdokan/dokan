@@ -199,8 +199,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 
         if ( ! $results ) {
             global $wpdb;
-            $exclude_product_types      = esc_sql( $exclude_product_types );
-            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+            $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
@@ -412,7 +411,7 @@ function dokan_author_total_sales( $seller_id ) {
     $earnings    = Cache::get( $cache_key, $cache_group );
 
     if ( false === $earnings ) {
-        $earnings = (int) $wpdb->get_var(
+        $earnings = (float) $wpdb->get_var(
             $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
         );
 
@@ -1413,7 +1412,7 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
     $start_date = 'day' !== $group_by ? $start_date->modify( 'first day of this month' ) : $start_date;
 
     $date_interval = new DateInterval( $duration_str );
-    $date_range    = new DatePeriod( $start_date, $date_interval, $interval );
+    $date_range    = $interval > 0 ? new DatePeriod( $start_date, $date_interval, $interval ) : [ $start_date ];
     foreach ( $date_range as $date ) {
         $time = $date->getTimestamp() . '000';
         if ( ! isset( $prepared_data[ $time ] ) ) {
@@ -2152,7 +2151,7 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
-    $url = get_permalink( $page_id );
+    $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
 
     if ( ! empty( $name ) ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
@@ -2298,13 +2297,15 @@ add_filter( 'woocommerce_email_recipient_no_stock', 'dokan_wc_email_recipient_ad
 add_filter( 'woocommerce_email_recipient_low_stock', 'dokan_wc_email_recipient_add_seller_no_stock', 10, 2 );
 
 /**
- * Display a monthly dropdown for filtering product listing on seller dashboard
+ * Get all the months of products of a vendor.
  *
- * @since 2.1
+ * @since DOKAN_LITE
  *
  * @param int $user_id
+ *
+ * @return object
  */
-function dokan_product_listing_filter_months_dropdown( $user_id ) {
+function dokan_get_products_listing_months_for_vendor( $user_id ) {
     global $wpdb, $wp_locale;
 
     $months = $wpdb->get_results(
@@ -2325,7 +2326,20 @@ function dokan_product_listing_filter_months_dropdown( $user_id ) {
      *
      * @param object $months the months drop-down query results
      */
-    $months      = apply_filters( 'months_dropdown_results', $months, 'product' );
+    return apply_filters( 'months_dropdown_results', $months, 'product' );
+}
+
+/**
+ * Display a monthly dropdown for filtering product listing on seller dashboard
+ *
+ * @since 2.1
+ *
+ * @param int $user_id
+ */
+function dokan_product_listing_filter_months_dropdown( $user_id ) {
+    global $wp_locale;
+
+    $months      = dokan_get_products_listing_months_for_vendor($user_id);
     $month_count = count( $months );
 
     if ( ! $month_count || ( 1 === $month_count && 0 === (int) $months[0]->month ) ) {
@@ -2373,9 +2387,10 @@ function dokan_product_listing_filter() {
         'product_types'       => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
         'product_cat'         => -1,
         'product_search_name' => '',
-        'date'                => 0,
+        'date'                => '',
         'product_type'        => '',
         'filter_by_other'     => '',
+        'post_status'         => 'all',
     ];
 
     if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
@@ -2384,6 +2399,7 @@ function dokan_product_listing_filter() {
         $template_args['date']                = ! empty( $_GET['date'] ) ? intval( wp_unslash( $_GET['date'] ) ) : '';
         $template_args['product_type']        = ! empty( $_GET['product_type'] ) ? sanitize_text_field( wp_unslash( $_GET['product_type'] ) ) : '';
         $template_args['filter_by_other']     = ! empty( $_GET['filter_by_other'] ) ? sanitize_text_field( wp_unslash( $_GET['filter_by_other'] ) ) : '';
+        $template_args['post_status']         = ! empty( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) : 'all';
     }
 
     dokan_get_template_part( 'products/listing-filter', '', apply_filters( 'dokan_product_listing_filter_args', $template_args ) );
@@ -2690,7 +2706,7 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
     // get the redirect url from $_GET
     if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
         $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
-    } elseif ( user_can( $user, 'dokandar' ) ) {
+    } elseif ( user_can( $user, 'dokandar' ) && wc_get_page_permalink( 'checkout' ) !== $redirect_to ) {
         $seller_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages' );
 
         if ( $seller_dashboard !== - 1 ) {
@@ -3852,6 +3868,7 @@ function dokan_redirect_to_admin_setup_wizard() {
  */
 function dokan_generate_ratings( $rating, $stars ) {
     $result = '';
+    $rating = wc_format_decimal( floatval( $rating ), 2 );
 
     for ( $i = 1; $i <= $stars; $i ++ ) {
         if ( $rating >= $i ) {
@@ -4464,6 +4481,45 @@ function dokan_bool_to_on_off( $bool ) {
 function is_tweleve_hour_format() {
     // Check if current setup format is 12 hour format.
     return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
+}
+
+/**
+ * Updates bulk orders status by orders ids.
+ *
+ * @since 3.7.10
+ *
+ * @param array $postdata
+ *
+ * @return void
+ */
+function dokan_apply_bulk_order_status_change( $postdata ) {
+    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
+    $orders = array_map( 'absint', $postdata['bulk_orders'] );
+
+    // -1 means bluk action option value
+    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
+
+    if ( in_array( $status, $excluded_status, true ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order instanceof \WC_Order ) {
+            continue;
+        }
+
+        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
+            continue;
+        }
+
+        $order->update_status( $status );
+    }
 }
 
 /**
