@@ -199,8 +199,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 
         if ( ! $results ) {
             global $wpdb;
-            $exclude_product_types      = esc_sql( $exclude_product_types );
-            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+            $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
