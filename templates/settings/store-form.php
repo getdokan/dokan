@@ -405,10 +405,10 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             });
         <?php endif; ?>
 
-
-        $(function() {
-
-            const savedState = '<?php echo esc_html( $address_state ); ?>';
+        var dokan_address_wrapper = $( '.dokan-address-fields' );
+        var dokan_address_select = {
+            init: function () {
+                var savedState = '<?php echo esc_html( $address_state ); ?>';
 
                 if ( ! savedState || 'N/A' === savedState ) {
                     $('#dokan-states-box').hide();
@@ -488,7 +488,9 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         }
 
         $(function() {
-            dokan_address_select.init();
+
+            const savedState = '<?php echo esc_html( $address_state ); ?>';
+
             if ( ! savedState || 'N/A' === savedState ) {
                 $('#dokan-states-box').hide();
             }
