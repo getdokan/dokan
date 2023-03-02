@@ -1063,8 +1063,20 @@ function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
  * @return false|string
  */
 function dokan_add_subpage_to_url( $url, $subpage ) {
-    $url_parts         = wp_parse_url( $url );
-    $url_parts['path'] = $url_parts['path'] . $subpage;
+    $is_plain_permalink = empty( get_option( 'permalink_structure' ) );
+    $url_parts          = wp_parse_url( $url );
+
+    if ( $is_plain_permalink ) {
+        $subpage = rtrim( $subpage, '/' );
+        $subpage_part = explode( '/', $subpage );
+        if ( 2 === count( $subpage_part ) ) {
+            $url_parts['query'] .= '&' . "{$subpage_part[0]}={$subpage_part[1]}";
+        } else {
+            $url_parts['query'] .= '&' . "{$subpage_part[0]}=true";
+        }
+    } else {
+        $url_parts['path'] = $url_parts['path'] . $subpage;
+    }
 
     return http_build_url( '', $url_parts );
 }
@@ -1091,7 +1103,7 @@ function dokan_edit_product_url( $product ) {
             'action'                    => 'edit',
             '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
         ],
-        dokan_get_navigation_url( 'products' )
+        urldecode_deep( dokan_get_navigation_url( 'products' ) )
     );
 
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
@@ -1200,7 +1212,10 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
+    $is_plain_permalink = empty( get_option( 'permalink_structure' ) );
+    $plain_store_url    = add_query_arg( $custom_store_url, $user_nicename, home_url() );
+
+    return $is_plain_permalink ? $plain_store_url : home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
 }
 
 /**
@@ -2075,7 +2090,7 @@ function dokan_get_coupon_edit_url( $coupon_id, $coupon_page = '' ) {
                 'action' => 'edit',
                 'view'   => 'add_coupons',
             ],
-            $coupon_page
+            urldecode_deep( $coupon_page )
         ),
         '_coupon_nonce',
         'coupon_nonce_url'
@@ -2151,13 +2166,15 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
-    $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
+    $is_plain_permalink  = empty( get_option( 'permalink_structure' ) );
+    $dashboard_permalink = get_permalink( $page_id );
+    $url                 = $is_plain_permalink ? $dashboard_permalink : rtrim( $dashboard_permalink, '/' ) . '/';
 
     if ( ! empty( $name ) ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
-    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
+    return apply_filters( 'dokan_get_navigation_url', $url, $name );
 }
 
 /**
