@@ -461,6 +461,12 @@
                     this.checked = value;
                 }
             });
+
+            this.$root.$on( 'dokanRestoreDefault', ( fieldData ) => {
+                if ( this.fieldValue[ fieldData.name ] !== fieldData.default ) {
+                    this.fieldValue[ fieldData.name ] = fieldData.default
+                }
+            });
         },
 
         computed: {

@@ -13,6 +13,9 @@
             </span>
         </h3>
         <p class="field_desc" v-html="fieldData.desc"></p>
+        <p class="field_default" v-if="fieldData.type === 'file' && fieldData.restore === true">
+            <a href="" v-on:click.prevent="restoreDefaultImage()">{{ __( 'Restore Default', 'dokan-lite' ) }}</a>
+        </p>
     </div>
 </template>
 
@@ -21,5 +24,11 @@
         name : 'FieldHeading',
 
         props : ['fieldData'],
+
+        methods: {
+            restoreDefaultImage() {
+                this.$root.$emit( 'dokanRestoreDefault', this.fieldData );
+            }
+        }
     };
 </script>
