@@ -2,7 +2,10 @@
 
 namespace WeDevs\Dokan\Order;
 
+use DateTimeZone;
 use Exception;
+use WC_Order;
+use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
 use WP_Error;
 
@@ -10,6 +13,7 @@ use WP_Error;
  * Order Management API
  *
  * @since 2.8
+ * @since DOKAN_SINCE added HPOS support
  */
 class Manager {
 
@@ -19,7 +23,7 @@ class Manager {
      * @since 3.0.0
      * @since 3.6.3 rewritten to include filters
      *
-     * @return WP_Error|int[]|\WC_Order[]
+     * @return WP_Error|int[]|WC_Order[]
      */
     public function all( $args = [] ) {
         $default = [
@@ -27,14 +31,14 @@ class Manager {
             'customer_id' => 0,
             'order_id'    => 0,
             'status'      => 'all',
-            'order_date'  => '', // only for backward compatibility, will be removed in future, if date is passed in args, it will be ignored
+            'order_date'  => '', // only for backward compatibility, will be removed in the future, if date is passed in args, it will be ignored
             'date'        => [
                 'from' => '',
                 'to'   => '',
             ],
             'search'      => '',
-            'include'    => [],
-            'exclude'    => [],
+            'include'     => [],
+            'exclude'     => [],
             'order_by'    => 'post_date',
             'order'       => 'DESC',
             'paged'       => 1,
@@ -46,13 +50,22 @@ class Manager {
 
         global $wpdb;
 
-        $fields     = '';
-        $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
-        $where      = ' AND p.post_status != %s';
-        $groupby    = '';
-        $orderby    = '';
-        $limits     = '';
-        $query_args = [ 1, 1, 'trash' ];
+        $fields  = '';
+        $groupby = '';
+        $orderby = '';
+        $limits  = '';
+
+        if ( dokan_is_hpos_enabled() ) {
+            // HPOS usage is enabled.
+            $order_table_name = $this->get_order_table_name();
+            $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
+            $query_args       = [ 1, 1 ];
+        } else {
+            // Traditional CPT-based orders are in use.
+            $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
+            $query_args = [ 1, 1, 'trash' ];
+            $where      = ' AND p.post_status != %s';
+        }
 
         // determine which fields to return
         if ( in_array( $args['return'], [ 'objects', 'ids' ], true ) ) {
@@ -70,15 +83,19 @@ class Manager {
 
         // filter customer id
         if ( ! $this->is_empty( $args['customer_id'] ) ) {
-            $join         .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
-            $customer_ids = implode( "','", array_map( 'absint', (array) $args['customer_id'] ) );
-            $where        .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ('$customer_ids')";
+            $customer_ids = implode( ',', array_map( 'absint', (array) $args['customer_id'] ) );
+            if ( dokan_is_hpos_enabled() ) {
+                $where .= "  AND p.customer_id IN ($customer_ids)";
+            } else {
+                $join  .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
+                $where .= " AND pm.meta_key = '_customer_user' AND pm.meta_value IN ($customer_ids)";
+            }
         }
 
         // filter order id
         if ( ! $this->is_empty( $args['order_id'] ) ) {
-            $order_ids = implode( "','", array_map( 'absint', (array) $args['order_id'] ) );
-            $where     .= " AND do.order_id IN ('$order_ids')";
+            $order_ids = implode( ',', array_map( 'absint', (array) $args['order_id'] ) );
+            $where     .= " AND do.order_id IN ($order_ids)";
         }
 
         // filter status
@@ -89,64 +106,72 @@ class Manager {
 
         // include order ids
         if ( ! $this->is_empty( $args['include'] ) ) {
-            $include = implode( "','", array_map( 'absint', (array) $args['include'] ) );
-            $where   .= " AND do.order_id IN ('$include')";
+            $include = implode( ',', array_map( 'absint', (array) $args['include'] ) );
+            $where   .= " AND do.order_id IN ($include)";
         }
 
         // exclude order ids
         if ( ! $this->is_empty( $args['exclude'] ) ) {
-            $exclude = implode( "','", array_map( 'absint', (array) $args['exclude'] ) );
-            $where   .= " AND do.order_id NOT IN ('$exclude')";
+            $exclude = implode( ',', array_map( 'absint', (array) $args['exclude'] ) );
+            $where   .= " AND do.order_id NOT IN ($exclude)";
         }
 
         // date filter
-        $date_from = false;
-        $date_to   = false;
+        $date_from  = false;
+        $date_to    = false;
+        $date_field = dokan_is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date';
         // check if start date is set
         if ( ! $this->is_empty( $args['date']['from'] ) ) {
             // convert date string to object
             $date_from = dokan_current_datetime()->modify( $args['date']['from'] );
+            $date_from = dokan_is_hpos_enabled() && $date_from ? $date_from->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_from;
         }
 
         // check if end date is set
         if ( ! $this->is_empty( $args['date']['to'] ) ) {
             // convert date string to object
             $date_to = dokan_current_datetime()->modify( $args['date']['to'] );
+            $date_to = dokan_is_hpos_enabled() && $date_to ? $date_to->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_to;
         }
 
-        //swap dates if start date is after end date
-        $date_filter_applied = false;
         if ( $date_from && $date_to ) {
-            // fix start and end date
+            $date_from = $date_from->format( 'Y-m-d' );
+            $date_to   = $date_to->format( 'Y-m-d' );
+            //swap dates if start date is after end date
             if ( $date_from > $date_to ) {
-                $date_from    = $date_from->format( 'Y-m-d' );
-                $date_to      = $date_to->format( 'Y-m-d' );
                 $args['date'] = [
                     'from' => $date_to,
                     'to'   => $date_from,
                 ];
+            } else {
+                $args['date'] = [
+                    'from' => $date_from,
+                    'to'   => $date_to,
+                ];
             }
-            $where        .= ' AND DATE( p.post_date ) BETWEEN %s AND %s';
+
+            $where        .= " AND DATE( $date_field ) BETWEEN %s AND %s";
             $query_args[] = $args['date']['from'];
             $query_args[] = $args['date']['to'];
             // if only start date is set
         } elseif ( $date_from ) {
-            $where        .= ' AND DATE( p.post_date ) >= %s';
+            $where        .= " AND DATE( $date_field ) >= %s";
             $query_args[] = $date_from->format( 'Y-m-d' );
             // if only end date is set
         } elseif ( $date_to ) {
-            $where        .= ' AND DATE( p.post_date ) <= %s';
+            $where        .= " AND DATE( $date_field ) <= %s";
             $query_args[] = $date_to->format( 'Y-m-d' );
             // if only single date is set
         } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
             // backward compatibility for old filter
-            $where        .= ' AND DATE( p.post_date ) = %s';
+            $where        .= " AND DATE( $date_field ) = %s";
             $query_args[] = $args['date'];
         } elseif ( ! $this->is_empty( $args['order_date'] ) ) {
             // backward compatibility for old filter
             $order_date = dokan_current_datetime()->modify( $args['order_date'] );
+            $order_date = dokan_is_hpos_enabled() && $order_date ? $order_date->setTimezone( new DateTimeZone( 'UTC' ) ) : $order_date;
             if ( $order_date ) {
-                $where        .= ' AND DATE( p.post_date ) = %s';
+                $where        .= " AND DATE( $date_field ) = %s";
                 $query_args[] = $order_date->format( 'Y-m-d' );
             }
         }
@@ -154,7 +179,7 @@ class Manager {
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
             $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-            $where        .= ' AND p.ID LIKE %s';
+            $where        .= dokan_is_hpos_enabled() ? ' AND p.id LIKE %s' : ' AND p.ID LIKE %s'; // mysql is case-insensitive but others might create problems
             $query_args[] = $search;
         }
 
@@ -165,7 +190,7 @@ class Manager {
 
         // fix order by parameter
         $supported_order_by = [
-            'post_date'    => 'p.post_date',
+            'post_date'    => dokan_is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date',
             'id'           => 'do.id',
             'order_id'     => 'do.order_id',
             'seller_id'    => 'do.seller_id',
@@ -258,7 +283,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return bool|\WC_Order|\WC_Order_Refund
+     * @return bool|WC_Order|WC_Order_Refund
      */
     public function get( $id ) {
         return wc_get_order( $id );
@@ -267,16 +292,16 @@ class Manager {
     /**
      * Creates a sub order
      *
-     * @param \WC_Order $parent_order
-     * @param integer $seller_id
-     * @param array $seller_products
+     * @param WC_Order $parent_order
+     * @param integer  $seller_id
+     * @param array    $seller_products
      *
      * @return void|WP_Error
      */
     public function create_sub_order( $parent_order, $seller_id, $seller_products ) {
         dokan_log( 'Creating sub order for vendor: #' . $seller_id );
 
-        $bill_ship = array(
+        $bill_ship = [
             'billing_country',
             'billing_first_name',
             'billing_last_name',
@@ -297,14 +322,14 @@ class Manager {
             'shipping_city',
             'shipping_state',
             'shipping_postcode',
-        );
+        ];
 
         try {
-            $order = new \WC_Order();
+            $order = new WC_Order();
 
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
-                if ( is_callable( array( $order, "set_{$key}" ) ) ) {
+                if ( is_callable( [ $order, "set_{$key}" ] ) ) {
                     $order->{"set_{$key}"}( $parent_order->{"get_{$key}"}() );
                 }
             }
@@ -333,23 +358,22 @@ class Manager {
             $order->set_payment_method( $parent_order->get_payment_method() );
             $order->set_payment_method_title( $parent_order->get_payment_method_title() );
             $order->update_meta_data( '_dokan_vendor_id', $seller_id );
+            $order->save(); // need to save order data before passing it to a hook
 
             do_action( 'dokan_create_sub_order_before_calculate_totals', $order, $parent_order, $seller_products );
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
-
             $order->set_status( $parent_order->get_status() );
             $order->set_parent_id( $parent_order->get_id() );
-
-            $order_id = $order->save();
+            $order->save();
 
             // update total_sales count for sub-order
-            wc_update_total_sales_counts( $order_id );
+            wc_update_total_sales_counts( $order->get_id() );
 
-            dokan_log( 'Created sub order : #' . $order_id );
+            dokan_log( 'Created sub order : #' . $order->get_id() );
 
-            do_action( 'dokan_checkout_update_order_meta', $order_id, $seller_id );
+            do_action( 'dokan_checkout_update_order_meta', $order->get_id(), $seller_id );
         } catch ( Exception $e ) {
             return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
         }
@@ -358,12 +382,12 @@ class Manager {
     /**
      * Create line items for order
      *
-     * @param object $order    wc_get_order
-     * @param array $products
+     * @param object $order wc_get_order
+     * @param array  $products
      *
      * @return void
      */
-    public function create_line_items( $order, $products ) {
+    private function create_line_items( $order, $products ) {
         foreach ( $products as $item ) {
             $product_item = new \WC_Order_Item_Product();
 
@@ -388,21 +412,19 @@ class Manager {
             $order->add_item( $product_item );
         }
 
-        $order->save();
-
         do_action( 'dokan_after_create_line_items', $order );
     }
 
     /**
      * Create tax line items
      *
-     * @param \WC_Order $order
-     * @param \WC_Order $parent_order
-     * @param array $products
+     * @param WC_Order $order
+     * @param WC_Order $parent_order
+     * @param array    $products
      *
      * @return void
      */
-    public function create_taxes( $order, $parent_order, $products ) {
+    private function create_taxes( $order, $parent_order, $products ) {
         $shipping  = $order->get_items( 'shipping' );
         $tax_total = 0;
 
@@ -415,31 +437,29 @@ class Manager {
 
             $item = new \WC_Order_Item_Tax();
             $item->set_props(
-                array(
+                [
                     'rate_id'            => $tax->get_rate_id(),
                     'label'              => $tax->get_label(),
                     'compound'           => $tax->get_compound(),
                     'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
                     'tax_total'          => $tax_total,
                     'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
-                )
+                ]
             );
 
             $order->add_item( $item );
         }
-
-        $order->save();
     }
 
     /**
      * Create shipping for a sub-order if neccessary
      *
-     * @param \WC_Order $order
-     * @param \WC_Order $parent_order
+     * @param WC_Order $order
+     * @param WC_Order $parent_order
      *
      * @return void
      */
-    public function create_shipping( $order, $parent_order ) {
+    private function create_shipping( $order, $parent_order ) {
         dokan_log( sprintf( '#%d - Creating Shipping.', $order->get_id() ) );
 
         // Get all shipping methods for parent order
@@ -474,12 +494,12 @@ class Manager {
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
             $item->set_props(
-                array(
+                [
                     'method_title' => $shipping_method->get_name(),
                     'method_id'    => $shipping_method->get_method_id(),
                     'total'        => $shipping_method->get_total(),
                     'taxes'        => $shipping_method->get_taxes(),
-                )
+                ]
             );
 
             $metadata = $shipping_method->get_meta_data();
@@ -492,20 +512,19 @@ class Manager {
 
             $order->add_item( $item );
             $order->set_shipping_total( $shipping_method->get_total() );
-            $order->save();
         }
     }
 
     /**
      * Create coupons for a sub-order if neccessary
      *
-     * @param \WC_Order $order
-     * @param \WC_Order $parent_order
-     * @param array $products
+     * @param WC_Order $order
+     * @param WC_Order $parent_order
+     * @param array    $products
      *
      * @return void
      */
-    public function create_coupons( $order, $parent_order, $products ) {
+    private function create_coupons( $order, $parent_order, $products ) {
         $used_coupons = $parent_order->get_items( 'coupon' );
         $product_ids  = array_map(
             function ( $item ) {
@@ -530,16 +549,16 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                  apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();
                 $new_item->set_props(
-                    array(
+                    [
                         'code'         => $item->get_code(),
                         'discount'     => $item->get_discount(),
                         'discount_tax' => $item->get_discount_tax(),
-                    )
+                    ]
                 );
 
                 $new_item->add_meta_data( 'coupon_data', $coupon->get_data() );
@@ -547,8 +566,6 @@ class Manager {
                 $order->add_item( $new_item );
             }
         }
-
-        $order->save();
     }
 
     /**
@@ -563,22 +580,19 @@ class Manager {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id ) {
-        $parent_order = dokan()->order->get( $parent_order_id );
+        $parent_order = $this->get( $parent_order_id );
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
         if ( wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
-            $args = array(
-                'post_parent' => $parent_order_id,
-                'post_type'   => 'shop_order',
-                'numberposts' => - 1,
-                'post_status' => 'any',
+            $child_orders = wc_get_orders(
+                [
+                    'parent' => $parent_order->get_id(),
+                ]
             );
 
-            $child_orders = get_children( $args );
-
-            foreach ( $child_orders as $child ) {
-                wp_delete_post( $child->ID, true );
+            foreach ( $child_orders as $child_order ) {
+                $child_order->delete( true );
             }
         }
 
@@ -594,7 +608,7 @@ class Manager {
             do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
-            $parent_order->save();
+            $parent_order->save_meta_data();
 
             // if the request is made from rest api then insert the order data to the sync table
             if ( defined( 'REST_REQUEST' ) ) {
@@ -606,13 +620,13 @@ class Manager {
 
         // flag it as it has a suborder
         $parent_order->update_meta_data( 'has_sub_order', true );
-        $parent_order->save();
+        $parent_order->save_meta_data();
 
         dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
 
         // seems like we've got multiple sellers
         foreach ( $vendors as $seller_id => $seller_products ) {
-            dokan()->order->create_sub_order( $parent_order, $seller_id, $seller_products );
+            $this->create_sub_order( $parent_order, $seller_id, $seller_products );
         }
 
         dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
@@ -623,20 +637,31 @@ class Manager {
      *
      * @since 3.6.3
      *
-     * @param mixed $var
+     * @param mixed $item
      *
      * @return bool
      */
-    protected function is_empty( $var ) {
-        if ( empty( $var ) ) {
+    protected function is_empty( $item ) {
+        if ( empty( $item ) ) {
             return true;
         }
 
         // if var is an array, check if it's empty or not
-        if ( is_array( $var ) && isset( $var[0] ) && intval( $var[0] ) === 0 ) {
+        if ( is_array( $item ) && isset( $item[0] ) && intval( $item[0] ) === 0 ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Get the custom orders table name for wc.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    private function get_order_table_name() {
+        return \Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore::get_orders_table_name();
     }
 }

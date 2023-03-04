@@ -1122,7 +1122,7 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  * @return mixed
  */
 function dokan_get_option( $option, $section, $default = '' ) {
-    list( $option, $section ) = dokan_admin_settings_rearrange_map( $option, $section );
+    [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
 
@@ -4250,7 +4250,7 @@ function dokan_mask_email_address( $email ) {
         return $email;
     }
 
-    list( $first, $last ) = explode( '@', $email );
+    [ $first, $last ] = explode( '@', $email );
     $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
     $last        = explode( '.', $last );
     $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
@@ -4534,4 +4534,19 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
  */
 function dokan_sanitize_phone_number( $phone ) {
     return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+}
+
+/**
+ * Check if WooCommerce HPOS (High Performance Order Storage) feature is enabled or not
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_is_hpos_enabled() {
+    if ( false === version_compare( WC_VERSION, '7.1', '>=' ) ) {
+        return false;
+    }
+
+    return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 }
