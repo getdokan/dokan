@@ -3285,33 +3285,6 @@ function dokan_is_store_open( $user_id ) {
 }
 
 /**
- * Customer has order from current seller
- *
- * @since  2.8.6
- *
- * @param int $customer_id
- * @param int|null $seller_id
- *
- * @return bool
- */
-function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
-    $seller_id = ! empty( $seller_id ) ? $seller_id : dokan_get_current_user_id();
-    $args      = [
-        'customer_id' => $customer_id,
-        'post_type'   => 'shop_order',
-        'meta_key'    => '_dokan_vendor_id', // phpcs:ignore
-        'meta_value'  => $seller_id, // phpcs:ignore
-        'post_status' => 'any',
-        'return'      => 'ids',
-        'numberposts' => 1,
-    ];
-
-    $orders = wc_get_orders( $args );
-
-    return ! empty( $orders ) ? true : false;
-}
-
-/**
  * Dokan get pro buy now url
  *
  * @since 2.8.5
@@ -4534,19 +4507,4 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
  */
 function dokan_sanitize_phone_number( $phone ) {
     return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
-}
-
-/**
- * Check if WooCommerce HPOS (High Performance Order Storage) feature is enabled or not
- *
- * @since DOKAN_SINCE
- *
- * @return bool
- */
-function dokan_is_hpos_enabled() {
-    if ( false === version_compare( WC_VERSION, '7.1', '>=' ) ) {
-        return false;
-    }
-
-    return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 }

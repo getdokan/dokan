@@ -22,6 +22,7 @@ class Manager {
      *
      * @since 3.0.0
      * @since 3.6.3 rewritten to include filters
+     * @since DOKAN_SINCE added HPOS support
      *
      * @return WP_Error|int[]|WC_Order[]
      */
@@ -59,12 +60,14 @@ class Manager {
             // HPOS usage is enabled.
             $order_table_name = $this->get_order_table_name();
             $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
-            $query_args       = [ 1, 1 ];
+            $join             .= " LEFT JOIN $wpdb->posts post ON do.order_id = post.ID";
+            $where            = ' AND p.post_status != %s';
+            $query_args       = [ 1, 1, 'trash' ];
         } else {
             // Traditional CPT-based orders are in use.
             $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
-            $query_args = [ 1, 1, 'trash' ];
             $where      = ' AND p.post_status != %s';
+            $query_args = [ 1, 1, 'trash' ];
         }
 
         // determine which fields to return
@@ -206,7 +209,7 @@ class Manager {
         }
 
         // pagination param
-        if ( ! empty( $args['limit'] ) && - 1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
+        if ( ! empty( $args['limit'] ) && -1 !== intval( $args['limit'] ) && 'count' !== $args['return'] ) {
             $limit  = absint( $args['limit'] );
             $page   = absint( $args['paged'] );
             $page   = $page > 0 ? $page : 1;
@@ -287,6 +290,200 @@ class Manager {
      */
     public function get( $id ) {
         return wc_get_order( $id );
+    }
+
+    /**
+     * Count orders for a seller
+     *
+     * @since DOKAN_SINCE moved this function from functions.php file
+     *
+     * @param int $seller_id
+     *
+     * @return array
+     */
+    public function count_orders( $seller_id ) {
+        global $wpdb;
+
+        $cache_group = "seller_order_data_{$seller_id}";
+        $cache_key   = "count_orders_{$seller_id}";
+        $counts      = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $counts ) {
+            $counts = [
+                'wc-pending'        => 0,
+                'wc-completed'      => 0,
+                'wc-on-hold'        => 0,
+                'wc-processing'     => 0,
+                'wc-refunded'       => 0,
+                'wc-cancelled'      => 0,
+                'wc-failed'         => 0,
+                'wc-checkout-draft' => 0,
+                'total'             => 0,
+            ];
+            $counts = apply_filters( 'dokan_order_status_count', $counts );
+
+            $query = $wpdb->prepare(
+                "SELECT do.order_status as order_status, count(do.id) as order_count
+                FROM {$wpdb->prefix}dokan_orders AS do
+                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
+                WHERE
+                    do.seller_id = %d AND
+                    p.post_type = 'shop_order' AND
+                    p.post_status != 'trash'
+                GROUP BY do.order_status",
+                [ $seller_id ]
+            );
+
+            $results = $wpdb->get_results( $query ); // phpcs:ignore
+
+            if ( $results ) {
+                foreach ( $results as $count ) {
+                    if ( isset( $counts[ $count->order_status ] ) ) {
+                        $counts[ $count->order_status ] = intval( $count->order_count );
+                        $counts['total']                += $counts[ $count->order_status ];
+                    }
+                }
+            }
+
+            $counts = (object) $counts;
+            Cache::set( $cache_key, $counts, $cache_group );
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Check if an order with same id is exists in database
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int|WC_Order $order_id
+     *
+     * @return boolean
+     */
+    public function is_order_already_synced( $order_id ) {
+        global $wpdb;
+
+        if ( $order_id instanceof WC_Order ) {
+            $order_id = $order_id->get_id();
+        }
+
+        if ( ! $order_id || ! is_numeric( $order_id ) ) {
+            return false;
+        }
+
+        $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d LIMIT 1", $order_id ) );
+
+        return wc_string_to_bool( $order_id );
+    }
+
+    /**
+     * Get order of current logged-in users or by given customer id
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return \stdClass|WC_Order[]|int[]
+     */
+    public function get_customer_orders( $args ) {
+        // fix customer id if not provided
+        $customer_id = ! empty( $args['customer_id'] ) ? intval( $args['customer_id'] ) : dokan_get_current_user_id();
+        $args        = [
+            'customer_id' => $customer_id,
+            'limit'       => ! empty( $args['limit'] ) ? intval( $args['limit'] ) : 10,
+            'paged'       => ! empty( $args['paged'] ) ? absint( $args['paged'] ) : 1,
+            'return'      => ! empty( $args['return_type'] ) && in_array( $args['return_type'], [ 'ids', 'objects' ], true ) ? sanitize_text_field( $args['return_type'] ) : 'ids',
+        ];
+
+        return wc_get_orders(
+            apply_filters( 'woocommerce_my_account_my_orders_query', $args )
+        );
+    }
+
+    /**
+     * Get Customer Order IDs by Seller
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $customer_id
+     * @param int $seller_id
+     *
+     * @return int[]|null on failure
+     */
+    public function get_customer_order_ids_by_seller( $customer_id, $seller_id ) {
+        if ( ! $customer_id || ! $seller_id ) {
+            return null;
+        }
+
+        $args = [
+            'customer_id' => $customer_id,
+            'meta_key'    => '_dokan_vendor_id', // phpcs:ignore
+            'meta_value'  => $seller_id, // phpcs:ignore
+            'return'      => 'ids',
+            'limit'       => -1,
+        ];
+
+        $orders = wc_get_orders( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+
+        return ! empty( $orders ) ? $orders : null;
+    }
+
+    /**
+     * Delete dokan order
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int      $order_id
+     * @param int|null $seller_id
+     *
+     * @return void
+     */
+    public function delete_seller_order( $order_id, $seller_id = null ) {
+        global $wpdb;
+
+        $where = [
+            'order_id' => $order_id,
+        ];
+
+        $where_format = [ '%d' ];
+
+        if ( is_numeric( $seller_id ) ) {
+            $where['seller_id'] = $seller_id;
+            $where_format[]     = '%d';
+        }
+
+        $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
+
+        // todo: delete all order references from vendor_balance, withdraw and refund table
+        // todo: remove action of wp_trash_post, wp_untrash_post, wp_delete_post if necessary
+    }
+
+    /**
+     * Delete dokan order with suborders
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return void
+     */
+    public function delete_seller_order_with_suborders( $order_id ) {
+        // delete main order
+        $this->delete_seller_order( $order_id );
+
+        $sub_orders = wc_get_orders(
+            [
+                'parent' => $order_id,
+                'limit'  => -1,
+            ]
+        );
+
+        if ( $sub_orders ) {
+            foreach ( $sub_orders as $sub_order ) {
+                $sub_order->delete( true );
+            }
+        }
     }
 
     /**
@@ -588,6 +785,7 @@ class Manager {
             $child_orders = wc_get_orders(
                 [
                     'parent' => $parent_order->get_id(),
+                    'limit'  => -1,
                 ]
             );
 

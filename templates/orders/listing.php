@@ -104,12 +104,11 @@ if ( $user_orders ) {
                     </td>
                     <td class="dokan-order-date" data-title="<?php esc_attr_e( 'Date', 'dokan-lite' ); ?>">
                         <?php
-                        if ( '0000-00-00 00:00:00' === dokan_get_date_created( $order ) ) {
+                        if ( '0000-00-00 00:00:00' === $order->get_date_created()->format( 'Y-m-d H:i:s' ) ) {
                             $t_time = __( 'Unpublished', 'dokan-lite' );
                             $h_time = __( 'Unpublished', 'dokan-lite' );
                         } else {
-                            $now       = dokan_current_datetime()->setTimezone( new DateTimeZone( 'UTC' ) );
-                            $t_time    = $now->modify( $order->get_date_created() );
+                            $t_time    = $order->get_date_created();
                             $time_diff = time() - $t_time->getTimestamp();
 
                             // get human-readable time

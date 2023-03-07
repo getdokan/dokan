@@ -56,8 +56,8 @@ class Commission {
      */
     public function calculate_gateway_fee( $order_id ) {
         global $wpdb;
-        $order           = wc_get_order( $order_id );
-        $processing_fee  = $this->get_processing_fee( $order );
+        $order          = wc_get_order( $order_id );
+        $processing_fee = $this->get_processing_fee( $order );
 
         if ( ! $processing_fee ) {
             return;
@@ -91,7 +91,7 @@ class Commission {
                 $wpdb->dokan_vendor_balance,
                 [ 'debit' => (float) $net_amount ],
                 [
-                    'trn_id' => $tmp_order->get_id(),
+                    'trn_id'   => $tmp_order->get_id(),
                     'trn_type' => 'dokan_orders',
                 ],
                 [ '%f' ],
@@ -118,7 +118,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  array
+     * @param array
      *
      * @return array
      */
@@ -139,7 +139,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return void
      */
@@ -163,7 +163,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $number
+     * @param int $number
      *
      * @return void
      */
@@ -187,9 +187,9 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int|WC_Product $product
-     * @param  string         $context[admin|seller]
-     * @param  float          $price
+     * @param int|WC_Product $product
+     * @param string         $context [admin|seller]
+     * @param float          $price
      *
      * @return float
      */
@@ -219,8 +219,8 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int|WC_Order $order
-     * @param  string       $context
+     * @param int|WC_Order $order
+     * @param string       $context
      *
      * @return float|void|WP_Error on failure
      */
@@ -243,6 +243,7 @@ class Commission {
 
         if ( $saved_admin_fee !== '' ) {
             $saved_fee = ( 'seller' === $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
@@ -274,7 +275,7 @@ class Commission {
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
                 $item_price = $refund ? $item_price - $refund : $item_price;
-                $earning   += $this->get_earning_by_product( $product_id, $context, $item_price );
+                $earning    += $this->get_earning_by_product( $product_id, $context, $item_price );
             }
         }
 
@@ -307,7 +308,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $vendor_id
+     * @param int $vendor_id
      *
      * @return float
      */
@@ -320,7 +321,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return float
      */
@@ -333,7 +334,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return int
      */
@@ -349,7 +350,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return float
      */
@@ -383,7 +384,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $vendor_id
+     * @param int $vendor_id
      *
      * @return string
      */
@@ -396,7 +397,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return string
      */
@@ -412,7 +413,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return string
      */
@@ -425,7 +426,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  float $rate
+     * @param float $rate
      *
      * @return float
      */
@@ -442,7 +443,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  float $product_price
+     * @param float $product_price
      *
      * @return float|null on failure
      */
@@ -455,8 +456,8 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $vendor_id
-     * @param  float $product_price
+     * @param int   $vendor_id
+     * @param float $product_price
      *
      * @return float|null on failure
      */
@@ -469,8 +470,8 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
-     * @param  float $product_price
+     * @param int   $product_id
+     * @param float $product_price
      *
      * @return float|null on failure
      */
@@ -487,8 +488,8 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
-     * @param  int $product_price
+     * @param int $product_id
+     * @param int $product_price
      *
      * @return float|null on failure
      */
@@ -505,9 +506,9 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  callable $callable
-     * @param  int $product_id
-     * @param  float $product_price
+     * @param callable $callable
+     * @param int      $product_id
+     * @param float    $product_price
      *
      * @return float | null on failure
      */
@@ -630,7 +631,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return float|null on failure
      */
@@ -643,7 +644,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return float|null on failure
      */
@@ -656,7 +657,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $vendor_id
+     * @param int $vendor_id
      *
      * @return float|null on failure
      */
@@ -669,7 +670,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
+     * @param int $product_id
      *
      * @return float|null on failure
      */
@@ -691,8 +692,8 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $order_id
-     * @param  string $context
+     * @param int    $order_id
+     * @param string $context
      *
      * @return float|null on failure
      */
@@ -727,9 +728,9 @@ class Commission {
      * Get shipping fee recipient
      *
      * @since  2.9.21
-     * @since 3.4.1 introduced the shipping fee recipient hook
+     * @since  3.4.1 introduced the shipping fee recipient hook
      *
-     * @param  WC_Order|int $order
+     * @param WC_Order|int $order
      *
      * @return string
      */
@@ -759,9 +760,9 @@ class Commission {
      * Get tax fee recipient
      *
      * @since  2.9.21
-     * @since 3.4.1 introduced the tax fee recipient hook
+     * @since  3.4.1 introduced the tax fee recipient hook
      *
-     * @param  WC_Order|int $order
+     * @param WC_Order|int $order
      *
      * @return string|WP_Error
      */
@@ -828,6 +829,7 @@ class Commission {
             $all_orders = wc_get_orders(
                 [
                     'parent' => $order->get_id(),
+                    'limit'  => -1,
                 ]
             );
         } else {
@@ -842,9 +844,9 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param  int $product_id
-     * @param  float $product_price
-     * @param  int $vendor_id
+     * @param int   $product_id
+     * @param float $product_price
+     * @param int   $vendor_id
      *
      * @return float
      */

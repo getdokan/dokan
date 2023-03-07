@@ -48,6 +48,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WeDevs_Dokan class
  *
  * @class WeDevs_Dokan The class that holds the entire WeDevs_Dokan plugin
+ *
+ * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
+ * @property WeDevs\Dokan\Commission    $commission Instance of Commission class
  */
 final class WeDevs_Dokan {
 
