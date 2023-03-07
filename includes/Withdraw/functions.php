@@ -396,7 +396,7 @@ function dokan_withdraw_get_active_order_status() {
  */
 function dokan_withdraw_get_active_order_status_in_comma() {
     $order_status = dokan_withdraw_get_active_order_status();
-    $status       = "'" . implode( "', '", $order_status ) . "'";
+    $status       = "'" . implode( "', '", esc_sql( $order_status ) ) . "'";
 
     return $status;
 }
