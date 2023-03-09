@@ -541,7 +541,7 @@ class Assets {
             ],
             'dokan-vendor-address'      => [
                 'src'     => $asset_url . '/js/vendor-address.js',
-                'deps'    => [ 'jquery', 'wc-country-select' ],
+                'deps'    => [ 'jquery', 'wc-address-i18n' ],
                 'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
             ],
             'dokan-admin-product'       => [

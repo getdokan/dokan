@@ -51,7 +51,7 @@ class ProductControllerV2 extends ProductController {
                     'callback'            => [ $this, 'get_product_filter_by_data' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
-                'schema' => $this->get_filter_data_schema(),
+                'schema' => [ $this, 'get_filter_data_schema' ],
             ]
         );
     }
