@@ -17,7 +17,6 @@
                 country = $( this ).val();
 
             if ( states[ country ] ) {
-
                 if ( $.isEmptyObject( states[ country ] ) ) {
 
                     $( 'div#dokan-states-box' ).slideUp( 2 );
@@ -59,8 +58,6 @@
 
                 }
             } else {
-
-
                 if ( $statebox.is( 'select' ) ) {
                     input_selected_state = '';
                     $( 'select#dokan_address_state' ).replaceWith( '<input type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" required="required"/>' );
@@ -73,9 +70,39 @@
                 $( '#dokan_address_state' ).removeClass( 'dokan-hide' );
                 $( 'div#dokan-states-box' ).slideDown();
             }
+
+            $( document.body ).trigger( 'dokan_vendor_country_to_state_changing', [country] );
         }
     }
     window.dokan_address_select = dokan_address_select;
     window.dokan_address_select.init();
+
+    $( document.body )
+		.on( 'dokan_vendor_country_to_state_changing', function( event, country ) {
+            // wc_address_i18n_params is required to continue, ensure the object exists
+            if ( typeof wc_address_i18n_params === 'undefined' ) {
+                return false;
+            }
+
+            var locale_json = wc_address_i18n_params.locale.replace( /&quot;/g, '"' ), locale = JSON.parse( locale_json ),thislocale;
+
+			if ( typeof locale[ country ] !== 'undefined' ) {
+				thislocale = locale[ country ];
+			} else {
+				thislocale = locale['default'];
+			}
+
+            let required = thislocale?.state?.required || undefined === thislocale?.state?.required;
+
+            if (thislocale?.state?.label) {
+                let labelElement = `${thislocale?.state?.label} ${required ? '<span class="required"> *</span>' : ''}`;
+
+                $('.dokan-address-fields #dokan-states-box label').html(labelElement);
+                $('.dokan-address-fields #dokan-states-box #dokan_address_state').attr('data-state', thislocale?.state?.label);
+            }
+
+
+            $('.dokan-address-fields #dokan-states-box #dokan_address_state').attr('required', required);
+        })
 
 } )(jQuery, window)
