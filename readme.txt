@@ -7,7 +7,7 @@ Tested up to: 6.1.1
 WC requires at least: 5.0.0
 WC tested up to: 7.4.1
 Requires PHP: 7.2
-Stable tag: 3.7.13
+Stable tag: 3.7.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -312,6 +312,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.14 ( Mar 09, 2023 ) =
+
+- **fix:** [RestAPI] Fatal error while activating Dokan Lite via wp-cli
+- **fix:** [VendorStoreSettings] State option appear while choosing the country with no state
 
 = v3.7.13 ( Mar 01, 2023 ) =
 
