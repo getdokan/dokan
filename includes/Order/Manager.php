@@ -430,6 +430,21 @@ class Manager {
     }
 
     /**
+     * @param int|WC_Order $parent_order
+     *
+     * @return WC_Order[]
+     */
+    public function get_child_orders( $parent_order ) {
+        $parent_order_id = is_numeric( $parent_order ) ?? $parent_order->get_id();
+        return wc_get_orders(
+            [
+                'parent' => $parent_order_id,
+                'limit'  => -1,
+            ]
+        );
+    }
+
+    /**
      * Delete dokan order
      *
      * @since DOKAN_SINCE

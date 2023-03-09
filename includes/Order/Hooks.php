@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use Exception;
+use WC_Order;
 
 /**
  * Admin Hooks
@@ -25,7 +26,7 @@ class Hooks {
     public function __construct() {
         // on order status change
         add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
-        add_action( 'woocommerce_order_status_changed', [ $this, 'on_sub_order_change' ], 99, 3 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'on_sub_order_change' ], 99, 4 );
 
         // create sub-orders
         add_action( 'woocommerce_checkout_update_order_meta', [ $this, 'split_vendor_orders' ] );
@@ -107,11 +108,11 @@ class Hooks {
     /**
      * Update the child order status when a parent order status is changed
      *
-     * @param integer $order_id
-     * @param string  $old_status
-     * @param string  $new_status
+     * @param int      $order_id
+     * @param string   $old_status
+     * @param string   $new_status
+     * @param WC_Order $order
      *
-     * @global object $wpdb
      * @return void
      */
     public function on_order_status_change( $order_id, $old_status, $new_status, $order ) {
@@ -119,7 +120,7 @@ class Hooks {
 
         // Split order if the order doesn't have parent and sub orders,
         // and the order is created from dashboard.
-        if ( empty( $order->post_parent ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
+        if ( empty( $order->get_parent_id() ) && empty( $order->get_meta( 'has_sub_order' ) ) && is_admin() ) {
             // Remove the hook to prevent recursive callas.
             remove_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10 );
 
@@ -145,17 +146,10 @@ class Hooks {
         );
 
         // if any child orders found, change the orders as well
-        $sub_orders = get_children(
-            [
-                'post_parent' => $order_id,
-                'post_type'   => 'shop_order',
-            ]
-        );
-
+        $sub_orders = dokan()->order->get_child_orders( $order_id );
         if ( $sub_orders ) {
-            foreach ( $sub_orders as $order_post ) {
-                $order = dokan()->order->get( $order_post->ID );
-                $order->update_status( $new_status );
+            foreach ( $sub_orders as $sub_order ) {
+                $sub_order->update_status( $new_status );
             }
         }
 
@@ -195,14 +189,14 @@ class Hooks {
             return;
         }
 
-        $balance_data = $wpdb->get_row(
+        $balance_data = $wpdb->get_var(
             $wpdb->prepare(
-                "select * from $wpdb->dokan_vendor_balance where trn_id = %d AND status = 'approved'",
-                $order_id
+                "SELECT 1 FROM $wpdb->dokan_vendor_balance WHERE trn_id = %d AND trn_type = %s AND status = 'approved'",
+                [ $order_id, 'dokan_refund' ]
             )
         );
 
-        if ( $balance_data ) {
+        if ( ! empty( $balance_data ) ) {
             return;
         }
 
@@ -266,46 +260,41 @@ class Hooks {
     /**
      * Mark the parent order as complete when all the child order are completed
      *
-     * @param integer $order_id
-     * @param string  $old_status
-     * @param string  $new_status
+     * @param integer  $order_id
+     * @param string   $old_status
+     * @param string   $new_status
+     * @param WC_Order $order
      *
      * @return void
      */
-    public function on_sub_order_change( $order_id, $old_status, $new_status ) {
-        $order_post = get_post( $order_id );
-
+    public function on_sub_order_change( $order_id, $old_status, $new_status, $order ) {
         // we are monitoring only child orders
-        if ( $order_post->post_parent === 0 ) {
+        if ( $order->get_parent_id() === 0 ) {
             return;
         }
 
         // get all the child orders and monitor the status
-        $parent_order_id = $order_post->post_parent;
-        $sub_orders      = get_children(
-            [
-                'post_parent' => $parent_order_id,
-                'post_type'   => 'shop_order',
-            ]
-        );
+        $parent_order_id = $order->get_parent_id();
+        $sub_orders      = dokan()->order->get_child_orders( $parent_order_id );
+
+        if ( ! $sub_orders ) {
+            return;
+        }
 
         // return if any child order is not completed
         $all_complete = true;
 
-        if ( $sub_orders ) {
-            foreach ( $sub_orders as $sub ) {
-                $order = dokan()->order->get( $sub->ID );
-
-                if ( $order->get_status() !== 'completed' ) {
-                    $all_complete = false;
-                }
+        foreach ( $sub_orders as $sub_order ) {
+            if ( $sub_order->get_status() !== 'completed' ) {
+                $all_complete = false;
+                break;
             }
         }
 
         // seems like all the child orders are completed
         // mark the parent order as complete
         if ( $all_complete ) {
-            $parent_order = dokan()->order->get( $parent_order_id );
+            $parent_order = wc_get_order( $parent_order_id );
             $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
         }
     }
@@ -391,7 +380,7 @@ class Hooks {
     /**
      * Restore order stock if it's been reduced by twice
      *
-     * @param object $order
+     * @param WC_Order $order
      *
      * @return void
      */
@@ -401,19 +390,13 @@ class Hooks {
             return;
         }
 
-        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
-
         // seems it's not a parent order so return early
-        if ( ! $has_sub_order ) {
+        if ( ! $order->get_meta( 'has_sub_order' ) ) {
             return;
         }
 
         // Loop over all items.
-        foreach ( $order->get_items() as $item ) {
-            if ( ! $item->is_type( 'line_item' ) ) {
-                continue;
-            }
-
+        foreach ( $order->get_items( 'line_item' ) as $item ) {
             // Only reduce stock once for each item.
             $product            = $item->get_product();
             $item_stock_reduced = $item->get_meta( '_reduced_stock', true );
@@ -456,9 +439,9 @@ class Hooks {
     /**
      * Trim child order if parent exist from wc_order_product_lookup for analytics order
      *
-     * @param \WC_Order $orders
+     * @param WC_Order $orders
      *
-     * @return \WC_Order
+     * @return WC_Order
      */
     public function trim_child_order_for_analytics_order( $orders ) {
         foreach ( $orders->data as $key => $order ) {
@@ -485,19 +468,15 @@ class Hooks {
      *
      * @since DOKAN_LITE_SINCE
      *
-     * @param $order
+     * @param WC_Order $order
      *
      * @return void
      */
     public function handle_order_notes_for_suborder( $order ) {
-        $has_sub_order = wp_get_post_parent_id( $order->get_id() );
-
         //return if it has suborder. only continue if this is a suborder
-        if ( ! $has_sub_order ) {
+        if ( ! $order->get_meta( 'has_sub_order' ) ) {
             return;
         }
-
-        $order = wc_get_order( $order->get_id() );
 
         $notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
 
@@ -512,9 +491,7 @@ class Hooks {
 
         //adding stock level notes in order
         foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $item_id = $line_item->get_variation_id() ? $line_item->get_variation_id() : $line_item->get_product_id();
-
-            $product = wc_get_product( $item_id );
+            $product = $line_item->get_product();
 
             if ( $product->get_manage_stock() ) {
                 $stock_quantity    = $product->get_stock_quantity();
