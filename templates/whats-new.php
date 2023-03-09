@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.14',
+        'released' => '2023-03-09',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fatal error while activating Dokan Lite via wp-cli',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorStoreSettings] State option appear while choosing the country with no state',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.13',
         'released' => '2023-03-01',
         'changes'  => [
