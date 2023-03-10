@@ -55,15 +55,15 @@ class Registration {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
-        $role           = sanitize_text_field( wp_unslash( $_POST['role'] ) );
-        $shop_url       = isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '';
+        $role            = sanitize_text_field( wp_unslash( $_POST['role'] ) );
+        $shop_url        = isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '';
         $required_fields = apply_filters(
             'dokan_seller_registration_required_fields', [
                 'fname'    => __( 'Please enter your first name.', 'dokan-lite' ),
                 'lname'    => __( 'Please enter your last name.', 'dokan-lite' ),
                 'phone'    => __( 'Please enter your phone number.', 'dokan-lite' ),
                 'shopname' => __( 'Please provide a shop name.', 'dokan-lite' ),
-                'shopurl'  => __( 'Please provide an unique shop URL.', 'dokan-lite' ),
+                'shopurl'  => __( 'Please provide a unique shop URL.', 'dokan-lite' ),
             ]
         );
 
@@ -77,7 +77,7 @@ class Registration {
 
             // Check if the shop URL already not in use.
             if ( ! empty( get_user_by( 'slug', $shop_url ) ) ) {
-                return new WP_Error( 'shop-url-error', __( 'Shop URL not available', 'dokan-lite' ) );
+                return new WP_Error( 'shop-url-error', __( 'Shop URL is not available', 'dokan-lite' ) );
             }
         }
 
