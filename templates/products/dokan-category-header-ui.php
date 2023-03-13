@@ -6,11 +6,15 @@ $hide_cat_title = ! empty( $hide_cat_title ) && 'yes' === $hide_cat_title;
 
 $initial_category_for_modal = 0;
 
+// If there are no chosen category and also there is a default category set then initial category box set as default category
 if ( count( $chosen_cat ) < 1 && ! empty( $default_product_cat->term_id ) ) {
     $initial_category_for_modal = $default_product_cat->term_id;
 }
 
-array_push( $chosen_cat, $initial_category_for_modal );
+// If no category is set then add a empty category box.
+if ( count( $chosen_cat ) < 1 ) {
+    array_push( $chosen_cat, $initial_category_for_modal );
+}
 ?>
 
 <!-- Trigger/Open The Modal -->
