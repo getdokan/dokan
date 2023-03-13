@@ -131,6 +131,7 @@
                 searchText: '',
                 awaitingSearch: false,
                 withdrawMethods: {},
+                disbursementSchedule: {},
                 isSaveConfirm: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
             }
@@ -204,6 +205,7 @@
                         self.showLoading = false;
                         self.isLoaded = true;
                         self.setWithdrawMethods();
+                        self.setWithdrawDisbursementSchedule();
                     }
                 });
             },
@@ -240,6 +242,15 @@
                         fieldData.send_announcement_for_payment_change = this.getDifference( this.withdrawMethods, fieldData.withdraw_methods );
                     }
                     this.withdrawMethods = fieldData.withdraw_methods;
+
+                    // Disbursement Schedule Option Change.
+                    const consentOfScheduleChange = await this.setDisbursementScheduleChangeAnnouncementAction(fieldData, section);
+                    fieldData.send_announcement_for_disbursement_schedule_change = false;
+
+                    if ('value' in consentOfScheduleChange && consentOfScheduleChange.value === true) {
+                        fieldData.send_announcement_for_disbursement_schedule_change = this.getDifference( this.disbursementSchedule, fieldData.disbursement_schedule );
+                    }
+                    this.disbursementSchedule = fieldData.disbursement_schedule;
                 }
 
                 var self = this,
@@ -289,6 +300,11 @@
                     this.withdrawMethods = {...this.settingValues.dokan_withdraw.withdraw_methods};
                 }
             },
+            setWithdrawDisbursementSchedule() {
+                if ( 'disbursement_schedule' in this.settingValues.dokan_withdraw ) {
+                    this.disbursementSchedule = {...this.settingValues.dokan_withdraw.disbursement_schedule};
+                }
+            },
 
             async setPaymentChangeAnnouncementAction( fieldData, section ) {
                 if ( ! ( 'withdraw_methods' in fieldData ) || 'dokan_withdraw' !== section ) {
@@ -308,6 +324,29 @@
                     showCancelButton: true,
                     confirmButtonText: this.__('Save & send announcement', 'dokan-lite'),
                     cancelButtonText: this.__( 'Save only', 'dokan-lite' ),
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                });
+            },
+
+            async setDisbursementScheduleChangeAnnouncementAction( fieldData, section ) {
+                if ( ! ( 'disbursement_schedule' in fieldData ) || 'dokan_withdraw' !== section ) {
+                    return Promise.resolve( {value: false} );
+                }
+
+                const diff = this.getDifference( this.disbursementSchedule, fieldData.disbursement_schedule );
+
+                if ( Object.keys( diff ).length === 0 ) {
+                    return Promise.resolve({value: false});
+                }
+
+                return Swal.fire({
+                    title: this.__( 'Disbursement Schedule Updated', 'dokan-lite' ),
+                    text: this.__( 'Do you want to inform your vendors about the removal of the previous disbursement schedule by sending them an announcement?', 'dokan-lite' ),
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: this.__('Save and Send Announcement', 'dokan-lite'),
+                    cancelButtonText: this.__( 'Save Only', 'dokan-lite' ),
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                 });

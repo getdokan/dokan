@@ -214,16 +214,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       };
     },
     loadChildCategories: function loadChildCategories(catlevel, termId, name, haschild) {
-      if (!haschild) {
-        ProductCategory.disableDoneBtn(false);
-        return;
-      }
+      /**
+       * By passing true in this filter hook anyone can enable capability to select aby middle category in dokan product
+       * multi-step category selection.
+       */
+      var middleCategorySelection = wp.hooks.applyFilters('dokan_middle_category_selection', false); // If selected category has no child OR middle category selection is true then enable the category select done button else disable.
 
-      ProductCategory.disableDoneBtn();
-      var categories = ProductCategory.getCategoriesWithParentId(termId, catlevel + 1);
-      categoriesState.push(categories);
-      ProductCategory.updateCategoryUi();
-      ProductCategory.scrollTo(catlevel);
+      if (!haschild || true === middleCategorySelection) {
+        ProductCategory.disableDoneBtn(false);
+      } else {
+        ProductCategory.disableDoneBtn();
+      } // If the selected category has more children category then show them.
+
+
+      if (haschild) {
+        var categories = ProductCategory.getCategoriesWithParentId(termId, catlevel + 1);
+        categoriesState.push(categories);
+        ProductCategory.updateCategoryUi();
+        ProductCategory.scrollTo(catlevel);
+      }
     },
     updateSearchResultUi: function updateSearchResultUi() {
       var html = '';

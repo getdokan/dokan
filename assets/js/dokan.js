@@ -485,12 +485,9 @@ jQuery(function($) {
 
                     if ( 0 < unit_total_tax ) {
                         var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
-                        var precision         = dokan_refund[
-                            round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
-                        ];
 
                         refund_line_total_tax.val(
-                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, precision, '' ) )
+                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
                         ).trigger( 'change' );
@@ -964,6 +961,7 @@ jQuery(function($) {
                         $( '#dokan-add-product-popup' ).iziModal('close');
                         window.location.href = resp.data;
                     } else {
+                        product_featured_frame = undefined;
                         $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
                         Dokan_Editor.modal.iziModal('resetContent');
                         Dokan_Editor.openProductPopup();

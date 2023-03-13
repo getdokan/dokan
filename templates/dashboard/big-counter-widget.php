@@ -14,7 +14,7 @@
 <div class="dashboard-widget big-counter">
     <ul class="list-inline">
         <li>
-            <div class="title"><?php esc_html_e( 'Sales', 'dokan-lite' ); ?></div>
+            <div class="title"><?php esc_html_e( 'Net Sales', 'dokan-lite' ); ?></div>
             <div class="count"><?php echo wp_kses_post( wc_price( $earning ) ); ?></div>
         </li>
         <li>

@@ -199,8 +199,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 
         if ( ! $results ) {
             global $wpdb;
-            $exclude_product_types      = esc_sql( $exclude_product_types );
-            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+            $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
@@ -2152,7 +2151,7 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
-    $url = get_permalink( $page_id );
+    $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
 
     if ( ! empty( $name ) ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
@@ -2707,7 +2706,7 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
     // get the redirect url from $_GET
     if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
         $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
-    } elseif ( user_can( $user, 'dokandar' ) ) {
+    } elseif ( user_can( $user, 'dokandar' ) && wc_get_page_permalink( 'checkout' ) !== $redirect_to ) {
         $seller_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages' );
 
         if ( $seller_dashboard !== - 1 ) {
@@ -3869,6 +3868,7 @@ function dokan_redirect_to_admin_setup_wizard() {
  */
 function dokan_generate_ratings( $rating, $stars ) {
     $result = '';
+    $rating = wc_format_decimal( floatval( $rating ), 2 );
 
     for ( $i = 1; $i <= $stars; $i ++ ) {
         if ( $rating >= $i ) {

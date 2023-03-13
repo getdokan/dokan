@@ -5,9 +5,9 @@
 **Requires at least:** 5.4  
 **Tested up to:** 6.1.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.3.0  
+**WC tested up to:** 7.4.1  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.10  
+**Stable tag:** 3.7.14  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -313,6 +313,37 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.7.14 ( Mar 09, 2023 ) ###
+
+- **fix:** [RestAPI] Fatal error while activating Dokan Lite via wp-cli
+- **fix:** [VendorStoreSettings] State option appear while choosing the country with no state
+
+### v3.7.13 ( Mar 01, 2023 ) ###
+
+- **fix:** fixed a SQL injection issue
+
+### v3.7.12 ( Feb 23, 2023 ) ###
+
+- **new:** Added a new js hook `dokan_middle_category_selection` by using this hook if anyone passes true in this hook user will be able to select any category in Dokan multi-step category and a new WordPress hook `dokan_middle_category_selection` where you also have to pass true select middle category.
+- **update:** [LoginRedirection] Keep the sellers on the checkout page if they login from the checkout page.
+- **update:** Added sub-description to the `hide vendor info` section under Dokan admin appearance settings
+- **fix:** [AddNewProductPopup] Create & Add a new product button does not allow adding a product image during the time of adding more than one product has been fixed
+- **fix:** Fixed a fatal error if the order is created from WooCommerce admin dashboard without adding any line items.
+- **fix:** Fixed admin user permission/capability issue after permanently deleting the Dokan plugin.
+- **fix:** [ReverseWithdrawal] Refund amount wasn’t subtracted from `Total Collected Values` for reverse withdrawal under the Admin Reverse Withdrawal menu.
+- **fix:** [ReverseWithdrawal] The decimal value is not included under the `Total Collected` section of the admin dashboard Reverse Withdrawal menu.
+- **fix:** Dokan Dashboard menu wasn’t loading if the permalink doesn’t include / at the end of the URL
+- **fix:** Fixed product image thumbnail gets image height squeezed on add new product popup under vendor dashboard
+
+### v3.7.11 ( Feb 13, 2023 ) ###
+
+- **fix:** Vendor search doesn't work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page
+- **fix:** The number of orders on the backend is not appearing depending on the vendor's own order count.
+- **fix:** Fixed a fatal error while creating an order from the admin dashboard with no data
+
+- **update:** Added vendor address-related fields under vendor registration form
+- **update:** Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`
+
 ### v3.7.10 ( Jan 26, 2023 ) ###
 
 - **new:** Extended REST API support for Dokan
@@ -340,14 +371,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Multiple store category modal wasn’t working for some theme
 - **fix:** Recreate reverse withdrawal payment product if no product found with stored product id
 
-
 ### v3.7.9 ( Jan 10, 2023 ) ###
 
 - **update:** Last-page and first-page pagination icon inconsistency under single store page product listing
 - **update:** Adjusted store banner image stretching issue under store list page
 - **fix:** Vendor email address is not showing up on the store header.
 
-### v3.7.8 ( Oct 27, 2022 ) ###
+### v3.7.8 ( Dec 27, 2022 ) ###
 
 - **fix:** Single Store Page store header menu and search fields style break on mobile devices
 - **fix:** Vendor dashboard total sales wasn’t displaying decimal values

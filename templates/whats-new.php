@@ -4,6 +4,117 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.14',
+        'released' => '2023-03-09',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fatal error while activating Dokan Lite via wp-cli',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorStoreSettings] State option appear while choosing the country with no state',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.13',
+        'released' => '2023-03-01',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed a SQL injection issue',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.12',
+        'released' => '2023-02-23',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new js hook `dokan_middle_category_selection` by using this hook if anyone passes true in this hook user will be able to select any category in Dokan multi-step category and a new WordPress hook `dokan_middle_category_selection` where you also have to pass true select middle category.',
+                    'description' => '',
+                ],
+
+            ],
+            'Improvement' => [
+                [
+                    'title'       => '[LoginRedirection] Keep the sellers on the checkout page if they login from the checkout page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added sub-description to the `hide vendor info` section under Dokan admin appearance settings',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[AddNewProductPopup] Create & Add a new product button does not allow adding a product image during the time of adding more than one product has been fixed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error if the order is created from WooCommerce admin dashboard without adding any line items.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed admin user permission/capability issue after permanently deleting the Dokan plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] Refund amount wasn’t subtracted from `Total Collected Values` for reverse withdrawal under the Admin Reverse Withdrawal menu.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] The decimal value is not included under the `Total Collected` section of the admin dashboard Reverse Withdrawal menu.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan Dashboard menu wasn’t loading if the permalink doesn’t include / at the end of the URL',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed product image thumbnail gets image height squeezed on add new product popup under vendor dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.11',
+        'released' => '2023-02-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Vendor search doesn\'t work correctly while admin assigns a vendor to a product from WooCommerce → Products → Add New page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The number of orders on the backend is not appearing depending on the vendor\'s own order count.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while creating an order from the admin dashboard with no data',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Added vendor address-related fields under vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed text `New Vendor Product Upload` to `Enable Selling`. Also changed field description from `Allow newly registered vendors to add products` to  `Immediately enable selling for newly registered vendors`',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.10',
         'released' => '2023-01-26',
         'changes'  => [

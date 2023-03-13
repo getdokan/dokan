@@ -273,7 +273,7 @@ class Commission {
         }
 
         if ( $context === $this->get_shipping_fee_recipient( $order->get_id() ) ) {
-            $earning += $order->get_total_shipping() - $order->get_total_shipping_refunded();
+            $earning += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
         }
 
         if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
@@ -351,7 +351,7 @@ class Commission {
         $terms = Helper::get_product_chosen_category( $this->validate_product_id( $product_id ) );
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-        if ( empty( $terms ) || count( $terms ) > 1 || ! Helper::product_category_selection_is_single() ) {
+        if ( ! is_array( $terms ) || empty( $terms ) || count( $terms ) > 1 || ! Helper::product_category_selection_is_single() ) {
             return null;
         }
 
