@@ -547,8 +547,8 @@ class Settings {
                 ],
                 'dokan_middle_category_selection'       => [
                     'name'    => 'dokan_middle_category_selection',
-                    'label'   => __( 'Select any category', 'dokan' ),
-                    'desc'    => __( 'Allow vendors to select any category while creating/editing products.', 'dokan' ),
+                    'label'   => __( 'Select any category', 'dokan-lite' ),
+                    'desc'    => __( 'Allow vendors to select any category while creating/editing products.', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
                 ],

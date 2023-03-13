@@ -30,7 +30,7 @@ class Helper {
      * @return boolean
      */
     public static function turned_on_middle_category_selection() {
-        return 'on'  === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'on' );
+        return 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'on' );
     }
 
     /**
@@ -170,7 +170,6 @@ class Helper {
          */
         $middle_category_selection = 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'off' );
 
-
         $all_ancestors = [];
 
         // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
@@ -182,7 +181,7 @@ class Helper {
                 $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
             }
         }
-error_log( print_r( $chosen_categories, 1 ) );
+
         // save chosen cat to database
         update_post_meta( $post_id, 'chosen_product_cat', $chosen_categories );
         // add all ancestor and chosen cat as product category
