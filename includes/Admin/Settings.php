@@ -545,6 +545,13 @@ class Settings {
                     'default' => 'on',
                     'tooltip' => __( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ),
                 ],
+                'dokan_middle_category_selection'       => [
+                    'name'    => 'dokan_middle_category_selection',
+                    'label'   => __( 'Select any category', 'dokan' ),
+                    'desc'    => __( 'Allow vendors to select any category while creating/editing products.', 'dokan' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
+                ],
             ]
         );
 

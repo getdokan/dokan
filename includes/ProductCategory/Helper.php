@@ -23,6 +23,17 @@ class Helper {
     }
 
     /**
+     * Returns 'true' if select any category option is turned on.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return boolean
+     */
+    public static function turned_on_middle_category_selection() {
+        return 'on'  === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'on' );
+    }
+
+    /**
      * Returns products category.
      *
      * @since 3.6.2
@@ -95,6 +106,11 @@ class Helper {
     public static function generate_chosen_categories( $terms ) {
         $all_parents = [];
 
+        // If any category selection option is turned we don't need to generate chosen categories, all terms are also chosen category.
+        if ( self::turned_on_middle_category_selection() ) {
+            return $terms;
+        }
+
         foreach ( $terms as $term_id ) {
             $all_ancestors = get_ancestors( $term_id, 'product_cat' );
             $all_children  = get_term_children( $term_id, 'product_cat' );
@@ -166,7 +182,7 @@ class Helper {
                 $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
             }
         }
-
+error_log( print_r( $chosen_categories, 1 ) );
         // save chosen cat to database
         update_post_meta( $post_id, 'chosen_product_cat', $chosen_categories );
         // add all ancestor and chosen cat as product category
