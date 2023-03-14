@@ -4266,16 +4266,15 @@ function dokan_array_after( $array, $position, $new_array ) {
  *
  * @since 3.2.16
  *
+ * @param array  $old_array
  * @param array  $new_array
  * @param string $insert_after_key
  *
- * @param array  $old_array
- *
  * @return array
  */
-function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key ) {
+function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key = '' ) {
     $keys  = array_keys( $old_array );
-    $index = array_search( $insert_after_key, $keys, true );
+    $index = ! empty( $insert_after_key ) ? array_search( $insert_after_key, $keys, true ) : false;
     $pos   = false === $index ? count( $old_array ) : $index + 1;
 
     return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
