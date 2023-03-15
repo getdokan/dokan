@@ -1081,10 +1081,10 @@ function dokan_add_subpage_to_url( $url, $subpage ) {
         if ( 2 === count( $subpage_part ) ) {
             $url_parts['query'] .= '&' . "{$subpage_part[0]}={$subpage_part[1]}";
         } else {
-            $url_parts['query'] .= '&' . "{$subpage_part[0]}=true";
+            $url_parts['query'] .= '&' . "{$subpage_part[0]}";
         }
     } else {
-        $url_parts['path'] = $url_parts['path'] . $subpage;
+        $url_parts['path'] = user_trailingslashit( trailingslashit( $url_parts['path'] ) . $subpage, 'single' );
     }
 
     return http_build_url( '', $url_parts );
@@ -2187,12 +2187,11 @@ function dokan_get_navigation_url( $name = '' ) {
         return '';
     }
 
-    $is_plain_permalink  = empty( get_option( 'permalink_structure' ) );
     $dashboard_permalink = get_permalink( $page_id );
-    $url                 = $is_plain_permalink ? $dashboard_permalink : rtrim( $dashboard_permalink, '/' ) . '/';
+    $url                 = dokan_is_plain_permalink() ? $dashboard_permalink : user_trailingslashit( $dashboard_permalink, 'single' );
 
     if ( ! empty( $name ) ) {
-        $url = dokan_add_subpage_to_url( $url, $name . '/' );
+        $url = dokan_add_subpage_to_url( $url, $name );
     }
 
     return apply_filters( 'dokan_get_navigation_url', $url, $name );
