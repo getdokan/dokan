@@ -133,6 +133,8 @@ class Orders {
             ),
             'page'                => 1,
             'limit'               => 10,
+            'order_endpoint'      => apply_filters( 'dokan_dashboard_orders_page_endpoints', 'orders' ),
+            'page_id'             => isset( $_GET['page_id'] ) ? absint( wp_unslash( $_GET['page_id'] ) ) : 0,
         ];
 
         // check if nonce isn't set, in that case display first 10 items without any filtering is applied

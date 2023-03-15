@@ -24,8 +24,13 @@
             <input id="order_filter_end_date" type="hidden" autocomplete="off" class="dokan-form-control" name="order_date_end" placeholder="<?php esc_attr_e( 'End Date', 'dokan-lite' ); ?>" value="<?php echo esc_attr( $filter_date_end ); ?>">
             <input type="hidden" name="order_status" value="<?php echo esc_attr( $order_status ); ?>">
 
+            <?php if ( dokan_is_plain_permalink() ): ?>
+                <input type="hidden" name="page_id" value="<?php echo esc_attr( $page_id ); ?>">
+                <input type="hidden" name="<?php echo esc_attr( $order_endpoint ); ?>">
+            <?php endif; ?>
+
             <button type="submit" name="dokan_order_filter" class="dokan-btn dokan-btn-sm"><span class="fa fa-filter"></span> <?php esc_attr_e( 'Filter', 'dokan-lite' ); ?></button>
-            <a onclick="window.location = window.location.href.split('?')[0];" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( dokan_get_navigation_url( 'orders' ) ); ?>" class="dokan-btn dokan-btn-sm"><span class="fa fa-undo"></span> <?php esc_attr_e( 'Reset', 'dokan-lite' ); ?></a>
 
             <?php wp_nonce_field( 'seller-order-filter-nonce', 'seller_order_filter_nonce', false ); ?>
         </div>
