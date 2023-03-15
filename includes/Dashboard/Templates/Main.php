@@ -18,10 +18,26 @@ class Main {
     public static function dashboard_side_navigation() {
         global $wp;
 
-        $request = $wp->request;
-        $active  = explode( '/', $request );
+        $active = [];
 
-        unset( $active[0] );
+        if ( dokan_is_plain_permalink() ) {
+            foreach ( $wp->query_vars as $query_var => $value ) {
+                if ( 'page_id' === $query_var ) {
+                    continue;
+                }
+
+                $active[] = $query_var;
+
+                if ( ! ( empty( $value ) || 'true' === $value ) ) {
+                    $active[] = $value;
+                }
+            }
+        } else {
+            $request = $wp->request;
+            $active  = explode( '/', $request );
+
+            unset( $active[0] );
+        }
 
         if ( $active ) {
             $active_menu = implode( '/', $active );
