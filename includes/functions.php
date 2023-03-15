@@ -151,6 +151,16 @@ function dokan_is_seller_dashboard() {
 }
 
 /**
+ * Check is Plain permalink is active.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_is_plain_permalink(): bool {
+    return empty( get_option( 'permalink_structure' ) );
+}
+/**
  * Redirect to login page if not already logged in
  *
  * @return void
@@ -1063,10 +1073,9 @@ function dokan_get_page_url( $page, $context = 'dokan', $subpage = '' ) {
  * @return false|string
  */
 function dokan_add_subpage_to_url( $url, $subpage ) {
-    $is_plain_permalink = empty( get_option( 'permalink_structure' ) );
-    $url_parts          = wp_parse_url( $url );
+    $url_parts = wp_parse_url( $url );
 
-    if ( $is_plain_permalink ) {
+    if ( dokan_is_plain_permalink() ) {
         $subpage = rtrim( $subpage, '/' );
         $subpage_part = explode( '/', $subpage );
         if ( 2 === count( $subpage_part ) ) {
@@ -1199,11 +1208,15 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
- * @param int $user_id
+ * @since unknown
+ * @since DOKAN_SINCE Support for subURL added.
+ *
+ * @param int    $user_id User ID.
+ * @param string $sub_url Sub URL.
  *
  * @return string
  */
-function dokan_get_store_url( $user_id ) {
+function dokan_get_store_url( $user_id, string $sub_url = '' ): string {
     if ( ! $user_id ) {
         return '';
     }
@@ -1212,10 +1225,18 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    $is_plain_permalink = empty( get_option( 'permalink_structure' ) );
-    $plain_store_url    = add_query_arg( $custom_store_url, $user_nicename, home_url() );
+    $query_arg         = [ $custom_store_url => $user_nicename ];
+    $processed_sub_url = trim( $sub_url, ' \t\n\r\0\x0B\\/' );
+    $formatted_sub_url = empty( $processed_sub_url ) ? '' : user_trailingslashit( $processed_sub_url, 'single' );
 
-    return $is_plain_permalink ? $plain_store_url : home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
+    if ( ! empty( $processed_sub_url ) ) {
+        $sub_url_parts = explode( '/', $processed_sub_url );
+        foreach ( $sub_url_parts as $url_part ) {
+            $query_arg[ $url_part ] = '';
+        }
+    }
+
+    return dokan_is_plain_permalink() ? add_query_arg( $query_arg, home_url() ) : home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' . $formatted_sub_url );
 }
 
 /**
