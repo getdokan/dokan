@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WP_REST_Server;
 
@@ -70,6 +71,12 @@ class ProductBlockController extends ProductController {
 
         $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 
+        // Get chosen product categories for dokan multi-step category, if not found then generate it and return it.
+        $chosen_cat = Helper::get_product_chosen_category( $product_id );
+        if ( empty( $chosen_cat ) ) {
+            $chosen_cat = Helper::generate_and_set_chosen_categories( $product_id );
+        }
+
         return apply_filters(
             'dokan_rest_get_product_block_data',
             [
@@ -92,6 +99,7 @@ class ProductBlockController extends ProductController {
                     'status'              => $product->get_status( $context ),
                     'catalog_visibility'  => $product->get_catalog_visibility( $context ),
                     'categories'          => $this->get_taxonomy_terms( $product ),
+                    'chosen_cat'          => $chosen_cat,
                 ],
                 'inventory' => [
                     'sku'               => $product->get_sku( $context ),

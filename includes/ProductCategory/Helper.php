@@ -247,4 +247,24 @@ class Helper {
     public static function get_product_chosen_category( $product_id ) {
         return get_post_meta( $product_id, 'chosen_product_cat', true );
     }
+
+    /**
+     * Generates and sets products categories.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id
+     *
+     * @return array $chosen_categories
+     */
+    public static function generate_and_set_chosen_categories( $product_id, $chosen_categories = [] ) {
+        if ( empty( $chosen_categories ) ) {
+            $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
+            $chosen_categories = Helper::generate_chosen_categories( $terms );
+        }
+
+        Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+
+        return $chosen_categories;
+    }
 }
