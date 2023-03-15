@@ -2440,6 +2440,9 @@ function dokan_product_listing_filter() {
         $template_args['post_status']         = ! empty( $_GET['post_status'] ) ? sanitize_text_field( wp_unslash( $_GET['post_status'] ) ) : 'all';
     }
 
+    $template_args['page_id'] = ! empty( $_GET['page_id'] ) ? absint( wp_unslash( $_GET['page_id'] ) ) : 0;
+    $template_args['product_query'] = apply_filters( 'dokan_dashboard_product_page_endpoint', 'products' );
+
     dokan_get_template_part( 'products/listing-filter', '', apply_filters( 'dokan_product_listing_filter_args', $template_args ) );
 }
 

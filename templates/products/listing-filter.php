@@ -10,6 +10,8 @@
  * @var string               $product_type
  * @var string               $filter_by_other
  * @var string               $post_status
+ * @var string               $product_query
+ * @var int                  $page_id
  *
  * @since 2.4
  */
@@ -70,6 +72,11 @@ do_action( 'dokan_product_listing_filter_before_form' );
             <input type="hidden" name="post_status" value="<?php echo esc_attr( $post_status ); ?>">
         <?php endif; ?>
 
+        <?php if ( dokan_is_plain_permalink() ) : ?>
+            <input type="hidden" name="page_id" value="<?php echo esc_attr( $page_id ); ?>">
+            <input type="hidden" name="<?php echo esc_attr( $product_query ); ?>" value="">
+        <?php endif; ?>
+
         <?php wp_nonce_field( 'product_listing_filter', '_product_listing_filter_nonce', false ); ?>
         <button type="submit" class="dokan-btn"><?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
     </form>
@@ -98,6 +105,11 @@ do_action( 'dokan_product_listing_filter_before_form' );
 
         <?php if ( ! empty( $post_status ) ) : ?>
             <input type="hidden" name="post_status" value="<?php echo esc_attr( $post_status ); ?>">
+        <?php endif; ?>
+
+        <?php if ( dokan_is_plain_permalink() ) : ?>
+            <input type="hidden" name="page_id" value="<?php echo esc_attr( $page_id ); ?>">
+            <input type="hidden" name="<?php echo esc_attr( $product_query ); ?>" value="">
         <?php endif; ?>
     </form>
 
