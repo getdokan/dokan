@@ -847,8 +847,9 @@ class Assets {
             }
 
             if (
-                isset( $wp->query_vars['page'] ) ||
-                isset( $wp->query_vars['reports'] )
+                isset( $wp->query_vars['page'] )
+                || ( isset( $wp->query_vars['page_id'] ) && 1 === count( $wp->query_vars ) )
+                || isset( $wp->query_vars['reports'] )
             ) {
                 wp_enqueue_script( 'dokan-chart' );
                 wp_enqueue_script( 'dokan-flot' );
