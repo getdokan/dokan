@@ -2119,7 +2119,11 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    $vendor      = $vendor->get( $user->ID );
+    $vendor = $vendor->get( $user->ID );
+    if ( ! $vendor->is_vendor() ) {
+        return $url;
+    }
+
     $gravatar_id = $vendor->get_avatar_id();
 
     if ( ! $gravatar_id ) {
