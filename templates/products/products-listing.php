@@ -225,7 +225,7 @@
 
                         $pagenum  = isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1;
                         $base_url = dokan_get_navigation_url( 'products' );
-
+                        $url_glue = dokan_is_plain_permalink() ? '&' : '?';
                         if ( $product_query->max_num_pages > 1 ) {
                             echo '<div class="pagination-wrap">';
                             $page_links = paginate_links(
@@ -233,7 +233,7 @@
                                     'current'   => $pagenum,
                                     'total'     => $product_query->max_num_pages,
                                     'base'      => $base_url . '%_%',
-                                    'format'    => '?pagenum=%#%',
+                                    'format'    => $url_glue . 'pagenum=%#%',
                                     'add_args'  => [
                                         '_product_listing_filter_nonce' => wp_create_nonce( 'product_listing_filter' ),
                                     ],
