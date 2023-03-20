@@ -357,6 +357,7 @@ final class WeDevs_Dokan {
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
+            new \WeDevs\Dokan\Order\Admin\Hooks();
             new \WeDevs\Dokan\Admin\Menu();
             new \WeDevs\Dokan\Admin\AdminBar();
             new \WeDevs\Dokan\Admin\Pointers();
