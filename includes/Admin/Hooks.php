@@ -130,7 +130,7 @@ class Hooks {
                 if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
                     $output = sprintf( '<a href="#" class="show-sub-orders" data-class="parent-%1$d" data-show="%2$s" data-hide="%3$s">%2$s</a>', esc_attr( $order->get_id() ), esc_attr__( 'Show Sub-Orders', 'dokan-lite' ), esc_attr__( 'Hide Sub-Orders', 'dokan-lite' ) );
                 } elseif ( OrderUtil::is_hpos_enabled() && 0 !== $order->get_parent_id() ) {
-                    $output = sprintf( '<span style="display:block;" class="parent-%s">&nbsp;</span>', $order->get_parent_id() );
+                    $output = sprintf( '<span style="display:block;" class="sub-order parent-%s">&nbsp;</span>', $order->get_parent_id() );
                 }
                 break;
 
@@ -198,28 +198,11 @@ class Hooks {
         ?>
         <script type="text/javascript">
         jQuery(function($) {
-            $('tr.sub-order').hide();
-
-            $('a.show-sub-orders').on('click', function(e) {
-                e.preventDefault();
-
-                let $self = $(this),
-                    el = $('tr.' + $self.data('class') );
-
-                if ( ! el.length ) {
-                    return;
-                }
-
-                if ( el.is(':hidden') ) {
-                    el.show();
-                    $self.text( $self.data('hide') );
-                } else {
-                    el.hide();
-                    $self.text( $self.data('show') );
-                }
-            });
-
+            <?php if ( OrderUtil::is_hpos_enabled() ) : ?>
             // hpos implementation
+            fix_row_css_styles();
+            toggle_suborders();
+
             $( 'a.show-sub-orders' ).on('click', function(e) {
                 e.preventDefault();
                 const self = $(this);
@@ -242,13 +225,77 @@ class Hooks {
 
             $('button.toggle-sub-orders').on('click', function(e) {
                 e.preventDefault();
-
-                $('tr.sub-order').toggle();
+                if ( this.classList.contains( 'hide' ) ) {
+                    toggle_suborders();
+                    this.classList.remove( 'hide' );
+                    this.classList.add( 'show' );
+                } else {
+                    toggle_suborders( false );
+                    this.classList.remove( 'show' );
+                    this.classList.add( 'hide' );
+                }
             });
+
+            function toggle_suborders( hide = true ) {
+                const self = $(this);
+                const elms = $('table.orders td.suborder>span.sub-order');
+
+                if ( ! elms.length ) {
+                    return;
+                }
+
+                elms.each( function(index) {
+                    if ( hide ) {
+                        this.parentElement.parentElement.style.display = 'none';
+                    } else {
+                        this.parentElement.parentElement.style.display = '';
+                    }
+                });
+            }
+
+            function fix_row_css_styles() {
+                const self = $(this);
+                const elms = $('table.orders td.suborder>span.sub-order');
+
+                if ( ! elms.length ) {
+                    return;
+                }
+
+                elms.each( function(index) {
+                    this.parentElement.parentElement.bgColor = '#ECFFF2';
+                });
+            }
+            <?php else: ?>
+                $('tr.sub-order').hide();
+
+                $('a.show-sub-orders').on('click', function(e) {
+                    e.preventDefault();
+
+                    let $self = $(this),
+                        el = $('tr.' + $self.data('class') );
+
+                    if ( ! el.length ) {
+                        return;
+                    }
+
+                    if ( el.is(':hidden') ) {
+                        el.show();
+                        $self.text( $self.data('hide') );
+                    } else {
+                        el.hide();
+                        $self.text( $self.data('show') );
+                    }
+                });
+
+                $('button.toggle-sub-orders').on('click', function(e) {
+                    e.preventDefault();
+                    $('tr.sub-order').toggle();
+                 });
+            <?php endif; ?>
         });
         </script>
 
-        <style type="text/css">
+        <style>
             tr.sub-order {
                 background: #ECFFF2;
             }
@@ -356,7 +403,7 @@ class Hooks {
      */
     public function admin_shop_order_toggle_sub_orders( $typenow, $which ) {
         if ( $typenow === 'shop_order' ) {
-            echo '<button class="toggle-sub-orders button">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
+            echo '<button class="toggle-sub-orders button show">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
         }
     }
 
