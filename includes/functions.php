@@ -1226,13 +1226,13 @@ function dokan_get_store_url( $user_id, string $sub_url = '' ): string {
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
     $query_arg         = [ $custom_store_url => $user_nicename ];
-    $processed_sub_url = trim( $sub_url, ' \t\n\r\0\x0B\\/' );
+    $processed_sub_url = trim( $sub_url, " \t\n\r\0\x0B\\/" );
     $formatted_sub_url = empty( $processed_sub_url ) ? '' : user_trailingslashit( $processed_sub_url, 'single' );
 
     if ( ! empty( $processed_sub_url ) ) {
         $sub_url_parts = explode( '/', $processed_sub_url );
         foreach ( $sub_url_parts as $url_part ) {
-            $query_arg[ $url_part ] = '';
+            $query_arg[ $url_part ] = 'true';
         }
     }
 
