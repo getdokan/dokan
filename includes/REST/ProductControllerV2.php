@@ -73,7 +73,7 @@ class ProductControllerV2 extends ProductController {
 
             $chosen_cat = ! empty( $request['chosen_cat'] ) && is_array( $request['chosen_cat'] ) ? array_map( 'absint', $request['chosen_cat'] ) : [];
 
-            $product['chosen_cat'] =  $chosen_cat;
+            $product['chosen_cat'] = $chosen_cat;
             $response->set_data( $product );
 
             Helper::generate_and_set_chosen_categories( $product['id'], $chosen_cat );
@@ -101,7 +101,7 @@ class ProductControllerV2 extends ProductController {
 
             $chosen_cat = ! empty( $request['chosen_cat'] ) && is_array( $request['chosen_cat'] ) ? array_map( 'absint', $request['chosen_cat'] ) : [];
 
-            $product['chosen_cat'] =  $chosen_cat;
+            $product['chosen_cat'] = $chosen_cat;
             $response->set_data( $product );
 
             Helper::generate_and_set_chosen_categories( $product['id'], $chosen_cat );
@@ -189,7 +189,7 @@ class ProductControllerV2 extends ProductController {
     public function get_product_filter_by_data() {
         global $wp_locale;
 
-        $months     = dokan_get_products_listing_months_for_vendor( dokan_get_current_user_id() );
+        $months = dokan_get_products_listing_months_for_vendor( dokan_get_current_user_id() );
 
         foreach ( $months as $key => $arc_row ) {
             $month = zeroise( $arc_row->month, 2 );

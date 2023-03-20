@@ -156,7 +156,6 @@ class Helper {
          */
         $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
 
-
         $all_ancestors = [];
 
         // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
@@ -227,7 +226,7 @@ class Helper {
             'categories' => $all_categories,
             'is_single'  => self::product_category_selection_is_single(),
             'i18n'       => [
-                'select_a_category' => __( 'Select a category', 'dokan-lite' ),
+                'select_a_category'  => __( 'Select a category', 'dokan-lite' ),
                 'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
             ],
         ];
@@ -260,10 +259,10 @@ class Helper {
     public static function generate_and_set_chosen_categories( $product_id, $chosen_categories = [] ) {
         if ( empty( $chosen_categories ) ) {
             $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
-            $chosen_categories = Helper::generate_chosen_categories( $terms );
+            $chosen_categories = self::generate_chosen_categories( $terms );
         }
 
-        Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+        self::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
 
         return $chosen_categories;
     }
