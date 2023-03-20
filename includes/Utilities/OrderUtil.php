@@ -86,4 +86,17 @@ class OrderUtil {
             : esc_url_raw( admin_url( 'post.php?action=edit' ) ) . '&post=' . intval( $order_id );
     }
 
+    /**
+     * Get the custom orders table name for wc.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_order_table_name() {
+        global $wpdb;
+        return self::is_hpos_enabled()
+            ? \Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore::get_orders_table_name()
+            : $wpdb->posts;
+    }
 }

@@ -7,6 +7,7 @@ use Exception;
 use WC_Order;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Error;
 
 /**
@@ -56,16 +57,16 @@ class Manager {
         $orderby = '';
         $limits  = '';
 
-        if ( dokan_is_hpos_enabled() ) {
+        $order_table_name = OrderUtil::get_order_table_name();
+        if ( OrderUtil::is_hpos_enabled() ) {
             // HPOS usage is enabled.
-            $order_table_name = $this->get_order_table_name();
             $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
             $join             .= " LEFT JOIN $wpdb->posts post ON do.order_id = post.ID";
             $where            = ' AND p.post_status != %s';
             $query_args       = [ 1, 1, 'trash' ];
         } else {
             // Traditional CPT-based orders are in use.
-            $join       = " LEFT JOIN $wpdb->posts p ON do.order_id = p.ID";
+            $join       = " LEFT JOIN {$order_table_name} p ON do.order_id = p.ID";
             $where      = ' AND p.post_status != %s';
             $query_args = [ 1, 1, 'trash' ];
         }
@@ -87,7 +88,7 @@ class Manager {
         // filter customer id
         if ( ! $this->is_empty( $args['customer_id'] ) ) {
             $customer_ids = implode( ',', array_map( 'absint', (array) $args['customer_id'] ) );
-            if ( dokan_is_hpos_enabled() ) {
+            if ( OrderUtil::is_hpos_enabled() ) {
                 $where .= "  AND p.customer_id IN ($customer_ids)";
             } else {
                 $join  .= " LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id";
@@ -122,19 +123,19 @@ class Manager {
         // date filter
         $date_from  = false;
         $date_to    = false;
-        $date_field = dokan_is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date';
+        $date_field = OrderUtil::is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date';
         // check if start date is set
         if ( ! $this->is_empty( $args['date']['from'] ) ) {
             // convert date string to object
             $date_from = dokan_current_datetime()->modify( $args['date']['from'] );
-            $date_from = dokan_is_hpos_enabled() && $date_from ? $date_from->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_from;
+            $date_from = OrderUtil::is_hpos_enabled() && $date_from ? $date_from->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_from;
         }
 
         // check if end date is set
         if ( ! $this->is_empty( $args['date']['to'] ) ) {
             // convert date string to object
             $date_to = dokan_current_datetime()->modify( $args['date']['to'] );
-            $date_to = dokan_is_hpos_enabled() && $date_to ? $date_to->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_to;
+            $date_to = OrderUtil::is_hpos_enabled() && $date_to ? $date_to->setTimezone( new DateTimeZone( 'UTC' ) ) : $date_to;
         }
 
         if ( $date_from && $date_to ) {
@@ -172,7 +173,7 @@ class Manager {
         } elseif ( ! $this->is_empty( $args['order_date'] ) ) {
             // backward compatibility for old filter
             $order_date = dokan_current_datetime()->modify( $args['order_date'] );
-            $order_date = dokan_is_hpos_enabled() && $order_date ? $order_date->setTimezone( new DateTimeZone( 'UTC' ) ) : $order_date;
+            $order_date = OrderUtil::is_hpos_enabled() && $order_date ? $order_date->setTimezone( new DateTimeZone( 'UTC' ) ) : $order_date;
             if ( $order_date ) {
                 $where        .= " AND DATE( $date_field ) = %s";
                 $query_args[] = $order_date->format( 'Y-m-d' );
@@ -182,7 +183,7 @@ class Manager {
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
             $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-            $where        .= dokan_is_hpos_enabled() ? ' AND p.id LIKE %s' : ' AND p.ID LIKE %s'; // mysql is case-insensitive but others might create problems
+            $where        .= OrderUtil::is_hpos_enabled() ? ' AND p.id LIKE %s' : ' AND p.ID LIKE %s'; // mysql is case-insensitive but others might create problems
             $query_args[] = $search;
         }
 
@@ -193,7 +194,7 @@ class Manager {
 
         // fix order by parameter
         $supported_order_by = [
-            'post_date'    => dokan_is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date',
+            'post_date'    => OrderUtil::is_hpos_enabled() ? 'p.date_created_gmt' : 'p.post_date',
             'id'           => 'do.id',
             'order_id'     => 'do.order_id',
             'seller_id'    => 'do.seller_id',
@@ -865,16 +866,5 @@ class Manager {
         }
 
         return false;
-    }
-
-    /**
-     * Get the custom orders table name for wc.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    private function get_order_table_name() {
-        return \Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore::get_orders_table_name();
     }
 }
