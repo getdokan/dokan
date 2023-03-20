@@ -2727,9 +2727,9 @@ function dokan_get_toc_url( $store_id ) {
         return '';
     }
 
-    $userstore = dokan_get_store_url( $store_id );
+    $userstore = dokan_get_store_url( $store_id, 'toc' );
 
-    return apply_filters( 'dokan_get_toc_url', $userstore . 'toc' );
+    return apply_filters( 'dokan_get_toc_url', $userstore );
 }
 
 /**
