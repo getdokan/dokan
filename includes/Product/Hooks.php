@@ -173,6 +173,9 @@ class Hooks {
         $orderby_options = dokan_store_product_catalog_orderby();
         $store_user      = dokan()->vendor->get( get_query_var( 'author' ) );
         $store_id        = $store_user->get_id();
+        $userdata         = get_userdata( $store_id );
+        $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
+        $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
         ?>
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
@@ -189,6 +192,9 @@ class Hooks {
                     </select>
                 <?php endif; ?>
                 <input type="hidden" name="paged" value="1"/>
+                <?php if ( dokan_is_plain_permalink() ) : ?>
+                    <input type="hidden" name="<?php echo esc_attr( $custom_store_url ); ?>" value="<?php echo esc_attr( $user_nicename ); ?>"/>
+                <?php endif; ?>
             </form>
         </div>
         <?php
