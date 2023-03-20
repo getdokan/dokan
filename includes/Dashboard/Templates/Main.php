@@ -32,6 +32,7 @@ class Main {
                     $active[] = $value;
                 }
             }
+            $request = '';
         } else {
             $request = $wp->request;
             $active  = explode( '/', $request );
