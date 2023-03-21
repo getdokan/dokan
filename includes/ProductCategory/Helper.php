@@ -29,8 +29,8 @@ class Helper {
      *
      * @return boolean
      */
-    public static function turned_on_middle_category_selection() {
-        return 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'on' );
+    public static function is_any_category_selection_enabled() {
+        return 'on' === dokan_get_option( 'dokan_any_category_selection', 'dokan_selling', 'off' );
     }
 
     /**
@@ -107,7 +107,7 @@ class Helper {
         $all_parents = [];
 
         // If any category selection option is turned we don't need to generate chosen categories, all terms are also chosen category.
-        if ( self::turned_on_middle_category_selection() ) {
+        if ( self::is_any_category_selection_enabled() ) {
             return $terms;
         }
 
@@ -168,7 +168,7 @@ class Helper {
         /**
          * If enabled any one middle category in dokan product multi-step category selection.
          */
-        $middle_category_selection = 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'off' );
+        $middle_category_selection = 'on' === self::is_any_category_selection_enabled();
 
         $all_ancestors = [];
 
@@ -239,7 +239,7 @@ class Helper {
         $data = [
             'categories' => $all_categories,
             'is_single'  => self::product_category_selection_is_single(),
-            'middle_category_selection'  => 'on' === dokan_get_option( 'dokan_middle_category_selection', 'dokan_selling', 'off' ),
+            'middle_category_selection'  => 'on' === self::is_any_category_selection_enabled(),
             'i18n'       => [
                 'select_a_category' => __( 'Select a category', 'dokan-lite' ),
                 'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
