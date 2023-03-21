@@ -206,7 +206,7 @@
             /**
              * If enabled any one middle category in dokan product multi-step category selection.
              */
-            const middleCategorySelection = dokan_product_category_data.middle_category_selection;
+            const middleCategorySelection = dokan_product_category_data.any_category_selection;
 
             // If selected category has no child OR middle category selection is true then enable the category select done button else disable.
             if ( ! haschild || true === Boolean( middleCategorySelection ) ) {

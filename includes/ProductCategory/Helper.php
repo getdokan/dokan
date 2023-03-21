@@ -168,12 +168,12 @@ class Helper {
         /**
          * If enabled any one middle category in dokan product multi-step category selection.
          */
-        $middle_category_selection = 'on' === self::is_any_category_selection_enabled();
+        $any_category_selection = self::is_any_category_selection_enabled();
 
         $all_ancestors = [];
 
         // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
-        if ( $middle_category_selection ) {
+        if ( $any_category_selection ) {
             $all_ancestors = $chosen_categories;
         } else {
             // we need to assign all ancestor of chosen category to add to the given product
@@ -239,7 +239,7 @@ class Helper {
         $data = [
             'categories' => $all_categories,
             'is_single'  => self::product_category_selection_is_single(),
-            'middle_category_selection'  => 'on' === self::is_any_category_selection_enabled(),
+            'any_category_selection'  => self::is_any_category_selection_enabled(),
             'i18n'       => [
                 'select_a_category' => __( 'Select a category', 'dokan-lite' ),
                 'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
