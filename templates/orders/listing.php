@@ -44,6 +44,9 @@ if ( $user_orders ) {
             <tbody>
             <?php
             foreach ( $user_orders as $order ) { // phpcs:ignore
+                /**
+                 * @var WC_Order $order
+                 */
                 ?>
                 <tr>
                     <th class="dokan-order-select check-column">
@@ -81,24 +84,8 @@ if ( $user_orders ) {
                     </td>
                     <td class="dokan-order-customer" data-title="<?php esc_attr_e( 'Customer', 'dokan-lite' ); ?>">
                         <?php
-                        $user_info = '';
-
-                        if ( $order->get_user_id() ) {
-                            $user_info = get_userdata( $order->get_user_id() );
-                        }
-
-                        if ( ! empty( $user_info ) ) {
-                            $user = '';
-
-                            if ( $user_info->first_name || $user_info->last_name ) {
-                                $user .= esc_html( $user_info->first_name . ' ' . $user_info->last_name );
-                            } else {
-                                $user .= esc_html( $user_info->display_name );
-                            }
-                        } else {
-                            $user = empty( trim( $order->get_formatted_billing_full_name() ) ) ? __( 'Guest', 'dokan-lite' ) : $order->get_formatted_billing_full_name();
-                        }
-
+                        $customer_full_name = trim( $order->get_formatted_billing_full_name() );
+                        $user = empty( $customer_full_name ) ? __( 'Guest', 'dokan-lite' ) : $customer_full_name;
                         echo esc_html( $user );
                         ?>
                     </td>

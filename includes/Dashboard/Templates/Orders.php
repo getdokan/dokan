@@ -64,6 +64,18 @@ class Orders {
 
         // get order id
         $order_id = intval( wp_unslash( $_GET['order_id'] ) );
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => __( 'No order data found with given order id.', 'dokan-lite' ),
+                ]
+            );
+            return;
+        }
 
         if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'dokan_view_order' ) ) {
             dokan_get_template_part( 'orders/details', '', [ 'order_id' => $order_id ] );
