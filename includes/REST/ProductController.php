@@ -699,20 +699,20 @@ class ProductController extends DokanRESTController {
             $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 $args, [
                     'key'   => '_stock_status',
-                    'value' => true === boolval( $request['in_stock'] ) ? 'instock' : 'outofstock',
+                    'value' => wc_string_to_bool( $request['in_stock'] ) ? 'instock' : 'outofstock',
                 ]
             );
         }
 
         // Filter by on sale products.
         if ( rest_is_boolean( $request['on_sale'] ) ) {
-            $on_sale_key = boolval( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
+            $on_sale_key = wc_string_to_bool( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
             $on_sale_ids = wc_get_product_ids_on_sale();
 
             // Use 0 when there's no on sale products to avoid return all products.
             $on_sale_ids = empty( $on_sale_ids ) ? [ 0 ] : $on_sale_ids;
 
-            $args[ $on_sale_key ] += $on_sale_ids;
+            $args[ $on_sale_key ] = ! empty( $args[ $on_sale_key ] ) && is_array( $args[ $on_sale_key ] ) ? array_merge( $args[ $on_sale_key ], $on_sale_ids ) : $on_sale_ids;
         }
 
         // Force the post_type argument, since it's not a user input variable.
