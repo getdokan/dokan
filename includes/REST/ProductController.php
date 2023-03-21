@@ -654,7 +654,7 @@ class ProductController extends DokanRESTController {
         }
 
         // Filter featured.
-        if ( is_bool( $request['featured'] ) ) {
+        if ( rest_is_boolean( $request['featured'] ) ) {
             $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
@@ -695,24 +695,24 @@ class ProductController extends DokanRESTController {
         }
 
         // Filter product in stock or out of stock.
-        if ( is_bool( $request['in_stock'] ) ) {
+        if ( rest_is_boolean( $request['in_stock'] ) ) {
             $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 $args, [
                     'key'   => '_stock_status',
-                    'value' => true === $request['in_stock'] ? 'instock' : 'outofstock',
+                    'value' => wc_string_to_bool( $request['in_stock'] ) ? 'instock' : 'outofstock',
                 ]
             );
         }
 
         // Filter by on sale products.
-        if ( is_bool( $request['on_sale'] ) ) {
-            $on_sale_key = $request['on_sale'] ? 'post__in' : 'post__not_in';
+        if ( rest_is_boolean( $request['on_sale'] ) ) {
+            $on_sale_key = wc_string_to_bool( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
             $on_sale_ids = wc_get_product_ids_on_sale();
 
             // Use 0 when there's no on sale products to avoid return all products.
             $on_sale_ids = empty( $on_sale_ids ) ? [ 0 ] : $on_sale_ids;
 
-            $args[ $on_sale_key ] += $on_sale_ids;
+            $args[ $on_sale_key ] = ! empty( $args[ $on_sale_key ] ) && is_array( $args[ $on_sale_key ] ) ? array_merge( $args[ $on_sale_key ], $on_sale_ids ) : $on_sale_ids;
         }
 
         // Force the post_type argument, since it's not a user input variable.
@@ -1015,19 +1015,13 @@ class ProductController extends DokanRESTController {
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
-
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
-                    $product->set_low_stock_amount( '' );
-                }
+                $product->set_low_stock_amount( '' );
             } elseif ( $product->is_type( 'external' ) ) {
                 $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
-
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
-                    $product->set_low_stock_amount( '' );
-                }
+                $product->set_low_stock_amount( '' );
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
                 if ( ! $product->is_type( 'variable' ) ) {
@@ -1043,7 +1037,7 @@ class ProductController extends DokanRESTController {
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
                 }
 
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) && isset( $request['low_stock_amount'] ) ) {
+                if ( isset( $request['low_stock_amount'] ) ) {
                     $product->set_low_stock_amount( wc_stock_amount( $request['low_stock_amount'] ) );
                 }
             } else {
