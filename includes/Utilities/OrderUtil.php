@@ -93,7 +93,7 @@ class OrderUtil {
      *
      * @return string
      */
-    public function get_order_table_name() {
+    public static function get_order_table_name() {
         global $wpdb;
         return self::is_hpos_enabled()
             ? \Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore::get_orders_table_name()

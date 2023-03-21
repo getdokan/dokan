@@ -60,9 +60,10 @@ class Manager {
         $order_table_name = OrderUtil::get_order_table_name();
         if ( OrderUtil::is_hpos_enabled() ) {
             // HPOS usage is enabled.
+            // HPOS still supports post table
             $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
             $join             .= " LEFT JOIN $wpdb->posts post ON do.order_id = post.ID";
-            $where            = ' AND p.post_status != %s';
+            $where            = ' AND post.post_status != %s';
             $query_args       = [ 1, 1, 'trash' ];
         } else {
             // Traditional CPT-based orders are in use.
@@ -761,8 +762,9 @@ class Manager {
             if (
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
-                ( array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                  apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
+                (
+					array_intersect( $product_ids, $coupon->get_product_ids() ) ||
+                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
                 $new_item = new \WC_Order_Item_Coupon();

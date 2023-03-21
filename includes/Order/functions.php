@@ -185,7 +185,7 @@ function dokan_count_orders( $seller_id ) {
  *
  * @param int $order_id
  *
- * @depecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE
  *
  * @return void
  */
@@ -203,7 +203,7 @@ function dokan_delete_sync_order( $order_id ) {
  * @param int $order_id
  * @param int $seller_id
  *
- * @depecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE
  *
  * @return void
  */
@@ -493,7 +493,7 @@ function dokan_is_sub_order( $order_id ) {
  *
  * @since 2.4.3
  *
- * @depecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE
  *
  * @return  int Order_count
  */
@@ -587,12 +587,12 @@ function dokan_get_suborder_ids_by( $parent_order_id ) {
  * @param WC_Order $order
  * @param string $context accepted values are seller and admin
  *
- * @depecated 2.9.21
+ * @deprecated 2.9.21
  *
  * @return float
  */
 function dokan_get_admin_commission_by( $order, $context ) {
-    wc_deprecated_function( 'dokan_get_admin_commission_by', '2.9.21', 'dokan()->commission->get_earning_by_order()' );
+    wc_deprecated_function( 'dokan_get_admin_commission_by', '2.9.21', 'dokan()->commission->get_earning_by_order( $order, $context )' );
     $context = 'seller' === $context ? $context : 'admin';
 
     return dokan()->commission->get_earning_by_order( $order, $context );
@@ -606,7 +606,7 @@ function dokan_get_admin_commission_by( $order, $context ) {
  * @param int $customer_id
  * @param int $seller_id
  *
- * @depecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE
  *
  * @return array|null on failure
  */
@@ -866,6 +866,56 @@ function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = n
     $orders = wc_get_orders( $args );
 
     return ! empty( $orders );
+}
+
+/**
+ * Get total sales amount of a seller
+ *
+ * @since DOKAN_SINCE moved from includes/functions.php
+ *
+ * @param int   $seller_id
+ *
+ * @return float
+ */
+function dokan_author_total_sales( $seller_id ) {
+    global $wpdb;
+
+    $cache_group = "seller_order_data_{$seller_id}";
+    $cache_key   = "earning_{$seller_id}";
+    $earnings    = Cache::get( $cache_key, $cache_group );
+
+    if ( false === $earnings ) {
+        $earnings = (float) $wpdb->get_var(
+            $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
+        );
+
+        Cache::set( $cache_key, $earnings, $cache_group );
+    }
+
+    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
+}
+
+if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
+
+    /**
+     * Get Seller's net Earnings from a order
+     *
+     * @since 2.5.2
+     * @since DOKAN_SINCE moved from includes/functions.php
+     *
+     * @param WC_ORDER $order
+     * @param int      $seller_id
+     *
+     * @deprecated DOKAN_SINCE
+     *
+     * @return int $earned
+     */
+    function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
+        wc_deprecated_function( 'dokan_get_seller_earnings_by_order', '3.7.111', 'dokan()->commission->get_earning_by_order( $order, \'seller\' )' );
+        $earned = dokan()->commission->get_earning_by_order( $order, 'seller' );
+
+        return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
+    }
 }
 
 /**

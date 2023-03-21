@@ -49,8 +49,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class WeDevs_Dokan The class that holds the entire WeDevs_Dokan plugin
  *
- * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
  * @property WeDevs\Dokan\Commission    $commission Instance of Commission class
+ * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
+ * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  */
 final class WeDevs_Dokan {
 
@@ -107,6 +108,7 @@ final class WeDevs_Dokan {
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
         register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
+        add_action( 'before_woocommerce_init', [ $this, 'add_hpos_support' ] );
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
 
@@ -272,6 +274,19 @@ final class WeDevs_Dokan {
     private function define( $name, $value ) {
         if ( ! defined( $name ) ) {
             define( $name, $value );
+        }
+    }
+
+    /**
+     * Add High Performance Order Storage Support
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function add_hpos_support() {
+        if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
         }
     }
 
