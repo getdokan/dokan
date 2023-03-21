@@ -654,7 +654,7 @@ class ProductController extends DokanRESTController {
         }
 
         // Filter featured.
-        if ( rest_is_boolean( $request['featured'] ) ) {
+        if ( rest_is_boolean( $request['featured'] ) && wc_string_to_bool( $request['featured'] ) ) {
             $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
