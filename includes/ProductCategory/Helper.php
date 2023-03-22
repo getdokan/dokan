@@ -23,6 +23,17 @@ class Helper {
     }
 
     /**
+     * Returns 'true' if select any category option is turned on.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return boolean
+     */
+    public static function is_any_category_selection_enabled() {
+        return 'on' === dokan_get_option( 'dokan_any_category_selection', 'dokan_selling', 'off' );
+    }
+
+    /**
      * Returns products category.
      *
      * @since 3.6.2
@@ -95,6 +106,11 @@ class Helper {
     public static function generate_chosen_categories( $terms ) {
         $all_parents = [];
 
+        // If any category selection option is turned we don't need to generate chosen categories, all terms are also chosen category.
+        if ( self::is_any_category_selection_enabled() ) {
+            return $terms;
+        }
+
         foreach ( $terms as $term_id ) {
             $all_ancestors = get_ancestors( $term_id, 'product_cat' );
             $all_children  = get_term_children( $term_id, 'product_cat' );
@@ -150,17 +166,14 @@ class Helper {
         }
 
         /**
-         * By passing true in this filter hook anyone can enable capability to select any middle category in dokan product
-         * multi-step category selection. In other words if middle category selection is enabled then we will not assign all
-         * the parent categories of the selected category.
+         * If enabled any one middle category in dokan product multi-step category selection.
          */
-        $middle_category_selection = apply_filters( 'dokan_middle_category_selection', false );
-
+        $any_category_selection = self::is_any_category_selection_enabled();
 
         $all_ancestors = [];
 
         // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
-        if ( $middle_category_selection ) {
+        if ( $any_category_selection ) {
             $all_ancestors = $chosen_categories;
         } else {
             // we need to assign all ancestor of chosen category to add to the given product
@@ -226,6 +239,7 @@ class Helper {
         $data = [
             'categories' => $all_categories,
             'is_single'  => self::product_category_selection_is_single(),
+            'any_category_selection'  => self::is_any_category_selection_enabled(),
             'i18n'       => [
                 'select_a_category' => __( 'Select a category', 'dokan-lite' ),
                 'duplicate_category' => __( 'This category has already been selected', 'dokan-lite' ),
