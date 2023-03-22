@@ -31,7 +31,7 @@ class Hooks {
             // hpos equivalent hooks for admin_footer-edit.php
             add_action( 'admin_footer-woocommerce_page_wc-orders', [ $this, 'admin_shop_order_scripts' ] );
             // hpos equivalent hooks for restrict_manage_posts
-            add_action( 'woocommerce_order_list_table_restrict_manage_orders', [ $this, 'admin_shop_order_toggle_sub_orders' ], 10, 2 );
+            add_action( 'woocommerce_order_list_table_restrict_manage_orders', [ $this, 'admin_shop_order_toggle_sub_orders' ], 10, 1 );
             // hpos equivalent hooks for manage_edit-shop_order_columns
             add_filter( 'manage_woocommerce_page_wc-orders_columns', [ $this, 'admin_shop_order_edit_columns' ], 11 );
         } else {

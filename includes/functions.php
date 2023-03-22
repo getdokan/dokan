@@ -2145,8 +2145,8 @@ function dokan_get_processing_time_value( $index ) {
  *
  * @since 3.2.11 rewritten entire function
  *
+ * @param int $order_id
  * @param int|null $vendor_id will remove this parameter in future
- * @param int      $order
  *
  * @return array will return empty array in case order has suborders
  */
@@ -2154,7 +2154,7 @@ function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
     $order      = wc_get_order( $order_id );
     $order_info = [];
 
-    if ( ! $order instanceof WC_Abstract_Order || $order->get_meta( 'has_sub_order' ) ) {
+    if ( ! $order || $order->get_meta( 'has_sub_order' ) ) {
         return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
     }
 
@@ -2733,6 +2733,8 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
  *
  * @param int $product_id
  * @param int $seller_id
+ *
+ * @deprecated 2.9.11
  *
  * @return float $earning | zero on failure or no price
  */
@@ -4068,13 +4070,15 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
      * @since 2.6.8
      * @since 3.7.0 This method was moved from wc-functions.php
      *
+     * @param string  $time
      * @param boolean $date_only
      *
-     * @param string  $time
+     * @deprecated DOKAN_SINCE
      *
      * @return string
      */
     function dokan_date_time_format( $time, $date_only = false ) {
+        wc_deprecated_function( 'dokan_date_time_format', '3.7.111', 'dokan_format_datetime()' );
         $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
 
         if ( $date_only ) {

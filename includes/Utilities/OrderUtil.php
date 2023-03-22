@@ -56,10 +56,9 @@ class OrderUtil {
      * @return string
      */
     public static function get_order_admin_screen(): string {
-        if ( self::is_hpos_enabled() ) {
-            return \Automattic\WooCommerce\Utilities\OrderUtil::get_order_admin_screen();
-        }
-        return 'shop_order';
+        return self::is_hpos_enabled() && function_exists( 'wc_get_page_screen_id' )
+            ? wc_get_page_screen_id( 'shop-order' )
+            : 'shop_order';
     }
 
     /**
@@ -76,14 +75,17 @@ class OrderUtil {
     /**
      * Get admin order edit page url
      *
-     * @param int $order_id
+     * @param int|null $order_id
      *
      * @return string
      */
-    public static function get_admin_order_edit_url( int $order_id ): string {
-        return self::is_hpos_enabled()
-            ? esc_url_raw( admin_url( 'admin.php?page=wc-orders&action=edit' ) ) . '&id=' . intval( $order_id )
-            : esc_url_raw( admin_url( 'post.php?action=edit' ) ) . '&post=' . intval( $order_id );
+    public static function get_admin_order_edit_url( $order_id = null ): string {
+        $base_url = self::is_hpos_enabled()
+            ? esc_url_raw( admin_url( 'admin.php?page=wc-orders&action=edit' ) )
+            : esc_url_raw( admin_url( 'post.php?action=edit' ) );
+        $concate_param = self::is_hpos_enabled() ? '&id=' . intval( $order_id ) : '&post=' . intval( $order_id );
+
+        return ! empty( $order_id ) ? $base_url . $concate_param : $base_url;
     }
 
     /**

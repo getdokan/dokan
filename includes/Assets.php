@@ -5,6 +5,7 @@ namespace WeDevs\Dokan;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
 
@@ -1146,6 +1147,8 @@ class Assets {
                     'buynowpro'    => dokan_pro_buynow_url(),
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                     'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                    'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                    'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),
