@@ -51,6 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @property WeDevs\Dokan\Commission    $commission Instance of Commission class
  * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
+ * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  */
 final class WeDevs_Dokan {
@@ -362,7 +363,6 @@ final class WeDevs_Dokan {
      */
     public function init_classes() {
         new \WeDevs\Dokan\Withdraw\Hooks();
-        new \WeDevs\Dokan\Order\Hooks();
         new \WeDevs\Dokan\Product\Hooks();
         new \WeDevs\Dokan\ProductCategory\Hooks();
         new \WeDevs\Dokan\Vendor\Hooks();
@@ -372,7 +372,6 @@ final class WeDevs_Dokan {
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
-            new \WeDevs\Dokan\Order\Admin\Hooks();
             new \WeDevs\Dokan\Admin\Menu();
             new \WeDevs\Dokan\Admin\AdminBar();
             new \WeDevs\Dokan\Admin\Pointers();
@@ -395,6 +394,7 @@ final class WeDevs_Dokan {
         $this->container['shortcodes']          = new \WeDevs\Dokan\Shortcodes\Shortcodes();
         $this->container['registration']        = new \WeDevs\Dokan\Registration();
         $this->container['order']               = new \WeDevs\Dokan\Order\Manager();
+        $this->container['order_controller']    = new \WeDevs\Dokan\Order\Controller();
         $this->container['api']                 = new \WeDevs\Dokan\REST\Manager();
         $this->container['withdraw']            = new \WeDevs\Dokan\Withdraw\Manager();
         $this->container['dashboard']           = new \WeDevs\Dokan\Dashboard\Manager();

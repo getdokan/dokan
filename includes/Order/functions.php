@@ -198,7 +198,7 @@ function dokan_delete_sync_order( $order_id ) {
 /**
  * Delete an order row from sync table to not insert duplicate
  *
- * @since  2.4.11
+ * @since      2.4.11
  *
  * @param int $order_id
  * @param int $seller_id
@@ -491,7 +491,7 @@ function dokan_is_sub_order( $order_id ) {
 /**
  * Get total number of orders in Dokan order table
  *
- * @since 2.4.3
+ * @since      2.4.3
  *
  * @deprecated DOKAN_SINCE
  *
@@ -582,10 +582,10 @@ function dokan_get_suborder_ids_by( $parent_order_id ) {
 /**
  * Return admin commission from an order
  *
- * @since     2.4.12
+ * @since      2.4.12
  *
  * @param WC_Order $order
- * @param string $context accepted values are seller and admin
+ * @param string   $context accepted values are seller and admin
  *
  * @deprecated 2.9.21
  *
@@ -601,7 +601,7 @@ function dokan_get_admin_commission_by( $order, $context ) {
 /**
  * Get Customer Order IDs by Seller
  *
- * @since 2.6.6
+ * @since      2.6.6
  *
  * @param int $customer_id
  * @param int $seller_id
@@ -873,7 +873,7 @@ function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = n
  *
  * @since DOKAN_SINCE moved from includes/functions.php
  *
- * @param int   $seller_id
+ * @param int $seller_id
  *
  * @return float
  */
@@ -900,8 +900,8 @@ if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
     /**
      * Get Seller's net Earnings from a order
      *
-     * @since 2.5.2
-     * @since DOKAN_SINCE moved from includes/functions.php
+     * @since      2.5.2
+     * @since      DOKAN_SINCE moved from includes/functions.php
      *
      * @param WC_ORDER $order
      * @param int      $seller_id
@@ -915,6 +915,77 @@ if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
         $earned = dokan()->commission->get_earning_by_order( $order, 'seller' );
 
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
+    }
+}
+
+/**
+ * Dokan get vendor order details by order ID
+ *
+ * @since 3.2.11 rewritten entire function
+ * @since DOKAN_SINCE Moved this function from includes/functions.php
+ *
+ * @param int      $order_id
+ * @param int|null $vendor_id will remove this parameter in future
+ *
+ * @return array will return empty array in case order has suborders
+ */
+function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
+    $order      = wc_get_order( $order_id );
+    $order_info = [];
+
+    if ( ! $order || $order->get_meta( 'has_sub_order' ) ) {
+        return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
+    }
+
+    foreach ( $order->get_items( 'line_item' ) as $item ) {
+        $info = [
+            'product'  => $item['name'],
+            'quantity' => $item['quantity'],
+            'total'    => $item['total'],
+        ];
+        array_push( $order_info, $info );
+    }
+
+    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
+}
+
+/**
+ * Updates bulk orders status by orders ids.
+ *
+ * @since 3.7.10
+ * @since DOKAN_SINCE Moved this method from includes/functions.php file
+ *
+ * @param array $postdata
+ *
+ * @return void
+ */
+function dokan_apply_bulk_order_status_change( $postdata ) {
+    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
+        return;
+    }
+
+    $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
+    $orders = array_map( 'absint', $postdata['bulk_orders'] );
+
+    // -1 means bluk action option value
+    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
+
+    if ( in_array( $status, $excluded_status, true ) ) {
+        return;
+    }
+
+    foreach ( $orders as $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order instanceof \WC_Order ) {
+            continue;
+        }
+
+        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
+            continue;
+        }
+
+        $order->update_status( $status );
     }
 }
 
