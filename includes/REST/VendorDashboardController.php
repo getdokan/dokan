@@ -81,6 +81,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'default'     => 'day',
                             'enum'        => [ 'day', 'week', 'month', 'year' ],
                         ],
+                        'alltime'   => [
+                            'type'        => 'boolean',
+                            'description' => __( 'Alltime Report?', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => false,
+                        ],
                     ],
                     'permission_callback' => 'is_user_logged_in',
                 ],
@@ -168,6 +174,7 @@ class VendorDashboardController extends \WP_REST_Controller {
         $from             = $request->get_param( 'from' );
         $to               = $request->get_param( 'to' );
         $group_by         = $request->get_param( 'group_by' );
+        $alltime          = $request->get_param( 'alltime' );
         $from_date        = dokan_current_datetime()->modify( $from );
         $to_date          = dokan_current_datetime()->modify( $to );
         $interval         = DateInterval::createFromDateString( '1 ' . $group_by );
@@ -208,6 +215,16 @@ class VendorDashboardController extends \WP_REST_Controller {
                 break;
         }
 
+        // For all time report data we will get data from dokan installation time till now.
+        if ( $alltime ) {
+            $to_date = dokan_current_datetime();
+
+            $from      = get_option( 'dokan_installed_time', $to );
+            $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $from ) );
+
+            $to_date          = $to_date->add( $interval );
+        }
+
         $order_report_data = dokan_get_order_report_data(
             array(
                 'data' => array(
@@ -242,7 +259,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'group_by'     => implode( ', ', $group_by_array ),
                 'order_by'     => 'post_date ASC',
                 'query_type'   => 'get_results',
-                'filter_range' => true,
+                'filter_range' => ! $alltime,
                 'debug'        => false,
             ),
             $from_date->format( 'Y-m-d' ),
