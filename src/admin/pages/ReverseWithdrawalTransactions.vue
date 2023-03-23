@@ -350,7 +350,7 @@ export default {
                 per_page: -1,
             };
 
-            dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data)
+            dokan.api.get('/reverse-withdrawal/transactions/', data)
             .done( ( response, status, xhr ) => {
                 self.transactionData = response;
                 self.updatedCounts( xhr );
