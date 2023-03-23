@@ -218,9 +218,10 @@ class VendorDashboardController extends \WP_REST_Controller {
         // For all time report data we will get data from dokan installation time till now.
         if ( $alltime ) {
             $to_date = dokan_current_datetime();
-            $from      = get_option( 'dokan_installed_time', $to_date );
+            $from    = get_option( 'dokan_installed_time', $to_date );
+
             $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $from ) );
-            $to_date = $to_date->add( $interval );
+            $to_date   = $to_date->add( $interval );
         }
 
         $order_report_data = dokan_get_order_report_data(
