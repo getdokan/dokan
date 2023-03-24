@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.15',
+        'released' => '2023-03-23',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => '[CategoryPopup] Added a new settings to select any category from frontend',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[VendorSignup] Fixed vendor can sign up even though store URL is not available',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductsRestAPI] Fixed in_stock, featured, on_sale filter for products rest API wasn\'t working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.14',
         'released' => '2023-03-09',
         'changes'  => [

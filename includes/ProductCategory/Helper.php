@@ -25,7 +25,7 @@ class Helper {
     /**
      * Returns 'true' if select any category option is turned on.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.15
      *
      * @return boolean
      */
