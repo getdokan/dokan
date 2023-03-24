@@ -215,12 +215,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     loadChildCategories: function loadChildCategories(catlevel, termId, name, haschild) {
       /**
-       * By passing true in this filter hook anyone can enable capability to select aby middle category in dokan product
-       * multi-step category selection.
+       * If enabled any one middle category in dokan product multi-step category selection.
        */
-      var middleCategorySelection = wp.hooks.applyFilters('dokan_middle_category_selection', false); // If selected category has no child OR middle category selection is true then enable the category select done button else disable.
+      var middleCategorySelection = dokan_product_category_data.any_category_selection; // If selected category has no child OR middle category selection is true then enable the category select done button else disable.
 
-      if (!haschild || true === middleCategorySelection) {
+      if (!haschild || true === Boolean(middleCategorySelection)) {
         ProductCategory.disableDoneBtn(false);
       } else {
         ProductCategory.disableDoneBtn();
