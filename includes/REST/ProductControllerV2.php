@@ -97,7 +97,7 @@ class ProductControllerV2 extends ProductController {
      *
      * @return void
      */
-    private function set_chosen_categories ( $response ) {
+    private function set_chosen_categories( $response ) {
         if ( ! is_wp_error( $response ) ) {
             $product = $response->get_data();
 
