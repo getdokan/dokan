@@ -19,7 +19,7 @@ test.beforeAll(async ({ request }) => {
 // test.afterEach(async ({ request }) => { });
 
 test.describe('stores api test', () => {
-	test('get store availability status', async ({ request }) => {
+	test('get store slug availability', async ({ request }) => {
 		const response = await request.get(endPoints.getAllStoresCheck);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

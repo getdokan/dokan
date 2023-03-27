@@ -78,6 +78,7 @@ test.describe('product api test', () => {
 		const response = await request.post(endPoints.createProduct, { data: payloads.createProduct() });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		console.log(responseBody)
 	});
 
 	test('update a product', async ({ request }) => {

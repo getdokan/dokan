@@ -146,6 +146,7 @@ export const endPoints = {
 	// follow store
 	getStoreFollowStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/follow-store${QUERY}vendor_id=${sellerId}`,
 	followUnfollowStore: `${SERVER_URL}/dokan/v1/follow-store`, // post
+	getFollowers: `${SERVER_URL}/dokan/v1/follow-store/followers`, // post
 
 	// abuse reports
 	getAllAbuseReportReasons: `${SERVER_URL}/dokan/v1/abuse-reports/abuse-reasons`,
@@ -198,6 +199,8 @@ export const endPoints = {
 	getAllUserRoles: `${SERVER_URL}/dokan/v1/roles`,
 
 	// reverse withdrawal
+	getReverseWithdrawalVendorBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/vendor-balance`,
+	getReverseWithdrawalAddProductToCart: `${SERVER_URL}/dokan/v1/reverse-withdrawal/pay`,
 	getReverseWithdrawalTransactionTypes: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transaction-types`,
 	getAllReverseWithdrawalStores: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores`,
 	getAllReverseWithdrawalStoreBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores-balance`,
@@ -260,10 +263,10 @@ export const endPoints = {
 	getVendorStorePreferences: `${SERVER_URL}/dokan/v1/vendor-dashboard/preferences`,
 	getVendorProfileProgressBarData: `${SERVER_URL}/dokan/v1/vendor-dashboard/profile-progressbar`,
 
+	// v2
+
 	// rank math
 	rankMath: (productId: string) => `${SERVER_URL}/dokan/v2/rank-math/${productId}/store-current-editable-post`,
-
-	// v2
 
 	// product duplicate 
 	createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
@@ -487,6 +490,13 @@ export const endPoints = {
 		//settings
 		getSiteSettings: `${SERVER_URL}/wp/v2/settings`,
 		setSiteSettings: `${SERVER_URL}/wp/v2/settings`,
+
+		//posts
+		getAllPosts: `${SERVER_URL}/wp/v2/posts`,
+		getSinglePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
+		createPost: `${SERVER_URL}/wp/v2/posts`,
+		updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
+		deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
 	},
 
 };

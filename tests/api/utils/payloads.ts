@@ -4,6 +4,28 @@ const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from
 
 export const payloads = {
 
+	// wp 
+	createPost: {
+		title: 'Hello World',
+		content: 'My Post Content.',
+		status: 'publish'
+	},
+
+	createMedia: {
+		title: 'avatar',
+		alt_text: 'avatar_img',
+		status: 'publish',
+		post: '1'
+
+	},
+	mediaAttributes: {
+		title: 'avatar',
+		caption: 'avatar_img',
+		description: 'avatar_img',
+		alt_text: 'avatar_img',
+
+	},
+
 	// user auth
 
 	aAuth: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD),
@@ -1455,5 +1477,7 @@ export const payloads = {
 			}
 		]
 	},
+
+
 
 };

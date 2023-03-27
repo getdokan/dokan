@@ -8,7 +8,8 @@ let sellerId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, sellerId] = await apiUtils.createStore(payloads.createStore());
+	// [, sellerId] = await apiUtils.createStore(payloads.createStore());
+	[, sellerId] = await apiUtils.getCurrentUser();
 	await apiUtils.followUnfollowStore(sellerId);
 });
 
@@ -32,4 +33,13 @@ test.describe('follow store api test', () => {
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
+
+	test('get followers @pro', async ({ request }) => {
+		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
+
+		const response = await request.get(endPoints.getFollowers);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+
 });

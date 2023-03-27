@@ -18,6 +18,18 @@ test.beforeAll(async ({ request }) => {
 test.describe.skip('reverse withdrawal api test', () => {
 	//TODO: enable reverse withdraw settings
 
+	test.only('get reverse withdrawal add product to cart', async ({ request }) => {
+		const response = await request.get(endPoints.getReverseWithdrawalAddProductToCart);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+	
+	test.only('get reverse withdrawal vendor balance', async ({ request }) => {
+		const response = await request.get(endPoints.getReverseWithdrawalVendorBalance);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+
 	test('get reverse withdrawal transaction types', async ({ request }) => {
 		const response = await request.get(endPoints.getReverseWithdrawalTransactionTypes);
 		const responseBody = await apiUtils.getResponseBody(response);

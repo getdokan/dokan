@@ -1,6 +1,7 @@
 import { expect, type APIRequestContext } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
+import FormData from 'form-data';
 
 export class ApiUtils {
 	readonly request: APIRequestContext;
@@ -961,13 +962,90 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia2(filePath: string, auth?: any) {
+	async uploadMedia2(filePath: any, attributes: any, auth?: any) { //TODO: handle different file upload, hardcoded: image
+		const form: any = new FormData();
+		// form.append("file", fs.createReadStream(filePath));
+
+		// const base64 = { 'base64': fs.readFileSync(filePath) }
+		function base64_encode(file) {
+			var body = fs.readFileSync(file);
+			return body.toString('base64');
+		}
+
+		form.append("file",
+			// fs.readFileSync(filePath, { encoding: 'base64' }),
+
+			// base64_encode(filePath),
+			fs.createReadStream(filePath),
+			{
+				name: String((filePath.split('/')).pop()),
+				type: 'image/' + (filePath.split('.')).pop(),
+			}
+
+		);
+
+		form.append("title", attributes.title);
+		form.append("caption", attributes.caption);
+		form.append("caption", attributes.description);
+		form.append("alt_text", attributes.alt_text);
+		console.log(String((filePath.split('/')).pop()))
+		console.log(form)
+
+		// const payload = {
+		// 	headers: {
+		// 		Accept: '*/*',
+		// 		ContentType: 'multipart/form-data',
+		// 		// ContentType: 'image/png',
+		// 		'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
+		// 		// Authorization: auth.Authorization  //TODO: handle authorization
+		// 	},
+		// 	form: form
+		// }
+		const headers = {
+			Accept: '*/*',
+			ContentType: 'multipart/form-data',
+			// ContentType: 'image/png',
+			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
+			// Authorization: auth.Authorization  //TODO: handle authorization
+		}
+
+
+		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
+		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });
+		const responseBody = await this.getResponseBody(response);
+		const mediaId = responseBody.id;
+		return [responseBody, mediaId];
+	}
+
+	// upload media
+	async uploadMedia3(filePath: string, auth?: any) {
 		const payload = fs.readFileSync(filePath);
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = responseBody.id;
 		return [responseBody, mediaId];
+	}
+
+	// get all mediaItems
+	async getAllMediaItems(auth?: any) {
+		const response = await this.request.get(endPoints.wp.getAllMediaItems, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get mediaItemId
+	async getMediaItemId( auth?: any) {
+		const getAllMediaItems = await this.getAllMediaItems();
+		const mediaId = getAllMediaItems[0].id;
+		return mediaId;
+	}
+
+	// create post 
+	async createPost(payload: object, auth?: any) {
+		const response = await this.request.put(endPoints.wp.createPost, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
 	}
 
 	/**

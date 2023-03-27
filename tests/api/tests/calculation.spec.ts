@@ -17,7 +17,7 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe.skip('calculation test', () => {
+test.describe('calculation test', () => {
 	test('calculation test', async ({ request }) => {
 		let discountTotal: any, discountTax: any, shippingTotal: number | undefined, shippingTax: any, cartTax: any, totalTax: any, orderTotal: any, paymentMethod: any, productPrice: number, productQuantity: number,
 			gatewayFee = 0;
@@ -41,7 +41,7 @@ test.describe.skip('calculation test', () => {
 		let adminCommission = orderReport.commission
 		let vendorEarning = orderReport.vendor_earning
 
-		const commissionRate = 10;
+		const commissionRate = 7.79;
 
 		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]);
 		const calculatedTax = helpers.tax(taxRate, calculatedSubTotal, shippingTotal);
