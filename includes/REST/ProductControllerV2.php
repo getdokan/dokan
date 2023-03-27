@@ -68,16 +68,7 @@ class ProductControllerV2 extends ProductController {
     public function create_item( $request ) {
         $response = parent::create_item( $request );
 
-        if ( ! is_wp_error( $response ) ) {
-            $product = $response->get_data();
-
-            $chosen_cat = ! empty( $request['chosen_cat'] ) && is_array( $request['chosen_cat'] ) ? array_map( 'absint', $request['chosen_cat'] ) : [];
-
-            $product['chosen_cat'] = $chosen_cat;
-            $response->set_data( $product );
-
-            Helper::generate_and_set_chosen_categories( $product['id'], $chosen_cat );
-        }
+        $this->set_chosen_categories( $response );
 
         return $response;
     }
@@ -93,9 +84,20 @@ class ProductControllerV2 extends ProductController {
      */
     public function update_item( $request ) {
         $response = parent::update_item( $request );
-        error_log( print_r( 'aunshon', 1 ) );
 
-        error_log( print_r( $response->get_data(), 1 ) );
+        $this->set_chosen_categories( $response );
+
+        return $response;
+    }
+
+    /**
+     * Save chosen category to database.
+     *
+     * @param WP_Error|WP_REST_Response $response
+     *
+     * @return void
+     */
+    private function set_chosen_categories ( $response ) {
         if ( ! is_wp_error( $response ) ) {
             $product = $response->get_data();
 
@@ -106,8 +108,6 @@ class ProductControllerV2 extends ProductController {
 
             Helper::generate_and_set_chosen_categories( $product['id'], $chosen_cat );
         }
-
-        return $response;
     }
 
     /**
