@@ -1478,6 +1478,11 @@ export const payloads = {
 		]
 	},
 
+	// reverse withdrawal
+
+	amountToPay: {
+		amount: '10'
+	}
 
 
 };

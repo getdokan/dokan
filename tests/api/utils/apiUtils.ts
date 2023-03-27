@@ -29,7 +29,7 @@ export class ApiUtils {
 		try {
 			responseBody = await response.json();
 			// console.log('Status Code: ', response.status());
-			// console.log('ResponseBody: ', responseBody); 
+			console.log('ResponseBody: ', responseBody); 
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 		} catch (err) {
 			console.log('Status Code: ', response.status());

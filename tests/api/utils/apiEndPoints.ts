@@ -199,7 +199,7 @@ export const endPoints = {
 	getAllUserRoles: `${SERVER_URL}/dokan/v1/roles`,
 
 	// reverse withdrawal
-	getReverseWithdrawalVendorBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/vendor-balance`,
+	getReverseWithdrawalVendorDueStatus: `${SERVER_URL}/dokan/v1/reverse-withdrawal/vendor-due-status`,
 	getReverseWithdrawalAddProductToCart: `${SERVER_URL}/dokan/v1/reverse-withdrawal/pay`,
 	getReverseWithdrawalTransactionTypes: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transaction-types`,
 	getAllReverseWithdrawalStores: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores`,
