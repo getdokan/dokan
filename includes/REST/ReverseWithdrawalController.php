@@ -407,19 +407,20 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      */
     public function prepare_vendor_due_status_for_response( $item, $request ) {
         $data     = [
-            'status'                   => wc_string_to_bool( $item['status'] ),
-            'due_date'                 => sanitize_text_field( $item['due_date'] ),
-            'balance'                  => $item['balance']['balance'],
-            'formatted_balance'        => wc_format_localized_price( wc_format_decimal( $item['balance']['balance'], '' ) ),
-            'billing_type'             => sanitize_text_field( $item['balance']['billing_type'] ),
-            'formatted_billing_type'   => sanitize_text_field( Helper::get_formatted_billing_type( $item['balance']['billing_type'] ) ),
-            'billing_day'              => (int) $item['balance']['billing_day'],
-            'due_period'               => (int) $item['balance']['due_period'],
-            'threshold'                => (int) $item['balance']['threshold'],
-            'formatted_threshold'      => wc_format_localized_price( wc_format_decimal( $item['balance']['threshold'], '' ) ),
-            'payable_amount'           => $item['balance']['payable_amount'],
-            'formatted_payable_amount' => wc_format_localized_price( wc_format_decimal( $item['balance']['payable_amount'], wc_get_price_decimals() ) ),
-            'formatted_failed_actions' => Helper::get_formatted_failed_actions(),
+            'status'                         => wc_string_to_bool( $item['status'] ),
+            'due_date'                       => sanitize_text_field( $item['due_date'] ),
+            'balance'                        => $item['balance']['balance'],
+            'formatted_balance'              => wc_format_localized_price( wc_format_decimal( $item['balance']['balance'], '' ) ),
+            'billing_type'                   => sanitize_text_field( $item['balance']['billing_type'] ),
+            'formatted_billing_type'         => sanitize_text_field( Helper::get_formatted_billing_type( $item['balance']['billing_type'] ) ),
+            'billing_day'                    => (int) $item['balance']['billing_day'],
+            'due_period'                     => (int) $item['balance']['due_period'],
+            'threshold'                      => (int) $item['balance']['threshold'],
+            'formatted_threshold'            => wc_format_localized_price( wc_format_decimal( $item['balance']['threshold'], '' ) ),
+            'payable_amount'                 => $item['balance']['payable_amount'],
+            'formatted_payable_amount'       => wc_format_localized_price( wc_format_decimal( $item['balance']['payable_amount'], wc_get_price_decimals() ) ),
+            'formatted_failed_actions'       => Helper::get_formatted_failed_actions(),
+            'formatted_action_taken_message' => ! empty( Helper::get_failed_actions_by_vendor( $request->get_param( 'vendor_id' ) ) ) ? Helper::get_formatted_failed_actions_by_vendor( $request->get_param( 'vendor_id' ) ) : '',
         ];
         $response = rest_ensure_response( $data );
 
@@ -895,6 +896,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 ],
                 'formatted_failed_actions' => [
                     'description' => __( 'Formatted Failed Actions', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'formatted_action_taken_message' => [
+                    'description' => __( 'Formatted Action Taken Message', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
