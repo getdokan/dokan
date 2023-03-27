@@ -189,20 +189,19 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 * Admin can view and modify vendor store products.
 * Admin can view a comprehensive [Admin Earning Report](https://wedevs.com/docs/dokan/earning-reports/) with data categorization by day, year, or vendors. Moreover, the admin can also view each vendor’s earning reports individually.
 * Dokan Pro has an advanced support option for customers, allowing customers to directly interact with vendors and admin for product inquiry ([Product Enquiry module](https://wedevs.com/dokan/modules/))
-* Advanced settings for the admin –
 
+* Dokan Pro has update and support option for the customer.
+
+* Advanced settings for the admin -
      * General Settings
-
         * Admin can enable/disable the map on the store page.
         * Admin can enable/disable the contact form on the store page.
-        * Admin can also enable/disable the store sidebar from the theme.
-
+        * Admin can also enable/disable the store sidebar from theme.
 
      * Selling Options
-
         * Admin can manage new product status.
-        * Admin can set the order status for withdrawal.
-        * Admin can set automatic withdrawal disbursement for vendor payments based on the amount or time period.
+        * Admin can set the order status for withdraw.
+        * Admin can seth threshold withdraw day for the vendor.
         * Admin can change the vendor store URL.
         * Admin can also enable/disable the permission of review editing for the vendor.
 
