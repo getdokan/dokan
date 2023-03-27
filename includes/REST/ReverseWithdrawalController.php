@@ -57,16 +57,16 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/vendor-balance', [
+            $this->namespace, '/' . $this->rest_base . '/vendor-due-status', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_vendor_balance' ],
-                    'permission_callback' => [ $this, 'get_vendor_balance_permissions_check' ],
+                    'callback'            => [ $this, 'get_vendor_due_status' ],
+                    'permission_callback' => [ $this, 'get_vendor_due_status_permissions_check' ],
                     'args'                => [
                         'vendor_id' => [
                             'description'       => __( 'Vendor ID to filter form', 'dokan-lite' ),
                             'type'              => 'integer',
-                            'required'          => true,
+                            'required'          => false,
                             'default'           => dokan_get_current_user_id(),
                             'sanitize_callback' => 'absint',
                             'validate_callback' => 'rest_validate_request_arg',
@@ -117,9 +117,9 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'add_to_cart' ],
-                    'permission_callback' => [ $this, 'get_vendor_balance_permissions_check' ],
+                    'permission_callback' => [ $this, 'get_vendor_due_status_permissions_check' ],
                     'args'                => [
-                        'price' => [
+                        'amount' => [
                             'description'       => __( 'Payable amount', 'dokan-lite' ),
                             'type'              => 'string',
                             'required'          => true,
@@ -248,12 +248,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @return bool True if the request has read access, false otherwise.
      */
-    public function get_vendor_balance_permissions_check( $request ) {
+    public function get_vendor_due_status_permissions_check( $request ) {
         return is_user_logged_in() && dokan_is_user_seller( dokan_get_current_user_id() );
     }
 
     /**
-     * This method will return transactions of a single store
+     * This method will return due status of a single vendor
      *
      * @since DOKAN_SINCE
      *
@@ -261,7 +261,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @return WP_REST_Response
      */
-    public function get_vendor_balance( $request ) {
+    public function get_vendor_due_status( $request ) {
         $request_params = $request->get_params();
 
         if ( ! current_user_can( dokana_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
@@ -273,7 +273,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             return rest_ensure_response( $item );
         }
 
-        $item = $this->prepare_vendor_balance_for_response( $item, $request );
+        $item = $this->prepare_vendor_due_status_for_response( $item, $request );
 
         return rest_ensure_response( $item );
     }
@@ -322,7 +322,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function add_to_cart( $request ) {
-        $added_to_cart = Helper::add_payment_to_cart( $request->get_param( 'price' ) );
+        $added_to_cart = Helper::add_payment_to_cart( $request->get_param( 'amount' ) );
 
         if ( is_wp_error( $added_to_cart ) ) {
             return rest_ensure_response( $added_to_cart );
@@ -405,7 +405,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @return WP_REST_Response
      */
-    public function prepare_vendor_balance_for_response( $item, $request ) {
+    public function prepare_vendor_due_status_for_response( $item, $request ) {
         $data     = [
             'status'                   => wc_string_to_bool( $item['status'] ),
             'due_date'                 => sanitize_text_field( $item['due_date'] ),
@@ -416,6 +416,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             'billing_day'              => (int) $item['balance']['billing_day'],
             'due_period'               => (int) $item['balance']['due_period'],
             'threshold'                => (int) $item['balance']['threshold'],
+            'formatted_threshold'      => wc_format_localized_price( wc_format_decimal( $item['balance']['threshold'], '' ) ),
             'payable_amount'           => $item['balance']['payable_amount'],
             'formatted_payable_amount' => wc_format_localized_price( wc_format_decimal( $item['balance']['payable_amount'], wc_get_price_decimals() ) ),
             'formatted_failed_actions' => Helper::get_formatted_failed_actions(),
@@ -597,12 +598,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 'properties'  => [
                     'from' => [
                         'type'    => [ 'string' ],
-                        'pattern' => '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])',
+                        'format'  => 'date-time',
                         'default' => $default_transaction_date['from'],
                     ],
                     'to'   => [
                         'type'    => [ 'string' ],
-                        'pattern' => '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])',
+                        'format'  => 'date-time',
                         'default' => $default_transaction_date['to'],
                     ],
                 ],
@@ -871,6 +872,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 'threshold'                => [
                     'description' => __( 'Threshold Period', 'dokan-lite' ),
                     'type'        => 'integer',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'formatted_threshold'      => [
+                    'description' => __( 'Formatted Threshold Amount', 'dokan-lite' ),
+                    'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],

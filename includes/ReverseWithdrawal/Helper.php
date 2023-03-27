@@ -311,8 +311,8 @@ class Helper {
      */
     public static function get_default_transaction_date() {
         return [
-            'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d' ),
-            'to'   => dokan_current_datetime()->format( 'Y-m-d' ),
+            'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d H:i:s' ),
+            'to'   => dokan_current_datetime()->format( 'Y-m-d H:i:s' ),
         ];
     }
 
