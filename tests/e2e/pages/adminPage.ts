@@ -377,14 +377,18 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMinimumDistance, geolocation.radiusSearchMinimumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
-        await this.clearAndType(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
-        await this.wait(1)
+        await this.focus(selector.admin.dokan.settings.defaultLocation)
+        await this.wait(2)
+        await this.clearAndFill(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
+        await this.wait(2)
         await this.press(data.key.arrowDown)
         await this.press(data.key.enter)
+        await this.wait(2)
 
         // save settings
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.geolocationSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(geolocation.saveSuccessMessage)
+        await this.wait(5)
     }
 
     // Admin Set Dokan Product Report Abuse Settings

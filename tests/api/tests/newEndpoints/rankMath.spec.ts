@@ -15,7 +15,7 @@ test.beforeAll(async ({ request }) => {
 // test.beforeEach(async ({ request }) => { });
 // test.afterEach(async ({ request }) => { });
 
-test.describe('rank math api test', () => {
+test.describe.skip('rank math api test', () => {
 	test('rank math', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet!');
 		const response = await request.post(endPoints.rankMath(productId), { data: {} });

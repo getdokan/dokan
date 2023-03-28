@@ -413,9 +413,9 @@ export class BasePage {
 	}
 
 	// clear input field and type
-	async clearAndType(selector: string, text: string): Promise<void> {
-		await this.page.type(selector, text);
-	}
+	// async clearAndType(selector: string, text: string): Promise<void> { // TODO: need to update
+	// 	await this.page.type(selector, text);
+	// }
 
 	// clear input field and type
 	async clearAndFill(selector: string, text: string): Promise<void> {

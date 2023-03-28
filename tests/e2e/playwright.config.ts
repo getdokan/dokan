@@ -44,7 +44,7 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	globalSetup: require.resolve('./global-setup'),
+	// globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
@@ -59,7 +59,7 @@ const config: PlaywrightTestConfig = {
 
 		// launch options
 		launchOptions: {
-			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 30000, //whether to slow down test execution by provided seconds
+			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 50000, //whether to slow down test execution by provided seconds
 		},
 		
 		// api request headers

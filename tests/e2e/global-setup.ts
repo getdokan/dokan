@@ -13,7 +13,6 @@ async function globalSetup(config: FullConfig) {
 	// get storageState: admin
 	let admin = await browser.newPage();
 
-
 	// log in
 	await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
 	// await admin.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
@@ -24,36 +23,36 @@ async function globalSetup(config: FullConfig) {
 	await admin.context().storageState({ path: 'adminStorageState.json' });
 	console.log('Stored adminStorageState');
 
-	// set plain permalink 
-	await admin.goto(process.env.BASE_URL + '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
-	await admin.locator('#permalink-input-post-name').click();
-	await admin.locator('#submit').click();
-	await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
-	console.log('permalink updated');
+	// // set plain permalink 
+	// await admin.goto(process.env.BASE_URL + '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
+	// await admin.locator('#permalink-input-post-name').click();
+	// await admin.locator('#submit').click();
+	// await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
+	// console.log('permalink updated');
 
-	// get storageState: customer
-	let customer = await browser.newPage();
-	// log in
-	await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
-	await customer.fill(selector.frontend.username, process.env.CUSTOMER);
-	await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
-	await customer.click(selector.frontend.logIn);
-	await customer.context().storageState({ path: 'customerStorageState.json' });
-	console.log('Stored customerStorageState');
+	// // get storageState: customer
+	// let customer = await browser.newPage();
+	// // log in
+	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	// await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
+	// await customer.fill(selector.frontend.username, process.env.CUSTOMER);
+	// await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
+	// await customer.click(selector.frontend.logIn);
+	// await customer.context().storageState({ path: 'customerStorageState.json' });
+	// console.log('Stored customerStorageState');
 
-	// get storageState: vendor
-	let vendor = await browser.newPage();
-	// log in
-	await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
-	await vendor.fill(selector.frontend.username, process.env.VENDOR);
-	await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
-	await vendor.click(selector.frontend.logIn);
-	await vendor.context().storageState({ path: 'vendorStorageState.json' });
-	console.log('Stored vendorStorageState');
-	await context.tracing.stop( { path: './test-results/setup-trace.zip' } );
-	await browser.close();
+	// // get storageState: vendor
+	// let vendor = await browser.newPage();
+	// // log in
+	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	// await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+	// await vendor.fill(selector.frontend.username, process.env.VENDOR);
+	// await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
+	// await vendor.click(selector.frontend.logIn);
+	// await vendor.context().storageState({ path: 'vendorStorageState.json' });
+	// console.log('Stored vendorStorageState');
+	// await context.tracing.stop( { path: './test-results/setup-trace.zip' } );
+	// await browser.close();
 
 	// get site url structure
 	let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889';

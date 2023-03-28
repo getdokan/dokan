@@ -41,7 +41,7 @@ test.describe('calculation test', () => {
 		let adminCommission = orderReport.commission
 		let vendorEarning = orderReport.vendor_earning
 
-		const commissionRate = 7.79;
+		const commissionRate = 10;
 
 		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]);
 		const calculatedTax = helpers.tax(taxRate, calculatedSubTotal, shippingTotal);

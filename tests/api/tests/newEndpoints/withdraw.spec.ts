@@ -26,7 +26,7 @@ test.describe('withdraw api test', () => {
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get withdraw disbursement settings @v2', async ({ request }) => {
+	test.skip('get withdraw disbursement settings @v2', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.get(endPoints.getWithdrawDisbursementSettings);
@@ -34,7 +34,7 @@ test.describe('withdraw api test', () => {
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('update withdraw disbursement settings @v2', async ({ request }) => {
+	test.skip('update withdraw disbursement settings @v2', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });

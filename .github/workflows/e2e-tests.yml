@@ -56,7 +56,7 @@ jobs:
         run: |
           cd plugins/dokan-pro
           composer update
-          composer install
+          composer install --no-dev
           composer dump-autoload -o
 
       - name: Npm install and build (Dokan-pro)
