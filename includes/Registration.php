@@ -55,14 +55,15 @@ class Registration {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
-        $role = sanitize_text_field( wp_unslash( $_POST['role'] ) );
-
+        $role            = sanitize_text_field( wp_unslash( $_POST['role'] ) );
+        $shop_url        = isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '';
         $required_fields = apply_filters(
             'dokan_seller_registration_required_fields', [
                 'fname'    => __( 'Please enter your first name.', 'dokan-lite' ),
                 'lname'    => __( 'Please enter your last name.', 'dokan-lite' ),
                 'phone'    => __( 'Please enter your phone number.', 'dokan-lite' ),
                 'shopname' => __( 'Please provide a shop name.', 'dokan-lite' ),
+                'shopurl'  => __( 'Please provide a unique shop URL.', 'dokan-lite' ),
             ]
         );
 
@@ -72,6 +73,11 @@ class Registration {
                 if ( empty( $field_value ) ) {
                     return new WP_Error( "$field-error", $msg );
                 }
+            }
+
+            // Check if the shop URL already not in use.
+            if ( ! empty( get_user_by( 'slug', $shop_url ) ) ) {
+                return new WP_Error( 'shop-url-error', __( 'Shop URL is not available', 'dokan-lite' ) );
             }
         }
 
@@ -139,6 +145,7 @@ class Registration {
             'store_name'     => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'social'         => $social_profiles,
             'payment'        => [],
+            'address'        => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : '',
             'phone'          => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
             'show_email'     => 'no',
             'location'       => '',
@@ -150,8 +157,9 @@ class Registration {
         // Intially add values on profile completion progress bar
         $dokan_settings['profile_completion']['store_name']    = 10;
         $dokan_settings['profile_completion']['phone']         = 10;
+        $dokan_settings['profile_completion']['address']       = 10;
         $dokan_settings['profile_completion']['next_todo']     = 'banner_val';
-        $dokan_settings['profile_completion']['progress']      = 20;
+        $dokan_settings['profile_completion']['progress']      = 30;
         $dokan_settings['profile_completion']['progress_vals'] = [
             'banner_val'          => 15,
             'profile_picture_val' => 15,

@@ -256,6 +256,13 @@ class Manager {
                 )
             );
 
+            $refund_amount = (float) $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT SUM(trn.credit) FROM {$this->table} AS trn $join WHERE %d=%d $where AND trn.trn_type='order_refund'",
+                    $query_args
+                )
+            );
+
             // check for query error
             if ( ! empty( $wpdb->last_error ) ) {
                 return new WP_Error( 'db_query_error', $wpdb->last_error, $wpdb->last_query );
@@ -264,7 +271,7 @@ class Manager {
             $data = [
                 'total_transactions' => (int) $row->total_transactions,
                 'debit'              => (float) $row->debit,
-                'credit'             => (float) $row->credit,
+                'credit'             => (float) $row->credit - $refund_amount,
             ];
 
             if ( 'balance_count' === $args['return'] ) {

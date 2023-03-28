@@ -999,7 +999,7 @@ function dokan_clear_edit_product_category_cache( $term_id ) {
     }
 
     global $wpdb;
-    $products   = implode( ',', $products );
+    $products   = implode( ',', array_map( 'absint', (array) $products ) );
     $seller_ids = $wpdb->get_col( "SELECT DISTINCT post_author from {$wpdb->posts} WHERE ID in ($products)" ); // phpcs:ignore
 
     foreach ( $seller_ids as $seller_id ) {
@@ -1132,33 +1132,13 @@ function dokan_bulk_order_status_change() {
         return;
     }
 
-    if ( ! isset( $_POST['status'] ) || ! isset( $_POST['bulk_orders'] ) ) {
-        return;
-    }
-
-    $status = sanitize_text_field( wp_unslash( $_POST['status'] ) );
-    $orders = array_map( 'sanitize_text_field', wp_unslash( $_POST['bulk_orders'] ) );
-
-    // -1 means bluk action option value
-    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
-
-    if ( in_array( $status, $excluded_status, true ) ) {
-        return;
-    }
-
-    foreach ( $orders as $order ) {
-        $the_order = new WC_Order( $order );
-
-        if ( $the_order->get_status() === $status ) {
-            continue;
-        }
-
-        if ( in_array( $the_order->get_status(), $excluded_status, true ) ) {
-            continue;
-        }
-
-        $the_order->update_status( $status );
-    }
+    // Doing the bulk action for orders.
+    dokan_apply_bulk_order_status_change(
+        [
+            'status'      => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
+            'bulk_orders' => isset( $_POST['bulk_orders'] ) ? array_map( 'absint', $_POST['bulk_orders'] ) : [],
+        ]
+    );
 }
 
 add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
@@ -1243,3 +1223,45 @@ function send_email_for_order_cancellation( $recipient, $order ) {
 }
 
 add_filter( 'woocommerce_email_recipient_cancelled_order', 'send_email_for_order_cancellation', 10, 2 );
+
+
+/**
+ * Modify order counts for vendor.
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @param object $counts
+ *
+ * @return object $counts
+ */
+function dokan_modify_vendor_order_counts( $counts ) {
+    global $pagenow;
+
+    if ( 'edit.php' !== $pagenow || 'shop_order' !== get_query_var( 'post_type' ) ) {
+        return $counts;
+    }
+
+    if ( current_user_can( 'manage_woocommerce' ) ) {
+        return $counts;
+    }
+
+    $vendor_id = dokan_get_current_user_id();
+
+    if ( empty( $vendor_id ) ) {
+        return $counts;
+    }
+
+    // Current order counts for the vendor.
+    $vendor_order_counts = dokan_count_orders( $vendor_id );
+
+    // Modify WP dashboard order counts as per vendor's order counts.
+    foreach ( $vendor_order_counts as $count_key => $count_value ) {
+        if ( 'total' !== $count_key ) {
+            $counts->{$count_key} = $count_value;
+        }
+    }
+
+    return $counts;
+}
+
+add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );

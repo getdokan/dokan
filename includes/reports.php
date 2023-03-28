@@ -60,6 +60,8 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 				$get_key = "order_item_meta_{$key}.meta_value";
 			} elseif ( $value['type'] == 'order_item' ) {
 				$get_key = "order_items.{$key}";
+			} elseif ( $value['type'] == 'dokan_orders' ) {
+				$get_key = "do.{$key}";
 			}
 
 			if ( $value['function'] ) {
@@ -85,7 +87,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 				$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
 				$joins[ "order_item_meta_{$key}" ] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta_{$key} ON order_items.order_item_id = order_item_meta_{$key}.order_item_id";
 			} elseif ( $value['type'] == 'order_item' ) {
-				$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_id";
+				$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
 			}
 		}
 
@@ -98,7 +100,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 				$key = is_array( $value['meta_key'] ) ? $value['meta_key'][0] : $value['meta_key'];
 
 				if ( isset( $value['type'] ) && $value['type'] == 'order_item_meta' ) {
-					$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_id";
+					$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
 					$joins[ "order_item_meta_{$key}" ] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta_{$key} ON order_items.order_item_id = order_item_meta_{$key}.order_item_id";
 				} else {
 					// If we have a where clause for meta, join the postmeta table
@@ -113,7 +115,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
         WHERE   posts.post_type     = 'shop_order'
         AND     posts.post_status   != 'trash'
         AND     do.seller_id = {$current_user}
-        AND     do.order_status IN ('" . implode( "','", apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) . "')
+        AND     do.order_status IN ('" . implode( "','", esc_sql( apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) ) . "')
         ";
 
 		if ( $filter_range && ! empty( $start_date ) && ! empty( $end_date ) ) {
@@ -219,7 +221,7 @@ if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
 		$query_hash = md5( $query_type . $query );
 
 		if ( $debug ) {
-			error_log( '<pre>%s</pre>', print_r( $query, true ) );
+			error_log( sprintf( '<pre>%s</pre>', print_r( $query, true ) ) );
 		}
 
         $cache_group = "report_data_seller_{$current_user}";

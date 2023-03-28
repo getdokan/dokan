@@ -186,6 +186,7 @@ class Orders {
             'customer_id' => $template_args['user_id'],
             'seller_id'   => dokan_get_current_user_id(),
             'status'      => $template_args['order_status'],
+            'search'      => $template_args['search'],
             'paged'       => $template_args['page'],
             'limit'       => $template_args['limit'],
             'return'      => 'objects',
@@ -197,12 +198,6 @@ class Orders {
 
         if ( ! empty( $template_args['filter_date_end'] ) ) {
             $query_args['date']['to'] = $template_args['filter_date_end'];
-        }
-
-        if ( is_numeric( $template_args['search'] ) ) {
-            $query_args['order_id'] = absint( $template_args['search'] );
-        } elseif ( ! empty( $search ) ) {
-            $query_args['search'] = $template_args['search'];
         }
 
         $template_args['user_orders'] = dokan()->order->all( $query_args );

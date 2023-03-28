@@ -22,6 +22,7 @@ class VendorRegistration extends DokanShortcode {
 
         wp_enqueue_script( 'dokan-form-validate' );
         wp_enqueue_script( 'dokan-vendor-registration' );
+        wp_enqueue_script( 'dokan-vendor-address' );
 
         $data = dokan_get_seller_registration_form_data();
 

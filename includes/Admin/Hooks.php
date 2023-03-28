@@ -427,9 +427,25 @@ class Hooks {
 
             $args['search'] = '*' . $s . '*';
             $args['number'] = 35;
+            $args['search_columns'] = [ 'user_login', 'user_email', 'display_name', 'user_nicename' ];
         }
 
         $results = dokan()->vendor->all( $args );
+
+        if ( ! count( $results ) && ! empty( $_GET['s'] ) ) {
+            unset( $args['search'] );
+            unset( $args['search_columns'] );
+
+            $args['meta_query'] = [ // phpcs:ignore
+                [
+                    'key'     => 'dokan_store_name',
+                    'value'   => sanitize_text_field( wp_unslash( $_GET['s'] ) ) ?? '',
+                    'compare' => 'LIKE',
+                ],
+            ];
+
+            $results = dokan()->vendor->get_vendors( $args );
+        }
 
         if ( ! empty( $results ) ) {
             foreach ( $results as $vendor ) {

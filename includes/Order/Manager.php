@@ -83,7 +83,7 @@ class Manager {
 
         // filter status
         if ( ! $this->is_empty( $args['status'] ) && 'all' !== $args['status'] ) {
-            $status = implode( "','", array_map( 'sanitize_text_field', (array) $args['status'] ) );
+            $status = implode( "','", esc_sql( (array) $args['status'] ) );
             $where  .= " AND do.order_status IN ('$status')";
         }
 
@@ -154,7 +154,7 @@ class Manager {
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
             $search       = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-            $where        .= ' AND p.post_title LIKE %s';
+            $where        .= ' AND p.ID LIKE %s';
             $query_args[] = $search;
         }
 

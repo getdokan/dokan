@@ -63,6 +63,10 @@ trait ObjectCache {
     public static function get( $key, $group = '', $forced = false ) {
         extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
+        if ( empty( $key ) ) {
+            return false;
+        }
+
         return wp_cache_get( $key, $group, $forced );
     }
 
@@ -96,6 +100,10 @@ trait ObjectCache {
     public static function set( $key, $value, $group = '', $expire = WEEK_IN_SECONDS * 2 ) {
         extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
+        if ( empty( $key ) ) {
+            return false;
+        }
+
         return wp_cache_set( $key, $value, $group, $expire );
     }
 
@@ -118,6 +126,10 @@ trait ObjectCache {
     public static function delete( $key, $group = '', $time = 0 ) {
         extract( static::get_key_and_group( $key, $group ) ); //phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
+        if ( empty( $key ) ) {
+            return false;
+        }
+        
         return wp_cache_delete( $key, $group, $time );
     }
 

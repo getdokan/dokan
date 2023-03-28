@@ -452,6 +452,13 @@ class Settings {
                     'default' => '12',
                     'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
+                'enabled_address_on_reg'             => [
+                    'name'    => 'enabled_address_on_reg',
+                    'label'   => __( 'Enable Address Fields', 'dokan-lite' ),
+                    'desc'    => __( 'Add Address Fields on the Vendor Registration form', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
+                ],
             ]
         );
 
@@ -516,11 +523,11 @@ class Settings {
                 ],
                 'new_seller_enable_selling' => [
                     'name'    => 'new_seller_enable_selling',
-                    'label'   => __( 'New Vendor Product Upload', 'dokan-lite' ),
-                    'desc'    => __( 'Allow newly registered vendors to add products', 'dokan-lite' ),
+                    'label'   => __( 'Enable Selling', 'dokan-lite' ),
+                    'desc'    => __( 'Immediately enable selling for newly registered vendors', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
-                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from Dashboard -> Vendors.', 'dokan-lite' ),
+                    'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
@@ -537,6 +544,13 @@ class Settings {
                     'type'    => 'switcher',
                     'default' => 'on',
                     'tooltip' => __( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ),
+                ],
+                'dokan_any_category_selection'       => [
+                    'name'    => 'dokan_any_category_selection',
+                    'label'   => __( 'Select any category', 'dokan-lite' ),
+                    'desc'    => __( 'Allow vendors to select any category while creating/editing products.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
                 ],
             ]
         );
@@ -733,6 +747,7 @@ class Settings {
                 'hide_vendor_info'           => [
                     'name'    => 'hide_vendor_info',
                     'label'   => __( 'Hide Vendor Info', 'dokan-lite' ),
+                    'desc'    => __( 'Hide vendor contact info from single store page.', 'dokan-lite' ),
                     'type'    => 'multicheck',
                     'default' => [
                         'email'   => '',

@@ -1161,7 +1161,7 @@ class Vendor {
         $this->set_social_prop( 'gplus', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1170,7 +1170,7 @@ class Vendor {
         $this->set_social_prop( 'twitter', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1179,7 +1179,7 @@ class Vendor {
         $this->set_social_prop( 'pinterest', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1188,7 +1188,7 @@ class Vendor {
         $this->set_social_prop( 'linkedin', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1197,7 +1197,7 @@ class Vendor {
         $this->set_social_prop( 'youtube', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1206,7 +1206,7 @@ class Vendor {
         $this->set_social_prop( 'instagram', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set flickr
      *
      * @param string

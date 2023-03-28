@@ -13,9 +13,9 @@ use WC_Product_Simple;
 use WC_REST_Exception;
 use WC_Product_Factory;
 use WC_Product_Download;
-use WC_Product_Attribute;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
+use WeDevs\Dokan\Product\ProductAttribute;
 
 /**
  * Store API Controller
@@ -605,7 +605,7 @@ class ProductController extends DokanRESTController {
         $args = parent::prepare_objects_query( $request );
 
         // Set post_status.
-        $args['post_status'] = isset( $request['status'] ) ? $request['status'] : $this->post_status;
+        $args['post_status'] = ! empty( $request['status'] ) ? $request['status'] : $this->post_status;
 
         // Taxonomy query to filter products by type, category,
         // tag, shipping class, and attribute.
@@ -654,7 +654,7 @@ class ProductController extends DokanRESTController {
         }
 
         // Filter featured.
-        if ( is_bool( $request['featured'] ) ) {
+        if ( rest_is_boolean( $request['featured'] ) && wc_string_to_bool( $request['featured'] ) ) {
             $args['tax_query'][] = [
                 'taxonomy' => 'product_visibility',
                 'field'    => 'name',
@@ -695,24 +695,24 @@ class ProductController extends DokanRESTController {
         }
 
         // Filter product in stock or out of stock.
-        if ( is_bool( $request['in_stock'] ) ) {
+        if ( rest_is_boolean( $request['in_stock'] ) ) {
             $args['meta_query'] = $this->add_meta_query( //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
                 $args, [
                     'key'   => '_stock_status',
-                    'value' => true === $request['in_stock'] ? 'instock' : 'outofstock',
+                    'value' => wc_string_to_bool( $request['in_stock'] ) ? 'instock' : 'outofstock',
                 ]
             );
         }
 
         // Filter by on sale products.
-        if ( is_bool( $request['on_sale'] ) ) {
-            $on_sale_key = $request['on_sale'] ? 'post__in' : 'post__not_in';
+        if ( rest_is_boolean( $request['on_sale'] ) ) {
+            $on_sale_key = wc_string_to_bool( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
             $on_sale_ids = wc_get_product_ids_on_sale();
 
             // Use 0 when there's no on sale products to avoid return all products.
             $on_sale_ids = empty( $on_sale_ids ) ? [ 0 ] : $on_sale_ids;
 
-            $args[ $on_sale_key ] += $on_sale_ids;
+            $args[ $on_sale_key ] = ! empty( $args[ $on_sale_key ] ) && is_array( $args[ $on_sale_key ] ) ? array_merge( $args[ $on_sale_key ], $on_sale_ids ) : $on_sale_ids;
         }
 
         // Force the post_type argument, since it's not a user input variable.
@@ -817,6 +817,7 @@ class ProductController extends DokanRESTController {
                 'avatar'  => $store->get_avatar(),
                 'address' => $store->get_address(),
             ],
+            'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
 
         $response = rest_ensure_response( $data );
@@ -941,67 +942,8 @@ class ProductController extends DokanRESTController {
 
         // Attributes.
         if ( isset( $request['attributes'] ) ) {
-            $attributes = [];
-
-            foreach ( $request['attributes'] as $attribute ) {
-                $attribute_id   = 0;
-                $attribute_name = '';
-
-                // Check ID for global attributes or name for product attributes.
-                if ( ! empty( $attribute['id'] ) ) {
-                    $attribute_id   = absint( $attribute['id'] );
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                } elseif ( ! empty( $attribute['name'] ) ) {
-                    $attribute_name = wc_clean( $attribute['name'] );
-                }
-
-                if ( ! $attribute_id && ! $attribute_name ) {
-                    continue;
-                }
-
-                if ( $attribute_id ) {
-                    if ( isset( $attribute['options'] ) ) {
-                        $options = $attribute['options'];
-
-                        if ( ! is_array( $attribute['options'] ) ) {
-                            // Text based attributes - Posted values are term names.
-                            $options = explode( WC_DELIMITER, $options );
-                        }
-
-                        $values = array_map( 'wc_sanitize_term_text_based', $options );
-                        $values = array_filter( $values, 'strlen' );
-                    } else {
-                        $values = [];
-                    }
-
-                    if ( ! empty( $values ) ) {
-                        // Add attribute to array, but don't set values.
-                        $attribute_object = new WC_Product_Attribute();
-                        $attribute_object->set_id( $attribute_id );
-                        $attribute_object->set_name( $attribute_name );
-                        $attribute_object->set_options( $values );
-                        $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                        $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                        $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                        $attributes[] = $attribute_object;
-                    }
-                } elseif ( isset( $attribute['options'] ) ) {
-                    // Custom attribute - Add attribute to array and set the values.
-                    if ( is_array( $attribute['options'] ) ) {
-                        $values = $attribute['options'];
-                    } else {
-                        $values = explode( WC_DELIMITER, $attribute['options'] );
-                    }
-                    $attribute_object = new WC_Product_Attribute();
-                    $attribute_object->set_name( $attribute_name );
-                    $attribute_object->set_options( $values );
-                    $attribute_object->set_position( isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0' );
-                    $attribute_object->set_visible( ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0 );
-                    $attribute_object->set_variation( ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0 );
-                    $attributes[] = $attribute_object;
-                }
-            }
-            $product->set_attributes( $attributes );
+            $product_attribute = new ProductAttribute( $request['attributes'] );
+            $product_attribute->set( $product );
         }
 
         // Sales and prices.
@@ -1073,19 +1015,13 @@ class ProductController extends DokanRESTController {
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
-
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
-                    $product->set_low_stock_amount( '' );
-                }
+                $product->set_low_stock_amount( '' );
             } elseif ( $product->is_type( 'external' ) ) {
                 $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
                 $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
-
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) {
-                    $product->set_low_stock_amount( '' );
-                }
+                $product->set_low_stock_amount( '' );
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
                 if ( ! $product->is_type( 'variable' ) ) {
@@ -1101,7 +1037,7 @@ class ProductController extends DokanRESTController {
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
                 }
 
-                if ( version_compare( WC_VERSION, '3.4.7', '>' ) && isset( $request['low_stock_amount'] ) ) {
+                if ( isset( $request['low_stock_amount'] ) ) {
                     $product->set_low_stock_amount( wc_stock_amount( $request['low_stock_amount'] ) );
                 }
             } else {
@@ -1316,6 +1252,7 @@ class ProductController extends DokanRESTController {
                 'name'              => get_the_title( $attachment_id ),
                 'alt'               => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
                 'position'          => (int) $position,
+                'is_featured'       => $product->get_image_id() === $attachment_id,
             ];
         }
 
@@ -1696,50 +1633,8 @@ class ProductController extends DokanRESTController {
      */
     protected function save_default_attributes( $product, $request ) {
         if ( isset( $request['default_attributes'] ) && is_array( $request['default_attributes'] ) ) {
-            $attributes         = $product->get_attributes();
-            $default_attributes = [];
-
-            foreach ( $request['default_attributes'] as $attribute ) {
-                $attribute_id   = 0;
-                $attribute_name = '';
-
-                // Check ID for global attributes or name for product attributes.
-                if ( ! empty( $attribute['id'] ) ) {
-                    $attribute_id   = absint( $attribute['id'] );
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                } elseif ( ! empty( $attribute['name'] ) ) {
-                    $attribute_name = sanitize_title( $attribute['name'] );
-                }
-
-                if ( ! $attribute_id && ! $attribute_name ) {
-                    continue;
-                }
-
-                if ( isset( $attributes[ $attribute_name ] ) ) {
-                    $_attribute = $attributes[ $attribute_name ];
-
-                    if ( $_attribute['is_variation'] ) {
-                        $value = isset( $attribute['option'] ) ? wc_clean( stripslashes( $attribute['option'] ) ) : '';
-
-                        if ( ! empty( $_attribute['is_taxonomy'] ) ) {
-                            // If dealing with a taxonomy, we need to get the slug from the name posted to the API.
-                            $term = get_term_by( 'name', $value, $attribute_name );
-
-                            if ( $term && ! is_wp_error( $term ) ) {
-                                $value = $term->slug;
-                            } else {
-                                $value = sanitize_title( $value );
-                            }
-                        }
-
-                        if ( $value ) {
-                            $default_attributes[ $attribute_name ] = $value;
-                        }
-                    }
-                }
-            }
-
-            $product->set_default_attributes( $default_attributes );
+            $product_attribute = new ProductAttribute( $request['default_attributes'] );
+            $product_attribute->set_default( $product );
         }
 
         return $product;
