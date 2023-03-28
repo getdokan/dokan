@@ -35,6 +35,7 @@ class Controller {
         $this->container['hooks']       = new Hooks();
         $this->container['misc_hooks']  = new MiscHooks();
         $this->container['email_hooks'] = new EmailHooks();
+        $this->container['cache']       = new OrderCache();
 
         if ( is_admin() ) {
             $this->container['permission']  = new Admin\Permissions();

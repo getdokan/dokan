@@ -214,7 +214,7 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 }
 
 /**
- * Insert a order in sync table once a order is created
+ * Insert an order in sync table once an order is created
  *
  * @param int $order_id
  *

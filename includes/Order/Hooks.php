@@ -59,9 +59,6 @@ class Hooks {
         // Change order meta key and value.
         add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
-
-        // Init Order Cache Class
-        new OrderCache();
     }
 
     /**
@@ -427,12 +424,12 @@ class Hooks {
      * @return void
      */
     public function delete_child_order_from_wc_order_product( $args ) {
-        $order = get_post( $args );
+        $order = wc_get_order( $args );
 
-        if ( $order->post_parent ) {
+        if ( $order->get_parent_id() ) {
             global $wpdb;
-            $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->ID ] );
-            $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->ID ] );
+            $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->get_id() ] );
+            $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->get_id() ] );
         }
     }
 
