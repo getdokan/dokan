@@ -16,9 +16,6 @@ test.beforeAll(async ({ request }) => {
 	withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getPendingWithdrawId() : id;
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
 
 test.describe('withdraw api test', () => {
 	test('get balance details', async ({ request }) => {
@@ -40,7 +37,6 @@ test.describe('withdraw api test', () => {
 	});
 
 	test('get single withdraw', async ({ request }) => {
-		// let [, withdrawId] = await apiUtils.createWithdraw()
 
 		const response = await request.get(endPoints.getSingleWithdraw(withdrawId));
 		const responseBody = await apiUtils.getResponseBody(response);
@@ -48,7 +44,6 @@ test.describe('withdraw api test', () => {
 	});
 
 	test('update a withdraw', async ({ request }) => {
-		// let [, withdrawId] = await apiUtils.createWithdraw()
 
 		const response = await request.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw });
 		const responseBody = await apiUtils.getResponseBody(response);
@@ -56,7 +51,6 @@ test.describe('withdraw api test', () => {
 	});
 
 	test('cancel a withdraw', async ({ request }) => {
-		// let [, withdrawId] = await apiUtils.createWithdraw()
 
 		const response = await request.delete(endPoints.cancelAWithdraw(withdrawId));
 		const responseBody = await apiUtils.getResponseBody(response);
@@ -82,4 +76,6 @@ test.describe('withdraw api test', () => {
 		expect(response.ok()).toBeTruthy();
 		expect(response.status()).toBe(201);
 	});
+
+
 });

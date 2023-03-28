@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from '../utils/apiUtils';
+import { endPoints } from '../utils/apiEndPoints';
+import { payloads } from '../utils/payloads';
 
 let apiUtils: any;
 
@@ -26,7 +26,7 @@ test.describe('withdraw api test', () => {
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test.skip('get withdraw disbursement settings @v2', async ({ request }) => {
+	test('get withdraw disbursement settings @v2 @pro', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.get(endPoints.getWithdrawDisbursementSettings);
@@ -34,7 +34,7 @@ test.describe('withdraw api test', () => {
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test.skip('update withdraw disbursement settings @v2', async ({ request }) => {
+	test('update withdraw disbursement settings @v2 @pro', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
