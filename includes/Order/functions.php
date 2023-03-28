@@ -301,12 +301,17 @@ function dokan_sync_insert_order( $order_id ) {
  *
  * @since        3.2.11 rewritten entire function
  *
- * @param int $order_id
+ * @param int|WC_Abstract_Order $order
  *
  * @return int | 0 on failure
  */
-function dokan_get_seller_id_by_order( $order_id ) {
+function dokan_get_seller_id_by_order( $order ) {
     global $wpdb;
+
+    $order_id = $order;
+    if ( ! is_numeric( $order ) ) {
+        $order_id = $order->get_id();
+    }
 
     $cache_key = 'get_seller_id_by_order_' . $order_id;
     $seller_id = Cache::get( $cache_key );
@@ -328,7 +333,7 @@ function dokan_get_seller_id_by_order( $order_id ) {
     }
 
     // get order instance
-    $order = wc_get_order( $order_id );
+    $order = is_numeric( $order ) ? wc_get_order( $order_id ) : $order;
 
     if ( ! $order ) {
         return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );

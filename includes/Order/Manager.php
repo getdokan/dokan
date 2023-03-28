@@ -62,8 +62,7 @@ class Manager {
             // HPOS usage is enabled.
             // HPOS still supports post table
             $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
-            $join             .= " LEFT JOIN $wpdb->posts post ON do.order_id = post.ID";
-            $where            = ' AND post.post_status != %s';
+            $where            = ' AND p.status != %s';
             $query_args       = [ 1, 1, 'trash' ];
         } else {
             // Traditional CPT-based orders are in use.
@@ -489,12 +488,7 @@ class Manager {
         // delete main order
         $this->delete_seller_order( $order_id );
 
-        $sub_orders = wc_get_orders(
-            [
-                'parent' => $order_id,
-                'limit'  => -1,
-            ]
-        );
+        $sub_orders = $this->get_child_orders( $order_id );
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $sub_order ) {
@@ -791,21 +785,23 @@ class Manager {
      * some sub-orders based on the number of sellers.
      *
      * @param int $parent_order_id
+     * @param bool $force_create if this parameter is true, if suborder is already created, they'd be deleted first
+     *
+     * @since DOKAN_SINCE added $force_create parameter
      *
      * @return void
      */
-    public function maybe_split_orders( $parent_order_id ) {
+    public function maybe_split_orders( $parent_order_id, $force_create = false ) {
         $parent_order = $this->get( $parent_order_id );
+
+        if ( ! $parent_order ) {
+            dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
+        }
 
         dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
-        if ( wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
-            $child_orders = wc_get_orders(
-                [
-                    'parent' => $parent_order->get_id(),
-                    'limit'  => -1,
-                ]
-            );
+        if ( $force_create && wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
+            $child_orders = $this->get_child_orders( $parent_order->get_id() );
 
             foreach ( $child_orders as $child_order ) {
                 $child_order->delete( true );
