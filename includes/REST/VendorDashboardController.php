@@ -84,12 +84,6 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'default'     => 'day',
                             'enum'        => [ 'day', 'week', 'month', 'year' ],
                         ],
-                        'alltime'   => [
-                            'type'        => 'boolean',
-                            'description' => __( 'Alltime Report?', 'dokan-lite' ),
-                            'required'    => false,
-                            'default'     => false,
-                        ],
                     ],
                     'permission_callback' => 'is_user_logged_in',
                 ],
