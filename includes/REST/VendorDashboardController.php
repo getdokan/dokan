@@ -77,6 +77,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'description'       => __( 'Returns all sales reports if true', 'dokan-lite' ),
                             'default'           => false,
                             'validate_callback' => 'rest_is_boolean',
+                            'sanitize_callback' => 'rest_sanitize_boolean',
                         ],
                         'group_by'   => [
                             'type'        => 'string',
