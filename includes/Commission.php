@@ -778,7 +778,6 @@ class Commission {
      * @return string
      */
     public function get_shipping_tax_fee_recipient( $order ): string {
-
         $tax_recipient = apply_filters(
             'dokan_shipping_tax_fee_recipient',
             dokan_get_option(
