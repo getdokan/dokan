@@ -265,7 +265,7 @@ class VendorDashboardController extends \WP_REST_Controller {
         );
 
         if ( $filter_range ) {
-            $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $min_date, 'c' ) )->modify('-3 day' );
+            $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $min_date, 'c' ) )->modify( '-3 day' );
         }
 
         $date_range = new DatePeriod( $from_date, $interval, $to_date );
