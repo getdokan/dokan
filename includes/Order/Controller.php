@@ -32,10 +32,11 @@ class Controller {
      * @return void
      */
     public function init_classes() {
-        $this->container['hooks']       = new Hooks();
-        $this->container['misc_hooks']  = new MiscHooks();
-        $this->container['email_hooks'] = new EmailHooks();
-        $this->container['cache']       = new OrderCache();
+        $this->container['hooks']          = new Hooks();
+        $this->container['misc_hooks']     = new MiscHooks();
+        $this->container['email_hooks']    = new EmailHooks();
+        $this->container['cache']          = new OrderCache();
+        $this->container['frontend_hooks'] = new Frontend\Hooks();
 
         if ( is_admin() ) {
             $this->container['permission']  = new Admin\Permissions();

@@ -5,6 +5,11 @@ namespace WeDevs\Dokan\Order;
 use Exception;
 use WC_Order;
 
+// don't call the file directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 /**
  * Admin Hooks
  *

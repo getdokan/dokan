@@ -15,7 +15,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
     wc_deprecated_function( 'dokan_get_seller_amount_from_order', '3.7.111', 'dokan()->commission->get_earning_by_order()' );
 
     $order = wc_get_order( $order_id );
-    if ( is_wp_error( $order ) ) {
+    if ( ! $order ) {
         return $order;
     }
 
@@ -992,19 +992,4 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
 
         $order->update_status( $status );
     }
-}
-
-/**
- * Check if WooCommerce HPOS (High Performance Order Storage) feature is enabled or not
- *
- * @since DOKAN_SINCE
- *
- * @return bool
- */
-function dokan_is_hpos_enabled() {
-    if ( false === version_compare( WC_VERSION, '7.1', '>=' ) ) {
-        return false;
-    }
-
-    return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 }

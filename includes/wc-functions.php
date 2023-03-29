@@ -977,37 +977,6 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
 }
 
 /**
- * Change bulk order status in vendor dashboard
- *
- * @since 2.8.3
- *
- * @return void
- */
-function dokan_bulk_order_status_change() {
-    if ( ! current_user_can( 'dokan_manage_order' ) ) {
-        return;
-    }
-
-    if ( dokan_get_option( 'order_status_change', 'dokan_selling' ) === 'off' ) {
-        return;
-    }
-
-    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'bulk_order_status_change' ) ) {
-        return;
-    }
-
-    // Doing the bulk action for orders.
-    dokan_apply_bulk_order_status_change(
-        [
-            'status'      => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
-            'bulk_orders' => isset( $_POST['bulk_orders'] ) ? array_map( 'absint', $_POST['bulk_orders'] ) : [],
-        ]
-    );
-}
-
-add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
-
-/**
  * Keep old vendor after duplicate any product
  *
  * @param WC_Product $duplicate
