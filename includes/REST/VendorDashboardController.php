@@ -54,6 +54,9 @@ class VendorDashboardController extends \WP_REST_Controller {
                 ],
             ]
         );
+
+        $default_to_date   = dokan_current_datetime()->format( 'c' );
+        $default_from_date = dokan_format_datetime( get_option( 'dokan_installed_time', $default_to_date ), 'c' );
         register_rest_route(
             $this->namespace, '/' . $this->base . '/sales', [
                 [
@@ -64,15 +67,15 @@ class VendorDashboardController extends \WP_REST_Controller {
                             'type'        => 'string',
                             'format'      => 'date-time',
                             'description' => __( 'From Date', 'dokan-lite' ),
-                            'required'    => true,
-                            'default'     => dokan_current_datetime()->modify( 'first day of this month' )->format( 'c' ),
+                            'required'    => false,
+                            'default'     => $default_from_date,
                         ],
                         'to'   => [
                             'type'        => 'string',
                             'format'      => 'date-time',
                             'description' => __( 'To Date', 'dokan-lite' ),
-                            'required'    => true,
-                            'default'     => dokan_current_datetime()->format( 'c' ),
+                            'required'    => false,
+                            'default'     => $default_to_date,
                         ],
                         'group_by'   => [
                             'type'        => 'string',
@@ -174,7 +177,6 @@ class VendorDashboardController extends \WP_REST_Controller {
         $from             = $request->get_param( 'from' );
         $to               = $request->get_param( 'to' );
         $group_by         = $request->get_param( 'group_by' );
-        $alltime          = $request->get_param( 'alltime' );
         $from_date        = dokan_current_datetime()->modify( $from );
         $to_date          = dokan_current_datetime()->modify( $to );
         $interval         = DateInterval::createFromDateString( '1 ' . $group_by );
@@ -215,15 +217,6 @@ class VendorDashboardController extends \WP_REST_Controller {
                 break;
         }
 
-        // For all time report data we will get data from dokan installation time till now.
-        if ( $alltime ) {
-            $to_date = dokan_current_datetime();
-            $from    = get_option( 'dokan_installed_time', $to_date );
-
-            $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $from ) );
-            $to_date   = $to_date->add( $interval );
-        }
-
         $order_report_data = dokan_get_order_report_data(
             array(
                 'data' => array(
@@ -258,7 +251,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'group_by'     => implode( ', ', $group_by_array ),
                 'order_by'     => 'post_date ASC',
                 'query_type'   => 'get_results',
-                'filter_range' => ! $alltime,
+                'filter_range' => true,
                 'debug'        => false,
             ),
             $from_date->format( 'Y-m-d' ),
