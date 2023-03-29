@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WC_Order;
 use WP_REST_Response;
 
 // don't call the file directly
@@ -21,8 +22,72 @@ class MiscHooks {
      * @since DOKAN_SINCE
      */
     public function __construct() {
+        //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
+        add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
+        add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
+
+        // remove customer info from order export based on setting
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
+
         add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
         add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 );
+    }
+
+    /**
+     * Delete_child_order_from_wc_order_product
+     *
+     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     *
+     * @param \ActionScheduler_Action $args
+     *
+     * @return void
+     */
+    public function delete_child_order_from_wc_order_product( $args ) {
+        $order = wc_get_order( $args );
+
+        if ( $order->get_parent_id() ) {
+            global $wpdb;
+            $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->get_id() ] );
+            $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->get_id() ] );
+        }
+    }
+
+    /**
+     * Trim child order if parent exist from wc_order_product_lookup for analytics order
+     *
+     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     *
+     * @param WC_Order $orders
+     *
+     * @return WC_Order
+     */
+    public function trim_child_order_for_analytics_order( $orders ) {
+        foreach ( $orders->data as $key => $order ) {
+            if ( $order['parent_id'] ) {
+                unset( $orders->data[ $key ] );
+            }
+        }
+
+        return $orders;
+    }
+
+    /**
+     * Remove customer sensitive information while exporting order
+     *
+     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     *
+     * @param array $headers
+     *
+     * @return mixed
+     */
+    public function hide_customer_info_from_vendor_order_export( $headers ) {
+        $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+        if ( 'off' !== $hide_customer_info ) {
+            unset( $headers['billing_email'] );
+            unset( $headers['customer_ip'] );
+        }
+
+        return $headers;
     }
 
     /**

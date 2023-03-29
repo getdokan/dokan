@@ -42,6 +42,9 @@ class Hooks {
             add_filter( 'manage_edit-shop_order_columns', [ $this, 'admin_shop_order_edit_columns' ], 11 );
         }
 
+        // Change order meta key and value.
+        add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
+        add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
         add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
         add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
         add_action( 'delete_post', [ $this, 'admin_on_delete_order' ] );
@@ -337,6 +340,49 @@ class Hooks {
             }
         </style>
         <?php
+    }
+
+    /**
+     * Change order item display meta key.
+     *
+     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     *
+     * @param string $display_key
+     *
+     * @return string
+     */
+    public function change_order_item_display_meta_key( $display_key ) {
+        if ( 'seller_id' === $display_key ) {
+            return __( 'Vendor', 'dokan-lite' );
+        }
+
+        return $display_key;
+    }
+
+    /**
+     * Change order item display meta value.
+     *
+     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     *
+     * @param string $display_value
+     * @param object $meta
+     *
+     * @return string
+     */
+    public function change_order_item_display_meta_value( $display_value, $meta ) {
+        if ( 'seller_id' === $meta->key ) {
+            $vendor = dokan()->vendor->get( $display_value );
+            $url    = get_edit_user_link( $display_value );
+            if ( function_exists( 'dokan_pro' ) ) {
+                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
+            }
+
+            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
+        }
+
+        return $display_value;
     }
 
     /**

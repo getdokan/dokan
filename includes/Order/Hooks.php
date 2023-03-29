@@ -26,6 +26,7 @@ class Hooks {
     public function __construct() {
         // on order status change
         add_action( 'woocommerce_order_status_changed', [ $this, 'on_order_status_change' ], 10, 4 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'manage_refunded_for_order' ], 15, 4 );
         add_action( 'woocommerce_order_status_changed', [ $this, 'on_sub_order_change' ], 99, 4 );
 
         // create sub-orders
@@ -48,58 +49,6 @@ class Hooks {
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
 
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
-
-        //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
-        add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
-        add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
-
-        // remove customer info from order export based on setting
-        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
-
-        // Change order meta key and value.
-        add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
-        add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
-    }
-
-    /**
-     * Change order item display meta key.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param $display_key
-     *
-     * @return string
-     */
-    public function change_order_item_display_meta_key( $display_key ) {
-        if ( 'seller_id' === $display_key ) {
-            return __( 'Vendor', 'dokan-lite' );
-        }
-
-        return $display_key;
-    }
-
-    /**
-     * Change order item display meta value.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @param $display_value
-     * @param $meta
-     *
-     * @return string
-     */
-    public function change_order_item_display_meta_value( $display_value, $meta ) {
-        if ( 'seller_id' === $meta->key ) {
-            $vendor = dokan()->vendor->get( $display_value );
-            $url    = get_edit_user_link( $display_value );
-            if ( function_exists( 'dokan_pro' ) ) {
-                $url = admin_url( 'admin.php?page=dokan#/vendors/' . $display_value );
-            }
-
-            return '<a href=' . esc_url( $url ) . " '>" . $vendor->get_shop_name() . '</a>';
-        }
-
-        return $display_value;
     }
 
     /**
@@ -172,13 +121,34 @@ class Hooks {
             [ '%s' ],
             [ '%d', '%s' ]
         );
+    }
 
-        if ( $new_status !== 'wc-refunded' ) {
-            return;
-        }
+    /**
+     * If order status is set to refunded from vendor dashboard, enter remaining balance into vendor balance table.
+     *
+     * @since DOKAN_SINCE Created this method from on_order_status_change()
+     *
+     * @param int      $order_id
+     * @param string   $old_status
+     * @param string   $new_status
+     * @param WC_Order $order
+     *
+     * @return void
+     */
+    public function manage_refunded_for_order( $order_id, $old_status, $new_status, $order ) {
+        global $wpdb;
 
         // verify nonce
         if ( ! isset( $_POST['_wpnonce'], $_POST['post_type'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan_change_status' ) ) {
+            return;
+        }
+
+        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
+            return;
+        }
+
+        if ( $new_status !== 'wc-refunded' ) {
             return;
         }
 
@@ -414,50 +384,6 @@ class Hooks {
             $item->delete_meta_data( '_reduced_stock' );
             $item->save();
         }
-    }
-
-    /**
-     * Delete_child_order_from_wc_order_product
-     *
-     * @param \ActionScheduler_Action $args
-     *
-     * @return void
-     */
-    public function delete_child_order_from_wc_order_product( $args ) {
-        $order = wc_get_order( $args );
-
-        if ( $order->get_parent_id() ) {
-            global $wpdb;
-            $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->get_id() ] );
-            $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->get_id() ] );
-        }
-    }
-
-    /**
-     * Trim child order if parent exist from wc_order_product_lookup for analytics order
-     *
-     * @param WC_Order $orders
-     *
-     * @return WC_Order
-     */
-    public function trim_child_order_for_analytics_order( $orders ) {
-        foreach ( $orders->data as $key => $order ) {
-            if ( $order['parent_id'] ) {
-                unset( $orders->data[ $key ] );
-            }
-        }
-
-        return $orders;
-    }
-
-    public function hide_customer_info_from_vendor_order_export( $headers ) {
-        $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
-        if ( 'off' !== $hide_customer_info ) {
-            unset( $headers['billing_email'] );
-            unset( $headers['customer_ip'] );
-        }
-
-        return $headers;
     }
 
     /**
