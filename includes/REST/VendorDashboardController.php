@@ -257,7 +257,7 @@ class VendorDashboardController extends \WP_REST_Controller {
         $min_date = time();
 
         array_walk(
-                $order_report_data, function( &$item ) use ( $date_time_format, &$min_date ) {
+            $order_report_data, function( &$item ) use ( $date_time_format, &$min_date ) {
                 $post_date = dokan_current_datetime()->modify( $item->post_date );
                 $min_date = $post_date->getTimestamp() < $min_date ? $post_date->getTimestamp() : $min_date;
                 $item->post_date = $post_date->format( $date_time_format );
