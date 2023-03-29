@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WC_Order;
+use WeDevs\Dokan\FakeMailer;
 
 // don't call the file directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,6 +30,8 @@ class EmailHooks {
 
         add_filter( 'woocommerce_email_recipient_cancelled_order', [ $this, 'send_email_for_order_cancellation' ], 10, 2 );
         add_filter( 'woocommerce_email_headers', [ $this, 'add_reply_to_vendor_email_on_wc_customer_note_mail' ], 10, 3 );
+
+        add_action( 'phpmailer_init', [ $this, 'exclude_child_customer_receipt' ] );
     }
 
     /**
@@ -118,5 +121,60 @@ class EmailHooks {
         }
 
         return $headers;
+    }
+
+    /**
+     * Exclude child order emails for customers
+     *
+     * A hacky and dirty way to do this from this action. Because there is no easy
+     * way to do this by removing action hooks from WooCommerce. It would be easier
+     * if they were from functions. Because they are added from classes, we can't
+     * remove those action hooks. That's why we are doing this from the phpmailer_init action
+     * by returning a fake phpmailer class.
+     *
+     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     *
+     * @param object $phpmailer
+     *
+     * @return void
+     */
+    public function exclude_child_customer_receipt( &$phpmailer ) {
+        $subject = $phpmailer->Subject; ////phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+        // order receipt
+        $sub_receipt  = __( 'Your {site_title} order receipt from {order_date}', 'dokan-lite' );
+        $sub_download = __( 'Your {site_title} order from {order_date} is complete', 'dokan-lite' );
+
+        $sub_receipt  = str_replace(
+            [
+                '{site_title}',
+                '{order_date}',
+            ], [ wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ], $sub_receipt
+        );
+        $sub_download = str_replace(
+            [
+                '{site_title}',
+                '{order_date} is complete',
+            ], [ wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ], $sub_download
+        );
+
+        // not a customer receipt mail
+        if ( ( stripos( $subject, $sub_receipt ) === false ) && ( stripos( $subject, $sub_download ) === false ) ) {
+            return;
+        }
+
+        $message = $phpmailer->Body; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+        $pattern = '/Order: #(\d+)/';
+        preg_match( $pattern, $message, $matches );
+
+        if ( isset( $matches[1] ) ) {
+            $order_id = $matches[1];
+            $order    = wc_get_order( $order_id );
+
+            // we found a child order
+            if ( $order && $order->post_parent !== 0 ) {
+                $phpmailer = new FakeMailer();
+            }
+        }
     }
 }
