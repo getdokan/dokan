@@ -20,7 +20,9 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "tareq1988/wp-php-cs-fixer": "dev-master",
     "phpcompatibility/phpcompatibility-wp": "dev-master",
-    "phpunit/phpunit": "^8.5.31"
+    "phpunit/phpunit": "^8.5.31",
+    "wp-phpunit/wp-phpunit": "dev-master",
+    "yoast/phpunit-polyfills": "^1.0@dev"
   },
   "config": {
     "platform": {

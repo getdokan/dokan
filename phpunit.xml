@@ -6,6 +6,9 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
+    <php>
+        <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/phpunit-wp-config.php" />
+    </php>
 	<testsuites>
 		<testsuite name="Dokan Test Suite">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
