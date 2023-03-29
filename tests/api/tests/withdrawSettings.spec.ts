@@ -9,10 +9,6 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('withdraw api test', () => {
 	test('get withdraw settings @v2', async ({ request }) => {
 		const response = await request.get(endPoints.getWithdrawSettings);

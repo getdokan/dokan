@@ -12,49 +12,36 @@ test.beforeAll(async ({ request }) => {
 	[productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
 
 test.describe('product variation api test', () => {
-	test('get all product variations', async ({ request }) => {
-		// let [productId,] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
 
+	test('get all product variations @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllProductVariations(productId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get single product variation', async ({ request }) => {
-		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
-
+	test('get single product variation @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleProductVariation(productId, variationId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('create a product variation', async ({ request }) => {
-		// let [, productId] = await apiUtils.createProduct(payloads.createVariableProduct())
-
+	test('create a product variation @pro', async ({ request }) => {
 		const response = await request.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('update a product variation', async ({ request }) => {
-		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
-
+	test('update a product variation @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('delete a product variation', async ({ request }) => {
-		// let [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct())
-
+	test('delete a product variation @pro', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteProductVariation(productId, variationId));
-		// let responseBody = await apiUtils.getResponseBody(response)
+		let responseBody = await apiUtils.getResponseBody(response)
 		expect(response.ok()).toBeTruthy();
-
 	});
 });

@@ -11,47 +11,40 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed');
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe.skip('reverse withdrawal api test', () => {
 	//TODO: enable reverse withdraw settings
-
-	test('get reverse withdrawal transaction types', async ({ request }) => {
+	test('get reverse withdrawal transaction types @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getReverseWithdrawalTransactionTypes);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get all reverse withdrawal stores', async ({ request }) => {
+	test('get all reverse withdrawal stores @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllReverseWithdrawalStores);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get all reverse withdrawal store balance', async ({ request }) => {
+	test('get all reverse withdrawal store balance @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllReverseWithdrawalStoreBalance);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get all reverse withdrawal transactions', async ({ request }) => {
+	test('get all reverse withdrawal transactions @lite', async ({ request }) => {
 		const storeId = await apiUtils.getReverseWithdrawalStoreId();
-		// console.log(storeId)
-
 		const response = await request.get(endPoints.getAllReverseWithdrawalTransactions(storeId, `${helpers.currentYear}-01-01`, `${helpers.currentYear}-12-31`));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get reverse withdrawal vendor due status', async ({ request }) => {
+	test('get reverse withdrawal vendor due status @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getReverseWithdrawalVendorDueStatus);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get reverse withdrawal add product to cart', async ({ request }) => {
+	test('add reverse withdrawal payment product to cart @lite', async ({ request }) => {
 		const response = await request.post(endPoints.getReverseWithdrawalAddProductToCart,{ data: payloads.amountToPay});
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

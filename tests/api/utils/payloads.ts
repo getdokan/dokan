@@ -1200,7 +1200,7 @@ export const payloads = {
 		status: 'active',
 	},
 
-	adminContactStore: {
+	clientContactStore: {
 		name: 'admin',
 		email: 'admin@g.c',
 		message: 'Test admin connect with vendor message',

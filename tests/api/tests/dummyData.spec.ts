@@ -9,24 +9,21 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('dummy Data api test', () => {
-	test('get dummy data status', async ({ request }) => {
+	
+	test('get dummy data status @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getDummyDataStatus);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('import dummy data', async ({ request }) => {
+	test('import dummy data @lite', async ({ request }) => {
 		const response = await request.post(endPoints.importDummyData, { data: payloads.dummyData });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('clear dummy data', async ({ request }) => {
+	test('clear dummy data @lite', async ({ request }) => {
 		const response = await request.delete(endPoints.clearDummyData);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

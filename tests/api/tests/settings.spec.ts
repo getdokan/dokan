@@ -16,17 +16,15 @@ test.afterAll(async ({ request }) => {
 	expect(response.ok()).toBeTruthy();
 });
 
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('settings api test', () => {
-	test('get settings', async ({ request }) => {
+	
+	test('get settings @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getSettings);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('update settings', async ({ request }) => {
+	test('update settings @lite', async ({ request }) => {
 		const response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

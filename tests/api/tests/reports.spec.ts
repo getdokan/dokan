@@ -10,30 +10,27 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('report api test', () => {
-	test('get sales overview report', async ({ request }) => {
+
+	test('get sales overview report @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSalesOverviewReport);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get summary report', async ({ request }) => {
+	test('get summary report @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSummaryReport);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get top earners report', async ({ request }) => {
+	test('get top earners report @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getTopEarnersReport);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get top selling products report ', async ({ request }) => {
+	test('get top selling products report  @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getTopSellingProductsReport);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

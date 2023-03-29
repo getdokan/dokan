@@ -40,6 +40,15 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// is json
+	async isJson(json: string) {
+		try {
+			return(JSON.parse(json) && !!json);
+		} catch (e) {
+			return false;
+		}
+	}
+
 	/**
 	 * dummy data api methods
 	 */
@@ -306,7 +315,7 @@ export class ApiUtils {
 
 	// cancel withdraw
 	async cancelWithdraw(withdrawId: string) {
-		const response = await this.request.delete(endPoints.cancelAWithdraw(withdrawId));
+		const response = await this.request.delete(endPoints.cancelWithdraw(withdrawId));
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -1035,7 +1044,7 @@ export class ApiUtils {
 	}
 
 	// get mediaItemId
-	async getMediaItemId( auth?: any) {
+	async getMediaItemId(auth?: any) {
 		const getAllMediaItems = await this.getAllMediaItems();
 		const mediaId = getAllMediaItems[0].id;
 		return mediaId;

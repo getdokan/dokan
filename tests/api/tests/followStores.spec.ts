@@ -13,33 +13,24 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.followUnfollowStore(sellerId);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
 
 test.describe('follow store api test', () => {
+	
 	test('get store follow status @pro', async ({ request }) => {
-		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-
 		const response = await request.get(endPoints.getStoreFollowStatus(sellerId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
 	test('follow-unfollow a store @pro', async ({ request }) => {
-		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-
 		const response = await request.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
 	test('get followers @pro', async ({ request }) => {
-		// let [, sellerId] = await apiUtils.createStore(payloads.createStore())
-
 		const response = await request.get(endPoints.getFollowers);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
-
 });

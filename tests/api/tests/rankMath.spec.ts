@@ -11,19 +11,13 @@ test.beforeAll(async ({ request }) => {
 	[, productId] = await apiUtils.createProduct(payloads.createProduct());
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe.skip('rank math api test', () => {
-	test('rank math', async ({ request }) => {
+
+	test('rank math @pro', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet!');
 		
 		const response = await request.post(endPoints.rankMath(productId), { data: {} });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
-
-
-
 });

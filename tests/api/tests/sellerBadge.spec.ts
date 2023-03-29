@@ -14,10 +14,6 @@ test.beforeAll(async ({ request }) => {
     [, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadge);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('seller badge api test', () => {
 
     test('get verified-seller verification types @pro', async ({ request }) => {
@@ -75,22 +71,15 @@ test.describe('seller badge api test', () => {
     });
 
     test('delete a seller badge @pro', async ({ request }) => {
-
-
         const response = await request.delete(endPoints.deleteSellerBadge(badgeId));
         const responseBody = await apiUtils.getResponseBody(response);
         expect(response.ok()).toBeTruthy();
     });
 
     test('update batch seller badges @pro', async ({ request }) => {
-
-
         const allBadgeIds = (await apiUtils.getAllSellerBadges()).map((a: { id: any }) => a.id);
-        // console.log(allBadgeIds)
-
         const response = await request.put(endPoints.updateBatchCustomers, { data: { ids: allBadgeIds, action: 'draft' } });
         const responseBody = await apiUtils.getResponseBody(response);
         expect(response.ok()).toBeTruthy();
     });
-
 });

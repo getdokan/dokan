@@ -9,11 +9,8 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe(' api test', () => {
+
 	test('setup test store settings', async ({ request }) => {
 		const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
 		const responseBody = await apiUtils.getResponseBody(response);

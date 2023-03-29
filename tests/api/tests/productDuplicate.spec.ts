@@ -11,16 +11,11 @@ test.beforeAll(async ({ request }) => {
 	[, productId] = await apiUtils.createProduct(payloads.createProduct());
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('product duplicate api test', () => {
-	test('create duplicate product @v2', async ({ request }) => {
+
+	test('create duplicate product @v2 @pro', async ({ request }) => {
 		const response = await request.post(endPoints.createDuplicateProduct(productId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
-
-
 });

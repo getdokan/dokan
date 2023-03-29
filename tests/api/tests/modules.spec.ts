@@ -12,20 +12,15 @@ test.beforeAll(async ({ request }) => {
 	randomModule = helpers.randomItem(await apiUtils.getAllModuleIds());
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('modules api test', () => {
-	test('get all modules', async ({ request }) => {
+	
+	test('get all modules @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllModules);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('deactivate a module', async ({ request }) => {
-		// let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-
+	test('deactivate a module @pro', async ({ request }) => {
 		const response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
@@ -34,9 +29,7 @@ test.describe('modules api test', () => {
 		// await apiUtils.activateModules(randomModule)
 	});
 
-	test('activate a module', async ({ request }) => {
-		// let randomModule = helpers.randomItem(await apiUtils.getAllModuleIds())
-
+	test('activate a module @pro', async ({ request }) => {
 		const response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

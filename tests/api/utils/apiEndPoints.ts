@@ -5,12 +5,13 @@ export const endPoints = {
 	serverUrl: `${SERVER_URL}`,
 
 	// stores
-	getAllStoresCheck: `${SERVER_URL}/dokan/v1/stores/check`,
+	
 	getAllStores: `${SERVER_URL}/dokan/v1/stores`,
 	getSingleStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}`,
 	createStore: `${SERVER_URL}/dokan/v1/stores`,
 	updateStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}`,
 	deleteStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}${QUERY}reassign=0`,
+	getStoresSlugAvaility: `${SERVER_URL}/dokan/v1/stores/check`,
 	getStoreCurrentVisitor: `${SERVER_URL}/dokan/v1/stores/current-visitor`,
 	getStoreStats: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/stats`,
 	getStoreCategories: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/categories`,
@@ -18,30 +19,23 @@ export const endPoints = {
 	getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
 	createStoreReview: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
 	updateStoreStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/status`,
-	adminContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`, // post
+	ClientContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`, // post
 	adminEmailStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/email`, // post
 	updateBatchStores: `${SERVER_URL}/dokan/v1/stores/batch`, // method: approved, pending, delete
 
 	// products
+	getAllProducts: `${SERVER_URL}/dokan/v1/products/`,
+	getSingleProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
+	createProduct: `${SERVER_URL}/dokan/v1/products`,
+	updateProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
+	deleteProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
+	getAllRelatedProducts: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/related`,
 	getProductsSummary: `${SERVER_URL}/dokan/v1/products/summary`,
 	getTopRatedProducts: `${SERVER_URL}/dokan/v1/products/top_rated`,
 	getBestSellingProducts: `${SERVER_URL}/dokan/v1/products/best_selling`,
 	getFeaturedProducts: `${SERVER_URL}/dokan/v1/products/featured`,
 	getLatestProducts: `${SERVER_URL}/dokan/v1/products/latest`,
 	getAllMultiStepCategories: `${SERVER_URL}/dokan/v1/products/multistep-categories`,
-	getAllProducts: `${SERVER_URL}/dokan/v1/products/`,
-	getSingleProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
-	getAllRelatedProducts: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/related`,
-	createProduct: `${SERVER_URL}/dokan/v1/products`,
-	updateProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
-	deleteProduct: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}`,
-
-	// product variations
-	getAllProductVariations: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
-	getSingleProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
-	createProductVariation: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
-	updateProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
-	deleteProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
 
 	// product attributes
 	getAllAttributes: `${SERVER_URL}/dokan/v1/products/attributes`,
@@ -50,6 +44,8 @@ export const endPoints = {
 	updateAttribute: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}`,
 	deleteAttribute: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}`,
 	batchUpdateAttributes: `${SERVER_URL}/dokan/v1/products/attributes/batch`, // method: create, update, delete
+	setDefaultAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/set-default/${productId}`,
+	updateProductAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/edit-product/${productId}`,
 
 	// product attribute terms
 	getAllAttributeTerms: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms`,
@@ -58,6 +54,13 @@ export const endPoints = {
 	updateAttributeTerm: (attributeId: string, attributeTermId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
 	deleteAttributeTerm: (attributeId: string, attributeTermId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/${attributeTermId}`,
 	updateBatchAttributeTerms: (attributeId: string) => `${SERVER_URL}/dokan/v1/products/attributes/${attributeId}/terms/batch`, // method: create, update, delete
+
+	// product variations
+	getAllProductVariations: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
+	getSingleProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
+	createProductVariation: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
+	updateProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
+	deleteProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
 
 	// orders
 	getOrdersSummary: `${SERVER_URL}/dokan/v1/orders/summary`,
@@ -79,10 +82,10 @@ export const endPoints = {
 	getSingleWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
 	createWithdraw: `${SERVER_URL}/dokan/v1/withdraw/`, // post
 	updateWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
-	cancelAWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
+	cancelWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
 	updateBatchWithdraws: `${SERVER_URL}/dokan/v1/withdraw/batch`, // method: approved, pending, delete, cancelled
 
-	// settings
+	// store settings 
 	getSettings: `${SERVER_URL}/dokan/v1/settings`,
 	updateSettings: `${SERVER_URL}/dokan/v1/settings`,
 
@@ -251,8 +254,7 @@ export const endPoints = {
 	// product
 	getProductBlockDetails: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/products/${productId}`,
 	getVariableProductBlockDetails: (productId: string) => `${SERVER_URL}/dokan/v1/blocks/product-variation/${productId}`,
-	setDefaultAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/set-default/${productId}`,
-	updateProductAttribute: (productId: string) => `${SERVER_URL}/dokan/v1/products/attributes/edit-product/${productId}`,
+
 
 	// vendor dashboard
 	getVendorDashboardStatistics: `${SERVER_URL}/dokan/v1/vendor-dashboard`,
@@ -271,9 +273,13 @@ export const endPoints = {
 	// product duplicate 
 	createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
 
+
+	getAllProductsV2: `${SERVER_URL}/dokan/v2/products`,
+	getAllOrdersV2: `${SERVER_URL}/dokan/v2/products`,
+
+
 	// product filter
 	getProductsFilterByData: `${SERVER_URL}/dokan/v2/products/filter-by-data`,
-	getFilteredProducts: `${SERVER_URL}/dokan/v2/products`,
 
 	// withdraw
 	getWithdrawSettings: `${SERVER_URL}/dokan/v2/withdraw/settings`,

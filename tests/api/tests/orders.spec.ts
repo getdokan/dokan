@@ -12,51 +12,45 @@ test.beforeAll(async ({ request }) => {
 	[, orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
+const versions = ['v1', 'v2'];
+for (const version of versions) {
+	test.describe(`order api test ${version}`, () => {
 
-test.describe('order api test', () => {
-	test('get all orders', async ({ request }) => {
-		const response = await request.get(endPoints.getAllOrders);
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
+		test('get all orders @lite', async ({ request }) => {
+			const response = await request.get(endPoints.getAllOrders.replace('v1', version));
+			const responseBody = await apiUtils.getResponseBody(response);
+			expect(response.ok()).toBeTruthy();
+		});
+
+		test('get orders summary @lite', async ({ request }) => {
+			const response = await request.get(endPoints.getOrdersSummary.replace('v1', version));
+			const responseBody = await apiUtils.getResponseBody(response);
+			expect(response.ok()).toBeTruthy();
+		});
+
+		test('get orders with before after @lite', async ({ request }) => {
+			const response = await request.get((endPoints.getOrdersBeforeAfter(`${helpers.currentYear}-12-30`, `${helpers.currentYear}-01-01`)).replace('v1', version));
+			const responseBody = await apiUtils.getResponseBody(response);
+			expect(response.ok()).toBeTruthy();
+		});
+
+		test('get single order @lite', async ({ request }) => {
+			const response = await request.get((endPoints.getSingleOrder(orderId)).replace('v1', version));
+			const responseBody = await apiUtils.getResponseBody(response);
+			expect(response.ok()).toBeTruthy();
+		});
+
+		test('update an order @lite', async ({ request }) => {
+			const response = await request.put((endPoints.updateOrder(orderId)).replace('v1', version), { data: payloads.updateOrder });
+			const responseBody = await apiUtils.getResponseBody(response);
+			expect(response.ok()).toBeTruthy();
+		});
 	});
+};
 
-	test('get orders summary', async ({ request }) => {
-		const response = await request.get(endPoints.getOrdersSummary);
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('get orders with before after', async ({ request }) => {
-		const response = await request.get(endPoints.getOrdersBeforeAfter(`${helpers.currentYear}-12-30`, `${helpers.currentYear}-01-01`));
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('get single order', async ({ request }) => {
-		// let [, orderId] = await apiUtils.createOrder(payloads.createProduct(),payloads.createOrder)
-
-		const response = await request.get(endPoints.getSingleOrder(orderId));
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('update an order', async ({ request }) => {
-		// let [, orderId] = await apiUtils.createOrder(payloads.createProduct(),payloads.createOrder)
-
-		const response = await request.put(endPoints.updateOrder(orderId), { data: payloads.updateOrder });
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('update batch orders @v2', async ({ request }) => {
-		const allOrderIds = (await apiUtils.getAllOrders()).map((a: { id: any }) => a.id);
-		// console.log(allOrderIds)
-		const response = await request.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
+test('update batch orders @v2 @lite', async ({ request }) => {
+	const allOrderIds = (await apiUtils.getAllOrders()).map((a: { id: any }) => a.id);
+	const response = await request.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
+	const responseBody = await apiUtils.getResponseBody(response);
+	expect(response.ok()).toBeTruthy();
 });
-

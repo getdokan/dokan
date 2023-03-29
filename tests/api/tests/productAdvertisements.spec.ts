@@ -11,11 +11,9 @@ test.beforeAll(async ({ request }) => {
 	[, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct());
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
 
 test.describe('product advertisement api test', () => {
+
 	test('get all advertised product stores @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllProductAdvertisementStores);
 		const responseBody = await apiUtils.getResponseBody(response);
@@ -38,16 +36,12 @@ test.describe('product advertisement api test', () => {
 	});
 
 	test('expire a product advertisement @pro', async ({ request }) => {
-		// let [, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct())
-
 		const response = await request.put(endPoints.expireProductAdvertisement(productAdvertisementId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
 	test('delete a product advertisement @pro', async ({ request }) => {
-		// let [, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct())
-
 		const response = await request.delete(endPoints.deleteProductAdvertisement(productAdvertisementId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
@@ -55,8 +49,6 @@ test.describe('product advertisement api test', () => {
 
 	test('update batch product advertisements @pro', async ({ request }) => {
 		const allProductAdvertisementIds = (await apiUtils.getAllProductAdvertisements()).map((a: { id: any }) => a.id);
-		// console.log(allProductAdvertisementIds)
-
 		const response = await request.put(endPoints.updateBatchProductAdvertisements, { data: { ids: allProductAdvertisementIds, action: 'delete' } });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

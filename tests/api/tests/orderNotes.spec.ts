@@ -12,39 +12,29 @@ test.beforeAll(async ({ request }) => {
 	[, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createProduct(), payloads.createOrder, payloads.createOrderNote);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
 
 test.describe('order note api test', () => {
-	test('get all order notes', async ({ request }) => {
-		// let [, orderId,] = await apiUtils.createOrderNote(payloads.createProduct(),payloads.createOrder, payloads.createOrderNote)
-
+	
+	test('get all order notes @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllOrderNotes(orderId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get single order note', async ({ request }) => {
-		// let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createProduct(),payloads.createOrder, payloads.createOrderNote)
-
+	test('get single order note @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('create an order note', async ({ request }) => {
-		// let orderId = await apiUtils.getOrderId()
-
+	test('create an order note @lite', async ({ request }) => {
 		const response = await request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 		expect(response.status()).toBe(201);
 	});
 
-	test('delete an order note', async ({ request }) => {
-		// let [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createProduct(),payloads.createOrder, payloads.createOrderNote)
-
+	test('delete an order note @lite', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId));
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();

@@ -79,7 +79,7 @@ export const endPoints = {
 	getSingleWithdraw: ( withdrawId: string ) => `${ SERVER_URL }/dokan/v1/withdraw/${ withdrawId }`,
 	createWithdraw: `${ SERVER_URL }/dokan/v1/withdraw/`, // post
 	updateWithdraw: ( withdrawId: string ) => `${ SERVER_URL }/dokan/v1/withdraw/${ withdrawId }`,
-	cancelAWithdraw: ( withdrawId: string ) => `${ SERVER_URL }/dokan/v1/withdraw/${ withdrawId }`,
+	cancelWithdraw: ( withdrawId: string ) => `${ SERVER_URL }/dokan/v1/withdraw/${ withdrawId }`,
 	updateBatchWithdraws: `${ SERVER_URL }/dokan/v1/withdraw/batch`, // method: approved, pending, delete, cancelled
 
 	// settings

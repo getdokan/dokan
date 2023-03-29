@@ -9,48 +9,45 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => { });
-// test.beforeEach(async ({ request }) => { });
-// test.afterEach(async ({ request }) => { });
-
 test.describe('vendor dashboard api test', () => {
-	test('get vendor dashboard statistics', async ({ request }) => {
+	
+	test('get vendor dashboard statistics @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorDashboardStatistics);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor profile information', async ({ request }) => {
+	test('get vendor profile information @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorProfileInformation);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor sales report', async ({ request }) => {
+	test('get vendor sales report @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorSalesReport);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor product reports summary', async ({ request }) => {
+	test('get vendor product reports summary @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorProductReportsSummary);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor order reports summary', async ({ request }) => {
+	test('get vendor order reports summary @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorOrderReportsSummary);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor store preferences', async ({ request }) => {
+	test('get vendor store preferences @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorStorePreferences);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('get vendor profile progress bar data', async ({ request }) => {
+	test('get vendor profile progress bar data @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getVendorProfileProgressBarData);
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
