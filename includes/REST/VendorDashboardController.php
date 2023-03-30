@@ -75,7 +75,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                         'filter_range'   => [
                             'type'              => 'boolean',
                             'description'       => __( 'Returns all sales reports if true', 'dokan-lite' ),
-                            'default'           => false,
+                            'default'           => true,
                             'validate_callback' => 'rest_is_boolean',
                             'sanitize_callback' => 'rest_sanitize_boolean',
                         ],
@@ -248,7 +248,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'group_by'     => implode( ', ', $group_by_array ),
                 'order_by'     => 'post_date ASC',
                 'query_type'   => 'get_results',
-                'filter_range' => ! $filter_range,
+                'filter_range' => $filter_range,
                 'debug'        => false,
             ),
             $from_date->format( 'Y-m-d' ),
