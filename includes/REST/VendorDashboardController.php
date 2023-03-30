@@ -259,14 +259,14 @@ class VendorDashboardController extends \WP_REST_Controller {
 
         array_walk(
             $order_report_data, function( &$item ) use ( $date_time_format, &$min_date ) {
-                $post_date = dokan_current_datetime()->modify( $item->post_date );
-                $min_date = $post_date->getTimestamp() < $min_date ? $post_date->getTimestamp() : $min_date;
-                $item->post_date = $post_date->format( $date_time_format );
+            $post_date       = dokan_current_datetime()->modify( $item->post_date );
+            $min_date        = $post_date->getTimestamp() < $min_date ? $post_date->getTimestamp() : $min_date;
+            $item->post_date = $post_date->format( $date_time_format );
             }
         );
 
         if ( $filter_range ) {
-            $from_date = dokan_current_datetime()->modify( dokan_format_datetime( $min_date, 'c' ) )->modify( '-3 day' );
+            $from_date = dokan_current_datetime()->setTimestamp( $min_date )->modify( '-3 day' );
         }
 
         $date_range = new DatePeriod( $from_date, $interval, $to_date );
