@@ -277,10 +277,10 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
                     AND pm.meta_key   = '_stock_status'
                     AND pm.meta_value = %s
                     AND p.ID IN (
-                        SELECT tr.object_id FROM {$wpdb->prefix}terms as t
-                        LEFT JOIN {$wpdb->prefix}term_taxonomy as tt on t.term_id = tt.term_taxonomy_id
-                        LEFT JOIN {$wpdb->prefix}term_relationships as tr on t.term_id = tr.term_taxonomy_id
-                        WHERE tt.taxonomy = 'product_type' and t.name not in ($exclude_product_types_text)
+                        SELECT tr.object_id FROM {$wpdb->prefix}terms AS t
+                        LEFT JOIN {$wpdb->prefix}term_taxonomy AS tt ON t.term_id = tt.term_taxonomy_id
+                        LEFT JOIN {$wpdb->prefix}term_relationships AS tr ON t.term_id = tr.term_taxonomy_id
+                        WHERE tt.taxonomy = 'product_type' AND t.slug NOT IN ({$exclude_product_types_text})
                     )
                     GROUP BY p.post_status",
                     $post_type,
