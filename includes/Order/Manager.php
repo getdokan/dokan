@@ -473,6 +473,9 @@ class Manager {
 
         // todo: delete all order references from vendor_balance, withdraw and refund table
         // todo: remove action of wp_trash_post, wp_untrash_post, wp_delete_post if necessary
+        // dokan_vendor_balance has a design flaw, if order is paid via paypal, check etc where
+        // vendor needs a manual withdraw requests, there is no way to track if order amount has been
+        // withdrawn or not, hence we can't properly delete vendor balance.
     }
 
     /**

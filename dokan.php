@@ -314,7 +314,7 @@ final class WeDevs_Dokan {
 
         // initialize the classes
         add_action( 'init', [ $this, 'init_classes' ], 4 );
-        add_action( 'init', [ $this, 'wpdb_table_shortcuts' ] );
+        add_action( 'init', [ $this, 'wpdb_table_shortcuts' ], 1 );
 
         add_action( 'plugins_loaded', [ $this, 'after_plugins_loaded' ] );
 
