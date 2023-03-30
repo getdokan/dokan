@@ -61,9 +61,9 @@ class Manager {
         if ( OrderUtil::is_hpos_enabled() ) {
             // HPOS usage is enabled.
             // HPOS still supports post table
-            $join             = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
-            $where            = ' AND p.status != %s';
-            $query_args       = [ 1, 1, 'trash' ];
+            $join       = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
+            $where      = ' AND p.status != %s';
+            $query_args = [ 1, 1, 'trash' ];
         } else {
             // Traditional CPT-based orders are in use.
             $join       = " LEFT JOIN {$order_table_name} p ON do.order_id = p.ID";
@@ -437,6 +437,7 @@ class Manager {
      */
     public function get_child_orders( $parent_order ) {
         $parent_order_id = is_numeric( $parent_order ) ?? $parent_order->get_id();
+
         return wc_get_orders(
             [
                 'parent' => $parent_order_id,
@@ -760,7 +761,7 @@ class Manager {
                 $coupon &&
                 ! is_wp_error( $coupon ) &&
                 (
-					array_intersect( $product_ids, $coupon->get_product_ids() ) ||
+                    array_intersect( $product_ids, $coupon->get_product_ids() ) ||
                     apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
@@ -787,10 +788,11 @@ class Manager {
      * to each seller dashboard. That's why we need to divide the main order to
      * some sub-orders based on the number of sellers.
      *
-     * @param int $parent_order_id
+     * @since DOKAN_SINCE added $force_create parameter
+     *
      * @param bool $force_create if this parameter is true, if suborder is already created, they'd be deleted first
      *
-     * @since DOKAN_SINCE added $force_create parameter
+     * @param int  $parent_order_id
      *
      * @return void
      */
