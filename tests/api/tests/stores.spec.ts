@@ -5,13 +5,11 @@ import { payloads } from '../utils/payloads';
 
 let apiUtils: any;
 let sellerId: string;
-let reviewId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, sellerId] = await apiUtils.createStore(payloads.createStore());
 	// let [, id] = await apiUtils.getCurrentUser()
-	[, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
 });
 
 test.describe('stores api test', () => {
@@ -75,19 +73,6 @@ test.describe('stores api test', () => {
 		const [, sId] = await apiUtils.getCurrentUser();
 		await apiUtils.createProduct(payloads.createProduct());
 		const response = await request.get(endPoints.getStoreProducts(sId));
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('get store reviews @lite', async ({ request }) => {
-		await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
-		const response = await request.get(endPoints.getStoreReviews(sellerId));
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(response.ok()).toBeTruthy();
-	});
-
-	test('create a store review @lite', async ({ request }) => {
-		const response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});

@@ -15,6 +15,7 @@ test.beforeAll(async ({ request }) => {
 	[, productId] = await apiUtils.createProduct(payloads.createProduct());
 	[attributeTerm, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
 	attribute = await apiUtils.getSingleAttribute(attributeId);
+	console.log(attribute)
 });
 
 test.describe('attribute api test', () => {

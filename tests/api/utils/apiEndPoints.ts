@@ -16,8 +16,6 @@ export const endPoints = {
 	getStoreStats: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/stats`,
 	getStoreCategories: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/categories`,
 	getStoreProducts: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/products`,
-	getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
-	createStoreReview: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
 	updateStoreStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/status`,
 	ClientContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`, // post
 	adminEmailStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/email`, // post
@@ -122,6 +120,8 @@ export const endPoints = {
 	updateReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
 
 	// store reviews
+	getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
+	createStoreReview: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
 	getAllStoreReviews: `${SERVER_URL}/dokan/v1/store-reviews`,
 	getSingleStoreReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/store-reviews/${reviewId}`,
 	updateStoreReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/store-reviews/${reviewId}`,

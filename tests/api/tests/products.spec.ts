@@ -58,7 +58,6 @@ for (const version of versions) {
 		});
 
 		test('get single product @lite', async ({ request }) => {
-			console.log((endPoints.getSingleProduct(productId)).replace('v1',version))
 			const response = await request.get((endPoints.getSingleProduct(productId)).replace('v1',version));
 			const responseBody = await apiUtils.getResponseBody(response);
 			expect(response.ok()).toBeTruthy();

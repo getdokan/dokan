@@ -16,7 +16,19 @@ test.beforeAll(async ({ request }) => {
 
 
 test.describe('store reviews api test', () => {
-	
+
+	test('get store reviews @pro', async ({ request }) => {
+		const response = await request.get(endPoints.getStoreReviews(sellerId));
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+
+	test('create a store review @pro', async ({ request }) => {
+		const response = await request.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview });
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
+	});
+
 	test('get all store reviews @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllStoreReviews);
 		const responseBody = await apiUtils.getResponseBody(response);
