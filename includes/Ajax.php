@@ -46,6 +46,7 @@ class Ajax {
         add_action( 'wp_ajax_custom-header-crop', [ $this, 'crop_store_banner' ] );
 
         add_action( 'wp_ajax_dokan_json_search_products_tags', [ $this, 'dokan_json_search_products_tags' ] );
+        add_action( 'wp_ajax_dokan_json_search_products_cats', [ $this, 'dokan_json_search_products_cats' ] );
 
         add_action( 'wp_ajax_dokan_json_search_products_and_variations', [ $this, 'json_search_product' ], 10 );
         add_action( 'wp_ajax_nopriv_dokan_json_search_products_and_variations', [ $this, 'json_search_product' ], 10 );
@@ -705,6 +706,45 @@ class Ajax {
         }
 
         echo wp_json_encode( $return );
+        die;
+    }
+
+    /**
+     * Search product tags
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function dokan_json_search_products_cats() {
+        check_ajax_referer( 'dokan-search-products-cats', 'security' );
+
+        $categories = [];
+        $name   = ! empty( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '';
+        $page   = ! empty( $_REQUEST['page'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) : 1;
+        $offset = ( $page - 1 ) * 10;
+
+        $drop_down_tags = apply_filters(
+            'dokan_search_product_cats_for_vendor_products',
+            [
+                'name__like' => $name,
+                'hide_empty' => 0,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+                'number'     => 10,
+                'offset'     => $offset,
+            ]
+        );
+
+        $product_cats = get_terms( 'product_cat', $drop_down_tags );
+
+        if ( ! empty( $product_cats ) ) {
+            foreach ( $product_cats as $category ) {
+                $categories[ $category->term_id ] = $category->name;
+            }
+        }
+
+        echo wp_json_encode( $categories );
         die;
     }
 
