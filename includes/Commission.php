@@ -738,7 +738,7 @@ class Commission {
         if ( $saved_shipping_recipient ) {
             $shipping_recipient = $saved_shipping_recipient;
         } else {
-            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' ), $order_id );
+            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
             update_post_meta( $order_id, 'shipping_fee_recipient', $shipping_recipient );
         }
 
