@@ -15,19 +15,22 @@ test.describe('product review api test', () => {
 	
 	test('get all product reviews @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllProductReviews);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get product reviews summary @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getProductReviewSummary);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update a product review @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateProductReview });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

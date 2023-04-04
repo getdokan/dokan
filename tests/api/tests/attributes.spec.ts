@@ -22,33 +22,38 @@ test.describe('attribute api test', () => {
 
 	test('get all attributes @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllAttributes);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get single attribute @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleAttribute(attributeId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('create an attribute @lite', async ({ request }) => {
 		const response = await request.post(endPoints.createAttribute, { data: payloads.createAttribute() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 		expect(response.status()).toBe(201);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update an attribute @lite', async ({ request }) => {
 		const response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete an attribute @lite', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteAttribute(attributeId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update batch attributes @lite', async ({ request }) => {
@@ -60,8 +65,9 @@ test.describe('attribute api test', () => {
 		}
 
 		const response = await request.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response)
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('set default attribute @lite', async ({ request }) => {
@@ -72,8 +78,9 @@ test.describe('attribute api test', () => {
 			options: [],
 		};
 		const response = await request.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update product attribute @lite', async ({ request }) => {
@@ -99,7 +106,8 @@ test.describe('attribute api test', () => {
 			],
 		};
 		const response = await request.post(endPoints.updateProductAttribute(productId), { data: payload });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

@@ -17,31 +17,36 @@ test.describe('product variation api test', () => {
 
 	test('get all product variations @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllProductVariations(productId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get single product variation @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleProductVariation(productId, variationId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('create a product variation @pro', async ({ request }) => {
 		const response = await request.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update a product variation @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete a product variation @pro', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteProductVariation(productId, variationId));
-		let responseBody = await apiUtils.getResponseBody(response)
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

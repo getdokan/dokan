@@ -13,7 +13,8 @@ test.describe('roles api test', () => {
 	
 	test('get all user roles  @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllUserRoles);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

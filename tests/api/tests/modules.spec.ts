@@ -16,14 +16,16 @@ test.describe('modules api test', () => {
 	
 	test('get all modules @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllModules);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('deactivate a module @pro', async ({ request }) => {
 		const response = await request.put(endPoints.deactivateModule, { data: { module: [randomModule] } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 
 		//reactivate module
 		// await apiUtils.activateModules(randomModule)
@@ -31,7 +33,8 @@ test.describe('modules api test', () => {
 
 	test('activate a module @pro', async ({ request }) => {
 		const response = await request.put(endPoints.activateModule, { data: { module: [randomModule] } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

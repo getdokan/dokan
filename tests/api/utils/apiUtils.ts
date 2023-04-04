@@ -26,25 +26,17 @@ export class ApiUtils {
 	// get responseBody
 	async getResponseBody(response: any, assert = true) {
 		let responseBody: any;
+		assert && expect(response.ok()).toBeTruthy();
 		try {
 			responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody); 
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+			return responseBody;
 		} catch (err) {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
-		}
-		assert && expect(response.ok()).toBeTruthy();
-		return responseBody;
-	}
-
-	// is json
-	async isJson(json: string) {
-		try {
-			return (JSON.parse(json) && !!json);
-		} catch (e) {
-			return false;
+			return false
 		}
 	}
 

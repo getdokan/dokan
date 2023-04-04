@@ -12,30 +12,34 @@ test.beforeAll(async ({ request }) => {
 test.describe('withdraw api test', () => {
 	test('get withdraw settings @v2', async ({ request }) => {
 		const response = await request.get(endPoints.getWithdrawSettings);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get withdraw summary @v2', async ({ request }) => {
 		const response = await request.get(endPoints.getWithdrawSummary);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get withdraw disbursement settings @v2 @pro', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.get(endPoints.getWithdrawDisbursementSettings);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update withdraw disbursement settings @v2 @pro', async ({ request }) => {
 		test.fail(!!process.env.CI, 'feature not merged yet');
 
 		const response = await request.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 });

@@ -16,32 +16,37 @@ test.describe('attribute term api test', () => {
 	
 	test('get all attribute terms @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllAttributeTerms(attributeId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get single attribute term @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('create an attribute term @lite', async ({ request }) => {
 		const response = await request.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update an attribute term  @lite', async ({ request }) => {
 		const response = await request.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete an attribute term @lite', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update batch attribute terms @lite', async ({ request }) => {
@@ -53,7 +58,8 @@ test.describe('attribute term api test', () => {
 		}
 
 		const response = await request.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

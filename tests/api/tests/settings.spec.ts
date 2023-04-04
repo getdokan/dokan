@@ -20,14 +20,16 @@ test.describe('settings api test', () => {
 	
 	test('get settings @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getSettings);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update settings @lite', async ({ request }) => {
 		const response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });
 

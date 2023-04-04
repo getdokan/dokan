@@ -17,31 +17,36 @@ test.describe('coupon api test', () => {
 	
 	test('get all coupons @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllCoupons);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get single coupon @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleCoupon(couponId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('create a coupon @pro', async ({ request }) => {
 		const response = await request.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update a coupon @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete a coupon @pro', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteCoupon(couponId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });

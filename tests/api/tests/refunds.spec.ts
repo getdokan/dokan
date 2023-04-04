@@ -21,14 +21,16 @@ test.describe.skip('refunds api test', () => {
 		// await apiUtils.createRefund(orderId, payloads.createRefund)
 
 		let response = await request.get(endPoints.getAllRefunds)
-		let responseBody = await apiUtils.getResponseBody(response)
-		expect(response.ok()).toBeTruthy()
+		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get all refunds by status @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllRefundsByStatus('completed')); // pending, cancelled, completed
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('approve a refund @pro', async ({ request }) => {
@@ -37,8 +39,9 @@ test.describe.skip('refunds api test', () => {
 		// let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
 
 		const response = await request.put(endPoints.approveRefund(refundId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('cancel a refund @pro', async ({ request }) => {
@@ -47,23 +50,26 @@ test.describe.skip('refunds api test', () => {
 		// let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
 
 		const response = await request.put(endPoints.cancelRefund(refundId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete a refund @pro', async ({ request }) => {
 		// let refundId = await apiUtils.getRefundId()
 
 		const response = await request.delete(endPoints.deleteRefund(refundId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update batch refunds @pro', async ({ request }) => {
 		const allRefundIds = (await apiUtils.getAllRefunds()).map((a: { id: any }) => a.id);
 		const response = await request.put(endPoints.updateBatchRefunds, { data: { cancelled: allRefundIds } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });
 

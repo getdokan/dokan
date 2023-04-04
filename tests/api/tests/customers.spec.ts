@@ -15,33 +15,38 @@ test.describe('customers api test', () => {
 
 	test('get all customers @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getAllCustomers);
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('get single customer @pro', async ({ request }) => {
 		const response = await request.get(endPoints.getSingleCustomer(customerId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('create a customer @pro', async ({ request }) => {
 		const response = await request.post(endPoints.createCustomer, { data: payloads.createCustomer() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 		expect(response.status()).toBe(201);
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update a customer @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('delete a customer @pro', async ({ request }) => {
 		const response = await request.delete(endPoints.deleteCustomer(customerId));
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 
 	test('update batch customers @pro', async ({ request }) => {
@@ -53,8 +58,9 @@ test.describe('customers api test', () => {
 		}
 
 		const response = await request.put(endPoints.updateBatchCustomers, { data: { update: batchCustomers } });
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
+		expect(responseBody).toBeTruthy();
 	});
 });
 
