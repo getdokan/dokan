@@ -339,7 +339,11 @@ class Commission {
      * @return int
      */
     public function validate_product_id( $product_id ) {
-        $product   = wc_get_product( $product_id );
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return 0;
+        }
+
         $parent_id = $product->get_parent_id();
 
         return $parent_id ? $parent_id : $product_id;
