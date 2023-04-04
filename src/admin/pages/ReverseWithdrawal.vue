@@ -236,8 +236,8 @@ export default {
             if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
                 return data;
             }
-            data.from = $.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.startDate );
-            data.to = $.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.endDate );
+            data.from = moment( this.filter.transaction_date.startDate ).format( 'YYYY-MM-DD HH:mm:ss' );
+            data.to = moment( this.filter.transaction_date.endDate ).format( 'YYYY-MM-DD HH:mm:ss' );
             // fix from param
             if ( data.from === data.to ) {
                 data.from = '';
