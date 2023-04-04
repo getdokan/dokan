@@ -114,7 +114,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/pay', [
+            $this->namespace, '/' . $this->rest_base . '/add-to-cart', [
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'add_to_cart' ],
