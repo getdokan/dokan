@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -419,6 +420,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             'formatted_threshold'            => wc_format_localized_price( wc_format_decimal( $item['balance']['threshold'], '' ) ),
             'payable_amount'                 => $item['balance']['payable_amount'],
             'formatted_payable_amount'       => wc_format_localized_price( wc_format_decimal( $item['balance']['payable_amount'], wc_get_price_decimals() ) ),
+            'display_notice'                 => SettingsHelper::display_payment_notice_on_vendor_dashboard(),
             'formatted_failed_actions'       => Helper::get_formatted_failed_actions(),
             'formatted_action_taken_message' => ! empty( Helper::get_failed_actions_by_vendor( $request->get_param( 'vendor_id' ) ) ) ? Helper::get_formatted_failed_actions_by_vendor( $request->get_param( 'vendor_id' ) ) : '',
         ];
@@ -890,6 +892,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 ],
                 'formatted_payable_amount' => [
                     'description' => __( 'Formatted Payable Amount', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'display_notice' => [
+                    'description' => __( 'Display notice to pay reverse withdrawal balance during grace period under vendor dashboard.', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
