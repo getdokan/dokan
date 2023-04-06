@@ -699,7 +699,7 @@
 
                             attachment = attachment.toJSON();
 
-                            if ( attachment.id ) {
+                            if ( attachment.id && 'image' === attachment.type ) {
                                 attachment_ids = [];
 
                                 $('<li class="image" data-attachment_id="' + attachment.id + '">\
@@ -802,6 +802,11 @@
 
                         selection.map( function( attachment ) {
                             attachment = attachment.toJSON();
+
+                            // Check if the attachment type is image.
+                            if ( 'image' !== attachment.type ) {
+                                return;
+                            }
 
                             // set the image hidden id
                             self.siblings('input.dokan-feat-image-id').val(attachment.id);
