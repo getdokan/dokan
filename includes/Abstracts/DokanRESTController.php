@@ -84,7 +84,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
     public function create_item( $request ) {
         $validate = $this->validation_before_create_item( $request );
@@ -132,7 +132,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
     public function update_item( $request ) {
         $validate = $this->validation_before_update_item( $request );
