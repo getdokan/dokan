@@ -682,6 +682,9 @@
                     product_gallery_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_gallery,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_gallery_btn_text,
                         },
@@ -786,6 +789,9 @@
                     product_featured_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_featured_img,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_featured_img_btn_text,
                         }
