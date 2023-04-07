@@ -711,11 +711,11 @@
                                     var attachment_id = jQuery(this).attr( 'data-attachment_id' );
                                     attachment_ids.push( attachment_id );
                                 });
+                                
+                                images_gid.val( attachment_ids.join(',') );
                             }
 
                         } );
-
-                        images_gid.val( attachment_ids.join(',') );
                     });
 
                     product_gallery_frame.open();
