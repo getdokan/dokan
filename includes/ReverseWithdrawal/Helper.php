@@ -670,7 +670,7 @@ class Helper {
     /**
      * Get formatted billing type
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param string $billing_type
      *
@@ -686,7 +686,7 @@ class Helper {
     /**
      * This method will add reverse payment amount to cart
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param string $amount
      *
