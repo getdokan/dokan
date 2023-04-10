@@ -1301,6 +1301,9 @@ jQuery(function($) {
                     product_gallery_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_gallery,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_gallery_btn_text,
                         },
@@ -1315,7 +1318,7 @@ jQuery(function($) {
 
                             attachment = attachment.toJSON();
 
-                            if ( attachment.id ) {
+                            if ( attachment.id && 'image' === attachment.type ) {
                                 attachment_ids = [];
 
                                 $('<li class="image" data-attachment_id="' + attachment.id + '">\
@@ -1405,6 +1408,9 @@ jQuery(function($) {
                     product_featured_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_featured_img,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_featured_img_btn_text,
                         }
@@ -1415,6 +1421,11 @@ jQuery(function($) {
 
                         selection.map( function( attachment ) {
                             attachment = attachment.toJSON();
+
+                            // Check if the attachment type is image.
+                            if ( 'image' !== attachment.type ) {
+                                return;
+                            }
 
                             // set the image hidden id
                             self.siblings('input.dokan-feat-image-id').val(attachment.id);

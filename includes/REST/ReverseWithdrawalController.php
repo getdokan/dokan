@@ -243,7 +243,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Checks if a given request has access to get items.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -256,7 +256,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * This method will return due status of a single vendor
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param WP_REST_Request $request
      *
@@ -316,7 +316,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * This method will add reverse payment amount to cart
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param WP_REST_Request $request
      *
@@ -399,7 +399,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Prepare refund for response
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param array           $item
      * @param WP_REST_Request $request
@@ -814,7 +814,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Get the Cart schema, conforming to JSON Schema.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @return array
      */

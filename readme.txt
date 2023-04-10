@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.4
-Tested up to: 6.1.1
+Tested up to: 6.2.0
 WC requires at least: 5.0.0
 WC tested up to: 7.5.1
 Requires PHP: 7.2
-Stable tag: 3.7.15
+Stable tag: 3.7.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.16 ( Apr 10, 2023 ) =
+
+- **fix:** [VendorDashboardAPI] Fixed an issue where the seller lifetime sales report wasn’t possible to retrieve via API.
+- **fix:** [VendorDashboard]: Fixed wrong product count showing under vendor dashboard product listing page.
+- **update:** [ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/vendor-due-status` to get reverse balance due status for a vendor
+- **update:** [ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/add-to-cart` to add reverse balance to the cart.
+- **update:** Allow only image format files as product featured and gallery images on vendor dashboard
+- **update:** Added multistep category support in product API
 
 = v3.7.15 ( Mar 23, 2023 ) =
 

@@ -9079,8 +9079,8 @@ var swal = Swal.mixin({
         return data;
       }
 
-      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.startDate);
-      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.endDate); // fix from param
+      data.from = __WEBPACK_IMPORTED_MODULE_2_moment___default()(this.filter.transaction_date.startDate).format('YYYY-MM-DD HH:mm:ss');
+      data.to = __WEBPACK_IMPORTED_MODULE_2_moment___default()(this.filter.transaction_date.endDate).format('YYYY-MM-DD HH:mm:ss'); // fix from param
 
       if (data.from === data.to) {
         data.from = '';
@@ -9525,8 +9525,8 @@ var swal = Swal.mixin({
         return data;
       }
 
-      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
-      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+      data.from = __WEBPACK_IMPORTED_MODULE_2_moment___default()(new Date(this.filter.transaction_date.startDate)).format('YYYY-MM-DD HH:mm:ss');
+      data.to = __WEBPACK_IMPORTED_MODULE_2_moment___default()(new Date(this.filter.transaction_date.endDate)).format('YYYY-MM-DD HH:mm:ss');
       return data;
     },
     bulkActions: function bulkActions() {
@@ -9615,7 +9615,7 @@ var swal = Swal.mixin({
         trn_date: self.filterTransactionDate,
         per_page: -1
       };
-      dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data).done(function (response, status, xhr) {
+      dokan.api.get('/reverse-withdrawal/transactions/', data).done(function (response, status, xhr) {
         self.transactionData = response;
         self.updatedCounts(xhr);
         self.updatePagination(xhr);
