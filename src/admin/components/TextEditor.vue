@@ -96,13 +96,6 @@
                             });
                         });
 
-                        // editor.addButton('shortcodes', {
-                        //     type: 'menubutton',
-                        //     icon: 'shortcode',
-                        //     tooltip: 'Shortcodes',
-                        //     menu: shortcodeMenuItems
-                        // });
-
                         editor.addButton('image', {
                             icon: 'image',
                             onclick() {
