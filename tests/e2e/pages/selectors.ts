@@ -596,6 +596,20 @@ export const selector = {
 				weeklyScheduleDay: "select[name='dokan_withdraw[weekly_schedule]']",
 				withdrawSaveChanges: '#submit',
 
+				// Reverse Withdraw Settings
+				enableReverseWithdrawal: ".enabled.dokan-settings-field-type-switcher .switch",
+				enableReverseWithdrawalForThisGateway: ".payment_gateways.dokan-settings-field-type-multicheck .switch",
+				billingType: "#dokan_reverse_withdrawal\\[billing_type\\]",
+				monthlyBillingDate: "#dokan_reverse_withdrawal\\[monthly_billing_day\\]",
+				reverseBalanceThreshold: "#dokan_reverse_withdrawal\\[reverse_balance_threshold\\]",
+				gracePeriod: "#dokan_reverse_withdrawal\\[due_period\\]",
+				disableAddToCartButton: "//div[contains(text(),'Disable Add to Cart Button')]//label",
+				hideWithdrawMenu: "//div[contains(text(),'Hide Withdraw Menu')]//label",
+				MakeVendorStatusInactive: "//div[contains(text(),'Make Vendor Status Inactive')]//label",
+				displayNoticeDuringGracePeriod: ".display_notice.dokan-settings-field-type-switcher .switch",
+				sendAnnouncement: ".send_announcement.dokan-settings-field-type-switcher .switch",
+				reverseWithdrawSaveChanges: '#submit',
+
 				// Page Settings
 				dashboard: '#dokan_pages\\[dashboard\\]',
 				myOrders: '#dokan_pages\\[my_orders\\]',
@@ -858,7 +872,7 @@ export const selector = {
 
 				// Selling
 				newVendorEnableSelling: "//label[@for='new_seller_enable_selling' and @class='switch-label']",
-				commissionType: "//label[@for='admin_percentage']//..//..//span[@class='select2-selection__rendered']",
+				commissionType: ".commission_type.wc-enhanced-select",
 				commissionTypeValues: '.select2-results ul li',
 				adminCommission: '#admin_percentage',
 				orderStatusChange: "//label[@for='order_status_change' and @class='switch-label']",
@@ -1754,7 +1768,7 @@ export const selector = {
 			// Create Product
 			closeCreateProductPopup: '.mfp-close',
 			addNewProduct: '.dokan-add-new-product',
-			productName: "input[name='post_title']",
+			productName: "//input[@name='post_title']",
 			productImage: '.dokan-feat-image-btn',
 			productAddGalleryImage: '.fa-plus',
 			productPrice: '#_regular_price',
@@ -1763,7 +1777,7 @@ export const selector = {
 			productScheduleFrom: '.dokan-start-date',
 			productScheduleTo: '.dokan-end-date',
 			productScheduleCancel: '.cancel_sale_schedule.dokan-hide',
-			productCategoryModal: '#dokan-category-open-modal',
+			productCategoryModal: '#dokan-add-new-product-form  #dokan-category-open-modal',
 			productCategory: '#select2-product_cat-container',
 			productCategorySearchInput: '#dokan-single-cat-search-input',
 			productCategorySearchResult: '#dokan-cat-search-res-ul li',
@@ -2072,6 +2086,7 @@ export const selector = {
 
 			// Coupon Dashboard
 			createdCoupon: '.coupon-code.column-primary strong span',
+			couponSaveSuccessMessage: 'Coupon has been saved successfully!',
 
 			// Coupon Error
 			couponError: '.dokan-alert.dokan-alert-danger',
@@ -2139,9 +2154,12 @@ export const selector = {
 			withdrawAmount: '#withdraw-amount',
 			withdrawMethod: '#withdraw-method',
 			submitRequest: '#dokan-withdraw-request-submit',
+			withdrawRequestSaveSuccessMessage:'Withdraw request successful.',
+			cancelWithdrawRequestSaveSuccessMessage:'Your request has been cancelled successfully!',
 			cancelRequest: "//strong[normalize-space()='Pending Requests']/..//a[normalize-space()='Cancel']",
 
 			// Auto Disbursement Schedule
+			enableSchedule: "//input[@id='dokan-schedule-enabler-switch']/..",
 			editSchedule: '#dokan-withdraw-display-schedule-popup',
 			crossIcon: '.mfp-close',
 			preferredPaymentMethod: '#preferred-payment-method',
@@ -2152,6 +2170,7 @@ export const selector = {
 			onlyWhenBalanceIs: '#minimum-withdraw-amount',
 			maintainAReserveBalance: '#withdraw-remaining-amount',
 			changeSchedule: '#dokan-withdraw-schedule-request-submit',
+			withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
 
 			// View Payments
 			viewPayments: '#dokan-withdraw-display-requests-button',
@@ -2164,6 +2183,7 @@ export const selector = {
 			customMethodMakeDefault: ( methodName: string ) => `//strong[contains( text(), '${ methodName }')]/../..//button[contains(@class, 'dokan-btn')]`,
 			// Default Payment Setup Links
 			customMethodSetup: ( methodName: string ) => `//strong[contains( text(), '${ methodName }')]/../..//a[@class='dokan-btn']`,
+			defaultPaymentMethodUpdateSuccessMessage:'Default method update successful.',
 		},
 
 		// Return Request
@@ -2590,6 +2610,7 @@ export const selector = {
 			NewPassword: '#password_1',
 			confirmNewPassword: '#password_2',
 			saveChanges: '.dokan-btn',
+			editAccountSaveChangesSuccessMessage: 'Account details changed successfully.',
 		},
 
 		// Search Similar Product
@@ -3078,7 +3099,7 @@ export const selector = {
 			length: '#dokan-warranty-length',
 			lengthValue: "//input[@name='warranty_length_value']",
 			lengthDuration: '#dokan-warranty-length-duration',
-			refundReasons: '.checkbox input',
+			refundReasons: '#dokan-store-rma-form .checkbox input',
 			refundPolicyIframe: 'iframe',
 			refundPolicyHtmlBody: '#tinymce',
 			rmaSaveChanges: '#dokan-store-rma-form-submit',

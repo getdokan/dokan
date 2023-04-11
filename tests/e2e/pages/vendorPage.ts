@@ -14,7 +14,7 @@ export class VendorPage extends BasePage {
 
 	loginPage = new LoginPage(this.page);
 	customerPage = new CustomerPage(this.page);
-	adminPage = new AdminPage(this.page);
+	// adminPage = new AdminPage(this.page);
 
 	// navigation
 
@@ -38,14 +38,14 @@ export class VendorPage extends BasePage {
 			await this.loginPage.logout();
 		}
 		const username = vendorInfo.firstName();
-		await this.clearAndType(selector.vendor.vRegistration.regEmail, username + data.vendor.vendorInfo.emailDomain);
-		await this.clearAndType(selector.vendor.vRegistration.regPassword, vendorInfo.password);
+		await this.clearAndFill(selector.vendor.vRegistration.regEmail, username + data.vendor.vendorInfo.emailDomain);
+		await this.clearAndFill(selector.vendor.vRegistration.regPassword, vendorInfo.password);
 		await this.click(selector.vendor.vRegistration.regVendor);
 		await this.waitForSelector(selector.vendor.vRegistration.firstName);
 		await this.type(selector.vendor.vRegistration.firstName, username);
 		await this.type(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
 		await this.type(selector.vendor.vRegistration.shopName, vendorInfo.shopName);
-		// await this.clearAndType(selector.vendor.shopUrl, shopUrl)
+		// await this.clearAndFill(selector.vendor.shopUrl, shopUrl)
 		await this.click(selector.vendor.vRegistration.shopUrl);
 		await this.type(selector.vendor.vRegistration.companyName, vendorInfo.companyName);
 		await this.type(selector.vendor.vRegistration.companyId, vendorInfo.companyId);
@@ -80,7 +80,7 @@ export class VendorPage extends BasePage {
 	async vendorSetupWizard(setupWizardData: { choice: any; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
 		if (setupWizardData.choice) {
 			await this.click(selector.vendor.vSetup.letsGo);
-			await this.clearAndType(selector.vendor.vSetup.storeProductsPerPage, setupWizardData.storeProductsPerPage);
+			await this.clearAndFill(selector.vendor.vSetup.storeProductsPerPage, setupWizardData.storeProductsPerPage);
 			await this.type(selector.vendor.vSetup.street1, setupWizardData.street1);
 			await this.type(selector.vendor.vSetup.street2, setupWizardData.street2);
 			await this.type(selector.vendor.vSetup.city, setupWizardData.city);
@@ -93,7 +93,7 @@ export class VendorPage extends BasePage {
 			await this.click(selector.vendor.vSetup.email);
 			await this.click(selector.vendor.vSetup.continueStoreSetup);
 			// paypal
-			await this.clearAndType(selector.vendor.vSetup.paypal, setupWizardData.paypal());
+			await this.clearAndFill(selector.vendor.vSetup.paypal, setupWizardData.paypal());
 			// bank transfer
 			await this.type(selector.vendor.vSetup.bankAccountName, setupWizardData.bankAccountName);
 			await this.selectByValue(selector.vendor.vSetup.bankAccountType, setupWizardData.bankAccountType);
@@ -105,7 +105,7 @@ export class VendorPage extends BasePage {
 			await this.type(selector.vendor.vSetup.bankSwiftCode, setupWizardData.bankSwiftCode);
 			await this.check(selector.vendor.vSetup.declaration);
 			await this.type(selector.vendor.vSetup.customPayment, setupWizardData.customPayment);
-			await this.clearAndType(selector.vendor.vSetup.skrill, setupWizardData.skrill);
+			await this.clearAndFill(selector.vendor.vSetup.skrill, setupWizardData.skrill);
 			await this.click(selector.vendor.vSetup.continuePaymentSetup);
 			await this.click(selector.vendor.vSetup.goToStoreDashboard);
 			// const dashboardIsVisible = await this.isVisible(selector.vendor.vDashboard.dashboard);
@@ -122,32 +122,33 @@ export class VendorPage extends BasePage {
 	// vendor add product category
 	async addCategory(category: string): Promise<void> {
 		await this.click(selector.vendor.product.productCategoryModal);
+		await this.page.locator(selector.vendor.product.productCategorySearchInput).waitFor({ state: "visible" }) //TODO : move to base page
 		await this.type(selector.vendor.product.productCategorySearchInput, category);
 		await this.click(selector.vendor.product.productCategorySearchResult);
 		await this.click(selector.vendor.product.productCategoryDone);
+
 		const categoryAlreadySelectedPopup = await this.isVisible(selector.vendor.product.productCategoryAlreadySelectedPopup);
 		if (categoryAlreadySelectedPopup) {
 			await this.click(selector.vendor.product.productCategoryAlreadySelectedPopup);
 			await this.click(selector.vendor.product.productCategoryModalClose);
 		}
+		//TODO: handle multiple category selection with assertion
 	}
 
 	// products
 
 	// vendor add simple product
 	async addSimpleProduct(product): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.products)
-
 		await this.goIfNotThere(data.subUrls.frontend.product);
 
 		const productName = product.productName();
 		// add new simple product
-		await this.click(selector.vendor.product.addNewProduct); // TODO: wait for popup
+		await this.click(selector.vendor.product.addNewProduct);
+		await this.page.locator(selector.vendor.product.productName).waitFor({ state: "visible" }) //TODO : move to base page
 		await this.type(selector.vendor.product.productName, productName);
 		await this.type(selector.vendor.product.productPrice, product.regularPrice());
-		// await this.addCategory(product.category) // TODO: need to fix
-		await this.clickAndWaitForNavigation(selector.vendor.product.createProduct);
+		await this.addCategory(product.category) // TODO: split in separate test
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.createProduct);
 
 		const createdProduct = await this.getElementValue(selector.vendor.product.title);
 		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
@@ -178,7 +179,7 @@ export class VendorPage extends BasePage {
 		// await this.waitForSelector(selector.vendor.product.variationPrice)
 		await this.type(selector.vendor.product.variationPrice, product.regularPrice());
 		await this.click(selector.vendor.product.okVariationPrice);
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
@@ -196,7 +197,8 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.product.subscriptionTrialLength, product.subscriptionTrialLength);
 		await this.selectByValue(selector.vendor.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
 
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
+
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
@@ -226,7 +228,7 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.product.variationPrice, product.regularPrice());
 		await this.click(selector.vendor.product.okVariationPrice); // todo : add waitForResponse with click
 
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 
 		await this.waitForSelector(selector.vendor.product.updatedSuccessMessage);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
@@ -240,18 +242,15 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
 		await this.type(selector.vendor.product.productUrl, await this.getBaseUrl() + product.productUrl);
 		await this.type(selector.vendor.product.buttonText, product.buttonText);
-		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
+		await this.clearAndFill(selector.vendor.product.price, product.regularPrice());
 
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
 
 	// vendor add auction product
 	async addAuctionProduct(product: { productName: any; productType?: string; category?: string; itemCondition: any; auctionType: any; regularPrice: any; bidIncrement: any; reservedPrice: any; buyItNowPrice: any; startDate: any; endDate: any; saveSuccessMessage: any; }): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.auction)
-
 		await this.goIfNotThere(data.subUrls.frontend.auction);
 
 		// add new auction product
@@ -268,7 +267,7 @@ export class VendorPage extends BasePage {
 		await this.removeAttribute(selector.vendor.vAuction.auctionEndDate, 'readonly');
 		await this.type(selector.vendor.vAuction.auctionStartDate, product.startDate);
 		await this.type(selector.vendor.vAuction.auctionEndDate, product.endDate);
-		await this.click(selector.vendor.vAuction.addAuctionProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.productAuction, selector.vendor.vAuction.addAuctionProduct, 302);
 
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
@@ -276,9 +275,6 @@ export class VendorPage extends BasePage {
 
 	// vendor add booking product
 	async addBookingProduct(product: { productName: any; productType?: string; category?: string; bookingDurationType: any; bookingDuration?: string; bookingDurationMax: any; bookingDurationUnit: any; calendarDisplayMode: any; maxBookingsPerBlock: any; minimumBookingWindowIntoTheFutureDate: any; minimumBookingWindowIntoTheFutureDateUnit: any; maximumBookingWindowIntoTheFutureDate: any; maximumBookingWindowIntoTheFutureDateUnit: any; baseCost: any; blockCost: any; }): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.booking)
-
 		await this.goIfNotThere(data.subUrls.frontend.booking);
 
 		const productName = product.productName();
@@ -289,23 +285,22 @@ export class VendorPage extends BasePage {
 		// await this.addCategory(product.category)
 		// general booking options
 		await this.selectByValue(selector.vendor.vBooking.bookingDurationType, product.bookingDurationType);
-		await this.clearAndType(selector.vendor.vBooking.bookingDurationMax, product.bookingDurationMax);
+		await this.clearAndFill(selector.vendor.vBooking.bookingDurationMax, product.bookingDurationMax);
 		await this.selectByValue(selector.vendor.vBooking.bookingDurationUnit, product.bookingDurationUnit);
 		// calendar display mode
 		await this.selectByValue(selector.vendor.vBooking.calenderDisplayMode, product.calendarDisplayMode);
 		await this.check(selector.vendor.vBooking.enableCalendarRangePicker);
 		// availability
-		await this.clearAndType(selector.vendor.vBooking.maxBookingsPerBlock, product.maxBookingsPerBlock);
-		await this.clearAndType(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
+		await this.clearAndFill(selector.vendor.vBooking.maxBookingsPerBlock, product.maxBookingsPerBlock);
+		await this.clearAndFill(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
 		await this.selectByValue(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit);
-		await this.clearAndType(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
+		await this.clearAndFill(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
 		await this.selectByValue(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
 		// costs
 		await this.type(selector.vendor.vBooking.baseCost, product.baseCost);
 		await this.type(selector.vendor.vBooking.blockCost, product.blockCost);
 
-		// await this.clickAndWaitForResponse( 'booking/new-product',selector.vendor.vBooking.saveProduct,200)
-		await this.click(selector.vendor.vBooking.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.productBooking, selector.vendor.vBooking.saveProduct, 302);
 
 		await this.waitForSelector(selector.vendor.vBooking.productName);
 		const createdProduct = await this.getElementValue(selector.vendor.vBooking.productName);
@@ -318,67 +313,45 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.vSearchSimilarProduct.search, productName);
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
+		//TODO: add assertion
 	}
 
 	// coupons
 
 	// vendor add coupon
 	async addCoupon(coupon: any): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.coupons)
-
 		await this.goIfNotThere(data.subUrls.frontend.coupon);
-
-		const couponCode = coupon.title();
-
 		await this.click(selector.vendor.vCoupon.addNewCoupon);
-		await this.type(selector.vendor.vCoupon.couponTitle, couponCode);
+		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
 		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);
 		await this.click(selector.vendor.vCoupon.applyForNewProducts);
 		await this.click(selector.vendor.vCoupon.showOnStore);
-		await this.click(selector.vendor.vCoupon.createCoupon);
-		const couponError = await this.isVisible(selector.vendor.vCoupon.couponError);
-		if (couponError) {
-			const errorMessage = await this.getElementText(selector.vendor.vCoupon.couponError);
-			if (errorMessage.includes(coupon.existingCouponErrorMessage)) {
-				return;
-			}
-		}
-		const createdCoupon = await this.getElementText(selector.vendor.vCoupon.createdCoupon);
-		expect(createdCoupon.toLowerCase()).toBe(couponCode.toLowerCase());
+		await this.clickAndWaitForResponse(data.subUrls.frontend.coupon, selector.vendor.vCoupon.createCoupon, 302);
+		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
 	}
 
 	// withdraw
 
 	// vendor request withdraw
 	async requestWithdraw(withdraw: { withdrawMethod: any; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod?: string; preferredSchedule?: string; minimumWithdrawAmount?: string; reservedBalance?: string; }): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.withdraw)
-
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
 
 		const canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
 		if (canRequestIsVisible) {
-			await this.click(selector.vendor.vWithdraw.cancelRequest);
-			await this.click(selector.vendor.vWithdraw.withdrawDashboard);
+			this.cancelRequestWithdraw()
+			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.withdrawDashboard);
 		}
 
 		const minimumWithdrawAmount: number = helpers.price(await this.getElementText(selector.vendor.vWithdraw.minimumWithdrawAmount));
-		// minimumWithdrawAmount = helpers.price(minimumWithdrawAmount)
 		const balance: number = helpers.price(await this.getElementText(selector.vendor.vWithdraw.balance));
-		// balance = helpers.price(balance)
 
 		if (balance > minimumWithdrawAmount) {
 			await this.click(selector.vendor.vWithdraw.requestWithdraw);
-			await this.clearAndType(selector.vendor.vWithdraw.withdrawAmount, String(minimumWithdrawAmount));
-
+			await this.clearAndFill(selector.vendor.vWithdraw.withdrawAmount, String(minimumWithdrawAmount));
 			await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default);
-			await this.click(selector.vendor.vWithdraw.submitRequest);
-
-			// const canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
-			// expect(canRequestIsVisible).toBe(true);
-			await expect(this.page.locator(selector.vendor.vWithdraw.cancelRequest)).toBeVisible();
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.submitRequest);
+			await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawRequestSaveSuccessMessage)).toBeVisible();
 		} else {
 			// throw new Error("Vendor balance is less than minimum withdraw amount")
 			console.log('Vendor balance is less than minimum withdraw amount');
@@ -387,57 +360,42 @@ export class VendorPage extends BasePage {
 
 	// vendor cancel withdraw request
 	async cancelRequestWithdraw(): Promise<void> {
-		await this.click(selector.vendor.vDashboard.withdraw);
-		await this.click(selector.vendor.vWithdraw.cancelRequest);
-		await this.click(selector.vendor.vWithdraw.withdrawDashboard);
-		const canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
-		expect(canRequestIsVisible).toBe(false);
-		
+		await this.goIfNotThere(data.subUrls.frontend.withdraw);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.withdrawRequests, selector.vendor.vWithdraw.cancelRequest, 302);
+		await expect(this.page.getByText(selector.vendor.vWithdraw.cancelWithdrawRequestSaveSuccessMessage)).toBeVisible();
 	}
 
 	// vendor add auto withdraw disbursement schedule
 	async addAutoWithdrawDisbursementSchedule(withdraw: { withdrawMethod?: { default: string; paypal: string; skrill: string; }; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod: any; preferredSchedule: any; minimumWithdrawAmount: any; reservedBalance: any; }): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.withdraw)
-
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-
+		await this.enableSwitcher(selector.vendor.vWithdraw.enableSchedule);
 		await this.click(selector.vendor.vWithdraw.editSchedule);
 		await this.selectByValue(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod);
 		await this.click(selector.vendor.vWithdraw[withdraw.preferredSchedule]);
 		await this.selectByValue(selector.vendor.vWithdraw.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount);
 		await this.selectByValue(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance);
-		await this.click(selector.vendor.vWithdraw.changeSchedule);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.changeSchedule);
+		await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawScheduleSaveSuccessMessage)).toBeVisible();
 	}
 
 	// vendor add default withdraw payment methods
 	async addDefaultWithdrawPaymentMethods(preferredSchedule: string): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.withdraw)
-
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-
-		const defaultMethod = await this.isVisible(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
-		console.log(defaultMethod);
-		if (defaultMethod) {
-			await this.click(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
-			// const methodStatus = await this.getElementText( selector.vendor.vWithdraw.customMethodMakeDefault( preferredSchedule ) );
-			// expect( methodStatus ).toMatch( 'Default' );
-			await expect(this.page.locator(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule))).toContainText('Default')
-		} else {
-			throw new Error("Withdraw payment method isn\'t set up");
-		}
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
+		await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
 	}
 
 	// vendor add vendor details
 	async setVendorDetails(vendorInfo: { firstName: () => string; lastName: () => string; email: () => string; password: string; password1: string; }): Promise<void> {
-		await this.clearAndType(selector.vendor.vAccountDetails.firstName, vendorInfo.firstName());
-		await this.clearAndType(selector.vendor.vAccountDetails.lastName, vendorInfo.lastName());
-		await this.clearAndType(selector.vendor.vAccountDetails.email, vendorInfo.email());
-		await this.type(selector.vendor.vAccountDetails.currentPassword, vendorInfo.password);
-		await this.type(selector.vendor.vAccountDetails.NewPassword, vendorInfo.password1);
-		await this.type(selector.vendor.vAccountDetails.confirmNewPassword, vendorInfo.password);
-		await this.click(selector.vendor.vAccountDetails.saveChanges);
+		await this.goIfNotThere(data.subUrls.frontend.editAccount);
+		await this.clearAndFill(selector.vendor.vAccountDetails.firstName, vendorInfo.firstName());
+		await this.clearAndFill(selector.vendor.vAccountDetails.lastName, vendorInfo.lastName());
+		await this.clearAndFill(selector.vendor.vAccountDetails.email, vendorInfo.email());
+		// await this.type(selector.vendor.vAccountDetails.currentPassword, vendorInfo.password);
+		// await this.type(selector.vendor.vAccountDetails.NewPassword, vendorInfo.password1);
+		// await this.type(selector.vendor.vAccountDetails.confirmNewPassword, vendorInfo.password1);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.editAccount, selector.vendor.vAccountDetails.saveChanges, 302);
+		await expect(this.page.getByText(selector.vendor.vAccountDetails.editAccountSaveChangesSuccessMessage)).toBeVisible();
 	}
 
 	// vendor settings
@@ -475,10 +433,10 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.settingsStore);
 
 		// store address
-		await this.clearAndType(selector.vendor.vStoreSettings.street, vendorInfo.street1);
-		await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
-		await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city);
-		await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
+		await this.clearAndFill(selector.vendor.vStoreSettings.street, vendorInfo.street1);
+		await this.clearAndFill(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
+		await this.clearAndFill(selector.vendor.vStoreSettings.city, vendorInfo.city);
+		await this.clearAndFill(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
 		await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue);
 		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
 		// update settings
@@ -504,22 +462,22 @@ export class VendorPage extends BasePage {
 	// vendor set basic info settings
 	async basicInfoSettings(vendorInfo: { email?: () => string; emailDomain?: string; password?: string; password1?: string; firstName?: () => string; lastName?: () => string; userName?: string; shopName?: string; shopUrl?: string; companyName?: string; companyId?: string; vatNumber?: string; bankName?: string; bankIban?: string; phoneNumber?: string; street1?: string; street2?: string; country?: string; countrySelectValue?: string; stateSelectValue?: string; city?: string; zipCode?: string; state?: string; accountName?: string; accountNumber?: string; bankAddress?: string; routingNumber?: string; swiftCode?: string; iban?: string; banner?: string; profilePicture?: string; storeName?: string; productsPerPage?: string; mapLocation: any; termsAndConditions: any; biography: any; supportButtonText: any; openingClosingTime: any; vacation: any; discount: any; minMax: any; storeSettingsSaveSuccessMessage: any }): Promise<void> {
 		// store basic info
-		await this.clearAndType(selector.vendor.vStoreSettings.storeName, vendorInfo.storeName);
-		await this.clearAndType(selector.vendor.vStoreSettings.storeProductsPerPage, vendorInfo.productsPerPage);
-		await this.clearAndType(selector.vendor.vStoreSettings.phoneNo, vendorInfo.phoneNumber);
+		await this.clearAndFill(selector.vendor.vStoreSettings.storeName, vendorInfo.storeName);
+		await this.clearAndFill(selector.vendor.vStoreSettings.storeProductsPerPage, vendorInfo.productsPerPage);
+		await this.clearAndFill(selector.vendor.vStoreSettings.phoneNo, vendorInfo.phoneNumber);
 		// address
-		await this.clearAndType(selector.vendor.vStoreSettings.street, vendorInfo.street1);
-		await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
-		await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city);
-		await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
+		await this.clearAndFill(selector.vendor.vStoreSettings.street, vendorInfo.street1);
+		await this.clearAndFill(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
+		await this.clearAndFill(selector.vendor.vStoreSettings.city, vendorInfo.city);
+		await this.clearAndFill(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
 		await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue);
 		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
 		// company info //TODO: uncomment after ui fix
-		await this.clearAndType(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName);
-		await this.clearAndType(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId);
-		await this.clearAndType(selector.vendor.vStoreSettings.vatOrTaxNumber, vendorInfo.vatNumber);
-		await this.clearAndType(selector.vendor.vStoreSettings.nameOfBank, vendorInfo.bankName);
-		await this.clearAndType(selector.vendor.vStoreSettings.bankIban, vendorInfo.bankIban);
+		await this.clearAndFill(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName);
+		await this.clearAndFill(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId);
+		await this.clearAndFill(selector.vendor.vStoreSettings.vatOrTaxNumber, vendorInfo.vatNumber);
+		await this.clearAndFill(selector.vendor.vStoreSettings.nameOfBank, vendorInfo.bankName);
+		await this.clearAndFill(selector.vendor.vStoreSettings.bankIban, vendorInfo.bankIban);
 		// email
 		await this.check(selector.vendor.vStoreSettings.email);
 		// show more products
@@ -529,7 +487,7 @@ export class VendorPage extends BasePage {
 	// vendor set map settings
 	async mapSettings(mapLocation: string): Promise<void> {
 		// map
-		await this.clearAndType(selector.vendor.vStoreSettings.map, mapLocation);
+		await this.clearAndFill(selector.vendor.vStoreSettings.map, mapLocation);
 		await this.press(data.key.arrowDown);
 		await this.press(data.key.enter);
 	}
@@ -539,7 +497,7 @@ export class VendorPage extends BasePage {
 		// terms and conditions
 		await this.check(selector.vendor.vStoreSettings.termsAndConditions);
 		// let termsAndConditionsIframe = await this.switchToIframe(selector.vendor.vStoreSettings.termsAndConditionsIframe)
-		// await this.iframeClearAndType(termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions)
+		// await this.iframeclearAndFill(termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions)
 		await this.typeFrameSelector(selector.vendor.vStoreSettings.termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions);
 	}
 
@@ -554,8 +512,8 @@ export class VendorPage extends BasePage {
 			await this.click(selector.vendor.vStoreSettings.businessDaysTab(day));
 			// individual day settings
 			await this.waitForSelector(selector.vendor.vStoreSettings.openingTime(day));
-			await this.clearAndType(selector.vendor.vStoreSettings.openingTime(day), openingClosingTime.openingTime);
-			await this.clearAndType(selector.vendor.vStoreSettings.closingTime(day), openingClosingTime.closingTime);
+			await this.clearAndFill(selector.vendor.vStoreSettings.openingTime(day), openingClosingTime.openingTime);
+			await this.clearAndFill(selector.vendor.vStoreSettings.closingTime(day), openingClosingTime.closingTime);
 		}
 	}
 
@@ -580,15 +538,15 @@ export class VendorPage extends BasePage {
 	async discountSettings(discount: { minimumOrderAmount: string; minimumOrderAmountPercentage: string; }): Promise<void> {
 		// discount
 		await this.check(selector.vendor.vStoreSettings.enableStoreWideDiscount);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumOrderAmount, discount.minimumOrderAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.percentage, discount.minimumOrderAmountPercentage);
+		await this.clearAndFill(selector.vendor.vStoreSettings.minimumOrderAmount, discount.minimumOrderAmount);
+		await this.clearAndFill(selector.vendor.vStoreSettings.percentage, discount.minimumOrderAmountPercentage);
 	}
 
 	// vendor set biography settings
 	async biographySettings(biography: string): Promise<void> {
 		// biography
 		// let biographyIframe = await this.switchToIframe(selector.vendor.vStoreSettings.biographyIframe)
-		// await this.iframeClearAndType(biographyIframe, selector.vendor.vStoreSettings.biographyHtmlBody, biography)
+		// await this.iframeclearAndFill(biographyIframe, selector.vendor.vStoreSettings.biographyHtmlBody, biography)
 		await this.typeFrameSelector(selector.vendor.vStoreSettings.biographyIframe, selector.vendor.vStoreSettings.biographyHtmlBody, biography);
 	}
 
@@ -597,18 +555,18 @@ export class VendorPage extends BasePage {
 		// store support
 		await this.check(selector.vendor.vStoreSettings.showSupportButtonInStore);
 		await this.check(selector.vendor.vStoreSettings.showSupportButtonInSingleProduct);
-		await this.clearAndType(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
+		await this.clearAndFill(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
 	}
 
 	// vendor set minmax settings
 	async minMaxSettings(minMax: { minimumProductQuantity: string; maximumProductQuantity: string; minimumAmount: string; maximumAmount: string; category: string; }): Promise<void> {
 		// min-max
 		await this.check(selector.vendor.vStoreSettings.enableMinMaxQuantities);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
-		await this.clearAndType(selector.vendor.vStoreSettings.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
+		await this.clearAndFill(selector.vendor.vStoreSettings.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
+		await this.clearAndFill(selector.vendor.vStoreSettings.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
 		await this.check(selector.vendor.vStoreSettings.enableMinMaxAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
+		await this.clearAndFill(selector.vendor.vStoreSettings.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
+		await this.clearAndFill(selector.vendor.vStoreSettings.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
 		await this.click(selector.vendor.vStoreSettings.clear);
 		await this.click(selector.vendor.vStoreSettings.selectAll);
 		// await this.selectOptionByText(selector.vendor.vStoreSettings.selectCategory, minMax.category)
@@ -617,17 +575,13 @@ export class VendorPage extends BasePage {
 
 	// vendor add addons
 	async addAddon(addon: { name: any; priority: any; category: any; type: any; displayAs: any; titleRequired: any; formatTitle: any; addDescription: any; enterAnOption: any; optionPriceType: any; optionPriceInput: any; saveSuccessMessage: any; }): Promise<string> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.settings)
-		// await this.click(selector.vendor.vSettings.addons)
-
 		await this.goIfNotThere(data.subUrls.frontend.settingsAddon);
 
 		// add addon
 		const addonName = addon.name();
 		await this.click(selector.vendor.vAddonSettings.createNewAddon);
-		await this.clearAndType(selector.vendor.vAddonSettings.name, addonName);
-		await this.clearAndType(selector.vendor.vAddonSettings.priority, addon.priority);
+		await this.clearAndFill(selector.vendor.vAddonSettings.name, addonName);
+		await this.clearAndFill(selector.vendor.vAddonSettings.priority, addon.priority);
 		await this.click(selector.vendor.vAddonSettings.productCategories,);
 		await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
 		await this.press(data.key.enter);
@@ -635,35 +589,29 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vAddonSettings.addField);
 		await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type);
 		await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs);
-		await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
+		await this.clearAndFill(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
 		await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle);
 		await this.click(selector.vendor.vAddonSettings.enableDescription);
-		await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
+		await this.clearAndFill(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
 		await this.click(selector.vendor.vAddonSettings.requiredField);
-		await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
+		await this.clearAndFill(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
 		await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType);
-		await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
+		await this.clearAndFill(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
 		await this.click(selector.vendor.vAddonSettings.publish);
 
-		// const successMessage = await this.getElementText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage);
-		// expect(successMessage).toMatch(addon.saveSuccessMessage);
 		await expect(this.page.locator(selector.vendor.vAddonSettings.addonUpdateSuccessMessage)).toContainText(addon.saveSuccessMessage)
 		return addonName;
 	}
 
 	// vendor edit addons
 	async editAddon(addon: { name: any; priority: any; category: any; type: any; displayAs: any; titleRequired: any; formatTitle: any; addDescription: any; enterAnOption: any; optionPriceType: any; optionPriceInput: any; saveSuccessMessage: any; }, addonName: string): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.settings)
-		// await this.click(selector.vendor.vSettings.addons)
-
 		await this.goIfNotThere(data.subUrls.frontend.settingsAddon);
 
 		// add addon
 		await this.click(selector.vendor.vAddonSettings.editAddon(addonName));
 		// await this.click(selector.vendor.vAddonSettings.firstAddon)
-		await this.clearAndType(selector.vendor.vAddonSettings.name, addon.name());
-		await this.clearAndType(selector.vendor.vAddonSettings.priority, addon.priority);
+		await this.clearAndFill(selector.vendor.vAddonSettings.name, addon.name());
+		await this.clearAndFill(selector.vendor.vAddonSettings.priority, addon.priority);
 		await this.click(selector.vendor.vAddonSettings.productCategories,);
 		await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
 		await this.press(data.key.enter);
@@ -671,24 +619,22 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vAddonSettings.addedFirstField);
 		await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type);
 		await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs);
-		await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
+		await this.clearAndFill(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
 		await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle);
-		await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
+		await this.clearAndFill(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
 		await this.click(selector.vendor.vAddonSettings.requiredField);
-		await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
+		await this.clearAndFill(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
 		await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType);
-		await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
+		await this.clearAndFill(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
 		await this.click(selector.vendor.vAddonSettings.update);
 
-		// const successMessage = await this.getElementText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage);
-		// expect(successMessage).toMatch(addon.saveSuccessMessage);
 		await expect(this.page.locator(selector.vendor.vAddonSettings.addonUpdateSuccessMessage)).toContainText(addon.saveSuccessMessage)
 	}
 
 	// paypal payment settings
 	async setPaypal(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
 		// paypal
-		await this.clearAndType(selector.vendor.vPaymentSettings.paypal, paymentMethod.email());
+		await this.clearAndFill(selector.vendor.vPaymentSettings.paypal, paymentMethod.email());
 		// update settings
 		await this.click(selector.vendor.vPaymentSettings.updateSettings);
 
@@ -700,13 +646,13 @@ export class VendorPage extends BasePage {
 	// bank transfer payment settings
 	async setBankTransfer(paymentMethod: { bankAccountName: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; saveSuccessMessage: string | RegExp; }): Promise<void> {
 		// bank transfer
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountName, paymentMethod.bankAccountName);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountNumber, paymentMethod.bankAccountNumber);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankName, paymentMethod.bankName);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankAddress, paymentMethod.bankAddress);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankRoutingNumber, paymentMethod.bankRoutingNumber);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankIban, paymentMethod.bankIban);
-		await this.clearAndType(selector.vendor.vPaymentSettings.bankSwiftCode, paymentMethod.bankSwiftCode);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAccountName, paymentMethod.bankAccountName);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAccountNumber, paymentMethod.bankAccountNumber);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankName, paymentMethod.bankName);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAddress, paymentMethod.bankAddress);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankRoutingNumber, paymentMethod.bankRoutingNumber);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankIban, paymentMethod.bankIban);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankSwiftCode, paymentMethod.bankSwiftCode);
 		// update settings
 		await this.click(selector.vendor.vPaymentSettings.updateSettings);
 
@@ -724,7 +670,7 @@ export class VendorPage extends BasePage {
 	// // paypal marketPlace payment settings
 	// async setPaypalMarketPlace(email): Promise<void> {
 	//     // paypal Marketplace
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.paypalMarketplace, paypalMarketplace)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.paypalMarketplace, paypalMarketplace)
 	//     await this.click(selector.vendor.vPaymentSettings.paypalMarketplaceSignUp)
 	// }
 
@@ -734,24 +680,24 @@ export class VendorPage extends BasePage {
 	//     await this.click(selector.vendor.vPaymentSettings.rzSignup)
 	//     // existing account info
 	//     await this.click(selector.vendor.vPaymentSettings.rzIHaveAlreadyAnAccount)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountId, rzAccountId)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzAccountId, rzAccountId)
 	//     await this.click(selector.vendor.vPaymentSettings.rzConnectExistingAccount)
 	//     //new account info
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountName, rzAccountName)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountEmail, rzAccountEmail)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzYourCompanyName, rzYourCompanyName)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzYourCompanyType, rzYourCompanyType)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountName, rzBankAccountName)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountNumber, rzBankAccountNumber)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzBankIfscCode, rzBankIfscCode)
-	//     await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountType, rzBankAccountType)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzAccountName, rzAccountName)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzAccountEmail, rzAccountEmail)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzYourCompanyName, rzYourCompanyName)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzYourCompanyType, rzYourCompanyType)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzBankAccountName, rzBankAccountName)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzBankAccountNumber, rzBankAccountNumber)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzBankIfscCode, rzBankIfscCode)
+	//     await this.clearAndFill(selector.vendor.vPaymentSettings.rzBankAccountType, rzBankAccountType)
 	//     await this.click(selector.vendor.vPaymentSettings.rzConnectAccount)
 	// }
 
 	// custom payment settings
 	async setCustom(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
 		// custom payment method
-		await this.clearAndType(selector.vendor.vPaymentSettings.customPayment, paymentMethod.email());
+		await this.clearAndFill(selector.vendor.vPaymentSettings.customPayment, paymentMethod.email());
 		// update settings
 		await this.click(selector.vendor.vPaymentSettings.updateSettings);
 
@@ -763,7 +709,7 @@ export class VendorPage extends BasePage {
 	// skrill Payment Settings
 	async setSkrill(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
 		// skrill
-		await this.clearAndType(selector.vendor.vPaymentSettings.skrill, paymentMethod.email());
+		await this.clearAndFill(selector.vendor.vPaymentSettings.skrill, paymentMethod.email());
 		// update settings
 		await this.click(selector.vendor.vPaymentSettings.updateSettings);
 
@@ -831,10 +777,10 @@ export class VendorPage extends BasePage {
 		}
 		await this.click(selector.vendor.vVerificationSettings.startAddressVerification);
 
-		await this.clearAndType(selector.vendor.vVerificationSettings.street, verification.street1);
-		await this.clearAndType(selector.vendor.vVerificationSettings.street2, verification.street2);
-		await this.clearAndType(selector.vendor.vVerificationSettings.city, verification.city);
-		await this.clearAndType(selector.vendor.vVerificationSettings.postOrZipCode, verification.zipCode);
+		await this.clearAndFill(selector.vendor.vVerificationSettings.street, verification.street1);
+		await this.clearAndFill(selector.vendor.vVerificationSettings.street2, verification.street2);
+		await this.clearAndFill(selector.vendor.vVerificationSettings.city, verification.city);
+		await this.clearAndFill(selector.vendor.vVerificationSettings.postOrZipCode, verification.zipCode);
 		await this.selectByValue(selector.vendor.vVerificationSettings.country, verification.country);
 		await this.selectByValue(selector.vendor.vVerificationSettings.state, verification.state);
 		await this.click(selector.vendor.vVerificationSettings.uploadResidenceProof);
@@ -900,7 +846,7 @@ export class VendorPage extends BasePage {
 		// delivery support
 		await this.check(selector.vendor.vDeliveryTimeSettings.homeDelivery);
 		await this.check(selector.vendor.vDeliveryTimeSettings.storePickup);
-		await this.clearAndType(selector.vendor.vDeliveryTimeSettings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer);
+		await this.clearAndFill(selector.vendor.vDeliveryTimeSettings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer);
 		for (const day of deliveryTime.days) {
 			// checkbox
 			await this.check(selector.vendor.vDeliveryTimeSettings.deliveryDayCheckbox(day));
@@ -910,15 +856,15 @@ export class VendorPage extends BasePage {
 			await this.selectByValue(selector.vendor.vDeliveryTimeSettings.openingTime(day), deliveryTime.openingTime);
 			await this.selectByValue(selector.vendor.vDeliveryTimeSettings.closingTime(day), deliveryTime.closingTime);
 
-			await this.clearAndType(selector.vendor.vDeliveryTimeSettings.timeSlot(day), deliveryTime.timeSlot);
-			await this.clearAndType(selector.vendor.vDeliveryTimeSettings.orderPerSlot(day), deliveryTime.orderPerSlot);
+			await this.clearAndFill(selector.vendor.vDeliveryTimeSettings.timeSlot(day), deliveryTime.timeSlot);
+			await this.clearAndFill(selector.vendor.vDeliveryTimeSettings.orderPerSlot(day), deliveryTime.orderPerSlot);
 		}
 		await this.click(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettings);
 
 		// const successMessage = await this.getElementText(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettingsSuccessMessage);
 		// expect(successMessage).toMatch(deliveryTime.saveSuccessMessage);
 		await expect(this.page.locator(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettingsSuccessMessage)).toContainText(deliveryTime.saveSuccessMessage);
-		
+
 	}
 
 	// vendor shipping settings
@@ -941,7 +887,7 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vSettings.shipping);
 		await this.click(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
 		await this.selectByValue(selector.vendor.vShippingSettings.shippingPolicies.processingTime, shippingPolicy.processingTime);
-		await this.clearAndType(selector.vendor.vShippingSettings.shippingPolicies.shippingPolicy, shippingPolicy.shippingPolicy);
+		await this.clearAndFill(selector.vendor.vShippingSettings.shippingPolicies.shippingPolicy, shippingPolicy.shippingPolicy);
 		await this.type(selector.vendor.vShippingSettings.shippingPolicies.refundPolicy, shippingPolicy.refundPolicy);
 		await this.click(selector.vendor.vShippingSettings.shippingPolicies.shippingPoliciesSaveSettings);
 
@@ -974,39 +920,39 @@ export class VendorPage extends BasePage {
 		switch (shipping.selectShippingMethod) {
 			case 'flat_rate':
 				// flat rate
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost);
+				await this.clearAndFill(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod);
+				await this.clearAndFill(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost);
 				await this.selectByValue(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
+				await this.clearAndFill(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
 				await this.selectByValue(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType);
 				break;
 
 			case 'free_shipping':
 				// free shipping
-				await this.clearAndType(selector.vendor.vShippingSettings.freeShippingTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
+				await this.clearAndFill(selector.vendor.vShippingSettings.freeShippingTitle, shipping.shippingMethod);
+				await this.clearAndFill(selector.vendor.vShippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
 				break;
 
 			case 'local_pickup':
 				// local pickup
-				await this.clearAndType(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost);
+				await this.clearAndFill(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod);
+				await this.clearAndFill(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost);
 				await this.selectByValue(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
+				await this.clearAndFill(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
 				break;
 
 			case 'dokan_table_rate_shipping':
 				// dokan table rate shipping
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod);
 				await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus);
 				await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost);
 				// rates
 				// await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder);
+				await this.clearAndFill(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder);
 
 				await this.click(selector.vendor.vShippingSettings.tableRateShippingUpdateSettings);
 				// const tableRateSuccessMessage = await this.getElementText(selector.vendor.vShippingSettings.tableRateShippingUpdateSettingsSuccessMessage);
@@ -1016,7 +962,7 @@ export class VendorPage extends BasePage {
 
 			case 'dokan_distance_rate_shipping':
 				// dokan distance rate shipping
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod);
 				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus);
 				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode);
 				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid);
@@ -1024,11 +970,11 @@ export class VendorPage extends BasePage {
 				await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDistance);
 				await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDuration);
 				// shipping address
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress1, shipping.street1);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress2, shipping.street2);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingAddress1, shipping.street1);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingAddress2, shipping.street2);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode);
+				await this.clearAndFill(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state);
 				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country);
 
 				await this.click(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettings);
@@ -1050,20 +996,17 @@ export class VendorPage extends BasePage {
 
 	// vendor set social profile settings
 	async setSocialProfile(urls: { facebook: any; twitter: any; pinterest: any; linkedin: any; youtube: any; instagram: any; flickr: any; saveSuccessMessage?: string; }): Promise<void> {
-		await this.goToVendorDashboard();
+		await this.goIfNotThere(data.subUrls.frontend.settingsSocialProfile);
 
-		await this.click(selector.vendor.vDashboard.settings);
-		await this.click(selector.vendor.vSettings.socialProfile);
-
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.facebook, urls.facebook);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.twitter, urls.twitter);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.pinterest, urls.pinterest);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.linkedin, urls.linkedin);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.youtube, urls.youtube);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.instagram, urls.instagram);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.flicker, urls.flickr);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.facebook, urls.facebook);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.twitter, urls.twitter);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.pinterest, urls.pinterest);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.linkedin, urls.linkedin);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.youtube, urls.youtube);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.instagram, urls.instagram);
+		await this.clearAndFill(selector.vendor.vSocialProfileSettings.flicker, urls.flickr);
 		// await this.clickJs(selector.vendor.vSocialProfileSettings.updateSettings)
-		await this.click(selector.vendor.vSocialProfileSettings.updateSettings);
+		await this.click(selector.vendor.vSocialProfileSettings.updateSettings); //ToDO: don't work
 		// await this.press(data.key.enter)
 
 		// const successMessage = await this.getElementText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage);
@@ -1073,36 +1016,25 @@ export class VendorPage extends BasePage {
 
 	// vendor set rma settings
 	async setRmaSettings(rma: { label: any; type: any; rmaLength: any; lengthValue: any; lengthDuration: any; refundPolicyHtmlBody: any; saveSuccessMessage: any; }): Promise<void> {
-		await this.goToVendorDashboard();
+		await this.goIfNotThere(data.subUrls.frontend.settingsRma);
 
-		await this.click(selector.vendor.vDashboard.settings);
-		await this.click(selector.vendor.vSettings.rma);
-
-		await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label);
+		await this.clearAndFill(selector.vendor.vRmaSettings.label, rma.label);
 		await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type);
 		await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength);
-		await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue);
+		await this.clearAndFill(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue);
 		await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration);
+		await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons); //todo:fix
 
-		const refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasons);
-		if (refundReasonIsVisible) {
-			await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons);
-		}
-		const iframe = await this.switchToIframe(selector.vendor.vRmaSettings.refundPolicyIframe);
-		await this.iframeClearAndType(iframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody);
-		await this.click(selector.vendor.vRmaSettings.rmaSaveChanges);
-
-		// const successMessage = await this.getElementText(selector.vendor.vRmaSettings.updateSettingsSuccessMessage);
-		// expect(successMessage).toMatch(rma.saveSuccessMessage);
-		await expect(this.page.locator(selector.vendor.vRmaSettings.updateSettingsSuccessMessage)).toContainText(rma.saveSuccessMessage);
+		await this.typeFrameSelector(selector.vendor.vRmaSettings.refundPolicyIframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.settingsRma, selector.vendor.vRmaSettings.rmaSaveChanges, 382);
+		await expect(this.page.getByText(rma.saveSuccessMessage)).toBeVisible();
 	}
 
 	// vendor functions
 
 	// vendor approve product review
 	async approveProductReview(reviewMessage: any): Promise<void> {
-		await this.goToVendorDashboard();
-		await this.click(selector.vendor.vDashboard.reviews);
+		await this.goIfNotThere(data.subUrls.frontend.reviews);
 		// let approvedReviewIsVisible = await this.isVisible(selector.vendor.vReviews.reviewRow(reviewMessage))
 		// if (approvedReviewIsVisible) {
 		//     expect(approvedReviewIsVisible).toBe(true)
@@ -1158,17 +1090,17 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.product.productLink(productName));
 		// override rma settings
 		await this.check(selector.vendor.product.overrideYourDefaultRmaSettingsForThisProduct);
-		await this.clearAndType(selector.vendor.product.rmaLabel, label);
+		await this.clearAndFill(selector.vendor.product.rmaLabel, label);
 		await this.selectByValue(selector.vendor.product.rmaType, type);
 		await this.selectByValue(selector.vendor.product.rmaLength, length);
-		await this.clearAndType(selector.vendor.product.rmaLengthValue, lengthValue);
+		await this.clearAndFill(selector.vendor.product.rmaLengthValue, lengthValue);
 		await this.selectByValue(selector.vendor.product.rmaLengthDuration, lengthDuration);
 
 		const refundReasonIsVisible = await this.isVisible(selector.vendor.product.refundReasons);
 		if (refundReasonIsVisible) {
 			// await this.clickAndWaitMultiple(selector.vendor.product.refundReasons)   ,                        /TODO: update this
 		}
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		// expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage)
@@ -1181,19 +1113,16 @@ export class VendorPage extends BasePage {
 
 		// add quantity discount
 		await this.check(selector.vendor.product.enableBulkDiscount);
-		await this.clearAndType(selector.vendor.product.lotMinimumQuantity, minimumQuantity);
-		await this.clearAndType(selector.vendor.product.lotDiscountInPercentage, discountPercentage);
+		await this.clearAndFill(selector.vendor.product.lotMinimumQuantity, minimumQuantity);
+		await this.clearAndFill(selector.vendor.product.lotDiscountInPercentage, discountPercentage);
 
-		await this.click(selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
-		// expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage)
+		// expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(data.product.saveSuccessMessage)
 	}
 
 	// vendor search product
-	async searchProduct(productName): Promise<void> {
-		// await this.goToVendorDashboard()
-		// await this.click(selector.vendor.vDashboard.products)
-
+	async searchProduct(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.product);
 		//search product
 		await this.type(selector.vendor.product.searchProduct, productName);
@@ -1206,8 +1135,7 @@ export class VendorPage extends BasePage {
 
 	// vendor change order status
 	async changeOrderStatus(orderNumber, orderStatus): Promise<void> {
-		await this.goToVendorDashboard();
-		await this.click(selector.vendor.vDashboard.orders);
+		await this.goIfNotThere(data.subUrls.frontend.order);
 		//change order status
 		await this.click(selector.vendor.vOrders.orderLink(orderNumber));
 		await this.click(selector.vendor.vOrders.edit);
@@ -1232,8 +1160,8 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.vOrders.refundProductQuantity(productName), productQuantity);
 		if (partialRefund) {
 			await this.click(selector.vendor.vOrders.refundDiv);
-			await this.clearAndType(selector.vendor.vOrders.refundProductCostAmount(productName), String(helpers.roundToTwo(productCost / 2)));
-			await this.clearAndType(selector.vendor.vOrders.refundProductTaxAmount(productName), String(helpers.roundToTwo(productTax / 2)));
+			await this.clearAndFill(selector.vendor.vOrders.refundProductCostAmount(productName), String(helpers.roundToTwo(productCost / 2)));
+			await this.clearAndFill(selector.vendor.vOrders.refundProductTaxAmount(productName), String(helpers.roundToTwo(productTax / 2)));
 		}
 		await this.type(selector.vendor.vOrders.refundReason, 'Defective product');
 		await this.click(selector.vendor.vOrders.refundManually);

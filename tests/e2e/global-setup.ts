@@ -13,17 +13,16 @@ async function globalSetup(config: FullConfig) {
 	// get storageState: admin
 	let admin = await browser.newPage();
 
-	// log in
-	await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
-	// await admin.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
-	await admin.fill(selector.backend.email, process.env.ADMIN);
-	await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
-	await admin.locator(selector.backend.login).click();
-	await admin.waitForLoadState('networkidle');
-	await admin.context().storageState({ path: 'adminStorageState.json' });
-	console.log('Stored adminStorageState');
+	// // log in
+	// await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
+	// await admin.fill(selector.backend.email, process.env.ADMIN);
+	// await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
+	// await admin.locator(selector.backend.login).click();
+	// await admin.waitForLoadState('networkidle');
+	// await admin.context().storageState({ path: 'adminStorageState.json' });
+	// console.log('Stored adminStorageState');
 
-	// // set plain permalink 
+	// // set permalink 
 	// await admin.goto(process.env.BASE_URL + '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
 	// await admin.locator('#permalink-input-post-name').click();
 	// await admin.locator('#submit').click();

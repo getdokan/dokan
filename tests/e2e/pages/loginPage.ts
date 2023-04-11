@@ -1,8 +1,10 @@
 import { expect, type Page } from '@playwright/test';
 import { BasePage } from './basePage';
+import { ApiUtils } from '../utils/apiUtils';
 import { data, user } from '../utils/testData';
 import { selector } from './selectors';
 import { helpers } from '../utils/helpers';
+
 
 export class LoginPage extends BasePage {
 	constructor( page: Page ) {
@@ -18,17 +20,21 @@ export class LoginPage extends BasePage {
 	async loginFronted( user: user ): Promise<void> {
 		await this.goIfBlank( data.subUrls.frontend.myAccount );
 		const currentUser = await this.getCurrentUser();
+		console.log(currentUser);
+		
 		// skip if user is already logged in
 		if ( user.username === currentUser ) {
 			return;
 		}
 		// logout if other user is already logged in
-		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) {
+		// else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storaage.json 
+		else if ( ( user.username !== currentUser ) || ( currentUser === undefined ) ) {
+			console.log('logout');
 			await this.logoutFrontend();
 		}
 		// login user
-		await this.clearAndType( selector.frontend.username, user.username );
-		await this.clearAndType( selector.frontend.userPassword, user.password );
+		await this.clearAndFill( selector.frontend.username, user.username );
+		await this.clearAndFill( selector.frontend.userPassword, user.password );
 		await this.click( selector.frontend.logIn );
 
 		const loggedInUser = await this.getCurrentUser();
@@ -44,8 +50,8 @@ export class LoginPage extends BasePage {
 	async loginWpDashboard( user: user ): Promise<void> {
 		const emailField = await this.isVisible( selector.backend.email );
 		if ( emailField ) {
-			await this.clearAndType( selector.backend.email, user.username );
-			await this.clearAndType( selector.backend.password, user.password );
+			await this.clearAndFill( selector.backend.email, user.username );
+			await this.clearAndFill( selector.backend.password, user.password );
 			await this.click( selector.backend.login );
 
 			const loggedInUser = await this.getCurrentUser();
@@ -61,6 +67,7 @@ export class LoginPage extends BasePage {
 	// user logoutFrontend
 	async logoutFrontend(): Promise<void> {
 		await this.goIfNotThere( data.subUrls.frontend.myAccount );
+		await this.focus( selector.frontend.customerLogout );
 		await this.click( selector.frontend.customerLogout );
 
 		const loggedInUser = await this.getCurrentUser();

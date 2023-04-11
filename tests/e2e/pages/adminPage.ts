@@ -168,6 +168,34 @@ export class AdminPage extends BasePage {
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(withdraw.saveSuccessMessage)
     }
 
+    // Admin Set Dokan Reverse Withdraw Settings
+    async setDokanReverseWithdrawSettings(reverseWithdraw: any) {
+        await this.goToDokanSettings()
+        await this.click(selector.admin.dokan.settings.reverseWithdrawal)
+
+        // reverse withdraw options
+        await this.enableSwitcher(selector.admin.dokan.settings.enableReverseWithdrawal)
+        await this.enableSwitcher(selector.admin.dokan.settings.enableReverseWithdrawalForThisGateway)
+
+        await this.selectByValue(selector.admin.dokan.settings.billingType, reverseWithdraw.billingType)
+        await this.clearAndFill(selector.admin.dokan.settings.reverseBalanceThreshold, reverseWithdraw.reverseBalanceThreshold)
+        await this.clearAndFill(selector.admin.dokan.settings.gracePeriod, reverseWithdraw.gracePeriod)
+
+        await this.enableSwitcher(selector.admin.dokan.settings.disableAddToCartButton)
+        await this.enableSwitcher(selector.admin.dokan.settings.hideWithdrawMenu)
+        await this.enableSwitcher(selector.admin.dokan.settings.MakeVendorStatusInactive)
+
+        await this.enableSwitcher(selector.admin.dokan.settings.displayNoticeDuringGracePeriod)
+        await this.enableSwitcher(selector.admin.dokan.settings.sendAnnouncement)
+
+        // save settings
+        // await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdrawSaveChanges)
+        // await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(reverseWithdraw.saveSuccessMessage)
+        await this.clickAndWaitForNavigation(selector.admin.dokan.settings.reverseWithdrawSaveChanges)
+        await expect(this.page.locator(selector.admin.dokan.settings.reverseBalanceThreshold)).toHaveValue(reverseWithdraw.reverseBalanceThreshold)
+    }
+
+
     // Admin Set Dokan Page Settings
     async setPageSettings(page: any) {
         await this.goToDokanSettings()
@@ -378,17 +406,15 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.dokan.settings.radiusSearchMaximumDistance, geolocation.radiusSearchMaximumDistance)
         await this.clearAndFill(selector.admin.dokan.settings.mapZoomLevel, geolocation.mapZoomLevel)
         await this.focus(selector.admin.dokan.settings.defaultLocation)
-        await this.wait(2)
-        await this.clearAndFill(selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
-        await this.wait(2)
+        await this.typeAndWaitForResponse(data.subUrls.gmap, selector.admin.dokan.settings.defaultLocation, geolocation.defaultLocation)
+        // await this.wait(2)
         await this.press(data.key.arrowDown)
-        await this.press(data.key.enter)
-        await this.wait(2)
+        await this.press(data.key.enter) // TODO: map not saving
+        // await this.wait(2)
 
         // save settings
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.geolocationSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(geolocation.saveSuccessMessage)
-        await this.wait(5)
     }
 
     // Admin Set Dokan Product Report Abuse Settings
@@ -976,8 +1002,8 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.products.product.category(product.category))
         // stock status
         product.stockStatus && await this.editStockStatus(data.product.stockStatus.outOfStock)
-        // vendor store name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        // Vendor Store Name
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         switch (product.status) {
@@ -1014,12 +1040,20 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.products.product.productType, product.productType)
         // add attributes
         await this.click(selector.admin.products.product.attributes)
-        await this.clickAndWaitForResponse('wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes', selector.admin.products.product.addExistingAttribute)
-        await this.typeAndWaitForResponse('wp-admin/admin-ajax.php?term', selector.admin.products.product.addExistingAttributeInput, product.attribute)
-        await this.pressAndWaitForResponse(data.subUrls.ajax, data.key.enter)
+
+        if (this.isVisibleLocator(selector.admin.products.product.customProductAttribute)) {
+            await this.selectByValue(selector.admin.products.product.customProductAttribute, `pa_${product.attribute}`)
+            await this.click(selector.admin.products.product.addAttribute)
+        } else {
+            await this.clickAndWaitForResponse('wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes', selector.admin.products.product.addExistingAttribute)
+            await this.typeAndWaitForResponse('wp-admin/admin-ajax.php?term', selector.admin.products.product.addExistingAttributeInput, product.attribute)
+            await this.pressAndWaitForResponse(data.subUrls.ajax, data.key.enter)
+        }
+
         await this.clickAndWaitForResponse('wp-admin/admin-ajax.php?action=woocommerce_json_search_taxonomy_terms', selector.admin.products.product.selectAll)
-        await this.click(selector.admin.products.product.usedForVariations)
+        // await this.click(selector.admin.products.product.usedForVariations)
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.saveAttributes)
+        await this.wait(2)
         // add variations
         await this.click(selector.admin.products.product.variations)
         await this.selectByValue(selector.admin.products.product.addVariations, product.variations.linkAllVariation)
@@ -1033,7 +1067,7 @@ export class AdminPage extends BasePage {
         // category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
         // Publish
         await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302)
@@ -1056,8 +1090,8 @@ export class AdminPage extends BasePage {
         await this.selectByValue(selector.admin.products.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        // Vendor Store Name
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1080,8 +1114,8 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.regularPrice, product.regularPrice())
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        // Vendor Store Name
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1108,8 +1142,8 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.advertisementSlot, product.advertisementSlot)
         await this.type(selector.admin.products.product.expireAfterDays, product.expireAfterDays)
         await this.click(selector.admin.products.product.recurringPayment)
-        // Vendor Store Name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        // Vendor Store Name
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1136,8 +1170,8 @@ export class AdminPage extends BasePage {
         await this.type(selector.admin.products.product.auctionDatesTo, product.endDate)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        // Vendor Store Name
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1164,7 +1198,7 @@ export class AdminPage extends BasePage {
         // Category
         await this.click(selector.admin.products.product.category(product.category))
         // Vendor Store Name  //TODO: uncomment after fix
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
+        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 
         // Publish
@@ -1270,49 +1304,46 @@ export class AdminPage extends BasePage {
         // await this.click(selector.admin.dokan.tools.openSetupWizard)
 
         await this.goto(data.subUrls.backend.dokanSetupWizard)
-
         await this.click(selector.admin.dokan.dokanSetupWizard.letsGo)
         // Store
-        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
-        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
+        await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.vendorStoreURL, dokanSetupWizard.vendorStoreURL)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.shippingFeeRecipient, dokanSetupWizard.shippingFeeRecipient)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.taxFeeRecipient, dokanSetupWizard.taxFeeRecipient)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource)
+        await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes)
+        await this.click(selector.admin.dokan.dokanSetupWizard.continue)
         // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
+        // Selling
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.newVendorEnableSelling)
+        await this.selectByValue(selector.admin.dokan.dokanSetupWizard.commissionType, dokanSetupWizard.commissionType)
+        await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.adminCommission, dokanSetupWizard.adminCommission)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusChange)
+        await this.click(selector.admin.dokan.dokanSetupWizard.continue)
+        // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
+        // Withdraw
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.payPal)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.bankTransfer)
+        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.wirecard)
+        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.stripe)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.custom)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.skrill)
+        await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawCompleted)
+        await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawProcessing)
+        await this.click(selector.admin.dokan.dokanSetupWizard.continue)
+        // Recommended
+        await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.wooCommerceConversionTracking)
+        await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.weMail)
+        await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.texty)
+        await this.click(selector.admin.dokan.dokanSetupWizard.continueRecommended)
+        // Ready!
+        await this.click(selector.admin.dokan.dokanSetupWizard.visitDokanDashboard)
 
-        // // Selling
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.newVendorEnableSelling)
-        // await this.selectByValue(selector.admin.dokan.dokanSetupWizard.commissionType, dokanSetupWizard.commissionType)
-        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.adminCommission, dokanSetupWizard.adminCommission)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusChange)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
-        // // await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
-        // // Withdraw
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.payPal)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.bankTransfer)
-        // // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.wirecard)
-        // // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.stripe)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.custom)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.skrill)
-        // await this.clearAndFill(selector.admin.dokan.dokanSetupWizard.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawCompleted)
-        // await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawProcessing)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.continue)
-        // // Recommended
-        // await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.wooCommerceConversionTracking)
-        // await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.weMail)
-        // await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.texty)
-        // await this.click(selector.admin.dokan.dokanSetupWizard.continueRecommended)
-        // // Ready!
-        // await this.click(selector.admin.dokan.dokanSetupWizard.visitDokanDashboard)
-
-        // await this.waitForSelector(selector.admin.dokan.dashboard.dashboardText)
-        // let dashboardTextIsVisible = await this.isVisible(selector.admin.dokan.dashboard.dashboardText)
-        // expect(dashboardTextIsVisible).toBe(true)
+        await this.waitForSelector(selector.admin.dokan.dashboard.dashboardText)
+        let dashboardTextIsVisible = await this.isVisible(selector.admin.dokan.dashboard.dashboardText)
+        expect(dashboardTextIsVisible).toBe(true)
     }
 
     // Dokan Modules

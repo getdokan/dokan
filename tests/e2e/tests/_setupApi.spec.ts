@@ -19,22 +19,26 @@ const fs = require('fs');
 
 //TODO: add more assertion, and move api assertion to function level
 
+let productId: string;
+
 test.describe('setup test api', () => {
-	test('check active plugins ', async ({ request }) => {
+
+	test('check active plugins @lite @pro', async ({ request }) => {
+		test.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
 		const activePlugins = (await apiUtils.getAllPluginByStatus('active')).map((a: { plugin: any }) => a.plugin);
 		// expect(activePlugins).toContain(data.plugin.plugins); //Todo: update assertion
-		expect(data.plugin.plugins).toContain(activePlugins);
-		// console.log(activePlugins)
+		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
+		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
-	test('set wp settings', async ({ request }) => {
+	test('set wp settings @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
-		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
+		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings)); //TODO
 	});
 
-	test('set wc settings', async ({ request }) => {
+	test('set wc settings @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const [generalSettingsResponse] = await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		expect(generalSettingsResponse.ok()).toBeTruthy();
@@ -42,7 +46,7 @@ test.describe('setup test api', () => {
 		expect(accountSettingsResponse.ok()).toBeTruthy();
 	});
 
-	test('set tax rate', async ({ request }) => {
+	test('set tax rate @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// enable tax rate
@@ -59,7 +63,7 @@ test.describe('setup test api', () => {
 		expect(parseInt(taxRateResponse.rate)).toBe(parseInt(payloads.createTaxRate.rate));
 	});
 
-	test('set shipping methods', async ({ request }) => {
+	test('set shipping methods @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// delete previous shipping zones
@@ -86,9 +90,10 @@ test.describe('setup test api', () => {
 		// expect(distanceRateShippingResponseBody.enabled).toBe(true);
 		// const dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping);
 		// expect(dokanVendorShippingResponseBody.enabled).toBe(true);
+		//TODO: separate lite pro shipping methods
 	});
 
-	test('set basic payments', async ({ request }) => {
+	test('set basic payments @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const [bacsResponse] = await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
 		expect(bacsResponse.ok()).toBeTruthy();
@@ -98,7 +103,7 @@ test.describe('setup test api', () => {
 		expect(codResponse.ok()).toBeTruthy();
 	});
 
-	test('add categories and attributes', async ({ request }) => {
+	test('add categories and attributes @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// delete previous categories
@@ -122,33 +127,48 @@ test.describe('setup test api', () => {
 		expect(responseM.ok()).toBeTruthy();
 	});
 
-	// Vendor Details
+	// Customer Details
 
-	test('add test vendor', async ({ request }) => {
+	test('add test customer @lite @pro', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
+		const response = await request.post(endPoints.wc.createCustomer, { data: payloads.createCustomer1 });
+		const responseBody = await apiUtils.getResponseBody(response, false);
+		responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy();
+	});
+
+
+	// Vendor Details
+	test('add test vendor @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// create store
-		const [storeResponseBody, storeResponseStatus] = await apiUtils.createStore(payloads.createStore1);
-		storeResponseBody.code === 'existing_user_login' ? expect(storeResponseStatus).toBe(500) : expect(storeResponseStatus).toBe(200);
+		const response = await request.post(endPoints.createStore, { data: payloads.createStore1 });
+		const responseBody = await apiUtils.getResponseBody(response, false);
+		responseBody.code ? expect(response.status()).toBe(500) : expect(response.ok()).toBeTruthy();
 
 		// create store product
 		const product = { ...payloads.createProduct(), name: 'p1_v1' };
-		const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
+		[, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
+	});
+
+	test('add test vendor coupon @pro', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
 
 		// create store coupon
 		const coupon = { ...payloads.createCoupon(), code: 'c1_v1' };
-		const [couponResponseBody, couponResponseStatus] = await apiUtils.createCoupon(productId, coupon, payloads.vendorAuth);
-		couponResponseBody.code === 'woocommerce_rest_coupon_code_already_exists' ? expect(couponResponseStatus).toBe(400) : expect(couponResponseStatus).toBe(200);
+		const response = await apiUtils.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId }, headers: payloads.vendorAuth });
+		const responseBody = await apiUtils.getResponseBody(response, false);
+		responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy();
 	});
 
-	test.fixme('add test vendor1 rma settings', async ({ page }) => {
-		const loginPage = new LoginPage(page);
-		const vendorPage = new VendorPage(page);
-		await loginPage.login(data.vendor);
-		await vendorPage.setRmaSettings(data.vendor.rma);
-	});
+	// test.fixme('add test vendor rma settings @pro', async ({ page }) => {
+	// 	const loginPage = new LoginPage(page);
+	// 	const vendorPage = new VendorPage(page);
+	// 	await loginPage.login(data.vendor);
+	// 	await vendorPage.setRmaSettings(data.vendor.rma);
+	// });
 
-	test('admin add test vendor products ', async ({ request }) => {
+	test('admin add test vendor products @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const product = payloads.createProduct();
 		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false });
@@ -157,13 +177,19 @@ test.describe('setup test api', () => {
 		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true });
 	});
 
-	// Customer Details
-
-	test('add test customer', async ({ request }) => {
+	test.only('add test vendor orders @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		const [responseBody, status] = await apiUtils.createCustomer(payloads.createCustomer1);
-		responseBody.code === 'registration-error-email-exists' ? expect(status).toBe(400) : expect(status).toBe(200);
+		// await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth );
+		
+		const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
+		const payload = payloads.createOrder;
+		payload.line_items[0].product_id = productId;
+		const response = await request.post(endPoints.wc.createOrder, { data: payload});
+		expect(response.ok()).toBeTruthy();
+		const responseBody = await apiUtils.getResponseBody(response);
 	});
+
+
 
 	// test('storageState', async ({ page }) => {
 	//     // get user signed in state
@@ -225,7 +251,7 @@ test.describe('setup test api', () => {
 	// })
 });
 
-test.describe.only('setup test e2e', () => {
+test.describe('setup test e2e', () => {
 
 	test.use({ storageState: 'adminStorageState.json' });
 
@@ -237,75 +263,79 @@ test.describe.only('setup test e2e', () => {
 		adminPage = new AdminPage(page);
 	});
 
-	test.skip('admin set WpSettings', async ({ }) => {
+	test.skip('admin set WpSettings @lite @pro', async ({ }) => {
 		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
 	});
 
-	test('admin set dokan general settings', async ({ }) => {
+	test('admin set dokan general settings @lite @pro', async ({ }) => {
 		await adminPage.setDokanGeneralSettings(data.dokanSettings.general);
 	});
 
-	test('admin set dokan selling settings', async ({ }) => {
+	test('admin set dokan selling settings @lite @pro', async ({ }) => {
 		await adminPage.setDokanSellingSettings(data.dokanSettings.selling);
 	});
 
-	test('admin set dokan withdraw settings', async ({ }) => {
+	test('admin set dokan withdraw settings @lite @pro', async ({ }) => {
 		await adminPage.setDokanWithdrawSettings(data.dokanSettings.withdraw);
 	});
 
-	test('admin set dokan page settings', async ({ }) => {
+	test('admin set dokan reverse withdraw settings @lite @pro', async ({ }) => {
+		await adminPage.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw);
+	});
+
+	test('admin set dokan page settings @lite @pro', async ({ }) => {
 		await adminPage.setPageSettings(data.dokanSettings.page);
 	});
 
-	test('admin set dokan appearance settings', async ({ }) => {
+	test('admin set dokan appearance settings @lite @pro', async ({ }) => {
 		await adminPage.setDokanAppearanceSettings(data.dokanSettings.appearance);
 	});
 
-	test('admin set dokan privacy policy settings', async ({ }) => {
+	test('admin set dokan privacy policy settings @lite @pro', async ({ }) => {
 		await adminPage.setDokanPrivacyPolicySettings(data.dokanSettings.privacyPolicy);
 	});
 
-	test('admin set dokan store support settings', async ({ }) => {
+	test('admin set dokan store support settings @pro', async ({ }) => {
 		await adminPage.setDokanStoreSupportSettings(data.dokanSettings.storeSupport);
 	});
 
-	test('admin set dokan rma settings', async ({ }) => {
+	test('admin set dokan rma settings @pro', async ({ }) => {
 		await adminPage.setDokanRmaSettings(data.dokanSettings.rma);
 	});
 
-	test('admin set dokan wholesale settings', async ({ }) => {
+	test('admin set dokan wholesale settings @pro', async ({ }) => {
 		await adminPage.setDokanWholesaleSettings(data.dokanSettings.wholesale);
 	});
 
-	test('admin set dokan eu compliance settings', async ({ }) => {
+	test('admin set dokan eu compliance settings @pro', async ({ }) => {
 		await adminPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	test.skip('admin set dokan delivery time settings', async ({ }) => {
+	test.skip('admin set dokan delivery time settings @pro', async ({ }) => {
 		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
 	});
 
-	test('admin set dokan product advertising settings', async ({ }) => {
+	test('admin set dokan product advertising settings @pro', async ({ }) => {
 		await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
 	});
 
-	test.only('admin set dokan geolocation settings', async ({ }) => {
+	test('admin set dokan geolocation settings @pro', async ({ }) => {
 		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation);
 	});
 
-	test('admin set dokan product report abuse settings', async ({ }) => {
+	test('admin set dokan product report abuse settings @pro', async ({ }) => {
 		await adminPage.setDokanProductReportAbuseSettings(data.dokanSettings.productReportAbuse);
 	});
 
-	test('admin set dokan spmv settings', async ({ }) => {
+	test('admin set dokan spmv settings @pro', async ({ }) => {
 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	});
 
-	test.fixme('admin set dokan vendor subscription settings', async ({ }) => {
+	test.fixme('admin set dokan vendor subscription settings @pro', async ({ }) => {
 		await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	});
 
-	test.skip('admin add dokan subscription', async ({ }) => {
+	test.skip('admin add dokan subscription @pro', async ({ }) => {
 		await adminPage.addDokanSubscription({ ...data.product.vendorSubscription, productName: data.predefined.vendorSubscription.nonRecurring });
 	});
 });

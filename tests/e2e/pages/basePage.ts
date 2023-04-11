@@ -194,7 +194,8 @@ export class BasePage {
 	async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code: number = 200): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
-			await this.page.type(selector, text),
+			// await this.page.type(selector, text),
+			await this.clearAndFill(selector, text),
 		]);
 		expect(response.status()).toBe(code);
 		return response;
@@ -224,7 +225,7 @@ export class BasePage {
 	}
 
 	// click if visible
-	async clickIfVisible(selector) {
+	async clickIfVisible(selector: string) {
 		const IsVisible = await this.isVisible(selector);
 		if (IsVisible) {
 			await this.click(selector);
@@ -262,7 +263,7 @@ export class BasePage {
 	// get locators  //TODO: need to test
 	async getLocators(selector: string): Promise<object> {
 		return this.page.locator(selector).elementHandles();
-		return this.page.$$(selector);
+		// return this.page.$$(selector);
 	}
 
 	// returns whether the element is visible
@@ -364,9 +365,17 @@ export class BasePage {
 	}
 
 	// get element property value: background color
-	async getElementBackgroundColor(selector: string) { //TODO: update with playwright method
+	async getElementBackgroundColor(selector: string) {
 		const element = this.page.locator(selector);
 		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('background-color'));
+		// console.log(value)
+		return value;
+	}
+
+	// get element property value: background color
+	async getElementColor(selector: string) {
+		const element = this.page.locator(selector);
+		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('color'));
 		// console.log(value)
 		return value;
 	}
@@ -602,7 +611,7 @@ export class BasePage {
 	async typeFrameSelector(frame: string, frameSelector: string, text: string): Promise<void> {
 		const locator = this.page.frameLocator(frame).locator(frameSelector);
 		await locator.fill(text);
-		await locator.type(text);
+		// await locator.type(text);
 	}
 
 	/**
@@ -665,13 +674,13 @@ export class BasePage {
 	}
 
 	// resolves given locator to the first matching DOM element
-	// async elementHandle(selector: string): Promise<ElementHandle> {
-	//     let locator = this.page.locator(selector)
-	//     return await locator.elementHandle()
-	// }
+	async getElementHandle(selector: string): Promise<ElementHandle> {
+		let locator = this.page.locator(selector)
+		return await locator.elementHandle()
+	}
 
 	// resolves given locator to all matching DOM elements
-	async elementHandles(selector: string): Promise<ElementHandle[]> {
+	async getElementHandles(selector: string): Promise<ElementHandle[]> {
 		const locator = this.page.locator(selector);
 		return await locator.elementHandles();
 	}
@@ -1007,7 +1016,9 @@ export class BasePage {
 	async enableSwitcher(selector: string): Promise<void> {
 		(/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span';
 		const value = await this.getElementBackgroundColor(selector);
-		if (!value.includes('rgb(0, 144, 255)')) {
+		// console.log(selector, value);
+		// if (!value.includes('rgb(0, 144, 255)')) {
+		if ((!value.includes('rgb(0, 144, 255))')) && (!value.includes('rgb(33, 150, 243)'))) {
 			await this.click(selector);
 		}
 	}
@@ -1016,7 +1027,8 @@ export class BasePage {
 	async disableSwitcher(selector: string): Promise<void> {
 		(/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span';
 		const value = await this.getElementBackgroundColor(selector);
-		if (value.includes('rgb(0, 144, 255)')) {
+		// if (value.includes('rgb(0, 144, 255)')) {
+		if ((value.includes('rgb(0, 144, 255))')) && (value.includes('rgb(33, 150, 243)'))) {
 			await this.click(selector);
 		}
 	}
@@ -1031,54 +1043,54 @@ export class BasePage {
 		expect(classValueAfter).toContain('woocommerce-input-toggle--enabled');
 	}
 
-	// // get pseudo element style
-	// async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
-	//     // let element = await this.getElement(selector)
-	//     let value = await this.page.evaluate((selector, pseudoElement, property) => {
-	//         let stylesObject = window.getComputedStyle(element, '::' + pseudoElement)
-	//         let style = stylesObject.getPropertyValue(property)
-	//         return style
-	//     }, selector,)
-	//     return value
-	// }
+	// get pseudo element style
+	async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
+		let element = await this.getElement(selector)
+		// let value = await this.page.evaluate(([element, pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property), [element, pseudoElement, property]) //todo:fix via page.evaluate
+		const value = await element.evaluate((element, [pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property), [pseudoElement, property]);
+		// console.log(value);  
+		return value;
+	}
 
-	// // enable switch or checkbox: dokan setup wizard
-	// async enableSwitcherSetupWizard(selector: string) {
-	//     // let element = await this.getElement(selector)
-	//     let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-	//     console.log('before', value)
-	//     // // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-	//     // if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-	//     //     // console.log('if:', selector)
-	//     //     await this.page.evaluate(el => el.click(), element)
-	//     //     await this.wait(0.3)
-	//     //     await this.page.evaluate(el => el.click(), element)
-	//     // } else {
-	//     //     // console.log('else:', selector)
-	//     //     await this.page.evaluate(el => el.click(), element)
-	//     // }
-	// }
+	// enable switch or checkbox: dokan setup wizard
+	async enableSwitcherSetupWizard(selector: string) {
+		let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+		// rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+		if ((!value.includes('rgb(251, 203, 196)')) && (!value.includes('rgb(242, 98, 77)'))) {
+			if (selector.includes('withdraw_methods')) selector += '/..';
+			await this.click(selector);
+		}
+	}
 
-	// // enable switch or checkbox: dokan setup wizard
-	// async disableSwitcherSetupWizard(selector) {
-	//     let IsVisible = await this.isVisible(selector)
-	//     if (IsVisible) {
-	//         let element = await this.getElement(selector)
-	//         await element.focus()
-	//         let value: any = await this.getPseudoElementStyles(selector, 'before', 'background-color')
-	//         // console.log('before', value)
-	//         // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-	//         if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
-	//             // console.log('if:', selector)
-	//             await this.page.evaluate(el => el.click(), element)
-	//         } else {
-	//             // console.log('else:', selector)
-	//             await this.page.evaluate(el => el.click(), element)
-	//             await this.wait(0.3)
-	//             await this.page.evaluate(el => el.click(), element)
-	//         }
-	//     }
-	// }
+	// disable switch or checkbox: dokan setup wizard
+	async disableSwitcherSetupWizard(selector: string) {
+		let value: any = await this.getPseudoElementStyles(selector, 'before', 'background-color')
+		// rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
+		if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
+			if (selector.includes('withdraw_methods')) selector += '/..'
+			await this.click(selector);
+		}
+	}
+
+	// Check Multiple Elements with Same Selector/Class/Xpath
+	async checkMultiple(selector: string) {
+		for (const element of await this.page.locator(selector).all()) {
+			const isCheckBoxChecked = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('checked'));
+			console.log(isCheckBoxChecked);
+			
+			if (!isCheckBoxChecked) {
+				await element.click()
+			}
+
+			// let elements = await this.getElements(selector)
+			// for (let element of elements) {
+			// 	const isCheckBoxChecked = await (await element.getProperty("checked")).jsonValue()
+			// 	if (!isCheckBoxChecked) {
+			// 		await element.click()
+			// 	}
+			// }
+		}
+	}
 
 	// delete element if exist (only first will delete) : dokan rma,report abuse
 	async deleteIfExists(selector: string) { //TODO: there may be alternative solution, this method might not needed

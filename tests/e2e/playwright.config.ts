@@ -25,7 +25,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 4000,
+		timeout: 5 * 1000,
 	},
 
 	/* Run tests in files in parallel */
@@ -35,7 +35,7 @@ const config: PlaywrightTestConfig = {
 	// forbidOnly: !!process.env.CI,
 
 	/* Retry on CI only */
-	// retries: process.env.CI ? 2 : 0,
+	// retries: process.env.CI ? 2 : 1,
 
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : 1,
@@ -44,11 +44,13 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
-		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+		// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+		headless: false,
+		// headless: true,
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL
 		ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
@@ -59,7 +61,7 @@ const config: PlaywrightTestConfig = {
 
 		// launch options
 		launchOptions: {
-			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 50000, //whether to slow down test execution by provided seconds
+			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) : 0, //whether to slow down test execution by provided seconds
 		},
 		
 		// api request headers

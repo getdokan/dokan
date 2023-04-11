@@ -235,7 +235,7 @@ export const data = {
 			productName: () => faker.commerce.productName() + ( ' (Simple)' ),
 			category: 'Uncategorized',
 			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: 'vendorStore1',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 			stockStatus: false,
 		},
@@ -245,10 +245,10 @@ export const data = {
 			productName: () => faker.commerce.productName() + ( ' (Variable)' ),
 			category: 'Uncategorized',
 			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: 'vendorStore1',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 			stockStatus: false,
-			attribute: 'size',
+			attribute: 'sizes',
 			attributeTerms: [ 's', 'l', 'm' ],
 			variations: {
 				linkAllVariation: 'link_all_variations',
@@ -264,7 +264,7 @@ export const data = {
 			buttonText: 'Buy product',
 			category: 'Uncategorized',
 			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: 'vendorStore1',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 		},
@@ -280,7 +280,7 @@ export const data = {
 			expireAfter: '0',
 			subscriptionTrialLength: '0',
 			subscriptionTrialPeriod: 'day',
-			storeName: 'vendorStore1',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 		},
@@ -295,7 +295,7 @@ export const data = {
 			expireAfter: '0',
 			subscriptionTrialLength: '0',
 			subscriptionTrialPeriod: 'day',
-			storeName: 'vendorStore1',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 			attribute: 'size',
 			attributeTerms: [ 's', 'l', 'm' ],
@@ -318,7 +318,7 @@ export const data = {
 			packValidity: '0',
 			advertisementSlot: '-1',
 			expireAfterDays: '-1',
-			storeName: 'admin',
+			storeName: String( process.env.VENDOR ) + 'store',
 			status: 'publish',
 		},
 
@@ -338,6 +338,8 @@ export const data = {
 			maximumBookingWindowIntoTheFutureDateUnit: 'month',
 			baseCost: '20',
 			blockCost: '10',
+			storeName: String( process.env.VENDOR ) + 'store',
+			
 		},
 		auction: {
 			productName: () => faker.commerce.productName() + ( ' (Auction)' ),
@@ -649,6 +651,13 @@ export const data = {
 			weeklyScheduleDay: 'monday',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
+		reverseWithdraw: {
+			billingType: 'by_amount', // 'by_month'
+			reverseBalanceThreshold: '21',
+			gracePeriod: '7',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+			
+		},
 		page: {
 			termsAndConditionsPage: 'Sample Page',
 			saveSuccessMessage: 'Setting has been saved successfully.',
@@ -803,9 +812,15 @@ export const data = {
 			cart: 'cart',
 			checkout: 'checkout',
 			dashboard: 'dashboard',
+			editAccount: 'dashboard/edit-account',
 			product: 'dashboard/products',
+			productAuction: 'dashboard/new-auction-product',
+			productBooking: 'dashboard/booking/new-product',
+			order: 'dashboard/orders',
 			coupon: 'dashboard/coupons',
+			reviews: 'dashboard/reviews/',
 			withdraw: 'dashboard/withdraw',
+			withdrawRequests: 'dashboard/withdraw-requests',
 			auction: 'dashboard/auction',
 			booking: 'dashboard/booking',
 			settingsStore: 'dashboard/settings/store',
@@ -819,6 +834,7 @@ export const data = {
 		},
 		ajax: '/admin-ajax.php',
 		post: '/post.php',
+		gmap: '/maps/api',
 	},
 
 	admin: {
@@ -1045,6 +1061,7 @@ export const data = {
 			defaultWithdrawMethod: {
 				paypal: 'PayPal',
 				skrill: 'Skrill',
+				bankTransfer:'Bank Transfer',
 			},
 			preferredPaymentMethod: 'paypal',
 			preferredSchedule: 'weekly',

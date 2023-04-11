@@ -25,15 +25,17 @@ export class ApiUtils {
 	async getResponseBody(response: any, assert = true) {
 		let responseBody: any;
 		try {
+			assert && expect(response.ok()).toBeTruthy();
 			responseBody = await response.json();
-			// console.log(responseBody)
+			// console.log('ResponseBody: ', responseBody); 
+			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+			return responseBody;
 		} catch (err) {
-			console.log('Error: ', err.message);
 			console.log('Status Code: ', response.status());
-			// console.log('Response text: ', await response.text());
+			console.log('Error: ', err.message);
+			console.log('Response text: ', await response.text());
+			return false
 		}
-		assert && expect(response.ok()).toBeTruthy();
-		return responseBody;
 	}
 
 	/**
@@ -51,7 +53,6 @@ export class ApiUtils {
 	async getSellerId(storeName?: string, auth?: any): Promise<string> {
 		const allStores = await this.getAllStores(auth);
 		const sellerId = storeName ? (allStores.find((o: { store_name: string; }) => o.store_name === storeName)).id : allStores[0].id;
-		// console.log(sellerId)
 		return sellerId;
 	}
 
@@ -59,8 +60,6 @@ export class ApiUtils {
 	async createStore(payload: object, auth?: any) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		// let sellerId = responseBody.id
-		// // console.log(sellerId)
 		return [responseBody, response.status()];
 	}
 
@@ -69,7 +68,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const reviewId = responseBody.id;
-		// console.log(reviewId)
 		return [responseBody, reviewId];
 	}
 
@@ -99,17 +97,14 @@ export class ApiUtils {
 	async getProductId(productName: string, auth?: any) {
 		const allProducts = await this.getAllProducts(auth);
 		const productId = productName ? (allProducts.find((o: { name: string; }) => o.name === productName)).id : allProducts[0].id;
-		// console.log(productId)
 		return productId;
 	}
 
 	// create product
 	async createProduct(payload: object, auth?: any) {
 		const response = await this.request.post(endPoints.createProduct, { data: payload, headers: auth });
-		expect(response.ok()).toBeTruthy();
 		const responseBody = await this.getResponseBody(response);
 		const productId = responseBody.id;
-		// console.log(productId)
 		return [responseBody, productId];
 	}
 
@@ -122,19 +117,16 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createProductVariation(productId), { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const variationId = responseBody.id;
-		// console.log(variationId)
 		return [responseBody, variationId];
 	}
 
 	// get variationTd
 	async getVariationId(productName: string, auth?: any) {
 		const productId = await this.getProductId(productName, auth);
-		// console.log(productId)
 
 		const response = await this.request.get(endPoints.getAllProductVariations(productId), { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const variationId = responseBody[0].id;
-		// console.log(variationId)
 		return [productId, variationId];
 	}
 
@@ -149,7 +141,6 @@ export class ApiUtils {
 			}],
 		};
 		const [responseBody, variationId] = await this.createProductVariation(productId, payload);
-		// console.log(productId, variationId)
 		return [productId, variationId];
 	}
 
@@ -168,7 +159,6 @@ export class ApiUtils {
 	async getAttributeId(auth?: any) {
 		const allAttributes = await this.getAllAttributes(auth);
 		const attributeId = allAttributes[0].id;
-		// console.log(attributeId)
 		return attributeId;
 	}
 
@@ -177,7 +167,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createAttribute, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const attributeId = responseBody.id;
-		// console.log(attributeId)
 		return [responseBody, attributeId];
 	}
 
@@ -206,7 +195,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createAttributeTerm(String(attributeId)), { data: attributeTerm, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const attributeTermId = responseBody.id;
-		// console.log(attributeTermId)
 		return [response, responseBody, attributeId, attributeTermId];
 	}
 
@@ -225,7 +213,6 @@ export class ApiUtils {
 	async getCouponId(couponCode: string, auth?: any) {
 		const allCoupons = await this.getAllCoupons(auth);
 		const couponId = couponCode ? (couponCode = allCoupons.find((o: { code: string; }) => o.code === couponCode)).id : allCoupons[0].id;
-		// console.log(couponId)
 		return couponId;
 	}
 
@@ -269,7 +256,6 @@ export class ApiUtils {
 	async getWithdrawId(auth?: any) {
 		const allProducts = await this.getAllWithdrawsByStatus('pending');
 		const withdrawId = allProducts[0].id;
-		// console.log(withdrawId)
 		return withdrawId;
 	}
 
@@ -278,7 +264,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const withdrawId = responseBody.id;
-		// console.log(couponId)
 		return [responseBody, withdrawId];
 	}
 
@@ -297,7 +282,6 @@ export class ApiUtils {
 	async getOrderId(auth?: any) {
 		const allOrders = await this.getAllOrders(auth);
 		const orderId = allOrders[0].id;
-		// console.log(orderId)
 		return orderId;
 	}
 
@@ -318,7 +302,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createOrderNote(orderId), { data: orderNote, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const orderNoteId = responseBody.id;
-		// console.log(orderNoteId)
 		return [responseBody, orderId, orderNoteId];
 	}
 
@@ -337,7 +320,6 @@ export class ApiUtils {
 	async getRefundId(auth?: any) {
 		const allRefunds = await this.getAllRefunds(auth);
 		const refundId = allRefunds[0].id;
-		// console.log(refundId)
 		return refundId;
 	}
 
@@ -375,8 +357,6 @@ export class ApiUtils {
 		const allSupportTickets = await this.getAllSupportTickets(auth);
 		const supportTicketId = allSupportTickets[0].ID;
 		const sellerId = allSupportTickets[0].vendor_id;
-		// console.log(supportTicketId)
-		// console.log(sellerId)
 		return [supportTicketId, sellerId];
 	}
 
@@ -410,7 +390,6 @@ export class ApiUtils {
 	async getReverseWithdrawalStoreId(auth?: any) {
 		const allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores(auth);
 		const reverseWithdrawalStoreId = allReverseWithdrawalStores[0].id;
-		// console.log(reverseWithdrawalStoreId)
 		return reverseWithdrawalStoreId;
 	}
 
@@ -428,7 +407,6 @@ export class ApiUtils {
 	// get all modules ids
 	async getAllModuleIds(auth?: any) {
 		const allModuleIds = (await this.getAllModules(auth)).map((a: { id: any; }) => a.id);
-		// console.log(allModuleIds)
 		return allModuleIds;
 	}
 
@@ -462,7 +440,6 @@ export class ApiUtils {
 	async getCustomerId(username: string, auth?: any) {
 		const allCustomers = await this.getAllCustomers(auth);
 		const customerId = (allCustomers.find((o: { username: string; }) => o.username === username)).id;
-		// console.log(customerId)
 		return customerId;
 	}
 
@@ -494,10 +471,8 @@ export class ApiUtils {
 	// create a wholesale customer
 	async createWholesaleCustomer(payload: object, auth?: any) {
 		const [, customerId] = await this.createCustomer(payload, auth);
-
 		const response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: customerId }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		// console.log(customerId)
 		return [responseBody, customerId];
 	}
 
@@ -520,7 +495,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const productAdvertisementId = responseBody.id;
-		// console.log(productAdvertisementId)
 		return [responseBody, productAdvertisementId];
 	}
 
@@ -539,7 +513,6 @@ export class ApiUtils {
 	async getAbuseReportId(auth?: any) {
 		const allAbuseReports = await this.getAllAbuseReports(auth);
 		const abuseReportId = allAbuseReports[0].id;
-		// console.log(abuseReportId)
 		return abuseReportId;
 	}
 
@@ -559,7 +532,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createAnnouncement, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const announcementId = responseBody.id;
-		// console.log(announcementId)
 		return [responseBody, announcementId];
 	}
 
@@ -592,7 +564,6 @@ export class ApiUtils {
 	async getProductReviewId(auth?: any) {
 		const allProductReviews = await this.getAllProductReviews(auth);
 		const reviewId = allProductReviews[0].id;
-		// console.log(reviewId)
 		return reviewId;
 	}
 
@@ -611,7 +582,6 @@ export class ApiUtils {
 	async getStoreReviewId(auth?: any) {
 		const allStoreReviews = await this.getAllStoreReviews(auth);
 		const reviewId = allStoreReviews[0].id;
-		// console.log(reviewId)
 		return reviewId;
 	}
 
@@ -638,7 +608,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createStoreCategory, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const categoryId = responseBody.id;
-		// console.log(categoryId)
 		return [responseBody, categoryId];
 	}
 
@@ -647,7 +616,6 @@ export class ApiUtils {
 		const response = await this.request.get(endPoints.getDefaultStoreCategory, { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const categoryId = responseBody.id;
-		// console.log(categoryId)
 		return [responseBody, categoryId];
 	}
 
@@ -672,10 +640,8 @@ export class ApiUtils {
 	// create quote rule
 	async createQuoteRule(payload: object, auth?: any) {
 		const response = await this.request.post(endPoints.createQuoteRule, { data: payload, headers: auth });
-		// console.log(response.status())
 		const responseBody = await this.getResponseBody(response);
 		const quoteRuleId = responseBody.id;
-		// console.log(quoteRuleId)
 		return [responseBody, quoteRuleId];
 	}
 
@@ -702,7 +668,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.createRequestQuote, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const quoteRuleId = responseBody[0].data.id;
-		// console.log(quoteRuleId)
 		return [responseBody, quoteRuleId];
 	}
 
@@ -754,7 +719,6 @@ export class ApiUtils {
 		const response = await this.request.get(endPoints.wp.getCurrentUser, { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const userId = responseBody.id;
-		// console.log(userId)
 		return [responseBody, userId];
 	}
 
@@ -865,7 +829,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const reviewId = responseBody.id;
-		// console.log(reviewId)
 		return [responseBody, reviewId];
 	}
 
@@ -889,7 +852,6 @@ export class ApiUtils {
 	async getCategoryId(categoryName: string, auth?: any) {
 		const allCustomers = await this.getAllCustomers();
 		const customerId = (allCustomers.find((o: { name: string; }) => o.name === categoryName)).id;
-		// console.log(customerId)
 		return customerId;
 	}
 
@@ -898,7 +860,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.wc.createCategory, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const categoryId = responseBody.id;
-		// console.log(categoryId)
 		return [responseBody, categoryId];
 	}
 
@@ -926,14 +887,13 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(product: object, order: any, auth?: any): Promise<[object, string]> {
+	async createOrder(product: object, order: any, auth?: any){
 		const [, productId] = await this.createProduct(product, auth);
 		const payload = order;
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const orderId = responseBody.id;
-		// console.log(orderId)
 		return [responseBody, orderId];
 	}
 
@@ -941,7 +901,6 @@ export class ApiUtils {
 	async createOrderWithStatus(product: object, order: any, status: string, auth?: any) {
 		const [, orderId] = await this.createOrder(product, order, auth);
 		await this.updateOrderStatus(orderId, status);
-		// console.log(orderId)
 		return orderId;
 	}
 
@@ -952,7 +911,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.wc.createRefund(orderId), { data: refund, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const refundId = responseBody.id;
-		// console.log(refundId)
 		return [responseBody, refundId];
 	}
 
@@ -1002,7 +960,6 @@ export class ApiUtils {
 	async getAllShippingZones(auth?: any) {
 		const response = await this.request.get(endPoints.wc.getAllShippingZones, { headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		// console.log(responseBody)
 		return responseBody;
 	}
 
@@ -1010,7 +967,6 @@ export class ApiUtils {
 	async getZoneId(zoneName: string, auth?: any) {
 		const allZones = await this.getAllShippingZones();
 		const zoneId = (allZones.find((o: { name: string; }) => o.name === zoneName)).id;
-		// console.log(zoneId)
 		return zoneId;
 	}
 
@@ -1019,7 +975,6 @@ export class ApiUtils {
 		const response = await this.request.post(endPoints.wc.createShippingZone, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const shippingZoneId = responseBody.id;
-		// console.log(shippingZoneId)
 		return [responseBody, shippingZoneId];
 	}
 
