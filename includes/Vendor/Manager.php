@@ -355,7 +355,7 @@ class Manager {
             $vendor->set_show_email( 'no' );
         }
 
-        if ( ! empty( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
+        if ( isset( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
             $vendor->set_gravatar_id( $data['gravatar_id'] );
         }
 
