@@ -24,6 +24,11 @@
         },
 
         created() {
+            /**
+             * When admin searches text editor setting in dokan admin setting, the text editors
+             * disables and does not works, thats why we need to distroy the text editors and
+             * reinitiate the text editors.
+             */
             this.$root.$on('reinitWpTextEditor', async () => {
                 if ( window.tinymce.activeEditor ) {
                     await window.tinymce.activeEditor.destroy();
