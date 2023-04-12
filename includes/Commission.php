@@ -84,7 +84,6 @@ class Commission {
 
             // Ensure sub-orders also get the correct payment gateway fee (if any)
             $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
-
             $net_amount = $vendor_earning - $gateway_fee;
             $net_amount = apply_filters( 'dokan_orders_vendor_net_amount', $net_amount, $vendor_earning, $gateway_fee, $tmp_order, $order );
 
@@ -108,9 +107,9 @@ class Commission {
             );
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
+            $tmp_order->save();
             // translators: %s: Geteway fee
             $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
-            $tmp_order->save_meta_data();
 
             //remove cache for seller earning
             $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
@@ -567,7 +566,7 @@ class Commission {
         $commission_type = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', true ) : null;
         $additional_fee  = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', true ) : null;
 
-        if ( null === $commission_rate ) { // this is the first time we are calculating commission for this order
+        if ( empty( $commission_rate ) ) { // this is the first time we are calculating commission for this order
             // Set default value as null
             $commission_rate = null;
             $commission_type = null;
@@ -603,7 +602,7 @@ class Commission {
         }
 
         /**
-         * If dokan pro doesn't exists but combine commission is found in database due to it was active before
+         * If dokan pro doesn't exist but combine commission is found in database due to it was active before
          * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
          * But in option field, looks like flat commission is selected.
          *
@@ -633,9 +632,7 @@ class Commission {
             }
 
             $earning = $product_price - $commission_rate;
-        }
-
-        if ( 'percentage' === $commission_type ) {
+        } elseif ( 'percentage' === $commission_type ) {
             $earning = ( $product_price * $commission_rate ) / 100;
             $earning = $product_price - $earning;
 
@@ -841,13 +838,12 @@ class Commission {
      *
      * @param WC_Order $order
      *
-     * @return array
+     * @return WC_Order[]
      */
     public function get_all_order_to_be_processed( $order ) {
-        $has_suborder = $order->get_meta( 'has_sub_order' );
-        $all_orders   = [];
+        $all_orders = [];
 
-        if ( $has_suborder ) {
+        if ( $order->get_meta( 'has_sub_order' ) ) {
             $all_orders = dokan()->order->get_child_orders( $order->get_id() );
         } else {
             $all_orders[] = $order;

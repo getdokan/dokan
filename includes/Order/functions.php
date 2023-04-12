@@ -240,8 +240,7 @@ function dokan_sync_insert_order( $order_id ) {
     if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
         $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
     } else {
-        $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
-        $net_amount       = $order_total - $admin_commission;
+        $net_amount = dokan()->commission->get_earning_by_order( $order );
     }
 
     $net_amount    = apply_filters( 'dokan_order_net_amount', $net_amount, $order );
