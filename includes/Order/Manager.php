@@ -436,7 +436,7 @@ class Manager {
      * @return WC_Order[]
      */
     public function get_child_orders( $parent_order ) {
-        $parent_order_id = is_numeric( $parent_order ) ?? $parent_order->get_id();
+        $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
 
         return wc_get_orders(
             [

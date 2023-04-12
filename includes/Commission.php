@@ -24,6 +24,15 @@ class Commission {
     public $order_id = 0;
 
     /**
+     * Order Line Item Id For Product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var int $order_item_id
+     */
+    protected $order_item_id = 0;
+
+    /**
      * Order quantity holder
      *
      * @since 2.9.21
@@ -148,6 +157,19 @@ class Commission {
     }
 
     /**
+     * Set order line item id
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $item_id
+     *
+     * @return void
+     */
+    public function set_order_item_id( $item_id ) {
+        $this->order_item_id = absint( $item_id );
+    }
+
+    /**
      * Get order id
      *
      * @since  2.9.21
@@ -156,6 +178,17 @@ class Commission {
      */
     public function get_order_id() {
         return $this->order_id;
+    }
+
+    /**
+     * Get order line item id
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int
+     */
+    public function get_order_item_id() {
+        return $this->order_item_id;
     }
 
     /**
@@ -189,24 +222,22 @@ class Commission {
      *
      * @param int|WC_Product $product
      * @param string         $context [admin|seller]
-     * @param float          $price
+     * @param float|null     $price
      *
-     * @return float
+     * @return float|WP_Error
      */
     public function get_earning_by_product( $product, $context = 'seller', $price = null ) {
         if ( ! $product instanceof WC_Product ) {
             $product = wc_get_product( $product );
         }
-        /**
-         * Todo: add proper error checking if product has been deleted.
-         * right now, we are calling this method anytime whether this feature is used or not
-         * commission calculation must be done with saved data and this method should be called
-         * one time after an order has been created.
-         */
 
-        $product_price = is_null( $price ) && $product ? (float) $product->get_price() : (float) $price;
+        if ( ! $product ) {
+            return new \WP_Error( 'invalid_product', __( 'Product not found', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        $product_price = is_null( $price ) ? (float) $product->get_price() : (float) $price;
         $vendor_id     = (int) dokan_get_vendor_by_product( $product, true );
-        $product_id    = $product ? $product->get_id() : 0;
+        $product_id    = $product->get_id();
 
         $earning = $this->calculate_commission( $product_id, $product_price, $vendor_id );
         $earning = 'admin' === $context ? $product_price - $earning : $earning;
@@ -247,37 +278,48 @@ class Commission {
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
-        // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
-        // Specially on order table `re-generation`.
+        // Set user passed `order_id`
         $this->set_order_id( $order->get_id() );
-        $earning = $this->get_earning_from_order_table( $order->get_id(), $context );
 
+        // get earning from order table
+        $earning = $this->get_earning_from_order_table( $order->get_id(), $context );
         if ( ! is_null( $earning ) ) {
             return $earning;
         }
 
-        $earning = 0;
+        $earning   = 0;
+        $vendor_id = (int) $order->get_meta( '_dokan_vendor_id' );
 
         foreach ( $order->get_items() as $item_id => $item ) {
-            if ( ! $item->get_product() ) {
-                continue;
-            }
+            // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
+            // Specially on order table `re-generation`.
+            $this->set_order_item_id( $item->get_id() );
 
             // Set line item quantity so that we can use it later in the `\WeDevs\Dokan\Commission::prepare_for_calculation()` method
             $this->set_order_qunatity( $item->get_quantity() );
 
-            $product_id = $item->get_product()->get_id();
+            $product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
-            $vendor_id  = (int) get_post_field( 'post_author', $product_id );
 
             if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) ) {
                 $earning += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
                 $item_price = $refund ? $item_price - $refund : $item_price;
-                $earning    += $this->get_earning_by_product( $product_id, $context, $item_price );
+
+                $item_earning = $this->calculate_commission( $product_id, $item_price, $vendor_id );
+                $item_earning = 'admin' === $context ? $item_price - $item_earning : $item_earning;
+                $earning      += $item_earning;
             }
+
+            // reset order item id to zero
+            $this->set_order_item_id( 0 );
+            // set order quantity to zero
+            $this->set_order_qunatity( 0 );
         }
+
+        // reset order id to zero, we don't need this value anymore
+        $this->set_order_id( 0 );
 
         if ( $context === $this->get_shipping_fee_recipient( $order ) ) {
             $earning += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
@@ -289,7 +331,7 @@ class Commission {
 
         $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
 
-        return apply_filters( 'dokan_get_earning_by_order', $earning );
+        return apply_filters( 'dokan_get_earning_by_order', $earning, $order, $context );
     }
 
     /**
@@ -519,26 +561,45 @@ class Commission {
     public function prepare_for_calculation( $callable, $product_id = 0, $product_price = 0 ) {
         do_action( 'dokan_before_prepare_for_calculation', $callable, $product_id, $product_price, $this );
 
-        $func_rate = str_replace( 'earning', 'rate', $callable );
-        $func_type = str_replace( 'earning', 'type', $callable );
-        $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
+        // If an order has been purchased previously, calculate the earning with the previously stated commission rate.
+        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
+        $commission_rate = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_commission_rate', true ) : null;
+        $commission_type = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', true ) : null;
+        $additional_fee  = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', true ) : null;
 
-        $commission_rate = null;
+        if ( null === $commission_rate ) { // this is the first time we are calculating commission for this order
+            // Set default value as null
+            $commission_rate = null;
+            $commission_type = null;
+            $additional_fee  = null;
 
-        // get[product,category,vendor,global]_wise_rate
-        if ( is_callable( [ $this, $func_rate ] ) ) {
-            $commission_rate = $this->$func_rate( $product_id );
-        }
+            $func_rate = str_replace( 'earning', 'rate', $callable );
+            $func_type = str_replace( 'earning', 'type', $callable );
+            $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
 
-        if ( is_null( $commission_rate ) ) {
-            return $commission_rate;
-        }
+            // get[product,category,vendor,global]_wise_rate
+            if ( is_callable( [ $this, $func_rate ] ) ) {
+                $commission_rate = $this->$func_rate( $product_id );
+            }
 
-        $earning = null;
+            if ( is_null( $commission_rate ) ) {
+                return $commission_rate;
+            }
 
-        // get[product,category,vendor,global]_wise_type
-        if ( is_callable( [ $this, $func_type ] ) ) {
-            $commission_type = $this->$func_type( $product_id );
+            // get[product,category,vendor,global]_wise_type
+            if ( is_callable( [ $this, $func_type ] ) ) {
+                $commission_type = $this->$func_type( $product_id );
+            }
+
+            // get[product,category,vendor,global]_wise_additional_fee
+            if ( is_callable( [ $this, $func_fee ] ) ) {
+                $additional_fee = $this->$func_fee( $product_id );
+            }
+
+            // Saving applied commission rates and types for current order item in order item meta.
+            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_rate', $commission_rate );
+            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', $commission_type );
+            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', $additional_fee );
         }
 
         /**
@@ -552,64 +613,21 @@ class Commission {
             $commission_type = 'flat';
         }
 
-        // get[product,category,vendor,global]_wise_additional_fee
-        if ( is_callable( [ $this, $func_fee ] ) ) {
-            $additional_fee = $this->$func_fee( $product_id );
-        }
-
-        // If an order has been purchased previously, calculate the earning with the previously stated commisson rate.
-        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
-        if ( $this->get_order_id() ) {
-            $order      = wc_get_order( $this->get_order_id() );
-            $line_items = $order->get_items();
-
-            static $i = 0;
-            foreach ( $line_items as $item ) {
-                $items = array_keys( $line_items );
-
-                if ( ! isset( $items[ $i ] ) ) {
-                    continue;
-                }
-
-                $saved_commission_rate = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_rate', true );
-                $saved_commission_type = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_type', true );
-                $saved_additional_fee  = wc_get_order_item_meta( $items[ $i ], '_dokan_additional_fee', true );
-
-                if ( $saved_commission_rate ) {
-                    $commission_rate = $saved_commission_rate;
-                } else {
-                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_rate', $commission_rate );
-                }
-
-                if ( $saved_commission_type ) {
-                    $commission_type = $saved_commission_type;
-                } else {
-                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_type', $commission_type );
-                }
-
-                if ( $saved_additional_fee ) {
-                    $additional_fee = $saved_additional_fee;
-                } else {
-                    wc_add_order_item_meta( $items[ $i ], '_dokan_additional_fee', $additional_fee );
-                }
-
-                $i++;
-                break;
-            }
-
-            // Reset `static` $i to 0 when the value of $i is equals to the line_items as we don't need to hold the value anymore.
-            // This is required cause on order table `re-generation` the php process keeps running.
-            $i = count( $line_items ) === $i ? 0 : $i;
-        }
+        $earning = null;
 
         if ( 'flat' === $commission_type ) {
-            if ( $this->get_order_qunatity() ) {
+            if ( (int) $this->get_order_qunatity() > 1 ) {
                 $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_order_qunatity() );
             }
 
             // If `_dokan_item_total` returns value non-falsy value, it means the request is comming from the `order refund requst`.
             // As it's `flat` fee, So modify `commission rate` to the correct amount to get refunded. (commission_rate/item_total)*product_price.
-            $item_total = $order->get_meta( $this->get_order_id(), '_dokan_item_total', true );
+            $item_total = 0;
+            if ( $this->get_order_id() ) {
+                $order      = wc_get_order( $this->get_order_id() );
+                $item_total = $order->get_meta( '_dokan_item_total', true );
+            }
+
             if ( $item_total ) {
                 $commission_rate = ( $commission_rate / $item_total ) * $product_price;
             }
@@ -627,7 +645,7 @@ class Commission {
             }
         }
 
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->order_id );
+        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->get_order_id() );
     }
 
     /**
@@ -830,12 +848,7 @@ class Commission {
         $all_orders   = [];
 
         if ( $has_suborder ) {
-            $all_orders = wc_get_orders(
-                [
-                    'parent' => $order->get_id(),
-                    'limit'  => -1,
-                ]
-            );
+            $all_orders = dokan()->order->get_child_orders( $order->get_id() );
         } else {
             $all_orders[] = $order;
         }
