@@ -14,6 +14,9 @@ class Astra {
      */
     public function __construct() {
         add_filter( 'astra_page_layout', [ $this, 'remove_sidebar' ] );
+        
+        // Payment request button conflict issue fix
+        add_action( 'wp_enqueue_scripts', [ $this, 'payment_request_button_style' ], 100 );
     }
 
     /**
@@ -29,5 +32,21 @@ class Astra {
         }
 
         return $layout;
+    }
+
+    public function payment_request_button_style()
+    {
+        
+        /*
+         * For payment request button conflict with Astra theme
+         * for simple and variable products in single product page.
+         */
+        $style = '.woocommerce div.product.product-type-simple form.cart,
+        .woocommerce div.product .woocommerce-variation-add-to-cart {
+          display: unset !important;
+        }';
+
+        wp_add_inline_style( 'dokan-style', $style );
+
     }
 }
