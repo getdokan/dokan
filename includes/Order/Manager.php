@@ -470,13 +470,48 @@ class Manager {
             $where_format[]     = '%d';
         }
 
-        $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
+        $deleted = $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
+        if ( false === $deleted ) {
+            dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting dokan order table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
+            return; // since dokan_orders table data couldn't be deleted, returning from here
+        }
 
-        // todo: delete all order references from vendor_balance, withdraw and refund table
-        // todo: remove action of wp_trash_post, wp_untrash_post, wp_delete_post if necessary
-        // dokan_vendor_balance has a design flaw, if order is paid via paypal, check etc where
-        // vendor needs a manual withdraw requests, there is no way to track if order amount has been
-        // withdrawn or not, hence we can't properly delete vendor balance.
+        // delete from dokan refund table -> order_id
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM `{$wpdb->prefix}dokan_refund` WHERE order_id = %d",
+                [ $order_id ]
+            )
+        );
+        if ( false === $deleted ) {
+            dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting refund table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
+        }
+
+        do_action( 'dokan_after_deleting_seller_order', $order_id );
+
+        // delete data from vendor balance table -> trn_id, trn_type: dokan_orders, dokan_refund, dokan_withdraw
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM `{$wpdb->prefix}dokan_vendor_balance`
+                WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
+                [ $order_id, 'dokan_orders', 'dokan_refund', 'dokan_withdraw' ]
+            )
+        );
+        if ( false === $deleted ) {
+            dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting vendor balance table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
+        }
+
+        // delete data from reverse withdrawal table -> order_id, trn_type: order_commission, manual_order_commission, order_refund
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM `{$wpdb->prefix}dokan_reverse_withdrawal`
+                WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
+                [ $order_id, 'order_commission', 'manual_order_commission', 'order_refund' ]
+            )
+        );
+        if ( false === $deleted ) {
+            dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting dokan reverse withdrawal table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
+        }
     }
 
     /**
@@ -496,6 +531,7 @@ class Manager {
 
         if ( $sub_orders ) {
             foreach ( $sub_orders as $sub_order ) {
+                // delete_seller_order for sub_order will be called from Order/Admin/Hooks.php file
                 $sub_order->delete( true );
             }
         }
