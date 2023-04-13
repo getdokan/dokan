@@ -463,7 +463,17 @@ class Manager {
             }
         }
 
-        $shipping_methods = apply_filters( 'dokan_shipping_methods', $applied_shipping_methods, $order->get_id(), $parent_order );
+        $applied_shipping_methods[0] = apply_filters_deprecated(
+            'dokan_shipping_method',
+            [
+                $applied_shipping_methods[0] ?? '',
+                $order->get_id(),
+                $parent_order,
+            ],
+            '3.7.16',
+            'dokan_shipping_methods'
+        );
+        $shipping_methods            = apply_filters( 'dokan_shipping_methods', array_filter( $applied_shipping_methods ), $order->get_id(), $parent_order );
 
         // bail out if no shipping methods found
         if ( empty( $shipping_methods ) ) {
