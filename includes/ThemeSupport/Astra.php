@@ -34,19 +34,25 @@ class Astra {
         return $layout;
     }
 
-    public function payment_request_button_style()
-    {
+    public function payment_request_button_style() {
         
         /*
          * For payment request button conflict with Astra theme
          * for simple and variable products in single product page.
          */
-        $style = '.woocommerce div.product.product-type-simple form.cart,
-        .woocommerce div.product .woocommerce-variation-add-to-cart {
-          display: unset !important;
-        }';
-
-        wp_add_inline_style( 'dokan-style', $style );
+        if (
+            dokan()->is_pro_exists() 
+            && dokan_pro()->module->is_active( 'stripe_express' ) 
+            && defined('ASTRA_THEME_VERSION') 
+            && is_checkout()
+        ) {
+            $style = '.woocommerce div.product.product-type-simple form.cart,
+            .woocommerce div.product .woocommerce-variation-add-to-cart {
+            display: unset !important;
+            }';
+            
+            wp_add_inline_style( 'dokan-style', $style );
+        }
 
     }
 }
