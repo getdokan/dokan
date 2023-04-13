@@ -60,7 +60,6 @@ class Manager {
         $order_table_name = OrderUtil::get_order_table_name();
         if ( OrderUtil::is_hpos_enabled() ) {
             // HPOS usage is enabled.
-            // HPOS still supports post table
             $join       = " LEFT JOIN {$order_table_name} p ON do.order_id = p.id";
             $where      = ' AND p.status != %s';
             $query_args = [ 1, 1, 'trash' ];
@@ -323,17 +322,32 @@ class Manager {
             ];
             $counts = apply_filters( 'dokan_order_status_count', $counts );
 
-            $query = $wpdb->prepare(
-                "SELECT do.order_status as order_status, count(do.id) as order_count
-                FROM {$wpdb->prefix}dokan_orders AS do
-                LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-                WHERE
-                    do.seller_id = %d AND
-                    p.post_type = 'shop_order' AND
-                    p.post_status != 'trash'
-                GROUP BY do.order_status",
-                [ $seller_id ]
-            );
+            $order_table_name = OrderUtil::get_order_table_name();
+            if ( OrderUtil::is_hpos_enabled() ) {
+                // HPOS usage is enabled.
+                $query = $wpdb->prepare(
+                    "SELECT do.order_status as order_status, count(do.id) as order_count
+                    FROM {$wpdb->prefix}dokan_orders AS do
+                    LEFT JOIN $order_table_name p ON do.order_id = p.id
+                    WHERE
+                        do.seller_id = %d AND
+                        p.status != 'trash'
+                    GROUP BY do.order_status",
+                    [ $seller_id ]
+                );
+            } else {
+                // Traditional CPT-based orders are in use.
+                $query = $wpdb->prepare(
+                    "SELECT do.order_status as order_status, count(do.id) as order_count
+                    FROM {$wpdb->prefix}dokan_orders AS do
+                    LEFT JOIN $order_table_name p ON do.order_id = p.ID
+                    WHERE
+                        do.seller_id = %d AND
+                        p.post_status != 'trash'
+                    GROUP BY do.order_status",
+                    [ $seller_id ]
+                );
+            }
 
             $results = $wpdb->get_results( $query ); // phpcs:ignore
 
