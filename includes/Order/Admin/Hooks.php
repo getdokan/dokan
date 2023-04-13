@@ -35,19 +35,24 @@ class Hooks {
             add_action( 'woocommerce_order_list_table_restrict_manage_orders', [ $this, 'admin_shop_order_toggle_sub_orders' ], 10, 1 );
             // hpos equivalent hooks for manage_edit-shop_order_columns
             add_filter( 'manage_woocommerce_page_wc-orders_columns', [ $this, 'admin_shop_order_edit_columns' ], 11 );
+
+            add_action( 'woocommerce_trash_order', [ $this, 'admin_on_trash_order' ] );
+            add_action( 'woocommerce_untrash_order', [ $this, 'admin_on_untrash_order' ] );
+            add_action( 'woocommerce_delete_order', [ $this, 'admin_on_delete_order' ] );
         } else {
             add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11, 2 );
             add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
             add_action( 'restrict_manage_posts', [ $this, 'admin_shop_order_toggle_sub_orders' ], 10, 1 );
             add_filter( 'manage_edit-shop_order_columns', [ $this, 'admin_shop_order_edit_columns' ], 11 );
+
+            add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
+            add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
+            add_action( 'delete_post', [ $this, 'admin_on_delete_order' ] );
         }
 
         // Change order meta key and value.
         add_filter( 'woocommerce_order_item_display_meta_key', [ $this, 'change_order_item_display_meta_key' ] );
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
-        add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
-        add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
-        add_action( 'delete_post', [ $this, 'admin_on_delete_order' ] );
         add_filter( 'woocommerce_reports_get_order_report_query', [ $this, 'admin_order_reports_remove_parents' ] );
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 3 );
     }
