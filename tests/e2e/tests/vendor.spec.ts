@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
-// import { AdminPage } from '../pages/adminPage';
-// import { CustomerPage } from '../pages/customerPage';
+import { AdminPage } from '../pages/adminPage';
+import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 
 // test.afterAll(async ({ }) => { })
@@ -29,7 +29,7 @@ test.skip('vendor can logout', async ({ page }) => {
 
 test.describe('Vendor functionality test', () => {
 
-	test.use({ storageState: 'vendorStorageState.json' })
+	// test.use({ storageState: 'vendorStorageState.json' })
 
 	let loginPage: any;
 	let vendorPage: any;
@@ -113,6 +113,10 @@ test.describe('Vendor functionality test', () => {
 	test.fixme('vendor can edit addon', async ({ }) => {
 		const addonName = await vendorPage.addAddon(data.vendor.addon);
 		await vendorPage.editAddon(data.vendor.addon, addonName);
+	});
+
+	test.only('vendor can add payment method', async ({ }) => {
+		await vendorPage.setPaymentSettings(data.vendor.payment);
 	});
 
 	test.skip('vendor can send id verification request ', async ({ }) => {

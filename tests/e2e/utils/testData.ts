@@ -825,6 +825,10 @@ export const data = {
 			settingsRma: 'dashboard/settings/rma',
 			settingsSeo: 'dashboard/settings/seo',
 			editAccount: 'dashboard/edit-account',
+			paypal:'dashboard/settings/payment-manage-paypal',
+			bankTransfer:'dashboard/settings/payment-manage-bank',
+			customPayment:'dashboard/settings/payment-manage-dokan_custom',
+			skrill:'dashboard/settings/payment-manage-skrill',
 		},
 
 		ajax: '/admin-ajax.php',
@@ -1023,6 +1027,7 @@ export const data = {
 		payment: {
 			email: () => faker.internet.email(),
 			bankAccountName: 'accountName',
+			bankAccountType:faker.helpers.arrayElement(['personal', 'business']),
 			bankAccountNumber: faker.random.alphaNumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',

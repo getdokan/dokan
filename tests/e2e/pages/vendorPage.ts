@@ -13,9 +13,9 @@ export class VendorPage extends BasePage {
 		super(page);
 	}
 
-	loginPage = new LoginPage(this.page);
-	customerPage = new CustomerPage(this.page);
-	adminPage = new AdminPage(this.page);
+	// loginPage = new LoginPage(this.page);
+	// customerPage = new CustomerPage(this.page);
+	// adminPage = new AdminPage(this.page);
 
 	// navigation
 
@@ -36,31 +36,43 @@ export class VendorPage extends BasePage {
 		await this.goToMyAccount();
 		const loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
 		if (!loginIsVisible) {
-			await this.loginPage.logout();
+			// await this.loginPage.logout();
 		}
 		const username = vendorInfo.firstName();
 		await this.clearAndFill(selector.vendor.vRegistration.regEmail, username + data.vendor.vendorInfo.emailDomain);
 		await this.clearAndFill(selector.vendor.vRegistration.regPassword, vendorInfo.password);
 		await this.click(selector.vendor.vRegistration.regVendor);
 		await this.waitForVisibleLocator(selector.vendor.vRegistration.firstName);
-		await this.type(selector.vendor.vRegistration.firstName, username);
-		await this.type(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
-		await this.type(selector.vendor.vRegistration.shopName, vendorInfo.shopName);
+		await this.clearAndFill(selector.vendor.vRegistration.firstName, username);
+		await this.clearAndFill(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
+		await this.clearAndFill(selector.vendor.vRegistration.shopName, vendorInfo.shopName);
 		// await this.clearAndFill(selector.vendor.shopUrl, shopUrl)
 		await this.click(selector.vendor.vRegistration.shopUrl);
-		await this.type(selector.vendor.vRegistration.companyName, vendorInfo.companyName);
-		await this.type(selector.vendor.vRegistration.companyId, vendorInfo.companyId);
-		await this.type(selector.vendor.vRegistration.vatNumber, vendorInfo.vatNumber);
-		await this.type(selector.vendor.vRegistration.bankName, vendorInfo.bankName);
-		await this.type(selector.vendor.vRegistration.bankIban, vendorInfo.bankIban);
-		await this.type(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
-		const termsAndConditionsIsVisible = await this.isVisible(selector.customer.cDashboard.termsAndConditions);
-		if (termsAndConditionsIsVisible) {
-			await this.check(selector.customer.cDashboard.termsAndConditions); //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
+
+		// fill address if enabled
+		const addressInputIsVisible = await this.isVisible(selector.vendor.vRegistration.street1)
+		if (addressInputIsVisible) {
+			await this.clearAndFill(selector.vendor.vRegistration.street1, vendorInfo.street1);
+			await this.clearAndFill(selector.vendor.vRegistration.street2, vendorInfo.street2);
+			await this.clearAndFill(selector.vendor.vRegistration.city, vendorInfo.city);
+			await this.clearAndFill(selector.vendor.vRegistration.zipCode, vendorInfo.zipCode);
+			await this.selectByValue(selector.vendor.vRegistration.country, vendorInfo.countrySelectValue);
+			await this.selectByValue(selector.vendor.vRegistration.state, vendorInfo.stateSelectValue);
 		}
+		await this.clearAndFill(selector.vendor.vRegistration.companyName, vendorInfo.companyName);
+		await this.clearAndFill(selector.vendor.vRegistration.companyId, vendorInfo.companyId);
+		await this.clearAndFill(selector.vendor.vRegistration.vatNumber, vendorInfo.vatNumber);
+		await this.clearAndFill(selector.vendor.vRegistration.bankName, vendorInfo.bankName);
+		await this.clearAndFill(selector.vendor.vRegistration.bankIban, vendorInfo.bankIban);
+		await this.clearAndFill(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
+		// const termsAndConditionsIsVisible = await this.isVisible(selector.customer.cDashboard.termsAndConditions);
+		// if (termsAndConditionsIsVisible) {
+		// 	await this.check(selector.customer.cDashboard.termsAndConditions); 
+		// }
+		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions)
 		const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
 		if (subscriptionPackIsVisible) {
-			// await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())    //TODO:
+			// await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())    //TODO: 
 			await this.selectByValue(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		}
 		await this.click(selector.vendor.vRegistration.register);
@@ -72,7 +84,7 @@ export class VendorPage extends BasePage {
 			}
 		}
 		if (subscriptionPackIsVisible) {
-			await this.customerPage.placeOrder('bank', false, false, true);
+			// await this.customerPage.placeOrder('bank', false, false, true);
 		}
 		await this.vendorSetupWizard(setupWizardData);
 	}
@@ -94,7 +106,7 @@ export class VendorPage extends BasePage {
 			await this.press(data.key.enter);
 			await this.type(selector.vendor.vSetup.state, setupWizardData.state);
 			await this.press(data.key.enter);
-			await this.check(selector.vendor.vSetup.email);
+			await this.check(selector.vendor.vSetup.email); //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
 			await this.click(selector.vendor.vSetup.continueStoreSetup);
 			// paypal
 			await this.clearAndFill(selector.vendor.vSetup.paypal, setupWizardData.paypal());
@@ -632,33 +644,47 @@ export class VendorPage extends BasePage {
 		await expect(this.page.locator(selector.vendor.vAddonSettings.addonUpdateSuccessMessage)).toContainText(addon.saveSuccessMessage);
 	}
 
+	// vendor set payment settings
+	async setPaymentSettings(payment: any): Promise<void> {
+		await this.setPaypal(payment)
+		await this.setBankTransfer(payment)
+		await this.setCustom(payment)
+		await this.setSkrill(payment)
+		// await this.setStripe()
+		// await this.setPaypalMarketPlace()
+		// await this.setRazorpay()
+
+	}
+
 	// paypal payment settings
 	async setPaypal(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
-		// paypal
+		await this.goIfNotThere(data.subUrls.frontend.paypal);
+		//paypal
 		await this.clearAndFill(selector.vendor.vPaymentSettings.paypal, paymentMethod.email());
 		// update settings
-		await this.click(selector.vendor.vPaymentSettings.updateSettings);
-
-		// const successMessage = await this.getElementText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage);
-		// expect(successMessage).toMatch(paymentMethod.saveSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
 
 	// bank transfer payment settings
-	async setBankTransfer(paymentMethod: { bankAccountName: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; saveSuccessMessage: string | RegExp; }): Promise<void> {
+	async setBankTransfer(paymentMethod: {
+		bankAccountType: string; bankAccountName: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; saveSuccessMessage: string | RegExp; }): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.bankTransfer);
 		// bank transfer
+		await this.clickIfVisible(selector.vendor.vPaymentSettings.disconnectAccount)
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAccountName, paymentMethod.bankAccountName);
+		await this.selectByValue(selector.vendor.vPaymentSettings.bankAccountType, paymentMethod.bankAccountType);
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAccountNumber, paymentMethod.bankAccountNumber);
+		await this.clearAndFill(selector.vendor.vPaymentSettings.bankRoutingNumber, paymentMethod.bankRoutingNumber);
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankName, paymentMethod.bankName);
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankAddress, paymentMethod.bankAddress);
-		await this.clearAndFill(selector.vendor.vPaymentSettings.bankRoutingNumber, paymentMethod.bankRoutingNumber);
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankIban, paymentMethod.bankIban);
 		await this.clearAndFill(selector.vendor.vPaymentSettings.bankSwiftCode, paymentMethod.bankSwiftCode);
-		// update settings
-		await this.click(selector.vendor.vPaymentSettings.updateSettings);
+		await this.check(selector.vendor.vSetup.declaration);
 
-		// const successMessage = await this.getElementText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage);
-		// expect(successMessage).toMatch(paymentMethod.saveSuccessMessage);
+		// update settings
+		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
+		await this.clickAndWaitForResponse(data.subUrls.ajax,selector.vendor.vPaymentSettings.addAccount)
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
 
@@ -697,41 +723,26 @@ export class VendorPage extends BasePage {
 
 	// custom payment settings
 	async setCustom(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.customPayment);
 		// custom payment method
 		await this.clearAndFill(selector.vendor.vPaymentSettings.customPayment, paymentMethod.email());
 		// update settings
-		await this.click(selector.vendor.vPaymentSettings.updateSettings);
-
-		// const successMessage = await this.getElementText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage);
-		// expect(successMessage).toMatch(paymentMethod.saveSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
 
 	// skrill Payment Settings
 	async setSkrill(paymentMethod: { email: () => string; saveSuccessMessage: string | RegExp; }): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.skrill);
 		// skrill
 		await this.clearAndFill(selector.vendor.vPaymentSettings.skrill, paymentMethod.email());
 		// update settings
-		await this.click(selector.vendor.vPaymentSettings.updateSettings);
-
-		// const successMessage = await this.getElementText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage);
-		// expect(successMessage).toMatch(paymentMethod.saveSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
-	//
-	// // vendor set payment settings
-	// async setPaymentSettings(): Promise<void> {
-	//     await this.click(selector.vendor.vDashboard.settings)
-	//     await this.click(selector.vendor.vSettings.payment)
-	//
-	//     await this.setPaypal()
-	//     await this.setBankTransfer()
-	//     await this.setStripe()
-	//     await this.setPaypalMarketPlace()
-	//     await this.setRazorpay()
-	//     await this.setCustom()
-	//     await this.setSkrill()
-	// }
+
+
+
 
 	// vendor send id verification request
 	async sendIdVerificationRequest(verification: { idRequestSubmitCancel: string | RegExp; file: any; file2?: string; street1?: string; street2?: string; city?: string; zipCode?: string; country?: string; state?: string; idRequestSubmitSuccessMessage: any; addressRequestSubmitSuccessMessage?: string; companyRequestSubmitSuccessMessage?: string; }): Promise<void> {

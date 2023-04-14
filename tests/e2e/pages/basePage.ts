@@ -160,6 +160,7 @@ export class BasePage {
 
 	// click on element
 	async click(selector: string): Promise<void> {
+		// if (checkVisible) await this.isVisible(selector) //TODO: implement visibility test before perform click; rather than clickIfVisible
 		// await this.clickViaPage(selector); // TODO: keep which one is better
 		await this.clickLocator(selector);
 	}

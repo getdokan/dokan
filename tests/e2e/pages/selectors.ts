@@ -1630,23 +1630,29 @@ export const selector = {
 		// Vendor Registration
 		vRegistration: {
 			// Vendor Registration
-			regEmail: '#reg_email',
-			regPassword: '#reg_password',
+			regEmail: 'input#reg_email',
+			regPassword: 'input#reg_password',
 			regVendor: "//input[@value='seller']",
-			firstName: '#first-name',
-			lastName: '#last-name',
-			shopName: '#company-name',
-			shopUrl: '#seller-url',
-			companyName: '#dokan-company-name',
-			companyId: '#dokan-company-id-number',
-			vatNumber: '#dokan-vat-number',
-			bankName: '#dokan-bank-name',
-			bankIban: '#dokan-bank-iban',
-			phone: '#shop-phone',
+			firstName: 'input#first-name',
+			lastName: 'input#last-name',
+			shopName: 'input#company-name',
+			shopUrl: 'input#seller-url',
+			street1: 'input#dokan_address[street_1]',
+			street2: 'input#dokan_address[street_2]',
+			city: 'input#dokan_address[city]',
+			zipCode: 'input#dokan_address[zip]',
+			country: 'select#dokan_address_country',
+			state: 'input#dokan_address_state',
+			companyName: 'input#dokan-company-name',
+			companyId: 'input#dokan-company-id-number',
+			vatNumber: 'input#dokan-vat-number',
+			bankName: 'input#dokan-bank-name',
+			bankIban: 'input#dokan-bank-iban',
+			phone: 'input#shop-phone',
 			subscriptionPack: '#dokan-subscription-pack',
 			subscriptionPackOptions: '#dokan-subscription-pack option',
 			// Register Button
-			register: '.woocommerce-Button',
+			register: 'button.woocommerce-Button',
 		},
 
 		// Vendor Setup Wizard
@@ -2796,12 +2802,16 @@ export const selector = {
 
 			// Bank Transfer
 			bankAccountName: "//input[@name='settings[bank][ac_name]']",
+			bankAccountType: '#ac_type',
 			bankAccountNumber: "//input[@name='settings[bank][ac_number]']",
 			bankName: "//input[@name='settings[bank][bank_name]']",
 			bankAddress: "//textarea[@name='settings[bank][bank_addr]']",
 			bankRoutingNumber: "//input[@name='settings[bank][routing_number]']",
 			bankIban: "//input[@name='settings[bank][iban]']",
 			bankSwiftCode: "//input[@name='settings[bank][swift]']",
+			declaration: '#declaration',
+			addAccount: 'button.save.dokan-btn',
+			disconnectAccount: 'button.dokan_payment_disconnect_btn',
 
 			//Stripe
 			ConnectWithStripe: '.dokan-stripe-connect-link',
@@ -2911,13 +2921,13 @@ export const selector = {
 			},
 
 			// Custom Payment Method
-			customPayment: '.payment-field-dokan_custom',
+			customPayment: '//input[@name="settings[dokan_custom][value]"]',
 
 			// Skrill
-			skrill: '.payment-field-skrill',
+			skrill: '//input[@name="settings[skrill][email]"]',
 
 			// Update Settings
-			updateSettings: '.dokan-btn',
+			updateSettings: 'input.dokan-btn',
 			updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success p',
 		},
 
