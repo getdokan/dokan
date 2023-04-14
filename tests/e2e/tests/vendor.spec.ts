@@ -2,14 +2,14 @@ import { test, expect } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 // import { AdminPage } from '../pages/adminPage';
-import { CustomerPage } from '../pages/customerPage';
+// import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 
 // test.afterAll(async ({ }) => { })
 // test.beforeEach(async ({ }) => { })
 // test.afterEach(async ({ }) => { })
 
-test.skip('vendor can register', async ({ page }) => {
+test('vendor can register', async ({ page }) => {
 	const loginPage = new LoginPage(page)
 	const vendorPage = new VendorPage(page)
 	await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard)
@@ -39,6 +39,10 @@ test.describe('Vendor functionality test', () => {
 		page = await browser.newPage();
 		loginPage = new LoginPage(page);
 		vendorPage = new VendorPage(page);
+	});
+
+	test('vendor can setup setup wizard', async ({ }) => {
+		await vendorPage.vendorSetupWizard(data.vendorSetupWizard);
 	});
 
 	test('vendor can add simple product @product', async ({ }) => {
@@ -98,7 +102,7 @@ test.describe('Vendor functionality test', () => {
 	});
 
 	// account settings
-	test.skip('vendor can set store settings ', async ({ }) => {
+	test('vendor can set store settings ', async ({ }) => {
 		await vendorPage.setStoreSettings(data.vendor.vendorInfo);
 	});
 
@@ -112,7 +116,7 @@ test.describe('Vendor functionality test', () => {
 	});
 
 	test.skip('vendor can send id verification request ', async ({ }) => {
-		await vendorPage.sendIdVerificationRequest(data.vendor.verification);
+		await vendorPage.sendIdVerificationRequest(data.vendor.verification); 
 	});
 
 	test.skip('vendor can send address verification request ', async ({ }) => {
@@ -123,39 +127,39 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.sendCompanyVerificationRequest(data.vendor.verification);
 	});
 
-	test.fixme('vendor can set delivery time settings ', async ({ }) => {
+	test('vendor can set delivery time settings ', async ({ }) => {
 		await vendorPage.setDeliveryTimeSettings(data.vendor.deliveryTime);
 	});
 
-	test.skip('vendor can set shipping policy', async ({ }) => {
+	test('vendor can set shipping policy', async ({ }) => {
 		await vendorPage.setShippingPolicies(data.vendor.shipping.shippingPolicy);
 	});
 
-	test.skip('vendor can set flat rate shipping ', async ({ }) => {
+	test('vendor can set flat rate shipping ', async ({ }) => {
 		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.flatRate);
 	});
 
-	test.skip('vendor can set free shipping ', async ({ }) => {
+	test('vendor can set free shipping ', async ({ }) => {
 		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.freeShipping);
 	});
 
-	test.skip('vendor can set local pickup shipping ', async ({ }) => {
+	test('vendor can set local pickup shipping ', async ({ }) => {
 		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.localPickup);
 	});
 
-	test.skip('vendor can set table rate shipping shipping ', async ({ }) => {
+	test('vendor can set table rate shipping shipping ', async ({ }) => {
 		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.tableRateShipping);
 	});
 
-	test.skip('vendor can set dokan distance rate shipping ', async ({ }) => {
+	test('vendor can set dokan distance rate shipping ', async ({ }) => {
 		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.distanceRateShipping);
 	});
 
-	test.fixme('vendor can set social profile settings ', async ({ }) => {
-		await vendorPage.setSocialProfile(data.urls);
+	test('vendor can set social profile settings ', async ({ }) => {
+		await vendorPage.setSocialProfile(data.vendor.socialProfileUrls);
 	});
 
-	test.only('vendor can set rma settings ', async ({ }) => {
+	test('vendor can set rma settings ', async ({ }) => {
 		await vendorPage.setRmaSettings(data.vendor.rma);
 	});
 });

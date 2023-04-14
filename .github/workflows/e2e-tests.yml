@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches:
+      - develop
       - e2e-pw
   workflow_dispatch:
 # Cancels all previous workflow runs for pull requests that have not completed.
@@ -118,8 +119,8 @@ jobs:
         with:
           report_paths: "tests/e2e/playwright-report/results.xml"
           include_passed: true,
-          # check_retries: true,
-          # detailed_summary: true,
+          check_retries: true,
+          detailed_summary: true,
 
       # - name: Generate Test Report
       #   uses: phoenix-actions/test-reporting@v8
@@ -147,20 +148,20 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Publish HTML report to GH Pages
-        if: always() # We want this to always run, even if test fail prior to this step running
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: tests/e2e/playwright-report # This is where index.html will be output
-          keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-          user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-          user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+      # - name: Publish HTML report to GH Pages
+      #   if: always() # We want this to always run, even if test fail prior to this step running
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: tests/e2e/playwright-report # This is where index.html will be output
+      #     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+      #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+      #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
 
-      - name: Test results
-        if: always()
-        run: |
-          echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+      # - name: Test results
+      #   if: always()
+      #   run: |
+      #     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
 
   # publishTestResults:
   #   name: Publish Test Result

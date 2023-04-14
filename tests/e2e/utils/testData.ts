@@ -2,13 +2,13 @@ import { faker } from '@faker-js/faker';
 import { helpers } from './helpers';
 
 interface user {
-    username: string;
-    password: string;
+	username: string;
+	password: string;
 }
 
 interface admin {
-    username: string;
-    password: string;
+	username: string;
+	password: string;
 }
 
 export { admin, user };
@@ -17,131 +17,131 @@ export const data = {
 
 	// Fixed  test data
 
-	PluginSlugList: [ 'dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro' ],
+	PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
 	// wooCommerce
 	// Shipping
-	shippingMethods: [ 'flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping' ],
-	taxStatus: [ 'taxable', 'none' ],
-	freeShippingRequires: [ 'coupon', 'min_amount', 'either', 'both' ],
+	shippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping'],
+	taxStatus: ['taxable', 'none'],
+	freeShippingRequires: ['coupon', 'min_amount', 'either', 'both'],
 	// Payment
-	razorpayDisbursementMode: [ 'Immediate', 'On Order Complete', 'Delayed' ],
-	payPalMarketplaceDisbursementMode: [ 'Immediate', 'On Order Complete', 'Delayed' ],
-	payPalMarketplacePaymentButtonType: [ 'Smart Payment Buttons', 'Standard Button' ],
-	mangopayAvailableCreditCards: [ 'CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*' ],
-	mangopayAvailableDirectPaymentServices: [ 'Sofort*', 'Giropay*' ],
-	mangopayTransferFunds: [ 'On payment completed', 'On order completed', 'Delayed' ],
-	mangopayTypeOfVendors: [ 'Individuals', 'Business', 'Either' ],
-	mangopayBusinessRequirement: [ 'Organizations', 'Soletraders', 'Businesses', 'Any' ],
-	stripeExpressDisbursementMode: [ 'On payment completed', 'On order completed', 'Delayed' ],
-	stripeExpressPaymentMethods: [ 'Credit/Debit Card', 'iDEAL' ],
-	stripeExpressButtonType: [ 'default', 'buy', 'donate', 'book' ],
-	stripeExpressButtonTheme: [ 'dark', 'light', 'light-outline' ],
-	stripeExpressButtonLocations: [ 'Checkout', 'Product', 'Cart' ],
-	stripeExpressButtonSize: [ 'default', 'medium', 'large' ],
+	razorpayDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
+	payPalMarketplaceDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
+	payPalMarketplacePaymentButtonType: ['Smart Payment Buttons', 'Standard Button'],
+	mangopayAvailableCreditCards: ['CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*'],
+	mangopayAvailableDirectPaymentServices: ['Sofort*', 'Giropay*'],
+	mangopayTransferFunds: ['On payment completed', 'On order completed', 'Delayed'],
+	mangopayTypeOfVendors: ['Individuals', 'Business', 'Either'],
+	mangopayBusinessRequirement: ['Organizations', 'Soletraders', 'Businesses', 'Any'],
+	stripeExpressDisbursementMode: ['On payment completed', 'On order completed', 'Delayed'],
+	stripeExpressPaymentMethods: ['Credit/Debit Card', 'iDEAL'],
+	stripeExpressButtonType: ['default', 'buy', 'donate', 'book'],
+	stripeExpressButtonTheme: ['dark', 'light', 'light-outline'],
+	stripeExpressButtonLocations: ['Checkout', 'Product', 'Cart'],
+	stripeExpressButtonSize: ['default', 'medium', 'large'],
 	// Dokan
 	// Setup Wizard
-	setupWizardShippingFeeRecipient: [ 'Vendor', 'Admin' ],
-	setupWizardTaxFeeRecipient: [ 'Vendor', 'Admin' ],
-	setupWizardMapApiSource: [ 'Google Maps', 'Mapbox' ],
-	setupWizardSellingProductTypes: [ 'Physical', 'Digital', 'Both' ],
-	setupWizardCommissionType: [ 'Flat', 'Percentage', 'Combine' ],
+	setupWizardShippingFeeRecipient: ['Vendor', 'Admin'],
+	setupWizardTaxFeeRecipient: ['Vendor', 'Admin'],
+	setupWizardMapApiSource: ['Google Maps', 'Mapbox'],
+	setupWizardSellingProductTypes: ['Physical', 'Digital', 'Both'],
+	setupWizardCommissionType: ['Flat', 'Percentage', 'Combine'],
 
 	// Admin
 
 	// General Settings
-	sellingProductTypes: [ 'sell_both', 'sell_physical', 'sell_digital' ],
-	storeCategory: [ 'none', 'Single', 'Multiple' ],
+	sellingProductTypes: ['sell_both', 'sell_physical', 'sell_digital'],
+	storeCategory: ['none', 'Single', 'Multiple'],
 	// Selling Options Settings
-	commissionType: [ 'flat', 'percentage', 'combine' ],
-	shippingFeeRecipient: [ 'seller', 'admin' ],
-	taxFeeRecipient: [ 'seller', 'admin' ],
-	newProductStatus: [ 'publish', 'pending' ],
-	productCategory: [ 'single', 'multiple' ],
+	commissionType: ['flat', 'percentage', 'combine'],
+	shippingFeeRecipient: ['seller', 'admin'],
+	taxFeeRecipient: ['seller', 'admin'],
+	newProductStatus: ['publish', 'pending'],
+	productCategory: ['single', 'multiple'],
 	// Withdraw
-	quarterlyScheduleMonth: [ 'january', 'february', 'march' ],
-	quarterlyScheduleWeek: [ '1', '2', '3', 'L' ],
-	quarterlyScheduleDay: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday' ],
-	monthlyScheduleWeek: [ '1', '2', '3', 'L' ],
-	monthlyScheduleDay: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday' ],
-	biweeklyScheduleWeek: [ '1', '2' ],
-	biweeklyScheduleDay: [ 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday' ],
-	weeklyScheduleDay: [ 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday' ],
+	quarterlyScheduleMonth: ['january', 'february', 'march'],
+	quarterlyScheduleWeek: ['1', '2', '3', 'L'],
+	quarterlyScheduleDay: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+	monthlyScheduleWeek: ['1', '2', '3', 'L'],
+	monthlyScheduleDay: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+	biweeklyScheduleWeek: ['1', '2'],
+	biweeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+	weeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
 	// Privacy Policy Settings
-	privacyPolicy: [ '2', '3', '4', '5', '6', '7', '8', '9', '10' ],
+	privacyPolicy: ['2', '3', '4', '5', '6', '7', '8', '9', '10'],
 	// getSupport settings
-	displayOnSingleProductPage: [ 'above_tab', 'inside_tab', 'dont_show' ],
+	displayOnSingleProductPage: ['above_tab', 'inside_tab', 'dont_show'],
 	// Rma Settings
-	rmaOrderStatus: [ 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ],
-	enableRefundRequests: [ 'yes', 'no' ],
-	enableCouponRequests: [ 'yes', 'no' ],
+	rmaOrderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
+	enableRefundRequests: ['yes', 'no'],
+	enableCouponRequests: ['yes', 'no'],
 	// Wholesale Customer Settings
-	needApprovalForCustomer: [ 'yes', 'no' ],
+	needApprovalForCustomer: ['yes', 'no'],
 	// Delivery Time Settings
-	storeOpeningClosingTime: [ '12:00 AM', '11:30 PM' ],
+	storeOpeningClosingTime: ['12:00 AM', '11:30 PM'],
 	// Geolocation Settings
-	locationMapPosition: [ 'top', 'left', 'right' ],
-	showMap: [ 'all', 'store_listing', 'shop' ],
-	radiusSearchUnit: [ 'km', 'miles' ],
+	locationMapPosition: ['top', 'left', 'right'],
+	showMap: ['all', 'store_listing', 'shop'],
+	radiusSearchUnit: ['km', 'miles'],
 	// Spmv Settings
-	availableVendorSectionDisplayPosition: [ 'below_tabs', 'inside_tabs', 'after_tabs' ],
-	showSpmvProducts: [ 'show_all', 'min_price', 'max_price', 'top_rated_vendor' ],
+	availableVendorSectionDisplayPosition: ['below_tabs', 'inside_tabs', 'after_tabs'],
+	showSpmvProducts: ['show_all', 'min_price', 'max_price', 'top_rated_vendor'],
 	// Vendor Subscription Settings
-	subscription: [ '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1' ],
-	productStatus: [ 'publish', 'pending', 'draft' ],
+	subscription: ['2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'],
+	productStatus: ['publish', 'pending', 'draft'],
 	// Products
-	productTypes: [ 'simple', 'grouped', 'external', 'variable', 'product_pack', 'subscription', 'variable-subscription', 'booking', 'auction' ],
-	productTaxStatus: [ 'taxable', 'shipping', 'none' ],
-	productTaxClass: [ 'taxable', 'reduced-rate', 'zero-rate' ],
-	subscriptionExpire: [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24' ],
-	subscriptionPeriodInterval: [ '0', '1', '2', '3', '4', '5', '6' ],
-	subscriptionPeriod: [ 'day', 'week', 'month', 'year' ],
-	subscriptionTrialPeriod: [ 'day', 'week', 'month', 'year' ],
-	auctionItemCondition: [ 'new', 'used' ],
-	auctionType: [ 'normal', 'reverse' ],
-	bookingDurationType: [ 'fixed', 'customer' ],
-	bookingDurationUnit: [ 'month', 'day', 'hour', 'minute' ],
-	calenderDisplayMode: [ '', 'always_visible' ],
+	productTypes: ['simple', 'grouped', 'external', 'variable', 'product_pack', 'subscription', 'variable-subscription', 'booking', 'auction'],
+	productTaxStatus: ['taxable', 'shipping', 'none'],
+	productTaxClass: ['taxable', 'reduced-rate', 'zero-rate'],
+	subscriptionExpire: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+	subscriptionPeriodInterval: ['0', '1', '2', '3', '4', '5', '6'],
+	subscriptionPeriod: ['day', 'week', 'month', 'year'],
+	subscriptionTrialPeriod: ['day', 'week', 'month', 'year'],
+	auctionItemCondition: ['new', 'used'],
+	auctionType: ['normal', 'reverse'],
+	bookingDurationType: ['fixed', 'customer'],
+	bookingDurationUnit: ['month', 'day', 'hour', 'minute'],
+	calenderDisplayMode: ['', 'always_visible'],
 
 	// Vendor
 
-	withdrawPaymentMethods: [ 'paypal', 'bank', 'dokan_custom', 'skrill' ],
-	reserveBalance: [ '0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000' ],
-	orderStatus: [ 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed' ],
+	withdrawPaymentMethods: ['paypal', 'bank', 'dokan_custom', 'skrill'],
+	reserveBalance: ['0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'],
+	orderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
 	// Rma Settings
-	rmaType: [ 'no_warranty', 'included_warranty', 'addon_warranty' ],
-	rmaLength: [ 'limited', 'lifetime' ],
-	rmaLengthDuration: [ 'days', 'weeks', 'months', 'years' ],
+	rmaType: ['no_warranty', 'included_warranty', 'addon_warranty'],
+	rmaLength: ['limited', 'lifetime'],
+	rmaLengthDuration: ['days', 'weeks', 'months', 'years'],
 	// Auction
-	itemCondition: [ 'new', 'used' ],
-	actionType: [ 'normal', 'reverse' ],
+	itemCondition: ['new', 'used'],
+	actionType: ['normal', 'reverse'],
 	// Shipping Policy
-	shippingPolicy: [ '1', '2', '3', '4', '5', '6', '7', '8', '9' ], // TODO: replace with select text values
-	vendorShippingMethods: [ 'flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping' ],
-	flatRateCalculationType: [ 'class', 'order' ],
-	flatRateCalculationType1: [ 'item', 'line', 'class' ], // TODO: replace with select text values, one option missing
-	tableRateTaxIncludedInShippingCosts: [ 'yes', 'no' ],
-	distanceRateTransportationMode: [ 'driving', 'walking', 'Bicycling' ],
-	distanceRateAvoid: [ 'none', 'tolls', 'highways', 'ferries' ],
-	distanceRateDistanceUnit: [ 'metric', 'imperial' ],
+	shippingPolicy: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], // TODO: replace with select text values
+	vendorShippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping'],
+	flatRateCalculationType: ['class', 'order'],
+	flatRateCalculationType1: ['item', 'line', 'class'], // TODO: replace with select text values, one option missing
+	tableRateTaxIncludedInShippingCosts: ['yes', 'no'],
+	distanceRateTransportationMode: ['driving', 'walking', 'Bicycling'],
+	distanceRateAvoid: ['none', 'tolls', 'highways', 'ferries'],
+	distanceRateDistanceUnit: ['metric', 'imperial'],
 	//addon
-	addonType: [ 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading' ],
-	addonDisplayAs: [ 'select', 'radiobutton', 'images' ],
-	addonFormatTitle: [ 'label', 'heading', 'hide' ],
-	addonOptionPriceType: [ 'flat_fee', 'quantity_based', 'percentage_based' ],
+	addonType: ['multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'],
+	addonDisplayAs: ['select', 'radiobutton', 'images'],
+	addonFormatTitle: ['label', 'heading', 'hide'],
+	addonOptionPriceType: ['flat_fee', 'quantity_based', 'percentage_based'],
 	//vendor store settings
-	vacationClosingStyle: [ 'instantly', 'datewise' ],
+	vacationClosingStyle: ['instantly', 'datewise'],
 	//Stripe express
-	iDealBanks: [ 'abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot' ],
+	iDealBanks: ['abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot'],
 	//bank details
-	bankAccountType: [ 'personal', 'business' ],
+	bankAccountType: ['personal', 'business'],
 
 	// Generated  test data
 
 	user: {
-		username: () => faker.name.firstName( 'male' ),
+		username: () => faker.name.firstName('male'),
 		userDetails: {
-			firstName: () => faker.name.firstName( 'male' ),
-			lastName: () => faker.name.lastName( 'male' ),
+			firstName: () => faker.name.firstName('male'),
+			lastName: () => faker.name.lastName('male'),
 			role: 'customer',
 		},
 	},
@@ -150,6 +150,7 @@ export const data = {
 		publishSuccessMessage: 'Product published. ',
 		draftUpdateSuccessMessage: 'Product draft updated. ',
 		pendingProductUpdateSuccessMessage: 'Product updated. ',
+		createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 
 		status: {
 			publish: 'publish',
@@ -171,60 +172,60 @@ export const data = {
 		},
 
 		name: {
-			simple: () => faker.commerce.productName() + ( ' (Simple)' ),
-			variable: () => faker.commerce.productName() + ( ' (Variable)' ),
-			external: () => faker.commerce.productName() + ( ' (External)' ),
-			grouped: () => faker.commerce.productName() + ( ' (Grouped)' ),
-			simpleSubscription: () => faker.commerce.productName() + ( ' (Simple Subscription)' ),
-			variableSubscription: () => faker.commerce.productName() + ( ' (Variable Subscription)' ),
+			simple: () => faker.commerce.productName() + (' (Simple)'),
+			variable: () => faker.commerce.productName() + (' (Variable)'),
+			external: () => faker.commerce.productName() + (' (External)'),
+			grouped: () => faker.commerce.productName() + (' (Grouped)'),
+			simpleSubscription: () => faker.commerce.productName() + (' (Simple Subscription)'),
+			variableSubscription: () => faker.commerce.productName() + (' (Variable Subscription)'),
 			dokanSubscription: {
-				nonRecurring: () => 'Dokan Subscription ' + faker.helpers.arrayElement( [ 'Gold', 'Silver', 'Platinum', 'Premium' ], ) + ' ' + faker.random.alpha( {
+				nonRecurring: () => 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.random.alpha({
 					count: 5,
 					casing: 'upper',
-				}, ) + ( ' (Product Pack)' ),
+				},) + (' (Product Pack)'),
 			},
-			booking: () => faker.commerce.productName() + ( ' (Booking)' ),
-			auction: () => faker.commerce.productName() + ( ' (Auction)' ),
+			booking: () => faker.commerce.productName() + (' (Booking)'),
+			auction: () => faker.commerce.productName() + (' (Auction)'),
 		},
 		price: {
 			// price: faker.commerce.price(100, 200, 2),
 			// price: faker.datatype.number({min:1, max:200, precision: 0.01}),
 			// price: faker.finance.amount(1, 200, 2),
-			price_int: () => faker.finance.amount( 100, 200, 0 ),
-			price_random: () => faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 0, 2 ] ) ), // 0 = no decimals, 2 = 2 decimals
-			price_frac: () => faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ),
-			price_frac_comma: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			auctionPrice: () => faker.commerce.price( 10, 100, 0 ),
+			price_int: () => faker.finance.amount(100, 200, 0),
+			price_random: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
+			price_frac: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
+			price_frac_comma: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			auctionPrice: () => faker.commerce.price(10, 100, 0),
 			price: () => data.product.price.price_frac_comma(),
 		},
 		category: {
 			unCategorized: 'Uncategorized',
 			clothings: 'Clothings',
 			randomCategory1: () => faker.commerce.productAdjective(),
-			randomCategory: () => 'category_' + faker.random.alpha( 5 ),
-			categories: faker.helpers.arrayElement( [ 'Electronic Devices', 'Electronic Accessories', "Men's Fashion", 'Clothings', "Women's Fashion" ] ),
+			randomCategory: () => 'category_' + faker.random.alpha(5),
+			categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', "Men's Fashion", 'Clothings', "Women's Fashion"]),
 		},
 		store: {
-			adminStore: String( process.env.ADMIN ) + 'store',
-			vendorStore1: String( process.env.VENDOR ) + 'store',
-			vendorStore2: String( process.env.VENDOR1 ) + 'store',
+			adminStore: String(process.env.ADMIN) + 'store',
+			vendorStore1: String(process.env.VENDOR) + 'store',
+			vendorStore2: String(process.env.VENDOR1) + 'store',
 		},
 
 		attribute: {
 			size: {
 				attributeName: 'size',
-				attributeTerms: [ 's', 'l', 'm' ],
+				attributeTerms: ['s', 'l', 'm'],
 			},
 
 			color: {
 				attributeName: 'color',
-				attributeTerms: [ 'red', 'blue', 'black', 'yellow', 'white' ],
+				attributeTerms: ['red', 'blue', 'black', 'yellow', 'white'],
 			},
 
 			randomAttribute: () => {
 				return {
-					attributeName: 'attribute_' + faker.random.alpha( 5 ),
-					attributeTerms: [ 'attributeTerm_' + faker.random.alpha( 5 ) ],
+					attributeName: 'attribute_' + faker.random.alpha(5),
+					attributeTerms: ['attributeTerm_' + faker.random.alpha(5)],
 				};
 			},
 
@@ -232,24 +233,24 @@ export const data = {
 
 		simple: {
 			productType: 'simple',
-			productName: () => faker.commerce.productName() + ( ' (Simple)' ),
+			productName: () => faker.commerce.productName() + (' (Simple)'),
 			category: 'Uncategorized',
-			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: String( process.env.VENDOR ) + 'store',
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			stockStatus: false,
 		},
 
 		variable: {
 			productType: 'variable',
-			productName: () => faker.commerce.productName() + ( ' (Variable)' ),
+			productName: () => faker.commerce.productName() + (' (Variable)'),
 			category: 'Uncategorized',
-			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: String( process.env.VENDOR ) + 'store',
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			stockStatus: false,
 			attribute: 'sizes',
-			attributeTerms: [ 's', 'l', 'm' ],
+			attributeTerms: ['s', 'l', 'm'],
 			variations: {
 				linkAllVariation: 'link_all_variations',
 				variableRegularPrice: 'variable_regular_price',
@@ -259,46 +260,46 @@ export const data = {
 
 		external: {
 			productType: 'external',
-			productName: () => faker.commerce.productName() + ( ' (External)' ),
+			productName: () => faker.commerce.productName() + (' (External)'),
 			productUrl: '/product/p1_v1/',
 			buttonText: 'Buy product',
 			category: 'Uncategorized',
-			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			storeName: String( process.env.VENDOR ) + 'store',
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 		},
 
 		simpleSubscription: {
 			productType: 'subscription',
-			productName: () => faker.commerce.productName() + ( ' (Simple Subscription)' ),
+			productName: () => faker.commerce.productName() + (' (Simple Subscription)'),
 			category: 'Uncategorized',
-			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			subscriptionPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			subscriptionPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPeriodInterval: '1',
 			subscriptionPeriod: 'month',
 			expireAfter: '0',
 			subscriptionTrialLength: '0',
 			subscriptionTrialPeriod: 'day',
-			storeName: String( process.env.VENDOR ) + 'store',
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 		},
 
 		variableSubscription: {
 			productType: 'variable-subscription',
-			productName: () => faker.commerce.productName() + ( ' (Variable Subscription)' ),
+			productName: () => faker.commerce.productName() + (' (Variable Subscription)'),
 			category: 'Uncategorized',
-			subscriptionPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
+			subscriptionPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPeriodInterval: '1',
 			subscriptionPeriod: 'month',
 			expireAfter: '0',
 			subscriptionTrialLength: '0',
 			subscriptionTrialPeriod: 'day',
-			storeName: String( process.env.VENDOR ) + 'store',
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			attribute: 'size',
-			attributeTerms: [ 's', 'l', 'm' ],
+			attributeTerms: ['s', 'l', 'm'],
 			variations: {
 				linkAllVariation: 'link_all_variations',
 				variableRegularPrice: 'variable_regular_price',
@@ -308,22 +309,22 @@ export const data = {
 
 		vendorSubscription: {
 			productType: 'product_pack',
-			productName: () => 'Dokan Subscription ' + faker.helpers.arrayElement( [ 'Gold', 'Silver', 'Platinum', 'Premium' ], ) + ' ' + faker.random.alpha( {
+			productName: () => 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.random.alpha({
 				count: 5,
 				casing: 'upper',
-			}, ) + ( ' (Product Pack)' ),
+			},) + (' (Product Pack)'),
 			category: 'Uncategorized',
-			regularPrice: () => ( faker.finance.amount( 100, 200, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			numberOfProducts: '-1',
 			packValidity: '0',
 			advertisementSlot: '-1',
 			expireAfterDays: '-1',
-			storeName: String( process.env.VENDOR ) + 'store',
+			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 		},
 
 		booking: {
-			productName: () => faker.commerce.productName() + ( ' (Booking)' ),
+			productName: () => faker.commerce.productName() + (' (Booking)'),
 			productType: 'booking',
 			category: 'Uncategorized',
 			bookingDurationType: 'customer',
@@ -338,27 +339,27 @@ export const data = {
 			maximumBookingWindowIntoTheFutureDateUnit: 'month',
 			baseCost: '20',
 			blockCost: '10',
-			storeName: String( process.env.VENDOR ) + 'store',
-			
+			storeName: String(process.env.VENDOR) + 'store',
+
 		},
 		auction: {
-			productName: () => faker.commerce.productName() + ( ' (Auction)' ),
+			productName: () => faker.commerce.productName() + (' (Auction)'),
 			productType: 'auction',
 			category: 'Uncategorized',
 			itemCondition: 'new',
 			auctionType: 'normal',
-			regularPrice: () => ( faker.finance.amount( 10, 100, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			bidIncrement: () => ( faker.finance.amount( 40, 50, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			reservedPrice: () => ( faker.finance.amount( 400, 500, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			buyItNowPrice: () => ( faker.finance.amount( 900, 1000, faker.helpers.arrayElement( [ 1, 2 ] ) ) ).replace( '.', ',' ),
-			startDate: helpers.currentDateTime.replace( /,/g, '' ),
-			endDate: helpers.addDays( helpers.currentDateTime, 1 ).replace( /,/g, '' ),
+			regularPrice: () => (faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			bidIncrement: () => (faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			reservedPrice: () => (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			buyItNowPrice: () => (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			startDate: helpers.currentDateTime.replace(/,/g, ''),
+			endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
 			saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
 		},
 
 		// Review
 		review: {
-			rating: faker.datatype.number( { min: 1, max: 5 } ),
+			rating: faker.datatype.number({ min: 1, max: 5 }),
 			reviewMessage: () => faker.datatype.uuid(),
 		},
 
@@ -366,7 +367,7 @@ export const data = {
 
 		report: {
 			// reportReason: faker.random.arrayElement(['This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other', 'This product is fake']),
-			reportReason: faker.helpers.arrayElement( [ 'This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other' ] ),
+			reportReason: faker.helpers.arrayElement(['This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other']),
 			reportReasonDescription: 'report reason description',
 			reportSubmitSuccessMessage: 'Your report has been submitted. Thank you for your response.',
 		},
@@ -379,7 +380,7 @@ export const data = {
 	},
 
 	store: {
-		rating: faker.helpers.arrayElement( [ 'width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%' ] ),
+		rating: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
 		reviewTitle: 'store review title',
 		reviewMessage: () => faker.datatype.uuid(),
 
@@ -440,21 +441,12 @@ export const data = {
 	coupon: {
 		// title: () => 'VC_' + faker.random.alpha({count: 5, casing: 'upper'},),
 		title: () => 'VC_' + faker.datatype.uuid(),
-		amount: () => faker.datatype.number( { min: 1, max: 10 }, ).toString(),
-		discount_type: () => faker.helpers.arrayElement( [ 'percent', 'fixed_product' ] ),
+		amount: () => faker.datatype.number({ min: 1, max: 10 },).toString(),
+		discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']),
 		existingCouponErrorMessage: 'Coupon title already exists',
 	},
 
-	urls: {
-		facebook: 'https://www.facebook.com/',
-		twitter: 'https://www.twitter.com/',
-		pinterest: 'https://www.pinterest.com/',
-		linkedin: 'https://www.linkedin.com/',
-		youtube: 'https://www.youtube.com/',
-		instagram: 'https://www.instagram.com/',
-		flickr: 'https://www.flickr.com/',
-		saveSuccessMessage: 'Your information has been saved successfully',
-	},
+
 
 	wpSettings: {
 		saveSuccessMessage: 'Your settings have been saved.',
@@ -656,15 +648,15 @@ export const data = {
 			reverseBalanceThreshold: '21',
 			gracePeriod: '7',
 			saveSuccessMessage: 'Setting has been saved successfully.',
-			
+
 		},
 		page: {
 			termsAndConditionsPage: 'Sample Page',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 		appearance: {
-			googleMapApiKey: String( process.env.GMAP ),
-			mapBoxApiKey: String( process.env.MAPBOX_API_KEY ),
+			googleMapApiKey: String(process.env.GMAP),
+			mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
 			storeBannerWidth: '625',
 			storeBannerHeight: '300',
 			saveSuccessMessage: 'Setting has been saved successfully.',
@@ -681,7 +673,7 @@ export const data = {
 		},
 		rma: {
 			orderStatus: 'wc-processing',
-			rmaReasons: [ 'Defective', 'Wrong Product', 'Other' ],
+			rmaReasons: ['Defective', 'Wrong Product', 'Other'],
 			refundPolicyHtmlBody: 'Refund Policy',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
@@ -760,7 +752,7 @@ export const data = {
 		shippingFeeRecipient: 'seller',
 		taxFeeRecipient: 'seller',
 		mapApiSource: 'google_maps',
-		googleMapApiKey: String( process.env.GMAP ),
+		googleMapApiKey: String(process.env.GMAP),
 		sellingProductTypes: 'sell_both',
 		commissionType: 'percentage',
 		adminCommission: '10',
@@ -778,13 +770,13 @@ export const data = {
 		state: 'New York',
 		paypal: () => faker.internet.email(),
 		bankAccountName: 'accountName',
-		bankAccountType: faker.helpers.arrayElement( [ 'personal', 'business' ] ),
-		bankAccountNumber: faker.random.alphaNumeric( 10 ),
+		bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
+		bankAccountNumber: faker.random.alphaNumeric(10),
 		bankName: 'bankName',
 		bankAddress: 'bankAddress',
-		bankRoutingNumber: faker.random.alphaNumeric( 10 ),
-		bankIban: faker.random.alphaNumeric( 10 ),
-		bankSwiftCode: faker.random.alphaNumeric( 10 ),
+		bankRoutingNumber: faker.random.alphaNumeric(10),
+		bankIban: faker.random.alphaNumeric(10),
+		bankSwiftCode: faker.random.alphaNumeric(10),
 		customPayment: '1234567890',
 		skrill: faker.internet.email(),
 	},
@@ -811,8 +803,8 @@ export const data = {
 			storeListing: 'store-listing',
 			cart: 'cart',
 			checkout: 'checkout',
+			vendorSetupWizard: '?page=dokan-seller-setup',
 			dashboard: 'dashboard',
-			editAccount: 'dashboard/edit-account',
 			product: 'dashboard/products',
 			productAuction: 'dashboard/new-auction-product',
 			productBooking: 'dashboard/booking/new-product',
@@ -827,40 +819,43 @@ export const data = {
 			settingsAddon: 'dashboard/settings/product-addon',
 			settingsPayment: 'dashboard/settings/payment',
 			settingsVerification: 'dashboard/settings/verification',
-			settingsShipping: 'dashboard/settings/shipping/#',
+			settingsDeliveryTime: 'dashboard/settings/delivery-time',
+			settingsShipping: 'dashboard/settings/shipping',
 			settingsSocialProfile: 'dashboard/settings/social',
 			settingsRma: 'dashboard/settings/rma',
-
+			settingsSeo: 'dashboard/settings/seo',
+			editAccount: 'dashboard/edit-account',
 		},
+
 		ajax: '/admin-ajax.php',
 		post: '/post.php',
 		gmap: '/maps/api',
 	},
 
 	admin: {
-		username: String( process.env.ADMIN ),
-		password: String( process.env.ADMIN_PASSWORD ),
+		username: String(process.env.ADMIN),
+		password: String(process.env.ADMIN_PASSWORD),
 	},
 
 	vendor: {
-		username: String( process.env.VENDOR ),
-		password: String( process.env.VENDOR_PASSWORD ),
+		username: String(process.env.VENDOR),
+		password: String(process.env.VENDOR_PASSWORD),
 
 		vendorInfo: {
 			email: () => faker.internet.email(),
 			emailDomain: '@gmail.com',
-			password: String( process.env.VENDOR_PASSWORD ),
-			password1: String( process.env.VENDOR_PASSWORD ) + '1',
-			firstName: () => faker.name.firstName( 'male' ),
-			lastName: () => faker.name.lastName( 'male' ),
-			userName: faker.name.firstName( 'male' ),
+			password: String(process.env.VENDOR_PASSWORD),
+			password1: String(process.env.VENDOR_PASSWORD) + '1',
+			firstName: () => faker.name.firstName('male'),
+			lastName: () => faker.name.lastName('male'),
+			userName: faker.name.firstName('male'),
 			shopName: faker.company.name(),
 			shopUrl: faker.company.name(),
 			companyName: faker.company.name(),
-			companyId: faker.random.alphaNumeric( 5 ),
-			vatNumber: faker.random.alphaNumeric( 10 ),
+			companyId: faker.random.alphaNumeric(5),
+			vatNumber: faker.random.alphaNumeric(10),
 			bankIban: faker.finance.iban(),
-			phoneNumber: faker.phone.number( '(###) ###-####' ),
+			phoneNumber: faker.phone.number('(###) ###-####'),
 			street1: 'abc street',
 			street2: 'xyz street',
 			country: 'United States (US)',
@@ -870,12 +865,12 @@ export const data = {
 			zipCode: '10006',
 			state: 'New York',
 			accountName: 'accountName',
-			accountNumber: faker.random.alphaNumeric( 10 ),
+			accountNumber: faker.random.alphaNumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			routingNumber: faker.random.alphaNumeric( 10 ),
-			swiftCode: faker.random.alphaNumeric( 10 ),
-			iban: faker.random.alphaNumeric( 10 ),
+			routingNumber: faker.random.alphaNumeric(10),
+			swiftCode: faker.random.alphaNumeric(10),
+			iban: faker.random.alphaNumeric(10),
 
 			//shop details
 			banner: 'tests/e2e/utils/sampleData/banner.png',
@@ -886,18 +881,26 @@ export const data = {
 			termsAndConditions: 'Vendor Terms and Conditions',
 			biography: 'Vendor biography',
 			supportButtonText: 'Get Support',
+
 			openingClosingTime: {
-				days: [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ],
-				openingTime: '06:00 AM',
-				closingTime: '11:30 PM',
+				days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+				openingTime: '06:00 am',
+				closingTime: '12:00 pm',
+				storeOpenNotice: 'Store is open',
+				storeCloseNotice: 'Store is closed',
 			},
 
 			vacation: {
-				vacationDayFrom: () => helpers.addDays( helpers.currentDate, helpers.getRandomArbitraryInteger( 31, 365 ) ),
-				vacationDayTo: () => helpers.addDays( data.vendor.vendorInfo.vacation.vacationDayFrom(), 31 ),
-				closingStyle: 'datewise',
-				vacationMessage: 'We are currently out of order',
-
+				instantly: {
+					closingStyle: 'instantly',
+					vacationMessage: 'We are currently out of order',
+				},
+				datewise: {
+					vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100)),
+					vacationDayTo: (from: string) => helpers.addDays(from, 31),
+					closingStyle: 'datewise',
+					vacationMessage: 'We are currently out of order',
+				}
 			},
 			discount: {
 				minimumOrderAmount: '200',
@@ -932,6 +935,8 @@ export const data = {
 					shippingCost: '20',
 					description: 'Flat rate',
 					calculationType: 'class',
+					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
+					zoneSaveSuccessMessage: 'Zone settings save successfully',
 					saveSuccessMessage: 'Zone settings save successfully',
 				},
 
@@ -942,6 +947,8 @@ export const data = {
 					shippingMethod: 'Free Shipping',
 					freeShippingRequires: 'min_amount',
 					freeShippingMinimumOrderAmount: '200',
+					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
+					zoneSaveSuccessMessage: 'Zone settings save successfully',
 					saveSuccessMessage: 'Zone settings save successfully',
 				},
 
@@ -953,6 +960,8 @@ export const data = {
 					taxStatus: 'taxable',
 					shippingCost: '20',
 					description: 'Local Pickup',
+					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
+					zoneSaveSuccessMessage: 'Zone settings save successfully',
 					saveSuccessMessage: 'Zone settings save successfully',
 
 				},
@@ -970,7 +979,10 @@ export const data = {
 					handlingFeePerOrder: '10',
 					minimumCostPerOrder: '10',
 					maximumCostPerOrder: '200',
-					saveSuccessMessage: 'Table rates has been saved successfully!',
+					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
+					zoneSaveSuccessMessage: 'Zone settings save successfully',
+					saveSuccessMessage: 'Zone settings save successfully',
+					tableRateSaveSuccessMessage: 'Table rates has been saved successfully!',
 
 				},
 
@@ -989,7 +1001,10 @@ export const data = {
 					zipCode: '10006',
 					state: 'New York',
 					country: 'United States (US)',
-					saveSuccessMessage: 'Distance rates has been saved successfully!',
+					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
+					zoneSaveSuccessMessage: 'Zone settings save successfully',
+					saveSuccessMessage: 'Zone settings save successfully',
+					distanceRateSaveSuccessMessage: 'Distance rates has been saved successfully!',
 				},
 
 				vendorShipping: {
@@ -1008,18 +1023,19 @@ export const data = {
 		payment: {
 			email: () => faker.internet.email(),
 			bankAccountName: 'accountName',
-			bankAccountNumber: faker.random.alphaNumeric( 10 ),
+			bankAccountNumber: faker.random.alphaNumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			bankRoutingNumber: faker.random.alphaNumeric( 10 ),
-			bankIban: faker.random.alphaNumeric( 10 ),
-			bankSwiftCode: faker.random.alphaNumeric( 10 ),
+			bankRoutingNumber: faker.random.alphaNumeric(10),
+			bankIban: faker.random.alphaNumeric(10),
+			bankSwiftCode: faker.random.alphaNumeric(10),
 			saveSuccessMessage: 'Your information has been saved successfully',
 		},
 
 		verification: {
-			file: '../utils/sampleData/avatar.png',
-			file2: 'tests/e2e/utils/sampleData/avatar.png',
+			// file: '../utils/sampleData/avatar.png',
+			// file2: './tests/e2e/utils/sampleData/avatar.png',
+			file: 'tests/avatar.png', //TODO : image path need to fixed
 			street1: 'abc street',
 			street2: 'xyz street',
 			city: 'New York',
@@ -1027,19 +1043,33 @@ export const data = {
 			country: 'US',
 			state: 'NY',
 			idRequestSubmitSuccessMessage: 'Your ID verification request is Sent and pending approval',
+			idRequestSubmitCancel: 'Your ID Verification request is cancelled',
 			addressRequestSubmitSuccessMessage: 'Your Address verification request is Sent and Pending approval',
+			addressRequestSubmitCancel: 'Your Address Verification request is cancelled',
 			companyRequestSubmitSuccessMessage: 'Your company verification request is sent and pending approval',
+			companyRequestSubmitCancel: 'Your company verification request is cancelled',
 
 		},
 
 		deliveryTime: {
 			deliveryBlockedBuffer: '0',
-			days: [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ],
-			openingTime: '06:00 AM',
-			closingTime: '12:00 PM',
+			days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+			openingTime: '06:00 am',
+			closingTime: '12:00 pm',
 			timeSlot: '30',
-			orderPerSlot: '10',
+			orderPerSlot: '100',
 			saveSuccessMessage: 'Delivery settings has been saved successfully!',
+		},
+
+		socialProfileUrls: {
+			facebook: 'https://www.facebook.com/',
+			twitter: 'https://www.twitter.com/',
+			pinterest: 'https://www.pinterest.com/',
+			linkedin: 'https://www.linkedin.com/',
+			youtube: 'https://www.youtube.com/',
+			instagram: 'https://www.instagram.com/',
+			flickr: 'https://www.flickr.com/',
+			saveSuccessMessage: 'Your information has been saved successfully',
 		},
 
 		rma: {
@@ -1061,7 +1091,7 @@ export const data = {
 			defaultWithdrawMethod: {
 				paypal: 'PayPal',
 				skrill: 'Skrill',
-				bankTransfer:'Bank Transfer',
+				bankTransfer: 'Bank Transfer',
 			},
 			preferredPaymentMethod: 'paypal',
 			preferredSchedule: 'weekly',
@@ -1087,25 +1117,25 @@ export const data = {
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
 	},
 	customer: {
-		username: String( process.env.CUSTOMER ),
-		password: String( process.env.CUSTOMER_PASSWORD ),
+		username: String(process.env.CUSTOMER),
+		password: String(process.env.CUSTOMER_PASSWORD),
 
 		customerInfo: {
 			emailDomain: '@gmail.com',
 			email: faker.internet.email(),
-			password: String( process.env.CUSTOMER_PASSWORD ),
-			password1: String( process.env.CUSTOMER_PASSWORD ) + '1',
-			firstName: () => faker.name.firstName( 'male' ),
-			lastName: () => faker.name.lastName( 'male' ),
+			password: String(process.env.CUSTOMER_PASSWORD),
+			password1: String(process.env.CUSTOMER_PASSWORD) + '1',
+			firstName: () => faker.name.firstName('male'),
+			lastName: () => faker.name.lastName('male'),
 			// username: () => this.customer.customerInfo.firstName, //TODO: handel callback  & not works
 			// storename: () => this.customer.customerInfo.firstName + 'store',
-			username: () => faker.name.firstName( 'male' ),
-			storename: () => faker.name.firstName( 'male' ) + 'store',
+			username: () => faker.name.firstName('male'),
+			storename: () => faker.name.firstName('male') + 'store',
 			companyName: faker.company.name(),
-			companyId: faker.random.alphaNumeric( 5 ),
-			vatNumber: faker.random.alphaNumeric( 10 ),
+			companyId: faker.random.alphaNumeric(5),
+			vatNumber: faker.random.alphaNumeric(10),
 			bankIban: faker.finance.iban(),
-			phone: faker.phone.number( '(###) ###-####' ),
+			phone: faker.phone.number('(###) ###-####'),
 			street1: 'abc street', //TODO: address should be global or not
 			street2: 'xyz street',
 			country: 'United States (US)',
@@ -1115,12 +1145,12 @@ export const data = {
 			zipCode: '10006',
 			state: 'New York',
 			accountName: 'accountName',
-			accountNumber: faker.random.alphaNumeric( 10 ),
+			accountNumber: faker.random.alphaNumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			routingNumber: faker.random.alphaNumeric( 10 ),
-			swiftCode: faker.random.alphaNumeric( 10 ),
-			iban: faker.random.alphaNumeric( 10 ),
+			routingNumber: faker.random.alphaNumeric(10),
+			swiftCode: faker.random.alphaNumeric(10),
+			iban: faker.random.alphaNumeric(10),
 
 			addressChangeSuccessMessage: 'Address changed successfully.',
 			getSupport: {
@@ -1148,8 +1178,8 @@ export const data = {
 
 	plugin: {
 		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro',],
-		pluginSlugList: [ 'dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions' ],
-		plugins: [ 'dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce' ],
+		pluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions'],
+		plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		activeClass: 'active',
 	},
 
@@ -1243,3 +1273,5 @@ export const data = {
 
 	},
 };
+
+

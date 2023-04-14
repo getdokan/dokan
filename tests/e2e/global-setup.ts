@@ -5,13 +5,13 @@ import { selector } from './pages/selectors';
 async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
 
-	// get user signed in state
-	const browser = await chromium.launch({ headless: true });
-	const context = await browser.newContext();
-	await context.tracing.start( { screenshots: true, snapshots: true } ); //TODO : test context is working for multiple page or not like admin, vendor & customer
+	// // get user signed in state
+	// const browser = await chromium.launch({ headless: true });
+	// const context = await browser.newContext();
+	// await context.tracing.start( { screenshots: true, snapshots: true } ); //TODO : test context is working for multiple page or not like admin, vendor & customer
 
-	// get storageState: admin
-	let admin = await browser.newPage();
+	// // get storageState: admin
+	// let admin = await browser.newPage();
 
 	// // log in
 	// await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });

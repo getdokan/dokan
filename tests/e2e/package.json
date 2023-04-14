@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "npm init playwright@latest",
   "main": "index.js",
+  "engines": {
+    "node": ">=8.10.0"
+  },
   "scripts": {
     "test:e2e": "playwright test --project=chromium",
     "test:e2e-setup": "playwright install chromium",
@@ -26,7 +29,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "dotenv": "^16.0.3"
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.38.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-playwright": "^0.12.0",
+    "tslib": "^2.5.0"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",

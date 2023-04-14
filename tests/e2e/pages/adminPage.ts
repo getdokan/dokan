@@ -1066,7 +1066,7 @@ export class AdminPage extends BasePage {
 
         // category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name //TODO: uncomment after fix
+        // Vendor Store Name 
         await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
         // Publish
@@ -1197,7 +1197,7 @@ export class AdminPage extends BasePage {
         await this.clearAndFill(selector.admin.products.product.blockCost, product.blockCost)
         // Category
         await this.click(selector.admin.products.product.category(product.category))
-        // Vendor Store Name  //TODO: uncomment after fix
+        // Vendor Store Name  
         await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName)
         await this.scrollToTop()
 

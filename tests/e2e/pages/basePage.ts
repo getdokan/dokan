@@ -13,6 +13,7 @@ import {
 } from '@playwright/test';
 import { helpers } from '../utils/helpers';
 import { selector } from './selectors';
+import { log } from 'console';
 require('dotenv').config();
 
 // This Page Contains All Necessary Playwright Automation Methods
@@ -54,23 +55,23 @@ export class BasePage {
 	}
 
 	// goto subUrl
-	async goto(subPath: string) {
+	async goto(subPath: string): Promise<void> {
 		// let subPath1: string = await this.createUrl(subPath)
 		await this.page.goto(subPath);
 	}
 
 	// go forward
-	async goForward() {
+	async goForward(): Promise<void> {
 		await this.page.goForward();
 	}
 
 	// go back
-	async goBack() {
+	async goBack(): Promise<void> {
 		await this.page.goBack();
 	}
 
 	// reload page
-	async reload() {
+	async reload(): Promise<void> {
 		await this.page.reload();
 	}
 
@@ -81,7 +82,7 @@ export class BasePage {
 	}
 
 	// Create a New URL
-	async createUrl(subPath: string) {
+	async createUrl(subPath: string): Promise<string> {
 		// let url = new URL(process.env.BASE_URL)
 		// url.pathname = url.pathname + subPath + '/'
 		// return url.href
@@ -89,7 +90,7 @@ export class BasePage {
 	}
 
 	// goto subPath if not already there
-	async goIfNotThere(subPath: string) {
+	async goIfNotThere(subPath: string): Promise<void> { // TODO: don't work , if url add '/' or '/#/ after navigating there
 		if (! await this.isCurrentUrl(subPath)) {
 			const url = await this.createUrl(subPath);
 			await this.page.goto(url, { waitUntil: 'networkidle' });
@@ -100,7 +101,7 @@ export class BasePage {
 	}
 
 	// goto subPath if about:blank is loaded
-	async goIfBlank(subPath: string) {
+	async goIfBlank(subPath: string): Promise<void> {
 		const blankPage = await this.page.evaluate(() => window.location.href === 'about:blank');
 		if (blankPage) {
 			await this.goto(subPath);
@@ -148,11 +149,9 @@ export class BasePage {
 	}
 
 	// scroll to top
-	async scrollToTop() { //TODO: crosscheck
-		await this.page.evaluate(() => {
-			window.scroll(0, 0);
-		});
-		await this.page.waitForTimeout(1000);
+	async scrollToTop(): Promise<void> { //TODO: crosscheck
+		await this.page.evaluate(() => window.scroll(0, 0));
+		await this.wait(1);
 	}
 
 	/**
@@ -161,8 +160,19 @@ export class BasePage {
 
 	// click on element
 	async click(selector: string): Promise<void> {
-		await this.page.locator(selector).click();
-		// await this.page.click(selector)
+		// await this.clickViaPage(selector); // TODO: keep which one is better
+		await this.clickLocator(selector);
+	}
+
+	// click on element
+	async clickViaPage(selector: string): Promise<void> {
+		await this.page.click(selector)
+	}
+
+	//  click on element by Running the js element.Click() method
+	async clickJs(selector: string): Promise<void> {
+		let element = this.page.locator(selector);
+		await element.click();
 	}
 
 	// double click on element
@@ -225,11 +235,27 @@ export class BasePage {
 	}
 
 	// click if visible
-	async clickIfVisible(selector: string) {
-		const IsVisible = await this.isVisible(selector);
-		if (IsVisible) {
+	async clickIfVisible(selector: string): Promise<void> {
+		const isVisible = await this.isVisible(selector);
+		if (isVisible) {
 			await this.click(selector);
 		}
+	}
+
+	// click if visible
+	async clickIfExists(selector: string): Promise<void> {
+		const isExists = await this.isLocatorExists(selector);
+		if (isExists) {
+			await this.click(selector);
+		}
+	}
+
+	async isLocatorExists(selector: string): Promise<boolean> {
+		return await this.page.locator(selector).count() ? true : false;
+	}
+
+	async isElementExists(selector: string): Promise<boolean> {
+		return await this.page.$(selector).catch(() => null) !== null;
 	}
 
 	/**
@@ -237,12 +263,12 @@ export class BasePage {
 	 */
 
 	// press key
-	async press(key: string) {
+	async press(key: string): Promise<void> {
 		await this.page.keyboard.press(key);
 	}
 
 	// press on selector [Focuses the element, and then uses keyboard press]
-	async pressOnSelector(selector: string, key: string) {
+	async pressOnSelector(selector: string, key: string): Promise<void> {
 		await this.page.press(selector, key);
 	}
 
@@ -255,21 +281,29 @@ export class BasePage {
 		await this.page.waitForSelector(selector);
 	}
 
-	// get locator //TODO: need to update this
+	// get locator 
 	async getLocator(selector: string): Promise<object> {
 		return this.page.locator(selector);
 	}
 
 	// get locators  //TODO: need to test
 	async getLocators(selector: string): Promise<object> {
-		return this.page.locator(selector).elementHandles();
+		return await this.page.locator(selector).all()
+		// return this.page.locator(selector).elementHandles();
 		// return this.page.$$(selector);
 	}
 
 	// returns whether the element is visible
 	async isVisible(selector: string): Promise<boolean> {
+		// return await this.isVisibleViaPage(selector);  //TODO: keep which one is better ; also update every page method with locator
+		return await this.isVisibleLocator(selector);
+	}
+
+	// returns whether the element is visible
+	async isVisibleViaPage(selector: string): Promise<boolean> {
 		return await this.page.isVisible(selector);
 	}
+
 
 	// returns whether the element is hidden
 	async isHidden(selector: string): Promise<boolean> {
@@ -337,35 +371,44 @@ export class BasePage {
 		return await this.page.inputValue(selector);
 	}
 
+	//get class attribute value
+	async getClassValue(selector: string): Promise<string | null> {
+		return await this.page.getAttribute(selector, 'class');
+	}
+
+	//get class attribute value
+	async hasClass(selector: string, className: string): Promise<boolean> {
+		const element = this.page.locator(selector);
+		const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className);
+		return hasClass;
+	}
+
 	//get attribute value
 	async getAttributeValue(selector: string, attribute: string): Promise<string | null> {
 		return await this.page.getAttribute(selector, attribute);
 	}
 
-	//get class attribute value
-	async getClassValue(selector: string): Promise<string | null> {
-		return await this.page.getAttribute(selector, 'className'); //TODO: maybe class
+	// has attribute
+	async hasAttribute(selector: string, attribute: string): Promise<boolean> {
+		const element = this.page.locator(selector);
+		const hasAttribute = await element.evaluate((element, attribute) => element.hasAttribute(attribute), attribute)
+		return hasAttribute;
 	}
 
-	// set attribute value
-	async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> { //TODO: update with playwright method
-		// await page.$eval(selector, (element, attribute, value) => element.setAttribute(attribute, value), attribute, value)
+	// set attribute/class value
+	async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
 		const element = this.page.locator(selector);
-		// await this.page.evaluate((element, attribute, value) => element.setAttribute(attribute, value), element, attribute, value)
-		await element.evaluate((element) => element.setAttribute(attribute, value));
+		await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute, value), [attribute, value]);
 	}
 
 	// remove element attribute
-	async removeAttribute(selector: string, attribute: string): Promise<void> { //TODO: update with playwright method
-		// let element = await this.getElement(selector)
-		// await this.page.evaluate((element, attribute) => element.removeAttribute(attribute), element, attribute)
-		const elementHandle = await this.page.$(selector);
-		// let elementHandle = await this.page.waitForSelector(selector)
-		await elementHandle.evaluate((element) => element.removeAttribute(attribute));
+	async removeAttribute(selector: string, attribute: string): Promise<void> {
+		let element = this.page.locator(selector);
+		await element.evaluate((element, attribute) => element.removeAttribute(attribute), attribute)
 	}
 
 	// get element property value: background color
-	async getElementBackgroundColor(selector: string) {
+	async getElementBackgroundColor(selector: string): Promise<string> {
 		const element = this.page.locator(selector);
 		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('background-color'));
 		// console.log(value)
@@ -373,22 +416,32 @@ export class BasePage {
 	}
 
 	// get element property value: background color
-	async getElementColor(selector: string) {
+	async getElementColor(selector: string): Promise<string> {  // TODO: All promise<string> should be Promise<string | null> , after refactor check for any conflict
 		const element = this.page.locator(selector);
 		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('color'));
 		// console.log(value)
 		return value;
 	}
 
+	// get pseudo element style
+	async getPseudoElementStyles(selector: string, pseudoElement: string, property: string): Promise<string> {
+		let element = await this.getElement(selector)
+		const value = await element.evaluate((element, [pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property), [pseudoElement, property]);
+		// console.log(value);  
+		return value;
+	}
+
+	// TODO: apply pseudostyle
+
 	// get multiple element texts
-	async getMultipleElementTexts(selector: string) {
+	async getMultipleElementTexts(selector: string): Promise<string[]> {
 		const texts = await this.page.$$eval(selector, (elements) => elements.map((item) => item.textContent));
 		// console.log(texts)
 		return texts;
 	}
 
 	// get element bounding box
-	async getElementBoundingBox(selector: string) {
+	async getElementBoundingBox(selector: string): Promise<object> {
 		const boundingBox = await this.page.locator(selector).boundingBox();
 		return boundingBox;
 	}
@@ -421,10 +474,31 @@ export class BasePage {
 		await this.page.fill(selector, '');
 	}
 
-	// clear input field and type
-	// async clearAndType(selector: string, text: string): Promise<void> { // TODO: need to update
-	// 	await this.page.type(selector, text);
+	// Or
+	async clearInputField1(selector: string): Promise<void> {
+		let element = await this.getElement(selector)
+		await element.click({ clickCount: 3 })
+		await this.press('Backspace')
+	}
+
+	// Or
+	// async clearInputField2(selector): Promise<void>  { //TODO: fix this method
+	// 	let element = await this.getElement(selector)
+	// 	await this.page.evaluate(element => element.value = '', element)
 	// }
+
+
+	// clear input field and type
+	async clearAndType(selector: string, text: string): Promise<void> { // TODO: need to update
+		await this.fill(selector, text);
+		await this.clearAndTypeViaPage(selector, text);
+	}
+
+	// clear input field and type
+	async clearAndTypeViaPage(selector: string, text: string): Promise<void> {
+		await this.clearInputField1(selector)
+		await this.type(selector, text);
+	}
 
 	// clear input field and type
 	async clearAndFill(selector: string, text: string): Promise<void> {
@@ -432,21 +506,39 @@ export class BasePage {
 	}
 
 	// type in input field
-	async type(selector: string, text: string) {
+	async type(selector: string, text: string): Promise<void> {
 		await this.page.type(selector, text);
 	}
 
 	// fill in input field
-	async fill(selector: string, text: string) {
+	async fill(selector: string, text: string): Promise<void> {
 		await this.page.fill(selector, text);
 	}
 
+	// fill if visible
+	async fillIfVisible(selector: string, text: string): Promise<void> {
+		const IsVisible = await this.isVisible(selector);
+		if (IsVisible) {
+			await this.clearAndFill(selector, text);
+		}
+	}
+
 	// append in input filed
-	async append(selector: string, text: string) {
+	async append(selector: string, text: string): Promise<void> {
 		await this.focus(selector);
 		await this.press('End');
 		await this.page.type(selector, text);
 	}
+
+	// check if visible
+	async typeIfVisible(selector: string, text: string): Promise<void> {
+		const IsVisible = await this.isVisible(selector);
+		if (IsVisible) {
+			await this.clearAndFill(selector, text);
+		}
+	}
+
+
 
 	// check/uncheck input fields [checkbox/radio] based on choice
 	async checkUncheck(selector: string, checked: boolean): Promise<void> {
@@ -454,18 +546,33 @@ export class BasePage {
 	}
 
 	// check input fields [checkbox/radio]
-	async check1(selector: string,): Promise<void> {
+	async check1(selector: string): Promise<void> {
 		await this.page.check(selector);
 	}
 
 	// check input fields [checkbox/radio]
-	async check(selector: string,): Promise<void> {
+	async check(selector: string): Promise<void> {
+		// await this.checkViaPage(selector); //TODO: keep which one is better
+		await this.checkLocator(selector);
+	}
+
+	// check input fields [checkbox/radio]
+	async checkViaPage(selector: string): Promise<void> {
 		await this.page.setChecked(selector, true);
 	}
+
 
 	// uncheck input fields [checkbox/radio]
 	async uncheck(selector: string): Promise<void> {
 		await this.page.uncheck(selector);
+	}
+
+	// check if visible
+	async checkIfVisible(selector: string): Promise<void> {
+		const IsVisible = await this.isVisible(selector);
+		if (IsVisible) {
+			await this.check(selector);
+		}
 	}
 
 	/**
@@ -502,49 +609,45 @@ export class BasePage {
 	}
 
 	// // set value based on select options text
-	// async selectByText(selectSelector: string, optionSelector: string, text: string) {
+	// async selectByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
 	//     let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
 	//     await this.selectByValue(selectSelector, optionValue);
 	// }
 
 	/**
-	 * Files & Media methods
+	 * Files & Media methods¸¸
 	 */
 
 	// upload file
-	async uploadFile(selector: string, files: []): Promise<void> {
+	async uploadFile(selector: string, files: string | string[]): Promise<void> {
+		// await this.page.setInputFiles(selector, files, { noWaitAfter: true });
 		await this.page.setInputFiles(selector, files);
+		await this.wait(2) //TODO: need to handle wait gracefully
 	}
 
 	// upload file
-	async uploadBuffer(selector: string, fileName: string, mimeType: string, buffer: Buffer): Promise<void> {
+	async uploadBuffer(selector: string, filePath: string): Promise<void> {
 		await this.page.setInputFiles(selector, {
-			name: fileName,
-			mimeType,
-			buffer: Buffer.from(buffer),
+			name: String((filePath.split('/')).pop()),
+			mimeType: 'image/' + (filePath.split('.')).pop(),
+			buffer: Buffer.from(filePath),
 		});
 	}
 
 	// upload files when input file element is missing
-	async uploadFileViaListener(selector: string, files: []): Promise<void> {
-		this.page.on('filechooser', async (fileChooser: any) => {
-			await fileChooser.setFiles(files);
-		});
-		await this.page.locator(selector).click(); //    invokes the filechooser
+	async uploadFileViaListener(selector: string, files: string | string[]): Promise<void> {
+		this.page.on('filechooser', async (fileChooser: any) => { await fileChooser.setFiles(files); });
+		await this.page.locator(selector).click();  // invokes the filechooser
 	}
 
-	async uploadFileViaListener1(selector: string, files: []): Promise<void> {
+	async uploadFileViaListener1(selector: string, files: string | string[]): Promise<void> {
 		// Start waiting for file chooser before clicking. Note no await.
 		const fileChooserPromise = this.page.waitForEvent('filechooser'); //Note: no await on listener
 		await this.page.locator(selector).click(); //    invokes the filechooser
 		const fileChooser = await fileChooserPromise;
 		await fileChooser.setFiles(files);
-
 		// or
-		// const fileChooserPromise = await Promise.all([
-		//     this.page.waitForEvent('filechooser')
-		//     this.page.locator(selector).click()
-		// ])
+		// const [fileChooser] = await Promise.all([this.page.waitForEvent('filechooser'), this.page.locator(selector).click()])
 		// await fileChooser.setFiles(files)
 	}
 
@@ -820,7 +923,7 @@ export class BasePage {
 	// get n-th matching locator
 	async nthLocator(selector: string, index: number): Promise<Locator> {
 		const locator = this.page.locator(selector);
-		return await locator.nth(index);
+		return locator.nth(index);
 	}
 
 	// get the page locator belongs to
@@ -896,10 +999,18 @@ export class BasePage {
 	}
 
 	// wait for locator
-	async waitForLocator(selector: string): Promise<void> {
+	async waitForLocator(selector: string, option: any): Promise<void> {
 		const locator = this.page.locator(selector);
-		await locator.waitFor();
+		await locator.waitFor(option);
 	}
+
+	// wait for locator to be visible
+	async waitForVisibleLocator(selector: string): Promise<void> {
+		const locator = this.page.locator(selector);
+		await locator.waitFor({ state: "visible" });
+	}
+
+
 
 	/**
 	 * Dialog methods
@@ -963,10 +1074,10 @@ export class BasePage {
 	}
 
 	// get wp current user
-	async getCurrentUser() {
+	async getCurrentUser(): Promise<string> {
 		const cookies = await this.page.context().cookies();
 		const cookie = cookies.find((c) => {
-			let _c$name;
+			let _c$name: string;
 			return !!(c !== null && c !== void 0 && (_c$name = c.name) !== null && _c$name !== void 0 && _c$name.startsWith('wordpress_logged_in_'));
 		});
 		if (!(cookie !== null && cookie !== void 0 && cookie.value)) {
@@ -980,7 +1091,7 @@ export class BasePage {
 	 */
 
 	// set dropdown option  span dropdown
-	async setDropdownOptionSpan(selector: string, value: string) {
+	async setDropdownOptionSpan(selector: string, value: string): Promise<void> {
 		const elements = await this.page.$$(selector);
 		for (const element of elements) {
 			const text: any = element.evaluate((element) => element.textContent, element);
@@ -1001,15 +1112,40 @@ export class BasePage {
 		await this.page.pause();
 	}
 
+
+	//   TODO:: NEW methods
+
+	/**
+	 * page methods
+	 */
+
+	// get all pages
+	async getAllPages(): Promise<Page[]> {
+		const pages = this.page.context().pages();
+		return pages;
+	}
+
+
+
 	/**
 	 * custom methods
 	 */
 
 	// dokan select2
-	async select2ByText(selectSelector: string, optionSelector: string, text: string) {
+	async select2ByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
 		await this.click(selectSelector);
 		await this.type(optionSelector, text);
 		await this.press('Enter');
+	}
+
+	// dokan select2 multi-selector
+	async select2ByTextMultiSelector(selectSelector: string, optionSelector: string, text: string): Promise<void> {
+		const isExists = await this.isLocatorExists(`//li[@class="select2-selection__choice" and @title="${text}"]`)
+		if (!isExists) {
+			await this.click(selectSelector);
+			await this.type(optionSelector, text);
+			await this.press('Enter');
+		}
 	}
 
 	// admin enable switcher , if enabled then Skip : admin settings switcher
@@ -1033,27 +1169,8 @@ export class BasePage {
 		}
 	}
 
-	// admin Enable payment methods via Slider
-	async enablePaymentMethod(selector: string) {
-		const classValueBefore: any = await this.getClassValue(selector);
-		if (classValueBefore.includes('woocommerce-input-toggle--disabled')) {
-			await this.click(selector);
-		}
-		const classValueAfter = await this.getClassValue(selector);
-		expect(classValueAfter).toContain('woocommerce-input-toggle--enabled');
-	}
-
-	// get pseudo element style
-	async getPseudoElementStyles(selector: string, pseudoElement: string, property: string) {
-		let element = await this.getElement(selector)
-		// let value = await this.page.evaluate(([element, pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property), [element, pseudoElement, property]) //todo:fix via page.evaluate
-		const value = await element.evaluate((element, [pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property), [pseudoElement, property]);
-		// console.log(value);  
-		return value;
-	}
-
 	// enable switch or checkbox: dokan setup wizard
-	async enableSwitcherSetupWizard(selector: string) {
+	async enableSwitcherSetupWizard(selector: string): Promise<void> {
 		let value = await this.getPseudoElementStyles(selector, 'before', 'background-color')
 		// rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
 		if ((!value.includes('rgb(251, 203, 196)')) && (!value.includes('rgb(242, 98, 77)'))) {
@@ -1063,7 +1180,7 @@ export class BasePage {
 	}
 
 	// disable switch or checkbox: dokan setup wizard
-	async disableSwitcherSetupWizard(selector: string) {
+	async disableSwitcherSetupWizard(selector: string): Promise<void> {
 		let value: any = await this.getPseudoElementStyles(selector, 'before', 'background-color')
 		// rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
 		if ((value.includes('rgb(251, 203, 196)')) || (value.includes('rgb(242, 98, 77)'))) {
@@ -1072,28 +1189,38 @@ export class BasePage {
 		}
 	}
 
+	// enable switch or checkbox: dokan setup wizard
+	async enableSwitcherDeliveryTime(selector: string): Promise<void> {
+		let value = await this.hasClass(selector += "//div[contains(@class,'minitoggle')]", 'active');
+		if (!value) {
+			await this.click(selector);
+		}
+	}
+
+	// admin Enable payment methods via Slider
+	async enablePaymentMethod(selector: string): Promise<void> {
+		const classValueBefore: any = await this.getClassValue(selector);
+		if (classValueBefore.includes('woocommerce-input-toggle--disabled')) {
+			await this.click(selector);
+		}
+		const classValueAfter = await this.getClassValue(selector);
+		expect(classValueAfter).toContain('woocommerce-input-toggle--enabled');
+	}
+
+
+
 	// Check Multiple Elements with Same Selector/Class/Xpath
-	async checkMultiple(selector: string) {
+	async checkMultiple(selector: string): Promise<void> {
 		for (const element of await this.page.locator(selector).all()) {
-			const isCheckBoxChecked = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('checked'));
-			console.log(isCheckBoxChecked);
-			
+			const isCheckBoxChecked = await element.isChecked()
 			if (!isCheckBoxChecked) {
 				await element.click()
 			}
-
-			// let elements = await this.getElements(selector)
-			// for (let element of elements) {
-			// 	const isCheckBoxChecked = await (await element.getProperty("checked")).jsonValue()
-			// 	if (!isCheckBoxChecked) {
-			// 		await element.click()
-			// 	}
-			// }
 		}
 	}
 
 	// delete element if exist (only first will delete) : dokan rma,report abuse
-	async deleteIfExists(selector: string) { //TODO: there may be alternative solution, this method might not needed
+	async deleteIfExists(selector: string): Promise<void> { //TODO: there may be alternative solution, this method might not needed
 		const elementExists = await this.isVisible(selector);
 		if (elementExists) {
 			const element = this.page.locator(selector);
@@ -1101,15 +1228,32 @@ export class BasePage {
 		}
 	}
 
-	//   TODO:: NEW methods
 
-	/**
-	 * page methods
-	 */
+	async wpUploadFile(filePath: string | string[]) {
+		//wp image upload
+		let wpUploadFiles = "//div[@class='supports-drag-drop' and @style='position: relative;']//button[@id='menu-item-upload']"
+		let uploadedMedia = ".attachment-preview"
+		let selectFiles = "//div[@class='supports-drag-drop' and @style='position: relative;']//button[@class='browser button button-hero']"
+		let select = "//div[@class='supports-drag-drop' and @style='position: relative;']//button[contains(@class, 'media-button-select')]"
+		let crop = "//div[@class='supports-drag-drop' and @style='position: relative;']//button[contains(@class, 'media-button-insert')]"
+		let uploadedMediaIsVisible = await this.isVisible(uploadedMedia)
+		if (uploadedMediaIsVisible) {
+			await this.click(wpUploadFiles)
+		}
+		else {
+			await this.uploadFile(selectFiles, filePath)
+			await this.click(select)
+			await this.clickIfVisible(crop)
+		}
+	}
 
-	// get all pages
-	async getAllPages() {
-		const pages = this.page.context().pages();
-		return pages;
+	// Remove Previous Uploaded media If Exists
+	async removePreviouslyUploadedImage(previousUploadedImageSelector: string, removePreviousUploadedImageSelector: string) {
+		let previousUploadedImageIsVisible = await this.isVisible(previousUploadedImageSelector)
+		if (previousUploadedImageIsVisible) {
+			await this.hover(previousUploadedImageSelector)
+			await this.click(removePreviousUploadedImageSelector)
+			await this.wait(2)
+		}
 	}
 }
