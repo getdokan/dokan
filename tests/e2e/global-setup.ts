@@ -11,51 +11,70 @@ async function globalSetup(config: FullConfig) {
 	await context.tracing.start({ screenshots: true, snapshots: true });
 
 	// // get storageState: admin
-	// let admin = await browser.newPage();
+	let admin = await browser.newPage();
 
-	// // log in
-	// await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
-	// await admin.fill(selector.backend.email, process.env.ADMIN);
-	// await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
-	// await admin.locator(selector.backend.login).click();
-	// await admin.waitForLoadState('networkidle');
-	// await admin.context().storageState({ path: 'adminStorageState.json' });
-	// console.log('Stored adminStorageState');
+	// log in
+	await admin.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' });
+	await admin.fill(selector.backend.email, process.env.ADMIN);
+	await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
+	await admin.locator(selector.backend.login).click();
+	await admin.waitForLoadState('networkidle');
+	await admin.context().storageState({ path: 'adminStorageState.json' });
+	console.log('Stored adminStorageState');
 
-	// // set permalink 
-	// await admin.goto(process.env.BASE_URL + '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
-	// await admin.locator('#permalink-input-post-name').click();
-	// await admin.locator('#submit').click();
-	// await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
-	// console.log('permalink updated');
-
-   //TODO: implement fixture for lite pro issue handle
+	// set permalink 
+	await admin.goto(process.env.BASE_URL + '/wp-admin/options-permalink.php', { waitUntil: 'networkidle' });
+	await admin.locator('#permalink-input-post-name').click();
+	await admin.locator('#submit').click();
+	await expect(admin.locator('#setting-error-settings_updated strong')).toContainText('Permalink structure updated.');
+	console.log('permalink updated');
 
 	// // get storageState: customer
 	let customer = await browser.newPage(); //TODO: user need to create first move to _setup file
-	// // register & log in
+
 	await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	// await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
-	// // register
-	await customer.fill(selector.customer.cRegistration.regEmail, 'cushjtomertre345@g.c');  //TODO: global setup not raising error
+	await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
+	// register
+	await customer.fill(selector.customer.cRegistration.regEmail, process.env.CUSTOMER + '@gmail.com');  //TODO: global setup not raising error
 	await customer.fill(selector.customer.cRegistration.regPassword, process.env.CUSTOMER_PASSWORD);
 	await customer.click(selector.customer.cRegistration.regCustomer);
 	await customer.click(selector.customer.cRegistration.register); // TODO: will register create storage.json
+	await customer.context().storageState({ path: 'customerStorageState.json' });
+	console.log('Stored customerStorageState');
 
-
+	//TODO: implement fixture for lite pro issue handle
 	//TODO: 1. add vendor reg for vendor storagestate.json
-	 		2. seperate globlSetup for local & CI , cant reg user every time for local site 
-			3. page context issue
+	//TODO: 2. separate globlSetup for local & CI , cant reg user every time for local site or find another soln.
+	//TODO: 3. page context issue
 
 	// log in
+	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	// await customer.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
 	// await customer.fill(selector.frontend.username, process.env.CUSTOMER);
 	// await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
 	// await customer.click(selector.frontend.logIn);
-	await customer.context().storageState({ path: 'customerStorageState12.json' });
-	console.log('Stored customerStorageState1');
+	// await customer.context().storageState({ path: 'customerStorageState.json' });
+	// console.log('Stored customerStorageState');
 
-	// // get storageState: vendor
+	// // // get storageState: vendor
 	// let vendor = await browser.newPage();  //TODO: user need to create first move to _setup file
+
+	// // register
+	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	// await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
+	// await vendor.fill(selector.vendor.vRegistration.regEmail, process.env.VENDOR+ 123456 + '@gmail.com');
+	// await vendor.fill(selector.vendor.vRegistration.regPassword, process.env.VENDOR_PASSWORD);
+	// await vendor.click(selector.vendor.vRegistration.regVendor);
+	// await vendor.waitForSelector(selector.vendor.vRegistration.firstName);
+	// await vendor.fill(selector.vendor.vRegistration.firstName, process.env.VENDOR);
+	// await vendor.fill(selector.vendor.vRegistration.lastName, process.env.VENDOR);
+	// await vendor.fill(selector.vendor.vRegistration.shopName, process.env.VENDOR + 'Store1');
+	// await vendor.click(selector.vendor.vRegistration.shopUrl);
+	// await vendor.fill(selector.vendor.vRegistration.phone, '11123456');
+	// await vendor.click(selector.vendor.vRegistration.register);
+	// await vendor.context().storageState({ path: 'vendorStorageState1.json' });
+	// console.log('Stored vendorStorageState');
+
 	// // log in
 	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
 	// await vendor.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });

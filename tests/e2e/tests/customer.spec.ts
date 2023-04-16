@@ -26,7 +26,7 @@ import { VendorPage } from '../pages/vendorPage';
 // 		await loginPage.logout();
 // 	});
 
-// 	test.only('customer login', async ({  }) => {
+// 	test('customer login', async ({  }) => {
 // 		// const loginPage = new LoginPage(page);
 // 		await loginPage.login(data.customer);
 // 	});

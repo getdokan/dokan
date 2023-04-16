@@ -15,12 +15,12 @@ test.describe('Vendor user functionality test1', () => {
 		await loginPage.logout()
 	})
 
-	test.only('vendor can login', async ({ page }) => {
+	test('vendor can login', async ({ page }) => {
 		const loginPage = new LoginPage(page)
 		await loginPage.login(data.vendor)
 	})
 
-	test.only('vendor can logout', async ({ page }) => {
+	test('vendor can logout', async ({ page }) => {
 		const loginPage = new LoginPage(page)
 		await loginPage.login(data.vendor)
 		await loginPage.logout()
