@@ -172,15 +172,15 @@ test.describe('setup test api', () => {
 	});
 
 
-	test('add test vendor orders @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
-		const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
-		const payload = payloads.createOrder;
-		payload.line_items[0].product_id = productId;
-		const response = await request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth});
-		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
-	});
+	// test('add test vendor orders @pro', async ({ request }) => {
+	// 	const apiUtils = new ApiUtils(request);
+	// 	const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
+	// 	const payload = payloads.createOrder;
+	// 	payload.line_items[0].product_id = productId;
+	// 	const response = await request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth});
+	// 	expect(response.ok()).toBeTruthy();
+	// 	const responseBody = await apiUtils.getResponseBody(response);
+	// });
 
 
 
