@@ -333,7 +333,6 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.settings.deliveryTime)
 
         // Delivery Time Settings
-
         await this.enableSwitcher(selector.admin.dokan.settings.allowVendorSettings)
         await this.enableSwitcher(selector.admin.dokan.settings.homeDelivery)
         await this.enableSwitcher(selector.admin.dokan.settings.storePickup)
@@ -343,29 +342,15 @@ export class AdminPage extends BasePage {
         await this.clearAndType(selector.admin.dokan.settings.orderPerSlot, deliveryTime.orderPerSlot)
         await this.clearAndType(selector.admin.dokan.settings.deliveryBoxInfo, deliveryTime.deliveryBoxInfo)
         await this.enableSwitcher(selector.admin.dokan.settings.requireDeliveryDateAndTime)
-
-        for (let day in deliveryTime.deliveryDay) {
-            await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay[day]))
-            // await this.clearAndType(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]), deliveryTime.openingTime)
-            await this.click(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay[day]))
-            await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'12:00 am')]")
-            // await this.clearAndType(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]), deliveryTime.closingTime)
-            await this.click(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay[day]))
-            await this.click("//ul[@class='ui-timepicker-list']//li[contains(text(),'11:30 pm')]")
-        }
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.monday))
-        // await this.type(selector.admin.dokan.settings.openingTime(deliveryTime.deliveryDay.monday), deliveryTime.openingTime)
-        // await this.type(selector.admin.dokan.settings.closingTime(deliveryTime.deliveryDay.monday), deliveryTime.closingTime)
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.tuesday))
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.wednesday))
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.thursday))
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.friday))
-        // await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(deliveryTime.deliveryDay.saturday))
-        // await this.clearAndType(selector.admin.dokan.settings.openingTime, deliveryTime.openingTime)
-        // await this.clearAndType(selector.admin.dokan.settings.closingTime, deliveryTime.closingTime)
-        await this.wait(2)
-        await this.hover(selector.admin.dokan.settings.deliveryTimeSaveChanges)
-
+        for (const day of deliveryTime.days) {
+            await this.enableSwitcher(selector.admin.dokan.settings.deliveryDay(day))
+			await this.click(selector.admin.dokan.settings.openingTime(day));
+            // await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
+            // comment below lines for full day
+            await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click(); //TODO: convert by locator, also move this to base page
+			await this.click(selector.admin.dokan.settings.closingTime(day));
+            await this.page.getByRole('listitem').filter({ hasText: deliveryTime.closingTime }).click();
+		}
         // save settings
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.deliveryTimeSaveChanges)
         await expect(this.page.locator(selector.admin.dokan.settings.dokanUpdateSuccessMessage)).toContainText(deliveryTime.saveSuccessMessage)

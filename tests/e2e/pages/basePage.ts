@@ -966,9 +966,9 @@ export class BasePage {
 	}
 
 	// scroll locator into view if needed
-	async scrollIntoViewLocator(selector: string): Promise<void> {
+	async scrollIntoViewLocator(selector: string, options?: { timeout?: number; }): Promise<void> {
 		const locator = this.page.locator(selector);
-		await locator.scrollIntoViewIfNeeded();
+		await locator.scrollIntoViewIfNeeded(options);
 	}
 
 	// select from select option through value, option, index
@@ -1173,9 +1173,7 @@ export class BasePage {
 	async enableSwitcher(selector: string): Promise<void> {
 		(/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span';
 		const value = await this.getElementBackgroundColor(selector);
-		// console.log(selector, value);
-		// if (!value.includes('rgb(0, 144, 255)')) {
-		if ((!value.includes('rgb(0, 144, 255))')) && (!value.includes('rgb(33, 150, 243)'))) {
+		if (!value.includes('rgb(0, 144, 255)')) {
 			await this.click(selector);
 		}
 	}
@@ -1184,8 +1182,7 @@ export class BasePage {
 	async disableSwitcher(selector: string): Promise<void> {
 		(/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span';
 		const value = await this.getElementBackgroundColor(selector);
-		// if (value.includes('rgb(0, 144, 255)')) {
-		if ((value.includes('rgb(0, 144, 255))')) && (value.includes('rgb(33, 150, 243)'))) {
+		if (value.includes('rgb(0, 144, 255)')) {
 			await this.click(selector);
 		}
 	}
@@ -1210,13 +1207,25 @@ export class BasePage {
 		}
 	}
 
-	// enable switch or checkbox: dokan setup wizard
+	// admin enable switcher , if enabled then Skip : vendor dashboard disbursements
+	async enableSwitcherDisbursement(selector: string): Promise<void> {
+		(/^(\/\/|\(\/\/)/.test(selector)) ? selector += '//span' : selector += ' span';
+		const value = await this.getElementBackgroundColor(selector);
+		if (!value.includes('rgb(33, 150, 243)')) {
+			await this.click(selector);
+		}
+	}
+
+
+	// enable switch or checkbox: vendor dashboard delivery time
 	async enableSwitcherDeliveryTime(selector: string): Promise<void> {
 		let value = await this.hasClass(selector += "//div[contains(@class,'minitoggle')]", 'active');
 		if (!value) {
 			await this.click(selector);
 		}
 	}
+
+
 
 	// admin Enable payment methods via Slider
 	async enablePaymentMethod(selector: string): Promise<void> {

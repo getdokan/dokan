@@ -10,7 +10,7 @@ import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 import { selector } from '../pages/selectors';
 import { helpers } from '../utils/helpers';
-const fs = require('fs');
+import fs from 'fs';
 
 // test.beforeAll(async ({ }) => { });
 // test.afterAll(async ({ }) => { });
@@ -177,7 +177,7 @@ test.describe('setup test api', () => {
 		const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
 		const payload = payloads.createOrder;
 		payload.line_items[0].product_id = productId;
-		const response = await request.post(endPoints.wc.createOrder, { data: payload});
+		const response = await request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth});
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 	});

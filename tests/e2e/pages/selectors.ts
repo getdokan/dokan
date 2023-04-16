@@ -778,9 +778,11 @@ export const selector = {
 				deliveryBoxInfo: '#dokan_delivery_time\\[delivery_box_info\\]',
 				requireDeliveryDateAndTime: '.selection_required .switch',
 				deliveryDay: (day: string) => `//h3[contains(text(), '${day}')]/../..//label[@class='switch tips']`,
-				openingTime: (day: string) => `#dokan_delivery_time\\[delivery_day_${day.toLowerCase()}\\]\\[opening_time\\]`,
-				closingTime: (day: string) => `#dokan_delivery_time\\[delivery_day_${day.toLowerCase()}\\]\\[closing_time\\]`,
-
+				openingTime: (day: string) => `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][opening_time]"]/..`,
+				openingTimeDatePicker: (time: string) => `(//li[contains(text(),'${time}')])[2]`,
+				closingTime: (day: string) => `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][closing_time]"]/..`,
+				closingTimeDatePicker: (time: string) => `(//li[contains(text(),'${time}')])[1]`,
+				fullDay: 'li.fullDayClock',
 				deliveryTimeSaveChanges: '#submit',
 
 				// Product Advertising
@@ -2755,7 +2757,7 @@ export const selector = {
 			selectCategory: '#product_cat',
 			selectCategorySearch: '//select[@id="product_cat"]/..//input[@class="select2-search__field"]',
 			selectCategorySearchedResult: '.select2-results__option.select2-results__option--highlighted',
-			alreadySelectedOption: (option:string) => `//li[@class="select2-selection__choice" and @title="${option}"]`,
+			alreadySelectedOption: (option: string) => `//li[@class="select2-selection__choice" and @title="${option}"]`,
 
 			// Update Settings
 			updateSettings: '//input[@name="dokan_update_store_settings"]',
@@ -2983,8 +2985,8 @@ export const selector = {
 			timeSlot: '#delivery_time_slot',
 			orderPerSlot: '#order_per_slot',
 			// Delivery Day
-			deliveryDaySwitch: (day: string) => `//label[@for='${day}-working-status']/p[@class='switch tips']`,
-			deliveryDaySwitchColor: (day: string) => `//label[@for='${day}-working-status']/p[@class='switch tips']//div[contains(@class,'minitoggle')]`,
+			deliveryDaySwitch: (day: string) => `//label[@for='${day}-working-status']//p[@class='switch tips']`,
+			deliveryDaySwitchColor: (day: string) => `//label[@for='${day}-working-status']//p[@class='switch tips']//div[contains(@class,'minitoggle')]`,
 			// Individual Day Settings
 			openingTime: (day: string) => `input#delivery-opening-time-${day}`,
 			openingTimeHiddenInput: (day: string) => `//input[@name='delivery_opening_time[${day}][]']`,
@@ -3424,7 +3426,7 @@ export const selector = {
 			followUnFollowStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
 			currentFollowStatus: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]//span[@class='dokan-follow-store-button-label-current']`,
 			followUnFollowStoreStorePage: 'button.dokan-follow-store-button',
-			currentFollowStatusStorePage:'span.dokan-follow-store-button-label-current'
+			currentFollowStatusStorePage: 'span.dokan-follow-store-button-label-current'
 		},
 
 		// Customer Header Cart
@@ -3524,7 +3526,7 @@ export const selector = {
 			backFromDuplicateCommentAlert: "//a[contains(text(),'« Back')]",
 			// Product Enquiry
 			enquiryMessage: '#dokan-enq-message',
-			submitEnquiry: '.dokan-btn-theme',
+			submitEnquiry: 'input.dokan-btn-theme',
 			submitEnquirySuccessMessage: '.alert.alert-success',
 		},
 
@@ -3546,6 +3548,7 @@ export const selector = {
 			proceedToCheckout: '.checkout-button.button.wc-forward',
 			// Remove All Item
 			productCrossIcon: '.product-remove a',
+			firstProductCrossIcon: '(//td[@class="product-remove"]//a)[1]',
 			cartEmptyMessage: '.cart-empty.woocommerce-info',
 
 		},

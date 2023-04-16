@@ -35,7 +35,7 @@ const config: PlaywrightTestConfig = {
 	// forbidOnly: !!process.env.CI,
 
 	/* Retry on CI only */
-	// retries: process.env.CI ? 2 : 1,
+	// retries: process.env.CI ? 1 : 1,
 
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : 1,
@@ -44,7 +44,7 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state

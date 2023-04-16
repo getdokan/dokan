@@ -27,7 +27,7 @@ export class LoginPage extends BasePage {
 			return;
 		}
 		// logout if other user is already logged in
-		// else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storaage.json 
+		// else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json 
 		else if ( ( user.username !== currentUser ) || ( currentUser === undefined ) ) {
 			console.log('logout');
 			await this.logoutFrontend();

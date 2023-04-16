@@ -374,7 +374,7 @@ export class VendorPage extends BasePage {
 	// vendor add auto withdraw disbursement schedule
 	async addAutoWithdrawDisbursementSchedule(withdraw: { withdrawMethod?: { default: string; paypal: string; skrill: string; }; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod: any; preferredSchedule: any; minimumWithdrawAmount: any; reservedBalance: any; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-		await this.enableSwitcher(selector.vendor.vWithdraw.enableSchedule);
+		await this.enableSwitcherDisbursement(selector.vendor.vWithdraw.enableSchedule);
 		await this.click(selector.vendor.vWithdraw.editSchedule);
 		await this.selectByValue(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod);
 		await this.click(selector.vendor.vWithdraw[withdraw.preferredSchedule]);

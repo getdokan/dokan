@@ -181,8 +181,8 @@ test.describe('Admin functionality test', () => {
 		await adminPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	test.skip('admin can set dokan delivery time settings @pro', async ({ }) => {
-		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime); //TODO: need to fix
+	test('admin can set dokan delivery time settings @pro', async ({ }) => {
+		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime); 
 	});
 
 	test('admin can set dokan product advertising settings @pro', async ({ }) => {

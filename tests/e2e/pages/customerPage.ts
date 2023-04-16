@@ -101,8 +101,6 @@ export class CustomerPage extends BasePage {
 		await this.click(selector.customer.cDashboard.becomeWholesaleCustomer);
 		const returnMessage = await this.getElementText(selector.customer.cDashboard.wholesaleRequestReturnMessage); // TODO: replace with hasText
 		if (returnMessage != data.wholesale.wholesaleRequestSendMessage) {
-			// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
-			// expect(successMessage).toMatch(data.wholesale.becomeWholesaleCustomerSuccessMessage);
 			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.becomeWholesaleCustomerSuccessMessage)
 		} else {
 			// await this.loginPage.switchUser(data.admin);
@@ -133,7 +131,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingZipCode, billingInfo.zipCode);
 		await this.clearAndType(selector.customer.cAddress.billingPhone, billingInfo.phone);
 		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.billingSaveAddress);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.billingAddress, selector.customer.cAddress.billingSaveAddress,302);
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
 	}
 
@@ -154,7 +152,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
 		await this.press(data.key.enter);
 		await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shippingSaveAddress);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shippingSaveAddress, 302);
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
 	}
 
@@ -163,8 +161,6 @@ export class CustomerPage extends BasePage {
 		await this.click(selector.customer.cMyAccount.rmaRequests);
 		await this.clearAndType(selector.customer.cRma.message, message);
 		await this.click(selector.customer.cRma.sendMessage);  //TODO: add ajax is exists
-		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
-		// expect(successMessage).toMatch(data.customer.rma.sendMessage);
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.rma.sendMessage)
 	}
 
@@ -364,11 +360,11 @@ export class CustomerPage extends BasePage {
 	// clear cart
 	async clearCart(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.cart);
-		const cartProductIsVisible = await this.isVisible(selector.customer.cCart.productCrossIcon);
+		const cartProductIsVisible = await this.isVisible(selector.customer.cCart.firstProductCrossIcon);
 		if (cartProductIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.frontend.cart, selector.customer.cCart.productCrossIcon);
+			await this.clickAndWaitForResponse(data.subUrls.frontend.cart, selector.customer.cCart.firstProductCrossIcon);
 			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('removed. Undo?');
-			await this.clearCart(); //Todo: avoid recursion
+			await this.clearCart(); //Todo: avoid recursion 
 		} else {
 			await expect(this.page.locator(selector.customer.cCart.cartEmptyMessage)).toContainText('Your cart is currently empty.');
 		}

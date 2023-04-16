@@ -1,0 +1,65 @@
+{
+  "cookies": [
+    {
+      "name": "wordpress_a19377f3cab91efdeadf3d703f4a06e0",
+      "value": "cushjtomertre345%7C1682882038%7CoCZ749WT8fsDZAsYhV45LBtI4wpXwwpGdewoqIzaMCG%7C45d1405b73f68d33bf712b81b25b0e4a7be81b013a6ae9e48aebb0101cbeb0e2",
+      "domain": "dokan5.test",
+      "path": "/wp-content/plugins",
+      "expires": 1682925238.860973,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_a19377f3cab91efdeadf3d703f4a06e0",
+      "value": "cushjtomertre345%7C1682882038%7CoCZ749WT8fsDZAsYhV45LBtI4wpXwwpGdewoqIzaMCG%7C45d1405b73f68d33bf712b81b25b0e4a7be81b013a6ae9e48aebb0101cbeb0e2",
+      "domain": "dokan5.test",
+      "path": "/wp-admin",
+      "expires": 1682925238.861029,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dokan_pro_dokan_quote_a19377f3cab91efdeadf3d703f4a06e0",
+      "value": "2515c503d60f9f1a45257c229dc94a76%7C%7C1681845234%7C%7C37fa2f49e2ad95e2bbc1cb901935c265%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan5.test",
+      "path": "/",
+      "expires": 1681845234.54802,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "wordpress_logged_in_a19377f3cab91efdeadf3d703f4a06e0",
+      "value": "cushjtomertre345%7C1682882038%7CoCZ749WT8fsDZAsYhV45LBtI4wpXwwpGdewoqIzaMCG%7Ccd5888c1a991a2a644b4cf63820886967daa4d67df3b46dc5520ca0f892706c5",
+      "domain": "dokan5.test",
+      "path": "/",
+      "expires": 1682925238.861045,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dokan_pro_vendor_verify_a19377f3cab91efdeadf3d703f4a06e0",
+      "value": "8ca449d8a8fba6a5f236445587832046%7C%7C1681672739%7C%7C0459436aeeaf99c810d960b46f3cac4b%7C%7Ca%3A0%3A%7B%7D",
+      "domain": "dokan5.test",
+      "path": "/",
+      "expires": 1681672740.251153,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://dokan5.test",
+      "localStorage": [
+        {
+          "name": "wc_cart_hash_1b7abe610e34fa61775895eb6fb0ae44",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
