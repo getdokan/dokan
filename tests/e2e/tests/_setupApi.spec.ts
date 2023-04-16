@@ -151,6 +151,16 @@ test.describe('setup test api', () => {
 		[, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
 	});
 
+	test('admin add test vendor products @lite @pro', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
+		const product = payloads.createProduct();
+		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false });
+		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true });
+		await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true });
+		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true });
+	});
+
+
 	test('add test vendor coupon @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
@@ -161,26 +171,9 @@ test.describe('setup test api', () => {
 		responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy();
 	});
 
-	// test.fixme('add test vendor rma settings @pro', async ({ page }) => {
-	// 	const loginPage = new LoginPage(page);
-	// 	const vendorPage = new VendorPage(page);
-	// 	await loginPage.login(data.vendor);
-	// 	await vendorPage.setRmaSettings(data.vendor.rma);
-	// });
 
-	test('admin add test vendor products @lite @pro', async ({ request }) => {
+	test('add test vendor orders @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		const product = payloads.createProduct();
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false });
-		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true });
-		await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true });
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true });
-	});
-
-	test.only('add test vendor orders @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
-		// await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth );
-		
 		const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
 		const payload = payloads.createOrder;
 		payload.line_items[0].product_id = productId;

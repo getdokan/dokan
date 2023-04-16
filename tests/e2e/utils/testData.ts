@@ -798,11 +798,27 @@ export const data = {
 			plugins: 'wp-admin/plugins.php',
 		},
 		frontend: {
+			// customer
 			myAccount: 'my-account',
+			productCustomerPage: 'product',
+			odersCustomerPage: 'orders',
 			shop: 'shop',
 			storeListing: 'store-listing',
 			cart: 'cart',
 			checkout: 'checkout',
+			addToCart: '?wc-ajax=add_to_cart',
+			applyCoupon: '?wc-ajax=apply_coupon',
+			placeOrder: '?wc-ajax=checkout',
+			billingAddress: 'my-account/edit-address/billing',
+			shippingAddress: 'my-account/edit-address/shipping',
+			editAccountCustomer: 'my-account/edit-account',
+			supportTickets: 'my-account/support-tickets',
+			productDetails: (productName: string) => `product/${productName}`,
+			vendorDetails: (storeName: string) => `store/${storeName}`,
+			productReview: 'wp-comments-post.php',
+			submitSupport: 'wp-comments-post.php',
+
+			//vendor dashboard
 			vendorSetupWizard: '?page=dokan-seller-setup',
 			dashboard: 'dashboard',
 			product: 'dashboard/products',
@@ -824,11 +840,11 @@ export const data = {
 			settingsSocialProfile: 'dashboard/settings/social',
 			settingsRma: 'dashboard/settings/rma',
 			settingsSeo: 'dashboard/settings/seo',
-			editAccount: 'dashboard/edit-account',
-			paypal:'dashboard/settings/payment-manage-paypal',
-			bankTransfer:'dashboard/settings/payment-manage-bank',
-			customPayment:'dashboard/settings/payment-manage-dokan_custom',
-			skrill:'dashboard/settings/payment-manage-skrill',
+			editAccountVendor: 'dashboard/edit-account',
+			paypal: 'dashboard/settings/payment-manage-paypal',
+			bankTransfer: 'dashboard/settings/payment-manage-bank',
+			customPayment: 'dashboard/settings/payment-manage-dokan_custom',
+			skrill: 'dashboard/settings/payment-manage-skrill',
 		},
 
 		ajax: '/admin-ajax.php',
@@ -1027,7 +1043,7 @@ export const data = {
 		payment: {
 			email: () => faker.internet.email(),
 			bankAccountName: 'accountName',
-			bankAccountType:faker.helpers.arrayElement(['personal', 'business']),
+			bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
 			bankAccountNumber: faker.random.alphaNumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
@@ -1173,6 +1189,10 @@ export const data = {
 		follow: {
 			following: 'Following',
 		},
+		supportTicket:
+		{
+			message: () => faker.datatype.uuid(),
+		},
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
 	},
 
@@ -1255,9 +1275,7 @@ export const data = {
 		},
 
 		coupon: {
-			coupon1: {
-				title: 'c1_v1',
-			},
+			couponTitle: 'c1_v1',
 		},
 		vendorInfo: {
 			firstName: () => 'vendor1',
@@ -1267,8 +1285,12 @@ export const data = {
 		},
 
 		vendorStores: {
-			vendor1: 'vendorStore1',
+			followFromShopPage: 'shopPage',
+			followFromStorePage: 'storePage',
+			vendor1: 'vendorStore1', //Todo: shopurl  and store url must be same
+			shopUrl: 'vendorStore1',
 			vendor2: 'vendorStore2',
+
 		},
 		customerInfo: {
 			firstName: () => 'customer1',

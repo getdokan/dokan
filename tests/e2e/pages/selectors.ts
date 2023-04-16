@@ -3121,6 +3121,7 @@ export const selector = {
 			lengthValue: "//input[@name='warranty_length_value']",
 			lengthDuration: '#dokan-warranty-length-duration',
 			refundReasons: '#dokan-store-rma-form .checkbox input',
+			refundReasonsFirst: '(//form[@id="dokan-store-rma-form"]//div[@class="checkbox"]//input)[1]',
 			refundPolicyIframe: 'iframe',
 			refundPolicyHtmlBody: '#tinymce',
 			rmaSaveChanges: '#dokan-store-rma-form-submit',
@@ -3265,14 +3266,14 @@ export const selector = {
 			billingNameOfBank: '#billing_dokan_bank_name',
 			billingBankIban: '#billing_dokan_bank_iban',
 			// billingCountryOrRegion: "#select2-billing_country-container",
-			billingCountryOrRegion: '.select2-selection__arrow',
+			billingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
 			billingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
 			billingCountryOrRegionValues: '.select2-results ul li',
 			billingStreetAddress: '#billing_address_1',
 			billingStreetAddress2: '#billing_address_2',
 			billingTownCity: '#billing_city',
 			// billingState: "#select2-billing_state-container",
-			billingState: '.select2-selection__arrow',
+			billingState: '(//span[@class="select2-selection__arrow"])[2]',
 			billingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
 			billingStateValues: '.select2-results ul li',
 			billingZipCode: '#billing_postcode',
@@ -3286,14 +3287,14 @@ export const selector = {
 			shippingLastName: '#shipping_last_name',
 			shippingCompanyName: '#shipping_company',
 			// shippingCountryOrRegion: "#select2-shipping_country-container",
-			shippingCountryOrRegion: '.select2-selection__arrow',
+			shippingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
 			shippingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
 			shippingCountryOrRegionValues: '.select2-results ul li',
 			shippingStreetAddress: '#shipping_address_1',
 			shippingStreetAddress2: '#shipping_address_2',
 			shippingTownCity: '#shipping_city',
 			// shippingState: "#select2-shipping_state-container",
-			shippingState: '.select2-selection__arrow',
+			shippingState: '(//span[@class="select2-selection__arrow"])[2]',
 			shippingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
 			shippingStateValues: '.select2-results ul li',
 			shippingZipCode: '#shipping_postcode',
@@ -3355,9 +3356,9 @@ export const selector = {
 			openTickets: "//ul[contains(@class,'subsubsub')]//a[contains(text(),'Open Tickets')]",
 			closedTickets: "//ul[contains(@class,'subsubsub')]//a[contains(text(),'Closed Tickets')]",
 
-			firstOpenTicket: '.dokan-support-topics-list tr td a',
+			firstOpenTicket: '(//div[@class="dokan-support-topics-list"]//tr//td//a)[1]',
 
-			chatText: (text: string) => `//div[contains(@class, 'dokan-chat-text')//p[contains(text(),'${text}')]`,
+			chatText: (text: string) => `//div[contains(@class, 'dokan-chat-text')]//p[contains(text(),'${text}')]`,
 			addReply: '#dokan-support-commentform #comment',
 			submitReply: '#submit',
 		},
@@ -3392,8 +3393,8 @@ export const selector = {
 			sorting: '.woocommerce-ordering .orderby',
 			search: '.dokan-btn',
 			// Cart
-			addToCart: '.add_to_cart_button',
-			viewCart: '.added_to_cart',
+			addToCart: 'a.add_to_cart_button',
+			viewCart: 'a.added_to_cart',
 			bidNow: '.button.product_type_auction',
 			// Pagination
 			previous: '.prev',
@@ -3421,7 +3422,9 @@ export const selector = {
 
 			visitStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//a[@title='Visit Store']`,
 			followUnFollowStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
-			currentStoreFollowStatus: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]//span[@class='dokan-follow-store-button-label-current']`,
+			currentFollowStatus: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]//span[@class='dokan-follow-store-button-label-current']`,
+			followUnFollowStoreStorePage: 'button.dokan-follow-store-button',
+			currentFollowStatusStorePage:'span.dokan-follow-store-button-label-current'
 		},
 
 		// Customer Header Cart
@@ -3489,7 +3492,7 @@ export const selector = {
 			submitGetSupport: '#support-submit-btn',
 
 			// Report Abuse
-			reportAbuse: '.dokan-report-abuse-button',
+			reportAbuse: 'a.dokan-report-abuse-button',
 			reportReasonByNumber: (reasonNumber: string) => `li:nth-child(${reasonNumber}) input`, // By Number
 			reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/..`, // By Name
 			reportDescription: '.dokan-form-control',
@@ -3527,7 +3530,7 @@ export const selector = {
 
 		// Customer Cart
 		cCart: {
-			cartPageHeader: '.entry-title',
+			cartPageHeader: 'h1.entry-title',
 			// Edit Cart
 			cartItem: (productName: string) => `//td[@class='product-name']//a[contains(text(),'${productName}')]`,
 			removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,

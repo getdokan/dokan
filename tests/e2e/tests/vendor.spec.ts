@@ -1,44 +1,46 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 
-// test.afterAll(async ({ }) => { })
-// test.beforeEach(async ({ }) => { })
-// test.afterEach(async ({ }) => { })
+test.describe('Vendor user functionality test1', () => {
 
-test('vendor can register', async ({ page }) => {
-	const loginPage = new LoginPage(page)
-	const vendorPage = new VendorPage(page)
-	await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard)
-	await loginPage.logout()
-})
+	// test.use({ storageState: 'vendorStorageState.json' });
+	test('vendor can register', async ({ page }) => {
+		const loginPage = new LoginPage(page)
+		const vendorPage = new VendorPage(page)
+		await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard)
+		await loginPage.logout()
+	})
 
-test.skip('vendor can login', async ({ page }) => {
-	const loginPage = new LoginPage(page)
-	await loginPage.login(data.vendor)
-})
+	test.only('vendor can login', async ({ page }) => {
+		const loginPage = new LoginPage(page)
+		await loginPage.login(data.vendor)
+	})
 
-test.skip('vendor can logout', async ({ page }) => {
-	const loginPage = new LoginPage(page)
-	await loginPage.login(data.vendor)
-	await loginPage.logout()
-})
+	test.only('vendor can logout', async ({ page }) => {
+		const loginPage = new LoginPage(page)
+		await loginPage.login(data.vendor)
+		await loginPage.logout()
+	})
+
+});
 
 test.describe('Vendor functionality test', () => {
 
-	// test.use({ storageState: 'vendorStorageState.json' })
+	test.use({ storageState: 'vendorStorageState.json' });
 
-	let loginPage: any;
+	// let loginPage: any;
 	let vendorPage: any;
-	let page: any;
+	// let page: Page;
 
 	test.beforeAll(async ({ browser }) => {
-		page = await browser.newPage();
-		loginPage = new LoginPage(page);
-		vendorPage = new VendorPage(page);
+		// page = await browser.newPage();
+		// loginPage = new LoginPage(page);
+		const vendor = await browser.newPage();
+		vendorPage = new VendorPage(vendor);
 	});
 
 	test('vendor can setup setup wizard', async ({ }) => {
@@ -115,12 +117,12 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.editAddon(data.vendor.addon, addonName);
 	});
 
-	test.only('vendor can add payment method', async ({ }) => {
+	test('vendor can add payment method', async ({ }) => {
 		await vendorPage.setPaymentSettings(data.vendor.payment);
 	});
 
 	test.skip('vendor can send id verification request ', async ({ }) => {
-		await vendorPage.sendIdVerificationRequest(data.vendor.verification); 
+		await vendorPage.sendIdVerificationRequest(data.vendor.verification);
 	});
 
 	test.skip('vendor can send address verification request ', async ({ }) => {

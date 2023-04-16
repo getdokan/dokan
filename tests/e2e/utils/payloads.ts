@@ -151,6 +151,7 @@ export const payloads = {
 			amount: faker.datatype.number( { min: 1, max: 10 }, ).toString(),
 			discount_type: faker.helpers.arrayElement( [ 'percent', 'fixed_product' ] ),
 			product_ids: [ 15 ],
+			individual_use: true,
 		};
 	},
 

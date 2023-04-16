@@ -1,24 +1,25 @@
-import { test } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 
-// test.afterAll(async ({ }) => { });
-// test.beforeEach(async ({ }) => { });
-// test.afterEach(async ({ }) => { });
+test.describe('Admin user functionality test1', () => {
 
-test('admin can login @lite @pro', async ({ page }) => {
-	const loginPage = new LoginPage(page);
-	await loginPage.adminLogin(data.admin);
-});
+	test('admin can login @lite @pro', async ({ page }) => {
+		const loginPage = new LoginPage(page);
+		await loginPage.adminLogin(data.admin);
+	});
 
-test('admin can logout @lite @pro', async ({ page }) => {
-	const loginPage = new LoginPage(page);
-	await loginPage.adminLogin(data.admin);
-	await loginPage.adminLogout();
+	test('admin can logout @lite @pro', async ({ page }) => {
+		const loginPage = new LoginPage(page);
+		await loginPage.adminLogin(data.admin);
+		await loginPage.adminLogout();
+	});
+
 });
 
 test.describe('Admin functionality test', () => {
+	
 	test.use({ storageState: 'adminStorageState.json' });
 
 	let adminPage: any;

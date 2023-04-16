@@ -77,8 +77,9 @@ export class BasePage {
 
 	//  returns whether the current URL is expected
 	async isCurrentUrl(subPath: string): Promise<boolean> {
-		const currentURL = new URL(await this.getCurrentUrl());
-		return currentURL.href === await this.createUrl(subPath);
+		let url = new URL(await this.getCurrentUrl());
+		let currentURL = (url.href).replace(/[/]$/, '') // added to remove last '/', 
+		return currentURL === await this.createUrl(subPath);
 	}
 
 	// Create a New URL
@@ -185,7 +186,7 @@ export class BasePage {
 	async clickAndWaitForNavigation(selector: string): Promise<void> {
 		await Promise.all([this.page.waitForNavigation({ waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
 	}
-
+	//TODo: add assertion to every function
 	// click & wait for request
 	async clickAndWaitForRequest(url: string, selector: string): Promise<void> {
 		await Promise.all([this.page.waitForRequest(url), this.page.locator(selector).click()]);
@@ -283,13 +284,13 @@ export class BasePage {
 	}
 
 	// get locator 
-	async getLocator(selector: string): Promise<object> {
+	async getLocator(selector: string): Promise<Locator> {
 		return this.page.locator(selector);
 	}
 
 	// get locators  //TODO: need to test
-	async getLocators(selector: string): Promise<object> {
-		return await this.page.locator(selector).all()
+	async getLocators(selector: string): Promise<Locator[]> {
+		return await this.page.locator(selector).all() //TODO: keep which one is better ; 
 		// return this.page.locator(selector).elementHandles();
 		// return this.page.$$(selector);
 	}
@@ -354,7 +355,26 @@ export class BasePage {
 
 	// get element text content
 	async getElementText(selector: string): Promise<string | null> {
+		return await this.textContentOfLocator(selector) //TODO: keep which one is better
+		// return await this.page.textContent(selector);
+	}
+	// get element text content
+	async getElementTextViaPage(selector: string): Promise<string | null> {
 		return await this.page.textContent(selector);
+	}
+
+	//get element has test or not
+	async hasText(selector: string, text: string): Promise<boolean> {  //TODO: implement all has methods hasText, hasClass, hasAttribute, hasColor 
+		const elementText = await this.textContentOfLocator(selector);
+		return elementText === text ? true : false;
+	}
+
+	// get element text content
+	async getElementTextIfVisible(selector: string): Promise<string | null> {
+		const isVisible = await this.isVisible(selector);
+		if (isVisible) {
+			return await this.getElementText(selector);
+		}
 	}
 
 	// get element inner text
@@ -377,7 +397,7 @@ export class BasePage {
 		return await this.page.getAttribute(selector, 'class');
 	}
 
-	//get class attribute value
+	//get element has class or not
 	async hasClass(selector: string, className: string): Promise<boolean> {
 		const element = this.page.locator(selector);
 		const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className);
@@ -491,8 +511,8 @@ export class BasePage {
 
 	// clear input field and type
 	async clearAndType(selector: string, text: string): Promise<void> { // TODO: need to update
-		await this.fill(selector, text);
-		await this.clearAndTypeViaPage(selector, text);
+		await this.fill(selector, text);  //TODO: keep which one is better
+		// await this.clearAndTypeViaPage(selector, text); 
 	}
 
 	// clear input field and type
@@ -834,7 +854,7 @@ export class BasePage {
 	// get frame locator
 	async frameLocator(selector: string): Promise<FrameLocator> {
 		const locator = this.page.locator(selector);
-		return await locator.frameLocator(selector);
+		return locator.frameLocator(selector);
 	}
 
 	// get locator attribute value
