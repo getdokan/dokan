@@ -4,16 +4,80 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.17',
+        'released' => '2023-04-17',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Allow whitelisted countries in location selectors based on admin-allowed countries under WooCommerce settings.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'JS console error while uploading non-image files to product gallery under vendor dashboard product add/edit page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed order invoice and packaging slip broken CSS under vendor dashboard order list page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed users are unable to register as customers on some themes, also fixed a JS console error on the My Account page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed TinyMCE editor and search box overlap under Dokan Admin Settings page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.16',
+        'released' => '2023-04-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => '[ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/vendor-due-status` to get reverse balance due status for a vendor',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/add-to-cart` to add reverse balance to the cart.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Allow only image format files as product featured and gallery images on vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added multistep category support in product API',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[VendorDashboardAPI] Fixed an issue where the seller lifetime sales report wasn’t possible to retrieve via API.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorDashboard]: Fixed wrong product count showing under vendor dashboard product listing page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.15',
         'released' => '2023-03-23',
         'changes'  => [
-            'New'         => [
+            'New' => [
                 [
                     'title'       => '[CategoryPopup] Added a new settings to select any category from frontend',
                     'description' => '',
                 ],
             ],
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[VendorSignup] Fixed vendor can sign up even though store URL is not available',
                     'description' => '',
@@ -29,7 +93,7 @@ $changelog = [
         'version'  => 'Version 3.7.14',
         'released' => '2023-03-09',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => '[RestAPI] Fatal error while activating Dokan Lite via wp-cli',
                     'description' => '',
@@ -45,7 +109,7 @@ $changelog = [
         'version'  => 'Version 3.7.13',
         'released' => '2023-03-01',
         'changes'  => [
-            'Fix'         => [
+            'Fix' => [
                 [
                     'title'       => 'Fixed a SQL injection issue',
                     'description' => '',

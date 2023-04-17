@@ -20,9 +20,9 @@ class Tracker {
     /**
      * Class constructor
      *
+     * @return void
      * @since 2.8.7
      *
-     * @return void
      */
     public function __construct() {
         $this->appsero_init_tracker_dokan();
@@ -31,9 +31,9 @@ class Tracker {
     /**
      * Initialize the plugin tracker
      *
+     * @return void
      * @since 2.8.7
      *
-     * @return void
      */
     public function appsero_init_tracker_dokan() {
         $client = new \Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
@@ -41,7 +41,7 @@ class Tracker {
         $this->insights = $client->insights();
 
         $this->insights->add_extra(
-            function() {
+            function () {
                 return [
                     'products'      => $this->insights->get_post_count( 'product' ),
                     'orders'        => $this->get_order_count(),
@@ -54,7 +54,7 @@ class Tracker {
 
         $this->insights->init_plugin();
 
-        add_filter( 'appsero_custom_deactivation_reasons', [ $this, 'get_custom_deactivation_reasons' ] );
+        add_filter( 'appsero_custom_deactivation_reasons', [ $this, 'get_custom_deactivation_reasons' ], 10, 2 );
     }
 
     /**
@@ -71,13 +71,24 @@ class Tracker {
     /**
      * Gets custom deactivation reasons
      *
-     * @since 3.0.15
-     *
-     * @param $reasons
+     * @param string[] $reasons
+     * @param null|\AppSero\Client $client
      *
      * @return \array
+     * @since 3.0.15
+     *
      */
-    public function get_custom_deactivation_reasons( $reasons ) {
+    public function get_custom_deactivation_reasons( $reasons, $client = null ) {
+        // return if old version of appsero client is loaded, where corresponding hooks provides only one argument
+        if ( null === $client ) {
+            return $reasons;
+        }
+
+        // return if client is not dokan lite
+        if ( 'dokan-lite' !== $client->slug ) {
+            return $reasons;
+        }
+
         $reasons = [
             [
                 'id'          => 'dokan-pro-is-expensive',
@@ -121,8 +132,8 @@ class Tracker {
                 'placeholder' => 'Sorry to see you go. If you ever have the need to use Dokan again, please return without hesitation. And we’re always by your side to help.',
                 'icon'        => '<svg height="23" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23"><path d="M3.1 4.8c.4 0 .8.2 1.1.4.5.5.6 1.3.2 1.9a8.26 8.26 0 001.3 10.6c3.3 3.1 8.5 3.1 11.7 0 3-2.8 3.5-7.2 1.3-10.6-.2-.2-.2-.5-.2-.8 0-.4.2-.8.4-1.1.7-.7 1.8-.6 2.3.2 2.9 4.5 2.3 10.4-1.5 14.2-4.5 4.4-11.8 4.4-16.3 0A11.1 11.1 0 011.9 5.4c.2-.3.7-.6 1.2-.6zM11.5 0c.5 0 1 .2 1.3.5s.5.8.5 1.3v7.4c0 1-.8 1.8-1.9 1.8s-1.9-.8-1.9-1.8V1.8c.1-1 1-1.8 2-1.8z" fill="#3b86ff"/></svg>',
             ],
-
         ];
+
         return $reasons;
     }
 }
