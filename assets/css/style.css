@@ -2833,6 +2833,10 @@ div.media-sidebar a.edit-attachment {
   border-color: #ccc;
   border-radius: 3px;
   background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 40px;
+  width: 40px;
 }
 .dokan-orders-content .dokan-orders-area td.dokan-order-action .wpo_wcpdf img {
   width: 22px !important;
