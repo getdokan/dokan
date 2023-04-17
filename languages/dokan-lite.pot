@@ -2,9 +2,9 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.7.16\n"
+"Project-Id-Version: Dokan 3.7.17\n"
 "Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
-"POT-Creation-Date: 2023-04-10 04:55:54+00:00\n"
+"POT-Creation-Date: 2023-04-17 04:42:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7405,13 +7405,13 @@ msgstr ""
 msgid "Check Out All Vendor Functionalities"
 msgstr ""
 
-#: src/admin/components/TextEditor.vue:125
-#: src/admin/components/TextEditor.vue:132
-#: src/admin/components/TextEditor.vue:137
+#: src/admin/components/TextEditor.vue:135
+#: src/admin/components/TextEditor.vue:142
+#: src/admin/components/TextEditor.vue:147
 msgid "Select an image"
 msgstr ""
 
-#: src/admin/components/TextEditor.vue:180
+#: src/admin/components/TextEditor.vue:190
 msgid "Please select an image,"
 msgstr ""
 
