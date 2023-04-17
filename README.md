@@ -5,9 +5,9 @@
 **Requires at least:** 5.4  
 **Tested up to:** 6.2.0  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.5.1  
+**WC tested up to:** 7.6.0  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.7.16  
+**Stable tag:** 3.7.17  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.7.17 ( Apr 17, 2023 ) ###
+
+- **fix:** JS console error while uploading non-image files to product gallery under vendor dashboard product add/edit page
+- **fix:** Fixed order invoice and packaging slip broken CSS under vendor dashboard order list page
+- **fix:** Fixed users are unable to register as customers on some themes, also fixed a JS console error on the My Account page
+- **fix:** Fixed TinyMCE editor and search box overlap under Dokan Admin Settings page.
+- **update:** Allow whitelisted countries in location selectors based on admin-allowed countries under WooCommerce settings.
 
 ### v3.7.16 ( Apr 10, 2023 ) ###
 
