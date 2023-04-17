@@ -1315,26 +1315,26 @@ jQuery(function($) {
                         var selection = product_gallery_frame.state().get('selection');
 
                         selection.map( function( attachment ) {
+                            attachment     = attachment.toJSON();
+                            attachment_ids = [];
 
-                            attachment = attachment.toJSON();
-
-                            if ( attachment.id && 'image' === attachment.type ) {
-                                attachment_ids = [];
-
-                                $('<li class="image" data-attachment_id="' + attachment.id + '">\
-                                        <img src="' + attachment.url + '" />\
-                                        <a href="#" class="action-delete">&times;</a>\
-                                    </li>').insertBefore( p_images.find('li.add-image') );
-
-                                $('#product_images_container ul li.image').css('cursor','default').each(function() {
-                                    var attachment_id = jQuery(this).attr( 'data-attachment_id' );
-                                    attachment_ids.push( attachment_id );
-                                });
+                            // Check if attachment doesn't exist or attachment type is not image
+                            if ( ! attachment.id || 'image' !== attachment.type ) {
+                                return;
                             }
 
-                        } );
+                            $('<li class="image" data-attachment_id="' + attachment.id + '">\
+                                    <img src="' + attachment.url + '" />\
+                                    <a href="#" class="action-delete">&times;</a>\
+                                </li>').insertBefore( p_images.find('li.add-image') );
 
-                        images_gid.val( attachment_ids.join(',') );
+                            $('#product_images_container ul li.image').css('cursor','default').each(function() {
+                                var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+                                attachment_ids.push( attachment_id );
+                            });
+
+                            images_gid.val( attachment_ids.join(',') );
+                        } );
                     });
 
                     product_gallery_frame.open();
@@ -1911,10 +1911,11 @@ jQuery(function($) {
     form_group.addClass('has-error').append(error);
   };
 
-  var validatorSuccess = function(label, element) {
+  var validatorSuccess = function(error, element) {
     $(element)
       .closest('.dokan-form-group')
       .removeClass('has-error');
+    $(error).remove();
   };
 
   var api = wp.customize;
