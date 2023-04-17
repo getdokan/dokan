@@ -6,7 +6,7 @@ async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
 
 	// get user signed in state
-	const browser = await chromium.launch({});
+	const browser = await chromium.launch({headless: false });
 	const context = await browser.newContext();
 	await context.tracing.start({ screenshots: true, snapshots: true });
 
@@ -18,8 +18,9 @@ async function globalSetup(config: FullConfig) {
 	await admin.fill(selector.backend.email, process.env.ADMIN);
 	await admin.fill(selector.backend.password, process.env.ADMIN_PASSWORD);
 	await admin.locator(selector.backend.login).click();
-	await admin.waitForLoadState('networkidle');
-	await admin.context().storageState({ path: 'adminStorageState.json' });
+	// await admin.waitForLoadState('networkidle');
+	await admin.waitForURL(process.env.BASE_URL + '/wp-admin');
+	await admin.context().storageState({ path: 'playwright/.auth/adminStorageState.json' });
 	console.log('Stored adminStorageState');
 
 	// set permalink 
@@ -39,7 +40,8 @@ async function globalSetup(config: FullConfig) {
 	await customer.fill(selector.customer.cRegistration.regPassword, process.env.CUSTOMER_PASSWORD);
 	await customer.click(selector.customer.cRegistration.regCustomer);
 	await customer.click(selector.customer.cRegistration.register); // TODO: will register create storage.json
-	await customer.context().storageState({ path: 'customerStorageState.json' });
+	await customer.waitForURL(process.env.BASE_URL + '/my-account');
+	await customer.context().storageState({ path: 'playwright/.auth/customerStorageState.json' });
 	console.log('Stored customerStorageState');
 
 	//TODO: implement fixture for lite pro issue handle
@@ -53,7 +55,8 @@ async function globalSetup(config: FullConfig) {
 	// await customer.fill(selector.frontend.username, process.env.CUSTOMER);
 	// await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
 	// await customer.click(selector.frontend.logIn);
-	// await customer.context().storageState({ path: 'customerStorageState.json' });
+	// await customer.waitForURL(process.env.BASE_URL + '/my-account');
+	// await customer.context().storageState({ path: 'playwright/.auth/customerStorageState.json' });
 	// console.log('Stored customerStorageState');
 
 	// // // get storageState: vendor
@@ -72,7 +75,8 @@ async function globalSetup(config: FullConfig) {
 	// await vendor.click(selector.vendor.vRegistration.shopUrl);
 	// await vendor.fill(selector.vendor.vRegistration.phone, '11123456');
 	// await vendor.click(selector.vendor.vRegistration.register);
-	// await vendor.context().storageState({ path: 'vendorStorageState1.json' });
+	// await vendor.waitForURL(process.env.BASE_URL + '/my-account');
+	// await vendor.context().storageState({ path: 'playwright/.auth/vendorStorageState1.json' });
 	// console.log('Stored vendorStorageState');
 
 	// // log in
@@ -81,7 +85,8 @@ async function globalSetup(config: FullConfig) {
 	// await vendor.fill(selector.frontend.username, process.env.VENDOR);
 	// await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
 	// await vendor.click(selector.frontend.logIn);
-	// await vendor.context().storageState({ path: 'vendorStorageState.json' });
+	// await vendor.waitForURL(process.env.BASE_URL + '/my-account');
+	// await vendor.context().storageState({ path: 'playwright/.auth/vendorStorageState.json' });
 	// console.log('Stored vendorStorageState');
 
 

@@ -6,54 +6,63 @@ import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 
 
-// test.describe('Customer user functionality test1', () => {
+test.describe('Customer user functionality test', () => {
+	// test.use({ storageState: undefined });
+	test.use({ storageState: { cookies: [], origins: [] } });
 
-// 	let loginPage: any;
-// 	let customerPage: any;
-// 	// let page: Page;
+	test.only('custossmer login', async ({ page }) => {
+		// const loginPage = new LoginPage(page);
+		await page.goto('http://dokan5.test')
+		await page.pause();
+	});
 
-// 	test.beforeAll(async ({ browser }) => {
-// 		const page = await browser.newPage();
-// 		loginPage = new LoginPage(page);
-// 		// const customer = await browser.newPage();
-// 		customerPage = new CustomerPage(page);
-// 	});
+	let loginPage: any;
+	let customerPage: any;
+	// // let page: Page;
 
-// 	test('customer register', async ({ page }) => {
-// 		const loginPage = new LoginPage(page);
-// 		const customerPage = new CustomerPage(page);
-// 		await customerPage.customerRegister(data.customer.customerInfo);
-// 		await loginPage.logout();
-// 	});
+	// test.beforeAll(async ({ browser }) => {
+	// 	const context = await browser.newContext({ storageState: {cookies: [], origins: []} });
+	// 	const page = await context.newPage();
+	// 	loginPage = new LoginPage(page);
+	// 	// const customer = await browser.newPage();
+	// 	customerPage = new CustomerPage(page);
+	// });
 
-// 	test('customer login', async ({  }) => {
-// 		// const loginPage = new LoginPage(page);
-// 		await loginPage.login(data.customer);
-// 	});
+	test('customer register', async ({ page }) => {
+		const loginPage = new LoginPage(page);
+		const customerPage = new CustomerPage(page);
+		await customerPage.customerRegister(data.customer.customerInfo);
+		await loginPage.logout();
+	});
 
-// 	test('customer logout', async ({ page }) => {
-// 		const loginPage = new LoginPage(page);
-// 		await loginPage.login(data.customer);
-// 		await loginPage.logout();
-// 	});
+	test('customer login', async ({  }) => {
+		// const loginPage = new LoginPage(page);
+		await loginPage.login(data.customer);
+	});
 
-// 	test('customer become a vendor', async ({ page }) => {
-// 		const customerPage = new CustomerPage(page);
-// 		await customerPage.customerRegister(data.customer.customerInfo);
-// 		await customerPage.customerBecomeVendor(data.customer.customerInfo);
-// 	});
+	test('customer logout', async ({ page }) => {
+		const loginPage = new LoginPage(page);
+		await loginPage.login(data.customer);
+		await loginPage.logout();
+	});
 
-// 	test('customer become a wholesale customer', async ({ page }) => {
-// 		const customerPage = new CustomerPage(page);
-// 		await customerPage.customerRegister(data.customer.customerInfo);
-// 		await customerPage.customerBecomeWholesaleCustomer();
-// 	});
+	test('customer become a vendor', async ({ page }) => {
+		const customerPage = new CustomerPage(page);
+		await customerPage.customerRegister(data.customer.customerInfo);
+		await customerPage.customerBecomeVendor(data.customer.customerInfo);
+	});
 
-// });
+	test('customer become a wholesale customer', async ({ page }) => {
+		const customerPage = new CustomerPage(page);
+		await customerPage.customerRegister(data.customer.customerInfo);
+		await customerPage.customerBecomeWholesaleCustomer();
+	});
+
+});
 
 test.describe('Customer functionality test', () => {
 
-	test.use({ storageState: 'customerStorageState.json' })
+	test.use({ storageState: 'customerStorageState.json' });
 
 	// let loginPage: any;
 	let customerPage: any;
@@ -67,7 +76,7 @@ test.describe('Customer functionality test', () => {
 	});
 
 	test('customer add billing details', async ({ }) => {
-	await customerPage.addBillingAddress(data.customer.customerInfo);
+		await customerPage.addBillingAddress(data.customer.customerInfo);
 	});
 
 	test('customer add shipping details', async ({ }) => {
@@ -125,12 +134,12 @@ test.describe('Customer functionality test', () => {
 		await customerPage.reviewStore(data.predefined.vendorStores.vendor1, data.store);
 	});
 
-	test( 'customer can ask for get support ', async ( { } ) => {
-		await customerPage.askForGetSupport( data.predefined.vendorStores.vendor1, data.customer.customerInfo.getSupport );
-	} );
+	test('customer can ask for get support ', async ({ }) => {
+		await customerPage.askForGetSupport(data.predefined.vendorStores.vendor1, data.customer.customerInfo.getSupport);
+	});
 
 	test('customer can send message to support ticket', async ({ }) => {
-		await customerPage.askForGetSupport( data.predefined.vendorStores.vendor1, data.customer.customerInfo.getSupport );
+		await customerPage.askForGetSupport(data.predefined.vendorStores.vendor1, data.customer.customerInfo.getSupport);
 		await customerPage.sendMessageCustomerSupportTicket(data.customer.supportTicket);
 	});
 

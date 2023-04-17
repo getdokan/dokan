@@ -44,12 +44,12 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	globalSetup: require.resolve('./global-setup'),
+	// globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
 		// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-		// headless: false,
+		headless: false,
 		// headless: true,
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL

@@ -75,7 +75,7 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.addBookingProduct(data.product.booking);
 	});
 
-	test('vendor can add coupon', async ({ }) => {
+	test.only('vendor can add coupon', async ({ }) => {
 		await vendorPage.addCoupon(data.coupon);
 	});
 
@@ -84,7 +84,7 @@ test.describe('Vendor functionality test', () => {
 	});
 
 	test('vendor can cancel request withdraw', async ({ }) => {
-		// await vendorPage.requestWithdraw( data.vendor.withdraw );
+		await vendorPage.requestWithdraw( data.vendor.withdraw );
 		await vendorPage.cancelRequestWithdraw();
 	});
 
