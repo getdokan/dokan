@@ -918,10 +918,10 @@ class DummyDataController extends DokanRESTController {
      * @return WP_REST_Response|WP_Error
      */
     public function import_dummy_data( $request ) {
-        $vendor_products = $request->get_param('vendor_products') ? wp_unslash( wc_clean( $request->get_param('vendor_products') ) ) : [];
-        $vendor_data     = $request->get_param('vendor_data') ? wp_unslash( wc_clean( $request->get_param('vendor_data') ) ) : [];
-        $vendor_index    = $request->get_param('vendor_index') ? absint( $request->get_param('vendor_index') ) : 0;
-        $total_vendors   = $request->get_param('total_vendors') ? absint( $request->get_param('total_vendors') ) : 0;
+        $vendor_products = $request->get_param( 'vendor_products' ) ? wp_unslash( wc_clean( $request->get_param( 'vendor_products' ) ) ) : [];
+        $vendor_data     = $request->get_param( 'vendor_data' ) ? wp_unslash( wc_clean( $request->get_param( 'vendor_data' ) ) ) : [];
+        $vendor_index    = $request->get_param( 'vendor_index' ) ? absint( $request->get_param( 'vendor_index' ) ) : 0;
+        $total_vendors   = $request->get_param( 'total_vendors' ) ? absint( $request->get_param( 'total_vendors' ) ) : 0;
 
         $created_vendor          = dokan()->dummy_data_importer->create_dummy_vendor( $vendor_data );
         $created_products_result = dokan()->dummy_data_importer->create_dummy_products_for_vendor( $created_vendor->id, $vendor_products );
@@ -964,6 +964,7 @@ class DummyDataController extends DokanRESTController {
      * @return boolean
      */
     public function get_permissions_check() {
+        //phpcs:ignore
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return false;
         }
@@ -984,50 +985,50 @@ class DummyDataController extends DokanRESTController {
             'title'      => 'Dokan dummy data',
             'type'       => 'object',
             'properties' => [
-                'result' => [
-                    'type' => 'object',
-                    'context' => [ 'view' ],
+                'result'       => [
+                    'type'       => 'object',
+                    'context'    => [ 'view' ],
                     'properties' => [
                         'imported' => [
-                            'type' => 'array',
+                            'type'    => 'array',
                             'context' => [ 'view' ],
-                            'items' => [
-                                'type' => 'number',
+                            'items'   => [
+                                'type'              => 'number',
                                 'sanitize_callback' => 'absint',
                             ],
                         ],
-                        'failed' => [
-                            'type' => 'array',
+                        'failed'   => [
+                            'type'    => 'array',
                             'context' => [ 'view' ],
-                            'items' => [
-                                'type' => 'number',
+                            'items'   => [
+                                'type'              => 'number',
                                 'sanitize_callback' => 'absint',
                             ],
                         ],
-                        'updated' => [
-                            'type' => 'array',
+                        'updated'  => [
+                            'type'    => 'array',
                             'context' => [ 'view' ],
-                            'items' => [
-                                'type' => 'number',
+                            'items'   => [
+                                'type'              => 'number',
                                 'sanitize_callback' => 'absint',
                             ],
                         ],
-                        'skipped' => [
-                            'type' => 'array',
+                        'skipped'  => [
+                            'type'    => 'array',
                             'context' => [ 'view' ],
-                            'items' => [
-                                'type' => 'number',
-                                'context' => [ 'view' ],
+                            'items'   => [
+                                'type'              => 'number',
+                                'context'           => [ 'view' ],
                                 'sanitize_callback' => 'absint',
                             ],
                         ],
                     ],
                 ],
                 'vendor_index' => [
-                    'type' => 'number',
-                    'context' => [ 'view' ],
+                    'type'              => 'number',
+                    'context'           => [ 'view' ],
                     'sanitize_callback' => 'absint',
-                ]
+                ],
             ],
         ];
 
