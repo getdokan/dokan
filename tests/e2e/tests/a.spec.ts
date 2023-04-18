@@ -3,11 +3,19 @@ import { test, expect } from '@playwright/test';
 
 
 // test.use({ storageState: { cookies: [], origins: [] } });
-// test.use({ storageState: 'adminStorageState.json' });
-// test.use({ storageState: 'customerStorageState.json' });
-test.use({ storageState: 'vendorStorageState.json' });
+// test.use({ storageState: 'playwright/.auth/adminStorageState.json' });
+// test.use({ storageState: 'playwright/.auth/customerStorageState.json' });
+// test.use({ storageState: 'playwright/.auth/vendorStorageState.json' });
+
 test('user login', async ({ page }) => {
-	// const loginPage = new LoginPage(page);
 	await page.goto('http://dokan5.test')
 	await page.pause();
 });
+
+// test('user login1', async ({ browser }) => {
+// 	// const loginPage = new LoginPage(page);
+// 	const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+// 	const page = await context.newPage();
+// 	await page.goto('http://dokan5.test')
+// 	await page.pause();
+// });
