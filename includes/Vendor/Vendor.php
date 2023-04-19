@@ -950,11 +950,13 @@ class Vendor {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return array
      */
     public function make_active() {
         $this->update_meta( 'dokan_enable_selling', 'yes' );
-        $this->change_product_status( 'publish' );
+
+        // change product status to publish
+        $this->change_product_status( 'revert' );
 
         do_action( 'dokan_vendor_enabled', $this->get_id() );
 
@@ -966,11 +968,13 @@ class Vendor {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return array
      */
     public function make_inactive() {
         $this->update_meta( 'dokan_enable_selling', 'no' );
-        $this->change_product_status( 'pending' );
+
+        // change product status to pending
+        $this->change_product_status( 'change_status' );
 
         do_action( 'dokan_vendor_disabled', $this->get_id() );
 
@@ -978,39 +982,20 @@ class Vendor {
     }
 
     /**
-     * Chnage product status when toggling seller active status
+     * Change product status when toggling seller active status
      *
      * @since 2.6.9
+     * @since DOKAN_SINCE introduced new bg process to change product status
      *
-     * @param int $seller_id
      * @param string $status
      *
      * @return void
      */
-    function change_product_status( $status ) {
-        $args = array(
-            'post_type'      => 'product',
-            'post_status'    => ( $status == 'pending' ) ? 'publish' : 'pending',
-            'posts_per_page' => -1,
-            'author'         => $this->get_id(),
-            'orderby'        => 'post_date',
-            'order'          => 'DESC'
-        );
-
-        $product_query = new WP_Query( $args );
-        $products = $product_query->get_posts();
-
-        if ( $products ) {
-            foreach ( $products as $pro ) {
-                if ( 'publish' != $status ) {
-                    update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
-                }
-
-                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => $status ) );
-            }
-            // delete product cache
-            ProductCache::delete( $this->get_id() );
-        }
+    public function change_product_status( $status ) {
+        $product_status_changer = dokan()->bg_process->change_vendor_product_status;
+        $product_status_changer->reset();
+        $product_status_changer->set_vendor_id( $this->get_id() );
+        $product_status_changer->add_to_queue( $status );
     }
 
     /**
