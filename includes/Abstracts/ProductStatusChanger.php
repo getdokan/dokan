@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Abstracts;
 
+use WeDevs\Dokan\Product\ProductCache;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // exit if accessed directly
 }
@@ -57,6 +59,7 @@ abstract class ProductStatusChanger {
      */
     public function __construct() {
         add_action( 'dokan_product_status_changer_async', [ $this, 'process_background_task' ] );
+        add_action( 'dokan_clear_product_cache_async', [ $this, 'clear_product_cache' ] );
     }
 
     /**
@@ -207,6 +210,11 @@ abstract class ProductStatusChanger {
         while ( $products = $this->get_products() ) { // phpcs:ignore
             // break if no products found.
             if ( empty( $products ) ) {
+                $args = [
+                    'vendor_id' => $this->get_vendor_id(),
+                ];
+                // clear product cache.
+                WC()->queue()->add( 'dokan_clear_product_cache_async', [ $args ] );
                 break;
             }
 
@@ -248,6 +256,23 @@ abstract class ProductStatusChanger {
                     break;
             }
         }
+    }
+
+    /**
+     * Clear product cache
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string[] $args
+     *
+     * @return void
+     */
+    public function clear_product_cache( $args ) {
+        if ( ! isset( $args['vendor_id'] ) ) {
+            return;
+        }
+
+        ProductCache::delete( $args['vendor_id'] );
     }
 
     /**
