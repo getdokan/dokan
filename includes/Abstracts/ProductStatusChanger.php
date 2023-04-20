@@ -296,6 +296,13 @@ abstract class ProductStatusChanger {
 
         // temporary store current status
         $current_status = $product->get_status();
+
+        // return if current_status is same as new status
+        if ( $current_status === $status ) {
+            return;
+        }
+
+        // set new product status
         $product->set_status( $status );
 
         // store previous product status
@@ -326,9 +333,9 @@ abstract class ProductStatusChanger {
         // get previous product status
         $previous_status = $product->get_meta( '_dokan_previous_status' );
         if ( ! $previous_status ) {
-            // if previous status not found, set product status to publish, this was the old implementation.
-            // after this change, we will store previous status in meta, so this is just a fallback.
-            $previous_status = 'publish';
+            // if previous status not found, return from here.
+            // for the first time, previous status will not be found. Admin need to manually change status first.
+            return;
         }
 
         // revert product status
