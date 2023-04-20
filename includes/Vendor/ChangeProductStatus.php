@@ -23,8 +23,15 @@ class ChangeProductStatus extends ProductStatusChanger {
      * @return int[]
      */
     public function get_products() {
+        $product_types = array_filter(
+            wc_get_product_types(), function ( $type ) {
+                return 'product_pack' !== $type;
+            }
+        );
+
         $args = [
             'status' => 'change_status' === $this->get_task_type() ? 'publish' : 'pending',
+            'type'   => array_merge( array_keys( $product_types ) ),
             'author' => $this->get_vendor_id(),
             'page'   => $this->get_current_page(),
             'limit'  => $this->get_per_page(),
