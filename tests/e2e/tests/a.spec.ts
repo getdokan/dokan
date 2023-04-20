@@ -9,7 +9,8 @@ import { test, expect } from '@playwright/test';
 
 test('user login', async ({ page }) => {
 	await page.goto('http://dokan5.test')
-	await page.pause();
+	await page.context().storageState({ path: 'adminStorageState.json' });
+	// await page.pause();
 });
 
 // test('user login1', async ({ browser }) => {

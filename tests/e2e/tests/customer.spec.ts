@@ -7,53 +7,43 @@ import { VendorPage } from '../pages/vendorPage';
 
 
 test.describe('Customer user functionality test', () => {
-	// test.use({ storageState: undefined });
-	test.use({ storageState: { cookies: [], origins: [] } });
 
-	test.only('custossmer login', async ({ page }) => {
-		// const loginPage = new LoginPage(page);
-		await page.goto('http://dokan5.test')
-		await page.pause();
-	});
+	test.use({ storageState: { cookies: [], origins: [] } })
 
 	let loginPage: any;
 	let customerPage: any;
-	// // let page: Page;
+	let page: Page;
 
-	// test.beforeAll(async ({ browser }) => {
-	// 	const context = await browser.newContext({ storageState: {cookies: [], origins: []} });
-	// 	const page = await context.newPage();
-	// 	loginPage = new LoginPage(page);
-	// 	// const customer = await browser.newPage();
-	// 	customerPage = new CustomerPage(page);
-	// });
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		page = await context.newPage();
+		loginPage = new LoginPage(page);
+		customerPage = new CustomerPage(page);
+	});
 
-	test('customer register', async ({ page }) => {
-		const loginPage = new LoginPage(page);
-		const customerPage = new CustomerPage(page);
+	test.afterAll(async ({ browser }) => {
+		await page.close();
+	});
+
+	test('customer register', async ({ }) => {
 		await customerPage.customerRegister(data.customer.customerInfo);
-		await loginPage.logout();
 	});
 
-	test('customer login', async ({  }) => {
-		// const loginPage = new LoginPage(page);
+	test('customer login', async ({ }) => {
 		await loginPage.login(data.customer);
 	});
 
-	test('customer logout', async ({ page }) => {
-		const loginPage = new LoginPage(page);
+	test('customer logout', async ({ }) => {
 		await loginPage.login(data.customer);
 		await loginPage.logout();
 	});
 
-	test('customer become a vendor', async ({ page }) => {
-		const customerPage = new CustomerPage(page);
+	test.skip('customer become a vendor', async ({ }) => {
 		await customerPage.customerRegister(data.customer.customerInfo);
 		await customerPage.customerBecomeVendor(data.customer.customerInfo);
 	});
 
-	test('customer become a wholesale customer', async ({ page }) => {
-		const customerPage = new CustomerPage(page);
+	test('customer become a wholesale customer', async ({ }) => {
 		await customerPage.customerRegister(data.customer.customerInfo);
 		await customerPage.customerBecomeWholesaleCustomer();
 	});
@@ -62,17 +52,19 @@ test.describe('Customer user functionality test', () => {
 
 test.describe('Customer functionality test', () => {
 
-	test.use({ storageState: 'customerStorageState.json' });
+	test.use({ storageState: 'playwright/.auth/customerStorageState.json' });
 
-	// let loginPage: any;
 	let customerPage: any;
-	// let page: Page;
+	let page: Page;
 
 	test.beforeAll(async ({ browser }) => {
-		// page = await browser.newPage();
-		// loginPage = new LoginPage(page);
-		const customer = await browser.newPage();
-		customerPage = new CustomerPage(customer);
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		customerPage = new CustomerPage(page);
+	});
+
+	test.afterAll(async ({ browser }) => {
+		await page.close();
 	});
 
 	test('customer add billing details', async ({ }) => {

@@ -778,6 +778,7 @@ export const data = {
 			login: 'wp-login.php',
 			adminLogin: 'wp-admin',
 			adminDashboard: 'wp-admin',
+			dokanWholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
 			dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
 			dokanVendors: 'wp-admin/admin.php?page=dokan#/vendors',
 			dokanSetupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -1102,7 +1103,7 @@ export const data = {
 				paypal: 'Paypal',
 				skrill: 'Skrill',
 			},
-			defaultWithdrawMethod: {
+			 defaultWithdrawMethod: {
 				paypal: 'PayPal',
 				skrill: 'Skrill',
 				bankTransfer: 'Bank Transfer',

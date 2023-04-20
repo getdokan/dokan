@@ -1,17 +1,25 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect,Page } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 
-test.describe('Admin user functionality test1', () => {
+test.describe.only('Admin user functionality test', () => {
+	test.use({ storageState: { cookies: [], origins: [] } })
 
-	test('admin can login @lite @pro', async ({ page }) => {
-		const loginPage = new LoginPage(page);
+	let loginPage: any;
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		const page = await context.newPage();
+		loginPage = new LoginPage(page);
+	});
+
+
+	test('admin can login @lite @pro', async ({  }) => {
 		await loginPage.adminLogin(data.admin);
 	});
 
-	test('admin can logout @lite @pro', async ({ page }) => {
-		const loginPage = new LoginPage(page);
+	test('admin can logout @lite @pro', async ({  }) => {
 		await loginPage.adminLogin(data.admin);
 		await loginPage.adminLogout();
 	});
@@ -19,21 +27,27 @@ test.describe('Admin user functionality test1', () => {
 });
 
 test.describe('Admin functionality test', () => {
-	
-	test.use({ storageState: 'adminStorageState.json' });
+
+	test.use({ storageState: 'playwright/.auth/adminStorageState.json' });
 
 	let adminPage: any;
+	let page: Page;
 
 	test.beforeAll(async ({ browser }) => {
-		const admin = await browser.newPage();
-		adminPage = new AdminPage(admin);
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		adminPage = new AdminPage(page);
+	});
+
+	test.afterAll(async ({ browser }) => {
+		await page.close();
 	});
 
 	test('admin can set dokan setup wizard @lite @pro', async ({ }) => { //todo:fix it
 		await adminPage.setDokanSetupWizard(data.dokanSetupWizard);
 	});
 
-	test('admin can add vendor @lite @pro', async ({ }) => {
+	test.only('admin can add vendor @lite @pro', async ({ }) => {
 		await adminPage.addVendor(data.vendor.vendorInfo);
 	});
 
@@ -182,7 +196,7 @@ test.describe('Admin functionality test', () => {
 	});
 
 	test('admin can set dokan delivery time settings @pro', async ({ }) => {
-		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime); 
+		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
 	});
 
 	test('admin can set dokan product advertising settings @pro', async ({ }) => {

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, Page} from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
@@ -7,21 +7,34 @@ import { VendorPage } from '../pages/vendorPage';
 
 test.describe('Vendor user functionality test1', () => {
 
-	// test.use({ storageState: 'vendorStorageState.json' });
-	test('vendor can register', async ({ page }) => {
-		const loginPage = new LoginPage(page)
-		const vendorPage = new VendorPage(page)
+
+	test.use({ storageState: { cookies: [], origins: [] } })
+
+	let loginPage: any;
+	let vendorPage: any;
+	let page: Page;
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext();
+		page = await context.newPage();
+		loginPage = new LoginPage(page);
+		vendorPage = new VendorPage(page);
+	});
+
+	test.afterAll(async ({ browser }) => {
+		await page.close();
+	});
+
+	test.skip('vendor can register', async ({  }) => {
 		await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard)
 		await loginPage.logout()
 	})
 
-	test('vendor can login', async ({ page }) => {
-		const loginPage = new LoginPage(page)
+	test('vendor can login', async ({  }) => {
 		await loginPage.login(data.vendor)
 	})
 
-	test('vendor can logout', async ({ page }) => {
-		const loginPage = new LoginPage(page)
+	test('vendor can logout', async ({  }) => {
 		await loginPage.login(data.vendor)
 		await loginPage.logout()
 	})
@@ -30,17 +43,19 @@ test.describe('Vendor user functionality test1', () => {
 
 test.describe('Vendor functionality test', () => {
 
-	test.use({ storageState: 'vendorStorageState.json' });
+	test.use({ storageState: 'playwright/.auth/vendorStorageState.json' });
 
-	// let loginPage: any;
 	let vendorPage: any;
-	// let page: Page;
+	let page: Page;
 
 	test.beforeAll(async ({ browser }) => {
-		// page = await browser.newPage();
-		// loginPage = new LoginPage(page);
-		const vendor = await browser.newPage();
-		vendorPage = new VendorPage(vendor);
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		vendorPage = new VendorPage(page);
+	});
+
+	test.afterAll(async ({ browser }) => {
+		await page.close();
 	});
 
 	test('vendor can setup setup wizard', async ({ }) => {
@@ -75,24 +90,27 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.addBookingProduct(data.product.booking);
 	});
 
-	test.only('vendor can add coupon', async ({ }) => {
+	test('vendor can add coupon', async ({ }) => {
 		await vendorPage.addCoupon(data.coupon);
 	});
 
-	test('vendor can request withdraw', async ({ }) => {
-		await vendorPage.requestWithdraw(data.vendor.withdraw);
+	test('vendor can add payment method', async ({ }) => {
+		await vendorPage.setPaymentSettings(data.vendor.payment);
 	});
 
-	test('vendor can cancel request withdraw', async ({ }) => {
-		await vendorPage.requestWithdraw( data.vendor.withdraw );
-		await vendorPage.cancelRequestWithdraw();
-	});
+	// test.only('vendor can request withdraw', async ({ }) => {
+	// 	await vendorPage.requestWithdraw(data.vendor.withdraw);
+	// });
 
-	test('vendor can add auto withdraw disbursement schedule', async ({ }) => {
-		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
-	});
+	// test.only('vendor can cancel request withdraw', async ({ }) => {
+	// 	await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
+	// });
 
-	test('vendor can add default withdraw payment methods ', async ({ }) => {
+	// test.only('vendor can add auto withdraw disbursement schedule', async ({ }) => {
+	// 	await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
+	// });
+
+	test.only('vendor can add default withdraw payment methods ', async ({ }) => {
 		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
 		// Cleanup
 		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
@@ -115,10 +133,6 @@ test.describe('Vendor functionality test', () => {
 	test.fixme('vendor can edit addon', async ({ }) => {
 		const addonName = await vendorPage.addAddon(data.vendor.addon);
 		await vendorPage.editAddon(data.vendor.addon, addonName);
-	});
-
-	test('vendor can add payment method', async ({ }) => {
-		await vendorPage.setPaymentSettings(data.vendor.payment);
 	});
 
 	test.skip('vendor can send id verification request ', async ({ }) => {

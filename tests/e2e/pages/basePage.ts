@@ -91,11 +91,10 @@ export class BasePage {
 	}
 
 	// goto subPath if not already there
-	async goIfNotThere(subPath: string): Promise<void> { // TODO: don't work , if url add '/' or '/#/ after navigating there
+	async goIfNotThere(subPath: string): Promise<void> {
 		if (! await this.isCurrentUrl(subPath)) {
 			const url = await this.createUrl(subPath);
 			await this.page.goto(url, { waitUntil: 'networkidle' });
-
 			const currentUrl = await this.getCurrentUrl();
 			expect(currentUrl).toMatch(subPath);
 		}
@@ -366,7 +365,7 @@ export class BasePage {
 	//get element has test or not
 	async hasText(selector: string, text: string): Promise<boolean> {  //TODO: implement all has methods hasText, hasClass, hasAttribute, hasColor 
 		const elementText = await this.textContentOfLocator(selector);
-		return elementText === text ? true : false;
+		return elementText.trim() === text ? true : false;
 	}
 
 	// get element text content

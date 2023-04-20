@@ -3,8 +3,8 @@ import { devices } from '@playwright/test';
 require( 'dotenv' ).config();
 
 // api
-const username = process.env.ADMIN;
-const password = process.env.ADMIN_PASSWORD;
+const username = process.env.CUSTOMER;
+const password = process.env.CUSTOMER_PASSWORD;
 const basicAuth = 'Basic ' + Buffer.from( username + ':' + password ).toString( 'base64' );
 
 /**
@@ -17,15 +17,15 @@ const config: PlaywrightTestConfig = {
 
 	/* Maximum time one test can run for. */
 	// timeout: 120 * 1000,
-	// timeout: 60 * 1000,
-	timeout: 30 * 1000,
+	timeout: 60 * 1000,
+	// timeout: 30 * 1000,
 
 	expect: {
 		/**
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 5 * 1000,
+		timeout: 7 * 1000,
 	},
 
 	/* Run tests in files in parallel */
@@ -44,12 +44,12 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
-		// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-		headless: false,
+		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+		// headless: false,
 		// headless: true,
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL
@@ -64,11 +64,11 @@ const config: PlaywrightTestConfig = {
 			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) * 1000: 0, //whether to slow down test execution by provided seconds
 		},
 		
-		// api request headers
-		extraHTTPHeaders: {
-			Accept: '*/*',
-			Authorization: basicAuth,
-		},
+		// // api request headers
+		// extraHTTPHeaders: {
+		// 	Accept: '*/*',
+		// 	Authorization: basicAuth,
+		// },
 	},
 
 	/* Configure projects for major browsers */

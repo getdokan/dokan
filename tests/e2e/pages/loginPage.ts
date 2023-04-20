@@ -7,55 +7,46 @@ import { helpers } from '../utils/helpers';
 
 
 export class LoginPage extends BasePage {
-	constructor( page: Page ) {
-		super( page );
+	constructor(page: Page) {
+		super(page);
 	}
 
 	// user login
-	async login( user: user ): Promise<void> {
-		await this.loginFronted( user );
+	async login(user: user): Promise<void> {
+		await this.loginFronted(user);
 	}
 
 	// user loginFronted
-	async loginFronted( user: user ): Promise<void> {
-		await this.goIfBlank( data.subUrls.frontend.myAccount );
+	async loginFronted(user: user): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.myAccount);
 		const currentUser = await this.getCurrentUser();
-		console.log(currentUser);
-		
 		// skip if user is already logged in
-		if ( user.username === currentUser ) {
+		if (user.username === currentUser) {
 			return;
 		}
 		// logout if other user is already logged in
-		// else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json 
-		else if ( ( user.username !== currentUser ) || ( currentUser === undefined ) ) {
-			console.log('logout');
+		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json 
+		// else if ((user.username !== currentUser) || (currentUser === undefined)) {
 			await this.logoutFrontend();
 		}
 		// login user
-		await this.clearAndFill( selector.frontend.username, user.username );
-		await this.clearAndFill( selector.frontend.userPassword, user.password );
-		await this.click( selector.frontend.logIn );
-
+		await this.clearAndFill(selector.frontend.username, user.username);
+		await this.clearAndFill(selector.frontend.userPassword, user.password);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
 		const loggedInUser = await this.getCurrentUser();
-		expect( loggedInUser ).toBe( user.username );
+		expect(loggedInUser).toBe(user.username);
 	}
 
 	// user loginBackend
-	async loginBackend( user: user ): Promise<void> {
-		await this.goIfNotThere( data.subUrls.backend.login );
-		await this.loginWpDashboard( user );
-	}
-
-	async loginWpDashboard( user: user ): Promise<void> {
-		const emailField = await this.isVisible( selector.backend.email );
-		if ( emailField ) {
-			await this.clearAndFill( selector.backend.email, user.username );
-			await this.clearAndFill( selector.backend.password, user.password );
-			await this.click( selector.backend.login );
-
+	async loginBackend(user: user, url: string = data.subUrls.backend.login): Promise<void> {
+		await this.goIfNotThere(url);
+		const emailField = await this.isVisible(selector.backend.email);
+		if (emailField) {
+			await this.clearAndFill(selector.backend.email, user.username);
+			await this.clearAndFill(selector.backend.password, user.password);
+			await this.clickAndWaitForResponse(data.subUrls.backend.login, selector.backend.login, 302);
 			const loggedInUser = await this.getCurrentUser();
-			expect( loggedInUser ).toBe( user.username );
+			expect(loggedInUser).toBe(user.username);
 		}
 	}
 
@@ -66,34 +57,31 @@ export class LoginPage extends BasePage {
 
 	// user logoutFrontend
 	async logoutFrontend(): Promise<void> {
-		await this.goIfNotThere( data.subUrls.frontend.myAccount );
-		await this.focus( selector.frontend.customerLogout );
-		await this.click( selector.frontend.customerLogout );
-
+		await this.goIfNotThere(data.subUrls.frontend.myAccount);
+		// await this.focus(selector.frontend.customerLogout);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.customerLogout, 302);
 		const loggedInUser = await this.getCurrentUser();
-		expect( loggedInUser ).toBeUndefined();
+		expect(loggedInUser).toBeUndefined();
 	}
 
 	// admin login
-	async adminLogin( user: user ) {
-		await this.goIfNotThere( data.subUrls.backend.adminLogin );
-		await this.loginWpDashboard( user );
+	async adminLogin(user: user) {
+		await this.loginBackend(user, data.subUrls.backend.adminLogin);
 	}
 
 	// admin logout
-	async adminLogout(): Promise<void> {
-		await this.hover( selector.backend.userMenu );
-		await this.click( selector.backend.logout );
-
+	async logoutBackend(): Promise<void> {
+		await this.hover(selector.backend.userMenu);
+		await this.clickAndWaitForResponse(data.subUrls.backend.adminLogin, selector.backend.logout, 302);
 		const loggedInUser = await this.getCurrentUser();
-		expect( loggedInUser ).toBeUndefined();
+		expect(loggedInUser).toBeUndefined();
 	}
 
 	// switch user
-	async switchUser( user: user ): Promise<void> {
+	async switchUser(user: user): Promise<void> {
 		const currentUser = await this.getCurrentUser();
-		if ( currentUser !== user.username ) {
-			await this.loginBackend( user );
+		if (currentUser !== user.username) {
+			await this.loginBackend(user);
 		}
 	}
 }

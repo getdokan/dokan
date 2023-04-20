@@ -2190,7 +2190,8 @@ export const selector = {
 			withdrawDashboard: '.dokan-add-product-link a',
 
 			// Default Payment Methods
-			customMethodMakeDefault: (methodName: string) => `//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn')]`,
+			customMethodMakeDefault: (methodName: string) => `//div[@id='dokan-withdraw-payment-method-list']//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn')]`,
+			defaultMethod: (methodName: string) => `//div[@id='dokan-withdraw-payment-method-list']//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn-default')]`,
 			// Default Payment Setup Links
 			customMethodSetup: (methodName: string) => `//strong[contains( text(), '${methodName}')]/../..//a[@class='dokan-btn']`,
 			defaultPaymentMethodUpdateSuccessMessage: 'Default method update successful.',
@@ -3213,7 +3214,7 @@ export const selector = {
 
 			// Become Wholesale Customer
 			becomeWholesaleCustomer: '#dokan-become-wholesale-customer-btn',
-			wholesaleRequestReturnMessage: '.dokan-wholesale-migration-wrapper div',
+			wholesaleRequestReturnMessage: '.dokan-wholesale-migration-wrapper div.woocommerce-info',
 		},
 
 		// Customer Orders

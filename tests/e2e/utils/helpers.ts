@@ -44,7 +44,7 @@ export const helpers = {
 	openReport: () => open('./artifacts/jest-stare/index.html'),
 
 	// convert string to price format
-	price: (st: string) => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
+	price: (str: string) => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
 
 	// current year
 	currentYear: new Date().getFullYear(),

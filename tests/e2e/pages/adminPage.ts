@@ -1202,10 +1202,11 @@ export class AdminPage extends BasePage {
 
     // Admin Approve Wholesale Request
     async adminApproveWholesaleRequest(customer: string) {
-        await this.hover(selector.admin.aDashboard.dokan)
-        await this.click(selector.admin.dokan.wholesaleCustomerMenu)
-        await this.click(selector.admin.dokan.wholesaleCustomer.statusSlider(customer))
-        await expect(this.page.locator(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)).toContainText(data.wholesale.wholesaleCapabilityActivate)
+        // await this.hover(selector.admin.aDashboard.dokan)
+        // await this.click(selector.admin.dokan.wholesaleCustomerMenu)
+        await this.goIfNotThere(data.subUrls.backend.dokanWholeSaleCustomer);
+        await this.click(selector.admin.dokan.wholesaleCustomer.statusSlider(customer));
+        await expect(this.page.locator(selector.admin.dokan.wholesaleCustomer.enableStatusUpdateSuccessMessage)).toContainText(data.wholesale.wholesaleCapabilityActivate);
     }
 
     async getOrderDetails(orderNumber: any) {

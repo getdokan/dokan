@@ -340,10 +340,9 @@ export class VendorPage extends BasePage {
 	// vendor request withdraw
 	async requestWithdraw(withdraw: { withdrawMethod: any; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod?: string; preferredSchedule?: string; minimumWithdrawAmount?: string; reservedBalance?: string; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-
-		const canRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
-		if (canRequestIsVisible) {
-			this.cancelRequestWithdraw()
+		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
+		if (cancelRequestIsVisible) {
+			this.cancelRequestWithdraw(withdraw)
 			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.withdrawDashboard);
 		}
 
@@ -356,6 +355,7 @@ export class VendorPage extends BasePage {
 			await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default);
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.submitRequest);
 			await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawRequestSaveSuccessMessage)).toBeVisible();
+			await this.waitForNavigation()  // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigatiooon
 		} else {
 			// throw new Error("Vendor balance is less than minimum withdraw amount")
 			console.log('Vendor balance is less than minimum withdraw amount');
@@ -365,8 +365,12 @@ export class VendorPage extends BasePage {
 	}
 
 	// vendor cancel withdraw request
-	async cancelRequestWithdraw(): Promise<void> {
+	async cancelRequestWithdraw(withdraw: { withdrawMethod: any; defaultWithdrawMethod?: { paypal: string; skrill: string; }; preferredPaymentMethod?: string; preferredSchedule?: string; minimumWithdrawAmount?: string; reservedBalance?: string; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
+		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
+		if (!cancelRequestIsVisible) {
+			this.requestWithdraw(withdraw)
+		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.withdrawRequests, selector.vendor.vWithdraw.cancelRequest, 302);
 		await expect(this.page.getByText(selector.vendor.vWithdraw.cancelWithdrawRequestSaveSuccessMessage)).toBeVisible();
 	}
@@ -387,8 +391,14 @@ export class VendorPage extends BasePage {
 	// vendor add default withdraw payment methods
 	async addDefaultWithdrawPaymentMethods(preferredSchedule: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
-		await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
+		let methodIsDefault = await this.isVisible(selector.vendor.vWithdraw.defaultMethod(preferredSchedule))
+		if (!methodIsDefault) {
+			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
+			// await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
+			await this.waitForNavigation()
+			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule)); //TODO: fix before soln
+			await expect(this.page.locator(selector.vendor.vWithdraw.defaultMethod(preferredSchedule))).toBeVisible();
+		}
 	}
 
 	// vendor add vendor details
@@ -518,7 +528,6 @@ export class VendorPage extends BasePage {
 			case 'datewise':
 				const vacationDayFrom = (vacation.vacationDayFrom()).split(',')[0];
 				const vacationDayTo = (vacation.vacationDayTo(vacationDayFrom)).split(',')[0];
-				console.log(vacationDayFrom, vacationDayTo);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.vacationDateRangeFrom, 'value', vacationDayFrom);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.vacationDateRangeTo, 'value', vacationDayTo);
 				await this.clearAndType(selector.vendor.vStoreSettings.setVacationMessageDatewise, vacation.vacationMessage);
@@ -668,7 +677,8 @@ export class VendorPage extends BasePage {
 
 	// bank transfer payment settings
 	async setBankTransfer(paymentMethod: {
-		bankAccountType: string; bankAccountName: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; saveSuccessMessage: string | RegExp; }): Promise<void> {
+		bankAccountType: string; bankAccountName: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; saveSuccessMessage: string | RegExp;
+	}): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.bankTransfer);
 		// bank transfer
 		await this.clickIfVisible(selector.vendor.vPaymentSettings.disconnectAccount)
@@ -684,7 +694,7 @@ export class VendorPage extends BasePage {
 
 		// update settings
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
-		await this.clickAndWaitForResponse(data.subUrls.ajax,selector.vendor.vPaymentSettings.addAccount)
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.addAccount)
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
 
@@ -991,7 +1001,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue);
 		await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration);
 		// check if refund reason exists
-		const refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasonsFirst); 
+		const refundReasonIsVisible = await this.isVisible(selector.vendor.vRmaSettings.refundReasonsFirst);
 		if (refundReasonIsVisible) {
 			await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons);
 		}

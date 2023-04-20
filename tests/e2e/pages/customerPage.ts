@@ -11,8 +11,8 @@ export class CustomerPage extends BasePage {
 		super(page);
 	}
 
-	// loginPage = new LoginPage(this.page);
-	// adminPage = new AdminPage(this.page);
+	loginPage = new LoginPage(this.page);
+	adminPage = new AdminPage(this.page);
 
 	// navigation
 
@@ -42,28 +42,28 @@ export class CustomerPage extends BasePage {
 	async customerRegister(customerInfo: { lastName: () => string; country: string; zipCode: string; emailDomain: string; city: string; accountName: string; companyName: string; storename: () => string; bankIban: string; swiftCode: string; bankName: string; password: any; countrySelectValue: string; street1: string; password1: string; street2: string; state: string; email: string; addressChangeSuccessMessage: string; getSupport: { supportSubmitSuccessMessage: string; subject: string; message: string }; accountNumber: string; bankAddress: string; stateSelectValue: string; firstName: () => string; routingNumber: string; companyId: string; phone: string; iban: string; username: () => string; vatNumber: string }): Promise<void> {
 		const username: string = customerInfo.firstName();
 		await this.goToMyAccount();
-		const loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-		if (!loginIsVisible) {
-			// await this.loginPage.logout();
+		const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
+		if (!regIsVisible) {
+			await this.loginPage.logout();
 		}
 		await this.clearAndType(selector.customer.cRegistration.regEmail, username + data.customer.customerInfo.emailDomain);
 		await this.clearAndType(selector.customer.cRegistration.regPassword, customerInfo.password);
 		await this.click(selector.customer.cRegistration.regCustomer);
-		await this.click(selector.customer.cRegistration.register);
-
-		const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
-		if (registrationErrorIsVisible) {
-			const errorMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceError);  // TODO: replace with hasText
-			if (errorMessage.includes(data.customer.registrationErrorMessage)) {
-				return;
-			}
-		}
+		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.customer.cRegistration.register, 302);
+		// await this.click( selector.customer.cRegistration.register);
+		// const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
+		// if (registrationErrorIsVisible) {
+		// 	const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registrationErrorMessage); 
+		// 	if (hasError) {
+		// 		return;
+		// 	}
+		// }
 		const loggedInUser = await this.getCurrentUser();
-		expect(username.toLowerCase()).toBe(loggedInUser);
+		expect(loggedInUser).toBe(username.toLowerCase());
 	}
 
 	// customer become vendor
-	async customerBecomeVendor(customerInfo): Promise<void> {
+	async customerBecomeVendor(customerInfo: { firstName: () => any; lastName: () => string; storename: () => string; street1: string; phone: string; companyName: string; companyId: string; vatNumber: string; bankName: string; bankIban: string; }): Promise<void> {
 		const firstName = customerInfo.firstName();
 		await this.click(selector.customer.cDashboard.becomeVendor);
 		// vendor registration form
@@ -97,14 +97,14 @@ export class CustomerPage extends BasePage {
 	// customer become wholesale customer
 	async customerBecomeWholesaleCustomer(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.myAccount);
-		const currentUser = await this.getCurrentUser(); //todo: add condition , user not custoemr
+		const currentUser = await this.getCurrentUser();                       
 		await this.click(selector.customer.cDashboard.becomeWholesaleCustomer);
-		const returnMessage = await this.getElementText(selector.customer.cDashboard.wholesaleRequestReturnMessage); // TODO: replace with hasText
-		if (returnMessage != data.wholesale.wholesaleRequestSendMessage) {
-			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.becomeWholesaleCustomerSuccessMessage)
+		const neeApproval = await this.hasText(selector.customer.cDashboard.wholesaleRequestReturnMessage, data.wholesale.wholesaleRequestSendMessage); 
+		if (!neeApproval) {
+			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.becomeWholesaleCustomerSuccessMessage);
 		} else {
-			// await this.loginPage.switchUser(data.admin);
-			// await this.adminPage.adminApproveWholesaleRequest(currentUser)
+			await this.loginPage.switchUser(data.admin);
+			await this.adminPage.adminApproveWholesaleRequest(currentUser);
 		}
 	}
 
@@ -125,13 +125,14 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
+		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln. 
 		await this.click(selector.customer.cAddress.billingState);
 		await this.clearAndType(selector.customer.cAddress.billingStateInput, billingInfo.state);
 		await this.press(data.key.enter);
 		await this.clearAndType(selector.customer.cAddress.billingZipCode, billingInfo.zipCode);
 		await this.clearAndType(selector.customer.cAddress.billingPhone, billingInfo.phone);
 		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.billingAddress, selector.customer.cAddress.billingSaveAddress,302);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.billingAddress, selector.customer.cAddress.billingSaveAddress, 302);
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
 	}
 
@@ -148,6 +149,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.shippingTownCity, shippingInfo.city);
+		await this.focus(selector.customer.cAddress.shippingZipCode);
 		await this.click(selector.customer.cAddress.shippingState);
 		await this.clearAndType(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
 		await this.press(data.key.enter);
@@ -584,7 +586,6 @@ export class CustomerPage extends BasePage {
 
 		cOrderDetails.paymentMethod = await this.getElementText(selector.customer.cOrders.paymentMethod);
 		cOrderDetails.orderTotal = helpers.price(await this.getElementText(selector.customer.cOrders.orderTotal));
-		// console.log(cOrderDetails)
 		return cOrderDetails;
 	}
 

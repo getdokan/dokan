@@ -6,11 +6,11 @@ async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
 
 	// get user signed in state
-	const browser = await chromium.launch({ headless: false });
+	const browser = await chromium.launch({ headless: true });
 	const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
 	await context.tracing.start({ screenshots: true, snapshots: true });
 
-	// // get storageState: admin
+	// get storageState: admin
 	let admin = await browser.newPage();
 
 	// log in
@@ -23,10 +23,7 @@ async function globalSetup(config: FullConfig) {
 	await admin.waitForURL(process.env.BASE_URL + '/wp-admin/');
 	await admin.context().storageState({ path: 'playwright/.auth/adminStorageState.json' });
 	console.log('Stored adminStorageState');
-	await admin.hover(selector.backend.userMenu);
-	await admin.click(selector.backend.logout);
-	await admin.waitForLoadState('networkidle');
-	await admin.close();
+
 
 
 	// // set permalink 
@@ -37,9 +34,8 @@ async function globalSetup(config: FullConfig) {
 	// console.log('permalink updated');
 
 	// // get storageState: customer
-	// let customer = await browser.newPage(); //TODO: user need to create first move to _setup file
-
 	// register
+	// let customer = await browser.newPage(); //TODO: user need to create first move to _setup file
 	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
 	// await customer.screenshot({ path: 'playwright/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
 	// await customer.fill(selector.customer.cRegistration.regEmail, process.env.CUSTOMER + '@gmail.com');  //TODO: global setup not raising error
@@ -55,22 +51,22 @@ async function globalSetup(config: FullConfig) {
 	//TODO: 2. separate globlSetup for local & CI , cant reg user every time for local site or find another soln.
 	//TODO: 3. page context issue
 
-	// // log in
-	// await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	// await customer.screenshot({ path: 'playwright/.screenshot/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
-	// await customer.fill(selector.frontend.username, process.env.CUSTOMER);
-	// await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
-	// await customer.click(selector.frontend.logIn);
-	// await customer.waitForURL(process.env.BASE_URL + '/my-account/');
-	// await customer.context().storageState({ path: 'playwright/.auth/customerStorageState.json' });
-	// console.log('Stored customerStorageState');
+	// log in
+	let customer = await browser.newPage(); //TODO: user need to create first move to _setup file
+	await customer.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await customer.screenshot({ path: 'playwright/.screenshot/screenshot_customer.png', fullPage: true }); //TODO: where is this saving
+	await customer.fill(selector.frontend.username, process.env.CUSTOMER);
+	await customer.fill(selector.frontend.userPassword, process.env.CUSTOMER_PASSWORD);
+	await customer.click(selector.frontend.logIn);
+	await customer.waitForURL(process.env.BASE_URL + '/my-account/');
+	await customer.context().storageState({ path: 'playwright/.auth/customerStorageState.json' });
+	console.log('Stored customerStorageState');
 
-	// await customer.close();
+	await customer.close();
 
 	// // // // get storageState: vendor
-	// let vendor = await browser.newPage();  //TODO: user need to create first move to _setup file
-
 	// // register
+	// let vendor = await browser.newPage();  //TODO: user need to create first move to _setup file
 	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
 	// await vendor.screenshot({ path: 'playwright/screenshot_vendor.png', fullPage: true });
 	// await vendor.fill(selector.vendor.vRegistration.regEmail, process.env.VENDOR+ 123456 + '@gmail.com');
@@ -87,15 +83,16 @@ async function globalSetup(config: FullConfig) {
 	// await vendor.context().storageState({ path: 'playwright/.auth/vendorStorageState1.json' });
 	// console.log('Stored vendorStorageState');
 
-	// // log in
-	// await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
-	// await vendor.screenshot({ path: 'playwright/.screenshot/screenshot_vendor.png', fullPage: true });
-	// await vendor.fill(selector.frontend.username, process.env.VENDOR);
-	// await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
-	// await vendor.click(selector.frontend.logIn);
-	// await vendor.waitForURL(process.env.BASE_URL + '/dashboard/');
-	// await vendor.context().storageState({ path: 'playwright/.auth/vendorStorageState.json' });
-	// console.log('Stored vendorStorageState');
+	// log in
+	let vendor = await browser.newPage();  //TODO: user need to create first move to _setup file
+	await vendor.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' });
+	await vendor.screenshot({ path: 'playwright/.screenshot/screenshot_vendor.png', fullPage: true });
+	await vendor.fill(selector.frontend.username, process.env.VENDOR);
+	await vendor.fill(selector.frontend.userPassword, process.env.VENDOR_PASSWORD);
+	await vendor.click(selector.frontend.logIn);
+	await vendor.waitForURL(process.env.BASE_URL + '/dashboard/');
+	await vendor.context().storageState({ path: 'playwright/.auth/vendorStorageState.json' });
+	console.log('Stored vendorStorageState');
 
 	// await context.tracing.stop({ path: 'playwright/test-results/setup-trace.zip' });
 
