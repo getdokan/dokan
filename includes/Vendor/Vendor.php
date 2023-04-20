@@ -987,15 +987,15 @@ class Vendor {
      * @since 2.6.9
      * @since DOKAN_SINCE introduced new bg process to change product status
      *
-     * @param string $status
+     * @param string $task_type
      *
      * @return void
      */
-    public function change_product_status( $status ) {
+    public function change_product_status( $task_type ) {
         $product_status_changer = dokan()->bg_process->change_vendor_product_status;
         $product_status_changer->reset();
         $product_status_changer->set_vendor_id( $this->get_id() );
-        $product_status_changer->add_to_queue( $status );
+        $product_status_changer->add_to_queue( $task_type );
     }
 
     /**
