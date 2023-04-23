@@ -21,7 +21,7 @@ test.describe('Customer user functionality test', () => {
 		customerPage = new CustomerPage(page);
 	});
 
-	test.afterAll(async ({ browser }) => {
+	test.afterAll(async ({  }) => {
 		await page.close();
 	});
 
@@ -38,7 +38,7 @@ test.describe('Customer user functionality test', () => {
 		await loginPage.logout();
 	});
 
-	test.skip('customer become a vendor', async ({ }) => {
+	test('customer become a vendor', async ({ }) => {
 		await customerPage.customerRegister(data.customer.customerInfo);
 		await customerPage.customerBecomeVendor(data.customer.customerInfo);
 	});
@@ -63,9 +63,10 @@ test.describe('Customer functionality test', () => {
 		customerPage = new CustomerPage(page);
 	});
 
-	test.afterAll(async ({ browser }) => {
+	test.afterAll(async ({  }) => {
 		await page.close();
 	});
+
 
 	test('customer add billing details', async ({ }) => {
 		await customerPage.addBillingAddress(data.customer.customerInfo);

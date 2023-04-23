@@ -63,11 +63,15 @@ Run the test with the title
 
     npx playwright test -g "customer add customer details"
 
+Run a single project
+
+    npx playwright test --project=e2e_tests
+
 Run group of tests with certain tag
 
     npx playwright test --grep @pro
 
-Run multiple groups of tags 
+Run multiple groups of tags
 
     npx playwright test --grep @lite | @pro
 

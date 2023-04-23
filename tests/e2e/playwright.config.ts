@@ -1,11 +1,11 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
-require( 'dotenv' ).config();
+require('dotenv').config();
 
-// api
-const username = process.env.CUSTOMER;
-const password = process.env.CUSTOMER_PASSWORD;
-const basicAuth = 'Basic ' + Buffer.from( username + ':' + password ).toString( 'base64' );
+// // api
+// const username = process.env.CUSTOMER;
+// const password = process.env.CUSTOMER_PASSWORD;
+// const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -17,8 +17,11 @@ const config: PlaywrightTestConfig = {
 
 	/* Maximum time one test can run for. */
 	// timeout: 120 * 1000,
-	timeout: 60 * 1000,
-	// timeout: 30 * 1000,
+	// timeout: 100 * 1000,
+	// timeout: 60 * 1000,
+	// timeout: 40 * 1000,
+	timeout: 30 * 1000,
+	// timeout: 10 * 1000,
 
 	expect: {
 		/**
@@ -41,15 +44,15 @@ const config: PlaywrightTestConfig = {
 	workers: process.env.CI ? 1 : 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
+	reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	globalSetup: require.resolve('./global-setup'),
+	// globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
-		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-		// headless: false,
+		// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+		headless: false,
 		// headless: true,
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL
@@ -61,9 +64,9 @@ const config: PlaywrightTestConfig = {
 
 		// launch options
 		launchOptions: {
-			slowMo: process.env.SLOWMO ? Number( process.env.SLOWMO ) * 1000: 0, //whether to slow down test execution by provided seconds
+			slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
 		},
-		
+
 		// // api request headers
 		// extraHTTPHeaders: {
 		// 	Accept: '*/*',
@@ -73,12 +76,23 @@ const config: PlaywrightTestConfig = {
 
 	/* Configure projects for major browsers */
 	projects: [
+		// Setup project
+		{ name: 'setup', 
+		// testMatch: /.*\.setup\.ts/ },
+		testMatch: '_auth.setup.ts' },
+		
 		{
-			name: 'chromium',
+			name: 'e2e_tests',
 			use: {
-				...devices[ 'Desktop Chrome' ],
+				...devices['Desktop Chrome'],	
 			},
+			dependencies: ['setup'],
 		},
+
+		{
+
+
+		  },
 
 		// {
 		//   name: 'firefox',

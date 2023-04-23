@@ -354,6 +354,7 @@ export const data = {
 			buyItNowPrice: () => (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			startDate: helpers.currentDateTime.replace(/,/g, ''),
 			endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
+			storeName: String(process.env.VENDOR) + 'store',
 			saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
 		},
 
@@ -777,6 +778,7 @@ export const data = {
 		backend: {
 			login: 'wp-login.php',
 			adminLogin: 'wp-admin',
+			adminLogout: 'wp-login.php?action=logout',
 			adminDashboard: 'wp-admin',
 			dokanWholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
 			dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
@@ -793,8 +795,9 @@ export const data = {
 		frontend: {
 			// customer
 			myAccount: 'my-account',
+			customerLogout: 'my-account/customer-logout',
 			productCustomerPage: 'product',
-			odersCustomerPage: 'orders',
+			ordersCustomerPage: 'orders',
 			shop: 'shop',
 			storeListing: 'store-listing',
 			cart: 'cart',
@@ -804,7 +807,9 @@ export const data = {
 			placeOrder: '?wc-ajax=checkout',
 			billingAddress: 'my-account/edit-address/billing',
 			shippingAddress: 'my-account/edit-address/shipping',
+			shippingAddressCheckout: '?wc-ajax=update_order_review',
 			editAccountCustomer: 'my-account/edit-account',
+			becomeVendor: 'my-account/account-migration',
 			supportTickets: 'my-account/support-tickets',
 			productDetails: (productName: string) => `product/${productName}`,
 			vendorDetails: (storeName: string) => `store/${storeName}`,
@@ -820,7 +825,7 @@ export const data = {
 			order: 'dashboard/orders',
 			coupon: 'dashboard/coupons',
 			reviews: 'dashboard/reviews/',
-			withdraw: 'dashboard/withdraw',
+			withdraw: 'dashboard/withdraw/',
 			withdrawRequests: 'dashboard/withdraw-requests',
 			auction: 'dashboard/auction',
 			booking: 'dashboard/booking',
@@ -856,7 +861,8 @@ export const data = {
 
 		vendorInfo: {
 			email: () => faker.internet.email(),
-			emailDomain: '@gmail.com',
+			// emailDomain: '_' + faker.random.alphaNumeric(5) + '@email.com',
+			emailDomain: '@email.com',
 			password: String(process.env.VENDOR_PASSWORD),
 			password1: String(process.env.VENDOR_PASSWORD) + '1',
 			firstName: () => faker.name.firstName('male'),
@@ -1103,7 +1109,7 @@ export const data = {
 				paypal: 'Paypal',
 				skrill: 'Skrill',
 			},
-			 defaultWithdrawMethod: {
+			defaultWithdrawMethod: {
 				paypal: 'PayPal',
 				skrill: 'Skrill',
 				bankTransfer: 'Bank Transfer',
@@ -1136,8 +1142,9 @@ export const data = {
 		password: String(process.env.CUSTOMER_PASSWORD),
 
 		customerInfo: {
-			emailDomain: '@gmail.com',
-			email: faker.internet.email(),
+			// emailDomain: '_' + faker.random.alphaNumeric(5) + '@email.com',
+			emailDomain: '@email.com',
+			email: () => faker.internet.email(),
 			password: String(process.env.CUSTOMER_PASSWORD),
 			password1: String(process.env.CUSTOMER_PASSWORD) + '1',
 			firstName: () => faker.name.firstName('male'),

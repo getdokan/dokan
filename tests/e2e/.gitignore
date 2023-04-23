@@ -170,10 +170,11 @@ Temporary Items
 .Ds_
 
 # playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
-# storageState.json
+playwright/
+test-results/
+playwright-report/
+playwright/.cache/
+storageState.json
 adminStorageState.json
 customerStorageState.json
 vendorStorageState.json

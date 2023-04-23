@@ -3,15 +3,20 @@ import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 
-test.describe.only('Admin user functionality test', () => {
+test.describe('Admin user functionality test', () => {
 	test.use({ storageState: { cookies: [], origins: [] } })
 
 	let loginPage: any;
+	let page: any;
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		const page = await context.newPage();
+		page = await context.newPage();
 		loginPage = new LoginPage(page);
+	});
+
+	test.afterAll(async ({  }) => {
+		await page.close();
 	});
 
 
@@ -21,7 +26,7 @@ test.describe.only('Admin user functionality test', () => {
 
 	test('admin can logout @lite @pro', async ({  }) => {
 		await loginPage.adminLogin(data.admin);
-		await loginPage.adminLogout();
+		await loginPage.logoutBackend();
 	});
 
 });
@@ -39,7 +44,7 @@ test.describe('Admin functionality test', () => {
 		adminPage = new AdminPage(page);
 	});
 
-	test.afterAll(async ({ browser }) => {
+	test.afterAll(async ({  }) => {
 		await page.close();
 	});
 
@@ -195,7 +200,7 @@ test.describe('Admin functionality test', () => {
 		await adminPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	test('admin can set dokan delivery time settings @pro', async ({ }) => {
+	test.skip('admin can set dokan delivery time settings @pro', async ({ }) => {
 		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
 	});
 

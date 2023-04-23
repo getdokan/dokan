@@ -234,9 +234,9 @@ export const selector = {
 				iban: '#iban',
 				swift: '#swift',
 				payPalEmail: '#paypal-email',
-				enableSelling: "//span[contains(text(), 'Enable Selling')]/..//span",
-				publishProductDirectly: "//span[contains(text(), 'Publish Product Directly')]/..//span",
-				makeVendorFeature: "//span[contains(text(), 'Make Vendor Featured')]/..//span",
+				enableSelling: "//span[contains(text(),'Enable Selling')]/..//span[@class='slider round']",
+				publishProductDirectly: "//span[contains(text(), 'Publish Product Directly')]/..//span[@class='slider round']",
+				makeVendorFeature: "//span[contains(text(), 'Make Vendor Featured')]/..//span[@class='slider round']",
 				createVendor: '.button.button-primary.button-hero',
 				// Sweet Alert
 				createAnother: '.swal2-confirm', // Sweet Alert Confirm
@@ -514,7 +514,7 @@ export const selector = {
 				// Site Options
 				adminAreaAccess: '.admin_access .switch',
 
-				vendorStoreUrl: '#dokan_general\\[custom_store_url\\]',
+				vendorStoreUrl: '#dokan_general\\[custom_store_url\\]',  //TODO: for CSS selector [ ] needs escaped with double back slash \\
 				vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
 				disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
 				sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
@@ -1639,12 +1639,12 @@ export const selector = {
 			lastName: 'input#last-name',
 			shopName: 'input#company-name',
 			shopUrl: 'input#seller-url',
-			street1: 'input#dokan_address[street_1]',
-			street2: 'input#dokan_address[street_2]',
-			city: 'input#dokan_address[city]',
-			zipCode: 'input#dokan_address[zip]',
+			street1: 'input#dokan_address\\[street_1\\]',
+			street2: 'input#dokan_address\\[street_2\\]',
+			city: 'input#dokan_address\\[city\\]',
+			zipCode: 'input#dokan_address\\[zip\\]',
 			country: 'select#dokan_address_country',
-			state: 'input#dokan_address_state',
+			state: 'select#dokan_address_state',
 			companyName: 'input#dokan-company-name',
 			companyId: 'input#dokan-company-id-number',
 			vatNumber: 'input#dokan-vat-number',
@@ -2755,7 +2755,7 @@ export const selector = {
 			selectProducts: "//label[contains(text(), 'Select Products')]/..//input[contains(@class,'select2-search__field')]",
 			selectAll: '.dokan-min-max-product-select-all',
 			clear: '.dokan-min-max-product-clear-all',
-			selectCategory: '#product_cat',
+			selectCategory: 'select#product_cat',
 			selectCategorySearch: '//select[@id="product_cat"]/..//input[@class="select2-search__field"]',
 			selectCategorySearchedResult: '.select2-results__option.select2-results__option--highlighted',
 			alreadySelectedOption: (option: string) => `//li[@class="select2-selection__choice" and @title="${option}"]`,
@@ -3529,6 +3529,9 @@ export const selector = {
 			enquiryMessage: '#dokan-enq-message',
 			submitEnquiry: 'input.dokan-btn-theme',
 			submitEnquirySuccessMessage: '.alert.alert-success',
+
+			// Product addon
+			addOnSelect: '.wc-pao-addon-select',
 		},
 
 		// Customer Cart

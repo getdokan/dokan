@@ -50,7 +50,8 @@ export class BasePage {
 	}
 
 	// wait for url to be loaded
-	async waitForUrl(url: string): Promise<void> {
+	async waitForUrl(url: string, options?: { timeout?: number; waitUntil?: string }): Promise<void> {
+		// await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
 		await this.page.waitForURL(url);
 	}
 
@@ -167,13 +168,19 @@ export class BasePage {
 
 	// click on element
 	async clickViaPage(selector: string): Promise<void> {
-		await this.page.click(selector)
+		await this.page.click(selector);
 	}
 
 	//  click on element by Running the js element.Click() method
 	async clickJs(selector: string): Promise<void> {
 		let element = this.page.locator(selector);
 		await element.click();
+	}
+
+	// click on element
+	async focusAndClick(selector: string): Promise<void> {
+		await this.focus(selector);
+		await this.clickLocator(selector);
 	}
 
 	// double click on element
@@ -185,6 +192,11 @@ export class BasePage {
 	async clickAndWaitForNavigation(selector: string): Promise<void> {
 		await Promise.all([this.page.waitForNavigation({ waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
 	}
+	// click & wait for navigation to complete
+	async clickAndWaitForUrl(selector: string, url: string): Promise<void> {
+		await Promise.all([this.page.waitForURL(url, { waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
+	}
+
 	//TODo: add assertion to every function
 	// click & wait for request
 	async clickAndWaitForRequest(url: string, selector: string): Promise<void> {
@@ -338,7 +350,7 @@ export class BasePage {
 
 	// hover on selector
 	async hover(selector: string): Promise<void> {
-		await this.page.hover(selector, { timeout: 20000 });
+		await this.page.hover(selector, { timeout: 2000 });
 		await this.wait(1);
 	}
 

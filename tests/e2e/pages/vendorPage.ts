@@ -36,12 +36,12 @@ export class VendorPage extends BasePage {
 		await this.goToMyAccount();
 		const loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
 		if (!loginIsVisible) {
-			// await this.loginPage.logout();
+			await this.loginPage.logout();
 		}
-		const username = vendorInfo.firstName();
+		const username = vendorInfo.firstName() + vendorInfo.lastName();
 		await this.clearAndType(selector.vendor.vRegistration.regEmail, username + data.vendor.vendorInfo.emailDomain);
 		await this.clearAndType(selector.vendor.vRegistration.regPassword, vendorInfo.password);
-		await this.click(selector.vendor.vRegistration.regVendor);
+		await this.focusAndClick(selector.vendor.vRegistration.regVendor);
 		await this.waitForVisibleLocator(selector.vendor.vRegistration.firstName);
 		await this.clearAndType(selector.vendor.vRegistration.firstName, username);
 		await this.clearAndType(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
@@ -65,34 +65,28 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vRegistration.bankName, vendorInfo.bankName);
 		await this.clearAndType(selector.vendor.vRegistration.bankIban, vendorInfo.bankIban);
 		await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
-		// const termsAndConditionsIsVisible = await this.isVisible(selector.customer.cDashboard.termsAndConditions);
-		// if (termsAndConditionsIsVisible) {
-		// 	await this.check(selector.customer.cDashboard.termsAndConditions); 
-		// }
 		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions)
 		const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
 		if (subscriptionPackIsVisible) {
-			// await this.selectOptionByText(selector.vendor.vRegistration.subscriptionPack, selector.vendor.vRegistration.subscriptionPackOptions, data.predefined.vendorSubscription.nonRecurring.productName())    //TODO: 
-			await this.selectByValue(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
+			await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		}
 		await this.click(selector.vendor.vRegistration.register);
 		const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
 		if (registrationErrorIsVisible) {
-			const errorMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceError);
-			if (errorMessage.includes(data.customer.registrationErrorMessage)) {
-				return;
+			const errorMessage = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registrationErrorMessage);
+			if (errorMessage) {
+				return; //TODO: Throw error message instead of return
 			}
 		}
 		if (subscriptionPackIsVisible) {
-			// await this.customerPage.placeOrder('bank', false, false, true);
+			await this.customerPage.placeOrder('bank', false, true, false);
 		}
 		await this.vendorSetupWizard(setupWizardData);
 	}
 
 	// vendor setup wizard
-	async vendorSetupWizard(setupWizardData: { choice: any; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
+	async vendorSetupWizard(setupWizardData: { choice: boolean; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
 		setupWizardData.choice = true
-
 		await this.goIfNotThere(data.subUrls.frontend.vendorSetupWizard);
 		if (setupWizardData.choice) {
 			await this.click(selector.vendor.vSetup.letsGo);
@@ -124,14 +118,12 @@ export class VendorPage extends BasePage {
 			await this.typeIfVisible(selector.vendor.vSetup.customPayment, setupWizardData.customPayment);
 			// skrill
 			await this.typeIfVisible(selector.vendor.vSetup.skrill, setupWizardData.skrill);
-
 			await this.click(selector.vendor.vSetup.continuePaymentSetup);
 			await this.clickAndWaitForResponse(data.subUrls.frontend.dashboard, selector.vendor.vSetup.goToStoreDashboard);
-			await expect(this.page.locator(selector.vendor.vDashboard.dashboard)).toBeVisible();
 		} else {
 			await this.clickAndWaitForResponse(data.subUrls.frontend.dashboard, selector.vendor.vSetup.notRightNow);
-			await expect(this.page.locator(selector.vendor.vDashboard.dashboard)).toBeVisible();
 		}
+		await expect(this.page.locator(selector.vendor.vDashboard.dashboard)).toBeVisible();
 	}
 
 	// vendor add product category
@@ -355,7 +347,7 @@ export class VendorPage extends BasePage {
 			await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default);
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.submitRequest);
 			await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawRequestSaveSuccessMessage)).toBeVisible();
-			await this.waitForNavigation()  // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigatiooon
+			await this.waitForNavigation()  // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigation
 		} else {
 			// throw new Error("Vendor balance is less than minimum withdraw amount")
 			console.log('Vendor balance is less than minimum withdraw amount');
@@ -395,7 +387,8 @@ export class VendorPage extends BasePage {
 		if (!methodIsDefault) {
 			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
 			// await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
-			await this.waitForNavigation()
+			// // await this.waitForNavigation()
+			// await this.waitForUrl(data.subUrls.frontend.withdraw);
 			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule)); //TODO: fix before soln
 			await expect(this.page.locator(selector.vendor.vWithdraw.defaultMethod(preferredSchedule))).toBeVisible();
 		}
@@ -479,31 +472,40 @@ export class VendorPage extends BasePage {
 	// vendor set map settings
 	async mapSettings(mapLocation: string): Promise<void> {
 		// map
-		await this.typeAndWaitForResponse(data.subUrls.gmap, selector.vendor.vStoreSettings.map, mapLocation);
-		await this.press(data.key.arrowDown);
-		await this.press(data.key.enter);
+		const geoLocationEnabled = await this.isVisible(selector.vendor.vStoreSettings.map);
+		if (geoLocationEnabled) {
+			await this.typeAndWaitForResponse(data.subUrls.gmap, selector.vendor.vStoreSettings.map, mapLocation);
+			await this.press(data.key.arrowDown);
+			await this.press(data.key.enter);
+		}
 	}
 
 	// vendor set terms and conditions settings
 	async termsAndConditionsSettings(termsAndConditions: string): Promise<void> {
 		// terms and conditions
-		await this.check(selector.vendor.vStoreSettings.termsAndConditions);
-		await this.typeFrameSelector(selector.vendor.vStoreSettings.termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions);
+		const tocEnabled = await this.isVisible(selector.vendor.vStoreSettings.termsAndConditions);
+		if (tocEnabled) {
+			await this.check(selector.vendor.vStoreSettings.termsAndConditions);
+			await this.typeFrameSelector(selector.vendor.vStoreSettings.termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions);
+		}
 	}
 
 	// vendor set opening closing time settings
 	async openingClosingTimeSettings(openingClosingTime: { days: any; openingTime: string; closingTime: string; storeOpenNotice: string; storeCloseNotice: string; }): Promise<void> {
 		// store opening closing time
-		await this.check(selector.vendor.vStoreSettings.storeOpeningClosingTime);
-		for (const day of openingClosingTime.days) {
-			await this.enableSwitcherDeliveryTime(selector.vendor.vStoreSettings.openingClosingTimeSwitch(day));
-			await this.setAttributeValue(selector.vendor.vStoreSettings.openingTime(day), 'value', openingClosingTime.openingTime);
-			await this.setAttributeValue(selector.vendor.vStoreSettings.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
-			await this.setAttributeValue(selector.vendor.vStoreSettings.closingTime(day), 'value', openingClosingTime.closingTime);
-			await this.setAttributeValue(selector.vendor.vStoreSettings.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
+		const openCloseTimeEnabled = await this.isVisible(selector.vendor.vStoreSettings.storeOpeningClosingTime);
+		if (openCloseTimeEnabled) {
+			await this.check(selector.vendor.vStoreSettings.storeOpeningClosingTime);
+			for (const day of openingClosingTime.days) {
+				await this.enableSwitcherDeliveryTime(selector.vendor.vStoreSettings.openingClosingTimeSwitch(day));
+				await this.setAttributeValue(selector.vendor.vStoreSettings.openingTime(day), 'value', openingClosingTime.openingTime);
+				await this.setAttributeValue(selector.vendor.vStoreSettings.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
+				await this.setAttributeValue(selector.vendor.vStoreSettings.closingTime(day), 'value', openingClosingTime.closingTime);
+				await this.setAttributeValue(selector.vendor.vStoreSettings.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
+			}
+			await this.clearAndType(selector.vendor.vStoreSettings.storeOpenNotice, openingClosingTime.storeOpenNotice);
+			await this.clearAndType(selector.vendor.vStoreSettings.storeCloseNotice, openingClosingTime.storeCloseNotice);
 		}
-		await this.clearAndType(selector.vendor.vStoreSettings.storeOpenNotice, openingClosingTime.storeOpenNotice);
-		await this.clearAndType(selector.vendor.vStoreSettings.storeCloseNotice, openingClosingTime.storeCloseNotice);
 	}
 
 	// vendor set vacation settings
@@ -516,6 +518,8 @@ export class VendorPage extends BasePage {
 		// 	await this.click(selector.vendor.vStoreSettings.deleteSavedVacationSchedule);
 		// 	await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.confirmDeleteSavedVacationSchedule);
 		// }
+		const vacationModeEnabled = await this.isVisible(selector.vendor.vStoreSettings.goToVacation);
+		if (vacationModeEnabled) {
 		await this.check(selector.vendor.vStoreSettings.goToVacation);
 		await this.selectByValue(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle);
 		switch (vacation.closingStyle) {
@@ -538,20 +542,27 @@ export class VendorPage extends BasePage {
 				break;
 		}
 	}
+}
 
 	// vendor set discount settings
 	async discountSettings(discount: { minimumOrderAmount: string; minimumOrderAmountPercentage: string; }): Promise<void> {
 		// discount
+		const discountEnabled = await this.isVisible(selector.vendor.vStoreSettings.enableStoreWideDiscount);
+		if (discountEnabled) {
 		await this.check(selector.vendor.vStoreSettings.enableStoreWideDiscount);
 		await this.clearAndType(selector.vendor.vStoreSettings.minimumOrderAmount, discount.minimumOrderAmount);
 		await this.clearAndType(selector.vendor.vStoreSettings.percentage, discount.minimumOrderAmountPercentage);
 	}
+}
 
 	// vendor set catalog mode settings
 	async catalogModeSettings(): Promise<void> {
-		// catalog mode
-		await this.check(selector.vendor.vStoreSettings.removeAddToCartButton);
-		await this.checkIfVisible(selector.vendor.vStoreSettings.enableRequestQuoteSupport);
+		// catalog mode		
+		const catalogModeEnabled = await this.isVisible(selector.vendor.vStoreSettings.removeAddToCartButton);
+		if (catalogModeEnabled) {
+			await this.check(selector.vendor.vStoreSettings.removeAddToCartButton);
+			await this.checkIfVisible(selector.vendor.vStoreSettings.enableRequestQuoteSupport);
+		}
 	}
 
 	// vendor set biography settings
@@ -563,23 +574,34 @@ export class VendorPage extends BasePage {
 	// vendor set store support settings
 	async storeSupportSettings(supportButtonText: string): Promise<void> {
 		// store support
+		const storeSupportEnabled = await this.isVisible(selector.vendor.vStoreSettings.removeAddToCartButton);
+		if (storeSupportEnabled) {
 		await this.check(selector.vendor.vStoreSettings.showSupportButtonInStore);
 		await this.check(selector.vendor.vStoreSettings.showSupportButtonInSingleProduct);
 		await this.clearAndType(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
 	}
+}
 
 	// vendor set minmax settings
 	async minMaxSettings(minMax: { minimumProductQuantity: string; maximumProductQuantity: string; minimumAmount: string; maximumAmount: string; category: string; }): Promise<void> {
 		// min-max
-		await this.check(selector.vendor.vStoreSettings.enableMinMaxQuantities);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
-		await this.clearAndType(selector.vendor.vStoreSettings.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
-		await this.check(selector.vendor.vStoreSettings.enableMinMaxAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
-		await this.click(selector.vendor.vStoreSettings.clear);
-		await this.click(selector.vendor.vStoreSettings.selectAll);
-		await this.select2ByTextMultiSelector(selector.vendor.vStoreSettings.selectCategorySearch, selector.vendor.vStoreSettings.selectCategorySearchedResult, minMax.category);
+		const minMaxEnabled = await this.isVisible(selector.vendor.vStoreSettings.enableMinMaxQuantities);
+		if (minMaxEnabled) {
+			await this.check(selector.vendor.vStoreSettings.enableMinMaxQuantities);
+			await this.clearAndType(selector.vendor.vStoreSettings.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
+			await this.clearAndType(selector.vendor.vStoreSettings.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
+			await this.check(selector.vendor.vStoreSettings.enableMinMaxAmount);
+			await this.clearAndType(selector.vendor.vStoreSettings.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
+			await this.clearAndType(selector.vendor.vStoreSettings.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
+			await this.click(selector.vendor.vStoreSettings.clear);
+			await this.click(selector.vendor.vStoreSettings.selectAll);
+			const multipleCategory = await this.isVisible(selector.vendor.vStoreSettings.selectCategorySearch);
+			if (multipleCategory){
+			await this.select2ByTextMultiSelector(selector.vendor.vStoreSettings.selectCategorySearch, selector.vendor.vStoreSettings.selectCategorySearchedResult, minMax.category);
+			}else {
+				await this.selectByLabel(selector.vendor.vStoreSettings.selectCategory, minMax.category)
+			}
+		}
 	}
 
 	// vendor set store address
@@ -606,9 +628,9 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vAddonSettings.createNewAddon);
 		await this.clearAndType(selector.vendor.vAddonSettings.name, addonName);
 		await this.clearAndType(selector.vendor.vAddonSettings.priority, addon.priority);
-		await this.click(selector.vendor.vAddonSettings.productCategories,);
-		await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
-		await this.press(data.key.enter);
+		// await this.click(selector.vendor.vAddonSettings.productCategories,); // commented for issue with buy product, or delete any previous addon before create one
+		// await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
+		// await this.press(data.key.enter);
 		// add-on fields
 		await this.click(selector.vendor.vAddonSettings.addField);
 		await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type);

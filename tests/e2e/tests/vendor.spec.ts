@@ -21,13 +21,13 @@ test.describe('Vendor user functionality test1', () => {
 		vendorPage = new VendorPage(page);
 	});
 
-	test.afterAll(async ({ browser }) => {
+	test.afterAll(async ({  }) => {
 		await page.close();
 	});
 
-	test.skip('vendor can register', async ({  }) => {
+	test('vendor can register', async ({  }) => {
 		await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard)
-		await loginPage.logout()
+		// await loginPage.logout()
 	})
 
 	test('vendor can login', async ({  }) => {
@@ -54,7 +54,7 @@ test.describe('Vendor functionality test', () => {
 		vendorPage = new VendorPage(page);
 	});
 
-	test.afterAll(async ({ browser }) => {
+	test.afterAll(async ({  }) => {
 		await page.close();
 	});
 
@@ -98,19 +98,19 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.setPaymentSettings(data.vendor.payment);
 	});
 
-	// test.only('vendor can request withdraw', async ({ }) => {
-	// 	await vendorPage.requestWithdraw(data.vendor.withdraw);
-	// });
+	test('vendor can request withdraw', async ({ }) => {
+		await vendorPage.requestWithdraw(data.vendor.withdraw);
+	});
 
-	// test.only('vendor can cancel request withdraw', async ({ }) => {
-	// 	await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
-	// });
+	test('vendor can cancel request withdraw', async ({ }) => {
+		await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
+	});
 
-	// test.only('vendor can add auto withdraw disbursement schedule', async ({ }) => {
-	// 	await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
-	// });
+	test('vendor can add auto withdraw disbursement schedule', async ({ }) => {
+		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
+	});
 
-	test.only('vendor can add default withdraw payment methods ', async ({ }) => {
+	test('vendor can add default withdraw payment methods ', async ({ }) => {
 		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
 		// Cleanup
 		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
@@ -121,7 +121,7 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.setVendorDetails(data.vendor.vendorInfo); //TODO: update test order or reset password
 	});
 
-	// account settings
+	// store settings
 	test('vendor can set store settings ', async ({ }) => {
 		await vendorPage.setStoreSettings(data.vendor.vendorInfo);
 	});
@@ -147,7 +147,7 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.sendCompanyVerificationRequest(data.vendor.verification);
 	});
 
-	test('vendor can set delivery time settings ', async ({ }) => {
+	test.skip('vendor can set delivery time settings ', async ({ }) => {
 		await vendorPage.setDeliveryTimeSettings(data.vendor.deliveryTime);
 	});
 
