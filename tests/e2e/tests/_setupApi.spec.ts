@@ -9,21 +9,17 @@ import { AdminPage } from '../pages/adminPage';
 import { CustomerPage } from '../pages/customerPage';
 import { VendorPage } from '../pages/vendorPage';
 import { selector } from '../pages/selectors';
-import { helpers } from '../utils/helpers';
+import { helpers } from '../utils/helpers'
 import fs from 'fs';
 
-// test.beforeAll(async ({ }) => { });
-// test.afterAll(async ({ }) => { });
-// test.beforeEach(async ({ }) => { });
-// test.afterEach(async ({ }) => { });
 
 //TODO: add more assertion, and move api assertion to function level
 
 let productId: string;
 
 test.describe('setup test api', () => {
-	
-	test.use({extraHTTPHeaders: {Accept: '*/*', Authorization: payloads.aAuth,},});
+
+	test.use({ extraHTTPHeaders: { Accept: '*/*', Authorization: payloads.aAuth, }, });
 
 	test('check active plugins @lite @pro', async ({ request }) => {
 		test.skip(!process.env.CI, 'skip plugin check');

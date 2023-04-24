@@ -86,7 +86,8 @@ jobs:
 
       - name: Set Permalink structure
         run: |
-            npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
+          cd tests/e2e 
+          npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
 
       - name: Setup for e2e tests
         run: |
