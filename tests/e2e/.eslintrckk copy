@@ -3,12 +3,13 @@
     // "browser": true,
     "es2021": true
     // "node": true 
+    // "commonjs": true,
   },
   "extends": [
     "eslint:recommended",
-    "standard-with-typescript",
-    "plugin:@typescript-eslint/recommended", //TODO : recommend meaning Also ********* learn eslint
-    "plugin:playwright/playwright-test/recommended"
+    "plugin:@typescript-eslint/recommended"
+    // "plugin:playwright/playwright-test/recommended",
+    // "prettier"
 ],
 "parser": "@typescript-eslint/parser",
   "parserOptions": {

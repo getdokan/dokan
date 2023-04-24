@@ -4,9 +4,9 @@ import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 
 test.describe('Admin user functionality test', () => {
-	test.use({ storageState: { cookies: [], origins: [] } })
+	test.use({ storageState: { cookies: [], origins: [] } });
 
-	let loginPage: any;
+	let loginPage: any
 	let page: any;
 
 	test.beforeAll(async ({ browser }) => {
@@ -61,8 +61,8 @@ test.describe('Admin functionality test', () => {
 	});
 
 	test.skip('admin can add variable product', async ({ }) => {
-		await adminPage.addVariableProduct(data.product.variable)
-	})
+		await adminPage.addVariableProduct(data.product.variable);
+	});
 
 	test('admin can add simple subscription @lite @pro', async ({ }) => {
 		await adminPage.addSimpleSubscription(data.product.simpleSubscription);
