@@ -84,6 +84,10 @@ jobs:
           cd tests/e2e 
           npm run activate-sf-test
 
+      - name: Set Permalink structure
+        run: |
+            npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
+
       - name: Setup for e2e tests
         run: |
           cd tests/e2e 
