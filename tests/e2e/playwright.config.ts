@@ -12,12 +12,10 @@ require('dotenv').config();
  */
 
 const config: PlaywrightTestConfig = {
-	// test directory
-	testDir: './tests',
+    // test directory
+    testDir: './tests',
 
 	/* Maximum time one test can run for. */
-	// timeout: 120 * 1000,
-	// timeout: 100 * 1000,
 	// timeout: 60 * 1000,
 	// timeout: 40 * 1000,
 	timeout: 30 * 1000,
@@ -47,7 +45,7 @@ const config: PlaywrightTestConfig = {
 	reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
@@ -78,9 +76,8 @@ const config: PlaywrightTestConfig = {
 	projects: [
 		// Setup project
 		{ name: 'setup', 
-		// testMatch: /.*\.setup\.ts/ },
-		testMatch: '_auth.setup.ts' },
-		
+		testMatch: /.*\.setup\.ts/ },
+
 		{
 			name: 'e2e_tests',
 			use: {
@@ -89,10 +86,12 @@ const config: PlaywrightTestConfig = {
 			dependencies: ['setup'],
 		},
 
-		{
-
-
-		  },
+		  	//     {
+	//         name: 'chromium',
+	//         use: {
+	//             ...devices['Desktop Chrome'],
+	//         },
+	//     },
 
 		// {
 		//   name: 'firefox',

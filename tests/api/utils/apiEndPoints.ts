@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { SERVER_URL, QUERY } = process.env;
 
 export const endPoints = {

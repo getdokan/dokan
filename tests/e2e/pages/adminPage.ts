@@ -891,57 +891,54 @@ export class AdminPage extends BasePage {
     async addVendor(vendorInfo: any) {
         await this.goIfNotThere(data.subUrls.backend.dokanVendors)
 
-        // let firstName = vendorInfo.firstName()
-        // let email = vendorInfo.email()
+        let firstName = vendorInfo.firstName()
+        let email = vendorInfo.email()
 
-        // // add new vendor
-        // await this.click(selector.admin.dokan.vendors.addNewVendor)
-        // // account info
-        // await this.type(selector.admin.dokan.vendors.firstName, firstName)
-        // await this.type(selector.admin.dokan.vendors.lastName, vendorInfo.lastName())
-        // await this.type(selector.admin.dokan.vendors.storeName, vendorInfo.shopName)
-        // await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.storeUrl, vendorInfo.shopName)
-        // await this.type(selector.admin.dokan.vendors.phoneNumber, vendorInfo.phoneNumber)
-        // await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.email, email)
-        // await this.click(selector.admin.dokan.vendors.generatePassword)
-        // await this.clearAndType(selector.admin.dokan.vendors.password, vendorInfo.password)
-        // await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.username, firstName)
-        // await this.type(selector.admin.dokan.vendors.companyName, vendorInfo.companyName)
-        // await this.type(selector.admin.dokan.vendors.companyIdEuidNumber, vendorInfo.companyId)
-        // await this.type(selector.admin.dokan.vendors.vatOrTaxNumber, vendorInfo.vatNumber)
-        // await this.type(selector.admin.dokan.vendors.nameOfBank, vendorInfo.bankName)
-        // await this.type(selector.admin.dokan.vendors.bankIban, vendorInfo.bankIban)
-        // await this.click(selector.admin.dokan.vendors.next)
-        // // address
-        // await this.type(selector.admin.dokan.vendors.street1, vendorInfo.street1)
-        // await this.type(selector.admin.dokan.vendors.street2, vendorInfo.street2)
-        // await this.type(selector.admin.dokan.vendors.city, vendorInfo.city)
-        // await this.type(selector.admin.dokan.vendors.zip, vendorInfo.zipCode)
-        // await this.click(selector.admin.dokan.vendors.country)
-        // await this.type(selector.admin.dokan.vendors.countryInput, vendorInfo.country)
-        // await this.press(data.key.enter)
-        // await this.click(selector.admin.dokan.vendors.state)
-        // await this.type(selector.admin.dokan.vendors.state, vendorInfo.state)
-        // await this.click(selector.admin.dokan.vendors.next)
-        // // payment options
-        // await this.type(selector.admin.dokan.vendors.accountName, vendorInfo.accountName)
-        // await this.type(selector.admin.dokan.vendors.accountNumber, vendorInfo.accountNumber)
-        // await this.type(selector.admin.dokan.vendors.bankName, vendorInfo.bankName)
-        // await this.type(selector.admin.dokan.vendors.bankAddress, vendorInfo.bankAddress)
-        // await this.type(selector.admin.dokan.vendors.routingNumber, vendorInfo.routingNumber)
-        // await this.type(selector.admin.dokan.vendors.iban, vendorInfo.iban)
-        // await this.type(selector.admin.dokan.vendors.swift, vendorInfo.swiftCode)
-        // await this.fill(selector.admin.dokan.vendors.payPalEmail, vendorInfo.email())
-        // await this.check(selector.admin.dokan.vendors.enableSelling)
-        // await this.check(selector.admin.dokan.vendors.publishProductDirectly)
-        // await this.check(selector.admin.dokan.vendors.makeVendorFeature)
-        // // create vendor
-        // await this.clickAndWaitForResponse('/dokan/v1/stores', selector.admin.dokan.vendors.createVendor);
-        // await expect(this.page.locator(selector.admin.dokan.vendors.sweetAlertTitle)).toContainText('Vendor Created');
-        // await this.click(selector.admin.dokan.vendors.closeSweetAlert);
-        // // await this.click(selector.admin.dokan.vendors.editVendorInfo)
-        // // let vendorEmail = await this.getElementValue(selector.admin.dokan.vendors.editVendor.email)
-        // // expect(vendorEmail).toBe(email)
+        // add new vendor
+        await this.click(selector.admin.dokan.vendors.addNewVendor)
+        // account info
+        await this.type(selector.admin.dokan.vendors.firstName, firstName)
+        await this.type(selector.admin.dokan.vendors.lastName, vendorInfo.lastName())
+        await this.type(selector.admin.dokan.vendors.storeName, vendorInfo.shopName)
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.storeUrl, vendorInfo.shopName)
+        await this.type(selector.admin.dokan.vendors.phoneNumber, vendorInfo.phoneNumber)
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.email, email)
+        await this.click(selector.admin.dokan.vendors.generatePassword)
+        await this.clearAndType(selector.admin.dokan.vendors.password, vendorInfo.password)
+        await this.typeAndWaitForResponse('dokan/v1/stores', selector.admin.dokan.vendors.username, firstName)
+        await this.type(selector.admin.dokan.vendors.companyName, vendorInfo.companyName)
+        await this.type(selector.admin.dokan.vendors.companyIdEuidNumber, vendorInfo.companyId)
+        await this.type(selector.admin.dokan.vendors.vatOrTaxNumber, vendorInfo.vatNumber)
+        await this.type(selector.admin.dokan.vendors.nameOfBank, vendorInfo.bankName)
+        await this.type(selector.admin.dokan.vendors.bankIban, vendorInfo.bankIban)
+        await this.click(selector.admin.dokan.vendors.next)
+        // address
+        await this.type(selector.admin.dokan.vendors.street1, vendorInfo.street1)
+        await this.type(selector.admin.dokan.vendors.street2, vendorInfo.street2)
+        await this.type(selector.admin.dokan.vendors.city, vendorInfo.city)
+        await this.type(selector.admin.dokan.vendors.zip, vendorInfo.zipCode)
+        await this.click(selector.admin.dokan.vendors.country)
+        await this.type(selector.admin.dokan.vendors.countryInput, vendorInfo.country)
+        await this.press(data.key.enter)
+        await this.click(selector.admin.dokan.vendors.state)
+        await this.type(selector.admin.dokan.vendors.state, vendorInfo.state)
+        await this.click(selector.admin.dokan.vendors.next)
+        // payment options
+        await this.type(selector.admin.dokan.vendors.accountName, vendorInfo.accountName)
+        await this.type(selector.admin.dokan.vendors.accountNumber, vendorInfo.accountNumber)
+        await this.type(selector.admin.dokan.vendors.bankName, vendorInfo.bankName)
+        await this.type(selector.admin.dokan.vendors.bankAddress, vendorInfo.bankAddress)
+        await this.type(selector.admin.dokan.vendors.routingNumber, vendorInfo.routingNumber)
+        await this.type(selector.admin.dokan.vendors.iban, vendorInfo.iban)
+        await this.type(selector.admin.dokan.vendors.swift, vendorInfo.swiftCode)
+        await this.fill(selector.admin.dokan.vendors.payPalEmail, vendorInfo.email())
+        await this.check(selector.admin.dokan.vendors.enableSelling)
+        await this.check(selector.admin.dokan.vendors.publishProductDirectly)
+        await this.check(selector.admin.dokan.vendors.makeVendorFeature)
+        // create vendor
+        await this.clickAndWaitForResponse('/dokan/v1/stores', selector.admin.dokan.vendors.createVendor);
+        await expect(this.page.locator(selector.admin.dokan.vendors.sweetAlertTitle)).toContainText('Vendor Created');
+        await this.click(selector.admin.dokan.vendors.closeSweetAlert);
     }
 
     // admin add categories

@@ -22,6 +22,8 @@ import fs from 'fs';
 let productId: string;
 
 test.describe('setup test api', () => {
+	
+	test.use({extraHTTPHeaders: {Accept: '*/*', Authorization: payloads.aAuth,},});
 
 	test('check active plugins @lite @pro', async ({ request }) => {
 		test.skip(!process.env.CI, 'skip plugin check');
@@ -35,7 +37,7 @@ test.describe('setup test api', () => {
 	test('set wp settings @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
-		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings)); //TODO
+		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings)); //TODO: update assertion
 	});
 
 	test('set wc settings @lite @pro', async ({ request }) => {
@@ -129,20 +131,20 @@ test.describe('setup test api', () => {
 
 	// Customer Details
 
-	test('add test customer @lite @pro', async ({ request }) => {
+	test('add customer @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		const response = await request.post(endPoints.wc.createCustomer, { data: payloads.createCustomer1 });
+		const response = await request.post(endPoints.wc.createCustomer, { data: payloads.createCustomer1, headers: payloads.adminAuth });
 		const responseBody = await apiUtils.getResponseBody(response, false);
 		responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy();
 	});
 
 
 	// Vendor Details
-	test('add test vendor @lite @pro', async ({ request }) => {
+	test('add vendor @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// create store
-		const response = await request.post(endPoints.createStore, { data: payloads.createStore1 });
+		const response = await request.post(endPoints.createStore, { data: payloads.createStore1, headers: payloads.adminAuth });
 		const responseBody = await apiUtils.getResponseBody(response, false);
 		responseBody.code ? expect(response.status()).toBe(500) : expect(response.ok()).toBeTruthy();
 
@@ -171,77 +173,6 @@ test.describe('setup test api', () => {
 		responseBody.code ? expect(response.status()).toBe(400) : expect(response.ok()).toBeTruthy();
 	});
 
-
-	// test('add test vendor orders @pro', async ({ request }) => {
-	// 	const apiUtils = new ApiUtils(request);
-	// 	const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
-	// 	const payload = payloads.createOrder;
-	// 	payload.line_items[0].product_id = productId;
-	// 	const response = await request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth});
-	// 	expect(response.ok()).toBeTruthy();
-	// 	const responseBody = await apiUtils.getResponseBody(response);
-	// });
-
-
-
-	// test('storageState', async ({ page }) => {
-	//     // get user signed in state
-	//     const browser = await chromium.launch({ headless: true })
-
-	//     // get storageState: admin
-	//     let adminPage = await browser.newPage()
-	//     // log in
-	//     await adminPage.goto(process.env.BASE_URL + '/wp-admin', { waitUntil: 'networkidle' })
-	//     await adminPage.screenshot({ path: './playwright-report/screenshot_admin.png', fullPage: true });
-	//     await adminPage.fill(selector.backend.email, 'admin')
-	//     await adminPage.fill(selector.backend.password, '01dokan01')
-	//     await adminPage.click(selector.backend.login)
-	//     await adminPage.waitForLoadState('networkidle')
-	//     await adminPage.context().storageState({ path: 'adminStorageState.json' })
-	//     console.log('Stored adminStorageState')
-
-	//     // get storageState: customer
-	//     let customerPage = await browser.newPage();
-	//     // log in
-	//     await customerPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-	//     await customerPage.screenshot({ path: './playwright-report/screenshot_customer.png', fullPage: true });
-	//     await customerPage.fill(selector.frontend.username, 'customer1')
-	//     await customerPage.fill(selector.frontend.userPassword, '01dokan01')
-	//     await customerPage.click(selector.frontend.logIn)
-	//     await customerPage.context().storageState({ path: 'customerStorageState.json' })
-	//     console.log('Stored customerStorageState')
-
-	//     // get storageState: vendor
-	//     let vendorPage = await browser.newPage()
-	//     // log in
-	//     await vendorPage.goto(process.env.BASE_URL + '/my-account', { waitUntil: 'networkidle' })
-	//     await vendorPage.screenshot({ path: './playwright-report/screenshot_vendor.png', fullPage: true });
-	//     await vendorPage.fill(selector.frontend.username, 'vendor1')
-	//     await vendorPage.fill(selector.frontend.userPassword, '01dokan01')
-	//     await vendorPage.click(selector.frontend.logIn)
-	//     await vendorPage.context().storageState({ path: 'vendorStorageState.json' })
-	//     console.log('Stored vendorStorageState')
-
-	//     await browser.close()
-	// })
-
-	// test('admin can login', async ({ page }) => {
-	//     const loginPage = new LoginPage(page)
-	//     await loginPage.adminLogin(data.admin)
-	//     await page.context().storageState({ path: 'adminStorageState.json' })
-	// })
-
-	// test('vendor can login', async ({ page }) => {
-	//     const loginPage = new LoginPage(page)
-	//     await loginPage.login(data.vendor)
-	//     await page.context().storageState({ path: 'vendorStorageState.json' })
-	// })
-
-	// test('customer login', async ({ page }) => {
-	//     const loginPage = new LoginPage(page)
-	//     await loginPage.login(data.customer)
-	//     await page.context().storageState({ path: 'customerStorageState.json' })
-	// })
 });
 
 test.describe('setup test e2e', () => {

@@ -14,7 +14,6 @@ import {
 import { helpers } from '../utils/helpers';
 import { selector } from './selectors';
 import { log } from 'console';
-require('dotenv').config();
 
 // This Page Contains All Necessary Playwright Automation Methods
 

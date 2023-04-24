@@ -52,7 +52,7 @@ test.describe('Admin functionality test', () => {
 		await adminPage.setDokanSetupWizard(data.dokanSetupWizard);
 	});
 
-	test.only('admin can add vendor @lite @pro', async ({ }) => {
+	test('admin can add vendor @lite @pro', async ({ }) => {
 		await adminPage.addVendor(data.vendor.vendorInfo);
 	});
 

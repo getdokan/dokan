@@ -1,18 +1,15 @@
 {
   "name": "dokan_e2e_playwright",
   "version": "1.0.0",
-  "description": "npm init playwright@latest",
+  "description": "dokan e2e test using playwright",
   "main": "index.js",
-  "engines": {
-    "node": ">=8.10.0"
-  },
   "scripts": {
-    "test:e2e": "playwright test --project=chromium",
-    "test:e2e-setup": "playwright install chromium",
-    "test:e2e-i": "playwright test --project=chromium --headed",
+    "nip": "npm install --production",
+    "nid": "npm install --include=dev",
     "test": "npx playwright test",
-    "test:p": "npx playwright test --project=e2e_tests",
-    "test:chrome": "npx playwright test --project=chromium",
+    "test:e2e": "playwright test --project=e2e_tests",
+    "test:e2e-setup": "playwright install chromium",
+    "test:e2e-i": "playwright test --project=e2e_tests --headed",
     "test:debug": "npx playwright test --debug",
     "test:codegen": "npx playwright codegen",
     "container_path": "wp-env install-path",

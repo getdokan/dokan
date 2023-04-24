@@ -1,4 +1,3 @@
-require('dotenv').config();
 import { chromium, FullConfig, request } from '@playwright/test';
 
 async function globalSetup(config: FullConfig) {

@@ -1,7 +1,12 @@
+//TODO: separate everything for local & pro like: global setup, env, playwright config
+//TODO: implement fixture for lite pro issue handle
+//TODO: separate globalSetup for local & CI , cant reg user every time for local site or find another soln.
 //TODO: #  // "no-unused-vars": "off" is enabled for now but remove before push
+//TODO: require .dotenv required in every file or just playwright config
+//TODO: test basic auth can be used instead of cookies for authentication
 //TODO: # Configure projects for multiple environments : ci, local,
 //TODO: # convert waitForNavigation to waitForUrl
-//TODO: # why two pages are oppening : fix that
+//TODO: # why two pages are opening : fix that
 //TODO: # test should run parallely
 //TODO: # add fixture
 //TODO: use extrahttpheaders: for grab storage.json  // not possible
