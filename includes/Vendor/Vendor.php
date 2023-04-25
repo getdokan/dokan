@@ -14,6 +14,31 @@ use WP_User;
  * @since 2.6.10
  */
 class Vendor {
+    /**
+     * Set class public properties
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function __set( $key, $value ) {
+        $this->{$key} = $value;
+    }
+
+    /**
+     * Get public properties
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return mixed
+     */
+    public function __get( $key ) {
+        // check isset
+        if ( isset( $this->{$key} ) ) {
+            return $this->{$key};
+        }
+        return null;
+    }
 
     /**
      * The vendor ID
