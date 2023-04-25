@@ -17,7 +17,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
 ],
   "rules": {
       // we want single quotes
@@ -28,7 +29,9 @@
       "indent": ["error", 4],
       // we want to avoid extraneous spaces
       "no-multi-spaces": ["error"],
-
+      "camelcase": "error",
+      "spaced-comment": "error",
+      "no-duplicate-imports": "error",
 
 
 
@@ -48,6 +51,11 @@
     //   "node/prefer-promises/dns": "error",
     //   "node/prefer-promises/fs": "error"
 
+    },
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
+      }
     }
     // "ignorePatterns": ["/**/*.test.ts"]
 }

@@ -4,9 +4,9 @@ import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
 
 test.describe('Admin user functionality test', () => {
-	test.use({ storageState: { cookies: [], origins: [] } });
+	test.use({ storageState: { cookies: [], origins: [] } })
 
-	let loginPage: any
+ let loginPage: any;
 	let page: any;
 
 	test.beforeAll(async ({ browser }) => {
@@ -19,8 +19,8 @@ test.describe('Admin user functionality test', () => {
 		await page.close();
 	});
 
-
-	test('admin can login @lite @pro', async ({  }) => {
+// 
+	test('admin can login @lite @pro', async ({ }) => {
 		await loginPage.adminLogin(data.admin);
 	});
 
