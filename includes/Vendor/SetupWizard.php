@@ -198,7 +198,7 @@ class SetupWizard extends DokanSetupWizard {
         $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
 
         $country_obj = new WC_Countries();
-        $countries   = $country_obj->countries;
+        $countries   = $country_obj->get_allowed_countries();
         $states      = $country_obj->states;
         ?>
         <h1><?php esc_attr_e( 'Store Setup', 'dokan-lite' ); ?></h1>

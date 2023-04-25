@@ -485,12 +485,9 @@ jQuery(function($) {
 
                     if ( 0 < unit_total_tax ) {
                         var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
-                        var precision         = dokan_refund[
-                            round_at_subtotal ? 'rounding_precision' : 'currency_format_num_decimals'
-                        ];
 
                         refund_line_total_tax.val(
-                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, precision, '' ) )
+                            parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
                         ).trigger( 'change' );
@@ -1304,6 +1301,9 @@ jQuery(function($) {
                     product_gallery_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_gallery,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_gallery_btn_text,
                         },
@@ -1315,26 +1315,26 @@ jQuery(function($) {
                         var selection = product_gallery_frame.state().get('selection');
 
                         selection.map( function( attachment ) {
+                            attachment     = attachment.toJSON();
+                            attachment_ids = [];
 
-                            attachment = attachment.toJSON();
-
-                            if ( attachment.id ) {
-                                attachment_ids = [];
-
-                                $('<li class="image" data-attachment_id="' + attachment.id + '">\
-                                        <img src="' + attachment.url + '" />\
-                                        <a href="#" class="action-delete">&times;</a>\
-                                    </li>').insertBefore( p_images.find('li.add-image') );
-
-                                $('#product_images_container ul li.image').css('cursor','default').each(function() {
-                                    var attachment_id = jQuery(this).attr( 'data-attachment_id' );
-                                    attachment_ids.push( attachment_id );
-                                });
+                            // Check if attachment doesn't exist or attachment type is not image
+                            if ( ! attachment.id || 'image' !== attachment.type ) {
+                                return;
                             }
 
-                        } );
+                            $('<li class="image" data-attachment_id="' + attachment.id + '">\
+                                    <img src="' + attachment.url + '" />\
+                                    <a href="#" class="action-delete">&times;</a>\
+                                </li>').insertBefore( p_images.find('li.add-image') );
 
-                        images_gid.val( attachment_ids.join(',') );
+                            $('#product_images_container ul li.image').css('cursor','default').each(function() {
+                                var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+                                attachment_ids.push( attachment_id );
+                            });
+
+                            images_gid.val( attachment_ids.join(',') );
+                        } );
                     });
 
                     product_gallery_frame.open();
@@ -1408,6 +1408,9 @@ jQuery(function($) {
                     product_featured_frame = wp.media({
                         // Set the title of the modal.
                         title: dokan.i18n_choose_featured_img,
+                        library: {
+                            type: 'image',
+                        },
                         button: {
                             text: dokan.i18n_choose_featured_img_btn_text,
                         }
@@ -1418,6 +1421,11 @@ jQuery(function($) {
 
                         selection.map( function( attachment ) {
                             attachment = attachment.toJSON();
+
+                            // Check if the attachment type is image.
+                            if ( 'image' !== attachment.type ) {
+                                return;
+                            }
 
                             // set the image hidden id
                             self.siblings('input.dokan-feat-image-id').val(attachment.id);
@@ -1903,10 +1911,11 @@ jQuery(function($) {
     form_group.addClass('has-error').append(error);
   };
 
-  var validatorSuccess = function(label, element) {
+  var validatorSuccess = function(error, element) {
     $(element)
       .closest('.dokan-form-group')
       .removeClass('has-error');
+    $(error).remove();
   };
 
   var api = wp.customize;

@@ -249,8 +249,8 @@ export default {
             if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
                 return data;
             }
-            data.from = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
-            data.to = $.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+            data.from = moment( new Date(this.filter.transaction_date.startDate ) ).format( 'YYYY-MM-DD HH:mm:ss' );
+            data.to = moment( new Date(this.filter.transaction_date.endDate ) ).format( 'YYYY-MM-DD HH:mm:ss' );
             return data;
         },
 
@@ -350,7 +350,7 @@ export default {
                 per_page: -1,
             };
 
-            dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data)
+            dokan.api.get('/reverse-withdrawal/transactions/', data)
             .done( ( response, status, xhr ) => {
                 self.transactionData = response;
                 self.updatedCounts( xhr );

@@ -1,4 +1,5 @@
 <?php
+
 namespace WeDevs\Dokan\ReverseWithdrawal;
 
 use WP_Error;
@@ -10,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper class for reverse withdrawal
  *
- * @since 3.5.1
+ * @since   3.5.1
  *
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
@@ -59,15 +60,15 @@ class Helper {
          * ! also do not use any filter here, if new transaction type is needed add it to the below array
          */
         $transaction_types = [
-            'opening_balance'           => esc_html__( 'Opening Balance', 'dokan-lite' ),
+            'opening_balance'          => esc_html__( 'Opening Balance', 'dokan-lite' ),
             // admin will get payment (debit)
-            'order_commission'          => esc_html__( 'Commission', 'dokan-lite' ),
-            'failed_transfer_reversal'  => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
-            'product_advertisement'     => esc_html__( 'Product Advertisement', 'dokan-lite' ),
-            'manual_order_commission'   => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
+            'order_commission'         => esc_html__( 'Commission', 'dokan-lite' ),
+            'failed_transfer_reversal' => esc_html__( 'Failed Transfer Reversal', 'dokan-lite' ),
+            'product_advertisement'    => esc_html__( 'Product Advertisement', 'dokan-lite' ),
+            'manual_order_commission'  => esc_html__( 'Manual Order Commission', 'dokan-lite' ),
             // vendor paid to admin (credit)
-            'vendor_payment'            => esc_html__( 'Payment', 'dokan-lite' ),
-            'order_refund'              => esc_html__( 'Refund', 'dokan-lite' ),
+            'vendor_payment'           => esc_html__( 'Payment', 'dokan-lite' ),
+            'order_refund'             => esc_html__( 'Refund', 'dokan-lite' ),
         ];
 
         if ( $transaction_type ) {
@@ -88,6 +89,7 @@ class Helper {
      */
     public static function get_failed_actions_by_vendor( $vendor_id ) {
         $failed_actions = get_user_meta( $vendor_id, self::failed_actions_key(), true );
+
         return is_array( $failed_actions ) ? $failed_actions : [];
     }
 
@@ -96,7 +98,7 @@ class Helper {
      *
      * @since 3.5.1
      *
-     * @param int $vendor_id
+     * @param int   $vendor_id
      * @param array $failed_actions
      *
      * @return void
@@ -123,7 +125,7 @@ class Helper {
      *
      * @since DOKA_SINCE
      *
-     * @param int $vendor_id
+     * @param int    $vendor_id
      * @param string $date
      *
      * @return void
@@ -162,9 +164,9 @@ class Helper {
     /**
      * This method will return reverse withdrawal payment amount
      *
-     * @param \WC_Abstract_Order $order
-     *
      * @since 3.5.1
+     *
+     * @param \WC_Abstract_Order $order
      *
      * @return float|bool false if meta key not found
      */
@@ -219,7 +221,7 @@ class Helper {
      *
      * @since 3.5.1
      *
-     * @param int $transaction_id
+     * @param int    $transaction_id
      * @param string $transaction_type
      * @param string $contex admin or seller
      *
@@ -261,8 +263,8 @@ class Helper {
      *
      * @since 3.5.1
      *
-     * @param array $item
-     * @param float $current_balance
+     * @param array  $item
+     * @param float  $current_balance
      * @param string $context
      *
      * @return array
@@ -309,15 +311,15 @@ class Helper {
      */
     public static function get_default_transaction_date() {
         return [
-            'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d' ),
-            'to'   => dokan_current_datetime()->format( 'Y-m-d' ),
+            'from' => dokan_current_datetime()->modify( '-1 month' )->format( 'Y-m-d H:i:s' ),
+            'to'   => dokan_current_datetime()->format( 'Y-m-d H:i:s' ),
         ];
     }
 
     /**
      * This method will return payable amount of a vendor for a month
      *
-     * @param int $vendor_id
+     * @param int        $vendor_id
      * @param int|string $current_date
      *
      * @return float|WP_Error
@@ -378,7 +380,7 @@ class Helper {
      *
      * @since 3.5.1
      *
-     * @param int|null $vendor_id
+     * @param int|null        $vendor_id
      * @param int|string|null $current_date
      *
      * @return array|WP_Error
@@ -404,8 +406,8 @@ class Helper {
         // get balance of the vendor till now
         $balance = $manager->get_store_balance(
             [
-				'vendor_id' => $vendor_id,
-			]
+                'vendor_id' => $vendor_id,
+            ]
         );
 
         if ( is_wp_error( $balance ) ) {
@@ -414,11 +416,12 @@ class Helper {
 
         // get required settings
         $data = [
-            'balance'      => $balance,
-            'billing_type' => SettingsHelper::get_billing_type(),
-            'billing_day'  => SettingsHelper::get_billing_day(),
-            'due_period'   => SettingsHelper::get_due_period(),
-            'threshold'    => SettingsHelper::get_reverse_balance_threshold(),
+            'balance'        => $balance,
+            'billing_type'   => SettingsHelper::get_billing_type(),
+            'billing_day'    => SettingsHelper::get_billing_day(),
+            'due_period'     => SettingsHelper::get_due_period(),
+            'threshold'      => SettingsHelper::get_reverse_balance_threshold(),
+            'payable_amount' => 0,
         ];
 
         // check settings for billing type
@@ -476,7 +479,6 @@ class Helper {
 
         $ret = [
             'status'   => false,
-            'message'  => '',
             'due_date' => '',
             'balance'  => $balance,
         ];
@@ -527,7 +529,7 @@ class Helper {
                 $ret['status'] = true;
                 // check when user crossed the threshold limit
                 $last_threshold_limit_exceed_date = static::get_balance_threshold_exceed_date( $vendor_id );
-                $threshold_exceeded = false;
+                $threshold_exceeded               = false;
                 if ( empty( $last_threshold_limit_exceed_date ) ) {
                     $last_threshold_limit_exceed_date = dokan_current_datetime()->format( 'Y-m-d' );
                     // we will only update this value if current date is today, because this function can be used to get older month's data
@@ -663,5 +665,82 @@ class Helper {
         $ret .= '</ol>';
 
         return $ret;
+    }
+
+    /**
+     * Get formatted billing type
+     *
+     * @since 3.7.16
+     *
+     * @param string $billing_type
+     *
+     * @return array|string
+     */
+    public static function get_formatted_billing_type( $billing_type = '' ) {
+        $available_billing_type = SettingsHelper::get_billing_type_options();
+
+        return ! empty( $billing_type ) && array_key_exists( $billing_type, $available_billing_type )
+            ? $available_billing_type[ $billing_type ] : $available_billing_type;
+    }
+
+    /**
+     * This method will add reverse payment amount to cart
+     *
+     * @since 3.7.16
+     *
+     * @param string $amount
+     *
+     * @return WP_Error|bool true if product is added to cart, WP_Error otherwise
+     */
+    public static function add_payment_to_cart( $amount ) {
+        $amount = ! empty( $amount ) ? (float) wc_format_decimal( $amount, wc_get_price_decimals() ) : 0;
+
+        // now check for data validation
+        if ( $amount <= 0 ) {
+            return new WP_Error( 'invalid-amount', __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ) );
+        }
+
+        // get reverse withdrawal product id
+        $reverse_pay_product_id = self::get_reverse_withdrawal_base_product();
+        if ( ! is_numeric( $reverse_pay_product_id ) ) {
+            return new WP_Error( 'invalid-reverse-withdrawal-product', __( 'Invalid base payment product id. Please contact with site admin.', 'dokan-lite' ) );
+        }
+
+        $product = wc_get_product( $reverse_pay_product_id );
+        if ( ! $product ) {
+            return new WP_Error( 'invalid-reverse-withdrawal-product', __( 'Invalid base payment product id. Please contact with site admin.', 'dokan-lite' ) );
+        }
+
+        if ( 'publish' !== $product->get_status() ) {
+            return new WP_Error( 'invalid-reverse-withdrawal-product', __( 'Base payment product status is not published. Please contact with site admin.', 'dokan-lite' ) );
+        }
+
+        /*
+         * It is possible for the cart to be unavailable in some cases,
+         * specially while requesting API from third party agent like PostMan.
+         * To avoid any inconsistency, we need to load the cart manually if not exists.
+         */
+        if ( ! WC()->cart ) {
+            wc_load_cart();
+        }
+
+        // add  product to cart
+        WC()->cart->empty_cart();
+        $cart_item_data = [
+            'dokan_reverse_withdrawal_balance' => $amount,
+        ];
+
+        // try catch block used just to get rid of phpcs error
+        try {
+            $added = WC()->cart->add_to_cart( $product->get_id(), 1, '', '', $cart_item_data ); // phpcs:ignore
+        } catch ( \Exception $exception ) {
+            return new WP_Error( 'invalid-reverse-withdrawal-product', __( 'Something went wrong while adding product to cart. Please contact site admin.', 'dokan-lite' ) );
+        }
+
+        if ( $added ) {
+            return true;
+        }
+
+        return new WP_Error( 'invalid-reverse-withdrawal-product', __( 'Something went wrong while adding product to cart. Please contact site admin.', 'dokan-lite' ) );
     }
 }
