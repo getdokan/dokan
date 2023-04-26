@@ -15,32 +15,6 @@ class Manager {
     protected $class_map;
 
     /**
-     * Set rest api class map
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function __set( $key, $value ) {
-        $this->{$key} = $value;
-    }
-
-    /**
-     * Get rest api class map
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return \WP_REST_Controller|mixed|null
-     */
-    public function __get( $key ) {
-        // check isset
-        if ( isset( $this->{$key} ) ) {
-            return $this->{$key};
-        }
-        return null;
-    }
-
-    /**
      * Constructor
      */
     public function __construct() {
@@ -71,13 +45,26 @@ class Manager {
         $this->get_rest_api_class_map();
 
         foreach ( $this->class_map as $file_name => $controller ) {
+            // return if file not exists
+            if ( ! file_exists( $file_name ) ) {
+                continue;
+            }
+
+            // include file
             require_once $file_name;
+
+            // check if class exists
+            if ( ! class_exists( $controller ) ) {
+                continue;
+            }
+
             // get controller object
             $object = new $controller();
             // check if object is instance of WP_REST_Controller
             if ( ! is_a( $object, 'WP_REST_Controller' ) ) {
                 continue;
             }
+
             // register routes
             $object->register_routes();
         }
