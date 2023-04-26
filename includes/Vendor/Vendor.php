@@ -22,6 +22,10 @@ class Vendor {
      * @return void
      */
     public function __set( $key, $value ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return;
+        }
         $this->{$key} = $value;
     }
 
@@ -30,9 +34,13 @@ class Vendor {
      *
      * @since DOKAN_SINCE
      *
-     * @return mixed
+     * @return mixed|null
      */
     public function __get( $key ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return null;
+        }
         // check isset
         if ( isset( $this->{$key} ) ) {
             return $this->{$key};
