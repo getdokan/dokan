@@ -26,6 +26,14 @@ interface auth { //TODO: gather all interfaces in one place
 	cities: string[],
 }
 
+interface coupon {
+		code: string,
+		amount: string,
+		discount_type: string,
+		product_ids: number[],
+		individual_use: boolean
+}
+
 export class ApiUtils {
 	readonly request: APIRequestContext;
 
@@ -49,8 +57,8 @@ export class ApiUtils {
 	// get responseBody
 	async getResponseBody(response: APIResponse, assert = true) {
 		let responseBody: any;
-		assert && expect(response.ok()).toBeTruthy();
 		try {
+			assert && expect(response.ok()).toBeTruthy();
 			responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody); 
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
@@ -59,7 +67,7 @@ export class ApiUtils {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
-			return false
+			return false; //TODO: WHY FALSE	
 		}
 	}
 
@@ -72,7 +80,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
+	
 	/**
 	 * store api methods
 	 */
@@ -99,11 +107,18 @@ export class ApiUtils {
 	}
 
 	// create store
-	async createStore(payload: object, auth? : auth) {
+	async createStore(payload: any, auth? : auth) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		const sellerId = responseBody.id;
-		return [responseBody, sellerId];
+		const responseBody = await this.getResponseBody(response, false);
+		let sellerId;
+		if(responseBody.code){
+			expect(response.status()).toBe(500);
+			sellerId = await this.getSellerId(payload.store_name, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			sellerId = responseBody.id;
+		}
+		return [responseBody,sellerId];
 	}
 
 	// create store review
@@ -175,7 +190,7 @@ export class ApiUtils {
 	// get variationTd
 	async createVariableProductWithVariation(attribute: object, attributeTerm: object, product: object, auth? : auth) {
 		const [, productId] = await this.createProduct(product,auth);
-		const [body, attributeId] = await this.createAttributeTerm(attribute, attributeTerm,auth);
+		const [body, attributeId] = await this.createAttributeTerm(attribute, attributeTerm, auth);
 		const payload = {
 			...product, attributes: [{
 				id: attributeId,
@@ -203,7 +218,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
+	
 	// get attributeId
 	async getAttributeId(auth? : auth) {
 		const allAttributes = await this.getAllAttributes(auth);
@@ -217,6 +232,13 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		const attributeId = responseBody.id;
 		return [responseBody, attributeId];
+	}
+
+	// update batch attributes
+	async updateBatchAttributes(action: string, allIds: string[], auth? : auth) {
+		const response = await this.request.post(endPoints.wc.updateBatchAttributes, { data: { [action]: allIds }, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return [response, responseBody];
 	}
 
 	/**
@@ -236,7 +258,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
+	
 	// create attribute term
 	async createAttributeTerm(attribute: object, attributeTerm: object, auth? : auth) {
 		const [, attributeId] = await this.createAttribute(attribute);
@@ -265,11 +287,20 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productId: string, coupon: any, auth? : auth): Promise<[object, string]> {
+	async createCoupon(productId: string[], coupon: coupon, auth?: auth ) {
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId }, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		const couponId = responseBody.id;
-		return [responseBody, couponId];
+		const responseBody = await this.getResponseBody(response, false);
+		let couponId;
+		console.log(responseBody.code);
+		
+		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
+			expect(response.status()).toBe(400);
+			couponId = await this.getCouponId(coupon.code, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			couponId = responseBody.id;
+		}
+		return [responseBody, couponId];	
 	}
 
 	/**
@@ -300,15 +331,15 @@ export class ApiUtils {
 
 	// get withdrawId
 	async getWithdrawId(auth? : auth) {
-		const withdraw = await this.getAllWithdrawsByStatus('pending', auth);
-		const withdrawId = withdraw[0].id;
+		const allWithdraws = await this.getAllWithdrawsByStatus('pending',auth);
+		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
 
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[object, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response, false);
+		const responseBody = await this.getResponseBody(response, false); //TODO: test if false is necessary
 		const withdrawId = responseBody.id;
 		return [responseBody, withdrawId];
 	}
@@ -319,7 +350,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
+	
 	/**
 	 * order api methods
 	 */
@@ -337,7 +368,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
+	
 	// get orderId
 	async getOrderId(auth? : auth) {
 		const allOrders = await this.getAllOrders(auth);
@@ -382,9 +413,6 @@ export class ApiUtils {
 		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
 		return singleOrderLog;
 	}
-
-
-
 
 	/**
 	 * refund api methods
@@ -495,7 +523,7 @@ export class ApiUtils {
 	async activateModules(moduleIds: string, auth? : auth) {
 		const response = await this.request.put(endPoints.activateModule, { data: { module: [moduleIds] }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		const activeStatus = responseBody.active;
+		// const activeStatus = responseBody.active;
 		return responseBody;
 	}
 
@@ -525,11 +553,18 @@ export class ApiUtils {
 	}
 
 	// create customer
-	async createCustomer(payload: object, auth? : auth): Promise<[object, string]> {
-		const response = await this.request.post(endPoints.createCustomer, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		const customerId = String(responseBody.id);
-		return [responseBody, customerId];
+	async createCustomer(payload: any, auth? : auth) {
+		const response = await this.request.post(endPoints.wc.createCustomer, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response, false);
+		let customerId;
+		if(responseBody.code){
+			expect(response.status()).toBe(400);
+			customerId = await this.getCustomerId(payload.username, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			customerId = responseBody.id;
+		}
+		return [responseBody,customerId];
 	}
 
 	// delete customer
@@ -553,7 +588,6 @@ export class ApiUtils {
 	// create a wholesale customer
 	async createWholesaleCustomer(payload: object, auth? : auth) {
 		const [, customerId] = await this.createCustomer(payload, auth);
-
 		const response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: customerId }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return [responseBody, customerId];
@@ -759,7 +793,6 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
 	/**
 	 * order downloads  api methods
 	 */
@@ -935,7 +968,8 @@ export class ApiUtils {
 				file: {
 					name: String((filePath.split('/')).pop()),
 					mimeType: 'image/' + (filePath.split('.')).pop(),
-					buffer: fs.readFileSync(filePath),
+					// buffer: fs.readFileSync(filePath),
+					buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
 				},
 			},
 		};
@@ -951,11 +985,11 @@ export class ApiUtils {
 		// form.append("file", fs.createReadStream(filePath));
 		// const base64 = { 'base64': fs.readFileSync(filePath) }
 		function base64_encode(file) {
-			var body = fs.readFileSync(file);
+			const body = fs.readFileSync(file);
 			return body.toString('base64');
 		}
 
-		form.append("file",
+		form.append('file',
 			// fs.readFileSync(filePath, { encoding: 'base64' }),
 
 			// base64_encode(filePath),
@@ -967,10 +1001,10 @@ export class ApiUtils {
 
 		);
 
-		form.append("title", attributes.title);
-		form.append("caption", attributes.caption);
-		form.append("caption", attributes.description);
-		form.append("alt_text", attributes.alt_text);
+		form.append('title', attributes.title);
+		form.append('caption', attributes.caption);
+		form.append('caption', attributes.description);
+		form.append('alt_text', attributes.alt_text);
 
 		// const payload = {
 		// 	headers: {
@@ -988,7 +1022,7 @@ export class ApiUtils {
 			// ContentType: 'image/png',
 			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
 			// Authorization: auth.Authorization  //TODO: handle authorization
-		}
+		};
 
 
 		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
@@ -1000,7 +1034,8 @@ export class ApiUtils {
 
 	// upload media
 	async uploadMedia3(filePath: string, auth? : auth) {
-		const payload = fs.readFileSync(filePath);
+		// const payload = fs.readFileSync(filePath);
+		const payload = Buffer.from(filePath);  //TODO: test then use it instead of previous
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
@@ -1017,7 +1052,7 @@ export class ApiUtils {
 
 	// get mediaItemId
 	async getMediaItemId(auth? : auth) {
-		const getAllMediaItems = await this.getAllMediaItems();
+		const getAllMediaItems = await this.getAllMediaItems(auth);
 		const mediaId = getAllMediaItems[0].id;
 		return mediaId;
 	}
@@ -1119,6 +1154,13 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// update batch categories
+	async updateBatchCategories(action: string, allIds: string[], auth? : auth) {
+		const response = await this.request.post(endPoints.wc.updateBatchCategories, { data: { [action]: allIds }, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return [response, responseBody];
+	}
+
 	// order
 
 	// create order
@@ -1172,7 +1214,7 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	// setup tax 
+	// setup tax  
 	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate) {
 		// enable tax rate
 		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
@@ -1186,7 +1228,7 @@ export class ApiUtils {
 		// create tax rate
 		const taxRateResponse = await this.createTaxRate(taxPayload);
 		expect(parseInt(taxRateResponse.rate)).toBe(parseInt(taxPayload.rate));
-		return Number(taxPayload.rate)
+		return Number(taxPayload.rate);
 	}
 
 	// shipping
@@ -1211,6 +1253,13 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		const shippingZoneId = responseBody.id;
 		return [responseBody, shippingZoneId];
+	}
+
+	// delete shipping zone
+	async deleteShippingZone(zoneId: string, auth? : auth) {
+		const response = await this.request.delete(endPoints.wc.deleteShippingZone(zoneId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
 	}
 
 	// get all shipping zone locations

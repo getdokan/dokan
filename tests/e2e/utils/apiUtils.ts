@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
-
+import fs from 'fs';
 interface auth { //TODO: gather all interfaces in one place
 	[key: string]: string;
  }
@@ -22,6 +22,14 @@ interface auth { //TODO: gather all interfaces in one place
 	class: string,
 	postcodes: string[],
 	cities: string[],
+}
+
+interface coupon {
+		code: string,
+		amount: string,
+		discount_type: string,
+		product_ids: number[],
+		individual_use: boolean
 }
 
 export class ApiUtils {
@@ -50,7 +58,6 @@ export class ApiUtils {
 		try {
 			assert && expect(response.ok()).toBeTruthy();
 			responseBody = await response.json();
-
 			// console.log('ResponseBody: ', responseBody); 
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
@@ -63,12 +70,29 @@ export class ApiUtils {
 	}
 
 	/**
+	 * dummy data api methods
+	 */
+
+	async importDummyData(payload: object) {
+		const response = await this.request.post(endPoints.importDummyData, { data: payload });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+	
+	/**
 	 * store api methods
 	 */
 
 	// get all stores
 	async getAllStores(auth? : auth) {
 		const response = await this.request.get(endPoints.getAllStores, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get single store
+	async getSingleStore(orderId: string, auth? : auth) {
+		const response = await this.request.get(endPoints.getSingleStore(orderId), { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -81,10 +105,18 @@ export class ApiUtils {
 	}
 
 	// create store
-	async createStore(payload: object, auth? : auth) {
+	async createStore(payload: any, auth? : auth) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		return [responseBody, response.status()];
+		const responseBody = await this.getResponseBody(response, false);
+		let sellerId;
+		if(responseBody.code){
+			expect(response.status()).toBe(500);
+			sellerId = await this.getSellerId(payload.store_name, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			sellerId = responseBody.id;
+		}
+		return [responseBody,sellerId];
 	}
 
 	// create store review
@@ -147,7 +179,6 @@ export class ApiUtils {
 	// get variationTd
 	async getVariationId(productName: string, auth? : auth) {
 		const productId = await this.getProductId(productName, auth);
-
 		const response = await this.request.get(endPoints.getAllProductVariations(productId), { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const variationId = responseBody[0].id;
@@ -179,6 +210,13 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// get single attribute
+	async getSingleAttribute(attributeId: string, auth? : auth) {
+		const response = await this.request.get(endPoints.getSingleAttribute(attributeId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+	
 	// get attributeId
 	async getAttributeId(auth? : auth) {
 		const allAttributes = await this.getAllAttributes(auth);
@@ -212,14 +250,20 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// get single attribute term
+	async getSingleAttributeTerm(attributeId: string, attributeTermId: string, auth? : auth) {
+		const response = await this.request.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+	
 	// create attribute term
-	async createAttributeTerm(attribute: object | number, attributeTerm: object, auth? : auth) {
-		let attributeId: number;
-		typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute) : attributeId = attribute;
-		const response = await this.request.post(endPoints.createAttributeTerm(String(attributeId)), { data: attributeTerm, headers: auth });
+	async createAttributeTerm(attribute: object, attributeTerm: object, auth? : auth) {
+		const [, attributeId] = await this.createAttribute(attribute);
+		const response = await this.request.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const attributeTermId = responseBody.id;
-		return [response, responseBody, attributeId, attributeTermId];
+		return [responseBody, attributeId, attributeTermId];
 	}
 
 	/**
@@ -241,13 +285,18 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productId: string[], coupon: object, auth?: auth ) {
+	async createCoupon(productId: string[], coupon: coupon, auth?: auth ) {
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId }, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		// let couponId = responseBody.id
-		// // console.log(couponId)
-		// return [responseBody, couponId]
-		return [responseBody, response.status()];
+		const responseBody = await this.getResponseBody(response, false);
+		let couponId;
+		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
+			expect(response.status()).toBe(400);
+			couponId = await this.getCouponId(coupon.code, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			couponId = responseBody.id;
+		}
+		return [responseBody, couponId];	
 	}
 
 	/**
@@ -278,19 +327,26 @@ export class ApiUtils {
 
 	// get withdrawId
 	async getWithdrawId(auth? : auth) {
-		const allProducts = await this.getAllWithdrawsByStatus('pending',auth);
-		const withdrawId = allProducts[0].id;
+		const allWithdraws = await this.getAllWithdrawsByStatus('pending',auth);
+		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
 
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[object, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.getResponseBody(response, false); //TODO: test if false is necessary
 		const withdrawId = responseBody.id;
 		return [responseBody, withdrawId];
 	}
 
+	// cancel withdraw
+	async cancelWithdraw(withdrawId: string) {
+		const response = await this.request.delete(endPoints.cancelWithdraw(withdrawId));
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+	
 	/**
 	 * order api methods
 	 */
@@ -302,6 +358,13 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// get single order
+	async getSingleOrder(orderId: string, auth? : auth) {
+		const response = await this.request.get(endPoints.getSingleOrder(orderId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+	
 	// get orderId
 	async getOrderId(auth? : auth) {
 		const allOrders = await this.getAllOrders(auth);
@@ -327,6 +390,24 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		const orderNoteId = responseBody.id;
 		return [responseBody, orderId, orderNoteId];
+	}
+
+	/**
+	 * admin api methods
+	*/
+
+	// get all order logs
+	async getAllOrderLogs(auth? : auth) {
+		const response = await this.request.get(endPoints.getAdminLogs, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get single order log
+	async getSingleOrderLog(orderId: string, auth? : auth) {
+		const allOrderLogs = await this.getAllOrderLogs();
+		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
+		return singleOrderLog;
 	}
 
 	/**
@@ -468,10 +549,18 @@ export class ApiUtils {
 	}
 
 	// create customer
-	async createCustomer(payload: object, auth? : auth) {
-		const response = await this.request.post(endPoints.createCustomer, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		return [responseBody, response.status()];
+	async createCustomer(payload: any, auth? : auth) {
+		const response = await this.request.post(endPoints.wc.createCustomer, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response, false);
+		let customerId;
+		if(responseBody.code){
+			expect(response.status()).toBe(400);
+			customerId = await this.getCustomerId(payload.username, auth);
+		} else { 
+			expect(response.ok()).toBeTruthy();
+			customerId = responseBody.id;
+		}
+		return [responseBody,customerId];
 	}
 
 	// delete customer
@@ -515,7 +604,6 @@ export class ApiUtils {
 	async createProductAdvertisement(product: object, auth? : auth) {
 		const [body, productId] = await this.createProduct(product, auth);
 		const sellerId = body.store.id;
-
 		const response = await this.request.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const productAdvertisementId = responseBody.id;
@@ -701,6 +789,59 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
+	/**
+	 * order downloads  api methods
+	 */
+
+	// get all order download
+	async getAllOrderDownloads(orderId: string, auth? : auth) {
+		const response = await this.request.get(endPoints.getAllOrderDownloads(orderId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// create order download
+	async createOrderDownload(orderId: string, downloadableProducts: string[], auth? : auth): Promise<[object, string]> {
+		const response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts } });
+		const responseBody = await this.getResponseBody(response);
+		const downloadId = String((Object.keys(responseBody))[0]);
+		return [responseBody, downloadId];
+	}
+
+	/**
+	 * seller badge  api methods
+	 */
+
+	// get all seller badges
+	async getAllSellerBadges(auth? : auth) {
+		const response = await this.request.get(endPoints.getAllSellerBadges, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get all seller badges
+	async getSellerBadgeId(eventType: string, auth? : auth) {
+		const allBadges = await this.getAllSellerBadges(auth);
+		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
+		return badgeId;
+	}
+
+	// create seller badge
+	async createSellerBadge(payload: any, auth? : auth): Promise<[object, string]> {
+		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response, false);
+		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type) : responseBody.id;
+		return [responseBody, badgeId];
+	}
+
+	// update batch seller badges
+	async updateBatchSellerBadges(action: string, allIds: string[], auth? : auth) {
+		const response = await this.request.put(endPoints.updateBatchSellerBadges, { data: { [action]: allIds }, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+
 
 	/**
 	 * wp  api methods
@@ -811,6 +952,61 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// upload media
+	async uploadMedia(filePath: string, auth? : auth) { //TODO: handle different file upload, hardcoded: image
+		const payload = {
+			headers: {
+				Accept: '*/*',
+				ContentType: 'multipart/form-data',
+				// Authorization: auth.Authorization  //TODO: handle authorization
+			},
+			multipart: {
+				file: {
+					name: String((filePath.split('/')).pop()),
+					mimeType: 'image/' + (filePath.split('.')).pop(),
+					// buffer: fs.readFileSync(filePath),
+					buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
+				},
+			},
+		};
+		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
+		const responseBody = await this.getResponseBody(response);
+		const mediaId = responseBody.id;
+		return [responseBody, mediaId];
+	}
+
+	// upload media
+	async uploadMedia3(filePath: string, auth? : auth) {
+		// const payload = fs.readFileSync(filePath);
+		const payload = Buffer.from(filePath);  //TODO: test then use it instead of previous
+		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
+		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
+		const responseBody = await this.getResponseBody(response);
+		const mediaId = responseBody.id;
+		return [responseBody, mediaId];
+	}
+
+	// get all mediaItems
+	async getAllMediaItems(auth? : auth) {
+		const response = await this.request.get(endPoints.wp.getAllMediaItems, { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get mediaItemId
+	async getMediaItemId(auth? : auth) {
+		const getAllMediaItems = await this.getAllMediaItems(auth);
+		const mediaId = getAllMediaItems[0].id;
+		return mediaId;
+	}
+
+	// create post 
+	async createPost(payload: object, auth? : auth) {
+		const response = await this.request.put(endPoints.wp.createPost, { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
 	/**
 	 * woocommerce  api methods
 	 */
@@ -842,7 +1038,7 @@ export class ApiUtils {
 	async updateBatchWcSettingsOptions(groupId: string, payload: object, auth? : auth) {
 		const response = await this.request.post(endPoints.wc.updateBatchSettingOptions(groupId), { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		return [response, responseBody];
+		return responseBody;
 	}
 
 	// reviews
@@ -911,14 +1107,14 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(product: object, order: any, auth? : auth){
-		const [, productId] = await this.createProduct(product, auth);
-		const payload = order;
+	async createOrder(productPayload: object, orderPayload: any, auth? : auth): Promise<[object, string, string]> {
+		const [, productId] = await this.createProduct(productPayload, auth);
+		const payload = orderPayload;
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const orderId = responseBody.id;
-		return [responseBody, orderId];
+		return [responseBody, orderId, productId];
 	}
 
 	// create complete order
@@ -1018,7 +1214,7 @@ export class ApiUtils {
 
 	// add shipping zone location
 	async addShippingZoneLocation(zoneId: string, zoneLocation: object, auth? : auth) {
-		const response = await this.request.put(endPoints.wc.addShippingZoneLocation(zoneId), { data: zoneLocation , headers: auth });
+		const response = await this.request.put(endPoints.wc.addShippingZoneLocation(zoneId), { data: zoneLocation, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -1054,9 +1250,9 @@ export class ApiUtils {
 	}
 
 	// update payment gateway
-	async updatePaymentGateway(paymentGatewayId: string, payload: object, auth? : auth) {
+	async updatePaymentGateway(paymentGatewayId: string, payload: object, auth? : auth): Promise<object> {
 		const response = await this.request.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		return [response, responseBody];
+		return responseBody;
 	}
 }

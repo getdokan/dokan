@@ -1285,7 +1285,7 @@ export const data = {
 		},
 
 		coupon: {
-			couponTitle: 'c1_v1',
+			couponCode: 'c1_v1',
 		},
 		vendorInfo: {
 			firstName: () => 'vendor1',

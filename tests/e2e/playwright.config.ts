@@ -12,13 +12,13 @@ require('dotenv').config();
  */
 
 const config: PlaywrightTestConfig = {
-    // test directory
-    testDir: './tests',
+	// test directory
+	testDir: './tests',
 
 	/* Maximum time one test can run for. */
 	// timeout: 60 * 1000,
-	timeout: 40 * 1000,
-	// timeout: 30 * 1000,
+	// timeout: 40 * 1000,
+	timeout: 30 * 1000,
 	// timeout: 10 * 1000,
 
 	expect: {
@@ -74,7 +74,7 @@ const config: PlaywrightTestConfig = {
 	projects: [
 		// Setup project
 		{ name: 'setup', 
-		testMatch: /.*\.setup\.ts/ },
+			testMatch: /.*\.setup\.ts/ },
 
 		{
 			name: 'e2e_tests',
@@ -84,12 +84,12 @@ const config: PlaywrightTestConfig = {
 			dependencies: ['setup'],
 		},
 
-		  	//     {
-	//         name: 'chromium',
-	//         use: {
-	//             ...devices['Desktop Chrome'],
-	//         },
-	//     },
+		//     {
+		//         name: 'chromium',
+		//         use: {
+		//             ...devices['Desktop Chrome'],
+		//         },
+		//     },
 
 		// {
 		//   name: 'firefox',
