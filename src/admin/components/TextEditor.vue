@@ -1,5 +1,5 @@
 <template>
-    <textarea :value="value" :id="'dokan-tinymce-' + editorId"></textarea>
+    <textarea :value="value" :id="'dokan-tinymce-' + editorId" class="dokan-tinymce"></textarea>
 </template>
 
 <script>
@@ -23,88 +23,98 @@
             };
         },
 
-        mounted() {
-            const vm = this;
-
-            window.tinymce.init({
-                selector: `#dokan-tinymce-${this.editorId}`,
-                branding: false,
-                height: 200,
-                menubar: false,
-                convert_urls: false,
-                theme: 'modern',
-                skin: 'lightgray',
-                fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
-                font_formats : 'Arial=arial,helvetica,sans-serif;' +
-                    'Comic Sans MS=comic sans ms,sans-serif;' +
-                    'Courier New=courier new,courier;' +
-                    'Georgia=georgia,palatino;' +
-                    'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' +
-                    'Tahoma=tahoma,arial,helvetica,sans-serif;' +
-                    'Times New Roman=times new roman,times;' +
-                    'Trebuchet MS=trebuchet ms,geneva;' +
-                    'Verdana=verdana,geneva;',
-                plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
-                toolbar: [
-                    'shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv',
-                    'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo',
-                ],
-                setup(editor) {
-                    const shortcodeMenuItems = [];
-
-                    _.forEach(vm.shortcodes, (shortcodeObj, shortcodeType) => {
-                        shortcodeMenuItems.push({
-                            text: shortcodeObj.title,
-                            classes: 'menu-section-title'
-                        });
-
-                        _.forEach(shortcodeObj.codes, (codeObj, shortcode) => {
-                            shortcodeMenuItems.push({
-                                text: codeObj.title,
-                                onclick() {
-                                    let code = `[${shortcodeType}:${shortcode}]`;
-
-                                    if (codeObj.default) {
-                                        code = `[${shortcodeType}:${shortcode} default="${codeObj.default}"]`;
-                                    }
-
-                                    if (codeObj.text) {
-                                        code = `[${shortcodeType}:${shortcode} text="${codeObj.text}"]`;
-                                    }
-
-                                    if (codeObj.plainText) {
-                                        code = codeObj.text;
-                                    }
-
-                                    editor.insertContent(code);
-                                }
-                            });
-                        });
-                    });
-
-                    // editor.addButton('shortcodes', {
-                    //     type: 'menubutton',
-                    //     icon: 'shortcode',
-                    //     tooltip: 'Shortcodes',
-                    //     menu: shortcodeMenuItems
-                    // });
-
-                    editor.addButton('image', {
-                        icon: 'image',
-                        onclick() {
-                            vm.browseImage(editor);
-                        }
-                    });
-
-                    // editor change triggers
-                    editor.on('change keyup NodeChange', () => {
-                        vm.$emit('input', editor.getContent());
-                    });
+        created() {
+            /**
+             * When admin searches text editor setting in dokan admin setting, the text editors
+             * disables and does not works, thats why we need to distroy the text editors and
+             * reinitiate the text editors.
+             */
+            this.$root.$on('reinitWpTextEditor', async () => {
+                if ( window.tinymce.activeEditor ) {
+                    await window.tinymce.activeEditor.destroy();
+                    await this.initWpEditor();
                 }
-            });
+            } );
+        },
+
+        mounted() {
+            this.initWpEditor();
         },
 
         methods: {
+            initWpEditor() {
+                const vm = this;
+
+                window.tinymce.init({
+                    selector: `.dokan-tinymce`,
+                    branding: false,
+                    height: 200,
+                    menubar: false,
+                    convert_urls: false,
+                    theme: 'modern',
+                    skin: 'lightgray',
+                    fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
+                    font_formats : 'Arial=arial,helvetica,sans-serif;' +
+                        'Comic Sans MS=comic sans ms,sans-serif;' +
+                        'Courier New=courier new,courier;' +
+                        'Georgia=georgia,palatino;' +
+                        'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' +
+                        'Tahoma=tahoma,arial,helvetica,sans-serif;' +
+                        'Times New Roman=times new roman,times;' +
+                        'Trebuchet MS=trebuchet ms,geneva;' +
+                        'Verdana=verdana,geneva;',
+                    plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
+                    toolbar: [
+                        'shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv',
+                        'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo',
+                    ],
+                    setup(editor) {
+                        const shortcodeMenuItems = [];
+
+                        _.forEach(vm.shortcodes, (shortcodeObj, shortcodeType) => {
+                            shortcodeMenuItems.push({
+                                text: shortcodeObj.title,
+                                classes: 'menu-section-title'
+                            });
+
+                            _.forEach(shortcodeObj.codes, (codeObj, shortcode) => {
+                                shortcodeMenuItems.push({
+                                    text: codeObj.title,
+                                    onclick() {
+                                        let code = `[${shortcodeType}:${shortcode}]`;
+
+                                        if (codeObj.default) {
+                                            code = `[${shortcodeType}:${shortcode} default="${codeObj.default}"]`;
+                                        }
+
+                                        if (codeObj.text) {
+                                            code = `[${shortcodeType}:${shortcode} text="${codeObj.text}"]`;
+                                        }
+
+                                        if (codeObj.plainText) {
+                                            code = codeObj.text;
+                                        }
+
+                                        editor.insertContent(code);
+                                    }
+                                });
+                            });
+                        });
+
+                        editor.addButton('image', {
+                            icon: 'image',
+                            onclick() {
+                                vm.browseImage(editor);
+                            }
+                        });
+
+                        // editor change triggers
+                        editor.on('change keyup NodeChange', () => {
+                            vm.$emit('input', editor.getContent());
+                        });
+                    }
+                });
+            },
             browseImage(editor) {
                 const vm = this;
                 const selectedFile = {

@@ -186,7 +186,7 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking' ] ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking', 'auction' ] ) {
     // get all function arguments as key => value pairs
     $args = get_defined_vars();
 
@@ -199,8 +199,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 
         if ( ! $results ) {
             global $wpdb;
-            $exclude_product_types      = esc_sql( $exclude_product_types );
-            $exclude_product_types_text = "'" . implode( "', '", $exclude_product_types ) . "'";
+            $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
@@ -253,10 +252,11 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
  * @param string $post_type
  * @param int    $user_id
  * @param string $stock_type
+ * @param array  $exclude_product_types
  *
  * @return int $counts
  */
-function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
+function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_product_types = [ 'booking', 'auction' ] ) {
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
@@ -265,6 +265,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+        $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
             $results = $wpdb->get_results(
@@ -275,6 +276,12 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
                     AND p.post_author = %d
                     AND pm.meta_key   = '_stock_status'
                     AND pm.meta_value = %s
+                    AND p.ID IN (
+                        SELECT tr.object_id FROM {$wpdb->prefix}terms AS t
+                        LEFT JOIN {$wpdb->prefix}term_taxonomy AS tt ON t.term_id = tt.term_taxonomy_id
+                        LEFT JOIN {$wpdb->prefix}term_relationships AS tr ON t.term_id = tr.term_taxonomy_id
+                        WHERE tt.taxonomy = 'product_type' AND t.slug NOT IN ({$exclude_product_types_text})
+                    )
                     GROUP BY p.post_status",
                     $post_type,
                     $user_id,
@@ -2120,7 +2127,11 @@ function dokan_get_avatar_url( $url, $id_or_email, $args ) {
         return $url;
     }
 
-    $vendor      = $vendor->get( $user->ID );
+    $vendor = $vendor->get( $user->ID );
+    if ( ! $vendor->is_vendor() ) {
+        return $url;
+    }
+
     $gravatar_id = $vendor->get_avatar_id();
 
     if ( ! $gravatar_id ) {

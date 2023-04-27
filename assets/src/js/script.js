@@ -103,10 +103,11 @@ jQuery(function($) {
     form_group.addClass('has-error').append(error);
   };
 
-  var validatorSuccess = function(label, element) {
+  var validatorSuccess = function(error, element) {
     $(element)
       .closest('.dokan-form-group')
       .removeClass('has-error');
+    $(error).remove();
   };
 
   var api = wp.customize;
