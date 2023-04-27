@@ -17,8 +17,8 @@ const config: PlaywrightTestConfig = {
 
 	/* Maximum time one test can run for. */
 	// timeout: 60 * 1000,
-	// timeout: 40 * 1000,
-	timeout: 30 * 1000,
+	timeout: 40 * 1000,
+	// timeout: 30 * 1000,
 	// timeout: 10 * 1000,
 
 	expect: {
@@ -36,13 +36,13 @@ const config: PlaywrightTestConfig = {
 	// forbidOnly: !!process.env.CI,
 
 	/* Retry on CI only */
-	retries: process.env.CI ? 1 : 0,
+	// retries: process.env.CI ? 1 : 0,
 
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI ? [['html'], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],
+	reporter: process.env.CI ? [['html'],['list', { printSteps: true }], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	globalSetup: require.resolve('./global-setup'),

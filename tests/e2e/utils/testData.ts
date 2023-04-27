@@ -11,6 +11,8 @@ interface admin {
 	password: string;
 }
 
+
+
 export { admin, user };
 
 export const data = {
@@ -137,6 +139,13 @@ export const data = {
 
 	// Generated  test data
 
+
+	auth: {
+		adminAuthFile: 'playwright/.auth/adminStorageState.json',
+		vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
+		customerAuthFile:'playwright/.auth/customerStorageState.json'
+	},
+
 	user: {
 		username: () => faker.name.firstName('male'),
 		userDetails: {
@@ -203,7 +212,7 @@ export const data = {
 			clothings: 'Clothings',
 			randomCategory1: () => faker.commerce.productAdjective(),
 			randomCategory: () => 'category_' + faker.random.alpha(5),
-			categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', "Men's Fashion", 'Clothings', "Women's Fashion"]),
+			categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', 'Men"s Fashion', 'Clothings', 'Women"s Fashion']),
 		},
 		store: {
 			adminStore: String(process.env.ADMIN) + 'store',
@@ -1288,9 +1297,9 @@ export const data = {
 		vendorStores: {
 			followFromShopPage: 'shopPage',
 			followFromStorePage: 'storePage',
-			vendor1: 'vendorStore1', //Todo: shopurl  and store url must be same
-			shopUrl: 'vendorStore1',
-			vendor2: 'vendorStore2',
+			vendor1: 'vendor1Store', //Todo: shopurl  and store url must be same
+			shopUrl: 'vendor1Store',
+			vendor2: 'vendor2Store',
 
 		},
 		customerInfo: {

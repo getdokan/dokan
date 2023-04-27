@@ -1,9 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 import { BasePage } from './basePage';
-import { ApiUtils } from '../utils/apiUtils';
 import { data, user } from '../utils/testData';
 import { selector } from './selectors';
-import { helpers } from '../utils/helpers';
 
 
 export class LoginPage extends BasePage {
@@ -12,8 +10,8 @@ export class LoginPage extends BasePage {
 	}
 
 	// user login
-	async login(user: user,storageState?: string): Promise<void> {
-		await this.loginFronted(user);
+	async login(user: user, storageState?: string): Promise<void> {
+		await this.loginFronted(user, storageState);
 	}
 
 	// user loginFronted

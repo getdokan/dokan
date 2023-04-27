@@ -131,7 +131,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingPhone, billingInfo.phone);
 		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email());
 		await this.clickAndWaitForResponse(data.subUrls.frontend.billingAddress, selector.customer.cAddress.billingSaveAddress, 302);
-		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage);
 	}
 
 	// customer add shipping address
@@ -153,15 +153,15 @@ export class CustomerPage extends BasePage {
 		await this.press(data.key.enter);
 		await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shippingSaveAddress, 302);
-		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage)
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.customerInfo.addressChangeSuccessMessage);
 	}
 
 	// customer Send Rma Request
 	async sendRmaMessage(message: string): Promise<void> {
 		await this.click(selector.customer.cMyAccount.rmaRequests);
 		await this.clearAndType(selector.customer.cRma.message, message);
-		await this.click(selector.customer.cRma.sendMessage);  //TODO: add ajax is exists
-		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.rma.sendMessage)
+		await this.click(selector.customer.cRma.sendMessage); //TODO: add ajax is exists
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.rma.sendMessage);
 	}
 
 
@@ -175,7 +175,7 @@ export class CustomerPage extends BasePage {
 		// await this.clearAndType(selector.customer.cAccountDetails.email, customerInfo.email())
 		await this.updatePassword(customerInfo.password, customerInfo.password1);
 		// cleanup
-		await this.updatePassword(customerInfo.password1, customerInfo.password);  //TODO: improve assert only in update password ,also update vendor
+		await this.updatePassword(customerInfo.password1, customerInfo.password); //TODO: improve assert only in update password ,also update vendor
 	}
 
 	// customer update password
@@ -200,34 +200,34 @@ export class CustomerPage extends BasePage {
 	async followStore(storeName: string, followLocation: string): Promise<void> {
 		let currentFollowStatus: boolean;
 		switch (followLocation) {
-			// shop page
-			case 'shopPage':
-				await this.searchStore(storeName);
-				currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
-				// unfollow if not already
-				if (currentFollowStatus) {
-					await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-					await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatus(storeName))).toContainText('Follow');
-				}
+		// shop page
+		case 'shopPage':
+			await this.searchStore(storeName);
+			currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
+			// unfollow if not already
+			if (currentFollowStatus) {
 				await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-				await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatus(storeName))).toContainText('Following');
-				break;
+				await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatus(storeName))).toContainText('Follow');
+			}
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
+			await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatus(storeName))).toContainText('Following');
+			break;
 
 			// store page
-			case 'storePage':
-				await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-				currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatusStorePage, 'Following');
-				// unfollow if not already
-				if (currentFollowStatus) {
-					await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreStorePage);
-					await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatusStorePage)).toContainText('Follow');
-				}
+		case 'storePage':
+			await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+			currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatusStorePage, 'Following');
+			// unfollow if not already
+			if (currentFollowStatus) {
 				await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreStorePage);
-				await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatusStorePage)).toContainText('Following');
-				break;
+				await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatusStorePage)).toContainText('Follow');
+			}
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreStorePage);
+			await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatusStorePage)).toContainText('Following');
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 
@@ -261,7 +261,7 @@ export class CustomerPage extends BasePage {
 
 	// customer add customer support ticket
 	async sendMessageCustomerSupportTicket(supportTicket: { message: () => any; }): Promise<void> {
-		let message = supportTicket.message();
+		const message = supportTicket.message();
 		await this.goIfNotThere(data.subUrls.frontend.supportTickets);
 		await this.click(selector.customer.cSupportTickets.firstOpenTicket);
 		await this.clearAndType(selector.customer.cSupportTickets.addReply, message);
@@ -327,12 +327,12 @@ export class CustomerPage extends BasePage {
 	// customer add product to cart from product details page
 	async addProductToCartFromSingleProductPage(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-		const addonIsVisible = this.isVisible(selector.customer.cSingleProduct.addOnSelect)
+		const addonIsVisible = this.isVisible(selector.customer.cSingleProduct.addOnSelect);
 		if (addonIsVisible){
 			await this.selectByNumber(selector.customer.cSingleProduct.addOnSelect, 1);
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.addToCart);
-		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(`“${productName}” has been added to your cart.`)
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(`“${productName}” has been added to your cart.`);
 	}
 
 	// customer check whether product is on cart
@@ -343,7 +343,7 @@ export class CustomerPage extends BasePage {
 	// go to cart from shop page
 	async goToCartFromShop(): Promise<void> {
 		await this.clickAndWaitForNavigation(selector.customer.cShop.viewCart);
-		const cartUrl = await this.isCurrentUrl('cart')
+		const cartUrl = await this.isCurrentUrl('cart');
 		expect(cartUrl).toBeTruthy();
 	}
 
@@ -395,7 +395,7 @@ export class CustomerPage extends BasePage {
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('Coupon code applied successfully.');
 	}
 
-	async buyProduct(productName: string, couponCode: string, applyCoupon: boolean = false, getOrderDetails: boolean = false, paymentMethod: string = 'bank', paymentDetails: any): Promise<void | object> {
+	async buyProduct(productName: string, couponCode: string, applyCoupon = false, getOrderDetails = false, paymentMethod = 'bank', paymentDetails: any): Promise<void | object> {
 		// clear cart before buying
 		await this.clearCart();
 		// buy product
@@ -405,7 +405,7 @@ export class CustomerPage extends BasePage {
 	}
 
 	// customer place order
-	async placeOrder(paymentMethod: string = 'bank', getOrderDetails: boolean = false, billingDetails: boolean = false, shippingDetails: boolean = false): Promise<void | object> {
+	async placeOrder(paymentMethod = 'bank', getOrderDetails = false, billingDetails = false, shippingDetails = false): Promise<void | object> {
 		await this.goIfNotThere(data.subUrls.frontend.checkout);
 		if (billingDetails) {
 			await this.addBillingAddressInCheckout(data.customer.customerInfo); //TODO: fill if empty
@@ -415,26 +415,26 @@ export class CustomerPage extends BasePage {
 		}
 
 		switch (paymentMethod) {
-			case 'bank':
-				await this.click(selector.customer.cCheckout.directBankTransfer);
-				// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
-				break;
-			case 'check':
-				await this.click(selector.customer.cCheckout.checkPayments);
-				// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
-				break;
-			case 'cod':
-				await this.click(selector.customer.cCheckout.cashOnDelivery);
-				// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
-				break;
+		case 'bank':
+			await this.click(selector.customer.cCheckout.directBankTransfer);
+			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
+			break;
+		case 'check':
+			await this.click(selector.customer.cCheckout.checkPayments);
+			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
+			break;
+		case 'cod':
+			await this.click(selector.customer.cCheckout.cashOnDelivery);
+			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
+			break;
 			// case 'stripe':
 			//     await this.payWithStripe(paymentDetails)
 			//     break;
 			// case 'stripeExpress':
 			//     await this.payWithStripeExpress(paymentDetails)
 			//     break;
-			default:
-				break;
+		default:
+			break;
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder); //todo:  remove from other places
 		await expect(this.page.locator(selector.customer.cOrderReceived.orderReceivedPageHeader)).toBeVisible();
@@ -650,6 +650,6 @@ export class CustomerPage extends BasePage {
 		await this.click(selector.customer.cOrders.warrantySubmitRequest);
 		// const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
 		// expect(successMessage).toMatch(refund.refundSubmitSuccessMessage);
-		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(refund.refundSubmitSuccessMessage)
+		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(refund.refundSubmitSuccessMessage);
 	}
 }

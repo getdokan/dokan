@@ -6,7 +6,6 @@ import { CustomerPage } from './customerPage';
 import { selector } from './selectors';
 import { data } from '../utils/testData';
 import { helpers } from '../utils/helpers';
-import { log } from 'console';
 
 export class VendorPage extends BasePage {
 	constructor(page: Page) {
@@ -50,7 +49,7 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vRegistration.shopUrl);
 
 		// fill address if enabled
-		const addressInputIsVisible = await this.isVisible(selector.vendor.vRegistration.street1)
+		const addressInputIsVisible = await this.isVisible(selector.vendor.vRegistration.street1);
 		if (addressInputIsVisible) {
 			await this.clearAndType(selector.vendor.vRegistration.street1, vendorInfo.street1);
 			await this.clearAndType(selector.vendor.vRegistration.street2, vendorInfo.street2);
@@ -65,7 +64,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vRegistration.bankName, vendorInfo.bankName);
 		await this.clearAndType(selector.vendor.vRegistration.bankIban, vendorInfo.bankIban);
 		await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
-		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions)
+		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
 		const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
 		if (subscriptionPackIsVisible) {
 			await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
@@ -86,7 +85,7 @@ export class VendorPage extends BasePage {
 
 	// vendor setup wizard
 	async vendorSetupWizard(setupWizardData: { choice: boolean; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
-		setupWizardData.choice = true
+		setupWizardData.choice = true;
 		await this.goIfNotThere(data.subUrls.frontend.vendorSetupWizard);
 		if (setupWizardData.choice) {
 			await this.click(selector.vendor.vSetup.letsGo);
@@ -153,7 +152,7 @@ export class VendorPage extends BasePage {
 		await this.waitForVisibleLocator(selector.vendor.product.productName);
 		await this.type(selector.vendor.product.productName, productName);
 		await this.type(selector.vendor.product.productPrice, product.regularPrice());
-		await this.addCategory(product.category) // TODO: split in separate test
+		await this.addCategory(product.category); // TODO: split in separate test
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.createProduct);
 		const createdProduct = await this.getElementValue(selector.vendor.product.title);
 		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
@@ -334,7 +333,7 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
 		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
 		if (cancelRequestIsVisible) {
-			this.cancelRequestWithdraw(withdraw)
+			this.cancelRequestWithdraw(withdraw);
 			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.withdrawDashboard);
 		}
 
@@ -347,7 +346,7 @@ export class VendorPage extends BasePage {
 			await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default);
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.submitRequest);
 			await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawRequestSaveSuccessMessage)).toBeVisible();
-			await this.waitForNavigation()  // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigation
+			await this.waitForNavigation(); // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigation
 		} else {
 			// throw new Error("Vendor balance is less than minimum withdraw amount")
 			console.log('Vendor balance is less than minimum withdraw amount');
@@ -361,7 +360,7 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
 		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
 		if (!cancelRequestIsVisible) {
-			this.requestWithdraw(withdraw)
+			this.requestWithdraw(withdraw);
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.withdrawRequests, selector.vendor.vWithdraw.cancelRequest, 302);
 		await expect(this.page.getByText(selector.vendor.vWithdraw.cancelWithdrawRequestSaveSuccessMessage)).toBeVisible();
@@ -383,7 +382,7 @@ export class VendorPage extends BasePage {
 	// vendor add default withdraw payment methods
 	async addDefaultWithdrawPaymentMethods(preferredSchedule: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.withdraw);
-		let methodIsDefault = await this.isVisible(selector.vendor.vWithdraw.defaultMethod(preferredSchedule))
+		const methodIsDefault = await this.isVisible(selector.vendor.vWithdraw.defaultMethod(preferredSchedule));
 		if (!methodIsDefault) {
 			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
 			// await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
@@ -426,7 +425,7 @@ export class VendorPage extends BasePage {
 		await this.minMaxSettings(vendorInfo.minMax);
 		// update settings
 		await this.click(selector.vendor.vStoreSettings.updateSettings);
-		await expect(this.page.locator(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage)).toContainText(vendorInfo.storeSettingsSaveSuccessMessage)
+		await expect(this.page.locator(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage)).toContainText(vendorInfo.storeSettingsSaveSuccessMessage);
 
 	}
 
@@ -520,9 +519,9 @@ export class VendorPage extends BasePage {
 		// }
 		const vacationModeEnabled = await this.isVisible(selector.vendor.vStoreSettings.goToVacation);
 		if (vacationModeEnabled) {
-		await this.check(selector.vendor.vStoreSettings.goToVacation);
-		await this.selectByValue(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle);
-		switch (vacation.closingStyle) {
+			await this.check(selector.vendor.vStoreSettings.goToVacation);
+			await this.selectByValue(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle);
+			switch (vacation.closingStyle) {
 			// instantly close
 			case 'instantly':
 				await this.clearAndType(selector.vendor.vStoreSettings.setVacationMessageInstantly, vacation.vacationMessage);
@@ -540,20 +539,20 @@ export class VendorPage extends BasePage {
 
 			default:
 				break;
+			}
 		}
 	}
-}
 
 	// vendor set discount settings
 	async discountSettings(discount: { minimumOrderAmount: string; minimumOrderAmountPercentage: string; }): Promise<void> {
 		// discount
 		const discountEnabled = await this.isVisible(selector.vendor.vStoreSettings.enableStoreWideDiscount);
 		if (discountEnabled) {
-		await this.check(selector.vendor.vStoreSettings.enableStoreWideDiscount);
-		await this.clearAndType(selector.vendor.vStoreSettings.minimumOrderAmount, discount.minimumOrderAmount);
-		await this.clearAndType(selector.vendor.vStoreSettings.percentage, discount.minimumOrderAmountPercentage);
+			await this.check(selector.vendor.vStoreSettings.enableStoreWideDiscount);
+			await this.clearAndType(selector.vendor.vStoreSettings.minimumOrderAmount, discount.minimumOrderAmount);
+			await this.clearAndType(selector.vendor.vStoreSettings.percentage, discount.minimumOrderAmountPercentage);
+		}
 	}
-}
 
 	// vendor set catalog mode settings
 	async catalogModeSettings(): Promise<void> {
@@ -576,11 +575,11 @@ export class VendorPage extends BasePage {
 		// store support
 		const storeSupportEnabled = await this.isVisible(selector.vendor.vStoreSettings.removeAddToCartButton);
 		if (storeSupportEnabled) {
-		await this.check(selector.vendor.vStoreSettings.showSupportButtonInStore);
-		await this.check(selector.vendor.vStoreSettings.showSupportButtonInSingleProduct);
-		await this.clearAndType(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
+			await this.check(selector.vendor.vStoreSettings.showSupportButtonInStore);
+			await this.check(selector.vendor.vStoreSettings.showSupportButtonInSingleProduct);
+			await this.clearAndType(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
+		}
 	}
-}
 
 	// vendor set minmax settings
 	async minMaxSettings(minMax: { minimumProductQuantity: string; maximumProductQuantity: string; minimumAmount: string; maximumAmount: string; category: string; }): Promise<void> {
@@ -597,9 +596,9 @@ export class VendorPage extends BasePage {
 			await this.click(selector.vendor.vStoreSettings.selectAll);
 			const multipleCategory = await this.isVisible(selector.vendor.vStoreSettings.selectCategorySearch);
 			if (multipleCategory){
-			await this.select2ByTextMultiSelector(selector.vendor.vStoreSettings.selectCategorySearch, selector.vendor.vStoreSettings.selectCategorySearchedResult, minMax.category);
+				await this.select2ByTextMultiSelector(selector.vendor.vStoreSettings.selectCategorySearch, selector.vendor.vStoreSettings.selectCategorySearchedResult, minMax.category);
 			}else {
-				await this.selectByLabel(selector.vendor.vStoreSettings.selectCategory, minMax.category)
+				await this.selectByLabel(selector.vendor.vStoreSettings.selectCategory, minMax.category);
 			}
 		}
 	}
@@ -616,7 +615,7 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
 		// update settings
 		await this.click(selector.vendor.vStoreSettings.updateSettings);
-		await expect(this.page.locator(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage)).toContainText(vendorInfo.storeSettingsSaveSuccessMessage)
+		await expect(this.page.locator(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage)).toContainText(vendorInfo.storeSettingsSaveSuccessMessage);
 	}
 
 	// vendor add addons
@@ -677,10 +676,10 @@ export class VendorPage extends BasePage {
 
 	// vendor set payment settings
 	async setPaymentSettings(payment: any): Promise<void> {
-		await this.setPaypal(payment)
-		await this.setBankTransfer(payment)
-		await this.setCustom(payment)
-		await this.setSkrill(payment)
+		await this.setPaypal(payment);
+		await this.setBankTransfer(payment);
+		await this.setCustom(payment);
+		await this.setSkrill(payment);
 		// await this.setStripe()
 		// await this.setPaypalMarketPlace()
 		// await this.setRazorpay()
@@ -703,7 +702,7 @@ export class VendorPage extends BasePage {
 	}): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.bankTransfer);
 		// bank transfer
-		await this.clickIfVisible(selector.vendor.vPaymentSettings.disconnectAccount)
+		await this.clickIfVisible(selector.vendor.vPaymentSettings.disconnectAccount);
 		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountName, paymentMethod.bankAccountName);
 		await this.selectByValue(selector.vendor.vPaymentSettings.bankAccountType, paymentMethod.bankAccountType);
 		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountNumber, paymentMethod.bankAccountNumber);
@@ -716,7 +715,7 @@ export class VendorPage extends BasePage {
 
 		// update settings
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.addAccount)
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.addAccount);
 		await expect(this.page.locator(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage)).toContainText(paymentMethod.saveSuccessMessage);
 	}
 
@@ -796,7 +795,7 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.uploadPhoto);
 		await this.uploadMedia(verification.file);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.submitId);
-		await expect(this.page.locator(selector.vendor.vVerificationSettings.idUpdateSuccessMessage)).toContainText(verification.idRequestSubmitSuccessMessage)
+		await expect(this.page.locator(selector.vendor.vVerificationSettings.idUpdateSuccessMessage)).toContainText(verification.idRequestSubmitSuccessMessage);
 	}
 
 	// vendor send address verification request
@@ -932,67 +931,67 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vShippingSettings.editShippingMethod(shipping.shippingMethod));
 
 		switch (shipping.selectShippingMethod) {
-			// flat rate
-			case 'flat_rate':
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost);
-				await this.selectByValue(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
-				await this.selectByValue(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType);
-				break;
+		// flat rate
+		case 'flat_rate':
+			await this.clearAndType(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod);
+			await this.clearAndType(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost);
+			await this.selectByValue(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus);
+			await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
+			await this.selectByValue(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType);
+			break;
 
 			// free shipping
-			case 'free_shipping':
-				await this.clearAndType(selector.vendor.vShippingSettings.freeShippingTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
-				break;
+		case 'free_shipping':
+			await this.clearAndType(selector.vendor.vShippingSettings.freeShippingTitle, shipping.shippingMethod);
+			await this.clearAndType(selector.vendor.vShippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
+			break;
 
 			// local pickup
-			case 'local_pickup':
-				await this.clearAndType(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod);
-				await this.clearAndType(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost);
-				await this.selectByValue(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus);
-				await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
-				break;
+		case 'local_pickup':
+			await this.clearAndType(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod);
+			await this.clearAndType(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost);
+			await this.selectByValue(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus);
+			await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
+			break;
 
 			// dokan table rate shipping
-			case 'dokan_table_rate_shipping':
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod);
-				await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus);
-				await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost);
-				// rates
-				// await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder);
-				await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder);
-				await this.click(selector.vendor.vShippingSettings.tableRateShippingUpdateSettings);
-				await expect(this.page.locator(selector.vendor.vShippingSettings.tableRateShippingUpdateSettingsSuccessMessage)).toContainText(shipping.tableRateSaveSuccessMessage);
-				return;
+		case 'dokan_table_rate_shipping':
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod);
+			await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus);
+			await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts);
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee);
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost);
+			// rates
+			// await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder);
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder);
+			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder);
+			await this.click(selector.vendor.vShippingSettings.tableRateShippingUpdateSettings);
+			await expect(this.page.locator(selector.vendor.vShippingSettings.tableRateShippingUpdateSettingsSuccessMessage)).toContainText(shipping.tableRateSaveSuccessMessage);
+			return;
 
 			// dokan distance rate shipping
-			case 'dokan_distance_rate_shipping':
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod);
-				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus);
-				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode);
-				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid);
-				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingDistanceUnit, shipping.distanceUnit);
-				await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDistance);
-				await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDuration);
-				// shipping address
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress1, shipping.street1);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress2, shipping.street2);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode);
-				await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state);
-				await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country);
-				await this.click(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettings);
-				await expect(this.page.locator(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettingsSuccessMessage)).toContainText(shipping.distanceRateSaveSuccessMessage);
-				return;
+		case 'dokan_distance_rate_shipping':
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod);
+			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus);
+			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode);
+			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid);
+			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingDistanceUnit, shipping.distanceUnit);
+			await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDistance);
+			await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDuration);
+			// shipping address
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress1, shipping.street1);
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress2, shipping.street2);
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city);
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode);
+			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state);
+			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country);
+			await this.click(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettings);
+			await expect(this.page.locator(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettingsSuccessMessage)).toContainText(shipping.distanceRateSaveSuccessMessage);
+			return;
 
-			default:
-				break;
+		default:
+			break;
 		}
 		await this.click(selector.vendor.vShippingSettings.shippingSettingsSaveSettings);
 		await this.click(selector.vendor.vShippingSettings.saveChanges);
@@ -1010,7 +1009,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.instagram, urls.instagram);
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.flicker, urls.flickr);
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSocialProfileSettings.updateSettings); //TODO: don't work, alternate soln. below line
-		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter)
+		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
 		await expect(this.page.locator(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage)).toContainText(urls.saveSuccessMessage);
 	}
 
@@ -1094,7 +1093,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.product.lotDiscountInPercentage, discountPercentage);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
-		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(data.product.createUpdateSaveSuccessMessage)
+		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(data.product.createUpdateSaveSuccessMessage);
 	}
 
 	// vendor search product
@@ -1124,7 +1123,7 @@ export class VendorPage extends BasePage {
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.product, selector.vendor.product.saveProduct, 302);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
-		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(data.product.createUpdateSaveSuccessMessage)
+		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(data.product.createUpdateSaveSuccessMessage);
 	}
 
 	// vendor change order status
@@ -1140,7 +1139,7 @@ export class VendorPage extends BasePage {
 	}
 
 	// vendor refund order
-	async refundOrder(orderNumber: string, productName: string, partialRefund: boolean = false): Promise<void> {
+	async refundOrder(orderNumber: string, productName: string, partialRefund = false): Promise<void> {
 		await this.goToVendorDashboard();
 		await this.click(selector.vendor.vDashboard.orders);
 		await this.click(selector.vendor.vOrders.orderLink(orderNumber));
