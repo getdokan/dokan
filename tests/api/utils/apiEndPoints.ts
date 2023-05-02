@@ -170,35 +170,33 @@ export const endPoints = {
 	updateWholesaleCustomer: (wholesaleCustomerId: string) => `${SERVER_URL}/dokan/v1/wholesale/customer/${wholesaleCustomerId}`,
 	updateBatchWholesaleCustomer: `${SERVER_URL}/dokan/v1/wholesale/customers/batch`, // method: activate, deactivate, delete
 
-	// customers
-	getAllCustomers: `${SERVER_URL}/dokan/v1/customers`,
-	getSingleCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}`,
-	createCustomer: `${SERVER_URL}/dokan/v1/customers/`,
-	updateCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}`,
-	deleteCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/customers/${customerId}${QUERY}force=true`,
-	updateBatchCustomers: `${SERVER_URL}/dokan/v1/customers/batch`, // method: create, update, delete
-
 	// request quote rules
-	getAllQuoteRules: `${SERVER_URL}/dokan/v1/dokan-quote-rule`,
-	getSingleQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/dokan-quote-rule/${quoteId}`,
-	createQuoteRule: `${SERVER_URL}/dokan/v1/dokan-quote-rule`,
-	updateQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/dokan-quote-rule/${quoteId}`,
-	deleteQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/dokan-quote-rule/${quoteId}`,
-	restoreQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/dokan-quote-rule/${quoteId}/restore`, // put
-	updateBatchQuoteRules: `${SERVER_URL}/dokan/v1/dokan-quote-rule/batch`, // method: trash, delete, restore
+	getAllQuoteRules: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule`,
+	getSingleQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
+	createQuoteRule: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule`,
+	updateQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
+	deleteQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
+	restoreQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}/restore`, // put
+	updateBatchQuoteRules: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/batch`, // method: trash, delete, restore
 
 	// request quotes
-	getAllRequestQuotes: `${SERVER_URL}/dokan/v1/dokan-request-quote`,
-	getSingleRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/dokan-request-quote/${quoteRequestId}`,
-	createRequestQuote: `${SERVER_URL}/dokan/v1/dokan-request-quote/`,
-	updateRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/dokan-request-quote/${quoteRequestId}`,
-	deleteRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/dokan-request-quote/${quoteRequestId}`,
-	restoreRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/dokan-request-quote/${quoteRequestId}/restore`, // put
-	updateBatchRequestQuotes: `${SERVER_URL}/dokan/v1/dokan-request-quote/batch`, // method: trash
-	convertRequestQuoteToOrder: `${SERVER_URL}/dokan/v1/dokan-request-quote/convert-to-order`, // post
-
-	// roles
-	getAllUserRoles: `${SERVER_URL}/dokan/v1/roles`,
+	getAllRequestQuotes: `${SERVER_URL}/dokan/v1/request-for-quote/`,
+	getSingleRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/${quoteRequestId}`,
+	createRequestQuote: `${SERVER_URL}/dokan/v1/request-for-quote/`,
+	updateRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/${quoteRequestId}`,
+	deleteRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/${quoteRequestId}`,
+	restoreRequestQuote: (quoteRequestId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/${quoteRequestId}/restore`, // put
+	updateBatchRequestQuotes: `${SERVER_URL}/dokan/v1/request-for-quote/batch`, // method: trash
+	convertRequestQuoteToOrder: `${SERVER_URL}/dokan/v1/request-for-quote/convert-to-order`, // post
+	// customers (rfq)
+	getAllCustomers: `${SERVER_URL}/dokan/v1/request-for-quote/customers`,
+	getSingleCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/customers/${customerId}`,
+	createCustomer: `${SERVER_URL}/dokan/v1/request-for-quote/customers/`,
+	updateCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/customers/${customerId}`,
+	deleteCustomer: (customerId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/customers/${customerId}${QUERY}force=true`,
+	updateBatchCustomers: `${SERVER_URL}/dokan/v1/request-for-quote/customers/batch`, // method: create, update, delete
+	// roles (rfq)
+	getAllUserRoles: `${SERVER_URL}/dokan/v1/request-for-quote/roles`,
 
 	// reverse withdrawal
 	getReverseWithdrawalVendorDueStatus: `${SERVER_URL}/dokan/v1/reverse-withdrawal/vendor-due-status`,
@@ -436,7 +434,7 @@ export const endPoints = {
 		getSingleShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
 		createShippingZone: `${SERVER_URL}/wc/v3/shipping/zones/`,
 		updateShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
-		deleteShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}`,
+		deleteShippingZone: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}${ QUERY }force=true`,
 		// shipping zone locations
 		getAllShippingZoneLocations: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}/locations`,
 		addShippingZoneLocation: (zoneId: string) => `${SERVER_URL}/wc/v3/shipping/zones/${zoneId}/locations`,

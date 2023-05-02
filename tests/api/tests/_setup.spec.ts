@@ -11,18 +11,18 @@ test.beforeAll(async ({ request }) => {
 
 test.describe(' api test', () => {
 
-	test('setup test store settings @lite @pro', async ({ request }) => {
+	test('setup store settings @lite @pro', async ({ request }) => {
 		const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(response.ok()).toBeTruthy();
 	});
 
-	test('create test customer @lite @pro', async ({ request }) => { 
+	test('create customer @lite @pro', async ({ request }) => { 
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.createCustomer (payloads.createCustomer1 , payloads.adminAuth);
 	});
 
-	test('create test vendor @lite @pro', async ({ request }) => {
+	test('create vendor @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.createStore (payloads.createStore1 , payloads.adminAuth);
 	});

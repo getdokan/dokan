@@ -1,6 +1,7 @@
 import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
+import { payloads } from './payloads';
 interface auth { //TODO: gather all interfaces in one place
 	[key: string]: string;
  }
@@ -58,14 +59,15 @@ export class ApiUtils {
 		try {
 			assert && expect(response.ok()).toBeTruthy();
 			responseBody = await response.json();
-			// console.log('ResponseBody: ', responseBody); 
+			// console.log('ResponseBody: ', responseBody);
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
-		} catch (err: unknown) {
+		}
+		catch (err: unknown) {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
-			return false; //TODO: WHY FALSE	
+			return false; //TODO: WHY FALSE
 		}
 	}
 
@@ -78,14 +80,14 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-	
+
 	/**
 	 * store api methods
 	 */
 
 	// get all stores
 	async getAllStores(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllStores, { headers: auth });
+		const response = await this.request.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -100,7 +102,7 @@ export class ApiUtils {
 	// get sellerId
 	async getSellerId(storeName?: string, auth? : auth): Promise<string> {
 		const allStores = await this.getAllStores(auth);
-		const sellerId = storeName ? (allStores.find((o: { store_name: string; }) => o.store_name === storeName)).id : allStores[0].id;
+		const sellerId = storeName ? (allStores.find((o: { store_name: string; })=> o.store_name === storeName)).id : allStores[0].id;
 		return sellerId;
 	}
 
@@ -112,11 +114,12 @@ export class ApiUtils {
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
 			sellerId = await this.getSellerId(payload.store_name, auth);
-		} else { 
+		}
+		else {
 			expect(response.ok()).toBeTruthy();
 			sellerId = responseBody.id;
 		}
-		return [responseBody,sellerId];
+		return [responseBody, sellerId];
 	}
 
 	// create store review
@@ -144,7 +147,7 @@ export class ApiUtils {
 
 	// get all products
 	async getAllProducts(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllProducts, { headers: auth });
+		const response = await this.request.get(endPoints.getAllProducts, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -152,7 +155,7 @@ export class ApiUtils {
 	// get productId
 	async getProductId(productName: string, auth? : auth) {
 		const allProducts = await this.getAllProducts(auth);
-		const productId = productName ? (allProducts.find((o: { name: string; }) => o.name === productName)).id : allProducts[0].id;
+		const productId = productName ? (allProducts.find((o: { name: string; })=> o.name === productName)).id : allProducts[0].id;
 		return productId;
 	}
 
@@ -162,6 +165,29 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		const productId = responseBody.id;
 		return [responseBody, productId];
+	}
+
+	// delete product
+	async deleteProduct(productId: string, auth? : auth) {
+		const response = await this.request.delete(endPoints.deleteProduct(productId), { headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// delete all products
+	async deleteAllProducts( productName = '', auth? : auth) {
+		const allProducts = await this.getAllProducts(auth);
+		let allProductIds;
+		// delete all products with same name
+		if (productName){
+			allProductIds = (allProducts.filter((o: { name: string; })=> o.name === productName)).map((a: { id: string })=> a.id);
+		}
+		else {
+			allProductIds = (await this.getAllProducts(auth)).map((a: { id: string })=> a.id);
+		}
+		const response = await this.request.put(endPoints.wc.updateBatchProducts, { data: { delete: allProductIds }, headers: payloads.adminAuth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
 	}
 
 	/**
@@ -187,14 +213,10 @@ export class ApiUtils {
 
 	// get variationTd
 	async createVariableProductWithVariation(attribute: object, attributeTerm: object, product: object, auth? : auth) {
-		const [, productId] = await this.createProduct(product,auth);
+		const [, productId] = await this.createProduct(product, auth);
 		const [body, attributeId] = await this.createAttributeTerm(attribute, attributeTerm, auth);
-		const payload = {
-			...product, attributes: [{
-				id: attributeId,
-				option: body.name,
-			}],
-		};
+		const payload = { ...product, attributes: [{ id: attributeId,
+			option: body.name, }], };
 		const [, variationId] = await this.createProductVariation(productId, payload);
 		return [productId, variationId];
 	}
@@ -216,7 +238,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-	
+
 	// get attributeId
 	async getAttributeId(auth? : auth) {
 		const allAttributes = await this.getAllAttributes(auth);
@@ -245,7 +267,7 @@ export class ApiUtils {
 
 	// get all attribute terms
 	async getAllAttributeTerms(attributeId: string, auth? : auth) {
-		const response = await this.request.get(endPoints.getAllAttributeTerms(attributeId), { headers: auth });
+		const response = await this.request.get(endPoints.getAllAttributeTerms(attributeId), { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -256,10 +278,11 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-	
+
 	// create attribute term
 	async createAttributeTerm(attribute: object, attributeTerm: object, auth? : auth) {
-		const [, attributeId] = await this.createAttribute(attribute);
+		let attributeId: string;
+		typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute) : attributeId = attribute;
 		const response = await this.request.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const attributeTermId = responseBody.id;
@@ -272,7 +295,7 @@ export class ApiUtils {
 
 	// get all coupons
 	async getAllCoupons(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllCoupons, { headers: auth });
+		const response = await this.request.get(endPoints.getAllCoupons, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -280,23 +303,24 @@ export class ApiUtils {
 	// get couponId
 	async getCouponId(couponCode: string, auth? : auth) {
 		const allCoupons = await this.getAllCoupons(auth);
-		const couponId = couponCode ? (couponCode = allCoupons.find((o: { code: string; }) => o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (couponCode = allCoupons.find((o: { code: string; })=> o.code === couponCode)).id : allCoupons[0].id;
 		return couponId;
 	}
 
 	// create coupon
-	async createCoupon(productId: string[], coupon: coupon, auth?: auth ) {
-		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productId }, headers: auth });
+	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) {
+		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId;
 		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 			expect(response.status()).toBe(400);
 			couponId = await this.getCouponId(coupon.code, auth);
-		} else { 
+		}
+		else {
 			expect(response.ok()).toBeTruthy();
 			couponId = responseBody.id;
 		}
-		return [responseBody, couponId];	
+		return [responseBody, couponId];
 	}
 
 	/**
@@ -313,21 +337,21 @@ export class ApiUtils {
 
 	// get all withdraws
 	async getAllWithdraws(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllWithdraws, { headers: auth });
+		const response = await this.request.get(endPoints.getAllWithdraws, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get all withdraws by status
 	async getAllWithdrawsByStatus(status: string, auth? : auth) {
-		const response = await this.request.get(endPoints.getAllWithdrawsByStatus(status), { headers: auth });
+		const response = await this.request.get(endPoints.getAllWithdrawsByStatus(status), { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get withdrawId
 	async getWithdrawId(auth? : auth) {
-		const allWithdraws = await this.getAllWithdrawsByStatus('pending',auth);
+		const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
 		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
@@ -346,14 +370,14 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-	
+
 	/**
 	 * order api methods
 	 */
 
 	// get all orders
 	async getAllOrders(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllOrders, { headers: auth });
+		const response = await this.request.get(endPoints.getAllOrders, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -364,7 +388,7 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-	
+
 	// get orderId
 	async getOrderId(auth? : auth) {
 		const allOrders = await this.getAllOrders(auth);
@@ -398,15 +422,15 @@ export class ApiUtils {
 
 	// get all order logs
 	async getAllOrderLogs(auth? : auth) {
-		const response = await this.request.get(endPoints.getAdminLogs, { headers: auth });
+		const response = await this.request.get(endPoints.getAdminLogs, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get single order log
 	async getSingleOrderLog(orderId: string, auth? : auth) {
-		const allOrderLogs = await this.getAllOrderLogs();
-		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
+		const allOrderLogs = await this.getAllOrderLogs(auth);
+		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; })=> o.order_id === orderId));
 		return singleOrderLog;
 	}
 
@@ -416,7 +440,7 @@ export class ApiUtils {
 
 	// get all orders
 	async getAllRefunds(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllRefunds, { headers: auth });
+		const response = await this.request.get(endPoints.getAllRefunds, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -452,7 +476,7 @@ export class ApiUtils {
 
 	// get all support tickets
 	async getAllSupportTickets(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllSupportTickets, { headers: auth });
+		const response = await this.request.get(endPoints.getAllSupportTickets, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -511,7 +535,7 @@ export class ApiUtils {
 
 	// get all modules ids
 	async getAllModuleIds(auth? : auth) {
-		const allModuleIds = (await this.getAllModules(auth)).map((a: { id: string; }) => a.id);
+		const allModuleIds = (await this.getAllModules(auth)).map((a: { id: string; })=> a.id);
 		return allModuleIds;
 	}
 
@@ -519,7 +543,6 @@ export class ApiUtils {
 	async activateModules(moduleIds: string, auth? : auth) {
 		const response = await this.request.put(endPoints.activateModule, { data: { module: [moduleIds] }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
-		// const activeStatus = responseBody.active;
 		return responseBody;
 	}
 
@@ -536,7 +559,7 @@ export class ApiUtils {
 
 	// get all customers
 	async getAllCustomers(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllCustomers, { headers: auth });
+		const response = await this.request.get(endPoints.wc.getAllCustomers, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -544,7 +567,7 @@ export class ApiUtils {
 	// get customerId
 	async getCustomerId(username: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { username: string; }) => o.username === username)).id;
+		const customerId = (allCustomers.find((o: { username: string; })=> o.username === username)).id;
 		return customerId;
 	}
 
@@ -556,11 +579,12 @@ export class ApiUtils {
 		if(responseBody.code){
 			expect(response.status()).toBe(400);
 			customerId = await this.getCustomerId(payload.username, auth);
-		} else { 
+		}
+		else {
 			expect(response.ok()).toBeTruthy();
 			customerId = responseBody.id;
 		}
-		return [responseBody,customerId];
+		return [responseBody, customerId];
 	}
 
 	// delete customer
@@ -576,7 +600,7 @@ export class ApiUtils {
 
 	// get all wholesale customers
 	async getAllWholesaleCustomers(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllWholesaleCustomers, { headers: auth });
+		const response = await this.request.get(endPoints.getAllWholesaleCustomers, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -595,7 +619,7 @@ export class ApiUtils {
 
 	// get all product advertisements
 	async getAllProductAdvertisements(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllProductAdvertisements, { headers: auth });
+		const response = await this.request.get(endPoints.getAllProductAdvertisements, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -634,7 +658,7 @@ export class ApiUtils {
 
 	// get all announcements
 	async getAllAnnouncements(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllAnnouncements, { headers: auth });
+		const response = await this.request.get(endPoints.getAllAnnouncements, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -667,7 +691,7 @@ export class ApiUtils {
 
 	// get all product reviews
 	async getAllProductReviews(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllProductReviews, { headers: auth });
+		const response = await this.request.get(endPoints.getAllProductReviews, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -685,7 +709,7 @@ export class ApiUtils {
 
 	// get all store reviews
 	async getAllStoreReviews(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllStoreReviews, { headers: auth });
+		const response = await this.request.get(endPoints.getAllStoreReviews, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -744,7 +768,7 @@ export class ApiUtils {
 
 	// get all quote rules
 	async getAllQuoteRules(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllQuoteRules, { headers: auth });
+		const response = await this.request.get(endPoints.getAllQuoteRules, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -764,13 +788,22 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// delete store review
+	async deleteAllQuoteRules(auth? : auth) {
+		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((a: { id: string })=> a.id);
+		const response = await this.request.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers : auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+
 	/**
 	 * request quote api methods
 	 */
 
 	// get all quote rules
 	async getAllRequestQuotes(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllRequestQuotes, { headers: auth });
+		const response = await this.request.get(endPoints.getAllRequestQuotes, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -795,14 +828,14 @@ export class ApiUtils {
 
 	// get all order download
 	async getAllOrderDownloads(orderId: string, auth? : auth) {
-		const response = await this.request.get(endPoints.getAllOrderDownloads(orderId), { headers: auth });
+		const response = await this.request.get(endPoints.getAllOrderDownloads(orderId), { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// create order download
 	async createOrderDownload(orderId: string, downloadableProducts: string[], auth? : auth): Promise<[object, string]> {
-		const response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts } });
+		const response = await this.request.post(endPoints.createOrderDownload(orderId), { data: { ids: downloadableProducts }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		const downloadId = String((Object.keys(responseBody))[0]);
 		return [responseBody, downloadId];
@@ -814,7 +847,7 @@ export class ApiUtils {
 
 	// get all seller badges
 	async getAllSellerBadges(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllSellerBadges, { headers: auth });
+		const response = await this.request.get(endPoints.getAllSellerBadges, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -822,7 +855,7 @@ export class ApiUtils {
 	// get all seller badges
 	async getSellerBadgeId(eventType: string, auth? : auth) {
 		const allBadges = await this.getAllSellerBadges(auth);
-		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
+		const badgeId = allBadges.find((o: { event_type: string; })=> o.event_type === eventType).id;
 		return badgeId;
 	}
 
@@ -840,7 +873,6 @@ export class ApiUtils {
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
-
 
 
 	/**
@@ -867,14 +899,14 @@ export class ApiUtils {
 
 	// get all users
 	async getAllUsers(auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllUsers, { headers: auth });
+		const response = await this.request.get(endPoints.wp.getAllUsers, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get user by role
 	async getAllUsersByRole(role: string, auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllUsersByRole(role), { headers: auth });
+		const response = await this.request.get(endPoints.wp.getAllUsersByRole(role), { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -919,14 +951,14 @@ export class ApiUtils {
 
 	// get all plugins
 	async getAllPlugins(auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllPlugins, { headers: auth });
+		const response = await this.request.get(endPoints.wp.getAllPlugins, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get all plugins by status
 	async getAllPluginByStatus(status: string, auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status), { headers: auth });
+		const response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status), { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -954,21 +986,15 @@ export class ApiUtils {
 
 	// upload media
 	async uploadMedia(filePath: string, auth? : auth) { //TODO: handle different file upload, hardcoded: image
-		const payload = {
-			headers: {
-				Accept: '*/*',
-				ContentType: 'multipart/form-data',
-				// Authorization: auth.Authorization  //TODO: handle authorization
-			},
-			multipart: {
-				file: {
-					name: String((filePath.split('/')).pop()),
-					mimeType: 'image/' + (filePath.split('.')).pop(),
-					// buffer: fs.readFileSync(filePath),
-					buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
-				},
-			},
-		};
+		const payload = { headers: { Accept: '*/*',
+			ContentType: 'multipart/form-data',
+			// Authorization: auth.Authorization  //TODO: handle authorization
+		},
+		multipart: { file: { name: String((filePath.split('/')).pop()),
+			mimeType: 'image/' + (filePath.split('.')).pop(),
+			// buffer: fs.readFileSync(filePath),
+			buffer: Buffer.from(filePath), //TODO: test then use it instead of previous
+		}, } };
 		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = responseBody.id;
@@ -978,7 +1004,7 @@ export class ApiUtils {
 	// upload media
 	async uploadMedia3(filePath: string, auth? : auth) {
 		// const payload = fs.readFileSync(filePath);
-		const payload = Buffer.from(filePath);  //TODO: test then use it instead of previous
+		const payload = Buffer.from(filePath); //TODO: test then use it instead of previous
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
@@ -988,7 +1014,7 @@ export class ApiUtils {
 
 	// get all mediaItems
 	async getAllMediaItems(auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllMediaItems, { headers: auth });
+		const response = await this.request.get(endPoints.wp.getAllMediaItems, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -1000,7 +1026,7 @@ export class ApiUtils {
 		return mediaId;
 	}
 
-	// create post 
+	// create post
 	async createPost(payload: object, auth? : auth) {
 		const response = await this.request.put(endPoints.wp.createPost, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response);
@@ -1056,7 +1082,7 @@ export class ApiUtils {
 
 	// get all categories
 	async getAllCategories(auth? : auth) {
-		const response = await this.request.get(endPoints.wc.getAllCategories, { headers: auth });
+		const response = await this.request.get(endPoints.wc.getAllCategories, { data: { per_page:100 }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -1071,7 +1097,7 @@ export class ApiUtils {
 	// get categoryId
 	async getCategoryId(categoryName: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { name: string; }) => o.name === categoryName)).id;
+		const customerId = (allCustomers.find((o: { name: string; })=> o.name === categoryName)).id;
 		return customerId;
 	}
 
@@ -1157,13 +1183,13 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	// setup tax  
+	// setup tax
 	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate) {
 		// enable tax rate
 		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
 
 		// delete previous tax rates
-		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: string }) => a.id);
+		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: string })=> a.id);
 		if (allTaxRateIds.length) {
 			await this.updateBatchTaxRates('delete', allTaxRateIds);
 		}
@@ -1186,7 +1212,7 @@ export class ApiUtils {
 	// get zoneId
 	async getZoneId(zoneName: string, auth? : auth) {
 		const allZones = await this.getAllShippingZones(auth);
-		const zoneId = (allZones.find((o: { name: string; }) => o.name === zoneName)).id;
+		const zoneId = (allZones.find((o: { name: string; })=> o.name === zoneName)).id;
 		return zoneId;
 	}
 

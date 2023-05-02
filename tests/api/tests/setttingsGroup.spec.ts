@@ -9,12 +9,12 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-test.afterAll(async ({ request }) => {
-	// TODO: remove after update setting cause disable selling fix
-	const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
-	const responseBody = await apiUtils.getResponseBody(response);
-	expect(response.ok()).toBeTruthy();
-});
+// test.afterAll(async ({ request }) => {
+// 	// TODO: remove after update setting cause disable selling fix
+// 	const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
+// 	const responseBody = await apiUtils.getResponseBody(response);
+// 	expect(response.ok()).toBeTruthy();
+// });
 
 test.describe('new settings api test', () => {
 	

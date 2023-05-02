@@ -10,7 +10,7 @@ let productId: string;
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, productId] = await apiUtils.createProduct(payloads.createProduct());
-	[, couponId] = await apiUtils.createCoupon(productId, payloads.createCoupon());
+	[, couponId] = await apiUtils.createCoupon([productId], payloads.createCoupon());
 });
 
 test.describe('coupon api test', () => {

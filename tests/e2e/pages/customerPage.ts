@@ -52,7 +52,7 @@ export class CustomerPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.customer.cRegistration.register, 302);
 		const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
 		if (registrationErrorIsVisible) {
-			const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registrationErrorMessage); 
+			const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registrationErrorMessage);
 			if (hasError) {
 				return; // TODO: throw error or handle already created user
 			}
@@ -82,7 +82,7 @@ export class CustomerPage extends BasePage {
 		if (subscriptionPackIsVisible) {
 			await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		}
-		await this.clickAndWaitForResponse(data.subUrls.frontend.becomeVendor, selector.customer.cDashboard.becomeAVendor,302);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.becomeVendor, selector.customer.cDashboard.becomeAVendor, 302);
 		if (subscriptionPackIsVisible) {
 			await this.placeOrder('bank', false, true, false);
 		}
@@ -99,7 +99,8 @@ export class CustomerPage extends BasePage {
 		const neeApproval = await this.isVisible(selector.customer.cDashboard.wholesaleRequestReturnMessage);
 		if (!neeApproval) {
 			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.becomeWholesaleCustomerSuccessMessage);
-		} else {
+		}
+		else {
 			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.wholesale.wholesaleRequestSendMessage);
 			await this.loginPage.switchUser(data.admin);
 			await this.adminPage.adminApproveWholesaleRequest(currentUser);
@@ -123,7 +124,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
-		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln. 
+		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln.
 		await this.click(selector.customer.cAddress.billingState);
 		await this.clearAndType(selector.customer.cAddress.billingStateInput, billingInfo.state);
 		await this.press(data.key.enter);
@@ -165,7 +166,6 @@ export class CustomerPage extends BasePage {
 	}
 
 
-
 	// customer add customer details
 	async addCustomerDetails(customerInfo: { firstName: () => string; lastName: () => string; password: string; password1: string; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.editAccountCustomer);
@@ -187,7 +187,7 @@ export class CustomerPage extends BasePage {
 		await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText(data.customer.account.updateSuccessMessage);
 	}
 
-	// customer search vendor
+	// customer search store
 	async searchStore(storeName: string): Promise<void> {
 		await this.goToStoreList();
 		await this.click(selector.customer.cStoreList.filter);
@@ -201,7 +201,7 @@ export class CustomerPage extends BasePage {
 		let currentFollowStatus: boolean;
 		switch (followLocation) {
 		// shop page
-		case 'shopPage':
+		case 'shopPage' :
 			await this.searchStore(storeName);
 			currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
 			// unfollow if not already
@@ -214,7 +214,7 @@ export class CustomerPage extends BasePage {
 			break;
 
 			// store page
-		case 'storePage':
+		case 'storePage' :
 			await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 			currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatusStorePage, 'Following');
 			// unfollow if not already
@@ -226,7 +226,7 @@ export class CustomerPage extends BasePage {
 			await expect(this.page.locator(selector.customer.cStoreList.currentFollowStatusStorePage)).toContainText('Following');
 			break;
 
-		default:
+		default :
 			break;
 		}
 	}
@@ -368,8 +368,9 @@ export class CustomerPage extends BasePage {
 		if (cartProductIsVisible) {
 			await this.clickAndWaitForResponse(data.subUrls.frontend.cart, selector.customer.cCart.firstProductCrossIcon);
 			await expect(this.page.locator(selector.customer.cWooSelector.wooCommerceSuccessMessage)).toContainText('removed. Undo?');
-			await this.clearCart(); //Todo: avoid recursion 
-		} else {
+			await this.clearCart(); //Todo: avoid recursion
+		}
+		else {
 			await expect(this.page.locator(selector.customer.cCart.cartEmptyMessage)).toContainText('Your cart is currently empty.');
 		}
 	}
@@ -415,15 +416,15 @@ export class CustomerPage extends BasePage {
 		}
 
 		switch (paymentMethod) {
-		case 'bank':
+		case 'bank' :
 			await this.click(selector.customer.cCheckout.directBankTransfer);
 			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
 			break;
-		case 'check':
+		case 'check' :
 			await this.click(selector.customer.cCheckout.checkPayments);
 			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
 			break;
-		case 'cod':
+		case 'cod' :
 			await this.click(selector.customer.cCheckout.cashOnDelivery);
 			// await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
 			break;
@@ -433,7 +434,7 @@ export class CustomerPage extends BasePage {
 			// case 'stripeExpress':
 			//     await this.payWithStripeExpress(paymentDetails)
 			//     break;
-		default:
+		default :
 			break;
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder); //todo:  remove from other places
@@ -499,15 +500,13 @@ export class CustomerPage extends BasePage {
 
 	// get order details after purchase
 	async getOrderDetailsAfterPlaceOrder(): Promise<object> {
-		const cOrderDetails: { orderNumber: string, subtotal: number, shippingCost: number, shippingMethod: string, tax: number, paymentMethod: string, orderTotal: number } = {
-			orderNumber: '',
+		const cOrderDetails: { orderNumber: string, subtotal: number, shippingCost: number, shippingMethod: string, tax: number, paymentMethod: string, orderTotal: number } = { orderNumber: '',
 			subtotal: 0,
 			shippingCost: 0,
 			shippingMethod: '',
 			tax: 0,
 			paymentMethod: '',
-			orderTotal: 0,
-		};
+			orderTotal: 0, };
 		cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderNumber);
 		cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.subTotal));
 
@@ -537,8 +536,7 @@ export class CustomerPage extends BasePage {
 		await this.click(selector.customer.cMyAccount.orders);
 		await this.click(selector.customer.cOrders.OrderDetailsLInk(orderNumber));
 
-		const cOrderDetails = {
-			orderNumber: '',
+		const cOrderDetails = { orderNumber: '',
 			orderDate: '',
 			orderStatus: '',
 			subtotal: 0,
@@ -549,8 +547,7 @@ export class CustomerPage extends BasePage {
 			quantityDiscount: 0,
 			discount: 0,
 			paymentMethod: '',
-			orderTotal: 0,
-		};
+			orderTotal: 0, };
 
 		cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrders.orderNumber);
 		cOrderDetails.orderDate = await this.getElementText(selector.customer.cOrders.orderDate);
@@ -607,7 +604,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
-		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln. 
+		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln.
 		await this.click(selector.customer.cAddress.billingState);
 		await this.clearAndType(selector.customer.cAddress.billingStateInput, billingInfo.state);
 		await this.press(data.key.enter);
@@ -629,7 +626,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.shippingTownCity, shippingInfo.city);
-		await this.focus(selector.customer.cAddress.shippingZipCode); //TODO: remove if found alternative soln. 
+		await this.focus(selector.customer.cAddress.shippingZipCode); //TODO: remove if found alternative soln.
 		await this.click(selector.customer.cAddress.shippingState);
 		await this.clearAndType(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
 		await this.press(data.key.enter);

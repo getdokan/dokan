@@ -1297,10 +1297,8 @@ export const data = {
 		vendorStores: {
 			followFromShopPage: 'shopPage',
 			followFromStorePage: 'storePage',
-			vendor1: 'vendor1Store', //Todo: shopurl  and store url must be same
-			shopUrl: 'vendor1Store',
-			vendor2: 'vendor2Store',
-
+			vendor1: 'vendor1store', //Todo: shopurl  and store url must be same
+			shopUrl: 'vendor1store'
 		},
 		customerInfo: {
 			firstName: () => 'customer1',
