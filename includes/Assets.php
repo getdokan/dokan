@@ -273,9 +273,6 @@ class Assets {
             'jquery-ui'                     => [
                 'src' => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
             ],
-            'dokan-fontawesome'             => [
-                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
-            ],
             'dokan-modal'                   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
@@ -345,6 +342,13 @@ class Assets {
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product.css' ),
             ],
         ];
+
+        // Scenario like there is already fontawesome library added by the theme with the setting user can control if he/she want to load the dokan fontawesome library or not.
+        if ( is_admin() || 'on' === dokan_get_option( 'enable_dokan_fontawesome', 'dokan_appearance', 'on' ) ) {
+            $styles['dokan-fontawesome'] = [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
+            ];
+        }
 
         return $styles;
     }
