@@ -38,10 +38,11 @@
             </span>
         </li>
     <?php } ?>
-
+    <?php if ( class_exists( 'Dokan_Pro' ) || ( get_option('woocommerce_enable_reviews') == 'yes' ) ) : ?>
     <li class="clearfix">
         <?php echo wp_kses_post( dokan_get_readable_seller_rating( $author->ID ) ); ?>
     </li>
+    <?php endif; ?>
 
     <?php do_action( 'dokan_product_seller_tab_end', $author, $store_info ); ?>
 </ul>
