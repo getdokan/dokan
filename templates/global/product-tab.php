@@ -38,7 +38,7 @@
             </span>
         </li>
     <?php } ?>
-    <?php if ( class_exists( 'Dokan_Pro' ) || ( get_option('woocommerce_enable_reviews') == 'yes' ) ) : ?>
+    <?php if ( class_exists( 'Dokan_Pro' ) || ( 'yes' === get_option( 'woocommerce_enable_reviews' ) ) ) : ?>
     <li class="clearfix">
         <?php echo wp_kses_post( dokan_get_readable_seller_rating( $author->ID ) ); ?>
     </li>
