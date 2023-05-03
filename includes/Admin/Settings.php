@@ -763,7 +763,7 @@ class Settings {
                 'enable_dokan_fontawesome' => [
                     'name'    => 'enable_dokan_fontawesome',
                     'label'   => __( 'Enable dokan fontawesome', 'dokan-lite' ),
-                    'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", "dokan-lite" ),
+                    'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
                 ],
