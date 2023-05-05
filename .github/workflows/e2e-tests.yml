@@ -96,9 +96,9 @@ jobs:
       #     npm run test:e2e-setup
 
       - name: Get installed Playwright version
-        working-directory: '../../tests/e2e/'
         id: playwright-version
         run: |
+          cd tests/e2e
           echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
         # PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV   
         # echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
