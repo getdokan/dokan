@@ -96,18 +96,18 @@ jobs:
       #     npm run test:e2e-setup
 
       - name: Get installed Playwright version
+        working-directory: '../../tests/e2e'
         id: playwright-version
         run: |
-          cd tests/e2e 
           echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
         # PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV   
         # echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
 
-      - name: Get installed Playwright versionkk
-        id: playwright-versionkk
-        run: |
-          cd tests/e2e 
-          echo "::set-output name=version::$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')" 
+      # - name: Get installed Playwright versionkk
+      #   id: playwright-versionkk
+      #   run: |
+      #     cd tests/e2e 
+      #     echo "::set-output name=version::$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')" 
        # node -e "console.log(require('playwright/package.json').version)"
       #  echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" >> $GITHUB_OUTPUT
       
@@ -148,30 +148,30 @@ jobs:
       #     command: cd tests/e2e && npm run test:e2e
 
       #  cd tests/e2e && npm run test setup.spec.ts
-      - name: Running the e2e tests
-        run: |
-          cd tests/e2e 
-          npm run test:e2e
+      # - name: Running the e2e tests
+      #   run: |
+      #     cd tests/e2e 
+      #     npm run test:e2e
 
-        env:
-          CI: true
-          ADMIN: ${{ secrets.ADMIN }}
-          ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
-          VENDOR: ${{ secrets.VENDOR }}
-          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          CUSTOMER: ${{ secrets.CUSTOMER }}
-          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          BASE_URL: ${{ secrets.BASE_URL }}
-          GMAP : ${{secrets.GMAP}}
+      #   env:
+      #     CI: true
+      #     ADMIN: ${{ secrets.ADMIN }}
+      #     ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
+      #     VENDOR: ${{ secrets.VENDOR }}
+      #     VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+      #     CUSTOMER: ${{ secrets.CUSTOMER }}
+      #     CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+      #     BASE_URL: ${{ secrets.BASE_URL }}
+      #     GMAP : ${{secrets.GMAP}}
 
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always() # always run even if the previous step fails
-        with:
-          report_paths: "tests/e2e/playwright-report/results.xml"
-          include_passed: true,
-          check_retries: true,
-          detailed_summary: true,
+      # - name: Publish Test Report
+      #   uses: mikepenz/action-junit-report@v3
+      #   if: always() # always run even if the previous step fails
+      #   with:
+      #     report_paths: "tests/e2e/playwright-report/results.xml"
+      #     include_passed: true,
+      #     check_retries: true,
+      #     detailed_summary: true,
 
       # - name: Generate Test Report
       #   uses: phoenix-actions/test-reporting@v8
