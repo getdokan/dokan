@@ -2173,10 +2173,11 @@ export const selector = {
 			editSchedule: '#dokan-withdraw-display-schedule-popup',
 			crossIcon: '.mfp-close',
 			preferredPaymentMethod: '#preferred-payment-method',
-			monthly: '#withdraw-schedule-monthly\\>',
-			quarterly: '#withdraw-schedule-quarterly\\>',
-			twicePerMonth: '#withdraw-schedule-biweekly\\>',
-			weekly: '#withdraw-schedule-weekly\\>',
+			preferredSchedule: (schedule: string) => `#withdraw-schedule-${schedule}\\>`,
+			// monthly: '#withdraw-schedule-monthly\\>',
+			// quarterly: '#withdraw-schedule-quarterly\\>',
+			// twicePerMonth: '#withdraw-schedule-biweekly\\>',
+			// weekly: '#withdraw-schedule-weekly\\>',  monthly,quarterly, biweekly,weekly
 			onlyWhenBalanceIs: '#minimum-withdraw-amount',
 			maintainAReserveBalance: '#withdraw-remaining-amount',
 			changeSchedule: '#dokan-withdraw-schedule-request-submit',
@@ -2762,6 +2763,7 @@ export const selector = {
 
 			// Update Settings
 			updateSettings: '//input[@name="dokan_update_store_settings"]',
+			updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success p',
 
 		},
 
@@ -2779,7 +2781,7 @@ export const selector = {
 			// Add-Ons
 			addField: '.wc-pao-add-field',
 			addedFirstField: '.wc-pao-addon-header.ui-sortable-handle',
-			type: '.wc-pao-addon-type-select',
+			type: 'select.wc-pao-addon-type-select',
 			displayAs: '.wc-pao-addon-display-select',
 			titleRequired: '.wc-pao-addon-content-name',
 			formatTitle: '#wc-pao-addon-content-title-format',

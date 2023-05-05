@@ -12,6 +12,7 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
+        // "ecmaVersion": 2017,
         "sourceType": "module"
     },
     "plugins": [
@@ -19,22 +20,24 @@
         // "prettier"
     ],
     "rules": {
+        // "@typescript-eslint/require-await": "error",
       // we want to avoid extraneous spaces
     //   "no-multi-spaces": ["error"],
     //   "camelcase": "error",
     //   "spaced-comment": "error",
       "no-duplicate-imports": "error",
+      "require-await": "error",
 
 
        //Layout & Formatting 
-    "array-bracket-newline": ["error", "never"],
-    "array-bracket-spacing": ["error", "never"],
-    "array-element-newline": ["error", "never"],
-    "arrow-parens": ["error", "as-needed"],
-    "arrow-spacing": ["error", { "before": false, "after": true }],
-    "block-spacing": "error",
-    "brace-style": ["error", "stroustrup"],
-    "comma-spacing": ["error", { "before": false, "after": true }],
+    // "array-bracket-newline": ["error", "never"],
+    // "array-bracket-spacing": ["error", "never"],
+    // "array-element-newline": ["error", "never"],
+    // "arrow-parens": ["error", "as-needed"],
+    // "arrow-spacing": ["error", { "before": false, "after": true }],
+    // "block-spacing": "error",
+    // "brace-style": ["error", "stroustrup"],
+    // "comma-spacing": ["error", { "before": false, "after": true }],
     "indent": ["error", "tab"],
     "no-multi-spaces": "error",
     // "no-multiple-empty-lines": "error",
@@ -44,7 +47,7 @@
     "object-curly-newline": ["error", "never"],
     // "object-curly-newline": ["error", { "multiline": true }],
     // "object-curly-newline": ["error", { "minProperties": 2 }],
-    "object-curly-spacing": ["error", "always"],
+    // "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "semi-spacing": ["error", { "before": false, "after": true }],

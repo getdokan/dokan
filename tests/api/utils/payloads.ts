@@ -190,6 +190,20 @@ export const payloads = {
 			amount: faker.datatype.number({ min: 1, max: 10 },).toString(),
 			discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
 			product_ids: [15],
+			meta_data: [
+				{
+					key: 'apply_before_tax',
+					value: 'no'
+				},
+				{
+					key: 'apply_new_products',
+					value: 'yes'
+				},
+				{
+					key: 'show_on_store',
+					value: 'no'
+				}
+			]
 		};
 	},
 
@@ -1214,6 +1228,7 @@ export const payloads = {
 	createStore1: {
 		user_login: process.env.VENDOR,
 		user_pass: process.env.USER_PASSWORD,
+		user_nicename: process.env.VENDOR + 'store',
 		role: 'seller',
 		email: process.env.VENDOR + '@yopmail.com',
 		store_name: process.env.VENDOR + 'store',

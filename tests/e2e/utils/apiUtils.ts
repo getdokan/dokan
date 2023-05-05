@@ -41,7 +41,7 @@ export class ApiUtils {
 	}
 
 	// get basic auth
-	async getBasicAuth(user: user): Promise<string> {
+	getBasicAuth(user: user): string {
 		const basicAuth = 'Basic ' + Buffer.from(user.username + ':' + user.password).toString('base64');
 		return basicAuth;
 	}
@@ -60,10 +60,10 @@ export class ApiUtils {
 			assert && expect(response.ok()).toBeTruthy();
 			responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody);
-			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+			// String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}
-		catch (err: unknown) {
+		catch (err: any) {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
@@ -321,6 +321,13 @@ export class ApiUtils {
 			couponId = responseBody.id;
 		}
 		return [responseBody, couponId];
+	}
+
+	// update coupon
+	async updateCoupon(couponId: string, payload: object, auth? : auth) {
+		const response = await this.request.put(endPoints.updateCoupon(couponId), { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
 	}
 
 	/**
@@ -1002,7 +1009,7 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia3(filePath: string, auth? : auth) {
+	async uploadMedia3(filePath: string) {
 		// const payload = fs.readFileSync(filePath);
 		const payload = Buffer.from(filePath); //TODO: test then use it instead of previous
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
@@ -1137,7 +1144,7 @@ export class ApiUtils {
 		const [, productId] = await this.createProduct(productPayload, auth);
 		const payload = orderPayload;
 		payload.line_items[0].product_id = productId;
-		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth });
+		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
 		const responseBody = await this.getResponseBody(response);
 		const orderId = responseBody.id;
 		return [responseBody, orderId, productId];

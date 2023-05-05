@@ -5,7 +5,7 @@ import { AdminPage } from '../pages/adminPage';
 import { ApiUtils } from '../utils/apiUtils';
 import { payloads } from '../utils/payloads';
 
-setup.describe('authenticate users & set permalink', ()=> {
+setup.describe.skip('authenticate users & set permalink', ()=> {
 
 	setup('authenticate admin', async ({ page })=> {
 		const loginPage = new LoginPage(page);

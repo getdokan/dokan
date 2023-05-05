@@ -42,7 +42,7 @@ export class ApiUtils {
 	}
 
 	// get basic auth
-	async getBasicAuth(user: user): Promise<string> {
+	getBasicAuth(user: user): string {
 		const basicAuth = 'Basic ' + Buffer.from(user.username + ':' + user.password).toString('base64');
 		return basicAuth;
 	}

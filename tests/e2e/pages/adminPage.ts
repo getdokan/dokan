@@ -986,12 +986,12 @@ export class AdminPage extends BasePage {
 		product.stockStatus && await this.editStockStatus(data.product.stockStatus.outOfStock);
 		// Vendor Store Name
 		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
-		// await this.scrollToTop()
+		await this.scrollToTop();
 
 		switch (product.status) {
 		case 'publish':
 			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.publish);
-			// await this.clickAndWaitForNavigation(selector.admin.products.product.publish);
+			await this.clickAndWaitForNavigation(selector.admin.products.product.publish);
 			await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
 			break;
 

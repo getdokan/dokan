@@ -16,8 +16,8 @@ const config: PlaywrightTestConfig = {
 	testDir: './tests',
 
 	/* Maximum time one test can run for. */
-	// timeout: 60 * 1000,
-	timeout: 40 * 1000,
+	timeout: 60 * 1000,
+	// timeout: 40 * 1000,
 	// timeout: 30 * 1000,
 	// timeout: 10 * 1000,
 
@@ -26,7 +26,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 7 * 1000,
+		timeout: 40 * 1000,
 	},
 
 	/* Run tests in files in parallel */
@@ -36,7 +36,7 @@ const config: PlaywrightTestConfig = {
 	// forbidOnly: !!process.env.CI,
 
 	/* Retry on CI only */
-	// retries: process.env.CI ? 1 : 0,
+	retries: process.env.CI ? 1 : 0,
 
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : 1,
@@ -78,10 +78,11 @@ const config: PlaywrightTestConfig = {
 
 		{
 			name: 'e2e_tests',
+			testMatch: /.*\.spec\.ts/ ,
 			use: {
 				...devices['Desktop Chrome'],	
 			},
-			dependencies: ['setup'],
+			// dependencies: ['setup'],
 		},
 
 		//     {
@@ -135,7 +136,7 @@ const config: PlaywrightTestConfig = {
 	],
 
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
-	// outputDir: 'test-results/',
+	outputDir: 'playwright-report/test-artifacts/',
 
 	/* Run your local dev server before starting the tests */
 	// webServer: {

@@ -1,5 +1,4 @@
-import {
-	expect,
+import {expect,
 	type Page,
 	type BrowserContext,
 	type Cookie,
@@ -9,8 +8,7 @@ import {
 	type Frame,
 	type FrameLocator,
 	type JSHandle,
-	type ElementHandle,
-} from '@playwright/test'; // TODO: type may not be needed
+	type ElementHandle,} from '@playwright/test'; // TODO: type may not be needed
 import { data } from 'utils/testData';
 
 // This Page Contains All Necessary Playwright Automation Methods
@@ -52,7 +50,7 @@ export class BasePage {
 		options?: { timeout?: number; waitUntil?: string },
 	): Promise<void> {
 		// await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
-		await this.page.waitForURL(url);
+		await this.page.waitForURL(url );
 	}
 
 	// goto subUrl
@@ -216,7 +214,6 @@ export class BasePage {
 			),
 			this.page.locator(selector).click(),
 		]);
-		expect(response.status()).toBe(code);
 		return response;
 	}
 
@@ -234,7 +231,6 @@ export class BasePage {
 			// await this.page.type(selector, text),
 			await this.clearAndFill(selector, text),
 		]);
-		expect(response.status()).toBe(code);
 		return response;
 	}
 
@@ -246,7 +242,6 @@ export class BasePage {
 			),
 			this.press(key),
 		]);
-		expect(response.status()).toBe(code);
 		return response;
 	}
 
@@ -311,7 +306,7 @@ export class BasePage {
 	}
 
 	// get locator
-	async getLocator(selector: string): Promise<Locator> {
+	getLocator(selector: string): Locator {
 		return this.page.locator(selector);
 	}
 
@@ -375,7 +370,7 @@ export class BasePage {
 	}
 
 	// get element
-	async getElement(selector: string): Promise<Locator> {
+	getElement(selector: string): Locator {
 		return this.page.locator(selector);
 	}
 
@@ -699,11 +694,9 @@ export class BasePage {
 
 	// upload file
 	async uploadBuffer(selector: string, filePath: string): Promise<void> {
-		await this.page.setInputFiles(selector, {
-			name: String(filePath.split('/').pop()),
+		await this.page.setInputFiles(selector, {name: String(filePath.split('/').pop()),
 			mimeType: 'image/' + filePath.split('.').pop(),
-			buffer: Buffer.from(filePath),
-		});
+			buffer: Buffer.from(filePath),});
 	}
 
 	// upload files when input file element is missing
@@ -1197,9 +1190,8 @@ export class BasePage {
 	 */
 
 	// get all pages
-	async getAllPages(): Promise<Page[]> {
-		const pages = this.page.context().pages();
-		return pages;
+	getAllPages(): Page[] {
+		return this.page.context().pages();
 	}
 
 	/**

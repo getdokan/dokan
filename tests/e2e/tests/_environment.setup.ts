@@ -8,8 +8,8 @@ import { AdminPage } from '../pages/adminPage';
 
 let productId: string;
 
-setup.describe('setup site & woocommerce & user settings', ()=> {
-	setup.use({ extraHTTPHeaders: { Accept: '*/*', Authorization: payloads.aAuth } });
+setup.describe.skip('setup site & woocommerce & user settings', ()=> {
+	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 	setup('check active plugins @lite @pro', async ({ request })=> {
 		setup.skip(!process.env.CI, 'skip plugin check');
@@ -103,6 +103,12 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
 	});
 
+});
+
+setup.describe.skip('setup  user settings', ()=> {
+	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
+
+
 	// Customer Details
 	setup('add customer @lite @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
@@ -114,14 +120,27 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		const apiUtils = new ApiUtils(request);
 
 		// create store
-		await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
 
-		// delete previous store products if any
+		// delete previous store products with predefined name if any
 		await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
 
 		// create store product
 		const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name, };
 		[, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
+
+
+	});
+
+	setup('add vendor coupon @pro', async ({ request })=> {
+		const apiUtils = new ApiUtils(request);
+		// create store coupon
+		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((a: { id: string })=> a.id);
+		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
+		const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
+		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
+			await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
+		}
 	});
 
 	setup.skip('admin add vendor products @lite @pro', async ({ request })=> {
@@ -133,23 +152,11 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
 	});
 
-	setup('add vendor coupon @pro', async ({ request })=> {
+	setup('add test vendor orders @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
-		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
-		await apiUtils.createCoupon([productId], coupon, payloads.vendorAuth);
+		await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
 	});
 
-	// setup.('add test vendor orders @pro', async ({ request }) => {
-	// 	const apiUtils = new ApiUtils(request);
-	// 	// await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth );
-
-	// 	const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth );
-	// 	const payload = payloads.createOrder;
-	// 	payload.line_items[0].product_id = productId;
-	// 	const response = await request.post(endPoints.wc.createOrder, { data: payload});
-	// 	expect(response.ok()).toBeTruthy();
-	// 	const responseBody = await apiUtils.getResponseBody(response);
-	// });
 });
 
 setup.describe.skip('setup dokan settings', ()=> {

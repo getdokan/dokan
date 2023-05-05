@@ -52,7 +52,10 @@
     //   "node/prefer-promises/fs": "error"
 
     "spaced-comment": "error",
-   
+
+    //  Basic 
+
+    "require-await": "error",
     "no-duplicate-imports": "error",
     "array-callback-return": "error",
     "constructor-super": "error",

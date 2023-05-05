@@ -1,3 +1,4 @@
+//TODO: add require await for async to eslint
 //TODO: separate everything for local & pro like: global setup, env, playwright config
 //TODO: implement fixture for lite pro issue handle
 //TODO: separate globalSetup for local & CI , cant reg user every time for local site or find another soln.

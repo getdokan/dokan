@@ -31,7 +31,7 @@
 #       - name: Use desired version of NodeJS
 #         uses: actions/setup-node@v3
 #         with:
-#           node-version: 14
+#           node-version: 16
 #           cache: "npm"
 
 #       - name: Clone dokan-pro
@@ -74,18 +74,18 @@
 #         run: |
 #           cd tests/api
 #           npm ci
-#           npm run start-env
+#           npm run start:env
 
 #       - name: Resetting wp-env
 #         if: failure()
 #         run: |
 #           cd tests/api
-#           npm run restart-env
+#           npm run restart:env
 
 #       # - name: Activate storefront
 #       #   run: |
 #       #     cd tests/api 
-#       #     npm run activate-sf-test
+#       #     npm run activate:theme
 
 #       # - name: Setup for api tests
 #       #   run: |
@@ -102,7 +102,7 @@
 
 #       - name: Running the api tests
 #         run: |
-#           cd tests/api && npm run test tests
+#           cd tests/api && npm run test 
 
 #         env:
 #           CI: true

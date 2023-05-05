@@ -3,7 +3,7 @@ import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { CustomerPage } from '../pages/customerPage';
 
-test.describe.skip('Customer user functionality test', ()=> {
+test.describe('Customer user functionality test', ()=> {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
 	let loginPage: any;
@@ -21,31 +21,31 @@ test.describe.skip('Customer user functionality test', ()=> {
 		await page.close();
 	});
 
-	test('customer register', async ()=> {
+	test('customer can register', async ()=> {
 		await customerPage.customerRegister(data.customer.customerInfo);
 	});
 
-	test('customer login', async ()=> {
+	test('customer can login', async ()=> {
 		await loginPage.login(data.customer);
 	});
 
-	test('customer logout', async ()=> {
+	test('customer can logout', async ()=> {
 		await loginPage.login(data.customer);
 		await loginPage.logout();
 	});
 
-	test('customer become a vendor', async ()=> {
+	test('customer can become a vendor', async ()=> {
 		await customerPage.customerRegister(data.customer.customerInfo);
 		await customerPage.customerBecomeVendor(data.customer.customerInfo);
 	});
 
-	test('customer become a wholesale customer', async ()=> {
+	test('customer can become a wholesale customer', async ()=> {
 		await customerPage.customerRegister(data.customer.customerInfo);
 		await customerPage.customerBecomeWholesaleCustomer();
 	});
 });
 
-test.describe.only('Customer functionality test', ()=> {
+test.describe('Customer functionality test', ()=> {
 
 	test.use({ storageState: data.auth.customerAuthFile });
 
@@ -62,23 +62,20 @@ test.describe.only('Customer functionality test', ()=> {
 		await page.close();
 	});
 
-	test('customer add billing details', async ( )=> {
+	test('customer can add billing details', async ( )=> {
 		await customerPage.addBillingAddress(data.customer.customerInfo);
 	});
 
-	test('customer add shipping details', async ( )=> {
+	test('customer can add shipping details', async ( )=> {
 		await customerPage.addShippingAddress(data.customer.customerInfo);
 	});
 
-	// test('customer add customer details', async ( )=> {
-	// 	await customerPage.addCustomerDetails(data.customer.customerInfo);
-	// });
-
-	test('customer search store', async ( )=> {
-		await customerPage.searchStore(data.predefined.vendorStores.vendor1);
+	test('customer can add customer details', async ( )=> {
+		await customerPage.addCustomerDetails(data.customer.customerInfo);
 	});
 
-	test('customer search product @product', async ( )=> {
+
+	test('customer can search product @product', async ( )=> {
 		await customerPage.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
@@ -94,7 +91,7 @@ test.describe.only('Customer functionality test', ()=> {
 		await customerPage.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
 	});
 
-	test('customer buy product', async ( )=> {
+	test('customer can buy product', async ( )=> {
 		await customerPage.clearCart();
 		await customerPage.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customerPage.placeOrder();
@@ -113,8 +110,12 @@ test.describe.only('Customer functionality test', ()=> {
 		await customerPage.applyCoupon(data.predefined.coupon.couponCode);
 	});
 
+	test('customer can search store', async ( )=> {
+		await customerPage.searchStore(data.predefined.vendorStores.vendor1); //TODO: update parameter
+	});
+
 	test('customer can follow store @pro', async ( )=> {
-		await customerPage.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromShopPage);
+		await customerPage.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromShopPage); //TODO: update parameter
 	});
 
 	test('customer can review store', async ( )=> {
