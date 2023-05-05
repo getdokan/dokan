@@ -25,7 +25,7 @@ test.describe('settings api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test.only('update settings @lite', async ({ request }) => {
+	test('update settings @lite', async ({ request }) => {
 		const response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings });
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
