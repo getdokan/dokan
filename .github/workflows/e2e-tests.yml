@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   tests:
+    timeout-minutes: 30
     name: e2e tests
     runs-on: ubuntu-latest
     # strategy:
@@ -33,74 +34,118 @@ jobs:
           node-version: 16
           cache: "npm"
 
-      - name: Clone dokan-pro
-        uses: actions/checkout@v3
-        with:
-          repository: weDevsOfficial/dokan-pro
-          token: ${{ secrets.ACCESS_TOKEN }}
-          path: "plugins/dokan-pro"
-          ref: "develop"
-          # fetch-depth: 0
+      # - name: Clone dokan-pro
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: weDevsOfficial/dokan-pro
+      #     token: ${{ secrets.ACCESS_TOKEN }}
+      #     path: "plugins/dokan-pro"
+      #     ref: "develop"
+      #     # fetch-depth: 0
 
-      - name: Composer install and build (Dokan-lite)
-        run: |
-          composer install --no-dev
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-lite)
+      #   run: |
+      #     composer install --no-dev
+      #     composer dump-autoload -o
 
-      - name: Npm install and build (Dokan-lite)
-        run: |
-          npm i
-          npm run dev:build
-          grunt
+      # - name: Npm install and build (Dokan-lite)
+      #   run: |
+      #     npm i
+      #     npm run dev:build
+      #     grunt
 
-      - name: Composer install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          composer update
-          composer install --no-dev
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     composer update
+      #     composer install --no-dev
+      #     composer dump-autoload -o
 
-      - name: Npm install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          npm i
-          npm run dev:build
-          npm run build
+      # - name: Npm install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     npm i
+      #     npm run dev:build
+      #     npm run build
 
       - name: Install dependencies & Setup WordPress Env
         run: |
           cd tests/e2e 
-          npm i --production
-          npm run start:env
+          npm ci --production
 
-      - name: Resetting wp-env
-        if: failure()
-        run: |
-          cd tests/e2e
-          npm run restart:env
 
-      - name: Activate storefront
-        run: |
-          cd tests/e2e 
-          npm run activate:theme
+      # - name: Resetting wp-env
+      #   if: failure()
+      #   run: |
+      #     cd tests/e2e
+      #     npm run restart:env
+
+      # - name: Activate theme:Storefront
+      #   run: |
+      #     cd tests/e2e 
+      #     npm run activate:theme
 
       # - name: Set Permalink structure
       #   run: |
       #     cd tests/e2e 
       #     npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
 
-      - name: Setup for e2e tests
+      # - name: Setup for e2e tests
+      #   run: |
+      #     cd tests/e2e 
+      #     npm run test:e2e-setup
+
+      - name: Get installed Playwright version
+        id: playwright-version
         run: |
           cd tests/e2e 
-          npm run test:e2e-setup
+          echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+        # PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV   
+        # echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
 
+      - name: Get installed Playwright versionkk
+        id: playwright-versionkk
+        run: |
+          cd tests/e2e 
+          echo "::set-output name=version::$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')" 
+       # node -e "console.log(require('playwright/package.json').version)"
+      #  echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" >> $GITHUB_OUTPUT
+      
+
+      # - name: Store Playwright's Version
+      #   run: |
+      #     PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+      #     echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+      #     echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+      # - name: Cache playwright binaries
+      #   uses: actions/cache@v3
+      #   id: playwright-cache
+      #   with:
+      #     path: |
+      #       ~/.cache/ms-playwright
+          # key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+
+      # # Install browser binaries & OS dependencies if cache missed
+      # - name: Install Playwright browser binaries & OS dependencies
+      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #         npx playwright install --with-deps chromium
+
+      # # Install only the OS dependencies if cache hit
+      # - name: Install Playwright OS dependencies
+      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+      #   run: |
+      #         npx playwright install-deps
+ 
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
       #   with:
       #     timeout_seconds: 30000
       #     max_attempts: 1
       #     retry_on: error
-      #     command: d tests/e2e && npm run test:e2e
+      #     command: cd tests/e2e && npm run test:e2e
 
       #  cd tests/e2e && npm run test setup.spec.ts
       - name: Running the e2e tests
@@ -145,14 +190,16 @@ jobs:
       #   run: |
       #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
 
-      - name: Archive playwright artifacts (screenshots, HTML snapshots, Reports)
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: tests/e2e/playwright-report
-          if-no-files-found: ignore
-          retention-days: 30
+      # - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: test-artifact
+      #     path: |
+      #       tests/e2e/playwright
+      #       tests/e2e/playwright-report
+      #     if-no-files-found: ignore
+      #     retention-days: 30
 
       # - name: Publish HTML report to GH Pages
       #   if: always() # We want this to always run, even if test fail prior to this step running

@@ -26,8 +26,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 10 * 1000,
-	},
+		timeout: 10 * 1000,},
 
 	/* Run tests in files in parallel */
 	// fullyParallel: true,
@@ -42,7 +41,9 @@ const config: PlaywrightTestConfig = {
 	workers: process.env.CI ? 1 : 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI ? [['html'],['list', { printSteps: true }], ['junit', { outputFile: 'playwright-report/results.xml' }]] : [['html', { open: 'never' }], ['list', { printSteps: true }]],
+	reporter: process.env.CI
+		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }]]
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	globalSetup: require.resolve('./global-setup'),
@@ -59,8 +60,7 @@ const config: PlaywrightTestConfig = {
 		// viewport: { width: 1440, height: 900 },
 
 		// launch options
-		launchOptions: {
-			slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
+		launchOptions: {slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
 		},
 
 		// // api request headers
@@ -73,15 +73,12 @@ const config: PlaywrightTestConfig = {
 	/* Configure projects for major browsers */
 	projects: [
 		// Setup project
-		{ name: 'setup', 
+		{ name: 'setup',
 			testMatch: /.*\.setup\.ts/ },
 
-		{
-			name: 'e2e_tests',
+		{name: 'e2e_tests',
 			testMatch: /.*\.spec\.ts/ ,
-			use: {
-				...devices['Desktop Chrome'],	
-			},
+			use: {...devices['Desktop Chrome'],},
 			dependencies: ['setup'],
 		},
 
@@ -136,7 +133,7 @@ const config: PlaywrightTestConfig = {
 	],
 
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
-	outputDir: 'playwright-report/test-artifacts/',
+	outputDir: 'playwright/test-artifacts/',
 
 	/* Run your local dev server before starting the tests */
 	// webServer: {

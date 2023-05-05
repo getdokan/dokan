@@ -1,3 +1,8 @@
+//TODO: working-directory: ./path/to/tests
+//TODO: update auth if expired instead of everytime
+//TODO: solve reporter path conflict
+//TODO: add color on git action
+//TODO: separate two junit report showing on simple git-action summary
 //TODO: add require await for async to eslint
 //TODO: separate everything for local & pro like: global setup, env, playwright config
 //TODO: implement fixture for lite pro issue handle

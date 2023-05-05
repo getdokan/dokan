@@ -23,7 +23,7 @@ export class LoginPage extends BasePage {
 			return;
 		}
 		// logout if other user is already logged in
-		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json 
+		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json
 		// else if ((user.username !== currentUser) || (currentUser === undefined)) {
 			await this.logoutFrontend();
 		}
@@ -33,7 +33,7 @@ export class LoginPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
 		if (storageState){
 			await this.page.context().storageState({ path: storageState });
-			}
+		}
 		const loggedInUser = await this.getCurrentUser();
 		expect(loggedInUser).toBe(user.username);
 	}
@@ -49,7 +49,7 @@ export class LoginPage extends BasePage {
 			// await this.waitForUrl(data.subUrls.backend.adminDashboard);
 			await this.waitForNavigation();
 			if (storageState){
-			await this.page.context().storageState({ path: storageState });
+				await this.page.context().storageState({ path: storageState });
 			}
 			const loggedInUser = await this.getCurrentUser();
 			expect(loggedInUser).toBe(user.username);
