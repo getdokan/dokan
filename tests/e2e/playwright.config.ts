@@ -82,7 +82,7 @@ const config: PlaywrightTestConfig = {
 			use: {
 				...devices['Desktop Chrome'],	
 			},
-			// dependencies: ['setup'],
+			dependencies: ['setup'],
 		},
 
 		//     {
