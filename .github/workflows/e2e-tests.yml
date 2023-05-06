@@ -95,13 +95,24 @@ jobs:
       #     cd tests/e2e 
       #     npm run test:e2e-setup
 
-      - name: Get installed Playwright version
-        id: playwright-version
+      - name: Get installed Playwright version1
+        id: playwright-version1
         run: |
           cd tests/e2e
+         # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
           echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" 
+      - name: Get installed Playwright version2
+        id: playwright-version2
+        run: |
+          cd tests/e2e
         # PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV   
+        PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" 
+      - name: Get installed Playwright version3
+        id: playwright-version3
+        run: |
+          cd tests/e2e
         # echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
+        echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
 
       # - name: Get installed Playwright versionkk
       #   id: playwright-versionkk
