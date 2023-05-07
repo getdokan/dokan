@@ -54,7 +54,7 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@playwright/test": "^1.33.0",
-    "@wordpress/env": "^6.0.0",
+    "@wordpress/env": "^4.9.0",
     "dotenv": "^16.0.3",
     "npm-check-updates": "^16.10.10"
   }
