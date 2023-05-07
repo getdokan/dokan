@@ -31,7 +31,7 @@ jobs:
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16'
           cache: "npm"
 
       # - name: Clone dokan-pro
@@ -50,28 +50,27 @@ jobs:
 
       # - name: Npm install and build (Dokan-lite)
       #   run: |
-      #     npm i
+      #     npm ci
       #     npm run dev:build
       #     grunt
 
       # - name: Composer install and build (Dokan-pro)
       #   run: |
       #     cd plugins/dokan-pro
-      #     composer update
       #     composer install --no-dev
       #     composer dump-autoload -o
 
       # - name: Npm install and build (Dokan-pro)
       #   run: |
       #     cd plugins/dokan-pro
-      #     npm i
+      #     npm ci
       #     npm run dev:build
       #     npm run build
 
-      - name: Install dependencies & Setup WordPress Env
-        run: |
-          cd tests/e2e 
-          npm ci --production
+      # - name: Install dependencies & Setup WordPress Env
+      #   run: |
+      #     cd tests/e2e 
+      #     npm ci --production
 
 
       # - name: Resetting wp-env
@@ -95,25 +94,30 @@ jobs:
       #     cd tests/e2e 
       #     npm run test:e2e-setup
 
-      # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
-      - name: Get installed Playwright version1
-        id: playwright-version1
+      # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")"   
+      # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
+      # echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
+      # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
+      # Get Playwright version
+      - name: Get installed Playwright version
+        id: playwright-version
         run: |
           cd tests/e2e
-          echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" 
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')"
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
-          echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
-          echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
+          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+          echo "${{ hashFiles('**/package-lock.json') }}"
 
+      # # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+      # # Cache browser binaries, cache key is based on Playwright version and OS
       # - name: Cache playwright binaries
       #   uses: actions/cache@v3
       #   id: playwright-cache
       #   with:
       #     path: |
       #       ~/.cache/ms-playwright
-          # key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      #     restore-keys: |
+      #          ${{ runner.os }}-playwright-
+
 
       # # Install browser binaries & OS dependencies if cache missed
       # - name: Install Playwright browser binaries & OS dependencies
