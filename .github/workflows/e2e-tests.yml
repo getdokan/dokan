@@ -119,12 +119,6 @@ jobs:
           restore-keys: |
                ${{ runner.os }}-playwright-
 
-
-      - name: Store Playwright's Version
-        run: |
-          echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
-
-
       # Install browser binaries & OS dependencies if cache missed
       - name: Install Playwright browser binaries & OS dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -132,12 +126,12 @@ jobs:
           cd tests/e2e
           npm run pw:browser-with-deps
 
-      # Install only the OS dependencies if cache hit
-      - name: Install Playwright OS dependencies
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: |
-          cd tests/e2e
-          npm run pw:deps-only
+      # # Install only the OS dependencies if cache hit  not needed
+      # - name: Install Playwright OS dependencies
+      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+      #   run: |
+      #     cd tests/e2e
+      #     npm run pw:deps-only
  
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
