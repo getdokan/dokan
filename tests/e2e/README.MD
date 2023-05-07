@@ -43,11 +43,15 @@ npm i
 
 ### How to run tests
 
-Running all tests
+Run all tests
 
     npx playwright test
 
-Running a single test file
+Run tests in UI Mode
+
+    npx playwright test --ui
+
+Run a single test file
 
     npx playwright test customers.spec.ts
 

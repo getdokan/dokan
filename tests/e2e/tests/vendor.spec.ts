@@ -80,7 +80,7 @@ test.describe('Vendor functionality test', ()=> {
 		await vendorPage.addExternalProduct(data.product.external);
 	});
 
-	test.only('vendor can add auction product', async ( )=> {
+	test('vendor can add auction product', async ( )=> {
 		await vendorPage.addAuctionProduct(data.product.auction);
 	});
 
