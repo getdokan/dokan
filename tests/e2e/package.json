@@ -6,7 +6,7 @@
   "scripts": {
     "nip": "npm install --production",
     "nid": "npm install --include=dev",
-    "pw:chrome": "playwright install chromium",
+    "pw:chrome-only": "playwright install chromium",
     "pw:browser-with-deps": "playwright install --with-deps chromium",
     "pw:deps-only": "playwright install-deps chromium",
     "test": "playwright test",
@@ -21,7 +21,8 @@
     "stop:env": "wp-env stop",
     "restart:env": "wp-env stop && wp-env start",
     "reset:db": "wp-env clean all && wp-env start",
-    "reset:env": "wp-env destroy all && wp-env start",
+    "reset:env": "wp-env destroy && wp-env start",
+    "set:post-permalink": "wp-env run tests-cli 'wp rewrite structure /%postname%/'",
     "user-list": "wp-env run cli wp user list",
     "activate:theme": "wp-env run tests-cli 'wp theme activate storefront'",
     "wp-env": "wp-env",
