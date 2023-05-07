@@ -17,7 +17,7 @@
     "test:report": "npx playwright show-report",
     "test:trace": "npx playwright show-trace trace.zip",
     "container_path": "wp-env install-path",
-    "start:env": "wp-env start test",
+    "start:env": "wp-env start",
     "update:env": "wp-env start -- --update",
     "stop:env": "wp-env stop",
     "restart:env": "wp-env stop && wp-env start",
