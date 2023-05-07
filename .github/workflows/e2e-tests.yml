@@ -90,10 +90,10 @@ jobs:
       #     cd tests/e2e 
       #     npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
 
-      - name: Setup for e2e tests
-        run: |
-          cd tests/e2e 
-          npm run test:e2e-setup
+      # - name: Setup for e2e tests
+      #   run: |
+      #     cd tests/e2e 
+      #     npm run test:e2e-setup
 
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")"   
       # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
@@ -101,41 +101,41 @@ jobs:
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
       # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
     
-      # # Get Playwright version
-      # - name: Get installed Playwright version
-      #   id: playwright-version
-      #   run: |
-      #     cd tests/e2e
-      #     echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+      # Get Playwright version
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: |
+          cd tests/e2e
+          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
 
-      # # Cache browser binaries, cache key is based on Playwright version and OS
-      # - name: Cache playwright binaries
-      #   uses: actions/cache@v3
-      #   id: playwright-cache
-      #   with:
-      #     path: |
-      #       ~/.cache/ms-playwright
-      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      #     restore-keys: |
-      #          ${{ runner.os }}-playwright-
-
-
-      # - name: Store Playwright's Version
-      #   run: |
-      #    echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
+      # Cache browser binaries, cache key is based on Playwright version and OS
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          restore-keys: |
+               ${{ runner.os }}-playwright-
 
 
-      # # Install browser binaries & OS dependencies if cache missed
-      # - name: Install Playwright browser binaries & OS dependencies
-      #   if: steps.playwright-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #         npx playwright install --with-deps chromium
+      - name: Store Playwright's Version
+        run: |
+         echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
 
-      # # Install only the OS dependencies if cache hit
-      # - name: Install Playwright OS dependencies
-      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-      #   run: |
-      #         npx playwright install-deps chromium
+
+      # Install browser binaries & OS dependencies if cache missed
+      - name: Install Playwright browser binaries & OS dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: |
+              npx playwright install --with-deps chromium
+
+      # Install only the OS dependencies if cache hit
+      - name: Install Playwright OS dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: |
+              npx playwright install-deps chromium
  
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
