@@ -157,6 +157,8 @@ jobs:
           CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           BASE_URL: ${{ secrets.BASE_URL }}
           GMAP : ${{secrets.GMAP}}
+          FORCE_COLOR: 1
+
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
