@@ -23,10 +23,11 @@ jobs:
     #   fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout testing repo
+        uses: actions/checkout@v3
         with:
-          ref: "e2e-pw"
-          # fetch-depth: 0
+         ref: "e2e-pw"
+         # fetch-depth: 0
 
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
@@ -100,25 +101,50 @@ jobs:
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
       # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       
-      # Get Playwright version
-      - name: Get installed Playwright version
-        id: playwright-version
+      # # Get Playwright version
+      # - name: Get installed Playwright version
+      #   id: playwright-version
+      #   run: |
+      #     cd tests/e2e
+      #     PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version') >> $GITHUB_ENV
+
+
+      # # Cache browser binaries, cache key is based on Playwright version and OS
+      # - name: Cache playwright binaries
+      #   uses: actions/cache@v3
+      #   id: playwright-cache
+      #   with:
+      #     path: |
+      #       ~/.cache/ms-playwright
+      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      #     restore-keys: |
+      #          ${{ runner.os }}-playwright-
+
+      - name: Set the value
+        id: step_one
         run: |
-          cd tests/e2e
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+          echo "action_state=yellow" >> "$GITHUB_ENV"
+      - name: Use the value
+        id: step_two
+        run: |
+    
+          echo "${{ env.action_state }}" # This will output 'yellow'
 
+      - name: Store Playwright's Version
+        run: |
+          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
+          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+    
+      #  env:
+      #     PLAYWRIGHT_VERSION: '11'
 
-      # Cache browser binaries, cache key is based on Playwright version and OS
-      - name: Cache playwright binaries
+      - name: Cache Playwright Browsers for Playwright's Version
+        id: cache-playwright-browsers
         uses: actions/cache@v3
-        id: playwright-cache
         with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          restore-keys: |
-               ${{ runner.os }}-playwright-
-
+         path: ~/.cache/ms-playwright
+         key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
 
       # # Install browser binaries & OS dependencies if cache missed
       # - name: Install Playwright browser binaries & OS dependencies
