@@ -158,14 +158,14 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           GMAP : ${{secrets.GMAP}}
 
-      # - name: Publish Test Report
-      #   uses: mikepenz/action-junit-report@v3
-      #   if: always() # always run even if the previous step fails
-      #   with:
-      #     report_paths: "tests/e2e/playwright-report/results.xml"
-      #     include_passed: true,
-      #     check_retries: true,
-      #     detailed_summary: true,
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: "tests/e2e/playwright-report/e2e-results.xml"
+          include_passed: true,
+          check_retries: true,
+          detailed_summary: true,
 
       # - name: Generate Test Report
       #   uses: phoenix-actions/test-reporting@v8

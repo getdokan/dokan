@@ -8,7 +8,7 @@ import { AdminPage } from '../pages/adminPage';
 
 let productId: string;
 
-setup.describe.skip('setup site & woocommerce & user settings', ()=> {
+setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 	setup('check active plugins @lite @pro', async ({ request })=> {
@@ -105,7 +105,7 @@ setup.describe.skip('setup site & woocommerce & user settings', ()=> {
 
 });
 
-setup.describe.skip('setup  user settings', ()=> {
+setup.describe('setup  user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 
@@ -159,7 +159,7 @@ setup.describe.skip('setup  user settings', ()=> {
 
 });
 
-setup.describe.skip('setup dokan settings', ()=> {
+setup.describe('setup dokan settings', ()=> {
 	setup.use({ storageState: data.auth.adminAuthFile });
 
 	let adminPage: any;

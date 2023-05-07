@@ -42,8 +42,8 @@ const config: PlaywrightTestConfig = {
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: process.env.CI
-		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }]],
+		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	globalSetup: require.resolve('./global-setup'),
