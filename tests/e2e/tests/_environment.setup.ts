@@ -26,7 +26,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 	});
 
 	setup('reset dokan previous settings @lite @pro', async ({ request })=> {
-		setup.skip(!process.env.CI, 'skip previous settings check');
+		setup.skip(!!process.env.CI, 'skip previous settings check');
 		//TODO: remove previous quote rule & list things thats need to reset
 		// previous seller badges
 
