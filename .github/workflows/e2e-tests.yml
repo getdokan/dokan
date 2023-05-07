@@ -68,10 +68,10 @@ jobs:
       #     npm run dev:build
       #     npm run build
 
-      # - name: Install dependencies & Setup WordPress Env
-      #   run: |
-      #     cd tests/e2e 
-      #     npm ci --production
+      - name: Install dependencies & Setup WordPress Env
+        run: |
+          cd tests/e2e 
+          npm ci --production
 
 
       # - name: Resetting wp-env
@@ -120,15 +120,6 @@ jobs:
       #     restore-keys: |
       #          ${{ runner.os }}-playwright-
 
-      - name: Set the value
-        id: step_one
-        run: |
-          echo "action_state=yellow" >> "$GITHUB_ENV"
-      - name: Use the value
-        id: step_two
-        run: |
-    
-          echo "${{ env.action_state }}" # This will output 'yellow'
 
       - name: Store Playwright's Version
         run: |
