@@ -162,7 +162,7 @@ jobs:
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
-          report_paths: "tests/e2e/playwright-report/e2e-results.xml"
+          report_paths: "tests/e2e/playwright-report/junit-report/e2e-results.xml"
           include_passed: true,
           check_retries: true,
           detailed_summary: true,
