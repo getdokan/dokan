@@ -104,8 +104,8 @@ jobs:
           echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')"
           echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
           echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
-          echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('playwright/package.json').version)")"
-          
+          echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
+
       # - name: Cache playwright binaries
       #   uses: actions/cache@v3
       #   id: playwright-cache
