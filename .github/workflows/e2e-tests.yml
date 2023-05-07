@@ -105,7 +105,7 @@ jobs:
           cd tests/e2e
           echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
           echo "${{ hashFiles('**/package-lock.json') }}"
-          echo "${{ hashFiles('**/package-locka.json') }}"
+          echo "${{ hashFiles('./package-locka.json') }}"
 
       # # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       # # Cache browser binaries, cache key is based on Playwright version and OS
