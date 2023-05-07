@@ -68,10 +68,10 @@ jobs:
       #     npm run dev:build
       #     npm run build
 
-      - name: Install dependencies & Setup WordPress Env
-        run: |
-          cd tests/e2e 
-          npm ci --production
+      # - name: Install dependencies & Setup WordPress Env
+      #   run: |
+      #     cd tests/e2e 
+      #     npm ci --production
 
 
       # - name: Resetting wp-env
