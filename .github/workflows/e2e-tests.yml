@@ -115,7 +115,7 @@ jobs:
         id: playwright-version3
         run: |
           cd tests/e2e
-          echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
+          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')"
 
       # - name: Get installed Playwright versionkk
       #   id: playwright-versionkk
