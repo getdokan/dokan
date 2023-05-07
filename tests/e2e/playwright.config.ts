@@ -79,7 +79,7 @@ const config: PlaywrightTestConfig = {
 		{name: 'e2e_tests',
 			testMatch: /.*\.spec\.ts/ ,
 			use: {...devices['Desktop Chrome'],},
-			dependencies: ['setup'],
+			// dependencies: ['setup'],
 		},
 
 		//     {

@@ -35,79 +35,77 @@ jobs:
           node-version: '16'
           cache: "npm"
 
-      # - name: Clone dokan-pro
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: weDevsOfficial/dokan-pro
-      #     token: ${{ secrets.ACCESS_TOKEN }}
-      #     path: "plugins/dokan-pro"
-      #     ref: "develop"
-      #     # fetch-depth: 0
+      - name: Clone dokan-pro
+        uses: actions/checkout@v3
+        with:
+          repository: weDevsOfficial/dokan-pro
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: "plugins/dokan-pro"
+          ref: "develop"
+          # fetch-depth: 0
 
-      # - name: Composer install and build (Dokan-lite)
-      #   run: |
-      #     composer install --no-dev
-      #     composer dump-autoload -o
+      - name: Composer install and build (Dokan-lite)
+        run: |
+          composer install --no-dev
+          composer dump-autoload -o
 
-      # - name: Npm install and build (Dokan-lite)
-      #   run: |
-      #     npm ci
-      #     npm run dev:build
-      #     grunt
+      - name: Npm install and build (Dokan-lite)
+        run: |
+          npm ci
+          npm run dev:build
+          grunt
 
-      # - name: Composer install and build (Dokan-pro)
-      #   run: |
-      #     cd plugins/dokan-pro
-      #     composer install --no-dev
-      #     composer dump-autoload -o
+      - name: Composer install and build (Dokan-pro)
+        run: |
+          cd plugins/dokan-pro
+          composer install --no-dev
+          composer dump-autoload -o
 
-      # - name: Npm install and build (Dokan-pro)
-      #   run: |
-      #     cd plugins/dokan-pro
-      #     npm ci
-      #     npm run dev:build
-      #     npm run build
+      - name: Npm install and build (Dokan-pro)
+        run: |
+          cd plugins/dokan-pro
+          npm ci
+          npm run dev:build
+          npm run build
 
-      # - name: Install dependencies & Setup WordPress Env
-      #   run: |
-      #     cd tests/e2e 
-      #     npm ci --production
+      - name: Install dependencies & Setup WordPress Env
+        run: |
+          cd tests/e2e 
+          npm ci --production
 
+      - name: Resetting wp-env
+        if: failure()
+        run: |
+          cd tests/e2e
+          npm run restart:env
 
-      # - name: Resetting wp-env
-      #   if: failure()
-      #   run: |
-      #     cd tests/e2e
-      #     npm run restart:env
-
-      # - name: Activate theme:Storefront
-      #   run: |
-      #     cd tests/e2e 
-      #     npm run activate:theme
+      - name: Activate theme:Storefront
+        run: |
+          cd tests/e2e 
+          npm run activate:theme
 
       # - name: Set Permalink structure
       #   run: |
       #     cd tests/e2e 
       #     npm run wp-env run tests-cli "wp rewrite structure '/%postname%'"
 
-      # - name: Setup for e2e tests
-      #   run: |
-      #     cd tests/e2e 
-      #     npm run test:e2e-setup
+      - name: Setup for e2e tests
+        run: |
+          cd tests/e2e 
+          npm run test:e2e-setup
 
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")"   
       # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
       # echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
       # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-      
-      # Get Playwright version
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: |
-          cd tests/e2e
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
-
+    
+      # # Get Playwright version
+      # - name: Get installed Playwright version
+      #   id: playwright-version
+      #   run: |
+      #     cd tests/e2e
+      #     echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
 
       # # Cache browser binaries, cache key is based on Playwright version and OS
       # - name: Cache playwright binaries
@@ -121,9 +119,9 @@ jobs:
       #          ${{ runner.os }}-playwright-
 
 
-      - name: Store Playwright's Version
-        run: |
-         echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
+      # - name: Store Playwright's Version
+      #   run: |
+      #    echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
 
 
       # # Install browser binaries & OS dependencies if cache missed
@@ -136,7 +134,7 @@ jobs:
       # - name: Install Playwright OS dependencies
       #   if: steps.playwright-cache.outputs.cache-hit == 'true'
       #   run: |
-      #         npx playwright install-deps
+      #         npx playwright install-deps chromium
  
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
@@ -147,21 +145,21 @@ jobs:
       #     command: cd tests/e2e && npm run test:e2e
 
       #  cd tests/e2e && npm run test setup.spec.ts
-      # - name: Running the e2e tests
-      #   run: |
-      #     cd tests/e2e 
-      #     npm run test:e2e
+      - name: Running the e2e tests
+        run: |
+          cd tests/e2e 
+          npm run test:e2e
 
-      #   env:
-      #     CI: true
-      #     ADMIN: ${{ secrets.ADMIN }}
-      #     ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
-      #     VENDOR: ${{ secrets.VENDOR }}
-      #     VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-      #     CUSTOMER: ${{ secrets.CUSTOMER }}
-      #     CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-      #     BASE_URL: ${{ secrets.BASE_URL }}
-      #     GMAP : ${{secrets.GMAP}}
+        env:
+          CI: true
+          ADMIN: ${{ secrets.ADMIN }}
+          ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
+          VENDOR: ${{ secrets.VENDOR }}
+          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          CUSTOMER: ${{ secrets.CUSTOMER }}
+          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          GMAP : ${{secrets.GMAP}}
 
       # - name: Publish Test Report
       #   uses: mikepenz/action-junit-report@v3
