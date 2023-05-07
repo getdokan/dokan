@@ -106,7 +106,7 @@ jobs:
         id: playwright-version
         run: |
           cd tests/e2e
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
+          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
 
 
       # # Cache browser binaries, cache key is based on Playwright version and OS
@@ -125,16 +125,6 @@ jobs:
         run: |
          echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
 
-    
-      #  env:
-      #     PLAYWRIGHT_VERSION: '11'
-
-      - name: Cache Playwright Browsers for Playwright's Version
-        id: cache-playwright-browsers
-        uses: actions/cache@v3
-        with:
-         path: ~/.cache/ms-playwright
-         key: playwright-browsers-${{ env.PLAYWRIGHT_VERSION }}
 
       # # Install browser binaries & OS dependencies if cache missed
       # - name: Install Playwright browser binaries & OS dependencies
