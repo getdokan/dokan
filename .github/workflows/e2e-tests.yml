@@ -98,25 +98,26 @@ jobs:
       # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
       # echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
+      # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+      
       # Get Playwright version
       - name: Get installed Playwright version
         id: playwright-version
         run: |
           cd tests/e2e
           echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
-          echo "${{ hashFiles('**/apackage-locka.json') }}"
 
-      # # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-      # # Cache browser binaries, cache key is based on Playwright version and OS
-      # - name: Cache playwright binaries
-      #   uses: actions/cache@v3
-      #   id: playwright-cache
-      #   with:
-      #     path: |
-      #       ~/.cache/ms-playwright
-      #     key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-      #     restore-keys: |
-      #          ${{ runner.os }}-playwright-
+
+      # Cache browser binaries, cache key is based on Playwright version and OS
+      - name: Cache playwright binaries
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          restore-keys: |
+               ${{ runner.os }}-playwright-
 
 
       # # Install browser binaries & OS dependencies if cache missed
