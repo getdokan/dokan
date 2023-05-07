@@ -13,6 +13,7 @@ const config: PlaywrightTestConfig = {
 	// timeout: 120 * 1000,
 	// timeout: 60 * 1000,
 	timeout: 40 * 1000,
+	
 	expect: {
 		/**
 		 * Maximum time expect() should wait for the condition to be met.
@@ -20,21 +21,24 @@ const config: PlaywrightTestConfig = {
 		 */
 		timeout: 5000,
 	},
+
 	/* Run tests in files in parallel */
 	// fullyParallel: true,
-
-	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? 1 : 1,
 
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	// forbidOnly: !!process.env.CI,
 
+	/* Opt out of parallel tests on CI. */
+	workers: process.env.CI ? 1 : 1,
+
 	/* Retry on CI only */
-	retries: process.env.CI ? 2 : 0,
+	retries: process.env.CI ? 1 : 0,
 	// retries: 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI ? [ [ 'html' ], [ 'junit', { outputFile: 'playwright-report/results.xml' } ] ] : [ [ 'html', { open: 'never' } ], [ 'list', { printSteps: true } ] ],
+	reporter: process.env.CI
+		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-api' }], ['junit', { outputFile: 'playwright-report/junit-report/api-results.xml' }], ['list', { printSteps: true }]]
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-api' }], ['junit', { outputFile: 'playwright-report/junit-report/api-results.xml' }], ['list', { printSteps: true }]],
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	globalSetup: require.resolve( './global-setup' ),
@@ -102,7 +106,7 @@ const config: PlaywrightTestConfig = {
 	// ],
 
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
-	// outputDir: 'playwright-report/test-artifacts/',
+	outputDir: 'playwright-report/test-artifacts/',
 
 	/* Run your local dev server before starting the tests */
 	// webServer: {
