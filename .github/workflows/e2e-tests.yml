@@ -129,13 +129,13 @@ jobs:
       - name: Install Playwright browser binaries & OS dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: |
-              npx playwright install --with-deps chromium
+              npm run pw:browser-with-deps
 
       # Install only the OS dependencies if cache hit
       - name: Install Playwright OS dependencies
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: |
-              npx playwright install-deps chromium
+              npm run pw:deps-only
  
       # - name: Running the e2e tests
       #   uses: nick-fields/retry@v2
