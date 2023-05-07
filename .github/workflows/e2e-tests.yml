@@ -142,7 +142,7 @@ jobs:
       #     command: cd tests/e2e && npm run test:e2e
 
       #  cd tests/e2e && npm run test setup.spec.ts
-      - name: Running the e2e tests
+      - name: 🧪 Running the e2e tests
         run: |
           cd tests/e2e 
           npm run test:e2e
@@ -184,16 +184,16 @@ jobs:
       #   run: |
       #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
 
-      # - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
-      #   uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name: test-artifact
-      #     path: |
-      #       tests/e2e/playwright
-      #       tests/e2e/playwright-report
-      #     if-no-files-found: ignore
-      #     retention-days: 30
+      - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-artifact
+          path: |
+            tests/e2e/playwright
+            tests/e2e/playwright-report
+          if-no-files-found: ignore
+          retention-days: 30
 
       # - name: Publish HTML report to GH Pages
       #   if: always() # We want this to always run, even if test fail prior to this step running
