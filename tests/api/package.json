@@ -9,7 +9,7 @@
     "test:grep": "npx playwright test --grep",
     "test:api-setup": "playwright install chromium",
     "container_path": "wp-env install-path",
-    "start:env": "wp-env start",
+    "start:env": "wp-env start --e2e",
     "update:env": "wp-env start -- --update",
     "stop:env": "wp-env stop",
     "restart:env": "wp-env stop && wp-env start",
