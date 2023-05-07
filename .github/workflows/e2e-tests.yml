@@ -101,12 +101,12 @@ jobs:
       # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
       # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       
-      # # Get Playwright version
-      # - name: Get installed Playwright version
-      #   id: playwright-version
-      #   run: |
-      #     cd tests/e2e
-      #     PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version') >> $GITHUB_ENV
+      # Get Playwright version
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: |
+          cd tests/e2e
+          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
 
       # # Cache browser binaries, cache key is based on Playwright version and OS
@@ -123,9 +123,8 @@ jobs:
 
       - name: Store Playwright's Version
         run: |
-          PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')
-          echo "Playwright's Version: $PLAYWRIGHT_VERSION"
-          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+         echo "${{ env.PLAYWRIGHT_VERSION }}" # This will output 'yellow'
+
     
       #  env:
       #     PLAYWRIGHT_VERSION: '11'
