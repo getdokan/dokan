@@ -103,11 +103,12 @@ jobs:
           echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" 
       
       # PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV      
-      - name: Get installed Playwright version2
-        id: playwright-version2
-        run: |
-          cd tests/e2e
-          PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" 
+      # - name: Get installed Playwright version2
+      #   id: playwright-version2
+      #   run: |
+      #     cd tests/e2e
+      #     PLAYWRIGHT_VERSION=$(npm ls --json @playwright/test | jq --raw-output '.dependencies["@playwright/test"].version')
+      #     echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" 
       
       # echo -n "::set-output name=version::$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" 
       - name: Get installed Playwright version3
