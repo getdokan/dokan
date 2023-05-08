@@ -99,7 +99,7 @@
                                         id="bulk-product-action"
                                         class="dokan-btn dokan-btn-theme"
                                         value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>"
-                                        onClick="dokan_bulk_delete_prompt( event, '<?php esc_attr_e( 'Are you sure?' ); ?>', '#bulk-product-action-selector', '#product-filter' )"
+                                        onClick="dokan_bulk_delete_prompt( event, '<?php esc_attr_e( 'Are you sure?', 'dokan-lite' ); ?>', '#bulk-product-action-selector', '#product-filter' )"
                                     />
                                 </div>
                                 <table class="dokan-table dokan-table-striped product-listing-table dokan-inline-editable-table" id="dokan-product-list-table">
