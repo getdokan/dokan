@@ -14,7 +14,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup('check active plugins @lite @pro', async ({ request })=> {
 		setup.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
-		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> (a.plugin).split('/')[0]);
+		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
