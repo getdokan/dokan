@@ -24,7 +24,7 @@ test.describe('Vendor user functionality test1', ()=> {
 	});
 
 	test('vendor can register', async ( )=> {
-		await vendorPage.vendorRegister(data.vendor.vendorInfo, data.vendorSetupWizard);
+		await vendorPage.vendorRegister(data.vendor.vendorInfo, {...data.vendorSetupWizard, choice:false});
 		// await loginPage.logout()
 	});
 
@@ -56,7 +56,7 @@ test.describe('Vendor functionality test', ()=> {
 		await page.close();
 	});
 
-	test('vendor can setup setup wizard', async ( )=> {
+	test('vendor can setup setup-wizard', async ( )=> {
 		await vendorPage.vendorSetupWizard(data.vendorSetupWizard);
 	});
 
