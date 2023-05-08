@@ -32,7 +32,7 @@ jobs:
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '14'
           cache: "npm"
 
       - name: Clone dokan-pro

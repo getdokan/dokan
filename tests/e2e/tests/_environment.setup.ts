@@ -14,9 +14,15 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup('check active plugins @lite @pro', async ({ request })=> {
 		setup.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
-		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> a.plugin);
+		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> (a.plugin).split('/')[0]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
+	});
+
+	setup('check active modules  @pro', async ({ request })=> { //TODO: move to dokan settings also handle auth
+		const apiUtils = new ApiUtils(request);
+		const activeModules = await apiUtils.getAllModuleIds({ status:'active'});
+		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
 	setup('set wp settings @lite @pro', async ({ request })=> {
@@ -171,12 +177,6 @@ setup.describe('setup dokan settings', ()=> {
 	setup.beforeAll(async ({ browser })=> {
 		const page = await browser.newPage();
 		adminPage = new AdminPage(page);
-	});
-
-	setup('check active modules  @pro', async ({ request })=> {
-		const apiUtils = new ApiUtils(request);
-		const activeModules = await apiUtils.getAllModuleIds({ status:'active'});
-		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
 	setup.skip('admin set WpSettings @lite @pro', async ()=> {

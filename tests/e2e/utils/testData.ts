@@ -958,8 +958,7 @@ export const data = {
 
 	plugin: {
 		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro',],
-		pluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions'],
-		plugins:['dokan/dokan','dokan-pro/dokan-pro','woocommerce/woocommerce','woocommerce-bookings/woocommerce-bookings','woocommerce-product-addons/woocommerce-product-addons','woocommerce-simple-auctions/woocommerce-simple-auctions','woocommerce-subscriptions/woocommerce-subscriptions'],
+		plugins:['basic-auth','dokan','dokan-pro','woocommerce','woocommerce-bookings','woocommerce-product-addons','woocommerce-simple-auctions','woocommerce-subscriptions'],
 		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		activeClass: 'active', },
 

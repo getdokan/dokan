@@ -6,3 +6,13 @@
   "trailingComma": "all",
   "bracketSpacing": true
 }
+
+
+// "[[javascript]]": {
+//   "editor.defaultFormatter": "esbenp.prettier-vscode",
+//   "editor.formatOnSave": true
+// },
+// "[[markdown]]": {
+//   "editor.defaultFormatter": "esbenp.prettier-vscode",
+//   "editor.formatOnSave": true
+// },
