@@ -169,9 +169,9 @@ jobs:
           check_retries: true,
           detailed_summary: true,
           check_name: 'E2E Test Report (JUnit)'
-          summary: E2E Test Summary Report (JUnit)
+          summary: 'E2E Test Summary Report (JUnit)'
           # annotate_only: true,
-          annotate_notice: true,
+          # annotate_notice: true,
           job_name: 'XXXXXXXXX'
 
 
