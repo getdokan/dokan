@@ -25,7 +25,7 @@ test.describe('Vendor user functionality test1', ()=> {
 
 	test('vendor can register', async ( )=> {
 		await vendorPage.vendorRegister(data.vendor.vendorInfo, {...data.vendorSetupWizard, choice:false});
-		await loginPage.logout()
+		await loginPage.logout();
 	});
 
 	test.only('vendor can login', async ( )=> {
