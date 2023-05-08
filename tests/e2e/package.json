@@ -16,6 +16,8 @@
     "test:codegen": "playwright codegen",
     "test:report": "npx playwright show-report",
     "test:trace": "npx playwright show-trace trace.zip",
+    "allure:generate": "allure generate playwright-report/allure-report -o allure-report --clean",
+    "allure:open": "allure open allure-report",
     "container_path": "wp-env install-path",
     "start:env": "wp-env start",
     "update:env": "wp-env start -- --update",
@@ -55,6 +57,7 @@
     "@faker-js/faker": "^7.6.0",
     "@playwright/test": "^1.33.0",
     "@wordpress/env": "^4.9.0",
+    "allure-playwright": "^2.2.1",
     "dotenv": "^16.0.3",
     "npm-check-updates": "^16.10.10"
   }

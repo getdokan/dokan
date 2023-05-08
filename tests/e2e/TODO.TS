@@ -1,3 +1,4 @@
+//TODO: slack integration
 //TODO: working-directory: ./path/to/tests
 //TODO: update auth if expired instead of everytime
 //TODO: solve reporter path conflict

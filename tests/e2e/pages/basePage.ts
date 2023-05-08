@@ -976,13 +976,13 @@ export class BasePage {
 	}
 
 	// get last matching locator
-	async lastLocator(selector: string): Promise<Locator> {
+	lastLocator(selector: string): Locator {
 		const locator = this.page.locator(selector);
 		return locator.last();
 	}
 
 	// get child locator
-	async locatorOfLocator(parentSelector: string, childSelector: string): Promise<Locator> {
+	locatorOfLocator(parentSelector: string, childSelector: string): Locator {
 		const locator = this.page.locator(parentSelector);
 		return locator.locator(childSelector);
 	}
