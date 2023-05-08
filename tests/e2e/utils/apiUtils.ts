@@ -308,7 +308,7 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) {
+	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) {  // TODO: need to update handle productIds can be empty
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId;
@@ -533,16 +533,16 @@ export class ApiUtils {
 	 * module  api methods
 	 */
 
-	// get all modules
-	async getAllModules(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllModules, { headers: auth });
+	// get all modules         //TODO: covert all get request with params , and remove unneccessary endpoints in both api and e2e suites
+	async getAllModules(params = {}, auth? : auth) {
+		const response = await this.request.get(endPoints.getAllModules, { headers: auth, params: params });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
 
 	// get all modules ids
-	async getAllModuleIds(auth? : auth) {
-		const allModuleIds = (await this.getAllModules(auth)).map((a: { id: string; })=> a.id);
+	async getAllModuleIds(params = {}, auth? : auth) {
+		const allModuleIds = (await this.getAllModules(params, auth)).map((a: { id: string; })=> a.id);
 		return allModuleIds;
 	}
 
@@ -957,15 +957,8 @@ export class ApiUtils {
 	// plugins
 
 	// get all plugins
-	async getAllPlugins(auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllPlugins, { data: { per_page:100 }, headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		return responseBody;
-	}
-
-	// get all plugins by status
-	async getAllPluginByStatus(status: string, auth? : auth) {
-		const response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status), { data: { per_page:100 }, headers: auth });
+	async getAllPlugins(params = {}, auth? : auth) { //TODO: run loop & increment page to grab all plugins/products/...
+		const response = await this.request.get(endPoints.wp.getAllPlugins, { data: { per_page:100 }, params: params, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}

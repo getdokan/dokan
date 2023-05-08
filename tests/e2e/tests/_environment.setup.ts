@@ -14,7 +14,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup('check active plugins @lite @pro', async ({ request })=> {
 		setup.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
-		const activePlugins = (await apiUtils.getAllPluginByStatus('active')).map((a: { plugin: string })=> a.plugin);
+		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> a.plugin);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
@@ -138,10 +138,12 @@ setup.describe('setup  user settings', ()=> {
 		// create store coupon
 		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((a: { id: string })=> a.id);
 		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
-		const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
-		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
-			await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
-		}
+		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
+		// TODO: not needed anymore
+		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
+		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){  
+		// 	await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
+		// }
 	});
 
 	setup.skip('admin add vendor products @lite @pro', async ({ request })=> {
@@ -169,6 +171,12 @@ setup.describe('setup dokan settings', ()=> {
 	setup.beforeAll(async ({ browser })=> {
 		const page = await browser.newPage();
 		adminPage = new AdminPage(page);
+	});
+
+	setup('check active modules  @pro', async ({ request })=> {
+		const apiUtils = new ApiUtils(request);
+		const activeModules = await apiUtils.getAllModuleIds({ status:'active'});
+		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
 	setup.skip('admin set WpSettings @lite @pro', async ()=> {

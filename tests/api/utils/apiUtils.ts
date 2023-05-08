@@ -951,13 +951,6 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	// get all plugins by status
-	async getAllPluginByStatus(status: string, auth?: auth) {
-		const response = await this.request.get(endPoints.wp.getAllPluginsByStatus(status), { headers: auth });
-		const responseBody = await this.getResponseBody(response);
-		return responseBody;
-	}
-
 	// get single plugin
 	async getSinglePlugin(plugin: string, auth?: auth) {
 		const response = await this.request.get(endPoints.wp.getSinglePlugin(plugin), { headers: auth });

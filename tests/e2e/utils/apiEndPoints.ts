@@ -475,7 +475,6 @@ export const endPoints = { serverUrl: `${SERVER_URL}`,
 
 		//plugins
 		getAllPlugins: `${SERVER_URL}/wp/v2/plugins`,
-		getAllPluginsByStatus: (status: string)=> `${SERVER_URL}/wp/v2/plugins${QUERY}status=${status}`,
 		getSinglePlugin: (plugin: string)=> `${SERVER_URL}/wp/v2/plugins/${plugin}`,
 		updatePlugin: (plugin: string)=> `${SERVER_URL}/wp/v2/plugins/${plugin}`,
 		deletePlugin: (plugin: string)=> `${SERVER_URL}/wp/v2/plugins/${plugin}`,

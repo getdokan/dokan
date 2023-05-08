@@ -79,6 +79,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cDashboard.bankIban, customerInfo.bankIban);
 		await this.clickIfVisible(selector.customer.cDashboard.termsAndConditions);
 		const subscriptionPackIsVisible = await this.isVisible(selector.customer.cDashboard.subscriptionPack);
+		console.log(subscriptionPackIsVisible);
 		if (subscriptionPackIsVisible) {
 			await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		}

@@ -1,6 +1,7 @@
+//TODO: ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //TODO: slack integration
 //TODO: working-directory: ./path/to/tests
-//TODO: update auth if expired instead of everytime
+//TODO: update auth if expired instead of every-time
 //TODO: solve reporter path conflict
 //TODO: add color on git action
 //TODO: separate two junit report showing on simple git-action summary

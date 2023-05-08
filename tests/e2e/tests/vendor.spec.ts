@@ -5,7 +5,6 @@ import { VendorPage } from '../pages/vendorPage';
 
 test.describe('Vendor user functionality test1', ()=> {
 
-
 	test.use({ storageState: { cookies: [], origins: [] } });
 
 	let loginPage: any;
@@ -28,7 +27,7 @@ test.describe('Vendor user functionality test1', ()=> {
 		await loginPage.logout();
 	});
 
-	test.only('vendor can login', async ( )=> {
+	test('vendor can login', async ( )=> {
 		await loginPage.login(data.vendor);
 	});
 

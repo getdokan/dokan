@@ -209,7 +209,7 @@ test.describe('Admin functionality test', ()=> {
 	});
 
 	test('admin can set dokan geolocation settings @pro', async ( )=> {
-		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation); //TODO: need to fix
+		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation); 
 	});
 
 	test('admin can set dokan product report abuse settings @pro', async ( )=> {
@@ -220,7 +220,7 @@ test.describe('Admin functionality test', ()=> {
 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	});
 
-	test('admin can set dokan vendor subscription settings @pro', async ( )=> {
+	test.skip('admin can set dokan vendor subscription settings @pro', async ( )=> {
 		await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	});
 });

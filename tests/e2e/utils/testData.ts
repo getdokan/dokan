@@ -568,6 +568,12 @@ export const data = {
 		saveSuccessMessage: 'Setting has been saved successfully.', }, },
 
 	module: { noModuleMessage: 'No modules found.', },
+	modules: {
+		modules: [
+			'booking', 'color_scheme_customizer','delivery_time', 'elementor', 'export_import','follow_store','geolocation','germanized','live_chat','live_search',
+			'moip','dokan_paypal_ap','paypal_marketplace','product_addon','product_enquiry','report_abuse','rma','seller_vacation','shipstation','auction','spmv',
+			'store_reviews','stripe','product_advertising','product_subscription','vendor_analytics','vendor_staff','vsp','vendor_verification','wholesale',
+			'rank_math','table_rate_shipping','mangopay','order_min_max','razorpay','seller_badge','stripe_express','request_for_quotation' ]	},
 
 	dokanSetupWizard: { vendorStoreURL: 'store',
 		shippingFeeRecipient: 'seller',
@@ -953,7 +959,8 @@ export const data = {
 	plugin: {
 		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro',],
 		pluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions'],
-		plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
+		plugins:['dokan/dokan','dokan-pro/dokan-pro','woocommerce/woocommerce','woocommerce-bookings/woocommerce-bookings','woocommerce-product-addons/woocommerce-product-addons','woocommerce-simple-auctions/woocommerce-simple-auctions','woocommerce-subscriptions/woocommerce-subscriptions'],
+		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		activeClass: 'active', },
 
 	woocommerce: { saveSuccessMessage: 'Your settings have been saved.', },
