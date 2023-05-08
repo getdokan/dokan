@@ -19,8 +19,5 @@
     "SCRIPT_DEBUG": "true",
     "WP_DEBUG_LOG": "true",
     "WP_DEBUG_DISPLAY": "true"
-  },
-  "env": {
-    "development": []
   }
 }
