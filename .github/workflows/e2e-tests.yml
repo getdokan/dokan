@@ -76,9 +76,8 @@ jobs:
       - name: Start WordPress Env
         run: |
           cd tests/e2e 
-          echo "TEST_DB_PORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}'" 
-        # >> $GITHUB_ENV
-        # echo "dbport: $TEST_DB_PORT"
+          echo "TEST_DB_PORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_ENV
+          echo "dbport: $TEST_DB_PORT"
         # npm run start:env
 
       - name: Resetting WordPress Env
