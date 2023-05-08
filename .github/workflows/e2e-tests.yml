@@ -116,8 +116,8 @@ jobs:
           path: |
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          restore-keys: |
-               ${{ runner.os }}-playwright-
+          # restore-keys: |
+          #      ${{ runner.os }}-playwright-
 
       # Install browser binaries & OS dependencies if cache missed
       - name: Install Playwright browser binaries & OS dependencies
