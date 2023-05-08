@@ -41,9 +41,9 @@ const config: PlaywrightTestConfig = {
 	workers: process.env.CI ? 1 : 1,
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	// reporter: process.env.CI
-	// 	? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
-	// 	: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }], ['allure-playwright',	{detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]],
+	reporter: process.env.CI
+		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }], ['allure-playwright',	{detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]],
 
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -80,7 +80,7 @@ const config: PlaywrightTestConfig = {
 		{name: 'e2e_tests',
 			testMatch: /.*\.spec\.ts/ ,
 			use: {...devices['Desktop Chrome'],},
-			// dependencies: ['setup'],
+			dependencies: ['setup'],
 		},
 
 		//     {
