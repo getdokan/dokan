@@ -77,8 +77,10 @@ jobs:
         run: |
           cd tests/e2e 
           echo "TEST_DB_PORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_ENV
+
+      - name: Start WordPress Env
+        run: |
           echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
-        # npm run start:env
 
       - name: Resetting WordPress Env
         if: failure()
@@ -164,7 +166,6 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           GMAP : ${{secrets.GMAP}}
           FORCE_COLOR: 1
-
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3

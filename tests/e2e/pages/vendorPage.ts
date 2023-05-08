@@ -80,12 +80,13 @@ export class VendorPage extends BasePage {
 		if (subscriptionPackIsVisible) {
 			await this.customerPage.placeOrder('bank', false, true, false);
 		}
-		await this.vendorSetupWizard(setupWizardData);
+		if(setupWizardData.choice){
+			await this.vendorSetupWizard(setupWizardData);
+		}
 	}
 
 	// vendor setup wizard
-	async vendorSetupWizard(setupWizardData: { choice: boolean; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
-		setupWizardData.choice = true;
+	async vendorSetupWizard(setupWizardData: { choice: boolean ; storeProductsPerPage: any; street1: any; street2: any; country: any; city: any; zipCode: any; state: any; paypal: any; bankAccountName: any; bankAccountType: any; bankAccountNumber: any; bankName: any; bankAddress: any; bankRoutingNumber: any; bankIban: any; bankSwiftCode: any; customPayment: any; skrill: any; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vendorSetupWizard);
 		if (setupWizardData.choice) {
 			await this.click(selector.vendor.vSetup.letsGo);
