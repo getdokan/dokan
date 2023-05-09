@@ -1,11 +1,10 @@
 <template>
     <div class="dokan-upload-image" @click="uploadImage">
-        <div class="dokan-upload-image-container">
-            <img v-if="! showButton" :src="image.src ? image.src : src">
+        <div v-if="! showButton" class="dokan-upload-image-container">
+            <img :src="image.src ? image.src : src">
             <slot name="imagePlaceholder"></slot>
         </div>
-
-        <button v-if="showButton" @click.prevent="uploadImage">
+        <button v-else @click.prevent="uploadImage">
             {{ buttonLabel }}
         </button>
     </div>
