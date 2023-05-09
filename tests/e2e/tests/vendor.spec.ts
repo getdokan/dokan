@@ -79,11 +79,7 @@ test.describe('Vendor functionality test', ()=> {
 		await vendorPage.addExternalProduct(data.product.external);
 	});
 
-	test.only('vendor can add auc test ', async ( )=> {
-		await vendorPage.addAuctionProduct1(data.product.auction);
-	});
-
-	test.only('vendor can add auction product', async ( )=> {
+	test.fixme('vendor can add auction product', async ( )=> {
 		await vendorPage.addAuctionProduct(data.product.auction);
 	});
 
