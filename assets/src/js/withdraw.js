@@ -32,7 +32,7 @@
                 modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
                     width       : 690,
                     overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor : '#b11d1db8',
+                    headerColor : dokan.modal_header_color,
                 } );
 
             modal.iziModal( 'setContent', withdrawTemplate().trim() );
@@ -45,7 +45,7 @@
                 modal = $( '#dokan-withdraw-schedule-popup' ).iziModal( {
                     width       : 690,
                     overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor : '#b11d1db8',
+                    headerColor : dokan.modal_header_color,
                 } );
 
             modal.iziModal( 'setContent', scheduleTemplate().trim() );
