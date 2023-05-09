@@ -57,7 +57,7 @@ const config: PlaywrightTestConfig = {
 		ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
 		trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
 		screenshot: 'only-on-failure', // Capture screenshot after each test failure.
-		// video: 'on-first-retry', // Record video only when retrying a test for the first time.
+		video: 'on-first-retry', // Record video only when retrying a test for the first time.
 		// viewport: { width: 1440, height: 900 },
 
 		// launch options

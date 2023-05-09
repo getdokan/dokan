@@ -1208,7 +1208,6 @@ export const payloads = {
 		banner_id: 0,
 		gravatar: '',
 		gravatar_id: 0,
-		shop_url: '',
 		products_per_page: 12,
 		show_more_product_tab: true,
 		toc_enabled: false,
@@ -1219,7 +1218,6 @@ export const payloads = {
 			count: 1,
 		},
 		enabled: true,
-		registered: '',
 		payment: {
 			paypal: {
 				0: 'email',

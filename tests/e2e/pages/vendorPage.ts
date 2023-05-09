@@ -273,6 +273,12 @@ export class VendorPage extends BasePage {
 		expect(productCreateSuccessMessage.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
 
+	async addAuctionProduct1(){
+		await this.goIfNotThere(data.subUrls.frontend.dashboard);
+		await this.click(selector.vendor.vDashboard.auction);
+
+	}
+
 	// vendor add booking product
 	async addBookingProduct(product: { productName: any; productType?: string; category?: string; bookingDurationType: any; bookingDuration?: string; bookingDurationMax: any; bookingDurationUnit: any; calendarDisplayMode: any; maxBookingsPerBlock: any; minimumBookingWindowIntoTheFutureDate: any; minimumBookingWindowIntoTheFutureDateUnit: any; maximumBookingWindowIntoTheFutureDate: any; maximumBookingWindowIntoTheFutureDateUnit: any; baseCost: any; blockCost: any; }): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.booking);
