@@ -74,18 +74,20 @@ jobs:
           npm ci --production
 
       - name: Start WordPress Env
+        id: momo
         run: |
           cd tests/e2e 
-          echo "TESPORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_ENV
+          echo "TESPORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_OUTPUT
 
       - name: robo
         run: |
-          echo "The value of TEST_DB_PORT is ${{ env.TESPORT }}"
-          echo "$TESPORT"
+          echo "The value of TEST_DB_PORT is ${{ steps.momo.outputs.TESPORT }}"
+
+          
       
-      - name: ecom
-        run: |
-           env
+      # - name: ecom
+      #   run: |
+      #      env
   
 
       - name: Resetting WordPress Env
