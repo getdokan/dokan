@@ -864,6 +864,20 @@
                     font-weight: 300;
                     line-height: 17px;
                     font-family: 'Roboto', sans-serif;
+
+                    a {
+                        display: inline-block;
+                        
+                        &:hover {
+                            box-shadow: 0 0 0 1px transparent;
+                        }
+                        &:active {
+                            box-shadow: 0 0 0 1px transparent;
+                        }
+                        &:focus {
+                            box-shadow: 0 0 0 1px transparent;
+                        }
+                    }
                 }
             }
         }
