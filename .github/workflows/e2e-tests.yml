@@ -77,7 +77,7 @@ jobs:
         id: momo
         run: |
           cd tests/e2e 
-          echo "TESPORT=$(npm run start:env)" >> $GITHUB_ENV
+          echo "TESPORT=$(npm run start:env)" >> $GITHUB_OUTPUT
 
       - name: robo
         run: |
