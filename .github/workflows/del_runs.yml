@@ -4,7 +4,6 @@ on:
   pull_request:
   push:
       branches:
-        - develop
         - e2e-pw
   # schedule:
   #   - cron: '0 0 1 * *'
