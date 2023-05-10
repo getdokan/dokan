@@ -1,6 +1,8 @@
 name: End-to-End Tests
 
 on:
+  schedule:
+    - cron: '0 8 * * *'
   pull_request:
   push:
     branches:
@@ -74,11 +76,13 @@ jobs:
           npm ci --production
 
       - name: Start WordPress Env
-        id: momo
+        id: wpenv
         run: |
-          cd tests/e2e 
-          "TESPORT=$(npm run start:env)" 
-          echo "$TESPORT"
+          cd tests/e2e
+          npm run start:env 
+         
+      # "TESPORT=$(npm run start:env)" 
+          # echo "$TESPORT"
 
       # - name: robo
       #   run: |

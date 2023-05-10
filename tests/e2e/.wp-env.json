@@ -1,23 +1,27 @@
 {
-  "core": null,
-  "phpVersion": "7.4",
-  "plugins": [
-    "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
-    "../../",
-    "../../plugins/dokan-pro",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/wb.zip",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/wps.zip",
-    "https://github.com/shashwatahalder01/TestUtils/raw/main/ws.zip"
-  ],
-  "themes": [
-    "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
-  ],
-  "config": {
-    "WP_DEBUG": "true",
-    "SCRIPT_DEBUG": "true",
-    "WP_DEBUG_LOG": "true",
-    "WP_DEBUG_DISPLAY": "true"
+  "env": {
+    "tests": {
+      "core": null,
+      "phpVersion": "7.4",
+      "plugins": [
+        "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
+        "../../",
+        "../../plugins/dokan-pro",
+        "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
+        "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
+        "https://github.com/shashwatahalder01/TestUtils/raw/main/wb.zip",
+        "https://github.com/shashwatahalder01/TestUtils/raw/main/wps.zip",
+        "https://github.com/shashwatahalder01/TestUtils/raw/main/ws.zip"
+      ],
+      "themes": [
+        "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
+      ],
+      "config": {
+        "WP_DEBUG": "true",
+        "SCRIPT_DEBUG": "true",
+        "WP_DEBUG_LOG": "true",
+        "WP_DEBUG_DISPLAY": "true"
+      }
+    }
   }
 }
