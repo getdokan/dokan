@@ -87,12 +87,11 @@ jobs:
         run: |
            env
   
-
-      - name: Resetting WordPress Env
-        if: failure()
-        run: |
-          cd tests/e2e
-          npm run star env
+      # - name: Resetting WordPress Env
+      #   if: failure()
+      #   run: |
+      #     cd tests/e2e
+      #     npm run start env
 
       - name: Activate theme:Storefront
         run: |
