@@ -84,9 +84,9 @@ jobs:
           echo "The value of TEST_DB_PORT is ${{ steps.momo.outputs.TESPORT }}"
 
         
-      # - name: ecom
-      #   run: |
-      #      env
+      - name: ecom
+        run: |
+           env
   
 
       - name: Resetting WordPress Env
