@@ -19,7 +19,7 @@ class PluginReview {
      * @since 3.3.1
      */
     public function __construct() {
-        add_action( 'dokan_admin_notices', [ $this, 'show_ask_for_review_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_ask_for_review_notice' ] );
         add_action( 'wp_ajax_dokan_ask_for_review_notice_action', [ $this, 'review_notice_action_ajax_handler' ] );
     }
 

@@ -97,6 +97,7 @@ class InstallerHelper {
             $product->set_sale_price( 0 );
             $product->set_manage_stock( false );
             $product->set_tax_status( 'none' );
+            $product->set_sold_individually( true );
             $product->save();
 
             update_option( Helper::get_base_product_option_key(), $product->get_id() );
