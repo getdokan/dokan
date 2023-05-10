@@ -378,6 +378,11 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.changeSchedule);
 		await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawScheduleSaveSuccessMessage)).toBeVisible();
+		// await expect(this.page.locator(selector.vendor.vWithdraw.scheduleMessage).filter({ hasText: 'text in column 1' })
+		// ).toBeVisible();
+		// let a = await this.page.locator(selector.vendor.vWithdraw.scheduleMessage).textContent();
+		// console.log(a);
+		// await expect(this.page.getByText(selector.vendor.vWithdraw.scheduleMessage)).not.toContainText(data.vendor.withdraw.scheduleMessageInitial);
 	}
 
 	// vendor add default withdraw payment methods

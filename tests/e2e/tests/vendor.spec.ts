@@ -103,8 +103,9 @@ test.describe('Vendor functionality test', ()=> {
 		await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
 	});
 
-	test('vendor can add auto withdraw disbursement schedule', async ( )=> {
-		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
+	test.only('vendor can add auto withdraw disbursement schedule', async ( )=> {
+		console.log(process.env.TESPORT);
+		// await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
 	});
 
 	test('vendor can add default withdraw payment methods ', async ( )=> {

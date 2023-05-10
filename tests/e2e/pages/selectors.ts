@@ -2174,13 +2174,10 @@ export const selector = {
 			crossIcon: '.mfp-close',
 			preferredPaymentMethod: '#preferred-payment-method',
 			preferredSchedule: (schedule: string) => `#withdraw-schedule-${schedule}\\>`,
-			// monthly: '#withdraw-schedule-monthly\\>',
-			// quarterly: '#withdraw-schedule-quarterly\\>',
-			// twicePerMonth: '#withdraw-schedule-biweekly\\>',
-			// weekly: '#withdraw-schedule-weekly\\>',  monthly,quarterly, biweekly,weekly
 			onlyWhenBalanceIs: '#minimum-withdraw-amount',
 			maintainAReserveBalance: '#withdraw-remaining-amount',
 			changeSchedule: '#dokan-withdraw-schedule-request-submit',
+			scheduleMessage: '//div[@class="dokan-switch-container"]/..//p',
 			withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
 
 			// View Payments

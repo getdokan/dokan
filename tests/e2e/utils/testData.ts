@@ -568,12 +568,11 @@ export const data = {
 		saveSuccessMessage: 'Setting has been saved successfully.', }, },
 
 	module: { noModuleMessage: 'No modules found.', },
-	modules: {
-		modules: [
-			'booking', 'color_scheme_customizer','delivery_time', 'elementor', 'export_import','follow_store','geolocation','germanized','live_chat','live_search',
-			'moip','dokan_paypal_ap','paypal_marketplace','product_addon','product_enquiry','report_abuse','rma','seller_vacation','shipstation','auction','spmv',
-			'store_reviews','stripe','product_advertising','product_subscription','vendor_analytics','vendor_staff','vsp','vendor_verification','wholesale',
-			'rank_math','table_rate_shipping','mangopay','order_min_max','razorpay','seller_badge','stripe_express','request_for_quotation' ]	},
+	modules: {modules: [
+		'booking', 'color_scheme_customizer','delivery_time', 'elementor', 'export_import','follow_store','geolocation','germanized','live_chat','live_search',
+		'moip','dokan_paypal_ap','paypal_marketplace','product_addon','product_enquiry','report_abuse','rma','seller_vacation','shipstation','auction','spmv',
+		'store_reviews','stripe','product_advertising','product_subscription','vendor_analytics','vendor_staff','vsp','vendor_verification','wholesale',
+		'rank_math','table_rate_shipping','mangopay','order_min_max','razorpay','seller_badge','stripe_express','request_for_quotation' ]	},
 
 	dokanSetupWizard: { vendorStoreURL: 'store',
 		shippingFeeRecipient: 'seller',
@@ -881,16 +880,19 @@ export const data = {
 			lengthDuration: 'weeks',
 			refundPolicyHtmlBody: 'Refund Policy Vendor',
 			saveSuccessMessage: 'Settings saved successfully', },
-		withdraw: { withdrawMethod: { default: 'paypal',
+		withdraw: {withdrawMethod: {default: 'paypal',
 			paypal: 'Paypal',
 			skrill: 'Skrill', },
+
 		defaultWithdrawMethod: { paypal: 'PayPal',
 			skrill: 'Skrill',
-			bankTransfer: 'Bank Transfer', },
+			bankTransfer: 'Bank Transfer',},
 		preferredPaymentMethod: 'paypal',
 		preferredSchedule: 'weekly', // monthly,quarterly, biweekly,weekly
 		minimumWithdrawAmount: '5',
-		reservedBalance: '15', },
+		reservedBalance: '15',
+		scheduleMessageInitial: 'Please update your withdraw schedule selection to get payment automatically.'
+	},
 
 		addon: { name: ()=> 'Add-ons Group #' + helpers.randomNumber(),
 			priority: '10',

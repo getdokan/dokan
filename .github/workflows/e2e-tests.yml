@@ -76,11 +76,17 @@ jobs:
       - name: Start WordPress Env
         run: |
           cd tests/e2e 
-          echo "TEST_DB_PORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_ENV
+          echo "TESPORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_ENV
 
-      - name: Start WordPress Env
+      - name: robo
         run: |
-          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
+          echo "The value of TEST_DB_PORT is ${{ env.TESPORT }}"
+          echo "$TESPORT"
+      
+      - name: ecom
+        run: |
+           env
+  
 
       - name: Resetting WordPress Env
         if: failure()
