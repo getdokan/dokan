@@ -1,10 +1,6 @@
 name: Delete old workflow runs
 on:
   workflow_dispatch:
-  pull_request:
-  push:
-      branches:
-        - e2e-pw
   # schedule:
   #   - cron: '0 0 1 * *'
 # Run monthly, at 00:00 on the 1st day of month.
@@ -19,4 +15,5 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 30
           keep_minimum_runs: 200
+          delete_workflow_by_state_pattern: 'disabled_manually'
           delete_run_by_conclusion_pattern: 'failed'
