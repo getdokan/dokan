@@ -53,7 +53,7 @@ const config: PlaywrightTestConfig = {
 		// storageState: 'storageState.json',  // location of sign in state
 		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
 		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
-		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889', //Base URL
+		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
 		ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
 		trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
 		screenshot: 'only-on-failure', // Capture screenshot after each test failure.

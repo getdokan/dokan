@@ -3,7 +3,7 @@ import { FullConfig, request } from '@playwright/test';
 async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
 	// get site url structure
-	let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8889';
+	let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999';
 	let query = '?';
 	const apiContext = await request.newContext({ ignoreHTTPSErrors: true });
 	const head = await apiContext.head(serverUrl);
