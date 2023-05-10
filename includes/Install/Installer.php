@@ -54,7 +54,7 @@ class Installer {
      * Since we are assuming admin/shop_manager users as vendors by default, and since dokan_store_name meta key is used for
      * various sql queries, we are assigning dokan_store_name meta key for admin users as well.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return void
      */
