@@ -77,7 +77,7 @@ jobs:
         id: momo
         run: |
           cd tests/e2e 
-          echo "TESPORT=$(npm run tt | awk '/MySQL for automated testing is listening on port/ {print $9}')" >> $GITHUB_OUTPUT
+          echo "TESPORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $NF}')" >> $GITHUB_OUTPUT
 
       - name: robo
         run: |
@@ -89,11 +89,11 @@ jobs:
       #      env
   
 
-      # - name: Resetting WordPress Env
-      #   if: failure()
-      #   run: |
-      #     cd tests/e2e
-      #     npm run star env
+      - name: Resetting WordPress Env
+        if: failure()
+        run: |
+          cd tests/e2e
+          npm run star env
 
       - name: Activate theme:Storefront
         run: |
