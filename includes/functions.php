@@ -4552,7 +4552,7 @@ function dokan_sanitize_phone_number( $phone ) {
  * Dokan override author ID from admin
  *
  * @since  2.6.2
- * @since DOKAN_SINCE moved this method from includes/Admin/functions.php file
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
  *
  * @param  WC_Product $product
  * @param  integer $seller_id
@@ -4576,7 +4576,7 @@ function dokan_override_product_author( $product, $seller_id ) {
  * Overrides author for products with variations.
  *
  * @since 3.7.4
- * @since DOKAN_SINCE moved this method from includes/Admin/functions.php file
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
  *
  * @param WC_Product $product
  * @param int        $seller_id

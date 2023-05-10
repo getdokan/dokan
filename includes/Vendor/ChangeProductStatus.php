@@ -11,14 +11,14 @@ use WeDevs\Dokan\Abstracts\ProductStatusChanger;
 /**
  * Change product status
  *
- * @since DOKAN_SINCE
+ * @since 3.7.18
  */
 class ChangeProductStatus extends ProductStatusChanger {
 
     /**
      * Get products
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return int[]
      */
