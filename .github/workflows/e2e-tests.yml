@@ -74,14 +74,14 @@ jobs:
           npm ci --production
 
       - name: Start WordPress Env
+        id: momo
         run: |
           cd tests/e2e 
           echo "TESPORT=$(npm run start:env)" >> $GITHUB_ENV
 
       - name: robo
         run: |
-          echo "The value of TEST_DB_PORT is ${{ env.TESPORT }}"
-          echo "$TESPORT"
+          echo "The value of TEST_DB_PORT is ${{ steps.momo.outputs.TESPORT }}"
       
       - name: ecom
         run: |
