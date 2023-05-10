@@ -76,7 +76,7 @@ jobs:
       - name: Start WordPress Env
         run: |
           cd tests/e2e 
-          echo "TESPORT=$(npm run start:env | awk '/MySQL for automated testing is listening on port/ {print $NF}')" >> $GITHUB_ENV
+          echo "TESPORT=$(npm run start:env)" >> $GITHUB_ENV
 
       - name: robo
         run: |
