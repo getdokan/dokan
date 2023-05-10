@@ -4,6 +4,7 @@
   "description": "dokan e2e test using playwright",
   "main": "index.js",
   "scripts": {
+    "tt": "node a.js",
     "nip": "npm install --production",
     "nid": "npm install --include=dev",
     "pw:chrome-only": "playwright install chromium",
