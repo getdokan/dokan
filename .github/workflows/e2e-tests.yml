@@ -173,7 +173,7 @@ jobs:
           VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           CUSTOMER: ${{ secrets.CUSTOMER }}
           CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          BASE_URL: ${{ secrets.BASE_URL }}
+          # BASE_URL: ${{ secrets.BASE_URL }}
           GMAP : ${{secrets.GMAP}}
           FORCE_COLOR: 1
 
