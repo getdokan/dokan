@@ -132,21 +132,21 @@ test.describe('Vendor functionality test', ()=> {
 		await vendorPage.editAddon(data.vendor.addon, addonName);
 	});
 
-	test.skip('vendor can send id verification request ', async ( )=> {
-		await vendorPage.sendIdVerificationRequest(data.vendor.verification);
-	});
+	// test.skip('vendor can send id verification request ', async ( )=> {
+	// 	await vendorPage.sendIdVerificationRequest(data.vendor.verification);
+	// });
 
-	test.skip('vendor can send address verification request ', async ( )=> {
-		await vendorPage.sendAddressVerificationRequest(data.vendor.verification);
-	});
+	// test.skip('vendor can send address verification request ', async ( )=> {
+	// 	await vendorPage.sendAddressVerificationRequest(data.vendor.verification);
+	// });
 
-	test.skip('vendor can send company verification request ', async ( )=> {
-		await vendorPage.sendCompanyVerificationRequest(data.vendor.verification);
-	});
+	// test.skip('vendor can send company verification request ', async ( )=> {
+	// 	await vendorPage.sendCompanyVerificationRequest(data.vendor.verification);
+	// });
 
-	test.skip('vendor can set delivery time settings ', async ( )=> {
-		await vendorPage.setDeliveryTimeSettings(data.vendor.deliveryTime);
-	});
+	// test.skip('vendor can set delivery time settings ', async ( )=> {
+	// 	await vendorPage.setDeliveryTimeSettings(data.vendor.deliveryTime);
+	// });
 
 	test('vendor can set shipping policy', async ( )=> {
 		await vendorPage.setShippingPolicies(data.vendor.shipping.shippingPolicy);

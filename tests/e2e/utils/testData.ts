@@ -19,11 +19,14 @@ export const data = {
 	// Fixed  test data
 
 	PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
+
 	// wooCommerce
+
 	// Shipping
 	shippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping'],
 	taxStatus: ['taxable', 'none'],
 	freeShippingRequires: ['coupon', 'min_amount', 'either', 'both'],
+
 	// Payment
 	razorpayDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
 	payPalMarketplaceDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
@@ -39,6 +42,7 @@ export const data = {
 	stripeExpressButtonTheme: ['dark', 'light', 'light-outline'],
 	stripeExpressButtonLocations: ['Checkout', 'Product', 'Cart'],
 	stripeExpressButtonSize: ['default', 'medium', 'large'],
+
 	// Dokan
 	// Setup Wizard
 	setupWizardShippingFeeRecipient: ['Vendor', 'Admin'],
@@ -52,12 +56,14 @@ export const data = {
 	// General Settings
 	sellingProductTypes: ['sell_both', 'sell_physical', 'sell_digital'],
 	storeCategory: ['none', 'Single', 'Multiple'],
+
 	// Selling Options Settings
 	commissionType: ['flat', 'percentage', 'combine'],
 	shippingFeeRecipient: ['seller', 'admin'],
 	taxFeeRecipient: ['seller', 'admin'],
 	newProductStatus: ['publish', 'pending'],
 	productCategory: ['single', 'multiple'],
+
 	// Withdraw
 	quarterlyScheduleMonth: ['january', 'february', 'march'],
 	quarterlyScheduleWeek: ['1', '2', '3', 'L'],
@@ -67,28 +73,37 @@ export const data = {
 	biweeklyScheduleWeek: ['1', '2'],
 	biweeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
 	weeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+
 	// Privacy Policy Settings
 	privacyPolicy: ['2', '3', '4', '5', '6', '7', '8', '9', '10'],
+
 	// getSupport settings
 	displayOnSingleProductPage: ['above_tab', 'inside_tab', 'dont_show'],
+
 	// Rma Settings
 	rmaOrderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
 	enableRefundRequests: ['yes', 'no'],
 	enableCouponRequests: ['yes', 'no'],
+
 	// Wholesale Customer Settings
 	needApprovalForCustomer: ['yes', 'no'],
+
 	// Delivery Time Settings
 	storeOpeningClosingTime: ['12:00 AM', '11:30 PM'],
+
 	// Geolocation Settings
 	locationMapPosition: ['top', 'left', 'right'],
 	showMap: ['all', 'store_listing', 'shop'],
 	radiusSearchUnit: ['km', 'miles'],
+
 	// Spmv Settings
 	availableVendorSectionDisplayPosition: ['below_tabs', 'inside_tabs', 'after_tabs'],
 	showSpmvProducts: ['show_all', 'min_price', 'max_price', 'top_rated_vendor'],
+
 	// Vendor Subscription Settings
 	subscription: ['2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'],
 	productStatus: ['publish', 'pending', 'draft'],
+
 	// Products
 	productTypes: ['simple', 'grouped', 'external', 'variable', 'product_pack', 'subscription', 'variable-subscription', 'booking', 'auction'],
 	productTaxStatus: ['taxable', 'shipping', 'none'],
@@ -107,13 +122,16 @@ export const data = {
 	withdrawPaymentMethods: ['paypal', 'bank', 'dokan_custom', 'skrill'],
 	reserveBalance: ['0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'],
 	orderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
+
 	// Rma Settings
 	rmaType: ['no_warranty', 'included_warranty', 'addon_warranty'],
 	rmaLength: ['limited', 'lifetime'],
 	rmaLengthDuration: ['days', 'weeks', 'months', 'years'],
+
 	// Auction
 	itemCondition: ['new', 'used'],
 	actionType: ['normal', 'reverse'],
+
 	// Shipping Policy
 	shippingPolicy: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], // TODO: replace with select text values
 	vendorShippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping'],
@@ -123,15 +141,19 @@ export const data = {
 	distanceRateTransportationMode: ['driving', 'walking', 'Bicycling'],
 	distanceRateAvoid: ['none', 'tolls', 'highways', 'ferries'],
 	distanceRateDistanceUnit: ['metric', 'imperial'],
+
 	//addon
 	addonType: ['multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'],
 	addonDisplayAs: ['select', 'radiobutton', 'images'],
 	addonFormatTitle: ['label', 'heading', 'hide'],
 	addonOptionPriceType: ['flat_fee', 'quantity_based', 'percentage_based'],
+
 	//vendor store settings
 	vacationClosingStyle: ['instantly', 'datewise'],
+
 	//Stripe express
 	iDealBanks: ['abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot'],
+
 	//bank details
 	bankAccountType: ['personal', 'business'],
 
@@ -767,10 +789,10 @@ export const data = {
 
 	modules: {
 		modules: [
-			'booking', 'color_scheme_customizer','delivery_time', 'elementor', 'export_import','follow_store','geolocation','germanized','live_chat','live_search',
-			'moip','dokan_paypal_ap','paypal_marketplace','product_addon','product_enquiry','report_abuse','rma','seller_vacation','shipstation','auction','spmv',
-			'store_reviews','stripe','product_advertising','product_subscription','vendor_analytics','vendor_staff','vsp','vendor_verification','wholesale',
-			'rank_math','table_rate_shipping','mangopay','order_min_max','razorpay','seller_badge','stripe_express','request_for_quotation' ]
+			'booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search',
+			'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv',
+			'store_reviews', 'stripe', 'product_advertising', 'product_subscription', 'vendor_analytics', 'vendor_staff', 'vsp', 'vendor_verification', 'wholesale',
+			'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation' ]
 	},
 
 	dokanSetupWizard: {
@@ -1244,7 +1266,7 @@ export const data = {
 
 	plugin: {
 		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro',],
-		plugins:['basic-auth','dokan','dokan-pro','woocommerce','woocommerce-bookings','woocommerce-product-addons','woocommerce-simple-auctions','woocommerce-subscriptions'],
+		plugins:['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
 		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		activeClass: 'active',
 	},

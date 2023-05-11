@@ -37,7 +37,7 @@
     // "arrow-spacing": ["error", { "before": false, "after": true }],
     // "block-spacing": "error",
     // "brace-style": ["error", "stroustrup"],
-    // "comma-spacing": ["error", { "before": false, "after": true }],
+    "comma-spacing": ["error", { "before": false, "after": true }],
     "indent": ["error", "tab"],
     "no-multi-spaces": "error",
     // "no-multiple-empty-lines": "error",

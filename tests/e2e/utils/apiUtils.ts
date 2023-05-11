@@ -309,7 +309,7 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) {  // TODO: need to update handle productIds can be empty
+	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) { // TODO: need to update handle productIds can be empty
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId;
@@ -534,7 +534,7 @@ export class ApiUtils {
 	 * module  api methods
 	 */
 
-	// get all modules         //TODO: covert all get request with params , and remove unneccessary endpoints in both api and e2e suites
+	// get all modules         //TODO: covert all get request with params , and remove unnecessary endpoints in both api and e2e suites
 	async getAllModules(params = {}, auth? : auth) {
 		const response = await this.request.get(endPoints.getAllModules, { headers: auth, params: params });
 		const responseBody = await this.getResponseBody(response);
@@ -986,7 +986,7 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia(filePath: string, auth? : auth) { //TODO: handle different file upload, hardcoded: image
+	async uploadMedia(filePath: string) { //TODO: handle different file upload, hardcoded: image
 		const payload = { headers: { Accept: '*/*',
 			ContentType: 'multipart/form-data',
 			// Authorization: auth.Authorization  //TODO: handle authorization

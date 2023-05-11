@@ -1,6 +1,8 @@
 const { SERVER_URL, QUERY } = process.env;
 
-export const endPoints = { serverUrl: `${SERVER_URL}`,
+export const endPoints = {
+
+	serverUrl: `${SERVER_URL}`,
 
 	// stores
 
@@ -460,7 +462,8 @@ export const endPoints = { serverUrl: `${SERVER_URL}`,
 		updateBatchSettingOptions: (groupId: string)=> `${SERVER_URL}/wc/v3/settings/${groupId}/batch`,
 
 		// system status
-		getAllSystemStatus: `${SERVER_URL}/wc/v3/system_status`, },
+		getAllSystemStatus: `${SERVER_URL}/wc/v3/system_status`,
+	},
 
 	wp: {
 
@@ -495,4 +498,5 @@ export const endPoints = { serverUrl: `${SERVER_URL}`,
 		getSinglePost: (postId: string)=> `${SERVER_URL}/wp/v2/posts/${postId}`,
 		createPost: `${SERVER_URL}/wp/v2/posts`,
 		updatePost: (postId: string)=> `${SERVER_URL}/wp/v2/posts/${postId}`,
-		deletePost: (postId: string)=> `${SERVER_URL}/wp/v2/posts/${postId}`, } };
+		deletePost: (postId: string)=> `${SERVER_URL}/wp/v2/posts/${postId}`, }
+};

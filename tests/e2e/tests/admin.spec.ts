@@ -99,7 +99,7 @@ test.describe('Admin functionality test', ()=> {
 	// settings
 
 	// tax settings
-	// test.skip('admin can set standard tax rate', async ( ) => {
+	// test('admin can set standard tax rate', async ( ) => {
 	//     await adminPage.addStandardTaxRate(data.tax)
 	// })
 
@@ -200,9 +200,9 @@ test.describe('Admin functionality test', ()=> {
 		await adminPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	test.skip('admin can set dokan delivery time settings @pro', async ( )=> {
-		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
-	});
+	// test.skip('admin can set dokan delivery time settings @pro', async ( )=> {
+	// 	await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
+	// });
 
 	test('admin can set dokan product advertising settings @pro', async ( )=> {
 		await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
@@ -220,8 +220,8 @@ test.describe('Admin functionality test', ()=> {
 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	});
 
-	test.skip('admin can set dokan vendor subscription settings @pro', async ( )=> {
-		await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
-	});
+	// test.skip('admin can set dokan vendor subscription settings @pro', async ( )=> {
+	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
+	// });
 
 });

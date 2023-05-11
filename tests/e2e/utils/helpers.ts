@@ -25,20 +25,20 @@ export const helpers = {
 	// string to slug
 	slugify: (str: string) => {
 		return str
-			.toString()                   // Cast to string (optional)
-			.normalize('NFKD')            // The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
+			.toString() 							// Cast to string (optional)
+			.normalize('NFKD') 						// The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
 			.replace(/[\u0300-\u036f]/g, '')
-			.toLowerCase()                // Convert the string to lowercase letters
-			.trim()                       // Remove whitespace from both sides of a string (optional)
-			.replace(/\s+/g, '-')         // Replace spaces with -
-			.replace(/[^\w\-]+/g, '')     // Remove all non-word chars
-			// .replace(/\_/g, '-')           // Replace _ with -
-			.replace(/\-\-+/g, '-')       // Replace multiple - with single -
-			.replace(/\-$/g, '');         // Remove trailing -
+			.toLowerCase() 							// Convert the string to lowercase letters
+			.trim()									// Remove whitespace from both sides of a string (optional)
+			.replace(/\s+/g, '-') 					// Replace spaces with -
+			.replace(/[^\w\-]+/g, '') 				// Remove all non-word chars
+			// .replace(/\_/g, '-')           		// Replace _ with -
+			.replace(/\-\-+/g, '-') 				// Replace multiple - with single -
+			.replace(/\-$/g, ''); 					// Remove trailing -
 	}, // TODO: might fail sometimes, need to update with string-to-slug see google
 
 	// opens the url in the default browser
-	openUrl: (url: any) => open('url'),
+	openUrl: (url: string) => open(url),
 
 	// opens test report in the default browser
 	openReport: () => open('./artifacts/jest-stare/index.html'),
@@ -52,6 +52,7 @@ export const helpers = {
 	// current day
 	currentDate: new Date().toLocaleDateString('en-CA'),
 
+	// current date-time
 	currentDateTime: new Date().toLocaleString('en-CA', {
 		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric',
 	}),
@@ -72,6 +73,7 @@ export const helpers = {
 
 	// round to two decimal places
 	// roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
+
 	roundToTwo(num: string | number) {
 		return Math.round((Number(num) + Number.EPSILON) * 100) / 100;
 	},
@@ -105,7 +107,7 @@ export const helpers = {
 	},
 
 	//calculate admin commission
-	adminCommission(subTotal: any, commissionRate: any, tax: number = 0, shipping: number = 0, gatewayFee: number = 0, taxReceiver: string = 'vendor', shippingReceiver: string = 'vendor', gatewayFeeGiver: string = 'vendor') {
+	adminCommission(subTotal: any, commissionRate: any, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
 		if (taxReceiver === 'vendor') {
 			tax = 0;
 		}
@@ -121,7 +123,7 @@ export const helpers = {
 	},
 
 	//calculate vendor earning
-	vendorEarning(subTotal: number, commission: number, tax: number = 0, shipping: number = 0, gatewayFee: number = 0, taxReceiver: string = 'vendor', shippingReceiver: string = 'vendor', gatewayFeeGiver: string = 'vendor') {
+	vendorEarning(subTotal: number, commission: number, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
 		if (taxReceiver !== 'vendor') {
 			tax = 0;
 		}
