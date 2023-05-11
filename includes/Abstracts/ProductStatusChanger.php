@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Product status changer abstract class
  *
- * @since DOKAN_SINCE
+ * @since 3.7.18
  */
 abstract class ProductStatusChanger {
     /**
      * Vendor id
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @var int $vendor_id
      */
@@ -26,7 +26,7 @@ abstract class ProductStatusChanger {
     /**
      * Current page
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @var int $page
      */
@@ -35,7 +35,7 @@ abstract class ProductStatusChanger {
     /**
      * Number of products to process per batch
      *
-     * @string DOKAN_SINCE
+     * @string 3.7.18
      *
      * @var int $per_page
      */
@@ -44,7 +44,7 @@ abstract class ProductStatusChanger {
     /**
      * Task type
      *
-     * @string DOKAN_SINCE
+     * @string 3.7.18
      *
      * @var string $task_type change_status|revert
      */
@@ -53,7 +53,7 @@ abstract class ProductStatusChanger {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return void
      */
@@ -65,7 +65,7 @@ abstract class ProductStatusChanger {
     /**
      * Set vendor id
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param int $vendor_id
      *
@@ -78,7 +78,7 @@ abstract class ProductStatusChanger {
     /**
      * Set task type
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param string $task_type change_status|revert
      *
@@ -92,7 +92,7 @@ abstract class ProductStatusChanger {
     /**
      * Set current page
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param int $page
      *
@@ -105,7 +105,7 @@ abstract class ProductStatusChanger {
     /**
      * Set number of products to process per batch
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param int $per_page
      *
@@ -118,7 +118,7 @@ abstract class ProductStatusChanger {
     /**
      * Get vendor id
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return int
      */
@@ -129,7 +129,7 @@ abstract class ProductStatusChanger {
     /**
      * Get task type
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return string
      */
@@ -140,7 +140,7 @@ abstract class ProductStatusChanger {
     /**
      * Get current page
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return int
      */
@@ -151,7 +151,7 @@ abstract class ProductStatusChanger {
     /**
      * Increment current page
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return void
      */
@@ -162,7 +162,7 @@ abstract class ProductStatusChanger {
     /**
      * Get number of products to process per batch
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return int
      */
@@ -173,7 +173,7 @@ abstract class ProductStatusChanger {
     /**
      * Reset properties
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return void
      */
@@ -187,7 +187,7 @@ abstract class ProductStatusChanger {
     /**
      * Get products to process
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @return int[]
      */
@@ -196,7 +196,7 @@ abstract class ProductStatusChanger {
     /**
      * Add products to queue
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param string      $task_type change_status|revert
      * @param string|null $status
@@ -236,7 +236,7 @@ abstract class ProductStatusChanger {
     /**
      * Process background task
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param array $args
      *
@@ -261,7 +261,7 @@ abstract class ProductStatusChanger {
     /**
      * Clear product cache
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param string[] $args
      *
@@ -278,7 +278,7 @@ abstract class ProductStatusChanger {
     /**
      * Change product status
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param int         $product_id
      * @param string|null $status
@@ -317,7 +317,7 @@ abstract class ProductStatusChanger {
     /**
      * Revert product status
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.18
      *
      * @param int $product_id
      *

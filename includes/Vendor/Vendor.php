@@ -985,7 +985,7 @@ class Vendor {
      * Change product status when toggling seller active status
      *
      * @since 2.6.9
-     * @since DOKAN_SINCE introduced new bg process to change product status
+     * @since 3.7.18 introduced new bg process to change product status
      *
      * @param string $task_type
      *
