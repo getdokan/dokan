@@ -85,10 +85,10 @@ jobs:
           cd tests/e2e
           npm run start:env
 
-      # - name: Activate theme:Storefront
-      #   run: |
-      #     cd tests/e2e 
-      #     npm run activate:theme
+      - name: Activate theme:Storefront
+        run: |
+          cd tests/e2e 
+          npm run activate:theme
 
       - name: Set Permalink structure
         run: |
