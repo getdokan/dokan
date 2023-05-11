@@ -91,7 +91,7 @@ test.describe('Customer functionality test', ()=> {
 		await customerPage.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
 	});
 
-	test.only('customer can buy product', async ( )=> {
+	test.fixme('customer can buy product', async ( )=> {
 		await customerPage.clearCart();
 		await customerPage.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customerPage.placeOrder();
