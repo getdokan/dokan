@@ -1,14 +1,4 @@
-import {expect,
-	type Page,
-	type BrowserContext,
-	type Cookie,
-	type Request,
-	type Response,
-	type Locator,
-	type Frame,
-	type FrameLocator,
-	type JSHandle,
-	type ElementHandle,} from '@playwright/test'; // TODO: type may not be needed
+import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle, } from '@playwright/test';
 import { data } from 'utils/testData';
 
 // This Page Contains All Necessary Playwright Automation Methods
@@ -45,12 +35,9 @@ export class BasePage {
 	}
 
 	// wait for url to be loaded
-	async waitForUrl(
-		url: string,
-		options?: { timeout?: number; waitUntil?: string },
-	): Promise<void> {
+	async waitForUrl(url: string, options?: any): Promise<void> {
 		// await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
-		await this.page.waitForURL(url );
+		await this.page.waitForURL(url, options);
 	}
 
 	// goto subUrl
@@ -75,14 +62,14 @@ export class BasePage {
 	}
 
 	//  returns whether the current URL is expected
-	async isCurrentUrl(subPath: string): Promise<boolean> {
-		const url = new URL(await this.getCurrentUrl());
+	isCurrentUrl(subPath: string): boolean {
+		const url = new URL(this.getCurrentUrl());
 		const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
-		return currentURL === (await this.createUrl(subPath));
+		return currentURL === (this.createUrl(subPath));
 	}
 
 	// Create a New URL
-	async createUrl(subPath: string): Promise<string> {
+	createUrl(subPath: string): string {
 		// let url = new URL(process.env.BASE_URL)
 		// url.pathname = url.pathname + subPath + '/'
 		// return url.href
@@ -92,9 +79,9 @@ export class BasePage {
 	// goto subPath if not already there
 	async goIfNotThere(subPath: string): Promise<void> {
 		if (!(await this.isCurrentUrl(subPath))) {
-			const url = await this.createUrl(subPath);
+			const url = this.createUrl(subPath);
 			await this.page.goto(url, { waitUntil: 'networkidle' });
-			const currentUrl = await this.getCurrentUrl();
+			const currentUrl = this.getCurrentUrl();
 			expect(currentUrl).toMatch(subPath);
 		}
 	}
@@ -112,13 +99,13 @@ export class BasePage {
 	 */
 
 	// get base url
-	async getBaseUrl(): Promise<string> {
-		const url = await this.getCurrentUrl();
+	getBaseUrl(): string {
+		const url = this.getCurrentUrl();
 		return new URL(url).origin;
 	}
 
 	// get current page url
-	async getCurrentUrl(): Promise<string> {
+	getCurrentUrl(): string {
 		return this.page.url();
 	}
 
@@ -133,7 +120,7 @@ export class BasePage {
 	}
 
 	// get the browser context that the page belongs to.
-	async getPageContext(): Promise<BrowserContext> {
+	getPageContext(): BrowserContext {
 		return this.page.context();
 	}
 
@@ -694,9 +681,9 @@ export class BasePage {
 
 	// upload file
 	async uploadBuffer(selector: string, filePath: string): Promise<void> {
-		await this.page.setInputFiles(selector, {name: String(filePath.split('/').pop()),
+		await this.page.setInputFiles(selector, { name: String(filePath.split('/').pop()),
 			mimeType: 'image/' + filePath.split('.').pop(),
-			buffer: Buffer.from(filePath),});
+			buffer: Buffer.from(filePath), });
 	}
 
 	// upload files when input file element is missing
@@ -719,8 +706,8 @@ export class BasePage {
 	}
 
 	// remove selected files to upload
-	async removeSelectedFileToUpload(selector: string, file: []): Promise<void> {
-		await this.page.setInputFiles(selector, []);
+	async removeSelectedFileToUpload(selector: string, file: [] = []): Promise<void> {
+		await this.page.setInputFiles(selector, file);
 	}
 
 	// get screenshot
@@ -750,24 +737,24 @@ export class BasePage {
 	 */
 
 	//  get all frames attached to the page
-	async getAllFrames(): Promise<Frame[]> {
+	getAllFrames(): Frame[] {
 		return this.page.frames();
 	}
 
 	// get frame
-	async getFrame(frame: string): Promise<Frame | null> {
+	getFrame(frame: string): Frame | null {
 		return this.page.frame(frame);
 	}
 
 	// get child frames
-	async getChildFrames(frame: string): Promise<Frame[] | null> {
+	getChildFrames(frame: string): Frame[] | null {
 		const parentFrame = this.page.frame(frame);
 		const childFrames = parentFrame.childFrames();
 		return childFrames;
 	}
 
 	// get frame
-	async getFrameSelector(frame: string, frameSelector: string): Promise<FrameLocator> {
+	getFrameSelector(frame: string, frameSelector: string): FrameLocator {
 		return this.page.frameLocator(frame).locator(frameSelector);
 	}
 
@@ -831,7 +818,7 @@ export class BasePage {
 	}
 
 	// dispatches event('click', 'dragstart',...) on the element
-	async dispatchEvent(selector: string, event: string): Promise<void> {
+	dispatchEvent(selector: string, event: string): void {
 		const locator = this.page.locator(selector);
 		locator.dispatchEvent(event);
 	}
@@ -844,7 +831,7 @@ export class BasePage {
 	}
 
 	// resolves given locator to the first matching DOM element
-	async getElementHandle(selector: string): Promise<ElementHandle> {
+	async getElementHandle(selector: string): Promise<null|ElementHandle<SVGElement | HTMLElement>> {
 		const locator = this.page.locator(selector);
 		return await locator.elementHandle();
 	}
@@ -880,13 +867,13 @@ export class BasePage {
 	}
 
 	// filter locator through inner locator or text
-	async filterLocator(selector: string, filterOptions: object): Promise<Locator> {
+	filterLocator(selector: string, filterOptions: object): Locator {
 		const locator = this.page.locator(selector);
 		return locator.filter(filterOptions);
 	}
 
 	// get first matching locator
-	async firstLocator(selector: string): Promise<Locator> {
+	firstLocator(selector: string): Locator {
 		const locator = this.page.locator(selector);
 		return locator.first();
 	}
@@ -898,7 +885,7 @@ export class BasePage {
 	}
 
 	// get frame locator
-	async frameLocator(selector: string): Promise<FrameLocator> {
+	frameLocator(selector: string): FrameLocator {
 		const locator = this.page.locator(selector);
 		return locator.frameLocator(selector);
 	}
@@ -906,7 +893,7 @@ export class BasePage {
 	// get locator attribute value
 	async getAttributeOfLocator(selector: string, attribute: string): Promise<null | string> {
 		const locator = this.page.locator(selector);
-		return locator.getAttribute(attribute);
+		return await locator.getAttribute(attribute);
 	}
 
 	// highlight locator
@@ -988,13 +975,13 @@ export class BasePage {
 	}
 
 	// get n-th matching locator
-	async nthLocator(selector: string, index: number): Promise<Locator> {
+	nthLocator(selector: string, index: number): Locator {
 		const locator = this.page.locator(selector);
 		return locator.nth(index);
 	}
 
 	// get the page locator belongs to
-	async pageOfLocator(selector: string): Promise<Page> {
+	pageOfLocator(selector: string): Page {
 		const locator = this.page.locator(selector);
 		return locator.page();
 	}
@@ -1081,60 +1068,60 @@ export class BasePage {
 	 * Dialog methods
 	 */
 
-	// accept alert
-	async acceptAlert(): Promise<void> {
-		this.page.on('dialog', (dialog) => {
-			dialog.accept();
-		});
-	}
+	// // accept alert
+	// async acceptAlert(): Promise<void> {
+	// 	this.page.on('dialog', (dialog) => {
+	// 		dialog.accept();
+	// 	});
+	// }
 
-	// dismiss alert
-	async dismissAlert(): Promise<void> {
-		this.page.on('dialog', (dialog) => {
-			dialog.dismiss();
-		});
-	}
+	// // dismiss alert
+	// async dismissAlert(): Promise<void> {
+	// 	this.page.on('dialog', (dialog) => {
+	// 		dialog.dismiss();
+	// 	});
+	// }
 
-	// type on prompt box/alert
-	async fillAlert(value: string): Promise<void> {
-		this.page.on('dialog', (dialog) => {
-			dialog.accept(value);
-		});
-	}
+	// // type on prompt box/alert
+	// async fillAlert(value: string): Promise<void> {
+	// 	this.page.on('dialog', (dialog) => {
+	// 		dialog.accept(value);
+	// 	});
+	// }
 
-	// get default prompt value. Otherwise, returns empty string.
-	async getDefaultPromptValue(): Promise<string> {
-		let value: string;
-		this.page.on('dialog', (dialog) => {
-			value = dialog.defaultValue();
-		});
-		return value;
-	}
+	// // get default prompt value. Otherwise, returns empty string.
+	// getDefaultPromptValue(): string {
+	// 	let value: string;
+	// 	this.page.on('dialog', (dialog) => {
+	// 		value = dialog.defaultValue();
+	// 	});
+	// 	return value;
+	// }
 
-	// get dialog's type [alert, beforeunload, confirm or prompt]
-	async getDialogType(): Promise<string> {
-		let type: string;
-		this.page.on('dialog', (dialog) => {
-			type = dialog.type();
-		});
-		return type;
-	}
+	// // get dialog's type [alert, beforeunload, confirm or prompt]
+	// async getDialogType(): Promise<string> {
+	// 	let type: string;
+	// 	this.page.on('dialog', (dialog) => {
+	// 		type = dialog.type();
+	// 	});
+	// 	return type;
+	// }
 
-	// get dialog's message
-	async getDialogMessage(): Promise<string> {
-		let message: string;
-		this.page.on('dialog', (dialog) => {
-			message = dialog.message();
-		});
-		return message;
-	}
+	// // get dialog's message
+	// async getDialogMessage(): Promise<string> {
+	// 	let message: string;
+	// 	this.page.on('dialog', (dialog) => {
+	// 		message = dialog.message();
+	// 	});
+	// 	return message;
+	// }
 
 	/**
 	 * Cookies methods
 	 */
 
 	// get cookies
-	async getCookie(name: string): Promise<Cookie[]> {
+	async getCookie(): Promise<Cookie[]> {
 		return await this.page.context().cookies();
 	}
 
@@ -1275,7 +1262,7 @@ export class BasePage {
 	// enable switch or checkbox: vendor dashboard delivery time
 	async enableSwitcherDeliveryTime(selector: string): Promise<void> {
 		const value = await this.hasClass(
-			(selector += '//div[contains(@class,\'minitoggle\')]'),
+			(selector += '//div[contains(@class,"minitoggle")]'),
 			'active',
 		);
 		if (!value) {
@@ -1315,15 +1302,12 @@ export class BasePage {
 
 	async wpUploadFile(filePath: string | string[]) {
 		//wp image upload
-		const wpUploadFiles =
-			'//div[@class=\'supports-drag-drop\' and @style=\'position: relative;\']//button[@id=\'menu-item-upload\']';
+		const wpUploadFiles = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@id="menu-item-upload"]';
 		const uploadedMedia = '.attachment-preview';
-		const selectFiles =
-			'//div[@class=\'supports-drag-drop\' and @style=\'position: relative;\']//button[@class=\'browser button button-hero\']';
-		const select =
-			'//div[@class=\'supports-drag-drop\' and @style=\'position: relative;\']//button[contains(@class, \'media-button-select\')]';
+		const selectFiles =	'//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]';
+		const select = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]';
 		const crop =
-			'//div[@class=\'supports-drag-drop\' and @style=\'position: relative;\']//button[contains(@class, \'media-button-insert\')]';
+			'//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]';
 		const uploadedMediaIsVisible = await this.isVisible(uploadedMedia);
 		if (uploadedMediaIsVisible) {
 			await this.click(wpUploadFiles);
