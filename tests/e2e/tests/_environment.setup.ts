@@ -4,8 +4,6 @@ import { payloads } from '../utils/payloads';
 import { data } from '../utils/testData';
 import { AdminPage } from '../pages/adminPage';
 
-//TODO: add more assertion, and move api assertion to function level
-
 setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
@@ -17,7 +15,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
-	setup('check active modules @pro', async ({ request })=> { //TODO: move to dokan settings also handle auth
+	setup('check active dokan modules @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
 		const activeModules = await apiUtils.getAllModuleIds({ status:'active' });
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
@@ -55,7 +53,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 
 		// delete previous shipping zones
 		const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string })=> a.id);
-		// allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // remove default zone id
+		// allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
 		if (allShippingZoneIds.length) {
 			for (const shippingZoneId of allShippingZoneIds) {
 				await apiUtils.deleteShippingZone(shippingZoneId);
@@ -113,18 +111,18 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 setup.describe('setup  user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
-	// Customer Details
-	setup('add customer @lite @pro', async ({ request })=> {
-		const apiUtils = new ApiUtils(request);
-		await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
-	});
+	// // Customer Details
+	// setup('add customer @lite @pro', async ({ request })=> {
+	// 	const apiUtils = new ApiUtils(request);
+	// 	await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
+	// });
 
 	// Vendor Details
 	setup('add vendor & product @lite @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
 
 		// create store
-		await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
+		// await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
 
 		// delete previous store products with predefined name if any
 		await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -148,14 +146,14 @@ setup.describe('setup  user settings', ()=> {
 		// }
 	});
 
-	setup.skip('admin add vendor products @lite @pro', async ({ request })=> {
-		const apiUtils = new ApiUtils(request);
-		const product = payloads.createProduct();
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
-	});
+	// setup.skip('admin add vendor products @lite @pro', async ({ request })=> {
+	// 	const apiUtils = new ApiUtils(request);
+	// 	const product = payloads.createProduct();
+	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
+	// });
 
 	setup('add test vendor orders @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
@@ -174,9 +172,9 @@ setup.describe('setup dokan settings', ()=> {
 		adminPage = new AdminPage(page);
 	});
 
-	setup.skip('admin set WpSettings @lite @pro', async ()=> {
-		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
-	});
+	// setup.skip('admin set WpSettings @lite @pro', async ()=> {
+	// 	await adminPage.setPermalinkSettings(data.wpSettings.permalink);
+	// });
 
 	setup('admin set dokan general settings @lite @pro', async ()=> {
 		await adminPage.setDokanGeneralSettings(data.dokanSettings.general);
@@ -222,9 +220,9 @@ setup.describe('setup dokan settings', ()=> {
 		await adminPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	setup.skip('admin set dokan delivery time settings @pro', async ()=> {
-		await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
-	});
+	// setup.skip('admin set dokan delivery time settings @pro', async ()=> {
+	// 	await adminPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
+	// });
 
 	setup('admin set dokan product advertising settings @pro', async ()=> {
 		await adminPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
@@ -242,13 +240,13 @@ setup.describe('setup dokan settings', ()=> {
 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	});
 
-	setup.fixme('admin set dokan vendor subscription settings @pro', async ()=> {
-		await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
-	});
+	// setup.fixme('admin set dokan vendor subscription settings @pro', async ()=> {
+	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
+	// });
 
-	setup.skip('admin add dokan subscription @pro', async ()=> {
-		await adminPage.addDokanSubscription({ ...data.product.vendorSubscription,
-			productName: data.predefined.vendorSubscription.nonRecurring, });
-	});
+	// setup.skip('admin add dokan subscription @pro', async ()=> {
+	// 	await adminPage.addDokanSubscription({ ...data.product.vendorSubscription,
+	// 		productName: data.predefined.vendorSubscription.nonRecurring, });
+	// });
 
 });

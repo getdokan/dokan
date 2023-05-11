@@ -2,6 +2,7 @@ import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 import { payloads } from './payloads';
+import { promises } from 'dns';
 interface auth { //TODO: gather all interfaces in one place
 	[key: string]: string;
  }
@@ -1185,7 +1186,7 @@ export class ApiUtils {
 	}
 
 	// setup tax
-	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate) {
+	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate):Promise<number> {
 		// enable tax rate
 		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
 
