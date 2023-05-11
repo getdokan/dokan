@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { BasePage } from './basePage';
 import { selector } from './selectors';
 import { data } from '../utils/testData';
@@ -581,14 +581,14 @@ export class AdminPage extends BasePage {
 		await this.click(selector.admin.wooCommerce.settings.editShippingMethod(shipping.shippingMethod));
 
 		switch (shipping.selectShippingMethod) {
-		case 'flat_rate':
+		case 'flat_rate' :
 			// Flat Rate
 			await this.clearAndType(selector.admin.wooCommerce.settings.flatRateMethodTitle, shipping.shippingMethod);
 			await this.selectByValue(selector.admin.wooCommerce.settings.flatRateTaxStatus, shipping.taxStatus);
 			await this.clearAndType(selector.admin.wooCommerce.settings.flatRateCost, shipping.shippingCost);
 			break;
 
-		case 'free_shipping':
+		case 'free_shipping' :
 			// Free Shipping
 			await this.clearAndType(selector.admin.wooCommerce.settings.freeShippingTitle, shipping.shippingMethod);
 			// await this.selectByValue(selector.admin.wooCommerce.settings.freeShippingRequires, shipping.freeShippingRequires)
@@ -596,30 +596,30 @@ export class AdminPage extends BasePage {
 			// await this.check(selector.admin.wooCommerce.settings.freeShippingCouponsDiscounts)
 			break;
 
-		case 'local_pickup':
+		case 'local_pickup' :
 			// Local Pickup
 			await this.clearAndType(selector.admin.wooCommerce.settings.localPickupTitle, shipping.shippingMethod);
 			await this.selectByValue(selector.admin.wooCommerce.settings.localPickupTaxStatus, shipping.taxStatus);
 			await this.clearAndType(selector.admin.wooCommerce.settings.localPickupCost, shipping.shippingCost);
 			break;
 
-		case 'dokan_table_rate_shipping':
+		case 'dokan_table_rate_shipping' :
 			// Dokan Table Rate Shipping
 			await this.clearAndType(selector.admin.wooCommerce.settings.dokanTableRateShippingMethodTitle, shipping.shippingMethod);
 			break;
 
-		case 'dokan_distance_rate_shipping':
+		case 'dokan_distance_rate_shipping' :
 			// Dokan Distance Rate Shipping
 			await this.clearAndType(selector.admin.wooCommerce.settings.dokanDistanceRateShippingMethodTitle, shipping.shippingMethod);
 			break;
 
-		case 'dokan_vendor_shipping':
+		case 'dokan_vendor_shipping' :
 			// Vendor Shipping
 			await this.clearAndType(selector.admin.wooCommerce.settings.vendorShippingMethodTitle, shipping.shippingMethod);
 			await this.selectByValue(selector.admin.wooCommerce.settings.vendorShippingTaxStatus, shipping.taxStatus);
 			break;
 
-		default:
+		default :
 			break;
 		}
 
@@ -989,25 +989,25 @@ export class AdminPage extends BasePage {
 		await this.scrollToTop();
 
 		switch (product.status) {
-		case 'publish':
+		case 'publish' :
 			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.publish);
 			await this.clickAndWaitForNavigation(selector.admin.products.product.publish);
 			await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.publishSuccessMessage);
 			break;
 
-		case 'draft':
+		case 'draft' :
 			await this.click(selector.admin.products.product.saveDraft);
 			await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.draftUpdateSuccessMessage);
 			break;
 
-		case 'pending':
+		case 'pending' :
 			await this.click(selector.admin.products.product.editStatus);
 			await this.selectByValue(selector.admin.products.product.status, data.product.status.pending);
 			await this.click(selector.admin.products.product.saveDraft);
 			await expect(this.page.locator(selector.admin.products.product.updatedSuccessMessage)).toContainText(data.product.pendingProductUpdateSuccessMessage);
 			break;
 
-		default:
+		default :
 			break;
 		}
 	}
@@ -1049,7 +1049,7 @@ export class AdminPage extends BasePage {
 
 		// category
 		await this.click(selector.admin.products.product.category(product.category));
-		// Vendor Store Name 
+		// Vendor Store Name
 		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
 		await this.scrollToTop();
 		// Publish
@@ -1180,7 +1180,7 @@ export class AdminPage extends BasePage {
 		await this.clearAndType(selector.admin.products.product.blockCost, product.blockCost);
 		// Category
 		await this.click(selector.admin.products.product.category(product.category));
-		// Vendor Store Name  
+		// Vendor Store Name
 		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
 		await this.scrollToTop();
 

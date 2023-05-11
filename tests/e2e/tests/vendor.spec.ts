@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { VendorPage } from '../pages/vendorPage';
@@ -7,8 +7,8 @@ test.describe('Vendor user functionality test1', ()=> {
 
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	let loginPage: any;
-	let vendorPage: any;
+	let loginPage: LoginPage;
+	let vendorPage: VendorPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
@@ -23,7 +23,7 @@ test.describe('Vendor user functionality test1', ()=> {
 	});
 
 	test('vendor can register', async ( )=> {
-		await vendorPage.vendorRegister(data.vendor.vendorInfo, {...data.vendorSetupWizard, choice:false});
+		await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice:false });
 		// await loginPage.logout();
 	});
 
@@ -42,7 +42,7 @@ test.describe('Vendor functionality test', ()=> {
 
 	test.use({ storageState: data.auth.vendorAuthFile });
 
-	let vendorPage: any;
+	let vendorPage: VendorPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
@@ -179,4 +179,5 @@ test.describe('Vendor functionality test', ()=> {
 	test('vendor can set rma settings ', async ( )=> {
 		await vendorPage.setRmaSettings(data.vendor.rma);
 	});
+
 });

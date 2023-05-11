@@ -39,7 +39,7 @@ export class CustomerPage extends BasePage {
 	// customer details
 
 	// customer register
-	async customerRegister(customerInfo: { lastName: () => string; country: string; zipCode: string; emailDomain: string; city: string; accountName: string; companyName: string; storename: () => string; bankIban: string; swiftCode: string; bankName: string; password: any; countrySelectValue: string; street1: string; password1: string; street2: string; state: string; email: string; addressChangeSuccessMessage: string; getSupport: { supportSubmitSuccessMessage: string; subject: string; message: string }; accountNumber: string; bankAddress: string; stateSelectValue: string; firstName: () => string; routingNumber: string; companyId: string; phone: string; iban: string; username: () => string; vatNumber: string }): Promise<void> {
+	async customerRegister(customerInfo: any): Promise<void> {
 		const username: string = customerInfo.firstName() + customerInfo.lastName();
 		await this.goToMyAccount();
 		const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
@@ -270,7 +270,7 @@ export class CustomerPage extends BasePage {
 	}
 
 	// customer rate & review product
-	async reviewProduct(productName: string, review: { reviewMessage: () => any; rating: string; }): Promise<void> {
+	async reviewProduct(productName: string, review: any): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		const reviewMessage = review.reviewMessage();
 		await this.click(selector.customer.cSingleProduct.reviews);

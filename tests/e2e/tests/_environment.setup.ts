@@ -6,22 +6,20 @@ import { AdminPage } from '../pages/adminPage';
 
 //TODO: add more assertion, and move api assertion to function level
 
-let productId: string;
-
 setup.describe('setup site & woocommerce & user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 	setup('check active plugins @lite @pro', async ({ request })=> {
 		setup.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
-		const activePlugins = (await apiUtils.getAllPlugins({status:'active'})).map((a: { plugin: string })=> (a.plugin).split('/')[1]);
+		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string })=> (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
-	setup('check active modules  @pro', async ({ request })=> { //TODO: move to dokan settings also handle auth
+	setup('check active modules @pro', async ({ request })=> { //TODO: move to dokan settings also handle auth
 		const apiUtils = new ApiUtils(request);
-		const activeModules = await apiUtils.getAllModuleIds({ status:'active'});
+		const activeModules = await apiUtils.getAllModuleIds({ status:'active' });
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
@@ -115,7 +113,6 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 setup.describe('setup  user settings', ()=> {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
-
 	// Customer Details
 	setup('add customer @lite @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
@@ -134,20 +131,19 @@ setup.describe('setup  user settings', ()=> {
 
 		// create store product
 		const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name, };
-		[, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
-
+		await apiUtils.createProduct(product, payloads.vendorAuth);
 
 	});
 
 	setup('add vendor coupon @pro', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
 		// create store coupon
-		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((a: { id: string })=> a.id);
+		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string })=> o.id);
 		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
 		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
 		// TODO: not needed anymore
 		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
-		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){  
+		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 		// 	await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
 		// }
 	});
@@ -171,8 +167,7 @@ setup.describe('setup  user settings', ()=> {
 setup.describe('setup dokan settings', ()=> {
 	setup.use({ storageState: data.auth.adminAuthFile });
 
-	let adminPage: any;
-	// let page: any;
+	let adminPage: AdminPage;
 
 	setup.beforeAll(async ({ browser })=> {
 		const page = await browser.newPage();
@@ -255,4 +250,5 @@ setup.describe('setup dokan settings', ()=> {
 		await adminPage.addDokanSubscription({ ...data.product.vendorSubscription,
 			productName: data.predefined.vendorSubscription.nonRecurring, });
 	});
+
 });

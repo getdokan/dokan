@@ -1,80 +1,64 @@
-import { test, expect, type Page } from '@playwright/test';
-import { data } from '../utils/testData';
-import { helpers } from '../utils/helpers';
-import { LoginPage } from '../pages/loginPage';
-import { AdminPage } from '../pages/adminPage';
-import { CustomerPage } from '../pages/customerPage';
-import { VendorPage } from '../pages/vendorPage';
+// import { test, expect, Page } from '@playwright/test';
+// import { data } from '../utils/testData';
+// import { helpers } from '../utils/helpers';
+// import { LoginPage } from '../pages/loginPage';
+// import { AdminPage } from '../pages/adminPage';
+// import { CustomerPage } from '../pages/customerPage';
+// import { VendorPage } from '../pages/vendorPage';
 
-// test.beforeAll(async ({ }) => { });
-// test.afterAll(async ({ }) => { });
-// test.beforeEach(async ({ }) => { });
-// test.afterEach(async ({ }) => { });
 
-test.describe.skip( 'Calculation functionality test', () => {
-	// test('refund through rma test', async ({ page }) => {
-	//     let loginPage = new LoginPage(page)
-	//     let adminPage = new AdminPage(page)
-	//     let vendorPage = new VendorPage(page)
-	//     let customerPage = new CustomerPage(page)
+// test.describe.skip( 'Calculation functionality test', () => {
+// 	test('refund through rma test', async ({ page }) => {
+// 		const loginPage = new LoginPage(page);
+// 		const adminPage = new AdminPage(page);
+// 		const vendorPage = new VendorPage(page);
+// 		const customerPage = new CustomerPage(page);
+// 		// let productName = data.product.name.simple
+// 		const productName = 'product1';
+// 		//create product
+// 		// await loginPage.login(data.vendor)
+// 		// await vendorPage.addSimpleProduct(data.product.name.simple, data.product.price, data.product.category
+// 		// buy product
+// 		// await loginPage.switchUser(data.customer)
+// 		await loginPage.login(data.customer);
+// 		const cOrderDetails = await customerPage.buyProduct(productName, false, true);
+// 		//update order status
+// 		await loginPage.switchUser(data.vendor);
+// 		await vendorPage.changeOrderStatus(cOrderDetails.orderNumber, data.orderStatus[1]);
+// 		//send refund request
+// 		await loginPage.switchUser(data.customer);
+// 		await customerPage.sendWarrantyRequest(cOrderDetails.orderNumber, productName, data.order.refundRequestType, data.order.refundRequestReasons, data.order.refundRequestDetails);
+// 		//vendor approve rma request
+// 		await loginPage.switchUser(data.vendor);
+// 		await vendorPage.approveReturnRequest(cOrderDetails.orderNumber, productName);
+// 		// await vendorPage.deleteReturnRequest(orderId
+// 		//admin approve refund request
+// 		await loginPage.switchUser(data.admin);
+// 		await adminPage.approveRefundRequest(cOrderDetails.orderNumber, true);
+// 	});
 
-	//     // let productName = data.product.name.simple
-	//     let productName = 'product1'
-
-	//     //create product
-	//     // await loginPage.login(data.vendor)
-	//     // await vendorPage.addSimpleProduct(data.product.name.simple, data.product.price, data.product.category)
-
-	//     // buy product
-	//     // await loginPage.switchUser(data.customer)
-	//     await loginPage.login(data.customer)
-	//     let cOrderDetails = await customerPage.buyProduct(productName, false, true)
-
-	//     //update order status
-	//     await loginPage.switchUser(data.vendor)
-	//     await vendorPage.changeOrderStatus(cOrderDetails.orderNumber, data.orderStatus[1])
-
-	//     //send refund request
-	//     await loginPage.switchUser(data.customer)
-	//     await customerPage.sendWarrantyRequest(cOrderDetails.orderNumber, productName, data.order.refundRequestType, data.order.refundRequestReasons, data.order.refundRequestDetails)
-
-	//     //vendor approve rma request
-	//     await loginPage.switchUser(data.vendor)
-	//     await vendorPage.approveReturnRequest(cOrderDetails.orderNumber, productName)
-	//     // await vendorPage.deleteReturnRequest(orderId)
-
-	//     //admin approve refund request
-	//     await loginPage.switchUser(data.admin)
-	//     await adminPage.approveRefundRequest(cOrderDetails.orderNumber, true)
-	// })
-
-	// test('vendor refund test', async ({ page }) => {
-	//     let loginPage = new LoginPage(page)
-	//     let adminPage = new AdminPage(page)
-	//     let vendorPage = new VendorPage(page)
-	//     let customerPage = new CustomerPage(page)
-
-	//     // let productName = data.product.name.simple
-	//     let productName = 'product1'
-
-	//     //create product
-	//     // await loginPage.login(data.vendor)
-	//     // await vendorPage.addSimpleProduct(productName, data.product.price, data.product.category)
-
-	//     // buy product
-	//     // await loginPage.switchUser(data.customer)
-	//     await loginPage.login(data.customer)
-	//     let cOrderDetails = await customerPage.buyProduct(productName, false, true)
-
-	//     //refund order
-	//     await loginPage.switchUser(data.vendor)
-	//     await vendorPage.changeOrderStatus(cOrderDetails.orderNumber, data.orderStatus[1])
-	//     await vendorPage.refundOrder(cOrderDetails.orderNumber, productName, true)
-
-	//     // approve refund request
-	//     await loginPage.switchUser(data.admin)
-	//     await adminPage.approveRefundRequest(cOrderDetails.orderNumber, true)
-	// })
+// 	test('vendor refund test', async ({ page }) => {
+// 		const loginPage = new LoginPage(page);
+// 		const adminPage = new AdminPage(page);
+// 		const vendorPage = new VendorPage(page);
+// 		const customerPage = new CustomerPage(page);
+// 		// let productName = data.product.name.simple
+// 		const productName = 'product1';
+// 		//create product
+// 		// await loginPage.login(data.vendor)
+// 		// await vendorPage.addSimpleProduct(productName, data.product.price, data.product.category
+// 		// buy product
+// 		// await loginPage.switchUser(data.customer)
+// 		await loginPage.login(data.customer);
+// 		const cOrderDetails = await customerPage.buyProduct(productName, false, true);
+// 		//refund order
+// 		await loginPage.switchUser(data.vendor);
+// 		await vendorPage.changeOrderStatus(cOrderDetails.orderNumber, data.orderStatus[1]);
+// 		await vendorPage.refundOrder(cOrderDetails.orderNumber, productName, true);
+// 		// approve refund request
+// 		await loginPage.switchUser(data.admin);
+// 		await adminPage.approveRefundRequest(cOrderDetails.orderNumber, true);
+// 	});
 
 // 	test( 'calculation test', async ( { browser } ) => {
 // 		const adminContext = await browser.newContext( { storageState: 'adminStorageState.json' } );
@@ -128,5 +112,5 @@ test.describe.skip( 'Calculation functionality test', () => {
 // 		expect( calculatedOrderTotal == cOrderDetails.orderTotal == aOrderDetails.orderTotal == vOrderDetails.orderTotal ).toBeTruthy();
 // 		expect( calculatedAdminCommission == aOrderDetails.commission ).toBeTruthy();
 // 		expect( calculatedVendorEarning == aOrderDetails.vendorEarning == vOrderDetails.vendorEarning ).toBeTruthy();
-	// } );
-} );
+// 	} );
+// } );

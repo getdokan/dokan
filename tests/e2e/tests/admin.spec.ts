@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { data } from '../utils/testData';
 import { LoginPage } from '../pages/loginPage';
 import { AdminPage } from '../pages/adminPage';
@@ -6,8 +6,8 @@ import { AdminPage } from '../pages/adminPage';
 test.describe('Admin user functionality test', ()=> {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	let loginPage: any;
-	let page: any;
+	let loginPage: LoginPage;
+	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
 		const context = await browser.newContext();
@@ -15,7 +15,7 @@ test.describe('Admin user functionality test', ()=> {
 		loginPage = new LoginPage(page);
 	});
 
-	test.afterAll(async ( )=> {
+	test.afterAll(async ()=> {
 		await page.close();
 	});
 
@@ -35,7 +35,7 @@ test.describe('Admin functionality test', ()=> {
 
 	test.use({ storageState: data.auth.adminAuthFile });
 
-	let adminPage: any;
+	let adminPage: AdminPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
@@ -60,17 +60,17 @@ test.describe('Admin functionality test', ()=> {
 		await adminPage.addSimpleProduct(data.product.simple);
 	});
 
-	test.skip('admin can add variable product', async ( )=> {
-		await adminPage.addVariableProduct(data.product.variable);
-	});
+	// test.skip('admin can add variable product @pro', async ( )=> {
+	// 	await adminPage.addVariableProduct(data.product.variable);
+	// });
 
-	test('admin can add simple subscription @lite @pro', async ( )=> {
+	test('admin can add simple subscription  @pro', async ( )=> {
 		await adminPage.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
-	test.skip('admin can add variable subscription @lite @pro', async ( )=> {
-		await adminPage.addVariableSubscription(data.product.variableSubscription);
-	});
+	// test.skip('admin can add variable subscription @pro', async ( )=> {
+	// 	await adminPage.addVariableSubscription(data.product.variableSubscription);
+	// });
 
 	test('admin can add external product @lite @pro', async ( )=> {
 		await adminPage.addExternalProduct(data.product.external);
@@ -209,7 +209,7 @@ test.describe('Admin functionality test', ()=> {
 	});
 
 	test('admin can set dokan geolocation settings @pro', async ( )=> {
-		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation); 
+		await adminPage.setDokanGeolocationSettings(data.dokanSettings.geolocation);
 	});
 
 	test('admin can set dokan product report abuse settings @pro', async ( )=> {
@@ -223,4 +223,5 @@ test.describe('Admin functionality test', ()=> {
 	test.skip('admin can set dokan vendor subscription settings @pro', async ( )=> {
 		await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	});
+
 });

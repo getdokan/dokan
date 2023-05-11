@@ -29,9 +29,7 @@ export class VendorPage extends BasePage {
 	// setup wizard
 
 	// vendor registration
-	async vendorRegister(vendorInfo: {
-		email?: () => string; emailDomain?: string; password: any; password1?: string; firstName: any; lastName: any; userName?: string; shopName: any; shopUrl?: string; companyName: any; companyId: any; vatNumber: any; bankName: any; bankIban: any; phoneNumber: any; street1?: string; street2?: string; country?: string; countrySelectValue?: string; stateSelectValue?: string; city?: string; zipCode?: string; state?: string; accountName?: string; accountNumber?: string; bankAddress?: string; routingNumber?: string; swiftCode?: string; iban?: string; banner?: string; profilePicture?: string; storeName?: string; productsPerPage?: string; mapLocation?: string; termsAndConditions?: string; biography?: string; supportButtonText?: string; openingClosingTime?: { days: string[]; openingTime: string; closingTime: string; }; vacation?: { vacationDayFrom: () => string; vacationDayTo: () => string; closingStyle: string; vacationMessage: string; }; discount?: { minimumOrderAmount: string; minimumOrderAmountPercentage: string; }; minMax?: { minimumProductQuantity: string; maximumProductQuantity: string; minimumAmount: string; maximumAmount: string; category: string; }; storeSettingsSaveSuccessMessage?: string;
-	}, setupWizardData: { choice: boolean; storeProductsPerPage: string; street1: string; street2: string; country: string; city: string; zipCode: string; state: string; paypal: () => string; bankAccountName: string; bankAccountType: string; bankAccountNumber: string; bankName: string; bankAddress: string; bankRoutingNumber: string; bankIban: string; bankSwiftCode: string; customPayment: string; skrill: string; }): Promise<void> {
+	async vendorRegister(vendorInfo: any, setupWizardData: any ): Promise<void> {
 		await this.goToMyAccount();
 		const loginIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
 		if (!loginIsVisible) {

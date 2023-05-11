@@ -6,8 +6,8 @@ import { CustomerPage } from '../pages/customerPage';
 test.describe('Customer user functionality test', ()=> {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	let loginPage: any;
-	let customerPage: any;
+	let loginPage: LoginPage;
+	let customerPage: CustomerPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
@@ -49,7 +49,7 @@ test.describe('Customer functionality test', ()=> {
 
 	test.use({ storageState: data.auth.customerAuthFile });
 
-	let customerPage: any;
+	let customerPage: CustomerPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser })=> {
@@ -91,7 +91,7 @@ test.describe('Customer functionality test', ()=> {
 		await customerPage.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
 	});
 
-	test.fixme('customer can buy product', async ( )=> {
+	test('customer can buy product', async ( )=> {
 		await customerPage.clearCart();
 		await customerPage.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customerPage.placeOrder();

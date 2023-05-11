@@ -1,18 +1,18 @@
-{
-  "semi": false,
-  "tabWidth": 4,
-  "printWidth": 100,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true
-}
+// {
+//   "semi": false,
+//   "tabWidth": 4,
+//   "printWidth": 100,
+//   "singleQuote": true,
+//   "trailingComma": "all",
+//   "bracketSpacing": true
+// }
 
 
-// "[[javascript]]": {
-//   "editor.defaultFormatter": "esbenp.prettier-vscode",
-//   "editor.formatOnSave": true
-// },
-// "[[markdown]]": {
-//   "editor.defaultFormatter": "esbenp.prettier-vscode",
-//   "editor.formatOnSave": true
-// },
+// // "[[javascript]]": {
+// //   "editor.defaultFormatter": "esbenp.prettier-vscode",
+// //   "editor.formatOnSave": true
+// // },
+// // "[[markdown]]": {
+// //   "editor.defaultFormatter": "esbenp.prettier-vscode",
+// //   "editor.formatOnSave": true
+// // },

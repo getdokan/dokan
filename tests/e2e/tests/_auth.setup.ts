@@ -12,12 +12,12 @@ setup.describe('authenticate users & set permalink', ()=> {
 		await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
 	});
 
-	// setup('admin set WpSettings', async ({ page })=> {
-	// 	const loginPage = new LoginPage(page);
-	// 	const adminPage = new AdminPage(page);
-	// 	await loginPage.adminLogin(data.admin);
-	// 	await adminPage.setPermalinkSettings(data.wpSettings.permalink);
-	// });
+	setup('admin set WpSettings', async ({ page })=> {
+		const loginPage = new LoginPage(page);
+		const adminPage = new AdminPage(page);
+		await loginPage.adminLogin(data.admin);
+		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
+	});
 
 	setup('add customer', async ({ request })=> {
 		const apiUtils = new ApiUtils(request);
