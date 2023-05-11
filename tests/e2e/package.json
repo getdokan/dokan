@@ -27,7 +27,7 @@
     "reset:env": "wp-env destroy && wp-env start",
     "container_path": "wp-env install-path",
     "set:post-permalink": "wp-env run tests-cli 'wp rewrite structure /%postname%/' --hard",
-    "htaccess": "npm run wp-env tests-cli 'ls -la'",
+    "htaccess": "wp-env run tests-cli 'ls -la'",
     "activate:theme": "wp-env run tests-cli 'wp theme activate storefront'",
     "user-list": "wp-env run tests-cli  wp user list",
     "wp-env": "wp-env",
