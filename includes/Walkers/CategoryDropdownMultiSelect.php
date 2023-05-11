@@ -37,7 +37,7 @@ class CategoryDropdownMultiSelect extends \Walker_CategoryDropdown {
             if ( in_array( (string) $category->{$value_field}, $args['multiselect'], true ) ) {
                 $output .= ' selected="selected"';
             }
-        } else if ( (string) $category->{$value_field} === (string) $args['selected'] ) {
+        } elseif ( (string) $category->{$value_field} === (string) $args['selected'] ) {
 			$output .= ' selected="selected"';
 		}
 		$output .= '>';
