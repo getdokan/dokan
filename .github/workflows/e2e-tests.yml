@@ -78,7 +78,6 @@ jobs:
         id: wpenv
         run: |
           cd tests/e2e
-          npm run wp-env destroy
           npm run start:env 
          
       # "TESPORT=$(npm run start:env)" 
