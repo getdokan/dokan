@@ -14,5 +14,5 @@ jobs:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
           retain_days: 30
-          keep_minimum_runs: 200
+          keep_minimum_runs: 210
           delete_run_by_conclusion_pattern: 'failed'
