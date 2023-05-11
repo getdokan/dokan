@@ -1,6 +1,4 @@
 {
-  "env": {
-    "tests": {
       "port":9999,
       "core": null,
       "phpVersion": "7.4",
@@ -9,17 +7,5 @@
       ],
       "themes": [
         "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
-      ],
-      "config": {
-        "WP_DEBUG": "true",
-        "SCRIPT_DEBUG": "true",
-        "WP_DEBUG_LOG": "true",
-        "WP_DEBUG_DISPLAY": "true"
-      },
-      "mappings": {
-        ".htaccess": ".htaccess"
-      }
-    
-    }
-  }
+      ]
 }
