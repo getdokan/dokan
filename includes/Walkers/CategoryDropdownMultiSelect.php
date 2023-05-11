@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Walkers;
  */
 class CategoryDropdownMultiSelect extends \Walker_CategoryDropdown {
 
-    public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ): void {
+    public function start_el( &$output, $data_object, $depth = 0, $args = [], $current_object_id = 0 ) {
 
         // Restores the more descriptive, specific name for use within this method.
 		$category = $data_object;
@@ -46,7 +46,5 @@ class CategoryDropdownMultiSelect extends \Walker_CategoryDropdown {
 			$output .= '&nbsp;&nbsp;(' . number_format_i18n( $category->count ) . ')';
 		}
 		$output .= "</option>\n";
-
     }
-
 }
