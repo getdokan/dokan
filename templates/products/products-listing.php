@@ -93,7 +93,14 @@
 
                                 <div class="dokan-form-group">
                                     <?php wp_nonce_field( 'bulk_product_status_change', 'security' ); ?>
-                                    <input type="submit" name="bulk_product_status_change" id="bulk-product-action" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
+                                    <input
+                                        type="submit"
+                                        name="bulk_product_status_change"
+                                        id="bulk-product-action"
+                                        class="dokan-btn dokan-btn-theme"
+                                        value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>"
+                                        onClick="dokan_bulk_delete_prompt( event, '<?php esc_attr_e( 'Are you sure?', 'dokan-lite' ); ?>', '#bulk-product-action-selector', '#product-filter' )"
+                                    />
                                 </div>
                                 <table class="dokan-table dokan-table-striped product-listing-table dokan-inline-editable-table" id="dokan-product-list-table">
                                     <thead>
@@ -111,7 +118,6 @@
                                             <th><?php esc_html_e( 'SKU', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Stock', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
-                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?><?php echo '<span class="tips earning-info" title="' . esc_html__( 'Earning could be greater than or less than the calculated value based on different criteria like tax and shipping fee receiver', 'dokan-lite' ) . '"></span>'; ?></th>
                                             <th><?php esc_html_e( 'Type', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Views', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>

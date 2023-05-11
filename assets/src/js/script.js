@@ -1245,3 +1245,27 @@ jQuery(function($) {
     return false;
   }
 }
+
+/**
+ * Shows bulk action delete operation confirmation
+ *
+ * @param {object} event
+ * @param {string} message
+ * @param {string} inputSelector
+ * @param {string} formSelector
+ */
+async function dokan_bulk_delete_prompt( event, message, inputSelector, formSelector ) {
+  event.preventDefault();
+
+  if ( 'delete' === jQuery( inputSelector ).val() ) {
+    let answer = await dokan_sweetalert( message, {
+      action  : 'confirm',
+      icon    : 'warning'
+    } );
+
+    if( answer.isConfirmed ) {
+      jQuery( formSelector ).submit()
+    }
+
+  }
+}
