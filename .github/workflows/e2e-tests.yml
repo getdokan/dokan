@@ -93,8 +93,8 @@ jobs:
       - name: Set Permalink structure
         run: |
           cd tests/e2e 
-          npm run wp-env run cli 'wp rewrite structure /%postname%/' -- --hard
-      # curl http://localhost:8888/wp-json/wp/v2 
+          npm run wp-env run tests-cli 'wp rewrite structure /%postname%/' -- --hard
+          # curl http://localhost:9999/wp-json/wp/v2 
 
       # - name: Setup for e2e tests
       #   run: |
