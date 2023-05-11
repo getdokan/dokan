@@ -205,12 +205,7 @@ export class BasePage {
 	}
 
 	// type & wait for response
-	async typeAndWaitForResponse(
-		subUrl: string,
-		selector: string,
-		text: string,
-		code = 200,
-	): Promise<Response> {
+	async typeAndWaitForResponse(subUrl: string,selector: string,text: string,code = 200,): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse(
 				(resp) => resp.url().includes(subUrl) && resp.status() === code,
@@ -382,7 +377,7 @@ export class BasePage {
 	async getElementTextIfVisible(selector: string): Promise<string | null> {
 		const isVisible = await this.isVisible(selector);
 		if (isVisible) {
-			return await this.getElementText(selector);
+			return await this.getElementText(selector)
 		}
 	}
 
@@ -471,12 +466,8 @@ export class BasePage {
 	}
 
 	// get pseudo element style
-	async getPseudoElementStyles(
-		selector: string,
-		pseudoElement: string,
-		property: string,
-	): Promise<string> {
-		const element = await this.getElement(selector);
+	async getPseudoElementStyles(selector: string,pseudoElement: string,property: string ): Promise<string> {
+		const element = this.getElement(selector);
 		const value = await element.evaluate(
 			(element, [pseudoElement, property]) =>
 				window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property),
@@ -486,10 +477,10 @@ export class BasePage {
 		return value;
 	}
 
-	// TODO: apply pseudostyle
+	// TODO: apply pseudo-style
 
 	// get multiple element texts
-	async getMultipleElementTexts(selector: string): Promise<string[]> {
+	async getMultipleElementTexts(selector: string): Promise<(string | null)[]> {
 		const texts = await this.page.$$eval(selector, (elements) =>
 			elements.map((item) => item.textContent),
 		);
@@ -498,7 +489,7 @@ export class BasePage {
 	}
 
 	// get element bounding box
-	async getElementBoundingBox(selector: string): Promise<object> {
+	async getElementBoundingBox(selector: string): Promise<null|{ x: number; y: number; width: number; height: number;}>{
 		const boundingBox = await this.page.locator(selector).boundingBox();
 		return boundingBox;
 	}
@@ -508,12 +499,12 @@ export class BasePage {
 	 */
 
 	// change default maximum time(seconds) for all the methods
-	async setDefaultNavigationTimeout(timeout: number): Promise<void> {
+	setDefaultNavigationTimeout(timeout: number): void {
 		this.page.setDefaultTimeout(timeout * 1000);
 	}
 
 	// change default maximum navigation time(seconds) for all navigation methods [goto, goBack, goForward, ...]
-	async setDefaultTimeout(timeout: number): Promise<void> {
+	setDefaultTimeout(timeout: number): void {
 		this.page.setDefaultTimeout(timeout * 1000);
 	}
 
@@ -825,8 +816,8 @@ export class BasePage {
 
 	// drag locator to target locator
 	async dragToTargetLocator(sourceSelector: string, targetSelector: string): Promise<void> {
-		const sourceLocator = await this.page.locator(sourceSelector);
-		const targetLocator = await this.page.locator(targetSelector);
+		const sourceLocator = this.page.locator(sourceSelector);
+		const targetLocator = this.page.locator(targetSelector);
 		await sourceLocator.dragTo(targetLocator);
 	}
 
@@ -1126,7 +1117,7 @@ export class BasePage {
 	}
 
 	// get wp current user
-	async getCurrentUser(): Promise<string> {
+	async getCurrentUser(): Promise<string | undefined> {
 		const cookies = await this.page.context().cookies();
 		const cookie = cookies.find((c) => {
 			let _c$name: string;
@@ -1138,9 +1129,7 @@ export class BasePage {
 				_c$name.startsWith('wordpress_logged_in_')
 			);
 		});
-		if (!(cookie !== null && cookie !== void 0 && cookie.value)) {
-			return;
-		}
+		if (!(cookie !== null && cookie !== void 0 && cookie.value)) {return;}
 		return decodeURIComponent(cookie.value).split('|')[0];
 	}
 
@@ -1186,25 +1175,15 @@ export class BasePage {
 	 */
 
 	// dokan select2
-	async select2ByText(
-		selectSelector: string,
-		optionSelector: string,
-		text: string,
-	): Promise<void> {
+	async select2ByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
 		await this.click(selectSelector);
 		await this.type(optionSelector, text);
 		await this.press('Enter');
 	}
 
 	// dokan select2 multi-selector
-	async select2ByTextMultiSelector(
-		selectSelector: string,
-		optionSelector: string,
-		text: string,
-	): Promise<void> {
-		const isExists = await this.isLocatorExists(
-			`//li[@class="select2-selection__choice" and @title="${text}"]`,
-		);
+	async select2ByTextMultiSelector(	selectSelector: string,	optionSelector: string, text: string): Promise<void> {
+		const isExists = await this.isLocatorExists(`//li[@class="select2-selection__choice" and @title="${text}"]`);
 		if (!isExists) {
 			await this.click(selectSelector);
 			await this.typeAndWaitForResponse(data.subUrls.ajax, optionSelector, text);
