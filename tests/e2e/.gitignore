@@ -192,5 +192,6 @@ jest-stare/
 allure-results/
 allure-report/
 plugins/
+../../plugins/
 _test.spec.ts
 
