@@ -20,7 +20,7 @@ test.describe('Admin user functionality test', ()=> {
 	});
 
 	//
-	test.only('admin can login @lite @pro', async ( )=> {
+	test('admin can login @lite @pro', async ( )=> {
 		await loginPage.adminLogin(data.admin);
 	});
 
