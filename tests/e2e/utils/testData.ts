@@ -16,149 +16,7 @@ export { admin, user };
 
 export const data = {
 
-	// Fixed  test data
-
-	PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
-
-	// wooCommerce
-
-	// Shipping
-	shippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping'],
-	taxStatus: ['taxable', 'none'],
-	freeShippingRequires: ['coupon', 'min_amount', 'either', 'both'],
-
-	// Payment
-	razorpayDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
-	payPalMarketplaceDisbursementMode: ['Immediate', 'On Order Complete', 'Delayed'],
-	payPalMarketplacePaymentButtonType: ['Smart Payment Buttons', 'Standard Button'],
-	mangopayAvailableCreditCards: ['CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*'],
-	mangopayAvailableDirectPaymentServices: ['Sofort*', 'Giropay*'],
-	mangopayTransferFunds: ['On payment completed', 'On order completed', 'Delayed'],
-	mangopayTypeOfVendors: ['Individuals', 'Business', 'Either'],
-	mangopayBusinessRequirement: ['Organizations', 'Soletraders', 'Businesses', 'Any'],
-	stripeExpressDisbursementMode: ['On payment completed', 'On order completed', 'Delayed'],
-	stripeExpressPaymentMethods: ['Credit/Debit Card', 'iDEAL'],
-	stripeExpressButtonType: ['default', 'buy', 'donate', 'book'],
-	stripeExpressButtonTheme: ['dark', 'light', 'light-outline'],
-	stripeExpressButtonLocations: ['Checkout', 'Product', 'Cart'],
-	stripeExpressButtonSize: ['default', 'medium', 'large'],
-
-	// Dokan
-	// Setup Wizard
-	setupWizardShippingFeeRecipient: ['Vendor', 'Admin'],
-	setupWizardTaxFeeRecipient: ['Vendor', 'Admin'],
-	setupWizardMapApiSource: ['Google Maps', 'Mapbox'],
-	setupWizardSellingProductTypes: ['Physical', 'Digital', 'Both'],
-	setupWizardCommissionType: ['Flat', 'Percentage', 'Combine'],
-
-	// Admin
-
-	// General Settings
-	sellingProductTypes: ['sell_both', 'sell_physical', 'sell_digital'],
-	storeCategory: ['none', 'Single', 'Multiple'],
-
-	// Selling Options Settings
-	commissionType: ['flat', 'percentage', 'combine'],
-	shippingFeeRecipient: ['seller', 'admin'],
-	taxFeeRecipient: ['seller', 'admin'],
-	newProductStatus: ['publish', 'pending'],
-	productCategory: ['single', 'multiple'],
-
-	// Withdraw
-	quarterlyScheduleMonth: ['january', 'february', 'march'],
-	quarterlyScheduleWeek: ['1', '2', '3', 'L'],
-	quarterlyScheduleDay: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-	monthlyScheduleWeek: ['1', '2', '3', 'L'],
-	monthlyScheduleDay: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-	biweeklyScheduleWeek: ['1', '2'],
-	biweeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-	weeklyScheduleDay: ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-
-	// Privacy Policy Settings
-	privacyPolicy: ['2', '3', '4', '5', '6', '7', '8', '9', '10'],
-
-	// getSupport settings
-	displayOnSingleProductPage: ['above_tab', 'inside_tab', 'dont_show'],
-
-	// Rma Settings
-	rmaOrderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
-	enableRefundRequests: ['yes', 'no'],
-	enableCouponRequests: ['yes', 'no'],
-
-	// Wholesale Customer Settings
-	needApprovalForCustomer: ['yes', 'no'],
-
-	// Delivery Time Settings
-	storeOpeningClosingTime: ['12:00 AM', '11:30 PM'],
-
-	// Geolocation Settings
-	locationMapPosition: ['top', 'left', 'right'],
-	showMap: ['all', 'store_listing', 'shop'],
-	radiusSearchUnit: ['km', 'miles'],
-
-	// Spmv Settings
-	availableVendorSectionDisplayPosition: ['below_tabs', 'inside_tabs', 'after_tabs'],
-	showSpmvProducts: ['show_all', 'min_price', 'max_price', 'top_rated_vendor'],
-
-	// Vendor Subscription Settings
-	subscription: ['2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'],
-	productStatus: ['publish', 'pending', 'draft'],
-
-	// Products
-	productTypes: ['simple', 'grouped', 'external', 'variable', 'product_pack', 'subscription', 'variable-subscription', 'booking', 'auction'],
-	productTaxStatus: ['taxable', 'shipping', 'none'],
-	productTaxClass: ['taxable', 'reduced-rate', 'zero-rate'],
-	subscriptionExpire: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
-	subscriptionPeriodInterval: ['0', '1', '2', '3', '4', '5', '6'],
-	subscriptionPeriod: ['day', 'week', 'month', 'year'],
-	subscriptionTrialPeriod: ['day', 'week', 'month', 'year'],
-	auctionItemCondition: ['new', 'used'],
-	auctionType: ['normal', 'reverse'],
-	bookingDurationType: ['fixed', 'customer'],
-	bookingDurationUnit: ['month', 'day', 'hour', 'minute'],
-	calenderDisplayMode: ['', 'always_visible'],
-
-	// Vendor
-	withdrawPaymentMethods: ['paypal', 'bank', 'dokan_custom', 'skrill'],
-	reserveBalance: ['0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'],
-	orderStatus: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
-
-	// Rma Settings
-	rmaType: ['no_warranty', 'included_warranty', 'addon_warranty'],
-	rmaLength: ['limited', 'lifetime'],
-	rmaLengthDuration: ['days', 'weeks', 'months', 'years'],
-
-	// Auction
-	itemCondition: ['new', 'used'],
-	actionType: ['normal', 'reverse'],
-
-	// Shipping Policy
-	shippingPolicy: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], // TODO: replace with select text values
-	vendorShippingMethods: ['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping'],
-	flatRateCalculationType: ['class', 'order'],
-	flatRateCalculationType1: ['item', 'line', 'class'], // TODO: replace with select text values, one option missing
-	tableRateTaxIncludedInShippingCosts: ['yes', 'no'],
-	distanceRateTransportationMode: ['driving', 'walking', 'Bicycling'],
-	distanceRateAvoid: ['none', 'tolls', 'highways', 'ferries'],
-	distanceRateDistanceUnit: ['metric', 'imperial'],
-
-	//addon
-	addonType: ['multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'],
-	addonDisplayAs: ['select', 'radiobutton', 'images'],
-	addonFormatTitle: ['label', 'heading', 'hide'],
-	addonOptionPriceType: ['flat_fee', 'quantity_based', 'percentage_based'],
-
-	//vendor store settings
-	vacationClosingStyle: ['instantly', 'datewise'],
-
-	//Stripe express
-	iDealBanks: ['abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot'],
-
-	//bank details
-	bankAccountType: ['personal', 'business'],
-
 	// Generated  test data
-
 	auth: {
 		adminAuthFile: 'playwright/.auth/adminStorageState.json',
 		vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
@@ -192,13 +50,20 @@ export const data = {
 			outOfStock: 'outofstock',
 		},
 
+		tax:{
+			status: 'taxable',   //'taxable', 'shipping', 'none'
+			taxClass: 'taxable'  //'taxable', 'reduced-rate', 'zero-rate'
+		},
+
 		type: {
 			simple: 'simple',
 			variable: 'variable',
 			simpleSubscription: 'subscription',
-			variableSubscription: '',
+			variableSubscription: 'variable-subscription',
 			external: 'external',
 			vendorSubscription: 'product_pack',
+			booking: 'booking',
+			auction: 'auction'
 		},
 
 		name: {
@@ -307,11 +172,11 @@ export const data = {
 			category: 'Uncategorized',
 			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			subscriptionPeriodInterval: '1',
-			subscriptionPeriod: 'month',
-			expireAfter: '0',
+			subscriptionPeriodInterval: '1',  // '0', '1', '2', '3', '4', '5', '6'
+			subscriptionPeriod: 'month',  // 'day', 'week', 'month', 'year'
+			expireAfter: '0',  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'
 			subscriptionTrialLength: '0',
-			subscriptionTrialPeriod: 'day',
+			subscriptionTrialPeriod: 'day',  // 'day', 'week', 'month', 'year'
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
@@ -358,11 +223,11 @@ export const data = {
 			productName: ()=> faker.commerce.productName() + (' (Booking)'),
 			productType: 'booking',
 			category: 'Uncategorized',
-			bookingDurationType: 'customer',
+			bookingDurationType: 'customer',  // 'fixed', 'customer'
 			bookingDuration: '2',
 			bookingDurationMax: '2',
-			bookingDurationUnit: 'day',
-			calendarDisplayMode: 'always_visible',
+			bookingDurationUnit: 'day',  // 'month', 'day', 'hour', 'minute'
+			calendarDisplayMode: 'always_visible',  // '', 'always_visible'
 			maxBookingsPerBlock: '5',
 			minimumBookingWindowIntoTheFutureDate: '0',
 			minimumBookingWindowIntoTheFutureDateUnit: 'month',
@@ -373,12 +238,14 @@ export const data = {
 			storeName: String(process.env.VENDOR) + 'store',
 		},
 
+		// Auction
 		auction: {
+
 			productName: ()=> faker.commerce.productName() + (' (Auction)'),
 			productType: 'auction',
 			category: 'Uncategorized',
-			itemCondition: 'new',
-			auctionType: 'normal',
+			itemCondition: 'new',  // 'new', 'used'
+			auctionType: 'normal',  // 'normal', 'reverse'
 			regularPrice: ()=> (faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			bidIncrement: ()=> (faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			reservedPrice: ()=> (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
@@ -399,7 +266,6 @@ export const data = {
 
 		// Report
 		report: {
-			// reportReason: faker.random.arrayElement(['This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other', 'This product is fake']),
 			reportReason: faker.helpers.arrayElement(['This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other']),
 			reportReasonDescription: 'report reason description',
 			reportSubmitSuccessMessage: 'Your report has been submitted. Thank you for your response.',
@@ -428,6 +294,7 @@ export const data = {
 			refunded: 'wc-refunded',
 			failed: 'wc-failed',
 		},
+
 		// Refund
 		refund: {
 			itemQuantity: '1',
@@ -504,13 +371,15 @@ export const data = {
 		enableShipping: 'Ship to all countries you sell to',
 		disableShipping: 'Disable shipping & shipping calculations',
 		shippingZone: 'US',
+
 		shippingMethods: {
+			methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping']),
 			flatRate: {
 				shippingZone: 'US',
 				shippingCountry: 'United States (US)',
 				selectShippingMethod: 'flat_rate',
 				shippingMethod: 'Flat rate',
-				taxStatus: 'taxable',
+				taxStatus: 'taxable', // 'none
 				shippingCost: '20',
 			},
 
@@ -519,7 +388,7 @@ export const data = {
 				shippingCountry: 'United States (US)',
 				selectShippingMethod: 'free_shipping',
 				shippingMethod: 'Free shipping',
-				freeShippingRequires: 'min_amount',
+				freeShippingRequires: 'min_amount',  // 'coupon', 'min_amount', 'either', 'both'
 				freeShippingMinimumOrderAmount: '200',
 			},
 
@@ -528,7 +397,7 @@ export const data = {
 				shippingCountry: 'United States (US)',
 				selectShippingMethod: 'local_pickup',
 				shippingMethod: 'Local pickup',
-				taxStatus: 'taxable',
+				taxStatus: 'taxable', // 'none
 				shippingCost: '20',
 			},
 
@@ -551,7 +420,7 @@ export const data = {
 				shippingCountry: 'United States (US)',
 				selectShippingMethod: 'dokan_vendor_shipping',
 				shippingMethod: 'Vendor Shipping',
-				taxStatus: 'taxable',
+				taxStatus: 'taxable', // 'none
 			},
 		},
 
@@ -595,10 +464,11 @@ export const data = {
 			sandboxClientId: 'client_',
 			sandBoxClientSecret: 'secret_',
 			payPalPartnerAttributionId: 'weDevs_SP_Dokan',
-			disbursementMode: 'Delayed',
-			paymentButtonType: 'Smart Payment Buttons',
+			disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
+			paymentButtonType: 'Smart Payment Buttons', // 'Smart Payment Buttons', 'Standard Button'
 			marketplaceLogoPath: '/wp-content/plugins/dokan/assets/images/dokan-logo.png',
 			announcementInterval: '7',
+
 		},
 
 		mangoPay: {
@@ -606,12 +476,13 @@ export const data = {
 			description: 'Pay via MangoPay',
 			sandboxClientId: 'client_',
 			sandBoxApiKey: 'secret_',
-			availableCreditCards: 'CB/Visa/Mastercard',
-			availableDirectPaymentServices: 'Sofort*',
-			transferFunds: 'On payment completed',
-			typeOfVendors: 'Either',
-			businessRequirement: 'Any',
+			availableCreditCards: 'CB/Visa/Mastercard', // 'CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*'
+			availableDirectPaymentServices: 'Sofort*', // 'Sofort*', 'Giropay*'],
+			transferFunds: 'On payment completed', // 'On payment completed', 'On order completed', 'Delayed'
+			typeOfVendors: 'Either', // 'Individuals', 'Business', 'Either'
+			businessRequirement: 'Any',  // 'Organizations', 'Soletraders', 'Businesses', 'Any'
 			announcementInterval: '7',
+
 		},
 
 		razorPay: {
@@ -619,8 +490,9 @@ export const data = {
 			description: 'Pay securely by Credit or Debit card or Internet Banking through Razorpay.',
 			testKeyId: 'rzp_test',
 			testKeySecret: 'rzp_test',
-			disbursementMode: 'Delayed',
+			disbursementMode: 'Delayed',  // 'Immediate', 'On Order Complete', 'Delayed'
 			announcementInterval: '7',
+
 		},
 
 		stripeExpress: {
@@ -633,50 +505,56 @@ export const data = {
 				card: 'Credit/Debit Card',
 				ideal: 'iDEAL',
 			},
-			disbursementMode: 'Delayed',
+			iDealBanks: ['abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot'],
+			disbursementMode: 'Delayed', // 'On payment completed', 'On order completed', 'Delayed'
 			customerBankStatement: 'Dokan',
-			paymentRequestButtonType: 'default',
-			paymentRequestButtonTheme: 'dark',
+			paymentRequestButtonType: 'default',  // 'default', 'buy', 'donate', 'book'
+			paymentRequestButtonTheme: 'dark',  // 'dark', 'light', 'light-outline'
 			paymentRequestButtonLocation: {
 				product: 'Product',
 				cart: 'Cart',
 			},
 			announcementInterval: '7,',
+
 		},
 	},
 
 	dokanSettings: {
+
+		// General Settings
 		general: {
 			vendorStoreUrl: 'store',
-			sellingProductTypes: 'sell_both',
+			sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
 			storeProductPerPage: '12',
-			storCategory: 'none',
+			storCategory: 'none',  // 'none', 'Single', 'Multiple'
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Selling Options Settings
 		selling: {
-			commissionType: 'percentage',
+			commissionType: 'percentage', //'flat', 'percentage', 'combine'
 			adminCommission: '10',
-			shippingFeeRecipient: 'seller',
-			taxFeeRecipient: 'seller',
-			newProductStatus: 'publish',
-			productCategorySelection: 'single',
+			shippingFeeRecipient: 'seller', //'seller', 'admin'
+			taxFeeRecipient: 'seller', //'seller', 'admin'
+			newProductStatus: 'publish', //'publish', 'pending'
+			productCategorySelection: 'single', //'single', 'multiple'
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Withdraw
 		withdraw: {
 			customMethodName: 'Bksh',
 			customMethodType: 'Phone',
 			minimumWithdrawAmount: '5',
 			withdrawThreshold: '0',
-			quarterlyScheduleMonth: 'march',
-			quarterlyScheduleWeek: '1',
-			quarterlyScheduleDay: 'monday',
-			monthlyScheduleWeek: '1',
-			monthlyScheduleDay: 'monday',
-			biweeklyScheduleWeek: '1',
-			biweeklyScheduleDay: 'monday',
-			weeklyScheduleDay: 'monday',
+			quarterlyScheduleMonth: 'march', // 'january', 'february', 'march'
+			quarterlyScheduleWeek: '1', //'1', '2', '3', 'L'
+			quarterlyScheduleDay: 'monday', //'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			monthlyScheduleWeek: '1', //'1', '2', '3', 'L'
+			monthlyScheduleDay: 'monday', // 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			biweeklyScheduleWeek: '1', //'1', '2'
+			biweeklyScheduleDay: 'monday', //'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			weeklyScheduleDay: 'monday', // 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
@@ -701,19 +579,20 @@ export const data = {
 		},
 
 		privacyPolicy: {
-			privacyPage: '2',
+			privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
 			privacyPolicyHtmlBody: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
 		storeSupport: {
-			displayOnSingleProductPage: 'above_tab',
+			displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
 			supportButtonLabel: 'Get Support',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Rma Settings
 		rma: {
-			orderStatus: 'wc-processing',
+			orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
 			rmaReasons: ['Defective', 'Wrong Product', 'Other'],
 			refundPolicyHtmlBody: 'Refund Policy',
 			saveSuccessMessage: 'Setting has been saved successfully.',
@@ -747,10 +626,11 @@ export const data = {
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Geolocation Settings
 		geolocation: {
-			locationMapPosition: 'top',
-			showMap: 'all',
-			radiusSearchUnit: 'km',
+			locationMapPosition: 'top', // 'top', 'left', 'right'
+			showMap: 'all', // 'all', 'store_listing', 'shop'
+			radiusSearchUnit: 'km', // 'km', 'miles'
 			radiusSearchMinimumDistance: '0',
 			radiusSearchMaximumDistance: '10',
 			mapZoomLevel: '11',
@@ -763,18 +643,20 @@ export const data = {
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Spmv Settings
 		spmv: {
 			sellItemButtonText: 'Sell This Item',
 			availableVendorDisplayAreaTitle: 'Other Available Vendor',
-			availableVendorSectionDisplayPosition: 'below_tabs',
-			showSpmvProducts: 'show_all',
+			availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
+			showSpmvProducts: 'show_all', // 'show_all', 'min_price', 'max_price', 'top_rated_vendor'
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// Vendor Subscription Settings
 		vendorSubscription: {
-			displayPage: '2',
+			displayPage: '2', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
 			noOfDays: '2',
-			productStatus: 'draft',
+			productStatus: 'draft', // 'publish', 'pending', 'draft'
 			cancellingEmailSubject: 'Subscription Package Cancel notification',
 			cancellingEmailBody: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
 			alertEmailSubject: 'Subscription Ending Soon',
@@ -785,9 +667,6 @@ export const data = {
 
 	module: {
 		noModuleMessage: 'No modules found.',
-	},
-
-	modules: {
 		modules: [
 			'booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search',
 			'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv',
@@ -795,14 +674,16 @@ export const data = {
 			'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation' ]
 	},
 
+	// Dokan Setup Wizard
 	dokanSetupWizard: {
+
 		vendorStoreURL: 'store',
-		shippingFeeRecipient: 'seller',
-		taxFeeRecipient: 'seller',
-		mapApiSource: 'google_maps',
+		shippingFeeRecipient: 'seller', //'seller', 'admin'
+		taxFeeRecipient: 'seller',  // 'seller', 'admin'
+		mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
 		googleMapApiKey: String(process.env.GMAP),
-		sellingProductTypes: 'sell_both',
-		commissionType: 'percentage',
+		sellingProductTypes: 'sell_both',  //'physical', 'digital', 'sell_both',
+		commissionType: 'percentage',  // 'flat','percentage' 'combine',
 		adminCommission: '10',
 		minimumWithdrawLimit: '5',
 	},
@@ -996,7 +877,7 @@ export const data = {
 
 		shipping: {
 			shippingPolicy: {
-				processingTime: '3',
+				processingTime: '3', // '1', '2', '3', '4', '5', '6', '7', '8', '9'
 				shippingPolicy: 'shipping policy',
 				refundPolicy: 'refund policy',
 				saveSuccessMessage: 'Settings save successfully',
@@ -1004,6 +885,7 @@ export const data = {
 
 			shippingZone: 'US',
 			shippingCountry: 'United States (US)',
+			methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping']),
 			shippingMethods: {
 				flatRate: {
 					shippingZone: 'US',
@@ -1013,7 +895,7 @@ export const data = {
 					taxStatus: 'taxable',
 					shippingCost: '20',
 					description: 'Flat rate',
-					calculationType: 'class',
+					calculationType: 'class', // 'item', 'line', 'class', 'order'
 					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
 					zoneSaveSuccessMessage: 'Zone settings save successfully',
 					saveSuccessMessage: 'Zone settings save successfully',
@@ -1050,7 +932,7 @@ export const data = {
 					selectShippingMethod: 'dokan_table_rate_shipping',
 					shippingMethod: 'Table Rate',
 					taxStatus: 'taxable',
-					taxIncludedInShippingCosts: 'no',
+					taxIncludedInShippingCosts: 'no', // 'yes', 'no'
 					handlingFee: '10',
 					maximumShippingCost: '200',
 					calculationType: 'item',
@@ -1069,9 +951,9 @@ export const data = {
 					selectShippingMethod: 'dokan_distance_rate_shipping',
 					shippingMethod: 'Distance Rate',
 					taxStatus: 'taxable',
-					transportationMode: 'driving',
-					avoid: 'none',
-					distanceUnit: 'metric',
+					transportationMode: 'driving', // 'driving', 'walking', 'Bicycling'
+					avoid: 'none', // 'none', 'tolls', 'highways', 'ferries'
+					distanceUnit: 'metric', // 'metric', 'imperial'
 					street1: 'abc street',
 					street2: 'xyz street',
 					city: 'New York',
@@ -1150,21 +1032,24 @@ export const data = {
 			saveSuccessMessage: 'Your information has been saved successfully',
 		},
 
+		// Rma Settings
 		rma: {
 			label: 'Warranty',
-			type: 'included_warranty',
-			rmaLength: 'limited',
+			type: 'included_warranty', // 'no_warranty', 'included_warranty', 'addon_warranty'
+			rmaLength: 'limited', // 'limited', 'lifetime'
 			lengthValue: '1',
-			lengthDuration: 'weeks',
+			lengthDuration: 'weeks', // 'days', 'weeks', 'months', 'years'
 			refundPolicyHtmlBody: 'Refund Policy Vendor',
 			saveSuccessMessage: 'Settings saved successfully',
 		},
 
 		withdraw: {
+
 			withdrawMethod: {
 				default: 'paypal',
 				paypal: 'Paypal',
 				skrill: 'Skrill',
+				custom: 'dokan_custom'
 			},
 
 			defaultWithdrawMethod: {
@@ -1174,24 +1059,26 @@ export const data = {
 			},
 			preferredPaymentMethod: 'paypal',
 			preferredSchedule: 'weekly', // monthly,quarterly, biweekly,weekly
-			minimumWithdrawAmount: '5',
+			minimumWithdrawAmount: '5', // '0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'
 			reservedBalance: '15',
 			scheduleMessageInitial: 'Please update your withdraw schedule selection to get payment automatically.'
 		},
 
+		//addon
 		addon: {
 			name: ()=> 'Add-ons Group #' + helpers.randomNumber(),
 			priority: '10',
 			category: 'Uncategorized',
-			type: 'multiple_choice',
-			displayAs: 'select',
+			type: 'multiple_choice',  // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
+			displayAs: 'select',  // 'select', 'radiobutton', 'images'
 			titleRequired: 'Add-on Title',
-			formatTitle: 'label',
+			formatTitle: 'label',  // 'label', 'heading', 'hide'
 			addDescription: 'Add-on description',
 			enterAnOption: 'Option 1',
-			optionPriceType: 'flat_fee',
+			optionPriceType: 'flat_fee', // 'flat_fee', 'quantity_based', 'percentage_based'
 			optionPriceInput: '30',
 			saveSuccessMessage: 'Add-on saved successfully',
+
 		},
 
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
@@ -1265,7 +1152,7 @@ export const data = {
 	},
 
 	plugin: {
-		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro',],
+		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
 		plugins:['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
 		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		activeClass: 'active',

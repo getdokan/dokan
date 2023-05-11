@@ -45,6 +45,7 @@
     "no-whitespace-before-property": "error",
     // "object-curly-newline": ["error", "always"],
     "object-curly-newline": ["error", { "minProperties": 2,"ImportDeclaration": "never", "ExportDeclaration": "never" }],
+    // "object-curly-newline": ["error", { "ImportDeclaration": "never", "ExportDeclaration": "never" }],
     // "object-curly-newline": ["error", "never", { "consistent": true }],
     // "object-curly-newline": ["error", { "minProperties": 1 }],
     // "object-curly-newline": ["error", { "multiline": true ,"minProperties": 2 }],
