@@ -107,6 +107,7 @@ jobs:
         run: |
           cd tests/e2e 
           npm run set:post-permalink
+          npm run htaccess
 
       # - name: Setup for e2e tests
       #   run: |
@@ -174,6 +175,7 @@ jobs:
           CUSTOMER: ${{ secrets.CUSTOMER }}
           CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           # BASE_URL: ${{ secrets.BASE_URL }}
+          BASE_URL: 'http://localhost:9999'
           GMAP : ${{secrets.GMAP}}
           FORCE_COLOR: 1
 
@@ -189,7 +191,7 @@ jobs:
           # summary: 'E2E Test Summary Report (JUnit)'
           # annotate_only: true,
           # annotate_notice: true,
-          job_name: 'XXXXXXXXX'
+          # job_name: 'XXXXXXXXX'
 
 
       # - name: Generate Test Report
