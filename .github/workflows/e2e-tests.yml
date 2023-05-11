@@ -78,6 +78,7 @@ jobs:
         id: wpenv
         run: |
           cd tests/e2e
+          npm run wp-env destroy
           npm run start:env 
          
       # "TESPORT=$(npm run start:env)" 
@@ -105,7 +106,7 @@ jobs:
       - name: Set Permalink structure
         run: |
           cd tests/e2e 
-          npm run wp-env run cli wp rewrite structure '/%postname%/' --hard 
+          npm run wp-env run cli 'wp rewrite structure /%postname%/' --hard 
           curl http://localhost:8888/wp-json/wp/v2
 
   #     # - name: Setup for e2e tests
