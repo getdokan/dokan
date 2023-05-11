@@ -64,6 +64,7 @@ export class ApiUtils {
 			return responseBody;
 		}
 		catch (err: any) {
+			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
