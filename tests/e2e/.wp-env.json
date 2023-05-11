@@ -1,5 +1,5 @@
 {
-      "core": "WordPress/WordPress#6.2.0",      
+      "core": "WordPress/WordPress#6.2",      
       "plugins": [
         "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip"
       ],
