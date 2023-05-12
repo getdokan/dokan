@@ -21,6 +21,7 @@
 //TODO: usr extrahttpheaders: for test describe and avoid storage.json all-together
 //TODO: convert all expect parameter to correct way: left side received and right part expected
 //TODO: convert all string assertion:
+//TODO: remove all single events like waitforNavigation, waitForUrl, 
 // filter received & expected test
 // trim if necessary
 // lowercase

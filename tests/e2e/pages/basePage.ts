@@ -190,16 +190,17 @@ export class BasePage {
 	//TODo: add assertion to every function
 	// click & wait for request
 	async clickAndWaitForRequest(url: string, selector: string): Promise<void> {
-		await Promise.all([this.page.waitForRequest(url), this.page.locator(selector).click()]);
+		await Promise.all([
+			this.page.waitForRequest(url),
+			this.page.locator(selector).click()
+		]);
 	}
 
 	// click & wait for response
 	async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
 		const [response] = await Promise.all([
-			this.page.waitForResponse(
-				(resp) => resp.url().includes(subUrl) && resp.status() === code,
-			),
-			this.page.locator(selector).click(),
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+			this.page.locator(selector).click()
 		]);
 		return response;
 	}
@@ -207,11 +208,9 @@ export class BasePage {
 	// type & wait for response
 	async typeAndWaitForResponse(subUrl: string,selector: string,text: string,code = 200,): Promise<Response> {
 		const [response] = await Promise.all([
-			this.page.waitForResponse(
-				(resp) => resp.url().includes(subUrl) && resp.status() === code,
-			),
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			// await this.page.type(selector, text),
-			await this.clearAndFill(selector, text),
+			this.clearAndFill(selector, text),
 		]);
 		return response;
 	}
@@ -219,9 +218,7 @@ export class BasePage {
 	// type & wait for response
 	async pressAndWaitForResponse(subUrl: string, key: string, code = 200): Promise<Response> {
 		const [response] = await Promise.all([
-			this.page.waitForResponse(
-				(resp) => resp.url().includes(subUrl) && resp.status() === code,
-			),
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			this.press(key),
 		]);
 		return response;
@@ -229,7 +226,10 @@ export class BasePage {
 
 	// click & wait for event
 	async clickAndWaitForEvent(event: any, selector: string): Promise<void> {
-		await Promise.all([this.page.waitForEvent(event), this.page.locator(selector).click()]);
+		await Promise.all([
+			this.page.waitForEvent(event), 
+			this.page.locator(selector).click()
+		]);
 		// const popupPromise = this.page.waitForEvent(event)
 		// this.page.locator(selector).click()
 		// const popup = await popupPromise
@@ -237,7 +237,10 @@ export class BasePage {
 
 	// click & wait for load state
 	async clickAndWaitForLoadState(url: string, selector: string): Promise<void> {
-		await Promise.all([this.page.waitForLoadState(), this.page.locator(selector).click()]);
+		await Promise.all([
+			this.page.waitForLoadState(),
+			this.page.locator(selector).click()
+		]);
 	}
 
 	// click if visible

@@ -194,4 +194,5 @@ allure-report/
 plugins/
 ../../plugins/
 _test.spec.ts
+_test.js
 

@@ -375,7 +375,7 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.vWithdraw.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount);
 		await this.selectByValue(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.changeSchedule);
-		await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawScheduleSaveSuccessMessage)).toBeVisible();
+		await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawScheduleSaveSuccessMessage)).toBeVisible(); //TODO: find when invokes it 
 		// await expect(this.page.locator(selector.vendor.vWithdraw.scheduleMessage).filter({ hasText: 'text in column 1' })
 		// ).toBeVisible();
 		// let a = await this.page.locator(selector.vendor.vWithdraw.scheduleMessage).textContent();

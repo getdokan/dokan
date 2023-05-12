@@ -80,15 +80,24 @@ jobs:
           cd tests/e2e
           npm run start:env 
            
-      - name: Restating WordPress Env
-        if: failure()
+      # - name: Restating WordPress Env
+      #   if: failure()
+      #   run: |
+      #     cd tests/e2e
+      #     npm run start:env
+
+      - name: Get Test DB PORT
         run: |
           cd tests/e2e
-          npm run start:env
+          echo docker ps
+          echo "TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
+          echo "dbport: $TEST_DB_PORT"
+          echo env
 
       - name: Activate theme:Storefront
         run: |
           cd tests/e2e 
+          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
           npm run activate:theme
 
       - name: Set Permalink structure
@@ -166,6 +175,7 @@ jobs:
           # BASE_URL: ${{ secrets.BASE_URL }}
           BASE_URL: 'http://localhost:9999'
           GMAP : ${{secrets.GMAP}}
+          SETUP: true
           FORCE_COLOR: 1
 
       - name: Publish Test Report
