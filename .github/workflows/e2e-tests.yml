@@ -70,15 +70,15 @@ jobs:
       #     npm run dev:build
       #     npm run build
 
-      # - name: Install dependencies 
-      #   run: |
-      #     cd tests/e2e 
-      #     npm ci --production
+      - name: Install dependencies 
+        run: |
+          cd tests/e2e 
+          npm ci --production
 
-      # - name: Start WordPress Env
-      #   run: |
-      #     cd tests/e2e
-      #     npm run start:env 
+      - name: Start WordPress Env
+        run: |
+          cd tests/e2e
+          npm run start:env 
            
       # - name: Restating WordPress Env
       #   if: failure()
