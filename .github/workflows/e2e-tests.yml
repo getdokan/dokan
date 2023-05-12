@@ -84,13 +84,13 @@ jobs:
       - name: Get Test DB PORT
         run: |
           cd tests/e2e
-          echo "TEST_DB_PORT=$(npm run docker:testDbPort | sed -E 's/.*:(.*)->.*/\\1/')" >> $GITHUB_ENV
-          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
+          echo "TEST_DB_PORT=$(npm run docker:testDbPort | sed -E 's/.*:(.*)->.*/\1/')" 
+          echo "The value of TEST_DB_PORT is $TEST_DB_PORT"
 
-      - name: DB PORT
-        run: |
-          cd tests/e2e 
-          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
+      # - name: DB PORT
+        # run: |
+        #   cd tests/e2e 
+        #   # echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
 
       - name: Activate theme:Storefront
         run: |
