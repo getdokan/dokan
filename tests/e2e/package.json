@@ -34,7 +34,7 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "restructure:permalink": "wp-env run tests-cli 'wp rewrite structure /%postname%/'",
-    "dockr": "docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}}"
+    "docker:testDbPort": "docker ps -f ancestor=mariadb -f name=tests-mysql  --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\\1/'"
 
   },
   "keywords": [],
