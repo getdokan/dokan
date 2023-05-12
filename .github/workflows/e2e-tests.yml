@@ -89,15 +89,27 @@ jobs:
       - name: Get Test DB PORT
         run: |
           cd tests/e2e
-          echo docker ps
-          echo "TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
+          docker ps 
+      
+      - name: Get Test DB PORT1
+        run: |
+          docker ps 
+      
+      - name: Get Test DB PORT
+        run: |
+          cd tests/e2e
+          echo "TEST_DB_PORT=$(npm run dockr | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
           echo "dbport: $TEST_DB_PORT"
-          echo env
+          env
+
+      - name: DB PORT
+        run: |
+          cd tests/e2e 
+          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
 
       - name: Activate theme:Storefront
         run: |
           cd tests/e2e 
-          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
           npm run activate:theme
 
       - name: Set Permalink structure
@@ -186,11 +198,11 @@ jobs:
           include_passed: true,
           check_retries: true,
           detailed_summary: true,
-          check_name: 'E2E Test Report (JUnit)'
-          summary: 'E2E Test Summary Report (JUnit)'
+          check_name: 'E2E Test Report (JUnit)_check_nem'
+          summary: 'E2E Test Summary Report (JUnit)_summary'
           # annotate_only: true,
-          # annotate_notice: true,
-          # job_name: 'XXXXXXXXX'
+          annotate_notice: true,
+          job_name: 'e2e2e2e2e2e2e2e_jobName'
 
 
       # - name: Generate Test Report
