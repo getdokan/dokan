@@ -37,48 +37,48 @@ jobs:
           node-version: '14'
           cache: "npm"
 
-      - name: Clone dokan-pro
-        uses: actions/checkout@v3
-        with:
-          repository: weDevsOfficial/dokan-pro
-          token: ${{ secrets.ACCESS_TOKEN }}
-          path: "plugins/dokan-pro"
-          ref: "develop"
-          # fetch-depth: 0
+      # - name: Clone dokan-pro
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: weDevsOfficial/dokan-pro
+      #     token: ${{ secrets.ACCESS_TOKEN }}
+      #     path: "plugins/dokan-pro"
+      #     ref: "develop"
+      #     # fetch-depth: 0
 
-      - name: Composer install and build (Dokan-lite)
-        run: |
-          composer install --no-dev
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-lite)
+      #   run: |
+      #     composer install --no-dev
+      #     composer dump-autoload -o
 
-      - name: Npm install and build (Dokan-lite)
-        run: |
-          npm ci
-          npm run dev:build
-          grunt
+      # - name: Npm install and build (Dokan-lite)
+      #   run: |
+      #     npm ci
+      #     npm run dev:build
+      #     grunt
 
-      - name: Composer install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          composer install --no-dev
-          composer dump-autoload -o
+      # - name: Composer install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     composer install --no-dev
+      #     composer dump-autoload -o
 
-      - name: Npm install and build (Dokan-pro)
-        run: |
-          cd plugins/dokan-pro
-          npm ci
-          npm run dev:build
-          npm run build
+      # - name: Npm install and build (Dokan-pro)
+      #   run: |
+      #     cd plugins/dokan-pro
+      #     npm ci
+      #     npm run dev:build
+      #     npm run build
 
-      - name: Install dependencies 
-        run: |
-          cd tests/e2e 
-          npm ci --production
+      # - name: Install dependencies 
+      #   run: |
+      #     cd tests/e2e 
+      #     npm ci --production
 
-      - name: Start WordPress Env
-        run: |
-          cd tests/e2e
-          npm run start:env 
+      # - name: Start WordPress Env
+      #   run: |
+      #     cd tests/e2e
+      #     npm run start:env 
            
       # - name: Restating WordPress Env
       #   if: failure()
@@ -92,186 +92,186 @@ jobs:
       
       - name: Get Test DB PORT1
         run: |
-          docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} 
+          docker ps -f ancestor=mariadb -f name=tests-mysql 
       
-      - name: Get Test DB PORT
-        run: |
-          TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')
-          echo "dbport: $TEST_DB_PORT"  
+      # - name: Get Test DB PORT
+      #   run: |
+      #     TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')
+      #     echo "dbport: $TEST_DB_PORT"  
 
-      - name: Get Test DB PORT
-        run: |
-          cd tests/e2e
-          echo "TEST_DB_PORTT=$(docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
-          echo "dbport: $TEST_DB_PORTT"
+      # - name: Get Test DB PORT
+      #   run: |
+      #     cd tests/e2e
+      #     echo "TEST_DB_PORTT=$(docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
+      #     echo "dbport: $TEST_DB_PORTT"
 
       - name: DB PORT
         run: |
           cd tests/e2e 
           echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
 
-      - name: Activate theme:Storefront
-        run: |
-          cd tests/e2e 
-          npm run activate:theme
-
-      - name: Set Permalink structure
-        run: |
-          cd tests/e2e 
-          npm run wp-env run tests-cli 'wp rewrite structure /%postname%/' -- --hard
-          # curl http://localhost:9999/wp-json/wp/v2 
-
-      # - name: Setup for e2e tests
-      #   run: |
-      #     cd tests/e2e 
-      #     npm run test:e2e-setup
-
-      # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")"   
-      # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
-      # echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
-      # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
-      # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-    
-      # Get Playwright version
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: |
-          cd tests/e2e
-          echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
-
-      # Cache browser binaries, cache key is based on Playwright version and OS
-      - name: Cache playwright binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-          # restore-keys: |
-          #      ${{ runner.os }}-playwright-
-
-      # Install browser binaries & OS dependencies if cache missed
-      - name: Install Playwright browser binaries & OS dependencies
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: |
-          cd tests/e2e
-          npm run pw:browser-with-deps
-
-      # # Install only the OS dependencies if cache hit  not needed
-      # - name: Install Playwright OS dependencies
-      #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-      #   run: |
-      #     cd tests/e2e
-      #     npm run pw:deps-only
- 
-      # - name: Running the e2e tests
-      #   uses: nick-fields/retry@v2
-      #   with:
-      #     timeout_seconds: 30000
-      #     max_attempts: 1
-      #     retry_on: error
-      #     command: cd tests/e2e && npm run test:e2e
-
-      #  cd tests/e2e && npm run test setup.spec.ts
-      - name: 🧪 Running the e2e tests
-        timeout-minutes: 30
-        run: |
-          cd tests/e2e 
-          npm run test:e2e
-
-        env:
-          CI: true
-          ADMIN: ${{ secrets.ADMIN }}
-          ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
-          VENDOR: ${{ secrets.VENDOR }}
-          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          CUSTOMER: ${{ secrets.CUSTOMER }}
-          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
-          # BASE_URL: ${{ secrets.BASE_URL }}
-          BASE_URL: 'http://localhost:9999'
-          GMAP : ${{secrets.GMAP}}
-          SETUP: true
-          FORCE_COLOR: 1
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always() # always run even if the previous step fails
-        with:
-          report_paths: "tests/e2e/playwright-report/junit-report/e2e-results.xml"
-          include_passed: true,
-          check_retries: true,
-          detailed_summary: true,
-          check_name: 'E2E Test Report (JUnit)_check_nem'
-          summary: 'E2E Test Summary Report (JUnit)_summary'
-          # annotate_only: true,
-          annotate_notice: true,
-          job_name: 'e2e2e2e2e2e2e2e_jobName'
-
-
-      # - name: Generate Test Report
-      #   uses: phoenix-actions/test-reporting@v8
-      #   id: test-report # Set ID reference for step
-      #   if: success() || failure() # run this step even if previous step failed
-      #   with:
-      #     name: e2e tests result # Name of the check run which will be created
-      #     path: tests/e2e/playwright-report/results.xml # Path to test results
-      #     reporter: jest-junit
-      #     only-summary: "false" # Allows you to generate only the summary.
-      #     list-suites: "all" # Limits which test suites are listed: 'all', 'failed'
-      #     list-tests: "all" # Limits which test cases are listed: 'all','failed', 'none'
-      #     fail-on-error: "true" # Set action as failed if test report contains any failed test
-
-      # - name: Test results
-      #   run: |
-      #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
-
-      - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: test-artifact
-          path: |
-            tests/e2e/playwright
-            tests/e2e/playwright-report
-          if-no-files-found: ignore
-          retention-days: 30
-
-      # - name: Publish HTML report to GH Pages
-      #   if: always() # We want this to always run, even if test fail prior to this step running
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: tests/e2e/playwright-report # This is where index.html will be output
-      #     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-      #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-      #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
-
-      # - name: Test results
-      #   if: always()
-      #   run: |
-      #     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
-
-  # publishTestResults:
-  #   name: Publish Test Result
-  #   needs: tests
-  #   runs-on: ubuntu-latest
-  #   if: always()
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v2
-  #       id: download
-
-  #     - name: Publish HTML report to GH Pages
-  #       if: always() # We want this to always run, even if test fail prior to this step running
-  #       uses: peaceiris/actions-gh-pages@v3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
-  #         # keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-  #         user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-  #         user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
-
-  #       # redundant / in echo url remove before run
-  #     - name: Test results
+  #     - name: Activate theme:Storefront
   #       run: |
-  #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
+  #         cd tests/e2e 
+  #         npm run activate:theme
+
+  #     - name: Set Permalink structure
+  #       run: |
+  #         cd tests/e2e 
+  #         npm run wp-env run tests-cli 'wp rewrite structure /%postname%/' -- --hard
+  #         # curl http://localhost:9999/wp-json/wp/v2 
+
+  #     # - name: Setup for e2e tests
+  #     #   run: |
+  #     #     cd tests/e2e 
+  #     #     npm run test:e2e-setup
+
+  #     # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")"   
+  #     # echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//')"
+  #     # echo "PLAYWRIGHT_VERSION=$(node -e "process.stdout.write(require('@playwright/test/package.json').version)")" 
+  #     # echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('@playwright/test/package.json').version)")"
+  #     # key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+    
+  #     # Get Playwright version
+  #     - name: Get installed Playwright version
+  #       id: playwright-version
+  #       run: |
+  #         cd tests/e2e
+  #         echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+
+  #     # Cache browser binaries, cache key is based on Playwright version and OS
+  #     - name: Cache playwright binaries
+  #       uses: actions/cache@v3
+  #       id: playwright-cache
+  #       with:
+  #         path: |
+  #           ~/.cache/ms-playwright
+  #         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+  #         # restore-keys: |
+  #         #      ${{ runner.os }}-playwright-
+
+  #     # Install browser binaries & OS dependencies if cache missed
+  #     - name: Install Playwright browser binaries & OS dependencies
+  #       if: steps.playwright-cache.outputs.cache-hit != 'true'
+  #       run: |
+  #         cd tests/e2e
+  #         npm run pw:browser-with-deps
+
+  #     # # Install only the OS dependencies if cache hit  not needed
+  #     # - name: Install Playwright OS dependencies
+  #     #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+  #     #   run: |
+  #     #     cd tests/e2e
+  #     #     npm run pw:deps-only
+ 
+  #     # - name: Running the e2e tests
+  #     #   uses: nick-fields/retry@v2
+  #     #   with:
+  #     #     timeout_seconds: 30000
+  #     #     max_attempts: 1
+  #     #     retry_on: error
+  #     #     command: cd tests/e2e && npm run test:e2e
+
+  #     #  cd tests/e2e && npm run test setup.spec.ts
+  #     - name: 🧪 Running the e2e tests
+  #       timeout-minutes: 30
+  #       run: |
+  #         cd tests/e2e 
+  #         npm run test:e2e
+
+  #       env:
+  #         CI: true
+  #         ADMIN: ${{ secrets.ADMIN }}
+  #         ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
+  #         VENDOR: ${{ secrets.VENDOR }}
+  #         VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+  #         CUSTOMER: ${{ secrets.CUSTOMER }}
+  #         CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+  #         # BASE_URL: ${{ secrets.BASE_URL }}
+  #         BASE_URL: 'http://localhost:9999'
+  #         GMAP : ${{secrets.GMAP}}
+  #         SETUP: true
+  #         FORCE_COLOR: 1
+
+  #     - name: Publish Test Report
+  #       uses: mikepenz/action-junit-report@v3
+  #       if: always() # always run even if the previous step fails
+  #       with:
+  #         report_paths: "tests/e2e/playwright-report/junit-report/e2e-results.xml"
+  #         include_passed: true,
+  #         check_retries: true,
+  #         detailed_summary: true,
+  #         check_name: 'E2E Test Report (JUnit)_check_nem'
+  #         summary: 'E2E Test Summary Report (JUnit)_summary'
+  #         # annotate_only: true,
+  #         annotate_notice: true,
+  #         job_name: 'e2e2e2e2e2e2e2e_jobName'
+
+
+  #     # - name: Generate Test Report
+  #     #   uses: phoenix-actions/test-reporting@v8
+  #     #   id: test-report # Set ID reference for step
+  #     #   if: success() || failure() # run this step even if previous step failed
+  #     #   with:
+  #     #     name: e2e tests result # Name of the check run which will be created
+  #     #     path: tests/e2e/playwright-report/results.xml # Path to test results
+  #     #     reporter: jest-junit
+  #     #     only-summary: "false" # Allows you to generate only the summary.
+  #     #     list-suites: "all" # Limits which test suites are listed: 'all', 'failed'
+  #     #     list-tests: "all" # Limits which test cases are listed: 'all','failed', 'none'
+  #     #     fail-on-error: "true" # Set action as failed if test report contains any failed test
+
+  #     # - name: Test results
+  #     #   run: |
+  #     #     echo "url is ${{ steps.test-report.outputs.runHtmlUrl }}"
+
+  #     - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: test-artifact
+  #         path: |
+  #           tests/e2e/playwright
+  #           tests/e2e/playwright-report
+  #         if-no-files-found: ignore
+  #         retention-days: 30
+
+  #     # - name: Publish HTML report to GH Pages
+  #     #   if: always() # We want this to always run, even if test fail prior to this step running
+  #     #   uses: peaceiris/actions-gh-pages@v3
+  #     #   with:
+  #     #     github_token: ${{ secrets.GITHUB_TOKEN }}
+  #     #     publish_dir: tests/e2e/playwright-report # This is where index.html will be output
+  #     #     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+  #     #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+  #     #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+
+  #     # - name: Test results
+  #     #   if: always()
+  #     #   run: |
+  #     #     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+
+  # # publishTestResults:
+  # #   name: Publish Test Result
+  # #   needs: tests
+  # #   runs-on: ubuntu-latest
+  # #   if: always()
+  # #   steps:
+  # #     - name: Download artifacts
+  # #       uses: actions/download-artifact@v2
+  # #       id: download
+
+  # #     - name: Publish HTML report to GH Pages
+  # #       if: always() # We want this to always run, even if test fail prior to this step running
+  # #       uses: peaceiris/actions-gh-pages@v3
+  # #       with:
+  # #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  # #         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
+  # #         # keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+  # #         user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+  # #         user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+
+  # #       # redundant / in echo url remove before run
+  # #     - name: Test results
+  # #       run: |
+  # #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
