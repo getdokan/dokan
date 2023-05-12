@@ -94,10 +94,10 @@ jobs:
         run: |
           docker ps -f ancestor=mariadb -f name=tests-mysql 
       
-      # - name: Get Test DB PORT
-      #   run: |
-      #     TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql  --format {{.Ports}} | sed -E 's/.*:(.*)->.*/\1/')
-      #     echo "dbport: $TEST_DB_PORT"  
+      - name: Get Test DB PORT
+        run: |
+          TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql  --format '{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')
+          echo "dbport: $TEST_DB_PORT"  
 
       # - name: Get Test DB PORT
       #   run: |
