@@ -83,7 +83,7 @@ jobs:
       - name: Get Test DB PORT
         run: |
           cd tests/e2e
-          echo "TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql  --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\\1/')" >> $GITHUB_ENV
+          echo "TEST_DB_PORT=$(docker ps -f ancestor=mariadb -f name=tests-mysql  --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
           echo "dbport: $TEST_DB_PORT"
 
       # - name: Get Test DB PORT
