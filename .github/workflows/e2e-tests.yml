@@ -84,7 +84,7 @@ jobs:
       - name: Get Test DB PORT
         run: |
           cd tests/e2e
-          echo "TEST_DB_PORT=$(npm run docker:testDbPort | sed -E 's/.*:(.*)->.*/\1/')" 
+          echo "TEST_DB_PORT=$(npm run docker:testDbPort )" 
           echo "The value of TEST_DB_PORT is $TEST_DB_PORT"
 
       # - name: DB PORT
