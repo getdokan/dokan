@@ -34,8 +34,7 @@
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "restructure:permalink": "wp-env run tests-cli 'wp rewrite structure /%postname%/'",
-    "dock": "docker ps",
-    "dockr": "docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}} "
+    "dockr": "docker ps -f ancestor=mariadb -f name=tests-mysql-1  --format {{.Ports}}"
 
   },
   "keywords": [],
