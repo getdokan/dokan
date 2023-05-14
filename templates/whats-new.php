@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.18',
+        'released' => '2023-05-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => ' [ReverseWithdrawal] Added sold individually param to true for advertisement base product when creating it, so that quantity can\'t be changed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove expected earning calculation from product listing and editing pages',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a notice before deleting products via bulk action under Vendor Dashboard → Product listing page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added dokan_store_name meta-key for all users with administrator and shop_manager roles during plugin activation',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed product getting published after enabling vendor selling status from admin dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.17',
         'released' => '2023-04-17',
         'changes'  => [

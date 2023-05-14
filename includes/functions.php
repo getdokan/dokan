@@ -4093,3 +4093,53 @@ function is_tweleve_hour_format() {
 function dokan_sanitize_phone_number( $phone ) {
     return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
 }
+
+/**
+ * Dokan override author ID from admin
+ *
+ * @since  2.6.2
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param  WC_Product $product
+ * @param  integer $seller_id
+ *
+ * @return void
+ */
+function dokan_override_product_author( $product, $seller_id ) {
+    wp_update_post(
+        [
+            'ID'          => $product->get_id(),
+            'post_author' => $seller_id,
+        ]
+    );
+
+    dokan_override_author_for_product_variations( $product, $seller_id );
+
+    do_action( 'dokan_after_override_product_author', $product, $seller_id );
+}
+
+/**
+ * Overrides author for products with variations.
+ *
+ * @since 3.7.4
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param WC_Product $product
+ * @param int        $seller_id
+ *
+ * @return void
+ */
+function dokan_override_author_for_product_variations( $product, $seller_id ) {
+    if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
+        $variations = $product->get_children();
+
+        foreach ( $variations as $variation_id ) {
+            wp_update_post(
+                [
+                    'ID'          => $variation_id,
+                    'post_author' => $seller_id,
+                ]
+            );
+        }
+    }
+}
