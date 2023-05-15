@@ -461,6 +461,7 @@ class Manager {
                     $applied_shipping_methods[] = $shipping_object;
                 }
             }
+            $applied_shipping_methods = array_filter( $applied_shipping_methods );
         }
 
         $applied_shipping_methods[0] = apply_filters_deprecated(
@@ -470,10 +471,11 @@ class Manager {
                 $order->get_id(),
                 $parent_order,
             ],
-            '3.7.16',
+            'DOKAN_SINCE',
             'dokan_shipping_methods'
         );
-        $shipping_methods            = apply_filters( 'dokan_shipping_methods', array_filter( $applied_shipping_methods ), $order->get_id(), $parent_order );
+
+        $shipping_methods = apply_filters( 'dokan_shipping_methods', $applied_shipping_methods, $order->get_id(), $parent_order );
 
         // bail out if no shipping methods found
         if ( empty( $shipping_methods ) ) {
@@ -484,29 +486,29 @@ class Manager {
 
         $shipping_totals = 0.0;
         foreach ( $shipping_methods as $shipping_method ) {
-            if ( is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
-                $item = new \WC_Order_Item_Shipping();
-
-                dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
-
-                $item->set_props(
-                    array(
-                        'method_title' => $shipping_method->get_name(),
-                        'method_id'    => $shipping_method->get_method_id(),
-                        'total'        => $shipping_method->get_total(),
-                        'taxes'        => $shipping_method->get_taxes(),
-                    )
-                );
-                $shipping_totals += $shipping_method->get_total();
-                $metadata        = $shipping_method->get_meta_data();
-
-                if ( $metadata ) {
-                    foreach ( $metadata as $meta ) {
-                        $item->add_meta_data( $meta->key, $meta->value );
-                    }
-                }
-                $order->add_item( $item );
+            if ( ! is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
+                continue;
             }
+            dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
+
+            $item = new \WC_Order_Item_Shipping();
+            $item->set_props(
+                array(
+                    'method_title' => $shipping_method->get_name(),
+                    'method_id'    => $shipping_method->get_method_id(),
+                    'total'        => $shipping_method->get_total(),
+                    'taxes'        => $shipping_method->get_taxes(),
+                )
+            );
+            $shipping_totals += $shipping_method->get_total();
+            $metadata        = $shipping_method->get_meta_data();
+
+            if ( $metadata ) {
+                foreach ( $metadata as $meta ) {
+                    $item->add_meta_data( $meta->key, $meta->value );
+                }
+            }
+            $order->add_item( $item );
         }
         $order->set_shipping_total( $shipping_totals );
         $order->save();
