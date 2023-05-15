@@ -490,7 +490,7 @@ class Settings {
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
                     'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping will not be included with shipping fees.', 'dokan-lite' ),
+                    'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),

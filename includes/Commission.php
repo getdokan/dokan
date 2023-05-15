@@ -778,25 +778,20 @@ class Commission {
      * @return string
      */
     public function get_shipping_tax_fee_recipient( $order ): string {
-        $tax_recipient = apply_filters(
-            'dokan_shipping_tax_fee_recipient',
-            dokan_get_option(
-                'shipping_tax_fee_recipient',
-                'dokan_selling',
-                $this->get_tax_fee_recipient( $order->get_id() )
-            ),
-            $order->get_id()
-        );
-
-        $saved_tax_recipient = $order->get_meta( 'shipping_tax_fee_recipient' );
-
-        if ( ! empty( $saved_tax_recipient ) ) {
-            return $saved_tax_recipient;
+        // get saved tax recipient
+        $saved_shipping_tax_recipient = $order->get_meta( 'shipping_tax_fee_recipient', true );
+        if ( ! empty( $saved_shipping_tax_recipient ) ) {
+            return $saved_shipping_tax_recipient;
         }
 
-        $order->add_meta_data( 'shipping_tax_fee_recipient', $tax_recipient, true );
+        $default_tax_fee_recipient = $this->get_tax_fee_recipient( $order->get_id() ); // this is needed for backward compatibility
+        $shipping_tax_recipient    = dokan_get_option( 'shipping_tax_fee_recipient', 'dokan_selling', $default_tax_fee_recipient );
+        $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
 
-        return $tax_recipient;
+        $order->add_meta_data( 'shipping_tax_fee_recipient', $shipping_tax_recipient, true );
+        $order->save();
+
+        return $shipping_tax_recipient;
     }
 
     /**
