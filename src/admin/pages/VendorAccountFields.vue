@@ -49,7 +49,24 @@
                         :class="{'dokan-form-input': true, 'has-error': getError('store_name')}"
                         :placeholder="getError( 'store_name' ) ? __( 'Store Name is required', 'dokan-lite' ) : __( 'Store Name', 'dokan-lite' )">
                 </div>
-
+                <div class="column">
+                    <label for="store-category">{{ __( 'Store Category', 'dokan-lite' ) }}</label>
+                    <Multiselect
+                        type='text'
+                        id="store-category"
+                        class="dokan-form-input dokan-store-category"
+                        :options='storeCategoryList'
+                        :multiple="true"
+                        :close-on-select="false"
+                        :clear-on-select="false"
+                        :preserve-search="true"
+                        label="name"
+                        trackBy="id"
+                        selectedLabel='name'
+                        v-model='selectedCategories'
+                        :showLabels="false"
+                    />
+                </div>
                 <div class="column" v-if="! getId()">
                     <label for="user-nicename">{{ __( 'Store URL', 'dokan-lite') }}</label>
                     <input type="text" id="user-nicename" class="dokan-form-input" v-model="vendorInfo.user_nicename" :placeholder="__( 'Store Url', 'dokan-lite')">
@@ -139,6 +156,7 @@ import { debounce } from "debounce";
 import Switches from "admin/components/Switches.vue";
 import UploadImage from "admin/components/UploadImage.vue";
 import PasswordGenerator from "admin/components/PasswordGenerator.vue";
+import { Multiselect } from "vue-multiselect";
 
 export default {
     name: 'VendorAccountFields',
@@ -146,7 +164,8 @@ export default {
     components: {
         Switches,
         UploadImage,
-        PasswordGenerator
+        PasswordGenerator,
+        Multiselect,
     },
 
     props: {
@@ -176,6 +195,8 @@ export default {
             userNameAvailabilityText: '',
             emailAvailabilityText: '',
             getAccountFields: dokan.hooks.applyFilters( 'getVendorAccountFields', [] ),
+            storeCategoryList: [],
+            selectedCategories: [],
         }
     },
 
@@ -202,6 +223,10 @@ export default {
         'vendorInfo.email'( value ) {
             this.checkEmail();
         },
+
+        'selectedCategories'( value ) {
+            this.vendorInfo.categories = this.selectedCategories;
+        }
     },
 
     computed: {
@@ -220,6 +245,7 @@ export default {
         this.$root.$on( 'passwordCancelled', () => {
             this.showPassword = false;
         } );
+        this.setStoreCategories();
     },
 
     methods: {
@@ -374,8 +400,32 @@ export default {
             let height = dokan.store_banner_dimension.height;
 
             return this.__( `Upload banner for your store. Banner size is (${width}x${height}) pixels.`, 'dokan-lite' );
+        },
+
+        setStoreCategories() {
+            dokan.api.get('/store-categories?per_page=50', {})
+                .then( ( response ) => {
+                    let storeCategoryIds = [];
+                    this.vendorInfo.categories.map( ( value ) => { storeCategoryIds.push( value.id ) } );
+                    this.storeCategoryList = response;
+                    this.selectedCategories = this.storeCategoryList.filter( ( category ) => {
+                        return storeCategoryIds.includes( category.id );
+                    } );
+                } );
         }
 
     }
 };
 </script>
+
+<style>
+.dokan-form-input.dokan-store-category{
+    width: 103% !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+#store-category{
+    border: 0;
+}
+</style>
