@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WP_REST_Server;
 use WP_REST_Request;
-use WeDevs\Dokan\ProductCategory\Categories;
+use WeDevs\Dokan\ProductCategory\Helper;
 
 /**
  * Products API Controller V2
@@ -54,6 +54,60 @@ class ProductControllerV2 extends ProductController {
                 'schema' => [ $this, 'get_filter_data_schema' ],
             ]
         );
+    }
+
+    /**
+     * Saves product.
+     *
+     * @since 3.7.16
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return void
+     */
+    public function create_item( $request ) {
+        $response = parent::create_item( $request );
+
+        $this->set_chosen_categories( $response );
+
+        return $response;
+    }
+
+    /**
+     * Updates product.
+     *
+     * @since 3.7.16
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return void
+     */
+    public function update_item( $request ) {
+        $response = parent::update_item( $request );
+
+        $this->set_chosen_categories( $response );
+
+        return $response;
+    }
+
+    /**
+     * Save chosen category to database.
+     *
+     * @param WP_Error|WP_REST_Response $response
+     *
+     * @return void
+     */
+    private function set_chosen_categories( $response ) {
+        if ( ! is_wp_error( $response ) ) {
+            $product = $response->get_data();
+
+            $chosen_cat = ! empty( $request['chosen_cat'] ) && is_array( $request['chosen_cat'] ) ? array_map( 'absint', $request['chosen_cat'] ) : [];
+
+            $product['chosen_cat'] = $chosen_cat;
+            $response->set_data( $product );
+
+            Helper::generate_and_set_chosen_categories( $product['id'], $chosen_cat );
+        }
     }
 
     /**
@@ -135,8 +189,7 @@ class ProductControllerV2 extends ProductController {
     public function get_product_filter_by_data() {
         global $wp_locale;
 
-        $months     = dokan_get_products_listing_months_for_vendor( dokan_get_current_user_id() );
-        $categories = new Categories();
+        $months = dokan_get_products_listing_months_for_vendor( dokan_get_current_user_id() );
 
         foreach ( $months as $key => $arc_row ) {
             $month = zeroise( $arc_row->month, 2 );
@@ -146,7 +199,6 @@ class ProductControllerV2 extends ProductController {
         }
         return [
             'allDates'   => $months,
-            'categories' => $categories->get(),
         ];
     }
 
@@ -267,10 +319,6 @@ class ProductControllerV2 extends ProductController {
                             ),
                         ),
                     ),
-                ),
-                'categories' => array(
-                    'description' => esc_html__( 'Product categories', 'dokan-lite' ),
-                    'type'        => 'object',
                 ),
             ),
         );

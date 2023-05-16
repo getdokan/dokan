@@ -186,7 +186,7 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  *
  * @return array
  */
-function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking' ] ) {
+function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking', 'auction' ] ) {
     // get all function arguments as key => value pairs
     $args = get_defined_vars();
 
@@ -252,10 +252,11 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
  * @param string $post_type
  * @param int    $user_id
  * @param string $stock_type
+ * @param array  $exclude_product_types
  *
  * @return int $counts
  */
-function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
+function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_product_types = [ 'booking', 'auction' ] ) {
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
@@ -264,6 +265,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
 
     if ( false === $counts ) {
         $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+        $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
             $results = $wpdb->get_results(
@@ -274,6 +276,12 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type ) {
                     AND p.post_author = %d
                     AND pm.meta_key   = '_stock_status'
                     AND pm.meta_value = %s
+                    AND p.ID IN (
+                        SELECT tr.object_id FROM {$wpdb->prefix}terms AS t
+                        LEFT JOIN {$wpdb->prefix}term_taxonomy AS tt ON t.term_id = tt.term_taxonomy_id
+                        LEFT JOIN {$wpdb->prefix}term_relationships AS tr ON t.term_id = tr.term_taxonomy_id
+                        WHERE tt.taxonomy = 'product_type' AND t.slug NOT IN ({$exclude_product_types_text})
+                    )
                     GROUP BY p.post_status",
                     $post_type,
                     $user_id,
@@ -4538,4 +4546,54 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
  */
 function dokan_sanitize_phone_number( $phone ) {
     return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+}
+
+/**
+ * Dokan override author ID from admin
+ *
+ * @since  2.6.2
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param  WC_Product $product
+ * @param  integer $seller_id
+ *
+ * @return void
+ */
+function dokan_override_product_author( $product, $seller_id ) {
+    wp_update_post(
+        [
+            'ID'          => $product->get_id(),
+            'post_author' => $seller_id,
+        ]
+    );
+
+    dokan_override_author_for_product_variations( $product, $seller_id );
+
+    do_action( 'dokan_after_override_product_author', $product, $seller_id );
+}
+
+/**
+ * Overrides author for products with variations.
+ *
+ * @since 3.7.4
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param WC_Product $product
+ * @param int        $seller_id
+ *
+ * @return void
+ */
+function dokan_override_author_for_product_variations( $product, $seller_id ) {
+    if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
+        $variations = $product->get_children();
+
+        foreach ( $variations as $variation_id ) {
+            wp_update_post(
+                [
+                    'ID'          => $variation_id,
+                    'post_author' => $seller_id,
+                ]
+            );
+        }
+    }
 }

@@ -178,6 +178,11 @@ var Dokan_Vendor_Registration = {
         const elementToObserve  = document.querySelector( '.woocommerce-form-register .password-input' ),
               AllowedClassNames = [ 'good', 'strong' ];
 
+        // If registration password input field is not exists.
+        if ( ! elementToObserve ) {
+            return;
+        }
+
         // Create a new instance of `MutationObserver` named `observer`.
         const observer = new MutationObserver( ( mutationList, observer ) => {
             for ( const mutation of mutationList ) {
