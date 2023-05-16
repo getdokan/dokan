@@ -9,7 +9,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
  *
  * @since DOKAN_SINCE
  */
-class V_3_7_16_UpdateOrderMeta extends DokanBackgroundProcesses {
+class V_3_7_19_UpdateOrderMeta extends DokanBackgroundProcesses {
 
     /**
      * Save order meta `shipping_tax_fee_recipient`.

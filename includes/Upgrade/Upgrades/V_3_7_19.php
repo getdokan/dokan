@@ -4,9 +4,9 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_6_2_UpdateProductCategories;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_7_16_UpdateOrderMeta;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_7_19_UpdateOrderMeta;
 
-class V_3_7_16 extends DokanUpgrader {
+class V_3_7_19 extends DokanUpgrader {
 
     /**
      * Update Order meta.
@@ -18,7 +18,7 @@ class V_3_7_16 extends DokanUpgrader {
      */
     public static function update_order_meta() {
         $i         = 1;
-        $processor = new V_3_7_16_UpdateOrderMeta();
+        $processor = new V_3_7_19_UpdateOrderMeta();
 
         do {
             $args = array(
