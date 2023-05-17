@@ -696,26 +696,26 @@
                         var selection = product_gallery_frame.state().get('selection');
 
                         selection.map( function( attachment ) {
+                            attachment     = attachment.toJSON();
+                            attachment_ids = [];
 
-                            attachment = attachment.toJSON();
-
-                            if ( attachment.id && 'image' === attachment.type ) {
-                                attachment_ids = [];
-
-                                $('<li class="image" data-attachment_id="' + attachment.id + '">\
-                                        <img src="' + attachment.url + '" />\
-                                        <a href="#" class="action-delete">&times;</a>\
-                                    </li>').insertBefore( p_images.find('li.add-image') );
-
-                                $('#product_images_container ul li.image').css('cursor','default').each(function() {
-                                    var attachment_id = jQuery(this).attr( 'data-attachment_id' );
-                                    attachment_ids.push( attachment_id );
-                                });
+                            // Check if attachment doesn't exist or attachment type is not image
+                            if ( ! attachment.id || 'image' !== attachment.type ) {
+                                return;
                             }
 
-                        } );
+                            $('<li class="image" data-attachment_id="' + attachment.id + '">\
+                                    <img src="' + attachment.url + '" />\
+                                    <a href="#" class="action-delete">&times;</a>\
+                                </li>').insertBefore( p_images.find('li.add-image') );
 
-                        images_gid.val( attachment_ids.join(',') );
+                            $('#product_images_container ul li.image').css('cursor','default').each(function() {
+                                var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+                                attachment_ids.push( attachment_id );
+                            });
+
+                            images_gid.val( attachment_ids.join(',') );
+                        } );
                     });
 
                     product_gallery_frame.open();
@@ -1001,49 +1001,6 @@
 
             return false;
         });
-
-        function dokan_show_earning_suggestion( callback ) {
-            let commission = $('span.vendor-earning').attr( 'data-commission' );
-            let product_id = $( 'span.vendor-earning' ).attr( 'data-product-id' );
-            let product_price = $( 'input.dokan-product-regular-price' ).val();
-            let sale_price = $( 'input.dokan-product-sales-price' ).val();
-            let earning_suggestion = $('.simple-product span.vendor-price');
-
-            earning_suggestion.html( dokan.i18n_calculating );
-
-            $.get( dokan.ajaxurl, {
-                action: 'get_vendor_earning',
-                product_id: product_id,
-                product_price: product_price,
-                product_price: sale_price ? sale_price : product_price,
-                _wpnonce: dokan.nonce
-            } )
-            .done( ( response ) => {
-                earning_suggestion.html( response );
-
-                if ( typeof callback === 'function' ) {
-                    callback();
-                }
-            } );
-        }
-
-        $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
-            dokan_show_earning_suggestion( function() {
-
-                if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
-                    if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
-                        $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
-                        $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
-                        $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
-                    } else {
-                        $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
-                        $( 'input[type=submit]' ).removeAttr( 'disabled');
-                        $( 'button[type=submit]' ).removeAttr( 'disabled');
-                    }
-                }
-            } );
-
-        }, 750 ) );
 
         /**
          * Handle the editing of the post_name. Create the required HTML elements and

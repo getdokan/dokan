@@ -36,6 +36,7 @@ if ( $user_orders ) {
                 <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
                     <th><?php esc_html_e( 'Shipment', 'dokan-lite' ); ?></th>
                 <?php endif; ?>
+                <?php do_action( 'dokan_order_listing_header_before_action_column' ); ?>
                 <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
                     <th width="17%"><?php esc_html_e( 'Action', 'dokan-lite' ); ?></th>
                 <?php } ?>
@@ -130,6 +131,7 @@ if ( $user_orders ) {
                             <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
                         </td>
                     <?php endif; ?>
+                    <?php do_action( 'dokan_order_listing_row_before_action_field', $order ); ?>
                     <?php if ( current_user_can( 'dokan_manage_order' ) ) { ?>
                         <td class="dokan-order-action" width="17%" data-title="<?php esc_attr_e( 'Action', 'dokan-lite' ); ?>">
                             <?php
