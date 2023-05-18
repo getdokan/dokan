@@ -73,6 +73,7 @@ module.exports = function(grunt) {
             '!<%= dirs.devJsSrc %>/helper.js',
             '!<%= dirs.devJsSrc %>/reverse-withdrawal.js',
             '!<%= dirs.devJsSrc %>/product-category-ui.js',
+            '!<%= dirs.devJsSrc %>/dokan-daterangepicker.js.js',
             '!<%= dirs.devJsSrc %>/dokan-admin-product.js',
             '!<%= dirs.devJsSrc %>/dokan-frontend.js',
           ],
