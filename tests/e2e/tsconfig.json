@@ -10,7 +10,7 @@
         "removeComments": true, /* Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space*/
         // "target": "ES6", /* Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)*/
         "target": "ES2017", /* Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)*/
-        "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+        "module": "es2022", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
         "allowJs": true, /* Allow javascript files to be compiled. */
         "checkJs": true, /* Report errors in .js files. */
         "declaration": true, /* Generates corresponding '.d.ts' file. */

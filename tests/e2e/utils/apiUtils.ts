@@ -2,8 +2,10 @@ import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 import { payloads } from './payloads';
-import { promises } from 'dns';
-interface auth { //TODO: gather all interfaces in one place
+
+//TODO: gather all interfaces in one place
+
+interface auth { 
 	[key: string]: string;
  }
 

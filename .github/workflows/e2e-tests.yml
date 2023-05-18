@@ -10,7 +10,7 @@ on:
       - e2e-pw
   workflow_dispatch:
 
-    # Cancels all previous workflow runs for pull requests that have not completed.
+  # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
   # The concurrency group contains the workflow name and the branch name for pull requests
   # or the commit hash for any other events.
@@ -89,17 +89,18 @@ jobs:
       - name: DB PORT
         run: |
           cd tests/e2e 
-          # echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
+          echo "The value of TEST_DB_PORT is ${{ env.TEST_DB_PORT }}"
 
       - name: Activate theme:Storefront
         run: |
           cd tests/e2e 
           npm run activate:theme
 
+      # npm run wp-env run tests-cli 'wp rewrite structure /%postname%/' -- --hard
       - name: Set Permalink structure
         run: |
           cd tests/e2e 
-          npm run wp-env run tests-cli 'wp rewrite structure /%postname%/' -- --hard
+          npm run wp-env run tests-cli 'wp rewrite structure /%postname%/'
           # curl http://localhost:9999/wp-json/wp/v2 
 
       # - name: Setup for e2e tests
