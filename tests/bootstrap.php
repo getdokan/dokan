@@ -1,6 +1,8 @@
 <?php
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
+// Composer autoloader must be loaded before WP_PHPUNIT__DIR will be available
+require_once dirname( __FILE__, 2 ) . '/vendor/autoload.php';
+$_tests_dir = getenv( 'WP_TESTS_DIR' ) ? getenv( 'WP_TESTS_DIR' ) : getenv( 'WP_PHPUNIT__DIR' );
 
 if ( !$_tests_dir ) {
     $_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
@@ -37,9 +39,9 @@ function install_wc() {
 
     WC_Install::install();
 
-    // Initialize the WC API extensions.
-    \Automattic\WooCommerce\Admin\Install::create_tables();
-    \Automattic\WooCommerce\Admin\Install::create_events();
+//    // Initialize the WC API extensions.
+//    \Automattic\WooCommerce\Admin\Install::create_tables();
+//    \Automattic\WooCommerce\Admin\Install::create_events();
 
     // Reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374.
     if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {

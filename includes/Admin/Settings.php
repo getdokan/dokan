@@ -490,7 +490,7 @@ class Settings {
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
                     'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Who will be receiving the shipping fees', 'dokan-lite' ),
+                    'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -500,8 +500,19 @@ class Settings {
                 ],
                 'tax_fee_recipient'      => [
                     'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Tax Fee Recipient', 'dokan-lite' ),
-                    'desc'    => __( 'Who will be receiving the tax fees', 'dokan-lite' ),
+                    'label'   => __( 'Product Tax Fee Recipient', 'dokan-lite' ),
+                    'desc'    => __( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'options' => [
+                        'seller' => __( 'Vendor', 'dokan-lite' ),
+                        'admin'  => __( 'Admin', 'dokan-lite' ),
+                    ],
+                    'default' => 'seller',
+                ],
+                'shipping_tax_fee_recipient'      => [
+                    'name'    => 'shipping_tax_fee_recipient',
+                    'label'   => __( 'Shipping Tax Fee Recipient', 'dokan-lite' ),
+                    'desc'    => __( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
                         'seller' => __( 'Vendor', 'dokan-lite' ),

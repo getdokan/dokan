@@ -14,6 +14,39 @@ use WP_User;
  * @since 2.6.10
  */
 class Vendor {
+    /**
+     * Set class public properties
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function __set( $key, $value ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return;
+        }
+        $this->{$key} = $value;
+    }
+
+    /**
+     * Get public properties
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return mixed|null
+     */
+    public function __get( $key ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return null;
+        }
+        // check isset
+        if ( isset( $this->{$key} ) ) {
+            return $this->{$key};
+        }
+        return null;
+    }
 
     /**
      * The vendor ID
