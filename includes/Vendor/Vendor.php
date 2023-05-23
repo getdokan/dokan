@@ -436,11 +436,12 @@ class Vendor {
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
-        if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
-            return get_avatar_url( $this->data->user_email, 96 );
+        if ( $avatar_id ) {
+            return wp_get_attachment_url( $avatar_id );
         }
 
-        return wp_get_attachment_url( $avatar_id );
+        return dokan_get_option( 'default_store_profile', 'dokan_appearance', '' );
+        
     }
 
     /**

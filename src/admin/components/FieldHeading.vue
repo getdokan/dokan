@@ -12,7 +12,7 @@
                 ></i>
             </span>
         </h3>
-        <p class="field_desc" v-html="fieldData.desc"></p>
+        <p class="field_desc" v-if="fieldData.desc" v-html="fieldData.desc"></p>
         <p class="field_default" v-if="fieldData.type === 'file' && fieldData.restore === true">
             <a href="" v-on:click.prevent="restoreDefaultImage()">{{ __( 'Restore Default', 'dokan-lite' ) }}</a>
         </p>
@@ -27,7 +27,19 @@
 
         methods: {
             restoreDefaultImage() {
-                this.$root.$emit( 'dokanRestoreDefault', this.fieldData );
+                Swal.fire({
+                        icon              : 'warning',
+                        html              : this.__( 'Would you like to revert back to the default state?', 'dokan-lite' ),
+                        title             : this.__( 'Are you sure?', 'dokan-lite' ),
+                        showCancelButton  : true,
+                        cancelButtonText  : this.__( 'No, Cancel', 'dokan-lite' ),
+                        confirmButtonText : this.__( 'Yes, Reset', 'dokan-lite' ),
+                    }).then( ( response ) => {
+                        if ( response.isConfirmed ) {
+                            this.$root.$emit( 'dokanRestoreDefault', this.fieldData );
+                            Swal.fire( this.__( 'Success', 'dokan-lite' ), '', 'success' );
+                        }
+                    });
             }
         }
     };

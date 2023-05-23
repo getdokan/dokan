@@ -1,25 +1,25 @@
 <?php
-$store_user    = dokan()->vendor->get( get_query_var( 'author' ) );
-$store_info    = $store_user->get_shop_info();
-$social_info   = $store_user->get_social_profiles();
-$store_tabs    = dokan_get_store_tabs( $store_user->get_id() );
-$social_fields = dokan_get_social_profile_fields();
+$store_user                 = dokan()->vendor->get( get_query_var( 'author' ) );
+$store_info                 = $store_user->get_shop_info();
+$social_info                = $store_user->get_social_profiles();
+$store_tabs                 = dokan_get_store_tabs( $store_user->get_id() );
+$social_fields              = dokan_get_social_profile_fields();
 
-$dokan_store_times = ! empty( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : [];
-$current_time      = dokan_current_datetime();
-$today             = strtolower( $current_time->format( 'l' ) );
+$dokan_store_times          = ! empty( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : [];
+$current_time               = dokan_current_datetime();
+$today                      = strtolower( $current_time->format( 'l' ) );
 
-$dokan_appearance = get_option( 'dokan_appearance' );
-$profile_layout   = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
-$store_address    = dokan_get_seller_short_address( $store_user->get_id(), false );
+$dokan_appearance           = get_option( 'dokan_appearance' );
+$profile_layout             = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
+$store_address              = dokan_get_seller_short_address( $store_user->get_id(), false );
+$store_banner_url           = dokan_get_option( 'default_store_banner', 'dokan_appearance', '' );
+$dokan_store_time_enabled   = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
+$store_open_notice          = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
+$store_closed_notice        = isset( $store_info['dokan_store_close_notice'] ) && ! empty( $store_info['dokan_store_close_notice'] ) ? $store_info['dokan_store_close_notice'] : __( 'Store Closed', 'dokan-lite' );
+$show_store_open_close      = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 
-$dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
-$store_open_notice        = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
-$store_closed_notice      = isset( $store_info['dokan_store_close_notice'] ) && ! empty( $store_info['dokan_store_close_notice'] ) ? $store_info['dokan_store_close_notice'] : __( 'Store Closed', 'dokan-lite' );
-$show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
-
-$general_settings = get_option( 'dokan_general', [] );
-$banner_width     = dokan_get_vendor_store_banner_width();
+$general_settings           = get_option( 'dokan_general', [] );
+$banner_width               = dokan_get_vendor_store_banner_width();
 
 if ( ( 'default' === $profile_layout ) || ( 'layout2' === $profile_layout ) ) {
     $profile_img_class = 'profile-img-circle';
@@ -48,7 +48,7 @@ if ( 'layout3' === $profile_layout ) {
                     title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     class="profile-info-img">
             <?php } else { ?>
-                <div class="profile-info-img dummy-image">&nbsp;</div>
+                <div class="profile-info-img dummy-image" style="background-image:url(<?php esc_attr_e( $store_banner_url ); ?>)">&nbsp;</div>
             <?php } ?>
 
             <div class="profile-info-summery-wrapper dokan-clearfix">

@@ -871,6 +871,10 @@
                     line-height: 17px;
                     font-family: 'Roboto', sans-serif;
                 }
+
+                .field_default {
+                    margin: 0;
+                }
             }
         }
 

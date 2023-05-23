@@ -730,6 +730,13 @@ class Settings {
                     'default' => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
                     'restore' => true
                 ],
+                'default_store_profile'       => [
+                    'name'    => 'default_store_profile',
+                    'label'   => __( 'Default Store Profile Picture', 'dokan-lite' ),
+                    'type'    => 'file',
+                    'default' => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                    'restore' => true
+                ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
                     'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
