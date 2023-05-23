@@ -1276,8 +1276,8 @@ add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );
  * @return boolean
  */
 function dokan_vendor_dokan_product_purchase_restriction( bool $is_purchasable, $product ): bool {
-    if ( dokan_is_product_author( $product->get_id() ) ) {
-        return false;
+    if ( false === $is_purchasable || dokan_is_product_author( $product->get_id() ) ) {
+        $is_purchasable = false;
     }
     return $is_purchasable;
 }
