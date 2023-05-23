@@ -1,0 +1,16 @@
+[
+    "Basic-Auth-master\/basic-auth.php",
+    "admin-bar-user-switching\/admin-bar-user-switching.php",
+    "dokan-pro\/dokan-pro.php",
+    "dokan\/dokan.php",
+    "elementor\/elementor.php",
+    "email-log\/email-log.php",
+    "flush-opcache\/flush-opcache.php",
+    "user-switching\/user-switching.php",
+    "woocommerce-bookings\/woocommerce-bookings.php",
+    "woocommerce-product-addons\/woocommerce-product-addons.php",
+    "woocommerce-simple-auctions\/woocommerce-simple-auctions.php",
+    "woocommerce-subscriptions\/woocommerce-subscriptions.php",
+    "woocommerce\/woocommerce.php",
+    "wp-reset\/wp-reset.php"
+]

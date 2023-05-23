@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "dokan e2e test using playwright",
   "main": "index.js",
+
   "scripts": {
     "nip": "npm install --production",
     "nid": "npm install --include=dev",
@@ -64,6 +65,7 @@
     "dotenv": "^16.0.3",
     "like-mysql": "^2.0.2",
     "mysqlconnector": "^2.0.1",
-    "npm-check-updates": "^16.10.12"
+    "npm-check-updates": "^16.10.12",
+    "php-serialize": "^4.1.1"
   }
 }

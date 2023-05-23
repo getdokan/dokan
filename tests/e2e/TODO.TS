@@ -161,3 +161,13 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
         'wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=new',
         { waitUntil: 'networkidle' }
     );
+
+//TODO: ensure empty cart like this , try to use both clearCookies to clear cart & storagejson for authenticate user
+// check clearcookies clear storagejson or not
+	test.beforeEach( async ( { context, page } ) => {
+		// Shopping cart is very sensitive to cookies, so be explicit
+		await context.clearCookies();
+
+		await page.goto( `/shop/?add-to-cart=${ productId }` );
+		await page.waitForLoadState( 'networkidle' );
+	} );
