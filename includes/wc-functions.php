@@ -1265,3 +1265,22 @@ function dokan_modify_vendor_order_counts( $counts ) {
 }
 
 add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );
+
+
+/**
+ * @since DOKAN_SINCE
+ *
+ * @param boolean $is_purchasable
+ * @param object $product
+ *
+ * @return boolean
+ */
+function dokan_vendor_dokan_product_purchase_restriction( bool $is_purchasable, $product ): bool {
+    if ( dokan_is_product_author( $product->get_id() ) ) {
+        return false;
+    }
+    return $is_purchasable;
+}
+
+add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_dokan_product_purchase_restriction', 10, 2 );
+
