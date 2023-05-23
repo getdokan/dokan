@@ -33,6 +33,7 @@ class Hooks {
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 2 );
         add_filter( 'post_types_to_delete_with_user', [ $this, 'add_wc_post_types_to_delete_user' ], 10, 2 );
         add_filter( 'dokan_save_settings_value', [ $this, 'update_pages' ], 10, 2 );
+        add_filter( 'woocommerce_is_purchasable', [ &$this, 'vendor_dokan_product_purchase_restriction' ], 10, 2 );
 
         // Ajax hooks
         add_action( 'wp_ajax_dokan_product_search_author', [ $this, 'search_vendors' ] );
@@ -524,5 +525,20 @@ class Hooks {
         $value            = is_array( $value ) ? $value : array();
 
         return array_replace_recursive( $current_settings, $value );
+    }
+
+    /**
+     * @since DOKAN_SINCE
+     *
+     * @param boolean $is_purchasable
+     * @param object $product
+     *
+     * @return boolean
+     */
+    public function vendor_dokan_product_purchase_restriction( $is_purchasable, $product ) {
+        if ( dokan_is_product_author( $product->get_id() ) ) {
+            return false;
+        }
+        return $is_purchasable;
     }
 }
