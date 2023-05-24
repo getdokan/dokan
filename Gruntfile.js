@@ -13,7 +13,6 @@ module.exports = function(grunt) {
       devJsSrc: 'assets/src/js'
     },
 
-    // Compile all .less files.
     less: {
       // one to one
       core: {
@@ -32,6 +31,7 @@ module.exports = function(grunt) {
       admin: {
         files: {
           '<%= dirs.css %>/admin.css': ['<%= dirs.devLessSrc %>/admin.less'],
+          '<%= dirs.css %>/plugin.css': ['<%= dirs.devLessSrc %>/plugin.less'],
           '<%= dirs.css %>/global-admin.css': ['<%= dirs.devLessSrc %>/global-admin.less'],
           '<%= dirs.css %>/setup.css': ['<%= dirs.devLessSrc %>/setup.less'],
           '<%= dirs.css %>/setup-no-wc.css': [
