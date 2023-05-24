@@ -45,9 +45,28 @@ class Manager {
         $this->get_rest_api_class_map();
 
         foreach ( $this->class_map as $file_name => $controller ) {
+            // return if file not exists
+            if ( ! file_exists( $file_name ) ) {
+                continue;
+            }
+
+            // include file
             require_once $file_name;
-            $this->$controller = new $controller();
-            $this->$controller->register_routes();
+
+            // check if class exists
+            if ( ! class_exists( $controller ) ) {
+                continue;
+            }
+
+            // get controller object
+            $object = new $controller();
+            // check if object is instance of WP_REST_Controller
+            if ( ! is_a( $object, 'WP_REST_Controller' ) ) {
+                continue;
+            }
+
+            // register routes
+            $object->register_routes();
         }
     }
 

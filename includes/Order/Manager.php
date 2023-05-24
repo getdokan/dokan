@@ -410,9 +410,14 @@ class Manager {
             $tax_total += $item->get_total_tax();
         }
 
-        foreach ( $parent_order->get_taxes() as $tax ) {
-            $seller_shipping = reset( $shipping );
+        $seller_shipping_total_taxes = array_map(
+            function ( $item ) {
+                return $item->get_total_tax();
+            },
+            $shipping
+        );
 
+        foreach ( $parent_order->get_taxes() as $tax ) {
             $item = new \WC_Order_Item_Tax();
             $item->set_props(
                 array(
@@ -421,7 +426,7 @@ class Manager {
                     'compound'           => $tax->get_compound(),
                     'rate_code'          => \WC_Tax::get_rate_code( $tax->get_rate_id() ),
                     'tax_total'          => $tax_total,
-                    'shipping_tax_total' => is_bool( $seller_shipping ) ? '' : $seller_shipping->get_total_tax(),
+                    'shipping_tax_total' => empty( $seller_shipping_total_taxes ) ? '' : array_sum( $seller_shipping_total_taxes ),
                 )
             );
 
@@ -446,33 +451,47 @@ class Manager {
         $shipping_methods = $parent_order->get_shipping_methods();
         $order_seller_id  = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
-        $applied_shipping_method = '';
+        $applied_shipping_methods = [];
 
         if ( $shipping_methods ) {
             foreach ( $shipping_methods as $method_item_id => $shipping_object ) {
                 $shipping_seller_id = (int) wc_get_order_item_meta( $method_item_id, 'seller_id', true );
 
                 if ( $order_seller_id === $shipping_seller_id ) {
-                    $applied_shipping_method = $shipping_object;
-                    break;
+                    $applied_shipping_methods[] = $shipping_object;
                 }
             }
+            $applied_shipping_methods = array_filter( $applied_shipping_methods );
         }
 
-        $shipping_method = apply_filters( 'dokan_shipping_method', $applied_shipping_method, $order->get_id(), $parent_order );
+        $applied_shipping_methods[0] = apply_filters_deprecated(
+            'dokan_shipping_method',
+            [
+                $applied_shipping_methods[0] ?? '',
+                $order->get_id(),
+                $parent_order,
+            ],
+            '3.7.19',
+            'dokan_shipping_methods'
+        );
+
+        $shipping_methods = apply_filters( 'dokan_shipping_methods', $applied_shipping_methods, $order->get_id(), $parent_order );
 
         // bail out if no shipping methods found
-        if ( ! $shipping_method ) {
+        if ( empty( $shipping_methods ) ) {
             dokan_log( sprintf( '#%d - No shipping method found. Aborting.', $order->get_id() ) );
 
             return;
         }
 
-        if ( is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
-            $item = new \WC_Order_Item_Shipping();
-
+        $shipping_totals = 0.0;
+        foreach ( $shipping_methods as $shipping_method ) {
+            if ( ! is_a( $shipping_method, 'WC_Order_Item_Shipping' ) ) {
+                continue;
+            }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
+            $item = new \WC_Order_Item_Shipping();
             $item->set_props(
                 array(
                     'method_title' => $shipping_method->get_name(),
@@ -481,19 +500,18 @@ class Manager {
                     'taxes'        => $shipping_method->get_taxes(),
                 )
             );
-
-            $metadata = $shipping_method->get_meta_data();
+            $shipping_totals += $shipping_method->get_total();
+            $metadata        = $shipping_method->get_meta_data();
 
             if ( $metadata ) {
                 foreach ( $metadata as $meta ) {
                     $item->add_meta_data( $meta->key, $meta->value );
                 }
             }
-
             $order->add_item( $item );
-            $order->set_shipping_total( $shipping_method->get_total() );
-            $order->save();
         }
+        $order->set_shipping_total( $shipping_totals );
+        $order->save();
     }
 
     /**

@@ -212,11 +212,12 @@ class Commission {
      * Get earning by order
      *
      * @since  2.9.21
+     * @since  3.7.19 Shipping tax recipient support added.
      *
-     * @param  int|WC_Order $order
+     * @param  int|\WC_Order $order Order.
      * @param  string $context
      *
-     * @return float|null on failure
+     * @return float|void|\WP_Error|null on failure
      */
     public function get_earning_by_order( $order, $context = 'seller' ) {
         if ( ! $order instanceof \WC_Order ) {
@@ -277,7 +278,11 @@ class Commission {
         }
 
         if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
+            $earning += ( ( $order->get_total_tax() - $order->get_total_tax_refunded() ) - ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) ) );
+        }
+
+        if ( $context === $this->get_shipping_tax_fee_recipient( $order ) ) {
+            $earning += ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) );
         }
 
         $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
@@ -733,7 +738,7 @@ class Commission {
         if ( $saved_shipping_recipient ) {
             $shipping_recipient = $saved_shipping_recipient;
         } else {
-            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' ), $order_id );
+            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
             update_post_meta( $order_id, 'shipping_fee_recipient', $shipping_recipient );
         }
 
@@ -756,11 +761,61 @@ class Commission {
         if ( $saved_tax_recipient ) {
             $tax_recipient = $saved_tax_recipient;
         } else {
-            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' ), $order_id );
+            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
             update_post_meta( $order_id, 'tax_fee_recipient', $tax_recipient );
         }
 
         return $tax_recipient;
+    }
+
+    /**
+     * Get shipping tax fee recipient.
+     *
+     * @since 3.7.19
+     *
+     * @param \WC_Order $order Order.
+     *
+     * @return string
+     */
+    public function get_shipping_tax_fee_recipient( $order ): string {
+        // get saved tax recipient
+        $saved_shipping_tax_recipient = $order->get_meta( 'shipping_tax_fee_recipient', true );
+        if ( ! empty( $saved_shipping_tax_recipient ) ) {
+            return $saved_shipping_tax_recipient;
+        }
+
+        $default_tax_fee_recipient = $this->get_tax_fee_recipient( $order->get_id() ); // this is needed for backward compatibility
+        $shipping_tax_recipient    = dokan_get_option( 'shipping_tax_fee_recipient', 'dokan_selling', $default_tax_fee_recipient );
+        $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
+
+        $order->add_meta_data( 'shipping_tax_fee_recipient', $shipping_tax_recipient, true );
+        $order->save();
+
+        return $shipping_tax_recipient;
+    }
+
+    /**
+     * Get total shipping tax refunded for the order.
+     *
+     * @since 3.7.19
+     *
+     * @param \WC_Order $order Order.
+     *
+     * @return float
+     */
+    public function get_total_shipping_tax_refunded( \WC_Order $order ): float {
+        $tax_refunded = 0.0;
+
+        foreach ( $order->get_items( 'shipping' ) as $item_id => $item ) {
+            /**
+             * @var \WC_Order_Item_Shipping $item Shipping item.
+             */
+            foreach ( $item->get_taxes()['total'] as $tax_id => $tax_amount ) {
+                $tax_refunded += $order->get_tax_refunded_for_item( $item->get_id(), $tax_id, 'shipping' );
+            }
+        }
+
+        return $tax_refunded;
     }
 
     /**

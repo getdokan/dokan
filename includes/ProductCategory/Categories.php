@@ -1,5 +1,4 @@
 <?php
-
 namespace WeDevs\Dokan\ProductCategory;
 
 use WeDevs\Dokan\Cache;
@@ -21,7 +20,7 @@ class Categories {
      * @return void|array
      */
     public function get_all_categories( $ret = false ) {
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
+        $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
 
         $this->categories = Cache::get_transient( $transient_key );
 
@@ -115,7 +114,6 @@ class Categories {
      * @return int
      */
     public function get_topmost_parent( $category_id ) {
-        $category_id = $category_id;
         // check if category id is set
         if ( ! isset( $this->categories[ $category_id ] ) ) {
             return 0;
@@ -145,7 +143,7 @@ class Categories {
         $where  = " AND tax.taxonomy = 'product_cat'";
 
         // If wpml plugin exists then get categories as language set.
-        if ( function_exists( 'wpml_get_current_language' ) ) {
+        if ( function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ) {
             $current_language = wpml_get_current_language();
 
             $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
