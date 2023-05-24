@@ -13,6 +13,7 @@ const pluginFiles = [
   'languages/',
   'templates/',
   'lib/',
+  'deprecated/',
   'CHANGELOG.md',
   'readme.txt',
   'dokan.php',
@@ -47,7 +48,7 @@ exec(
     // Removing the old build folder.
     fs.removeSync( planDir );
 
-    console.log( `🗜  Started making the zip...` );
+    console.log( `🗜 Started making the zip...` );
 
     const fileList = [ ...pluginFiles ];
 
@@ -110,7 +111,7 @@ exec(
         // Output zip file name.
         const zipFile = `dokan-lite-v${ version }.zip`;
 
-        console.log(`📦 Making zip file ${ zipFile }...`);
+        console.log(`📦 Making the zip file ${ zipFile }`);
 
         // Making the zip file here.
         asyncExec(
@@ -120,7 +121,7 @@ exec(
           },
           () => {
             fs.removeSync( dest );
-            console.log( chalk.green( `✅ ${zipFile} is ready. 🎉` ) );
+            console.log( chalk.green( `✅  ${zipFile} is ready. 🎉` ) );
           }
         ).catch( ( error ) => {
           console.log( chalk.red( `Could not make ${ zipFile }.`) );

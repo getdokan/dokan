@@ -15,7 +15,8 @@
     "script:build": "wp-scripts build --progress",
     "script:start": "wp-scripts start --progress",
     "readme": "wp-readme-to-md",
-    "clean": "node bin/clean"
+    "clean": "node bin/clean",
+    "zip": "node bin/zip"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
