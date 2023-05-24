@@ -12,7 +12,7 @@ $today                      = strtolower( $current_time->format( 'l' ) );
 $dokan_appearance           = get_option( 'dokan_appearance' );
 $profile_layout             = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
 $store_address              = dokan_get_seller_short_address( $store_user->get_id(), false );
-$store_banner_url           = dokan_get_option( 'default_store_banner', 'dokan_appearance', '' );
+$store_banner_url           = $store_user->get_banner();
 $dokan_store_time_enabled   = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
 $store_open_notice          = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
 $store_closed_notice        = isset( $store_info['dokan_store_close_notice'] ) && ! empty( $store_info['dokan_store_close_notice'] ) ? $store_info['dokan_store_close_notice'] : __( 'Store Closed', 'dokan-lite' );
@@ -48,7 +48,7 @@ if ( 'layout3' === $profile_layout ) {
                     title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     class="profile-info-img">
             <?php } else { ?>
-                <div class="profile-info-img dummy-image" style="background-image:url(<?php esc_attr_e( $store_banner_url ); ?>)">&nbsp;</div>
+                <div class="profile-info-img dummy-image" style="background-image:url(<?php esc_url_raw( $store_banner_url ); ?>)">&nbsp;</div>
             <?php } ?>
 
             <div class="profile-info-summery-wrapper dokan-clearfix">
