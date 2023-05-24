@@ -18,7 +18,7 @@ var entryPoint = {
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
-  'dokan.js': [
+  'dokan': [
     './assets/src/js/product-editor.js',
     './assets/src/js/script.js',
     './assets/src/js/store-lists.js',
@@ -90,7 +90,6 @@ module.exports = {
   plugins,
 
   module: {
-    ...defaultConfig.module,
     rules: [
       {
         test: /\.js$/,
@@ -107,6 +106,24 @@ module.exports = {
           'css-loader',
           'less-loader',
         ],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '../images/[name].[ext]',
+        },
+      },
+      {
+        test: /\.svg/,
+        use: {
+          loader: "svg-url-loader",
+          options: {
+            // make all svg images to work in IE
+            iesafe: true,
+            name: '../font/[name].[ext]',
+          },
+        },
       },
     ]
   },
