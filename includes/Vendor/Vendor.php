@@ -17,7 +17,7 @@ class Vendor {
     /**
      * Set class public properties
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class Vendor {
     /**
      * Get public properties
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @return mixed|null
      */

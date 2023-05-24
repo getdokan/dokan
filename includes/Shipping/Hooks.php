@@ -8,7 +8,7 @@ use WC_Order_Item_Shipping;
 /**
  * Shipping hooks class
  *
- * @since   DOKAN_SINCE
+ * @since   3.7.19
  *
  * @package WeDevs\Dokan\Shipping
  */
@@ -17,7 +17,7 @@ class Hooks {
     /**
      * Hooks constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      */
     public function __construct() {
         if ( ! dokan()->is_pro_exists() ) {
@@ -31,7 +31,7 @@ class Hooks {
     /**
      * Split shipping seller wise
      *
-     * @since DOKAN_SINCE Moved from pro.
+     * @since 3.7.19 Moved from pro.
      *
      * @param array $packages
      *
@@ -74,7 +74,7 @@ class Hooks {
     /**
      * Added shipping meta after order
      *
-     * @since DOKAN_SINCE Moved from pro.
+     * @since 3.7.19 Moved from pro.
      *
      * @param WC_Order_Item_Shipping $item        Shipping Line Item.
      * @param string                 $package_key Package key.
@@ -90,7 +90,7 @@ class Hooks {
     /**
      * Set package wise seller name
      *
-     * @since DOKAN_SINCE Moved from pro.
+     * @since 3.7.19 Moved from pro.
      *
      * @param string  $title   Existing shipping pack name.
      * @param integer $i       Pack ID.

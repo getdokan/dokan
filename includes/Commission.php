@@ -212,7 +212,7 @@ class Commission {
      * Get earning by order
      *
      * @since  2.9.21
-     * @since  DOKAN_SINCE Shipping tax recipient support added.
+     * @since  3.7.19 Shipping tax recipient support added.
      *
      * @param  int|\WC_Order $order Order.
      * @param  string $context
@@ -771,7 +771,7 @@ class Commission {
     /**
      * Get shipping tax fee recipient.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @param \WC_Order $order Order.
      *
@@ -797,7 +797,7 @@ class Commission {
     /**
      * Get total shipping tax refunded for the order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @param \WC_Order $order Order.
      *

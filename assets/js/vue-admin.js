@@ -771,6 +771,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'UploadImage',
   inheritAttrs: false,
@@ -1938,11 +1940,19 @@ var render = function() {
     { staticClass: "dokan-upload-image", on: { click: _vm.uploadImage } },
     [
       !_vm.showButton
-        ? _c("img", { attrs: { src: _vm.image.src ? _vm.image.src : _vm.src } })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showButton
         ? _c(
+            "div",
+            { staticClass: "dokan-upload-image-container" },
+            [
+              _c("img", {
+                attrs: { src: _vm.image.src ? _vm.image.src : _vm.src }
+              }),
+              _vm._v(" "),
+              _vm._t("imagePlaceholder")
+            ],
+            2
+          )
+        : _c(
             "button",
             {
               on: {
@@ -1954,7 +1964,6 @@ var render = function() {
             },
             [_vm._v("\n        " + _vm._s(_vm.buttonLabel) + "\n    ")]
           )
-        : _vm._e()
     ]
   )
 }

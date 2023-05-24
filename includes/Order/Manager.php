@@ -471,7 +471,7 @@ class Manager {
                 $order->get_id(),
                 $parent_order,
             ],
-            'DOKAN_SINCE',
+            '3.7.19',
             'dokan_shipping_methods'
         );
 
