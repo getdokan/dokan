@@ -7,7 +7,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 /**
  * Set additional order meta `shipping_tax_fee_recipient`.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.19
  */
 class V_3_7_19_UpdateOrderMeta extends DokanBackgroundProcesses {
 
@@ -16,7 +16,7 @@ class V_3_7_19_UpdateOrderMeta extends DokanBackgroundProcesses {
      *
      * @param array $orders
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @return bool
      */

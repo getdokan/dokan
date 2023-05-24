@@ -12,7 +12,7 @@ class V_3_7_19 extends DokanUpgrader {
      * Update Order meta.
      * Add new meta `shipping_tax_fee_recipient`
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.19
      *
      * @return void
      */
