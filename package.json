@@ -9,11 +9,13 @@
     "dev": "WEBPACK_ENV=development webpack --progress --colors --watch --hide-modules",
     "dev:build": "WEBPACK_ENV=development webpack --progress --colors --hide-modules",
     "build": "WEBPACK_ENV=production webpack",
-    "makepot": "grunt makepot",
+    "makepot": "node bin/makepot",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "version": "node bin/version-replace",
     "script:build": "wp-scripts build --progress",
-    "script:start": "wp-scripts start --progress"
+    "script:start": "wp-scripts start --progress",
+    "readme": "wp-readme-to-md",
+    "clean": "node bin/clean"
   },
   "dependencies": {
     "@wordpress/hooks": "^2.12.3",
@@ -29,18 +31,21 @@
     "vue2-daterange-picker": "^0.6.8"
   },
   "devDependencies": {
+    "@wordpress/scripts": "^26.4.0",
     "fs-extra": "^10.1.0",
     "jed": "^1.1.1",
     "less": "^4.1.3",
     "less-loader": "^6.0.0",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.6",
     "replace-in-file": "^6.3.5",
+    "rimraf": "^5.0.1",
     "vue-color": "^2.8.1",
     "vue-loader": "15.10.1",
     "vue-router": "^3.6.5",
     "vue-slick": "^1.2.0",
     "vue-template-compiler": "^2.7.14",
-    "wp-vue-i18n": "^1.1.4",
-    "@wordpress/scripts": "^26.4.0"
+    "wp-readme-to-markdown": "^1.0.1",
+    "wp-vue-i18n": "^1.1.4"
   }
 }

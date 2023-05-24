@@ -18,9 +18,20 @@ var entryPoint = {
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
-
-
-
+  'dokan.js': [
+    './assets/src/js/product-editor.js',
+    './assets/src/js/script.js',
+    './assets/src/js/store-lists.js',
+    './assets/src/js/withdraw.js'
+  ],
+  'login-form-popup': './assets/src/js/login-form-popup.js',
+  'dokan-maps-compat': './assets/src/js/dokan-maps-compat.js',
+  'dokan-admin': './assets/src/js/admin.js',
+  'dokan-setup-no-wc': [
+    './assets/src/js/setup-no-wc.js'
+  ],
+  'helper': './assets/src/js/helper.js',
+  'dokan-frontend': './assets/src/js/dokan-frontend.js',
 
   'style': '/assets/src/less/style.less',
   'rtl': '/assets/src/less/rtl.less',
