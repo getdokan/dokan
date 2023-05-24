@@ -78,7 +78,7 @@ class WithdrawApproved extends WC_Email {
         $this->find['site_url']      = '{site_url}';
 
         $this->replace['username']      = $seller->user_login;
-        $this->replace['amount']        = wc_price( $withdraw->get_amount() );
+        $this->replace['amount']        = sprintf( '%1$s %2$s', get_woocommerce_currency_symbol(), wc_format_localized_price( wc_format_decimal( $withdraw->get_amount(), wc_get_price_decimals() ) ) );
         $this->replace['method']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->replace['profile_url']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
         $this->replace['withdraw_page'] = admin_url( 'admin.php?page=dokan-withdraw' );
