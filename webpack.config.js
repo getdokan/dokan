@@ -64,7 +64,6 @@ const plugins = [
 ];
 
 module.exports = {
-  ...defaultConfig,
   mode: defaultConfig.mode,
   entry: entryPoint,
   output: {
@@ -108,21 +107,17 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        loader: 'file-loader',
-        options: {
-          name: '../images/[name].[ext]',
+        test: /\.(bmp|png|jpe?g|gif|webp|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: '../images/[name][ext][query]'
         },
       },
       {
-        test: /\.svg/,
-        use: {
-          loader: "svg-url-loader",
-          options: {
-            // make all svg images to work in IE
-            iesafe: true,
-            name: '../font/[name].[ext]',
-          },
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: '../font/[name].[ext]',
         },
       },
     ]
