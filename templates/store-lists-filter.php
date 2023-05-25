@@ -88,5 +88,4 @@ defined( 'ABSPATH' ) || exit; ?>
     </div>
 
     <?php do_action( 'dokan_after_store_lists_filter_apply_button', $stores ); ?>
-    <?php wp_nonce_field( 'dokan_store_lists_filter_nonce', '_store_filter_nonce', false ); ?>
 </form>
