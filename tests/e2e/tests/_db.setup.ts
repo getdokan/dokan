@@ -52,6 +52,14 @@ test.describe('test site', ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
 	});
 
+	test('admin set dokan shipping settings @pro', async ()=> {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
+	});
+
+	test('admin set dokan quote settings @pro', async ()=> {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
+	});
+
 	test('admin set dokan rma settings @pro', async ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
 	});
@@ -60,9 +68,9 @@ test.describe('test site', ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
 	});
 
-	// test('admin set dokan eu compliance settings @pro', async ()=> {
-	// 	await dbUtils.setDokanSettings()
-	// });
+	test('admin set dokan eu compliance settings @pro', async ()=> {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
+	});
 
 	test('admin set dokan delivery time settings @pro', async ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);

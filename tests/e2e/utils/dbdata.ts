@@ -11,18 +11,18 @@ export const dbData = {
 			appearance: 'dokan_appearance',
 			privacyPolicy: 'dokan_privacy',
 			colors: 'dokan_colors',
-			// liveSearch:
+			// liveSearch: 'dokan_live_search_setting',
 			storeSupport: 'dokan_store_support_setting',
-			// sellerVerification:
-			// verificationSMSGateways:
-			// emailVerification:
-			// socialAPI:
-			// shippingStatus:
-			// quoteSettings:
-			// liveChat:
+			// sellerVerification: 'dokan_verification',
+			// verificationSMSGateways: 'dokan_verification_sms_gateways',
+			// emailVerification: 'dokan_email_verification',
+			// socialApi: 'dokan_social_api',
+			shippingStatus: 'dokan_shipping_status_setting',
+			quote: 'dokan_quote_settings',
+			// liveChat: 'dokan_live_chat',
 			rma: 'dokan_rma',
 			wholesale: 'dokan_wholesale',
-			// euCompliance:
+			euCompliance: 'dokan_germanized',
 			deliveryTime: 'dokan_delivery_time',
 			productAdvertising: 'dokan_product_advertisement',
 			geolocation: 'dokan_geolocation',
@@ -33,6 +33,8 @@ export const dbData = {
 		},
 
 		generalSettings: {
+
+			//site settings
 			site_options: '', //TODO : WHY EMPTY
 			admin_access: 'off',
 			custom_store_url: 'store',
@@ -42,6 +44,8 @@ export const dbData = {
 			global_digital_mode: 'sell_both',
 			enable_shipstation_logging: 'off',
 			data_clear_on_uninstall: 'off',
+
+			// vendor store settings
 			vendor_store_options: '', //TODO : WHY EMPTY
 			seller_enable_terms_and_conditions: 'on',
 			store_products_per_page: '12',
@@ -52,11 +56,18 @@ export const dbData = {
 		},
 
 		sellingSettings:  {
+
+			//commission
+			selling_capabilities: '',
+			commission_type: 'percentage',
 			admin_percentage: '10',
 			shipping_fee_recipient: 'seller',
 			tax_fee_recipient: 'seller',
+			shipping_tax_fee_recipient: 'seller',
 			automatic_process_api_refund: 'off',
-			selling_capabilities: '',
+
+			// vendor capabilities
+			additional_fee: '',
 			new_seller_enable_selling: 'on',
 			disable_product_popup: 'off',
 			order_status_change: 'on',
@@ -79,15 +90,16 @@ export const dbData = {
 			enable_min_max_quantity: 'on',
 			enable_min_max_amount: 'on',
 			disable_shipping_tab: 'off',
+
+			// catalog mode
 			catalog_mode_settings: '',
 			catalog_mode_hide_add_to_cart_button: 'off',
 			catalog_mode_hide_product_price: 'off',
-			commission_type: 'percentage',
-			additional_fee: '',
-			shipping_tax_fee_recipient: 'seller'
 		},
 
 		withdrawSettings: {
+
+			// withdraw settings
 			withdraw_methods: {
 				paypal: 'paypal',
 				bank: 'bank',
@@ -104,6 +116,8 @@ export const dbData = {
 			exclude_cod_payment: 'off',
 			withdraw_date_limit: '0',
 			hide_withdraw_option: 'off',
+
+			// disbursement settings
 			disbursement_schedule_settings: '',
 			disbursement: {
 				manual: 'manual',
@@ -139,9 +153,9 @@ export const dbData = {
 				cod: 'cod'
 			},
 			billing_type: 'by_amount',
-			reverse_balance_threshold: '21',
+			reverse_balance_threshold: '10',
 			monthly_billing_day: '1',
-			due_period: '7',
+			due_period: '0',
 			failed_actions: {
 				enable_catalog_mode: 'enable_catalog_mode',
 				hide_withdraw_menu: 'hide_withdraw_menu',
@@ -162,7 +176,7 @@ export const dbData = {
 			appearance_options: '',
 			store_map: 'on',
 			map_api_source: 'google_maps',
-			gmap_api_key: 'AIzaSyCiSPh9A7SYaO2sbZQ4qQo11AWyYB3UFvY',
+			gmap_api_key:  process.env.GMAP,
 			mapbox_access_token: '',
 			recaptcha_validation_label: '',
 			contact_seller: 'on',
@@ -208,7 +222,9 @@ export const dbData = {
 			}
 		},
 
-		//TODO:  liveSearchSettings:
+		liveSearchSettings: {
+			live_search_option:'suggestion_box'
+		},
 
 		storeSupportSettings: {
 			enabled_for_customer_order: 'on',
@@ -217,14 +233,124 @@ export const dbData = {
 			dokan_admin_email_notification: 'on'
 		},
 
-		//TODO:
-		// sellerVerificationSettings:
-		// verificationSMSGatewaysSettings:
-		// emailVerificationSettings:
-		// socialAPISettings:
-		// shippingStatusSettings:
-		// quoteSettingsSettings:
-		// liveChatSettings:
+		sellerVerificationSettings: {
+			'facebook_app_details': '',
+			'twitter_app_details': '',
+			'google_details': '',
+			'linkedin_details': '',
+			'fb_app_id': 'qq',
+			'fb_app_secret': 'qq',
+			'twitter_app_id': 'ww',
+			'twitter_app_secret': 'ee',
+			'google_app_id': 'qw',
+			'google_app_secret': 'qw'
+		},
+
+		verificationSMSGatewaysSettings: {
+			sender_name: 'weDevs Team',
+			sms_text: 'Your verification code is: %CODE%',
+			sms_sent_msg: 'SMS sent. Please enter your verification code',
+			sms_sent_error: 'Unable to send sms. Contact admin',
+			active_gateway: '',
+
+			// nexmo details
+			nexmo_details: '',
+			nexmo_username: '',
+			nexmo_pass: '',
+
+			// twilio details
+			twilio_details: '',
+		},
+
+		emailVerificationSettings: {
+			enabled: 'off',
+			registration_notice: 'Please check your email and complete email verification to login.',
+			login_notice: 'Please check your email and complete email verification to login.'
+		},
+
+		socialAPISettings: {
+			'section_title': '',
+			'enabled': 'on',
+			'facebook_details': '',
+			'twitter_details': '',
+			'google_details': '',
+			'linkedin_details': '',
+			'apple_details': '',
+			'fb_app_id': 'sdfdas',
+			'fb_app_secret': 'sdfsd',
+			'twitter_app_id': 'asdfs',
+			'twitter_app_secret': 'asdfs'
+		},
+
+		shippingStatusSettings: {
+			enabled: 'on',
+			shipping_status_provider: {
+				'sp-dhl': 'sp-dhl',
+				'sp-dpd': 'sp-dpd',
+				'sp-fedex': 'sp-fedex',
+				'sp-polish-shipping-providers': 'sp-polish-shipping-providers',
+				'sp-ups': 'sp-ups',
+				'sp-usps': 'sp-usps',
+				'sp-other': 'sp-other'
+			},
+			shipping_status_list: [
+				{
+					id: 'ss_delivered',
+					value: 'Delivered',
+					must_use: 'true',
+					desc: '(This is must use item)'
+				},
+				{
+					id: 'ss_cancelled',
+					value: 'Cancelled',
+					must_use: 'true',
+					desc: '(This is must use item)'
+				},
+				{
+					id: 'ss_proceccing',
+					value: 'Processing'
+				},
+				{
+					id: 'ss_ready_for_pickup',
+					value: 'Ready for pickup'
+				},
+				{
+					id: 'ss_pickedup',
+					value: 'Pickedup'
+				},
+				{
+					id: 'ss_on_the_way',
+					value: 'On the way'
+				}
+			]
+		},
+
+		quoteSettings: {
+
+			// quote settings
+			dokan_quote_settings: '',
+			enable_out_of_stock: 'on',
+			enable_ajax_add_to_quote: 'on',
+			redirect_to_quote_page: 'off',
+
+			// quote attributes settings
+			quote_attributes_settings: '',
+			decrease_offered_price: '0',
+			enable_convert_to_order: 'off',
+			enable_quote_converter_display: 'off'
+		},
+
+		liveChatSettings: {
+			enable: 'off',
+			provider: 'messenger',
+			theme_color: '#0084FF',
+			app_id: '',
+			app_secret: '',
+			wa_opening_method: 'in_app',
+			wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
+			chat_button_seller_page: 'on',
+			chat_button_product_page: 'above_tab'
+		},
 
 		rmaSettings: {
 			rma_order_status: 'wc-processing',
@@ -232,16 +358,16 @@ export const dbData = {
 			rma_enable_coupon_request: 'on',
 			rma_reasons: [
 				{
-					'id': 'defective',
-					'value': 'Defective'
+					id: 'defective',
+					value: 'Defective'
 				},
 				{
-					'id': 'wrong_product',
-					'value': 'Wrong Product'
+					id: 'wrong_product',
+					value: 'Wrong Product'
 				},
 				{
-					'id': 'other',
-					'value': 'Other'
+					id: 'other',
+					value: 'Other'
 				}
 			],
 			rma_policy: '<p>Refund Policy</p>'
@@ -253,56 +379,72 @@ export const dbData = {
 			need_approval_for_wholesale_customer: 'off'
 		},
 
-		//TODO: euComplianceSettings:
-
+		euComplianceSettings: {
+			vendor_fields: {
+				dokan_company_name: 'dokan_company_name',
+				dokan_company_id_number: 'dokan_company_id_number',
+				dokan_vat_number: 'dokan_vat_number',
+				dokan_bank_name: 'dokan_bank_name',
+				dokan_bank_iban: 'dokan_bank_iban'
+			},
+			vendor_registration: 'on',
+			customer_fields: {
+				billing_dokan_company_id_number: 'billing_dokan_company_id_number',
+				billing_dokan_vat_number: 'billing_dokan_vat_number',
+				billing_dokan_bank_name: 'billing_dokan_bank_name',
+				billing_dokan_bank_iban: 'billing_dokan_bank_iban'
+			},
+			enabled_germanized: 'on',
+			override_invoice_number: 'on'
+		},
 
 		deliveryTimeSettings: {
-			'allow_vendor_override_settings': 'off',
-			'delivery_support': {
+			allow_vendor_override_settings: 'off',
+			delivery_support: {
 				'delivery': 'delivery',
 				'store-pickup': 'store-pickup'
 			},
-			'delivery_date_label': 'Delivery Date',
-			'preorder_date': 0,
-			'time_slot_minutes': 30,
-			'order_per_slot': 0,
-			'delivery_box_info': 'This store needs %DAY% day(s) to process your delivery request',
-			'selection_required': 'on',
-			'delivery_day': '',
-			'delivery_day_monday': {
-				'delivery_status': 'monday',
-				'opening_time': '12:00 am',
-				'closing_time': '11:59 pm'
+			delivery_date_label: 'Delivery Date',
+			preorder_date: 0,
+			time_slot_minutes: 30,
+			order_per_slot: 0,
+			delivery_box_info: 'This store needs %DAY% day(s) to process your delivery request',
+			selection_required: 'on',
+			delivery_day: '',
+			delivery_day_monday: {
+				delivery_status: 'monday',
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
-			'delivery_day_tuesday': {
-				'delivery_status': 'tuesday',
-				'opening_time': '1:00 pm',
-				'closing_time': '2:00 pm'
+			delivery_day_tuesday: {
+				delivery_status: 'tuesday',
+				opening_time: '1:00 pm',
+				closing_time: '2:00 pm'
 			},
-			'delivery_day_wednesday': {
-				'delivery_status': '',
-				'opening_time': '',
-				'closing_time': ''
+			delivery_day_wednesday: {
+				delivery_status: '',
+				opening_time: '',
+				closing_time: ''
 			},
-			'delivery_day_thursday': {
-				'delivery_status': '',
-				'opening_time': '',
-				'closing_time': ''
+			delivery_day_thursday: {
+				delivery_status: '',
+				opening_time: '',
+				closing_time: ''
 			},
-			'delivery_day_friday': {
-				'delivery_status': '',
-				'opening_time': '',
-				'closing_time': ''
+			delivery_day_friday: {
+				delivery_status: '',
+				opening_time: '',
+				closing_time: ''
 			},
-			'delivery_day_saturday': {
-				'delivery_status': '',
-				'opening_time': '',
-				'closing_time': ''
+			delivery_day_saturday: {
+				delivery_status: '',
+				opening_time: '',
+				closing_time: ''
 			},
-			'delivery_day_sunday': {
-				'delivery_status': '',
-				'opening_time': '',
-				'closing_time': ''
+			delivery_day_sunday: {
+				delivery_status: '',
+				opening_time: '',
+				closing_time: ''
 			}
 		},
 
@@ -310,7 +452,7 @@ export const dbData = {
 			total_available_slot: '100',
 			expire_after_days: '10',
 			per_product_enabled: 'on',
-			cost: '15',
+			cost: '20',
 			vendor_subscription_enabled: 'on',
 			featured: 'on',
 			catalog_priority: 'on',
@@ -327,53 +469,53 @@ export const dbData = {
 			distance_max: '10',
 			map_zoom: '11',
 			location: {
-				latitude: '23.709921',
-				longitude: '90.40714300000002',
-				address: 'Dhaka',
+				latitude: '40.7127753',
+				longitude: '-74.0059728',
+				address: 'New York, NY, USA',
 				zoom: '10'
 			}
 		},
 
 		productReportAbuseSettings: {
-			'abuse_reasons': [
+			reported_by_logged_in_users_only: 'on',
+			abuse_reasons: [
 				{
-					'id': 'report_as_spam',
-					'value': 'This content is spam'
+					id: 'report_as_spam',
+					value: 'This content is spam'
 				},
 				{
-					'id': 'report_as_adult',
-					'value': 'This content should marked as adult'
+					id: 'report_as_adult',
+					value: 'This content should marked as adult'
 				},
 				{
-					'id': 'report_as_abusive',
-					'value': 'This content is abusive'
+					id: 'report_as_abusive',
+					value: 'This content is abusive'
 				},
 				{
-					'id': 'report_as_violent',
-					'value': 'This content is violent'
+					id: 'report_as_violent',
+					value: 'This content is violent'
 				},
 				{
-					'id': 'report_as_risk_of_hurting',
-					'value': 'This content suggests the author might be risk of hurting themselves'
+					id: 'report_as_risk_of_hurting',
+					value: 'This content suggests the author might be risk of hurting themselves'
 				},
 				{
-					'id': 'report_as_infringes_copyright',
-					'value': 'This content infringes upon my copyright'
+					id: 'report_as_infringes_copyright',
+					value: 'This content infringes upon my copyright'
 				},
 				{
-					'id': 'report_as_contains_private_info',
-					'value': 'This content contains my private information'
+					id: 'report_as_contains_private_info',
+					value: 'This content contains my private information'
 				},
 				{
-					'id': 'other',
-					'value': 'Other'
+					id: 'other',
+					value: 'Other'
 				},
 				{
-					'id': 'this_product_is_fake',
-					'value': 'This product is fake'
+					id: 'this_product_is_fake',
+					value: 'This product is fake'
 				}
 			],
-			'reported_by_logged_in_users_only': 'on'
 		},
 
 		spmvSettings: {
@@ -387,9 +529,9 @@ export const dbData = {
 		vendorSubscriptionSettings: {
 			subscription_pack: '2',
 			enable_pricing: 'off',
-			enable_subscription_pack_in_reg: 'on',
+			enable_subscription_pack_in_reg: 'off',
 			notify_by_email: 'on',
-			no_of_days_before_mail: '2',
+			no_of_days_before_mail: '1',
 			product_status_after_end: 'draft',
 			cancelling_email_subject: 'Subscription Package Cancel notification',
 			cancelling_email_body: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
