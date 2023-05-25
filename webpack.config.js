@@ -102,8 +102,18 @@ module.exports = {
         test: /\.(less|css)$/i,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
-          'less-loader',
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: false,
+            },
+          },
+          {
+            loader: "less-loader",
+            options: {
+              sourceMap: false,
+            },
+          },
         ],
       },
       {
