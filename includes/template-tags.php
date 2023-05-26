@@ -132,7 +132,6 @@ if ( ! function_exists( 'dokan_page_navi' ) ) :
             }
         }
 
-
         if ( (int) $paged < $max_page ) {
             echo '<li class="">';
             next_posts_link( __( 'Next &rarr;', 'dokan-lite' ) );
