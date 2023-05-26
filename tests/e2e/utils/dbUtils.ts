@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
-// import { dbData } from './dbdata';
+import { dbData } from './dbdata';
 
 const dbPrefix = process.env.DB_PREFIX;
 
@@ -49,9 +49,18 @@ export const dbUtils = {
 			const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
 			res = await dbUtils.dbQuery(queryUpdate);
 		}
+		// console.log(res);
 		expect(res).not.toHaveProperty('errno');
 		return res;
 	},
+
+	async getCommissionInfo(): Promise<any> {
+		const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
+		console.log(res);
+		const commissionType = res.commission_type;
+		const commission = [res.admin_percentage, res.additional_fee ];
+		return [commissionType, commission];
+	}
 
 
 };

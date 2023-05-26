@@ -3,9 +3,9 @@ import { devices } from '@playwright/test';
 require('dotenv').config();
 
 // // api
-// const username = process.env.CUSTOMER;
-// const password = process.env.CUSTOMER_PASSWORD;
-// const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+const username = process.env.ADMIN;
+const password = process.env.ADMIN_PASSWORD;
+const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -47,7 +47,7 @@ const config: PlaywrightTestConfig = {
 
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	// globalSetup: require.resolve('./global-setup'),
+	globalSetup: require.resolve('./global-setup'),
 
 	use: {
 		// storageState: 'storageState.json',  // location of sign in state
@@ -64,11 +64,11 @@ const config: PlaywrightTestConfig = {
 		launchOptions: {slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
 		},
 
-		// // api request headers
-		// extraHTTPHeaders: {
-		// 	Accept: '*/*',
-		// 	Authorization: basicAuth,
-		// },
+		// api request headers
+		extraHTTPHeaders: {
+			Accept: '*/*',
+			Authorization: basicAuth,
+		},
 	},
 
 	/* Configure projects for major browsers */
@@ -80,7 +80,7 @@ const config: PlaywrightTestConfig = {
 		{name: 'e2e_tests',
 			testMatch: /.*\.spec\.ts/ ,
 			use: {...devices['Desktop Chrome'],},
-			dependencies: Boolean(process.env.SETUP ) ? ['setup'] : [],
+			// dependencies: Boolean(process.env.SETUP ) ? ['setup'] : [],
 		},
 
 		//     {

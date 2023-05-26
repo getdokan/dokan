@@ -11,7 +11,8 @@ test.describe('test site', ()=> {
 		// await dbUtils.getDokanSettings(dbData.dokan.optionName.general);
 		// const res = await dbUtils.getDokanSettings(dbData.dokan.optionName.general);
 		// console.log(res);
-		const res = await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
+		// const res = await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
+		const res = await dbUtils.getCommissionInfo();
 		console.log(res);
 		// expect(res).not.toHaveProperty('errno');
 	});
@@ -31,10 +32,6 @@ test.describe('test site', ()=> {
 
 	test('admin set dokan reverse withdraw settings @lite @pro', async ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
-	});
-
-	test('admin set dokan page settings @lite @pro', async ()=> {
-		await dbUtils.setDokanSettings(dbData.dokan.optionName.page, dbData.dokan.pageSettings);
 	});
 
 	test('admin set dokan appearance settings @lite @pro', async ()=> {
@@ -95,6 +92,5 @@ test.describe('test site', ()=> {
 	test('admin set dokan vendor subscription settings @pro', async ()=> {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
 	});
-
 
 });

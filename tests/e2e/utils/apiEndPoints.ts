@@ -463,6 +463,10 @@ export const endPoints = {
 
 		// system status
 		getAllSystemStatus: `${SERVER_URL}/wc/v3/system_status`,
+
+		//data
+		getCurrentCurrency: `${SERVER_URL}/wc/v3/data/currencies/current`,
+
 	},
 
 	wp: {

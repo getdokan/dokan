@@ -1,4 +1,5 @@
-//TODO: ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
+//TODO: add get, post, put, delete request in api utils
+//TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //TODO: slack integration
 //TODO: working-directory: ./path/to/tests
 //TODO: update auth if expired instead of every-time
@@ -25,6 +26,8 @@
 // filter received & expected test
 // trim if necessary
 // lowercase
+
+//TODO: add system info after git action info via system status function
 
 
 
