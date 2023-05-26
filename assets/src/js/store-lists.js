@@ -223,6 +223,16 @@
         submitForm: function( event ) {
             event.preventDefault();
 
+            // Check if nonce exists on storeLists.query.
+            if ( storeLists.query._store_filter_nonce ) {
+                delete storeLists.query._store_filter_nonce;
+            }
+
+            // Check if store categories not exits in storeLists.query.
+            if ( ! storeLists.query.store_category_query ) {
+                storeLists.query._store_filter_nonce = $('input[name="_store_filter_nonce"]').first().val();
+            }
+
             const queryString = decodeURIComponent( $.param( storeLists.query ) );
             const target      = '/page';
             const pathName    = window.location.pathname;
