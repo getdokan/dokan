@@ -42,21 +42,19 @@ class Stores extends DokanShortcode {
         $limit  = $attr['per_page'];
         $offset = ( $paged - 1 ) * $limit;
 
-        // Prepare filter data.
+        // prepare filter data
         $dokan_seller_search = '';
         $requested_data      = [];
 
-        // Remove nonce if store categories exist.
-        if ( isset( $_GET['store_categories'] ) ) {
-            unset( $_GET['_store_filter_nonce'] );
-
-            $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) );
-        }
-
-        // Check if nonce verified.
+        // check if nonce verified
         if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
             $dokan_seller_search = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( wp_unslash( $_GET['dokan_seller_search'] ) ) : $dokan_seller_search;
             $requested_data = wc_clean( wp_unslash( $_GET ) );
+        }
+
+        // Remove nonce if store categories exist.
+        if ( isset( $_GET['store_categories'] ) ) {
+            $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) );
         }
 
         $seller_args = array(
@@ -88,8 +86,6 @@ class Stores extends DokanShortcode {
                 'field'    => 'slug',
                 'terms'    => explode( ',', $attr['category'] ),
             );
-
-            unset( $_GET['_store_filter_nonce'] );
         }
 
         if ( ! empty( $attr['order'] ) ) {
