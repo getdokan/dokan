@@ -52,7 +52,7 @@ class Stores extends DokanShortcode {
             $requested_data = wc_clean( wp_unslash( $_GET ) );
         }
 
-        // Remove nonce if store categories exist.
+        // Check if store categories exists in the GET request.
         if ( isset( $_GET['store_categories'] ) ) {
             $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) );
         }
