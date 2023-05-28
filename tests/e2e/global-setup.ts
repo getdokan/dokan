@@ -19,7 +19,7 @@ async function globalSetup(config: FullConfig) {
 	// process.env.SERVER_URL = serverUrl + '/wp-json';
 	process.env.QUERY = query;
 	// process.env.QUERY = '&';
-	console.log('ServerUrl:',process.env.SERVER_URL);
+	console.log('ServerUrl:', process.env.SERVER_URL);
 	console.log('Global Setup Finished!');
 }
 
