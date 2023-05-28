@@ -19,7 +19,6 @@ test.describe('Admin user functionality test', ()=> {
 		await page.close();
 	});
 
-	//
 	test('admin can login @lite @pro', async ( )=> {
 		await loginPage.adminLogin(data.admin);
 	});

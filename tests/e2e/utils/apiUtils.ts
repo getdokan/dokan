@@ -2,8 +2,10 @@ import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 import { payloads } from './payloads';
-import { promises } from 'dns';
-interface auth { //TODO: gather all interfaces in one place
+
+//TODO: gather all interfaces in one place
+
+interface auth {
 	[key: string]: string;
  }
 
@@ -34,6 +36,17 @@ interface coupon {
 		individual_use: boolean
 }
 
+interface reqOptions {
+	data?: any;
+	failOnStatusCode?: boolean | undefined;
+	form?: { [key: string]: string | number | boolean; } | undefined;
+	headers?: { [key: string]: string; } | undefined;
+	ignoreHTTPSErrors?: boolean | undefined;
+	maxRedirects?: number | undefined;
+	multipart?: { [key: string]: string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer; }; } | undefined;
+	params?: { [key: string]: string | number | boolean; } | undefined; timeout?: number | undefined;
+}
+
 export class ApiUtils {
 	readonly request: APIRequestContext;
 
@@ -48,10 +61,34 @@ export class ApiUtils {
 	}
 
 	// get site headers
-	async getSiteHeaders() {
-		const response = await this.request.head(endPoints.serverUrl);
+	async getSiteHeaders(url: string = endPoints.serverUrl ) {
+		const response = await this.request.head(url);
 		const headers = response.headers();
 		return headers;
+	}
+
+	async get(url: string, options?: reqOptions | undefined){
+		const response = await this.request.get(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	async post(url: string, options?: reqOptions | undefined){
+		const response = await this.request.post(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	async put (url: string, options?: reqOptions | undefined){
+		const response = await this.request.put(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	async delete(url: string, options?: reqOptions | undefined){
+		const response = await this.request.delete(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
 	}
 
 	// get responseBody
@@ -305,7 +342,7 @@ export class ApiUtils {
 	// get couponId
 	async getCouponId(couponCode: string, auth? : auth) {
 		const allCoupons = await this.getAllCoupons(auth);
-		const couponId = couponCode ? (couponCode = allCoupons.find((o: { code: string; })=> o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (allCoupons.find((o: { code: string; })=> o.code === couponCode)).id : allCoupons[0].id;
 		return couponId;
 	}
 
@@ -1280,6 +1317,13 @@ export class ApiUtils {
 	// update payment gateway
 	async updatePaymentGateway(paymentGatewayId: string, payload: object, auth? : auth): Promise<object> {
 		const response = await this.request.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), { data: payload, headers: auth });
+		const responseBody = await this.getResponseBody(response);
+		return responseBody;
+	}
+
+	// get system status
+	async getSystemStatus(auth? : auth){
+		const response = await this.request.get(endPoints.wc.getAllSystemStatus, { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}

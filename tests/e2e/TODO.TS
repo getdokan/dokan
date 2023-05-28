@@ -1,4 +1,5 @@
-//TODO: ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
+//TODO: add get, post, put, delete request in api utils
+//TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //TODO: slack integration
 //TODO: working-directory: ./path/to/tests
 //TODO: update auth if expired instead of every-time
@@ -25,3 +26,151 @@
 // filter received & expected test
 // trim if necessary
 // lowercase
+
+//TODO: add system info after git action info via system status function, current theme should be there
+
+
+
+// TODO: woocommerce
+
+// TODO: implement this for checkbox assert
+		// Verify changes have been saved
+		await expect( page.locator( '#woocommerce_calc_taxes' ) ).toBeChecked();
+
+// TODO:  reconsider that you need multiple assertion or not
+		// Verify that settings have been saved
+		await expect(
+			page.locator( '#setting-error-settings_updated' )
+		).toContainText( 'Permalink structure updated.' );
+		await expect( page.locator( '#permalink_structure' ) ).toHaveValue(
+			'/%postname%/'
+		);
+		await expect(
+			page.locator( '#woocommerce_permalink_structure' )
+		).toHaveValue( '/product/' );
+
+//TODO: follow woocommerce project structure like global setup, teardown, ....
+
+//TODO: Grab stateDir, baseURL from config
+const { stateDir, baseURL, userAgent } = config.projects[ 0 ].use;
+
+console.log( `State Dir: ${ stateDir }` );
+console.log( `Base URL: ${ baseURL }` );
+
+
+//TODO: try this for wait for navigation
+// await page.waitForLoadState( 'networkidle' );
+
+
+//TODO: file upload : plugin
+// const [ fileChooser ] = await Promise.all( [
+//     page.waitForEvent( 'filechooser' ),
+//     page.click( '#pluginzip' ),
+// ] );
+// await fileChooser.setFiles( woocommerceZipPath );
+
+
+//TODO: can implement test.step
+// test( `can update WooCommerce to "${ UPDATE_WC }"`, async ( {
+//     page,
+//     baseURL,
+// } ) => {
+
+// await test.step(
+//     'Choose the option "Replace current with uploaded"',
+//     async () => { 
+
+
+//     });
+
+// });
+
+
+
+//TODO: what is expect.poll
+
+await expect
+					.poll(
+						async () => {
+							await page.goto( 'wp-admin/plugins.php', {
+								waitUntil: 'networkidle',
+							} );
+
+							return await updateCompleteMessage.isVisible();
+						},
+						{
+							intervals: [ 10_000 ],
+							timeout: 120_000,
+						}
+					)
+					.toEqual( true );
+
+//TODO: try error.response.data
+
+response = await axios( options ).catch( ( error ) => {
+    if ( error.response ) {
+        console.error( error.response.data );
+    }
+    throw new Error( error.message );
+} );
+
+//TODO: use this for plugin download and activate scenario
+response.data.pipe( fs.createWriteStream( zipFilePath ) );
+
+
+
+//TODO: use this for run command via code , built a utility function
+export const installPluginThruWpCli = async ( pluginPath ) => {
+	const runWpCliCommand = async ( command ) => {
+		const { stdout, stderr } = await execAsync(
+			`pnpm exec wp-env run tests-cli "${ command }"`
+		);
+
+		console.log( stdout );
+		console.error( stderr );
+	};
+
+
+    // TODO: try & convet xppath to this
+    'input:below(:text("Search for a product…"))',
+    // search for each product to add
+		await page.click( 'text=Search for a product…' );
+
+
+		// Recalculate taxes
+		page.on( 'dialog', ( dialog ) => dialog.accept() );
+		await page.click( 'text=Recalculate' );
+
+
+    //TODO: what is page.dispatchEvent
+    await page.goto(
+        'wp-admin/admin.php?page=wc-settings&tab=shipping&section=classes'
+    );
+
+    await page.dispatchEvent(
+        '.wc-shipping-class-delete >> nth=0',
+        'click'
+    );
+    await page.dispatchEvent(
+        '.wc-shipping-class-delete >> nth=0',
+        'click'
+    );
+    await page.dispatchEvent( 'text=Save shipping classes', 'click' );
+
+
+
+//TODO: why waitUntil on goto , what is the default value
+    await page.goto(
+        'wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=new',
+        { waitUntil: 'networkidle' }
+    );
+
+//TODO: ensure empty cart like this , try to use both clearCookies to clear cart & storagejson for authenticate user
+// check clearcookies clear storagejson or not
+	test.beforeEach( async ( { context, page } ) => {
+		// Shopping cart is very sensitive to cookies, so be explicit
+		await context.clearCookies();
+
+		await page.goto( `/shop/?add-to-cart=${ productId }` );
+		await page.waitForLoadState( 'networkidle' );
+	} );

@@ -554,6 +554,49 @@ export const payloads = {
 
 	general: {
 		update: [
+			// store address
+			{
+				id: 'woocommerce_store_address',
+				// label: 'Address line 1',
+				value: 'abc street',
+			},
+			{
+				id: 'woocommerce_store_address_2',
+				// label: 'Address line 2',
+				value: 'xyz street',
+			},
+			{
+				id: 'woocommerce_store_city',
+				// label: 'City',
+				value: 'New York',
+			},
+			{
+				id: 'woocommerce_default_country',
+				// label: 'Country / State',
+				value: 'US:NY',
+			},
+			{
+				id: 'woocommerce_store_postcode',
+				// label: 'Postcode / ZIP',
+				value: '10006',
+			},
+
+			// general options
+			{
+				id: 'woocommerce_allowed_countries',
+				// label: 'Selling location(s)',
+				value: 'all', // 'all', 'all_except', 'specific'
+			},
+			{
+				id: 'woocommerce_ship_to_countries',
+				// label: 'Shipping location(s)',
+				value: '', // '', 'specific', 'disabled'
+			},
+			{
+				id: 'woocommerce_default_customer_address',
+				// label: 'Default customer location',
+				value: 'base', // '', 'base', 'geolocation', 'geolocation_ajax'
+			},
 			{
 				id: 'woocommerce_calc_taxes',
 				// label: 'Enable taxes',
@@ -561,10 +604,21 @@ export const payloads = {
 				// value: 'no',
 			},
 			{
+				id: 'woocommerce_enable_coupons',
+				// label: 'Enable coupons',
+				value: 'yes',
+			},
+
+			// currency options
+			{
 				id: 'woocommerce_currency',
 				// label: 'Currency',
 				value: 'USD',
-				// value: 'BTC',
+			},
+			{
+				id: 'woocommerce_currency_pos',
+				// label: 'Currency position',
+				value: 'left', // 'left', 'right', 'left_space', 'right_space'
 			},
 			{
 				id: 'woocommerce_price_thousand_sep',

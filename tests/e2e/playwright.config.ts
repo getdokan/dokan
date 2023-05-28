@@ -1,10 +1,9 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
-import { devices } from '@playwright/test';
+import { PlaywrightTestConfig, devices } from '@playwright/test';
 require('dotenv').config();
 
 // // api
-// const username = process.env.CUSTOMER;
-// const password = process.env.CUSTOMER_PASSWORD;
+// const username = process.env.ADMIN;
+// const password = process.env.ADMIN_PASSWORD;
 // const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 /**
@@ -26,7 +25,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 10 * 1000,},
+		timeout: 10 * 1000, },
 
 	/* Run tests in files in parallel */
 	// fullyParallel: true,
@@ -43,7 +42,7 @@ const config: PlaywrightTestConfig = {
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: process.env.CI
 		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }], ['allure-playwright',	{detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]],
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }], ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]],
 
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -61,10 +60,10 @@ const config: PlaywrightTestConfig = {
 		// viewport: { width: 1440, height: 900 },
 
 		// launch options
-		launchOptions: {slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
+		launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
 		},
 
-		// // api request headers
+		// api request headers
 		// extraHTTPHeaders: {
 		// 	Accept: '*/*',
 		// 	Authorization: basicAuth,
@@ -77,10 +76,10 @@ const config: PlaywrightTestConfig = {
 		{ name: 'setup',
 			testMatch: /.*\.setup\.ts/ },
 
-		{name: 'e2e_tests',
-			testMatch: /.*\.spec\.ts/ ,
-			use: {...devices['Desktop Chrome'],},
-			dependencies: Boolean(process.env.SETUP ) ? ['setup'] : [],
+		{ name: 'e2e_tests',
+			testMatch: /.*\.spec\.ts/,
+			use: { ...devices['Desktop Chrome'], },
+			dependencies: process.env.SETUP ? ['setup'] : [],
 		},
 
 		//     {
