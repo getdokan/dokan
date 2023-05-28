@@ -234,16 +234,16 @@ export const dbData = {
 		},
 
 		sellerVerificationSettings: {
-			'facebook_app_details': '',
-			'twitter_app_details': '',
-			'google_details': '',
-			'linkedin_details': '',
-			'fb_app_id': 'qq',
-			'fb_app_secret': 'qq',
-			'twitter_app_id': 'ww',
-			'twitter_app_secret': 'ee',
-			'google_app_id': 'qw',
-			'google_app_secret': 'qw'
+			facebook_app_details: '',
+			twitter_app_details: '',
+			google_details: '',
+			linkedin_details: '',
+			fb_app_id: '',
+			fb_app_secret: '',
+			twitter_app_id: '',
+			twitter_app_secret: '',
+			google_app_id: '',
+			google_app_secret: ''
 		},
 
 		verificationSMSGatewaysSettings: {
@@ -269,17 +269,17 @@ export const dbData = {
 		},
 
 		socialAPISettings: {
-			'section_title': '',
-			'enabled': 'on',
-			'facebook_details': '',
-			'twitter_details': '',
-			'google_details': '',
-			'linkedin_details': '',
-			'apple_details': '',
-			'fb_app_id': 'sdfdas',
-			'fb_app_secret': 'sdfsd',
-			'twitter_app_id': 'asdfs',
-			'twitter_app_secret': 'asdfs'
+			section_title: '',
+			enabled: 'on',
+			facebook_details: '',
+			twitter_details: '',
+			google_details: '',
+			linkedin_details: '',
+			apple_details: '',
+			fb_app_id: '',
+			fb_app_secret: '',
+			twitter_app_id: '',
+			twitter_app_secret: ''
 		},
 
 		shippingStatusSettings: {
@@ -541,34 +541,23 @@ export const dbData = {
 
 		//TODO:  vendorAnalyticsSettings:
 
+	},
+
+	siteSettings : {
+		users_can_register: 1,
+		start_of_week: 1,
+		date_format: 'F j, Y',
+		time_format: 'g:i a',
+		permalink_structure: '/%postname%/',
+		default_role: 'subscriber',
+		timezone_string: 'Asia/Dhaka',
+
+	},
+
+	woocommerceSettings: {
+		woocommerce_enable_myaccount_registration:	'yes'
+
 	}
-
-	// activePlugins:    [
-	// 	'Basic-Auth-master\/basic-auth.php',
-	// 	'admin-bar-user-switching\/admin-bar-user-switching.php',
-	// 	'dokan-pro\/dokan-pro.php',
-	// 	'dokan\/dokan.php',
-	// 	'elementor\/elementor.php',
-	// 	'email-log\/email-log.php',
-	// 	'flush-opcache\/flush-opcache.php',
-	// 	'user-switching\/user-switching.php',
-	// 	'woocommerce-bookings\/woocommerce-bookings.php',
-	// 	'woocommerce-product-addons\/woocommerce-product-addons.php',
-	// 	'woocommerce-simple-auctions\/woocommerce-simple-auctions.php',
-	// 	'woocommerce-subscriptions\/woocommerce-subscriptions.php',
-	// 	'woocommerce\/woocommerce.php',
-	// 	'wp-reset\/wp-reset.php'
-	// ]
-
-	// siteSettings : {
-	//     users_can_register: 1
-	//     start_of_week:1
-	//     date_format	F j, Y
-	//     time_format	g:i a	yes
-	//     permalink_structure	/%postname%/
-	//     default_role	subscriber
-	//     timezone_string	Asia/Dhaka
-	// }
 
 
 };

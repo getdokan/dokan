@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
-import { dbData } from './dbdata';
+import { dbData } from './dbData';
 
 const dbPrefix = process.env.DB_PREFIX;
 
@@ -16,13 +16,15 @@ const mySql =  new MySqlConnection({
 
 export const dbUtils = {
 
+	// execute db query
 	async dbQuery(query: string): Promise<any> {
 		const dbContext: DbContext = new DbContext(mySql);
 		return await dbContext.inTransactionAsync(async (dbContext) => {
 			try{
-				const result = await dbContext.executeAsync(query); //TODO: ADD ASSERT DBQUERY IS SUCCESSES
-				// return result;
-				return JSON.parse(JSON.stringify(result));
+				const result = await dbContext.executeAsync(query);
+				const res = JSON.parse(JSON.stringify(result));
+				expect(res).not.toHaveProperty('errno'); //TODO: ADD ASSERT DBQUERY IS SUCCESSES, update it
+				return res;
 			}
 			catch(err: unknown){
 				// console.log('dbError:', err);
@@ -35,7 +37,6 @@ export const dbUtils = {
 	async getDokanSettings(optionName: string): Promise<any> {
 		const querySelect = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
 		const res = await dbUtils.dbQuery(querySelect);
-		expect(res).not.toHaveProperty('errno');
 		// console.log(res[0].option_value);
 		// console.log(unserialize(res[0].option_value));
 		return unserialize(res[0].option_value);
@@ -50,13 +51,12 @@ export const dbUtils = {
 			res = await dbUtils.dbQuery(queryUpdate);
 		}
 		// console.log(res);
-		expect(res).not.toHaveProperty('errno');
 		return res;
 	},
 
+	// get admin commission info
 	async getCommissionInfo(): Promise<any> {
 		const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
-		console.log(res);
 		const commissionType = res.commission_type;
 		const commission = [res.admin_percentage, res.additional_fee ];
 		return [commissionType, commission];

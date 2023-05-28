@@ -27,7 +27,7 @@
 // trim if necessary
 // lowercase
 
-//TODO: add system info after git action info via system status function
+//TODO: add system info after git action info via system status function, current theme should be there
 
 
 
