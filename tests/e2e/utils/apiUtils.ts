@@ -145,7 +145,7 @@ export class ApiUtils {
 	// get sellerId
 	async getSellerId(storeName?: string, auth? : auth): Promise<string> {
 		const allStores = await this.getAllStores(auth);
-		const sellerId = storeName ? (allStores.find((o: { store_name: string; })=> o.store_name === storeName)).id : allStores[0].id;
+		const sellerId = storeName ? (allStores.find((o: { store_name: string; }) => o.store_name === storeName)).id : allStores[0].id;
 		return sellerId;
 	}
 
@@ -201,7 +201,7 @@ export class ApiUtils {
 	// get productId
 	async getProductId(productName: string, auth? : auth) {
 		const allProducts = await this.getAllProducts(auth);
-		const productId = productName ? (allProducts.find((o: { name: string; })=> o.name === productName)).id : allProducts[0].id;
+		const productId = productName ? (allProducts.find((o: { name: string; }) => o.name === productName)).id : allProducts[0].id;
 		return productId;
 	}
 
@@ -228,10 +228,10 @@ export class ApiUtils {
 		let allProductIds;
 		// delete all products with same name
 		if (productName){
-			allProductIds = (allProducts.filter((o: { name: string; })=> o.name === productName)).map((a: { id: string })=> a.id);
+			allProductIds = (allProducts.filter((o: { name: string; }) => o.name === productName)).map((a: { id: string }) => a.id);
 		}
 		else {
-			allProductIds = (await this.getAllProducts(auth)).map((a: { id: string })=> a.id);
+			allProductIds = (await this.getAllProducts(auth)).map((a: { id: string }) => a.id);
 		}
 		// const response = await this.request.put(endPoints.wc.updateBatchProducts, { data: { delete: allProductIds }, headers: payloads.adminAuth });
 		// const responseBody = await this.getResponseBody(response);
@@ -362,7 +362,7 @@ export class ApiUtils {
 	// get couponId
 	async getCouponId(couponCode: string, auth? : auth) {
 		const allCoupons = await this.getAllCoupons(auth);
-		const couponId = couponCode ? (allCoupons.find((o: { code: string; })=> o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (allCoupons.find((o: { code: string; }) => o.code === couponCode)).id : allCoupons[0].id;
 		return couponId;
 	}
 
@@ -506,7 +506,7 @@ export class ApiUtils {
 	// get single order log
 	async getSingleOrderLog(orderId: string, auth? : auth) {
 		const allOrderLogs = await this.getAllOrderLogs(auth);
-		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; })=> o.order_id === orderId));
+		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
 		return singleOrderLog;
 	}
 
@@ -619,7 +619,7 @@ export class ApiUtils {
 
 	// get all modules ids
 	async getAllModuleIds(params = {}, auth? : auth) {
-		const allModuleIds = (await this.getAllModules(params, auth)).map((a: { id: string; })=> a.id);
+		const allModuleIds = (await this.getAllModules(params, auth)).map((a: { id: string; }) => a.id);
 		return allModuleIds;
 	}
 
@@ -654,7 +654,7 @@ export class ApiUtils {
 	// get customerId
 	async getCustomerId(username: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { username: string; })=> o.username === username)).id;
+		const customerId = (allCustomers.find((o: { username: string; }) => o.username === username)).id;
 		return customerId;
 	}
 
@@ -897,7 +897,7 @@ export class ApiUtils {
 
 	// delete store review
 	async deleteAllQuoteRules(auth? : auth) {
-		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((a: { id: string })=> a.id);
+		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((a: { id: string }) => a.id);
 		// const response = await this.request.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers : auth });
 		// const responseBody = await this.getResponseBody(response);
 		const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers : auth });
@@ -969,7 +969,7 @@ export class ApiUtils {
 	// get all seller badges
 	async getSellerBadgeId(eventType: string, auth? : auth) {
 		const allBadges = await this.getAllSellerBadges(auth);
-		const badgeId = allBadges.find((o: { event_type: string; })=> o.event_type === eventType).id;
+		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
 		return badgeId;
 	}
 
@@ -1227,7 +1227,7 @@ export class ApiUtils {
 	// get categoryId
 	async getCategoryId(categoryName: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { name: string; })=> o.name === categoryName)).id;
+		const customerId = (allCustomers.find((o: { name: string; }) => o.name === categoryName)).id;
 		return customerId;
 	}
 
@@ -1328,7 +1328,7 @@ export class ApiUtils {
 		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
 
 		// delete previous tax rates
-		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: string })=> a.id);
+		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: string }) => a.id);
 		if (allTaxRateIds.length) {
 			await this.updateBatchTaxRates('delete', allTaxRateIds);
 		}
@@ -1352,7 +1352,7 @@ export class ApiUtils {
 	// get zoneId
 	async getZoneId(zoneName: string, auth? : auth) {
 		const allZones = await this.getAllShippingZones(auth);
-		const zoneId = (allZones.find((o: { name: string; })=> o.name === zoneName)).id;
+		const zoneId = (allZones.find((o: { name: string; }) => o.name === zoneName)).id;
 		return zoneId;
 	}
 

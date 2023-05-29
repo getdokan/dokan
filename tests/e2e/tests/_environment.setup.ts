@@ -6,30 +6,30 @@ import { dbData } from '../utils/dbData';
 import { data } from '../utils/testData';
 // import { AdminPage } from '../pages/adminPage';
 
-setup.describe('setup site & woocommerce & user settings', ()=> {
+setup.describe('setup site & woocommerce & user settings', () => {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
-	setup('check active plugins @lite @pro', async ({ request })=> {
+	setup('check active plugins @lite @pro', async ({ request }) => {
 		setup.skip(!process.env.CI, 'skip plugin check');
 		const apiUtils = new ApiUtils(request);
-		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string })=> (a.plugin).split('/')[1]);
+		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
-	setup('check active dokan modules @pro', async ({ request })=> {
+	setup('check active dokan modules @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const activeModules = await apiUtils.getAllModuleIds({ status:'active' });
 		expect(activeModules).toEqual(expect.arrayContaining(data.module.modules));
 	});
 
-	setup('set wp settings @lite @pro', async ({ request })=> {
+	setup('set wp settings @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
 		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
 	});
 
-	setup('reset dokan previous settings @lite @pro', async ({ request })=> {
+	setup('reset dokan previous settings @lite @pro', async ({ request }) => {
 		setup.skip(!!process.env.CI, 'skip previous settings check');
 		//TODO: remove previous quote rule & list things thats need to reset
 		// previous seller badges
@@ -39,22 +39,22 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		await apiUtils.deleteAllQuoteRules();
 	});
 
-	setup('set wc settings @lite @pro', async ({ request })=> {
+	setup('set wc settings @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
 	});
 
-	setup('set tax rate @lite @pro', async ({ request })=> {
+	setup('set tax rate @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
 	});
 
-	setup('set shipping methods @lite @pro', async ({ request })=> {
+	setup('set shipping methods @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// delete previous shipping zones
-		const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string })=> a.id);
+		const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
 		// allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
 		if (allShippingZoneIds.length) {
 			for (const shippingZoneId of allShippingZoneIds) {
@@ -80,22 +80,22 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 		//TODO: separate lite pro shipping methods
 	});
 
-	setup('set basic payments @lite @pro', async ({ request })=> {
+	setup('set basic payments @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
 		await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
 		await apiUtils.updatePaymentGateway('cod', payloads.cod);
 	});
 
-	setup('add categories and attributes @lite @pro', async ({ request })=> {
+	setup('add categories and attributes @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// delete previous categories
-		const allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: string })=> a.id);
+		const allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: string }) => a.id);
 		await apiUtils.updateBatchCategories('delete', allCategoryIds);
 
 		// delete previous attributes
-		const allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: string })=> a.id);
+		const allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: string }) => a.id);
 		await apiUtils.updateBatchAttributes('delete', allAttributeIds);
 
 		// create category
@@ -110,7 +110,7 @@ setup.describe('setup site & woocommerce & user settings', ()=> {
 
 });
 
-setup.describe('setup  user settings', ()=> {
+setup.describe('setup  user settings', () => {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 	// // Customer Details
@@ -120,7 +120,7 @@ setup.describe('setup  user settings', ()=> {
 	// });
 
 	// Vendor Details
-	setup('add vendor & product @lite @pro', async ({ request })=> {
+	setup('add vendor & product @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 
 		// create store
@@ -135,10 +135,10 @@ setup.describe('setup  user settings', ()=> {
 
 	});
 
-	setup('add vendor coupon @pro', async ({ request })=> {
+	setup('add vendor coupon @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		// create store coupon
-		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string })=> o.id);
+		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
 		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
 		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
 		// TODO: not needed anymore
@@ -157,87 +157,87 @@ setup.describe('setup  user settings', ()=> {
 	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
 	// });
 
-	setup('add test vendor orders @pro', async ({ request })=> {
+	setup('add test vendor orders @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
 	});
 
 });
 
-setup.describe('setup dokan settings', ()=> {
+setup.describe('setup dokan settings', () => {
 
-	setup('set dokan general settings @lite @pro', async ()=> {
+	setup('set dokan general settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
 	});
 
-	setup('admin set dokan selling settings @lite @pro', async ()=> {
+	setup('admin set dokan selling settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 	});
 
-	setup('admin set dokan withdraw settings @lite @pro', async ()=> {
+	setup('admin set dokan withdraw settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
 	});
 
-	setup('admin set dokan reverse withdraw settings @lite @pro', async ()=> {
+	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});
 
-	setup('admin set dokan appearance settings @lite @pro', async ()=> {
+	setup('admin set dokan appearance settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
 	});
 
-	setup('admin set dokan privacy policy settings @lite @pro', async ()=> {
+	setup('admin set dokan privacy policy settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
 	});
-	setup('admin set dokan color settings @pro', async ()=> {
+	setup('admin set dokan color settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
 	});
 
-	setup('admin set dokan store support settings @pro', async ()=> {
+	setup('admin set dokan store support settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
 	});
 
-	setup('admin set dokan shipping settings @pro', async ()=> {
+	setup('admin set dokan shipping settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
 	});
 
-	setup('admin set dokan quote settings @pro', async ()=> {
+	setup('admin set dokan quote settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
 	});
 
-	setup('admin set dokan rma settings @pro', async ()=> {
+	setup('admin set dokan rma settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
 	});
 
-	setup('admin set dokan wholesale settings @pro', async ()=> {
+	setup('admin set dokan wholesale settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
 	});
 
-	setup('admin set dokan eu compliance settings @pro', async ()=> {
+	setup('admin set dokan eu compliance settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
 	});
 
-	setup('admin set dokan delivery time settings @pro', async ()=> {
+	setup('admin set dokan delivery time settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
 	});
 
-	setup('admin set dokan product advertising settings @pro', async ()=> {
+	setup('admin set dokan product advertising settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
 	});
 
-	setup('admin set dokan geolocation settings @pro', async ()=> {
+	setup('admin set dokan geolocation settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
 	});
 
-	setup('admin set dokan product report abuse settings @pro', async ()=> {
+	setup('admin set dokan product report abuse settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
 	});
 
-	setup('admin set dokan spmv settings @pro', async ()=> {
+	setup('admin set dokan spmv settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
 	});
 
-	setup('admin set dokan vendor subscription settings @pro', async ()=> {
+	setup('admin set dokan vendor subscription settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
 	});
 

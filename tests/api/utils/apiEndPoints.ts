@@ -1,10 +1,11 @@
 const { SERVER_URL, QUERY } = process.env;
 
 export const endPoints = {
+
 	serverUrl: `${SERVER_URL}`,
 
 	// stores
-	
+
 	getAllStores: `${SERVER_URL}/dokan/v1/stores`,
 	getSingleStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}`,
 	createStore: `${SERVER_URL}/dokan/v1/stores`,
@@ -82,7 +83,7 @@ export const endPoints = {
 	cancelWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
 	updateBatchWithdraws: `${SERVER_URL}/dokan/v1/withdraw/batch`, // method: approved, pending, delete, cancelled
 
-	// store settings 
+	// store settings
 	getSettings: `${SERVER_URL}/dokan/v1/settings`,
 	updateSettings: `${SERVER_URL}/dokan/v1/settings`,
 
@@ -267,7 +268,7 @@ export const endPoints = {
 	// rank math
 	rankMath: (productId: string) => `${SERVER_URL}/dokan/v2/rank-math/${productId}/store-current-editable-post`,
 
-	// product duplicate 
+	// product duplicate
 	createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
 
 
@@ -463,6 +464,9 @@ export const endPoints = {
 		// system status
 		getAllSystemStatus: `${SERVER_URL}/wc/v3/system_status`,
 
+		//data
+		getCurrentCurrency: `${SERVER_URL}/wc/v3/data/currencies/current`,
+
 	},
 
 	wp: {
@@ -499,6 +503,5 @@ export const endPoints = {
 		createPost: `${SERVER_URL}/wp/v2/posts`,
 		updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
 		deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
-	},
-
+	}
 };
