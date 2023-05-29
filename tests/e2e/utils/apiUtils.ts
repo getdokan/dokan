@@ -166,8 +166,9 @@ export class ApiUtils {
 
 	// create store review
 	async createStoreReview(sellerId: string, payload: object, auth? : auth) {
-		const response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		// const response = await this.request.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
+		// const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
 		const reviewId = responseBody.id;
 		return [responseBody, reviewId];
 	}
