@@ -77,7 +77,7 @@
                         <date-range-picker
                             class="mr-5"
                             ref="picker"
-                            :locale-data="this.dateTimePickerFormat"
+                            :locale-data="dateTimePickerFormat()"
                             :singleDatePicker="false"
                             :timePicker="false"
                             :timePicker24Hour="false"
@@ -155,10 +155,6 @@ export default {
                 debit: 0,
                 credit: 0,
                 total_transaction: 0
-            },
-            dateTimePickerFormat: {
-                format: dokan_get_daterange_picker_format().toLowerCase(),
-                ...dokan_helper.daterange_picker_local,
             },
             dateRangePickerRanges: {
                 'Today': [moment().toDate(), moment().toDate()],
