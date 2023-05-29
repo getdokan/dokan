@@ -8,6 +8,7 @@
   "scripts": {
     "start": "wp-scripts start --progress",
     "build": "wp-scripts build --progress",
+    "packages-update": "wp-scripts packages-update",
     "version": "node bin/version-replace",
     "makepot": "node bin/makepot",
     "readme": "wp-readme-to-md",
@@ -16,20 +17,13 @@
     "release": "npm run clean && npm run readme && npm run build && npm run makepot && npm run version && npm run zip"
   },
   "dependencies": {
-    "@wordpress/hooks": "^2.12.3",
+    "@wordpress/hooks": "^3.34.0",
     "chartjs-adapter-moment": "^1.0.1",
-    "debounce": "^1.2.1",
     "papaparse": "^5.4.1",
-    "vue": "^2.7.14",
-    "vue-chartjs": "^3.5.1",
-    "vue-content-loading": "^1.6.0",
-    "vue-multiselect": "^2.1.7",
-    "vue-notification": "^1.3.20",
-    "vue-wp-list-table": "^1.3.0",
-    "vue2-daterange-picker": "^0.6.8"
+    "vue-notification": "^1.3.20"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^26.4.0",
+    "@wordpress/scripts": "^26.5.0",
     "fs-extra": "^10.1.0",
     "jed": "^1.1.1",
     "less": "^4.1.3",
@@ -43,6 +37,13 @@
     "vue-slick": "^1.2.0",
     "vue-template-compiler": "^2.7.14",
     "wp-readme-to-markdown": "^1.0.1",
-    "wp-vue-i18n": "^1.1.4"
+    "wp-vue-i18n": "^1.1.4",
+    "debounce": "^1.2.1",
+    "vue": "^2.7.14",
+    "vue-chartjs": "^3.5.1",
+    "vue-content-loading": "^1.6.0",
+    "vue-multiselect": "^2.1.7",
+    "vue-wp-list-table": "^1.3.0",
+    "vue2-daterange-picker": "^0.6.8"
   }
 }
