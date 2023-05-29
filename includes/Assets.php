@@ -343,8 +343,8 @@ class Assets {
             ],
         ];
 
-        // Scenario like there is already fontawesome library added by the theme with the setting user can control if he/she want to load the dokan fontawesome library or not.
-        if ( is_admin() || 'on' === dokan_get_option( 'enable_dokan_fontawesome', 'dokan_appearance', 'on' ) ) {
+        // The scenario is like there is already fontawesome library added by the theme,but with this setting user can control it that if he/she want to load the dokan fontawesome library or not.
+        if ( is_admin() || 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
             $styles['dokan-fontawesome'] = [
                 'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
             ];
