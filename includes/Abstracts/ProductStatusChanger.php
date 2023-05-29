@@ -308,10 +308,12 @@ abstract class ProductStatusChanger {
         // store previous product status
         $product->update_meta_data( '_dokan_previous_status', $current_status );
 
-        do_action( 'dokan_product_status_changer_before_save', $product, $status );
+        do_action( 'dokan_product_change_status_before_save', $product, $status );
 
         // save product
         $product->save();
+
+        do_action( 'dokan_product_change_status_after_save', $product, $status );
     }
 
     /**
@@ -344,7 +346,11 @@ abstract class ProductStatusChanger {
         // delete previous product status
         $product->delete_meta_data( '_dokan_previous_status' );
 
+        do_action( 'dokan_product_status_revert_before_save', $product, $previous_status );
+
         // save product
         $product->save();
+
+        do_action( 'dokan_product_status_revert_after_save', $product, $previous_status );
     }
 }
