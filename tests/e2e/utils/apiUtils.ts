@@ -127,15 +127,17 @@ export class ApiUtils {
 
 	// get all stores
 	async getAllStores(auth? : auth) {
-		const response = await this.request.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		// const response = await this.request.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
+		// const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
 	// get single store
 	async getSingleStore(orderId: string, auth? : auth) {
-		const response = await this.request.get(endPoints.getSingleStore(orderId), { headers: auth });
-		const responseBody = await this.getResponseBody(response);
+		// const response = await this.request.get(endPoints.getSingleStore(orderId), { headers: auth });
+		// const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.get(endPoints.getSingleStore(orderId), { headers: auth });
 		return responseBody;
 	}
 
