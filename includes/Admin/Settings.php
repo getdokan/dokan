@@ -760,12 +760,12 @@ class Settings {
                         'address' => __( 'Store Address', 'dokan-lite' ),
                     ],
                 ],
-                'enable_dokan_fontawesome' => [
-                    'name'    => 'enable_dokan_fontawesome',
-                    'label'   => __( 'Enable dokan fontawesome', 'dokan-lite' ),
+                'disable_dokan_fontawesome' => [
+                    'name'    => 'disable_dokan_fontawesome',
+                    'label'   => __( 'Disable Dokan FontAwesome', 'dokan-lite' ),
                     'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", 'dokan-lite' ),
                     'type'    => 'switcher',
-                    'default' => 'on',
+                    'default' => 'off',
                 ],
             ],
             'dokan_privacy'    => [
