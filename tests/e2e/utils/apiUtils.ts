@@ -115,8 +115,9 @@ export class ApiUtils {
 	 */
 
 	async importDummyData(payload: object) {
-		const response = await this.request.post(endPoints.importDummyData, { data: payload });
-		const responseBody = await this.getResponseBody(response);
+		// const response = await this.request.post(endPoints.importDummyData, { data: payload });
+		// const responseBody = await this.getResponseBody(response);
+		const responseBody = await this.post(endPoints.importDummyData, { data: payload });
 		return responseBody;
 	}
 
