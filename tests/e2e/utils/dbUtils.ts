@@ -2,14 +2,15 @@ import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from './dbData';
+// const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
 
 const dbPrefix = process.env.DB_PREFIX;
 
 const mySql =  new MySqlConnection({
-	hostname: process.env.HOST_NAME,
-	username: process.env.USER_NAME,
-	password: process.env.PASSWORD,
-	db: process.env.Database,
+	hostname: process.env.DB_HOST_NAME,
+	username: process.env.DB_USER_NAME,
+	password: process.env.DB_USER_PASSWORD,
+	db: process.env.DATABASE,
 	port: Number(process.env.DB_PORT)
 });
 
@@ -23,7 +24,7 @@ export const dbUtils = {
 			try{
 				const result = await dbContext.executeAsync(query);
 				const res = JSON.parse(JSON.stringify(result));
-				expect(res).not.toHaveProperty('errno'); //TODO: ADD ASSERT DBQUERY IS SUCCESSES, update it
+				expect(res).not.toHaveProperty('errno'); //TODO: ADD Actual ASSERT DBQUERY IS SUCCESSES, update it
 				return res;
 			}
 			catch(err: unknown){

@@ -174,11 +174,11 @@ jobs:
           GMAP : ${{secrets.GMAP}}
           SETUP: true
           FORCE_COLOR: 1
-          HOST_NAME: localhost
-       # HOST_NAME: 127.0.0.1
-          USER_NAME: root
-          PASSWORD: password
-          Database: tests-wordpress
+          DB_HOST_NAME: localhost
+          # HOST_NAME: 127.0.0.1
+          DB_USER_NAME: root
+          DB_USER_PASSWORD: password
+          DATABASE: tests-wordpress
           DB_PREFIX: wp
 
       - name: Publish Test Report
