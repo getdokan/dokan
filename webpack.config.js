@@ -19,6 +19,8 @@ var entryPoint = {
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
+  'vendor-address': './assets/src/js/vendor-address.js',
+  'vendor-registration': './assets/src/js/vendor-registration.js',
   'dokan': [
     './assets/src/js/product-editor.js',
     './assets/src/js/script.js',
