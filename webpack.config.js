@@ -45,10 +45,10 @@ var entryPoint = {
   'plugin': '/assets/src/less/plugin.less',
   'global-admin': '/assets/src/less/global-admin.less',
   'setup': '/assets/src/less/setup.less',
-  'setup-no-wc': [
+  'setup-no-wc-style': [
     '/assets/src/less/setup-no-wc.less'
   ],
-  'reverse-withdrawal': '/assets/src/less/reverse-withdrawal.less',
+  'reverse-withdrawal-style': '/assets/src/less/reverse-withdrawal.less',
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
   'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
 };

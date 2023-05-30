@@ -337,8 +337,8 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
             'dokan-reverse-withdrawal'      => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal-style.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal-style.css' ),
             ],
             'dokan-admin-product' => [
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
