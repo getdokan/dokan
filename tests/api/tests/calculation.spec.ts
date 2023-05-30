@@ -4,7 +4,7 @@ import { endPoints } from '../utils/apiEndPoints';
 import { helpers } from '../utils/helpers';
 import { payloads } from '../utils/payloads';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let taxRate: number;
 
 test.beforeAll(async ({ request }) => {

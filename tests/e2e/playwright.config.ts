@@ -73,13 +73,16 @@ const config: PlaywrightTestConfig = {
 	/* Configure projects for major browsers */
 	projects: [
 		// Setup project
-		{ name: 'setup',
-			testMatch: /.*\.setup\.ts/ },
+		{
+			name: 'e2e_setup',
+			testMatch: /.*\.setup\.ts/
+		},
 
-		{ name: 'e2e_tests',
+		{
+			name: 'e2e_tests',
 			testMatch: /.*\.spec\.ts/,
 			use: { ...devices['Desktop Chrome'], },
-			dependencies: process.env.SETUP ? ['setup'] : [],
+			dependencies: process.env.SETUP ? ['e2e_setup'] : [],
 		},
 
 		//     {

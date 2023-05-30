@@ -4,15 +4,15 @@ import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 import { helpers } from '../utils/helpers';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed');
 });
 
-test.describe.skip('reverse withdrawal api test', () => {
-	//TODO: enable reverse withdraw settings
+test.describe('reverse withdrawal api test', () => {
+
 	test('get reverse withdrawal transaction types @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getReverseWithdrawalTransactionTypes);
 		expect(response.ok()).toBeTruthy();

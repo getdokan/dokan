@@ -4,7 +4,7 @@ import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 import { helpers } from '../utils/helpers';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let badgeId: string;
 let currentUserId: string;
 

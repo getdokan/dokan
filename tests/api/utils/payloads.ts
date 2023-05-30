@@ -139,18 +139,18 @@ export const payloads = {
 	createProductReview: () => {
 		return {
 			product_id: '',
-			review: 'Test_review' + faker.datatype.uuid(),
-			reviewer: faker.name.fullName(),
+			review: 'Test_review' + faker.string.uuid(),
+			reviewer: faker.person.fullName(),
 			reviewer_email: faker.internet.email(),
-			rating: faker.datatype.number({ min: 1, max: 5 }),
+			rating: faker.number.int({ min: 1, max: 5 }),
 		};
 	},
 
 	// product review
 
 	updateReview: {
-		review: () => 'review_message_' + faker.datatype.uuid(),
-		rating: faker.datatype.number({ min: 1, max: 5 }),
+		review: () => 'review_message_' + faker.string.uuid(),
+		rating: faker.number.int({ min: 1, max: 5 }),
 		name: 'customer1',
 		email: 'customer1@g.com',
 		verified: true,
@@ -186,10 +186,11 @@ export const payloads = {
 
 	createCoupon: () => {
 		return {
-			code: 'VC_' + faker.datatype.uuid(),
-			amount: faker.datatype.number({ min: 1, max: 10 },).toString(),
+			code: 'VC_' + faker.string.uuid(),
+			amount: faker.number.int({ min: 1, max: 10 },).toString(),
 			discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
 			product_ids: [15],
+			individual_use: false,
 			meta_data: [
 				{
 					key: 'apply_before_tax',
@@ -208,7 +209,7 @@ export const payloads = {
 	},
 
 	updateCoupon: () => {
-		return { amount: faker.datatype.number({ min: 1, max: 10 },).toString() };
+		return { amount: faker.number.int({ min: 1, max: 10 },).toString() };
 	},
 
 	// order
@@ -464,7 +465,7 @@ export const payloads = {
 
 	createAttribute: () => {
 		return {
-			name: 'Test_attribute_' + faker.random.alpha(8),
+			name: 'Test_attribute_' + faker.string.alpha(8),
 			// slug: `pa_${payloads.createAttribute.name}`,
 			// type: 'select',
 			// order_by: 'menu_order',
@@ -473,15 +474,15 @@ export const payloads = {
 	},
 
 	updateAttribute: () => {
-		return { name: 'Updated_Test_attribute_' + faker.random.alpha(5) };
+		return { name: 'Updated_Test_attribute_' + faker.string.alpha(5) };
 	},
 
 	createAttributeTerm: () => {
-		return { name: 'Test_attributeTerm_' + faker.random.alpha(8) };
+		return { name: 'Test_attributeTerm_' + faker.string.alpha(8) };
 	},
 
 	updateAttributeTerm: () => {
-		return { name: 'Updated_Test_attributeTerm_' + faker.random.alpha(5) };
+		return { name: 'Updated_Test_attributeTerm_' + faker.string.alpha(5) };
 	},
 
 	// user
@@ -837,10 +838,10 @@ export const payloads = {
 	createCustomer: () => {
 		return {
 			email: faker.internet.email(),
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
+			first_name: faker.person.firstName(),
+			last_name: faker.person.lastName(),
 			role: 'customer',
-			username: faker.name.firstName() + faker.datatype.uuid(),
+			username: faker.person.firstName() + faker.string.uuid(),
 			password: '01dokan01',
 			billing: {
 				first_name: 'customer1',
@@ -873,8 +874,8 @@ export const payloads = {
 	updateCustomer: () => {
 		return {
 			email: faker.internet.email(),
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
+			first_name: faker.person.firstName(),
+			last_name: faker.person.lastName(),
 			role: 'customer',
 			password: '01dokan01',
 			billing: {
@@ -987,10 +988,10 @@ export const payloads = {
 	// store category
 
 	createStoreCategory: () => {
-		return { name: 'Test_Store_Category' + faker.datatype.uuid() };
+		return { name: 'Test_Store_Category' + faker.string.uuid() };
 	},
 	updateStoreCategory: () => {
-		return { name: 'Update_Test_Store_Category' + faker.datatype.uuid() };
+		return { name: 'Update_Test_Store_Category' + faker.string.uuid() };
 	},
 
 	// dummy data
@@ -1037,13 +1038,13 @@ export const payloads = {
 
 	createStore: () => {
 		return {
-			user_login: faker.name.firstName() + faker.datatype.uuid(),
+			user_login: faker.person.firstName() + faker.string.uuid(),
 			user_pass: '01dokan01',
 			role: 'seller',
 			email: faker.internet.email(),
-			store_name: faker.name.firstName() + '_store',
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
+			store_name: faker.person.firstName() + '_store',
+			first_name: faker.person.firstName(),
+			last_name: faker.person.lastName(),
 			social: {
 				fb: 'http://dokan.test',
 				youtube: 'http://dokan.test',
@@ -1125,9 +1126,9 @@ export const payloads = {
 	updateStore: () => {
 		return {
 			// email: faker.internet.email(),
-			// store_name: faker.name.firstName(),
-			// first_name: faker.name.firstName(),
-			// last_name: faker.name.lastName(),
+			// store_name: faker.person.firstName(),
+			// first_name: faker.person.firstName(),
+			// last_name: faker.person.lastName(),
 			social: {
 				fb: 'http://dokan.test',
 				youtube: 'http://dokan.test',
@@ -1349,7 +1350,7 @@ export const payloads = {
 
 	createQuoteRule: () => {
 		return {
-			rule_name: 'QR_' + faker.random.alphaNumeric(5),
+			rule_name: 'QR_' + faker.string.alphanumeric(5),
 			selected_user_role: ['customer'],
 			category_ids: [],
 			product_ids: [],
@@ -1364,7 +1365,7 @@ export const payloads = {
 	},
 
 	updateQuoteRule: {
-		rule_name: 'updated_QR_' + faker.random.alphaNumeric(5),
+		rule_name: 'updated_QR_' + faker.string.alphanumeric(5),
 		selected_user_role: ['customer'],
 		hide_price: '0',
 		hide_price_text: 'Price is covered',
@@ -1378,7 +1379,7 @@ export const payloads = {
 
 	createRequestQuote: () => {
 		return {
-			quote_title: 'QT_' + faker.random.alphaNumeric(5),
+			quote_title: 'QT_' + faker.string.alphanumeric(5),
 			customer_info: {
 				name_field: 'customer1',
 				email_field: 'customer1@yopmail.com',
@@ -1392,7 +1393,7 @@ export const payloads = {
 	},
 
 	updateRequestQuote: {
-		quote_title: 'updated_QT_' + faker.random.alphaNumeric(5),
+		quote_title: 'updated_QT_' + faker.string.alphanumeric(5),
 		customer_info: {
 			name_field: 'customer1',
 			email_field: 'customer1@yopmail.com',

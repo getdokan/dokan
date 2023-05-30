@@ -3,7 +3,7 @@ import { ApiUtils } from '../utils/apiUtils';
 import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let downloadableProductId: string;
 let orderId: string;
 let downloadId: string;
@@ -22,7 +22,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 
-test.describe('order downloads api test', () => {
+test.describe.only('order downloads api test', () => {
 	
 	test('get all order downloads @v2 @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllOrderDownloads(orderId));

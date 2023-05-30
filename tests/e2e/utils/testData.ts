@@ -25,10 +25,10 @@ export const data = {
 
 	//User
 	user: {
-		username: ()=> faker.name.firstName('male'),
+		username: () => faker.person.firstName('male'),
 		userDetails: {
-			firstName: ()=> faker.name.firstName('male'),
-			lastName: ()=> faker.name.lastName('male'),
+			firstName: () => faker.person.firstName('male'),
+			lastName: () => faker.person.lastName('male'),
 			role: 'customer',
 		},
 	},
@@ -67,39 +67,39 @@ export const data = {
 		},
 
 		name: {
-			simple: ()=> faker.commerce.productName() + (' (Simple)'),
-			variable: ()=> faker.commerce.productName() + (' (Variable)'),
-			external: ()=> faker.commerce.productName() + (' (External)'),
-			grouped: ()=> faker.commerce.productName() + (' (Grouped)'),
-			simpleSubscription: ()=> faker.commerce.productName() + (' (Simple Subscription)'),
-			variableSubscription: ()=> faker.commerce.productName() + (' (Variable Subscription)'),
+			simple: () => faker.commerce.productName() + (' (Simple)'),
+			variable: () => faker.commerce.productName() + (' (Variable)'),
+			external: () => faker.commerce.productName() + (' (External)'),
+			grouped: () => faker.commerce.productName() + (' (Grouped)'),
+			simpleSubscription: () => faker.commerce.productName() + (' (Simple Subscription)'),
+			variableSubscription: () => faker.commerce.productName() + (' (Variable Subscription)'),
 			dokanSubscription: {
-				nonRecurring: ()=> 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.random.alpha({
-					count: 5,
+				nonRecurring: () => 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.string.alpha({
+					length: 5,
 					casing: 'upper',
 				},) + (' (Product Pack)'),
 			},
-			booking: ()=> faker.commerce.productName() + (' (Booking)'),
-			auction: ()=> faker.commerce.productName() + (' (Auction)'),
+			booking: () => faker.commerce.productName() + (' (Booking)'),
+			auction: () => faker.commerce.productName() + (' (Auction)'),
 		},
 
 		price: {
 			// price: faker.commerce.price(100, 200, 2),
-			// price: faker.datatype.number({min:1, max:200, precision: 0.01}),
+			// price: faker.number.int({min:1, max:200, precision: 0.01}),
 			// price: faker.finance.amount(1, 200, 2),
-			price_int: ()=> faker.finance.amount(100, 200, 0),
-			price_random: ()=> faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
-			price_frac: ()=> faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
-			price_frac_comma: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			auctionPrice: ()=> faker.commerce.price(10, 100, 0),
-			price: ()=> data.product.price.price_frac_comma(),
+			price_int: () => faker.finance.amount(100, 200, 0),
+			price_random: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
+			price_frac: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
+			price_frac_comma: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			auctionPrice: () => faker.commerce.price({ min: 10, max: 100, dec: 0 }),
+			price: () => data.product.price.price_frac_comma(),
 		},
 
 		category: {
 			unCategorized: 'Uncategorized',
 			clothings: 'Clothings',
-			randomCategory1: ()=> faker.commerce.productAdjective(),
-			randomCategory: ()=> 'category_' + faker.random.alpha(5),
+			randomCategory1: () => faker.commerce.productAdjective(),
+			randomCategory: () => 'category_' + faker.string.alpha(5),
 			categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', 'Men"s Fashion', 'Clothings', 'Women"s Fashion']),
 		},
 
@@ -119,19 +119,17 @@ export const data = {
 				attributeTerms: ['red', 'blue', 'black', 'yellow', 'white'],
 			},
 
-			randomAttribute: ()=> {
-				return {
-					attributeName: 'attribute_' + faker.random.alpha(5),
-					attributeTerms: ['attributeTerm_' + faker.random.alpha(5)],
-				};
-			},
+			randomAttribute: () => ({
+				attributeName: 'attribute_' + faker.string.alpha(5),
+				attributeTerms: ['attributeTerm_' + faker.string.alpha(5)],
+			}),
 		},
 
 		simple: {
 			productType: 'simple',
-			productName: ()=> faker.commerce.productName() + (' (Simple)'),
+			productName: () => faker.commerce.productName() + (' (Simple)'),
 			category: 'Uncategorized',
-			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			stockStatus: false,
@@ -139,9 +137,9 @@ export const data = {
 
 		variable: {
 			productType: 'variable',
-			productName: ()=> faker.commerce.productName() + (' (Variable)'),
+			productName: () => faker.commerce.productName() + (' (Variable)'),
 			category: 'Uncategorized',
-			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			stockStatus: false,
@@ -156,11 +154,11 @@ export const data = {
 
 		external: {
 			productType: 'external',
-			productName: ()=> faker.commerce.productName() + (' (External)'),
+			productName: () => faker.commerce.productName() + (' (External)'),
 			productUrl: '/product/p1_v1/',
 			buttonText: 'Buy product',
 			category: 'Uncategorized',
-			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
@@ -168,10 +166,10 @@ export const data = {
 
 		simpleSubscription: {
 			productType: 'subscription',
-			productName: ()=> faker.commerce.productName() + (' (Simple Subscription)'),
+			productName: () => faker.commerce.productName() + (' (Simple Subscription)'),
 			category: 'Uncategorized',
-			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			subscriptionPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			subscriptionPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPeriodInterval: '1',  // '0', '1', '2', '3', '4', '5', '6'
 			subscriptionPeriod: 'month',  // 'day', 'week', 'month', 'year'
 			expireAfter: '0',  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'
@@ -184,9 +182,9 @@ export const data = {
 
 		variableSubscription: {
 			productType: 'variable-subscription',
-			productName: ()=> faker.commerce.productName() + (' (Variable Subscription)'),
+			productName: () => faker.commerce.productName() + (' (Variable Subscription)'),
 			category: 'Uncategorized',
-			subscriptionPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			subscriptionPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPeriodInterval: '1',
 			subscriptionPeriod: 'month',
 			expireAfter: '0',
@@ -205,12 +203,12 @@ export const data = {
 
 		vendorSubscription: {
 			productType: 'product_pack',
-			productName: ()=> 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.random.alpha({
-				count: 5,
+			productName: () => 'Dokan Subscription ' + faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium'],) + ' ' + faker.string.alpha({
+				length: 5,
 				casing: 'upper',
 			},) + (' (Product Pack)'),
 			category: 'Uncategorized',
-			regularPrice: ()=> (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			numberOfProducts: '-1',
 			packValidity: '0',
 			advertisementSlot: '-1',
@@ -220,7 +218,7 @@ export const data = {
 		},
 
 		booking: {
-			productName: ()=> faker.commerce.productName() + (' (Booking)'),
+			productName: () => faker.commerce.productName() + (' (Booking)'),
 			productType: 'booking',
 			category: 'Uncategorized',
 			bookingDurationType: 'customer',  // 'fixed', 'customer'
@@ -241,15 +239,15 @@ export const data = {
 		// Auction
 		auction: {
 
-			productName: ()=> faker.commerce.productName() + (' (Auction)'),
+			productName: () => faker.commerce.productName() + (' (Auction)'),
 			productType: 'auction',
 			category: 'Uncategorized',
 			itemCondition: 'new',  // 'new', 'used'
 			auctionType: 'normal',  // 'normal', 'reverse'
-			regularPrice: ()=> (faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			bidIncrement: ()=> (faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			reservedPrice: ()=> (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			buyItNowPrice: ()=> (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			regularPrice: () => (faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			bidIncrement: () => (faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			reservedPrice: () => (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
+			buyItNowPrice: () => (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			startDate: helpers.currentDateTime.replace(/,/g, ''),
 			endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
 			storeName: String(process.env.VENDOR) + 'store',
@@ -258,10 +256,10 @@ export const data = {
 
 		// Review
 		review: {
-			rating: faker.datatype.number({
+			rating: faker.number.int({
 				min: 1, max: 5
 			}),
-			reviewMessage: ()=> faker.datatype.uuid(),
+			reviewMessage: () => faker.string.uuid(),
 		},
 
 		// Report
@@ -281,7 +279,7 @@ export const data = {
 	store: {
 		rating: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
 		reviewTitle: 'store review title',
-		reviewMessage: ()=> faker.datatype.uuid(),
+		reviewMessage: () => faker.string.uuid(),
 	},
 
 	order: {
@@ -338,12 +336,12 @@ export const data = {
 	},
 
 	coupon: {
-		// title: () => 'VC_' + faker.random.alpha({count: 5, casing: 'upper'},),
-		title: ()=> 'VC_' + faker.datatype.uuid(),
-		amount: ()=> faker.datatype.number({
+		// title: () => 'VC_' + faker.string.alpha({count: 5, casing: 'upper'},),
+		title: () => 'VC_' + faker.string.uuid(),
+		amount: () => faker.number.int({
 			min: 1, max: 10
 		},).toString(),
-		discount_type: ()=> faker.helpers.arrayElement(['percent', 'fixed_product']),
+		discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']),
 		existingCouponErrorMessage: 'Coupon title already exists',
 	},
 
@@ -697,15 +695,15 @@ export const data = {
 		city: 'New York',
 		zipCode: '10006',
 		state: 'New York',
-		paypal: ()=> faker.internet.email(),
+		paypal: () => faker.internet.email(),
 		bankAccountName: 'accountName',
 		bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
-		bankAccountNumber: faker.random.alphaNumeric(10),
+		bankAccountNumber: faker.string.alphanumeric(10),
 		bankName: 'bankName',
 		bankAddress: 'bankAddress',
-		bankRoutingNumber: faker.random.alphaNumeric(10),
-		bankIban: faker.random.alphaNumeric(10),
-		bankSwiftCode: faker.random.alphaNumeric(10),
+		bankRoutingNumber: faker.string.alphanumeric(10),
+		bankIban: faker.string.alphanumeric(10),
+		bankSwiftCode: faker.string.alphanumeric(10),
 		customPayment: '1234567890',
 		skrill: faker.internet.email(),
 	},
@@ -748,8 +746,8 @@ export const data = {
 			editAccountCustomer: 'my-account/edit-account',
 			becomeVendor: 'my-account/account-migration',
 			supportTickets: 'my-account/support-tickets',
-			productDetails: (productName: string)=> `product/${productName}`,
-			vendorDetails: (storeName: string)=> `store/${storeName}`,
+			productDetails: (productName: string) => `product/${productName}`,
+			vendorDetails: (storeName: string) => `store/${storeName}`,
 			productReview: 'wp-comments-post.php',
 			submitSupport: 'wp-comments-post.php',
 
@@ -797,19 +795,19 @@ export const data = {
 		password: String(process.env.VENDOR_PASSWORD),
 
 		vendorInfo: {
-			email: ()=> faker.internet.email(),
-			// emailDomain: '_' + faker.random.alphaNumeric(5) + '@email.com',
+			email: () => faker.internet.email(),
+			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
 			emailDomain: '@email.com',
 			password: String(process.env.VENDOR_PASSWORD),
 			password1: String(process.env.VENDOR_PASSWORD) + '1',
-			firstName: ()=> faker.name.firstName('male'),
-			lastName: ()=> faker.name.lastName('male'),
-			userName: faker.name.firstName('male'),
+			firstName: () => faker.person.firstName('male'),
+			lastName: () => faker.person.lastName('male'),
+			userName: faker.person.firstName('male'),
 			shopName: faker.company.name(),
 			shopUrl: faker.company.name(),
 			companyName: faker.company.name(),
-			companyId: faker.random.alphaNumeric(5),
-			vatNumber: faker.random.alphaNumeric(10),
+			companyId: faker.string.alphanumeric(5),
+			vatNumber: faker.string.alphanumeric(10),
 			bankIban: faker.finance.iban(),
 			phoneNumber: faker.phone.number('(###) ###-####'),
 			street1: 'abc street',
@@ -821,12 +819,12 @@ export const data = {
 			zipCode: '10006',
 			state: 'New York',
 			accountName: 'accountName',
-			accountNumber: faker.random.alphaNumeric(10),
+			accountNumber: faker.string.alphanumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			routingNumber: faker.random.alphaNumeric(10),
-			swiftCode: faker.random.alphaNumeric(10),
-			iban: faker.random.alphaNumeric(10),
+			routingNumber: faker.string.alphanumeric(10),
+			swiftCode: faker.string.alphanumeric(10),
+			iban: faker.string.alphanumeric(10),
 
 			//shop details
 			banner: 'tests/e2e/utils/sampleData/banner.png',
@@ -853,8 +851,8 @@ export const data = {
 				},
 
 				datewise: {
-					vacationDayFrom: ()=> helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100)),
-					vacationDayTo: (from: string)=> helpers.addDays(from, 31),
+					vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100)),
+					vacationDayTo: (from: string) => helpers.addDays(from, 31),
 					closingStyle: 'datewise',
 					vacationMessage: 'We are currently out of order',
 				}
@@ -980,15 +978,15 @@ export const data = {
 		},
 
 		payment: {
-			email: ()=> faker.internet.email(),
+			email: () => faker.internet.email(),
 			bankAccountName: 'accountName',
 			bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
-			bankAccountNumber: faker.random.alphaNumeric(10),
+			bankAccountNumber: faker.string.alphanumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			bankRoutingNumber: faker.random.alphaNumeric(10),
-			bankIban: faker.random.alphaNumeric(10),
-			bankSwiftCode: faker.random.alphaNumeric(10),
+			bankRoutingNumber: faker.string.alphanumeric(10),
+			bankIban: faker.string.alphanumeric(10),
+			bankSwiftCode: faker.string.alphanumeric(10),
 			saveSuccessMessage: 'Your information has been saved successfully',
 		},
 
@@ -1066,7 +1064,7 @@ export const data = {
 
 		//addon
 		addon: {
-			name: ()=> 'Add-ons Group #' + helpers.randomNumber(),
+			name: () => 'Add-ons Group #' + helpers.randomNumber(),
 			priority: '10',
 			category: 'Uncategorized',
 			type: 'multiple_choice',  // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
@@ -1089,20 +1087,20 @@ export const data = {
 		password: String(process.env.CUSTOMER_PASSWORD),
 
 		customerInfo: {
-			// emailDomain: '_' + faker.random.alphaNumeric(5) + '@email.com',
+			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
 			emailDomain: '@email.com',
-			email: ()=> faker.internet.email(),
+			email: () => faker.internet.email(),
 			password: String(process.env.CUSTOMER_PASSWORD),
 			password1: String(process.env.CUSTOMER_PASSWORD) + '1',
-			firstName: ()=> faker.name.firstName('male'),
-			lastName: ()=> faker.name.lastName('male'),
+			firstName: () => faker.person.firstName('male'),
+			lastName: () => faker.person.lastName('male'),
 			// username: () => this.customer.customerInfo.firstName, //TODO: handel callback  & not works
 			// storename: () => this.customer.customerInfo.firstName + 'store',
-			username: ()=> faker.name.firstName('male'),
-			storename: ()=> faker.name.firstName('male') + 'store',
+			username: () => faker.person.firstName('male'),
+			storename: () => faker.person.firstName('male') + 'store',
 			companyName: faker.company.name(),
-			companyId: faker.random.alphaNumeric(5),
-			vatNumber: faker.random.alphaNumeric(10),
+			companyId: faker.string.alphanumeric(5),
+			vatNumber: faker.string.alphanumeric(10),
 			bankIban: faker.finance.iban(),
 			phone: faker.phone.number('(###) ###-####'),
 			street1: 'abc street', //TODO: address should be global or not
@@ -1114,12 +1112,12 @@ export const data = {
 			zipCode: '10006',
 			state: 'New York',
 			accountName: 'accountName',
-			accountNumber: faker.random.alphaNumeric(10),
+			accountNumber: faker.string.alphanumeric(10),
 			bankName: 'bankName',
 			bankAddress: 'bankAddress',
-			routingNumber: faker.random.alphaNumeric(10),
-			swiftCode: faker.random.alphaNumeric(10),
-			iban: faker.random.alphaNumeric(10),
+			routingNumber: faker.string.alphanumeric(10),
+			swiftCode: faker.string.alphanumeric(10),
+			iban: faker.string.alphanumeric(10),
 			addressChangeSuccessMessage: 'Address changed successfully.',
 			getSupport: {
 				subject: 'get Support Subject',
@@ -1141,7 +1139,7 @@ export const data = {
 		},
 
 		supportTicket: {
-			message: ()=> faker.datatype.uuid(),
+			message: () => faker.string.uuid(),
 		},
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
 	},
@@ -1184,7 +1182,7 @@ export const data = {
 		simpleProduct: {
 			product1: {
 				name: 'p1_v1 (simple)',
-				productName: ()=> 'p1_v1 (simple)',
+				productName: () => 'p1_v1 (simple)',
 			},
 			product2: 'p2_v1 (simple)',
 			productFrac1: 'p1_F1_v1 (simple)',
@@ -1228,8 +1226,8 @@ export const data = {
 		},
 
 		vendorInfo: {
-			firstName: ()=> 'vendor1',
-			lastName: ()=> 'v1',
+			firstName: () => 'vendor1',
+			lastName: () => 'v1',
 			username: 'vendor1',
 			shopName: String(process.env.VENDOR) + 'store',
 		},
@@ -1242,9 +1240,9 @@ export const data = {
 		},
 
 		customerInfo: {
-			firstName: ()=> 'customer1',
-			lastName: ()=> 'c1',
-			username: ()=> 'customer1',
+			firstName: () => 'customer1',
+			lastName: () => 'c1',
+			username: () => 'customer1',
 		},
 	},
 };

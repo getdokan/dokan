@@ -32,7 +32,8 @@ interface coupon {
 	amount: string,
 	discount_type: string,
 	product_ids: number[],
-	individual_use: boolean
+	individual_use?: boolean,
+	meta_data?: { key: string; value: string; }[]
 }
 
 export class ApiUtils {
@@ -314,8 +315,7 @@ export class ApiUtils {
 	async createCoupon(productIds: string[], coupon: coupon, auth?: auth) {
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
-		let couponId;
-		console.log(responseBody.code);
+		let couponId: string;
 
 		if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists') {
 			expect(response.status()).toBe(400);
@@ -612,7 +612,7 @@ export class ApiUtils {
 	// create a wholesale customer
 	async createWholesaleCustomer(payload: object, auth?: auth) {
 		const [, customerId] = await this.createCustomer(payload, auth);
-		const response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: customerId }, headers: auth });
+		const response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return [responseBody, customerId];
 	}
@@ -985,8 +985,8 @@ export class ApiUtils {
 				file: {
 					name: String((filePath.split('/')).pop()),
 					mimeType: 'image/' + (filePath.split('.')).pop(),
-					// buffer: fs.readFileSync(filePath),
-					buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
+					buffer: fs.readFileSync(filePath),
+					// buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
 				},
 			},
 		};

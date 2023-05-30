@@ -3,7 +3,7 @@ import { ApiUtils } from '../utils/apiUtils';
 import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let wholesaleCustomerId: string;
 
 test.beforeAll(async ({ request }) => {
@@ -22,8 +22,7 @@ test.describe('wholesale customers api test', () => {
 
 	test('create a wholesale customer @pro', async ({ request }) => {
 		const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
-
-		const response = await request.post(endPoints.createWholesaleCustomer, { data: { id: customerId } });
+		const response = await request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();

@@ -49,31 +49,27 @@ export const payloads = {
 
 	// product
 
-	createProduct: () => {
-		return {
-			name: faker.commerce.productName() + ' Simple',
-			type: 'simple',
-			regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
-			categories: [
-				{
-					// id: 48
-				},
-			],
-		};
-	},
+	createProduct: () => ({
+		name: faker.commerce.productName() + ' Simple',
+		type: 'simple',
+		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		categories: [
+			{
+				// id: 48
+			},
+		],
+	}),
 
-	createVariableProduct: () => {
-		return {
-			name: faker.commerce.productName() + ' (Variable)',
-			type: 'variable',
-			regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
-			categories: [
-				{
-					// id: 48
-				},
-			],
-		};
-	},
+	createVariableProduct: () => ({
+		name: faker.commerce.productName() + ' (Variable)',
+		type: 'variable',
+		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		categories: [
+			{
+				// id: 48
+			},
+		],
+	}),
 
 	createProductVariation: {
 		// id: '47',
@@ -92,29 +88,23 @@ export const payloads = {
 		],
 	},
 
-	updateProduct: () => {
-		return { regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) };
-	},
+	updateProduct: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
 
-	updateProductVariation: () => {
-		return { regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) };
-	},
+	updateProductVariation: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
 
-	createProductReview: () => {
-		return {
-			product_id: '',
-			review: 'Test_review' + faker.datatype.uuid(),
-			reviewer: faker.name.fullName(),
-			reviewer_email: faker.internet.email(),
-			rating: faker.datatype.number({ min: 1, max: 5 }),
-		};
-	},
+	createProductReview: () => ({
+		product_id: '',
+		review: 'Test_review' + faker.string.uuid(),
+		reviewer: faker.person.fullName(),
+		reviewer_email: faker.internet.email(),
+		rating: faker.number.int({ min: 1, max: 5 }),
+	}),
 
 	// product review
 
 	updateReview: {
-		review: () => 'review_message_' + faker.datatype.uuid(),
-		rating: faker.datatype.number({ min: 1, max: 5 }),
+		review: () => 'review_message_' + faker.string.uuid(),
+		rating: faker.number.int({ min: 1, max: 5 }),
 		name: 'customer1',
 		email: 'customer1@g.com',
 		verified: true,
@@ -132,49 +122,41 @@ export const payloads = {
 
 	// attribute
 
-	updateBatchAttributesTemplate: () => {
-		return {
-			id: '',
-			description: 'updated description (batch req)',
-		};
-	},
+	updateBatchAttributesTemplate: () => ({
+		id: '',
+		description: 'updated description (batch req)',
+	}),
 
-	updateBatchAttributeTermsTemplate: () => {
-		return {
-			id: '',
-			order_by: 'menu_order',
-		};
-	},
+	updateBatchAttributeTermsTemplate: () => ({
+		id: '',
+		order_by: 'menu_order',
+	}),
 
 	// coupon
 
-	createCoupon: () => {
-		return {
-			code: 'VC_' + faker.datatype.uuid(),
-			amount: faker.datatype.number({ min: 1, max: 10 }).toString(),
-			discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
-			product_ids: [15],
-			individual_use: true,
-			meta_data: [
-				{
-					key: 'apply_before_tax',
-					value: 'no'
-				},
-				{
-					key: 'apply_new_products',
-					value: 'yes'
-				},
-				{
-					key: 'show_on_store',
-					value: 'no'
-				}
-			]
-		};
-	},
+	createCoupon: () => ({
+		code: 'VC_' + faker.string.uuid(),
+		amount: faker.number.int({ min: 1, max: 10 }).toString(),
+		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
+		product_ids: [15],
+		individual_use: true, // TODO: why true in e2e 
+		meta_data: [
+			{
+				key: 'apply_before_tax',
+				value: 'no'
+			},
+			{
+				key: 'apply_new_products',
+				value: 'yes'
+			},
+			{
+				key: 'show_on_store',
+				value: 'no'
+			}
+		]
+	}),
 
-	updateCoupon: () => {
-		return { amount: faker.datatype.number({ min: 1, max: 10 }).toString() };
-	},
+	updateCoupon: () => ({ amount: faker.number.int({ min: 1, max: 10 }).toString() }),
 
 	// order
 
@@ -417,27 +399,19 @@ export const payloads = {
 
 	// attribute
 
-	createAttribute: () => {
-		return {
-			name: 'Test_attribute_' + faker.random.alpha(8),
-			// slug: `pa_${payloads.createAttribute.name}`,
-			// type: "select",
-			// order_by: "menu_order",
-			// has_archives: false
-		};
-	},
+	createAttribute: () => ({
+		name: 'Test_attribute_' + faker.string.alpha(8),
+		// slug: `pa_${payloads.createAttribute.name}`,
+		// type: "select",
+		// order_by: "menu_order",
+		// has_archives: false
+	}),
 
-	updateAttribute: () => {
-		return { name: 'Updated_Test_attribute_' + faker.random.alpha(5) };
-	},
+	updateAttribute: () => ({ name: 'Updated_Test_attribute_' + faker.string.alpha(5) }),
 
-	createAttributeTerm: () => {
-		return { name: 'Test_attributeTerm_' + faker.random.alpha(8) };
-	},
+	createAttributeTerm: () => ({ name: 'Test_attributeTerm_' + faker.string.alpha(8) }),
 
-	updateAttributeTerm: () => {
-		return { name: 'Updated_Test_attributeTerm_' + faker.random.alpha(5) };
-	},
+	updateAttributeTerm: () => ({ name: 'Updated_Test_attributeTerm_' + faker.string.alpha(5) }),
 
 	// user
 
@@ -841,85 +815,79 @@ export const payloads = {
 
 	// customer
 
-	createCustomer: () => {
-		return {
-			email: faker.internet.email(),
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
-			role: 'customer',
-			username: faker.name.firstName() + faker.datatype.uuid(),
-			password: '01dokan01',
-			billing: {
-				first_name: 'customer1',
-				last_name: 'c1',
-				company: '',
-				address_1: 'abc street',
-				address_2: 'xyz street',
-				city: 'New York',
-				postcode: '10003',
-				country: 'US',
-				state: 'NY',
-				email: 'customer1@yopmail.com',
-				phone: '0123456789',
-			},
-			shipping: {
-				first_name: 'customer1',
-				last_name: 'c1',
-				company: '',
-				address_1: 'abc street',
-				address_2: 'xyz street',
-				city: 'New York',
-				postcode: '10003',
-				country: 'US',
-				state: 'NY',
-				phone: '0123456789',
-			},
-		};
-	},
+	createCustomer: () => ({
+		email: faker.internet.email(),
+		first_name: faker.person.firstName(),
+		last_name: faker.person.lastName(),
+		role: 'customer',
+		username: faker.person.firstName() + faker.string.uuid(),
+		password: '01dokan01',
+		billing: {
+			first_name: 'customer1',
+			last_name: 'c1',
+			company: '',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			postcode: '10003',
+			country: 'US',
+			state: 'NY',
+			email: 'customer1@yopmail.com',
+			phone: '0123456789',
+		},
+		shipping: {
+			first_name: 'customer1',
+			last_name: 'c1',
+			company: '',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			postcode: '10003',
+			country: 'US',
+			state: 'NY',
+			phone: '0123456789',
+		},
+	}),
 
-	updateCustomer: () => {
-		return {
-			email: faker.internet.email(),
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
-			role: 'customer',
-			password: '01dokan01',
-			billing: {
-				first_name: 'customer1',
-				last_name: 'c1',
-				company: '',
-				address_1: 'abc street',
-				address_2: 'xyz street',
-				city: 'New York',
-				postcode: '10003',
-				country: 'US',
-				state: 'NY',
-				email: 'customer1@yopmail.com',
-				phone: '0123456789',
-			},
-			shipping: {
-				first_name: 'customer1',
-				last_name: 'c1',
-				company: '',
-				address_1: 'abc street',
-				address_2: 'xyz street',
-				city: 'New York',
-				postcode: '10003',
-				country: 'US',
-				state: 'NY',
-				phone: '0123456789',
-			},
-		};
-	},
+	updateCustomer: () => ({
+		email: faker.internet.email(),
+		first_name: faker.person.firstName(),
+		last_name: faker.person.lastName(),
+		role: 'customer',
+		password: '01dokan01',
+		billing: {
+			first_name: 'customer1',
+			last_name: 'c1',
+			company: '',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			postcode: '10003',
+			country: 'US',
+			state: 'NY',
+			email: 'customer1@yopmail.com',
+			phone: '0123456789',
+		},
+		shipping: {
+			first_name: 'customer1',
+			last_name: 'c1',
+			company: '',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			postcode: '10003',
+			country: 'US',
+			state: 'NY',
+			phone: '0123456789',
+		},
+	}),
 
-	updateBatchCustomersTemplate: () => {
-		return {
-			id: '',
-			billing: {
-				phone: '0123456789',
-			},
-		};
-	},
+	updateBatchCustomersTemplate: () => ({
+		id: '',
+		billing: {
+			phone: '0123456789',
+		},
+	}),
 
 	// wholesale customer
 
@@ -993,12 +961,8 @@ export const payloads = {
 
 	// store category
 
-	createStoreCategory: () => {
-		return { name: 'Test_Store_Category' + faker.datatype.uuid() };
-	},
-	updateStoreCategory: () => {
-		return { name: 'Update_Test_Store_Category' + faker.datatype.uuid() };
-	},
+	createStoreCategory: () => ({ name: 'Test_Store_Category' + faker.string.uuid() }),
+	updateStoreCategory: () => ({ name: 'Update_Test_Store_Category' + faker.string.uuid() }),
 
 	// dummy data
 
@@ -1035,177 +999,173 @@ export const payloads = {
 			enable_tnc: 'off',
 			store_seo: [],
 			dokan_store_time: [],
-			enabled: true,
-			trusted: true,
+			enabled: 'yes',
+			trusted: 'yes',
 		},
 	},
 
 	// store
 
-	createStore: () => {
-		return {
-			user_login: faker.name.firstName() + faker.datatype.uuid(),
-			user_pass: '01dokan01',
-			role: 'seller',
-			email: faker.internet.email(),
-			store_name: faker.name.firstName() + '_store',
-			first_name: faker.name.firstName(),
-			last_name: faker.name.lastName(),
-			social: {
-				fb: 'http://dokan.test',
-				youtube: 'http://dokan.test',
-				twitter: 'http://dokan.test',
-				linkedin: 'http://dokan.test',
-				pinterest: 'http://dokan.test',
-				instagram: 'http://dokan.test',
-				flickr: 'http://dokan.test',
+	createStore: () => ({
+		user_login: faker.person.firstName() + faker.string.uuid(),
+		user_pass: '01dokan01',
+		role: 'seller',
+		email: faker.internet.email(),
+		store_name: faker.person.firstName() + '_store',
+		first_name: faker.person.firstName(),
+		last_name: faker.person.lastName(),
+		social: {
+			fb: 'http://dokan.test',
+			youtube: 'http://dokan.test',
+			twitter: 'http://dokan.test',
+			linkedin: 'http://dokan.test',
+			pinterest: 'http://dokan.test',
+			instagram: 'http://dokan.test',
+			flickr: 'http://dokan.test',
+		},
+		phone: '0123456789',
+		show_email: false,
+		address: {
+			street_1: 'abc street',
+			street_2: 'xyz street',
+			city: 'New York',
+			zip: '10003',
+			state: 'NY',
+			country: 'US',
+		},
+		location: '',
+		banner: '',
+		banner_id: 0,
+		gravatar: '',
+		gravatar_id: 0,
+		shop_url: '',
+		products_per_page: 12,
+		show_more_product_tab: true,
+		toc_enabled: false,
+		store_toc: '',
+		featured: true,
+		rating: {
+			rating: '0.00',
+			count: 1,
+		},
+		enabled: true,
+		registered: '',
+		payment: {
+			paypal: {
+				0: 'email',
+				email: 'paypal@g.c',
 			},
-			phone: '0123456789',
-			show_email: false,
-			address: {
-				street_1: 'abc street',
-				street_2: 'xyz street',
-				city: 'New York',
-				zip: '10003',
-				state: 'NY',
-				country: 'US',
+			bank: {
+				ac_name: 'account name',
+				ac_type: 'personal',
+				ac_number: '1234567',
+				bank_name: 'bank name',
+				bank_addr: 'bank address',
+				routing_number: '123456',
+				iban: '123456',
+				swift: '12345',
 			},
-			location: '',
-			banner: '',
-			banner_id: 0,
-			gravatar: '',
-			gravatar_id: 0,
-			shop_url: '',
-			products_per_page: 12,
-			show_more_product_tab: true,
-			toc_enabled: false,
-			store_toc: '',
-			featured: true,
-			rating: {
-				rating: '0.00',
-				count: 1,
+			stripe: false,
+		},
+		trusted: true,
+		store_open_close: {
+			enabled: false,
+			time: [],
+			open_notice: 'Store is open',
+			close_notice: 'Store is closed',
+		},
+		company_name: '',
+		vat_number: '',
+		company_id_number: '',
+		bank_name: '',
+		bank_iban: '',
+		categories: [
+			{
+				id: 74,
+				name: 'Uncategorized',
+				slug: 'uncategorized',
 			},
-			enabled: true,
-			registered: '',
-			payment: {
-				paypal: {
-					0: 'email',
-					email: 'paypal@g.c',
-				},
-				bank: {
-					ac_name: 'account name',
-					ac_type: 'personal',
-					ac_number: '1234567',
-					bank_name: 'bank name',
-					bank_addr: 'bank address',
-					routing_number: '123456',
-					iban: '123456',
-					swift: '12345',
-				},
-				stripe: false,
-			},
-			trusted: true,
-			store_open_close: {
-				enabled: false,
-				time: [],
-				open_notice: 'Store is open',
-				close_notice: 'Store is closed',
-			},
-			company_name: '',
-			vat_number: '',
-			company_id_number: '',
-			bank_name: '',
-			bank_iban: '',
-			categories: [
-				{
-					id: 74,
-					name: 'Uncategorized',
-					slug: 'uncategorized',
-				},
-			],
-			admin_commission: '',
-			admin_additional_fee: '0.00',
-			admin_commission_type: 'flat',
-		};
-	},
+		],
+		admin_commission: '',
+		admin_additional_fee: '0.00',
+		admin_commission_type: 'flat',
+	}),
 
-	updateStore: () => {
-		return {
-			// email: faker.internet.email(),
-			// store_name: faker.name.firstName(),
-			// first_name: faker.name.firstName(),
-			// last_name: faker.name.lastName(),
-			social: {
-				fb: 'http://dokan.test',
-				youtube: 'http://dokan.test',
-				twitter: 'http://dokan.test',
-				linkedin: 'http://dokan.test',
-				pinterest: 'http://dokan.test',
-				instagram: 'http://dokan.test',
-				flickr: 'http://dokan.test',
+	updateStore: () => ({
+		// email: faker.internet.email(),
+		// store_name: faker.person.firstName(),
+		// first_name: faker.person.firstName(),
+		// last_name: faker.person.lastName(),
+		social: {
+			fb: 'http://dokan.test',
+			youtube: 'http://dokan.test',
+			twitter: 'http://dokan.test',
+			linkedin: 'http://dokan.test',
+			pinterest: 'http://dokan.test',
+			instagram: 'http://dokan.test',
+			flickr: 'http://dokan.test',
+		},
+		phone: '0123456789',
+		show_email: false,
+		address: {
+			street_1: 'abc street',
+			street_2: 'xyz street',
+			city: 'New York',
+			zip: '10003',
+			state: 'NY',
+			country: 'US',
+		},
+		location: '',
+		banner: '',
+		banner_id: 0,
+		gravatar: '',
+		gravatar_id: 0,
+		shop_url: '',
+		products_per_page: 12,
+		show_more_product_tab: true,
+		toc_enabled: false,
+		store_toc: '',
+		featured: true,
+		rating: {
+			rating: '0.00',
+			count: 1,
+		},
+		trusted: true,
+		enabled: true,
+		registered: '',
+		payment: {
+			paypal: {
+				0: 'email',
+				email: 'paypal@g.c',
 			},
-			phone: '0123456789',
-			show_email: false,
-			address: {
-				street_1: 'abc street',
-				street_2: 'xyz street',
-				city: 'New York',
-				zip: '10003',
-				state: 'NY',
-				country: 'US',
+			bank: {
+				ac_name: 'account name',
+				ac_type: 'personal',
+				ac_number: '1234567',
+				bank_name: 'bank name',
+				bank_addr: 'bank address',
+				routing_number: '123456',
+				iban: '123456',
+				swift: '12345',
 			},
-			location: '',
-			banner: '',
-			banner_id: 0,
-			gravatar: '',
-			gravatar_id: 0,
-			shop_url: '',
-			products_per_page: 12,
-			show_more_product_tab: true,
-			toc_enabled: false,
-			store_toc: '',
-			featured: true,
-			rating: {
-				rating: '0.00',
-				count: 1,
-			},
-			trusted: true,
-			enabled: true,
-			registered: '',
-			payment: {
-				paypal: {
-					0: 'email',
-					email: 'paypal@g.c',
-				},
-				bank: {
-					ac_name: 'account name',
-					ac_type: 'personal',
-					ac_number: '1234567',
-					bank_name: 'bank name',
-					bank_addr: 'bank address',
-					routing_number: '123456',
-					iban: '123456',
-					swift: '12345',
-				},
-				stripe: false,
-			},
-			store_open_close: {
-				enabled: false,
-				time: [],
-				open_notice: 'Store is open',
-				close_notice: 'Store is closed',
-			},
-			company_name: '',
-			vat_number: '',
-			company_id_number: '',
-			bank_name: '',
-			bank_iban: '',
-			categories: [{}],
-			admin_commission: '',
-			admin_additional_fee: '0.00',
-			admin_commission_type: 'flat',
-		};
-	},
+			stripe: false,
+		},
+		store_open_close: {
+			enabled: false,
+			time: [],
+			open_notice: 'Store is open',
+			close_notice: 'Store is closed',
+		},
+		company_name: '',
+		vat_number: '',
+		company_id_number: '',
+		bank_name: '',
+		bank_iban: '',
+		categories: [{}],
+		admin_commission: '',
+		admin_additional_fee: '0.00',
+		admin_commission_type: 'flat',
+	}),
 
 	createStoreReview: {
 		title: 'Test store review',
@@ -1349,24 +1309,22 @@ export const payloads = {
 
 	// quote rule
 
-	createQuoteRule: () => {
-		return {
-			rule_name: 'QR_' + faker.random.alphaNumeric(5),
-			selected_user_role: ['customer'],
-			category_ids: [],
-			product_ids: [],
-			hide_price: '1',
-			hide_price_text: 'Price is hidden',
-			hide_cart_button: 'replace',
-			button_text: 'Add to quote',
-			apply_on_all_product: '1',
-			rule_priority: '0',
-			status: 'publish',
-		};
-	},
+	createQuoteRule: () => ({
+		rule_name: 'QR_' + faker.string.alphanumeric(5),
+		selected_user_role: ['customer'],
+		category_ids: [],
+		product_ids: [],
+		hide_price: '1',
+		hide_price_text: 'Price is hidden',
+		hide_cart_button: 'replace',
+		button_text: 'Add to quote',
+		apply_on_all_product: '1',
+		rule_priority: '0',
+		status: 'publish',
+	}),
 
 	updateQuoteRule: {
-		rule_name: 'updated_QR_' + faker.random.alphaNumeric(5),
+		rule_name: 'updated_QR_' + faker.string.alphanumeric(5),
 		selected_user_role: ['customer'],
 		hide_price: '0',
 		hide_price_text: 'Price is covered',
@@ -1377,23 +1335,21 @@ export const payloads = {
 
 	// request quote
 
-	createRequestQuote: () => {
-		return {
-			quote_title: 'QT_' + faker.random.alphaNumeric(5),
-			customer_info: {
-				name_field: 'customer1',
-				email_field: 'customer1@yopmail.com',
-				company_field: 'c1',
-				phone_field: '0987654321',
-			},
-			product_ids: [''],
-			offer_price: ['50'],
-			offer_product_quantity: ['10'],
-		};
-	},
+	createRequestQuote: () => ({
+		quote_title: 'QT_' + faker.string.alphanumeric(5),
+		customer_info: {
+			name_field: 'customer1',
+			email_field: 'customer1@yopmail.com',
+			company_field: 'c1',
+			phone_field: '0987654321',
+		},
+		product_ids: [''],
+		offer_price: ['50'],
+		offer_product_quantity: ['10'],
+	}),
 
 	updateRequestQuote: {
-		quote_title: 'updated_QT_' + faker.random.alphaNumeric(5),
+		quote_title: 'updated_QT_' + faker.string.alphanumeric(5),
 		customer_info: {
 			name_field: 'customer1',
 			email_field: 'customer1@yopmail.com',

@@ -54,7 +54,18 @@ const config: PlaywrightTestConfig = {
 	},
 
 	/* Configure projects for major browsers */
-	// projects: [
+	projects: [
+		// Setup project
+		{
+			name: 'api_setup',
+			testMatch: /.*\.setup\.ts/
+		},
+
+		{
+			name: 'api_tests',
+			testMatch: /.*\.spec\.ts/,
+			dependencies: process.env.SETUP ? ['api_setup'] : [],
+		},
 	//     {
 	//         name: 'chromium',
 	//         use: {
@@ -103,7 +114,7 @@ const config: PlaywrightTestConfig = {
 	//     channel: 'chrome',
 	//   },
 	// },
-	// ],
+	],
 
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	outputDir: 'playwright-report/test-artifacts/',

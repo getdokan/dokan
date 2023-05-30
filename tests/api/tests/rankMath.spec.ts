@@ -3,7 +3,7 @@ import { ApiUtils } from '../utils/apiUtils';
 import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let productId: string;
 
 test.beforeAll(async ({ request }) => {

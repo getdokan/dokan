@@ -3,7 +3,7 @@ import { ApiUtils } from '../utils/apiUtils';
 import { endPoints } from '../utils/apiEndPoints';
 import { payloads } from '../utils/payloads';
 
-let apiUtils: any;
+let apiUtils: ApiUtils;
 let sellerId: string;
 let reviewId: string;
 

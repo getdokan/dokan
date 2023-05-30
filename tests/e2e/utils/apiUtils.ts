@@ -33,7 +33,8 @@ interface coupon {
 		amount: string,
 		discount_type: string,
 		product_ids: number[],
-		individual_use: boolean
+		individual_use?: boolean,
+		meta_data?: { key: string; value: string; }[]
 }
 
 interface reqOptions {
