@@ -464,7 +464,7 @@ class Assets {
                 'deps'    => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
             ],
             'speaking-url'              => [
-                'src'  => $asset_url . '/js/speakingurl.min.js',
+                'src'  => $asset_url . '/vendors/speakingurl/speakingurl.min.js',
                 'deps' => [ 'jquery' ],
             ],
             'dokan-admin'               => [

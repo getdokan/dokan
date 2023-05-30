@@ -21,6 +21,9 @@ var entryPoint = {
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
   'vendor-address': './assets/src/js/vendor-address.js',
   'vendor-registration': './assets/src/js/vendor-registration.js',
+  'customize-controls': './assets/src/js/customize-controls.js',
+  'customize-preview': './assets/src/js/customize-preview.js',
+  'pointers': './assets/src/js/pointers.js',
   'dokan': [
     './assets/src/js/product-editor.js',
     './assets/src/js/script.js',
