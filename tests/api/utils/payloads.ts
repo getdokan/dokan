@@ -1028,8 +1028,8 @@ export const payloads = {
 			enable_tnc: 'off',
 			store_seo: [],
 			dokan_store_time: [],
-			enabled: true,
-			trusted: true,
+			enabled: 'yes',
+			trusted: 'yes',
 		},
 	},
 

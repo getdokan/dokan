@@ -1,4 +1,4 @@
-import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
+import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 import { payloads } from './payloads';
@@ -61,12 +61,9 @@ export class ApiUtils {
 		return basicAuth;
 	}
 
-	// get site headers
-	async getSiteHeaders(url: string = endPoints.serverUrl ) {
-		const response = await this.request.head(url);
-		const headers = response.headers();
-		return headers;
-	}
+	/**
+	 * request methods
+	 */
 
 	async get(url: string, options?: reqOptions | undefined){
 		const response = await this.request.get(url, options);
@@ -86,11 +83,38 @@ export class ApiUtils {
 		return [response, responseBody];
 	}
 
+	async patch(url: string, options?: reqOptions | undefined){
+		const response = await this.request.patch(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return [response, responseBody];
+	}
+
 	async delete(url: string, options?: reqOptions | undefined){
 		const response = await this.request.delete(url, options);
 		const responseBody = await this.getResponseBody(response);
 		return [response, responseBody];
 	}
+
+	async head(url: string, options?: reqOptions | undefined){
+		const response = await this.request.head(url, options);
+		const responseBody = await this.getResponseBody(response);
+		return [response, responseBody];
+	}
+
+	async fetch(urlOrRequest: string | Request, options?: reqOptions | undefined){
+		const response = await this.request.fetch(urlOrRequest, options);
+		const responseBody = await this.getResponseBody(response);
+		return [response, responseBody];
+	}
+
+	async storageState(path?: string | undefined){  //TODO: test it
+		await this.request.storageState({ path: path });
+	}
+
+	async disposeApiRequestContext(): Promise<void>{
+		await this.request.dispose();
+	}
+
 
 	// get responseBody
 	async getResponseBody(response: APIResponse, assert = true) {
@@ -109,6 +133,13 @@ export class ApiUtils {
 			console.log('Response text: ', await response.text());
 			return false; //TODO: WHY FALSE
 		}
+	}
+
+	// get site headers
+	async getSiteHeaders(url: string = endPoints.serverUrl ) {
+		const response = await this.request.head(url);
+		const headers = response.headers();
+		return headers;
 	}
 
 	/**
