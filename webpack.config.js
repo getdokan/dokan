@@ -50,22 +50,6 @@ var entryPoint = {
   'dokan-admin-product': '/assets/src/less/dokan-admin-product.less',
 };
 
-const plugins = [
-  new MiniCssExtractPlugin(
-    {
-      filename: ( { chunk } ) => {
-        if ( chunk.name.match( /\/modules\// ) ) {
-          return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
-        }
-
-        return '../css/[name].css';
-      },
-    }
-  ),
-
-  new VueLoaderPlugin(),
-];
-
 const updatedConfig = {
   mode: defaultConfig.mode,
   entry: entryPoint,
@@ -90,7 +74,21 @@ const updatedConfig = {
     moment: 'moment'
   },
 
-  plugins,
+  plugins: [
+    new MiniCssExtractPlugin(
+      {
+        filename: ( { chunk } ) => {
+          if ( chunk.name.match( /\/modules\// ) ) {
+            return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
+          }
+
+          return '../css/[name].css';
+        },
+      }
+    ),
+
+    new VueLoaderPlugin(),
+  ],
 
   module: {
     rules: [
