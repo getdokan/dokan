@@ -139,9 +139,9 @@ function dokan_is_product_edit_page() {
 function dokan_is_seller_dashboard() {
     global $wp_query;
 
-    $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
 
-    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
+    if ( ! $page_id ) {
         return false;
     }
 
