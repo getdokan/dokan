@@ -64,7 +64,7 @@ class SetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        list( $suffix ) = dokan_get_lite_script_suffix_and_version();
 
         if ( ! is_admin() ) {
             wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
