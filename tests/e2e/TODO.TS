@@ -28,7 +28,8 @@
 // lowercase
 
 //TODO: add system info after git action info via system status function, current theme should be there
-
+//TODO: shorter api endpoints, try to remove parameter as much as possible , /productid or query ...
+getAllOrders: ${SERVER_URL}/v1/orders to endPoints.getAllOrders
 
 
 // TODO: woocommerce
@@ -174,3 +175,8 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 		await page.goto( `/shop/?add-to-cart=${ productId }` );
 		await page.waitForLoadState( 'networkidle' );
 	} );
+
+
+	//TODO: use this instead of networkidle
+	// Start test
+	await page.waitForLoadState( 'networkidle' );

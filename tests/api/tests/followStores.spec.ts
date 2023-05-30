@@ -17,7 +17,7 @@ test.beforeAll(async ({ request }) => {
 test.describe('follow store api test', () => {
 
 	test('get store follow status @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getStoreFollowStatus(sellerId));
+		const response = await request.get(endPoints.getStoreFollowStatus, { params: { vendor_id:sellerId } });
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();

@@ -95,7 +95,7 @@ test.describe('stores api test', () => {
 	});
 
 	test('client contact store @lite', async ({ request }) => {
-		const response = await request.post(endPoints.ClientContactStore(sellerId), { data: payloads.clientContactStore });
+		const response = await request.post(endPoints.clientContactStore(sellerId), { data: payloads.clientContactStore });
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();

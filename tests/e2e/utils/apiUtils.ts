@@ -446,7 +446,7 @@ export class ApiUtils {
 	async getAllWithdrawsByStatus(status: string, auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllWithdrawsByStatus(status), { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllWithdrawsByStatus(status), { params: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllWithdraws, { params: { per_page:100, status: status }, headers: auth });
 		return responseBody;
 	}
 
@@ -640,7 +640,7 @@ export class ApiUtils {
 	 * module  api methods
 	 */
 
-	// get all modules         //TODO: covert all get request with params , and remove unnecessary endpoints in both api and e2e suites
+	// get all modules //TODO: covert all get request with params , and remove unnecessary endpoints in both api and e2e suites
 	async getAllModules(params = {}, auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllModules, {  params: params, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
@@ -650,7 +650,8 @@ export class ApiUtils {
 
 	// get all modules ids
 	async getAllModuleIds(params = {}, auth? : auth) {
-		const allModuleIds = (await this.getAllModules(params, auth)).map((a: { id: string; }) => a.id);
+		const allModules = await this.getAllModules(params, auth);
+		const allModuleIds = allModules.map((a: { id: string; }) => a.id);
 		return allModuleIds;
 	}
 
@@ -1108,7 +1109,7 @@ export class ApiUtils {
 	async getAllPlugins(params = {}, auth? : auth) { //TODO: run loop & increment page to grab all plugins/products/...
 		// const response = await this.request.get(endPoints.wp.getAllPlugins, { data: { per_page:100 }, params: params, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wp.getAllPlugins, { data: { per_page:100 }, params: params, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wp.getAllPlugins, { params: { ...params, per_page:100 }, headers: auth });
 		return responseBody;
 	}
 

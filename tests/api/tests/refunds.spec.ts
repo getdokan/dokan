@@ -27,7 +27,7 @@ test.describe.skip('refunds api test', () => {
 	});
 
 	test('get all refunds by status @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllRefundsByStatus('completed')); // pending, cancelled, completed
+		const response = await request.get(endPoints.getAllRefunds, { params :{status:'completed'}}); // pending, cancelled, completed
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();

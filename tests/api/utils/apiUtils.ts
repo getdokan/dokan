@@ -2,6 +2,7 @@ import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
 import FormData from 'form-data';
+import { payloads } from './payloads';
 
 interface auth { //TODO: gather all interfaces in one place
 	[key: string]: string;
@@ -63,7 +64,7 @@ export class ApiUtils {
 			// console.log('ResponseBody: ', responseBody); 
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
-		} catch (err: unknown) {
+		} catch (err: any) {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
 			console.log('Response text: ', await response.text());
@@ -347,7 +348,7 @@ export class ApiUtils {
 
 	// get all withdraws by status
 	async getAllWithdrawsByStatus(status: string, auth?: auth) {
-		const response = await this.request.get(endPoints.getAllWithdrawsByStatus(status), { headers: auth });
+		const response = await this.request.get(endPoints.getAllWithdraws, { params: { per_page:100, status: status }, headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}

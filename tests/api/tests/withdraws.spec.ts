@@ -33,7 +33,7 @@ test.describe('withdraw api test', () => {
 	});
 
 	test('get all withdraws by status @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllWithdrawsByStatus('pending')); // pending, cancelled, approved
+		const response = await request.get(endPoints.getAllWithdraws, { params: { status: 'pending'} } ); // pending, cancelled, approved
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();

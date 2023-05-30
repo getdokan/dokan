@@ -17,7 +17,7 @@ export const endPoints = {
 	getStoreCategories: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/categories`,
 	getStoreProducts: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/products`,
 	updateStoreStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/status`,
-	ClientContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`, // post
+	clientContactStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/contact`, // post
 	adminEmailStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/email`, // post
 	updateBatchStores: `${SERVER_URL}/dokan/v1/stores/batch`, // method: approved, pending, delete
 
@@ -75,7 +75,6 @@ export const endPoints = {
 
 	// withdraws
 	getBalanceDetails: `${SERVER_URL}/dokan/v1/withdraw/balance`,
-	getAllWithdrawsByStatus: (status: string) => `${SERVER_URL}/dokan/v1/withdraw/${QUERY}status=${status}`,
 	getAllWithdraws: `${SERVER_URL}/dokan/v1/withdraw/`,
 	getSingleWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
 	createWithdraw: `${SERVER_URL}/dokan/v1/withdraw/`, // post
@@ -140,14 +139,13 @@ export const endPoints = {
 
 	// refunds
 	getAllRefunds: `${SERVER_URL}/dokan/v1/refunds/`,
-	getAllRefundsByStatus: (status: string) => `${SERVER_URL}/dokan/v1/refunds/${QUERY}status=${status}`,
 	approveRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/approve`, // put
 	cancelRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/cancel`, // put
 	deleteRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}`,
 	updateBatchRefunds: `${SERVER_URL}/dokan/v1/refunds/batch`, // method: completed, cancelled
 
 	// follow store
-	getStoreFollowStatus: (sellerId: string) => `${SERVER_URL}/dokan/v1/follow-store${QUERY}vendor_id=${sellerId}`,
+	getStoreFollowStatus: `${SERVER_URL}/dokan/v1/follow-store`,
 	followUnfollowStore: `${SERVER_URL}/dokan/v1/follow-store`, // post
 	getFollowers: `${SERVER_URL}/dokan/v1/follow-store/followers`, // post
 
