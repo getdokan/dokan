@@ -3,6 +3,7 @@ const package = require('./package.json');
 const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+const isProduction = process.env.NODE_ENV === 'production';
 
 var vueVendor = Object.keys(package.dependencies);
 
@@ -63,12 +64,13 @@ const plugins = [
   new VueLoaderPlugin(),
 ];
 
-module.exports = {
+const updatedConfig = {
   mode: defaultConfig.mode,
   entry: entryPoint,
   output: {
     path: path.resolve(__dirname, './assets/js'),
     filename: '[name].js',
+    clean: true,
   },
 
   resolve: {
@@ -137,3 +139,23 @@ module.exports = {
     ]
   },
 }
+
+if (!isProduction) {
+  updatedConfig.devServer = {
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    allowedHosts: 'all',
+    host: 'localhost',
+    port: 8887,
+    proxy: {
+      '/assets/dist': {
+        pathRewrite: {
+          '^/assets/dist': '',
+        },
+      },
+    },
+  };
+}
+
+module.exports = updatedConfig;
