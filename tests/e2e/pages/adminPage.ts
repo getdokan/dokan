@@ -624,10 +624,7 @@ export class AdminPage extends BasePage {
 		}
 
 		await this.click(selector.admin.wooCommerce.settings.shippingMethodSaveChanges);
-
-		await this.waitForSelector(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
-		const shippingMethodIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
-		expect(shippingMethodIsVisible).toBe(true);
+		await expect(this.page.locator(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod))).toBeVisible();
 
 	}
 
@@ -1270,10 +1267,7 @@ export class AdminPage extends BasePage {
 		await this.type(selector.admin.dokan.refunds.searchRefund, orderNumber);
 		// await this.press(data.key.enter)
 
-
-		await this.waitForSelector(selector.admin.dokan.refunds.refundCell(orderNumber));
-		const searchedRefundRequestIsVisible = await this.isVisible(selector.admin.dokan.refunds.refundCell(orderNumber));
-		expect(searchedRefundRequestIsVisible).toBe(true);
+		await expect(this.page.locator(selector.admin.dokan.refunds.refundCell(orderNumber))).toBeVisible();
 	}
 
 
@@ -1325,9 +1319,7 @@ export class AdminPage extends BasePage {
 		// Ready!
 		await this.click(selector.admin.dokan.dokanSetupWizard.visitDokanDashboard);
 
-		await this.waitForSelector(selector.admin.dokan.dashboard.dashboardText);
-		const dashboardTextIsVisible = await this.isVisible(selector.admin.dokan.dashboard.dashboardText);
-		expect(dashboardTextIsVisible).toBe(true);
+		await expect(this.page.locator(selector.admin.dokan.dashboard.dashboardText)).toBeVisible();
 	}
 
 	// Dokan Modules

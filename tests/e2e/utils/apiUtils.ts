@@ -161,7 +161,7 @@ export class ApiUtils {
 	async getAllStores(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllStores, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllStores, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -225,7 +225,7 @@ export class ApiUtils {
 	async getAllProducts(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllProducts, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllProducts, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllProducts, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -355,7 +355,7 @@ export class ApiUtils {
 	async getAllAttributeTerms(attributeId: string, auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllAttributeTerms(attributeId), { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllAttributeTerms(attributeId), { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllAttributeTerms(attributeId), { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -386,7 +386,7 @@ export class ApiUtils {
 	async getAllCoupons(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllCoupons, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllCoupons, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllCoupons, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -438,7 +438,7 @@ export class ApiUtils {
 	async getAllWithdraws(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllWithdraws, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllWithdraws, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllWithdraws, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -446,7 +446,7 @@ export class ApiUtils {
 	async getAllWithdrawsByStatus(status: string, auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllWithdrawsByStatus(status), { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllWithdrawsByStatus(status), { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllWithdrawsByStatus(status), { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -481,7 +481,7 @@ export class ApiUtils {
 	async getAllOrders(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllOrders, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllOrders, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllOrders, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -530,7 +530,7 @@ export class ApiUtils {
 	async getAllOrderLogs(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAdminLogs, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAdminLogs, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAdminLogs, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -549,7 +549,7 @@ export class ApiUtils {
 	async getAllRefunds(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllRefunds, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllRefunds, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllRefunds, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -588,7 +588,7 @@ export class ApiUtils {
 	async getAllSupportTickets(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllSupportTickets, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllSupportTickets, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllSupportTickets, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -678,7 +678,7 @@ export class ApiUtils {
 	async getAllCustomers(auth? : auth) {
 		// const response = await this.request.get(endPoints.wc.getAllCustomers, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wc.getAllCustomers, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wc.getAllCustomers, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -721,7 +721,7 @@ export class ApiUtils {
 	async getAllWholesaleCustomers(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllWholesaleCustomers, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllWholesaleCustomers, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllWholesaleCustomers, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -742,7 +742,7 @@ export class ApiUtils {
 	async getAllProductAdvertisements(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllProductAdvertisements, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllProductAdvertisements, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllProductAdvertisements, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -784,7 +784,7 @@ export class ApiUtils {
 	async getAllAnnouncements(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllAnnouncements, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllAnnouncements, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllAnnouncements, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -821,7 +821,7 @@ export class ApiUtils {
 	async getAllProductReviews(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllProductReviews, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllProductReviews, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllProductReviews, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -840,7 +840,7 @@ export class ApiUtils {
 	async getAllStoreReviews(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllStoreReviews, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllStoreReviews, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllStoreReviews, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -905,7 +905,7 @@ export class ApiUtils {
 	async getAllQuoteRules(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllQuoteRules, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -944,7 +944,7 @@ export class ApiUtils {
 	async getAllRequestQuotes(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllRequestQuotes, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllRequestQuotes, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllRequestQuotes, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -972,7 +972,7 @@ export class ApiUtils {
 	async getAllOrderDownloads(orderId: string, auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllOrderDownloads(orderId), { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllOrderDownloads(orderId), { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllOrderDownloads(orderId), { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -993,7 +993,7 @@ export class ApiUtils {
 	async getAllSellerBadges(auth? : auth) {
 		// const response = await this.request.get(endPoints.getAllSellerBadges, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.getAllSellerBadges, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.getAllSellerBadges, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -1049,7 +1049,7 @@ export class ApiUtils {
 	async getAllUsers(auth? : auth) {
 		// const response = await this.request.get(endPoints.wp.getAllUsers, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wp.getAllUsers, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wp.getAllUsers, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -1057,7 +1057,7 @@ export class ApiUtils {
 	async getAllUsersByRole(role: string, auth? : auth) {
 		// const response = await this.request.get(endPoints.wp.getAllUsersByRole(role), { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wp.getAllUsersByRole(role), { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wp.getAllUsersByRole(role), { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -1168,7 +1168,7 @@ export class ApiUtils {
 	async getAllMediaItems(auth? : auth) {
 		// const response = await this.request.get(endPoints.wp.getAllMediaItems, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wp.getAllMediaItems, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wp.getAllMediaItems, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
@@ -1243,7 +1243,7 @@ export class ApiUtils {
 	async getAllCategories(auth? : auth) {
 		// const response = await this.request.get(endPoints.wc.getAllCategories, { data: { per_page:100 }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.get(endPoints.wc.getAllCategories, { data: { per_page:100 }, headers: auth });
+		const [, responseBody] = await this.get(endPoints.wc.getAllCategories, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 

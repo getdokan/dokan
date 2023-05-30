@@ -7,7 +7,7 @@
 //TODO: add color on git action
 //TODO: separate two junit report showing on simple git-action summary
 //TODO: add require await for async to eslint
-//TODO: separate everything for local & pro like: global setup, env, playwright config
+//TODO: separate everything for local & CI like: global setup, env, playwright config
 //TODO: implement fixture for lite pro issue handle
 //TODO: separate globalSetup for local & CI , cant reg user every time for local site or find another soln.
 //TODO: #  // "no-unused-vars": "off" is enabled for now but remove before push
@@ -131,7 +131,7 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 	};
 
 
-    // TODO: try & convet xppath to this
+    // TODO: try & convert xpath to this
     'input:below(:text("Search for a product…"))',
     // search for each product to add
 		await page.click( 'text=Search for a product…' );

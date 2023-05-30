@@ -343,21 +343,21 @@ export class CustomerPage extends BasePage {
 	// go to cart from shop page
 	async goToCartFromShop(): Promise<void> {
 		await this.clickAndWaitForNavigation(selector.customer.cShop.viewCart);
-		const cartUrl = await this.isCurrentUrl('cart');
+		const cartUrl = this.isCurrentUrl('cart');
 		expect(cartUrl).toBeTruthy();
 	}
 
 	// go to cart from product details page
 	async goToCartFromSingleProductPage(): Promise<void> {
 		await this.clickAndWaitForNavigation(selector.customer.cSingleProduct.viewCart);
-		const cartUrl = await this.isCurrentUrl('cart');
+		const cartUrl =  this.isCurrentUrl('cart');
 		expect(cartUrl).toBeTruthy();
 	}
 
 	// got to checkout from cart
 	async goToCheckoutFromCart(): Promise<void> {
 		await this.clickAndWaitForNavigation(selector.customer.cCart.proceedToCheckout);
-		const cartUrl = await this.isCurrentUrl('checkout');
+		const cartUrl = this.isCurrentUrl('checkout');
 		expect(cartUrl).toBeTruthy();
 	}
 
