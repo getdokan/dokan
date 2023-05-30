@@ -3,20 +3,6 @@
 use WeDevs\Dokan\Cache;
 
 /**
- * Get dokan lite script suffic and version for dokan
- *
- * @since DOKAN_SINCE
- *
- * @return array first element is script file suffix and second element is script file version
- */
-function dokan_get_lite_script_suffix_and_version() {
-    $suffix         = '';
-    $script_version = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? time() : DOKAN_PLUGIN_VERSION;
-
-    return [ $suffix, $script_version ];
-}
-
-/**
  * Dokan Admin menu position
  *
  * @since 3.0.0

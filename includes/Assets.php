@@ -357,7 +357,6 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
-        list( $suffix, $version ) = dokan_get_lite_script_suffix_and_version();
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
@@ -370,9 +369,8 @@ class Assets {
 
         $scripts = [
             'jquery-tiptip'             => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.js',
                 'deps'    => [ 'jquery' ],
-                'version' => $version,
             ],
             'dokan-i18n-jed'            => [
                 'src'  => $asset_url . '/vendors/i18n/jed.js',
@@ -446,29 +444,24 @@ class Assets {
 
             // Register core scripts
             'dokan-flot-main'           => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.js',
                 'deps'    => [ 'jquery' ],
-                'version' => $version,
             ],
             'dokan-flot-resize'         => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize.js',
                 'deps'    => [ 'dokan-flot-main' ],
-                'version' => $version,
             ],
             'dokan-flot-time'           => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.time' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.time.js',
                 'deps'    => [ 'dokan-flot-main' ],
-                'version' => $version,
             ],
             'dokan-flot-pie'            => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.pie' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.pie.js',
                 'deps'    => [ 'dokan-flot-main' ],
-                'version' => $version,
             ],
             'dokan-flot'                => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack' . $suffix . '.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack.js',
                 'deps'    => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
-                'version' => $version,
             ],
             'speaking-url'              => [
                 'src'  => $asset_url . '/js/speakingurl.min.js',
