@@ -50,7 +50,7 @@ var entryPoint = {
   ],
   'reverse-withdrawal': '/assets/src/less/reverse-withdrawal.less',
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
-  'dokan-admin-product': '/assets/src/less/dokan-admin-product.less',
+  'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
 };
 
 const updatedConfig = {
