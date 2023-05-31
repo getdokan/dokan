@@ -1287,6 +1287,8 @@ add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_res
 /**
  * Restricts vendor from reviewing own product
  *
+ * @since DOKAN_SINCE
+ *
  * @param array $data
  * @return array
  */
