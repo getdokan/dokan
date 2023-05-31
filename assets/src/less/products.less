@@ -176,15 +176,21 @@
     width: 25%;
   }
 
-  .content-half-part.sale-price {
-    display: inline-block;
+  .content-half-part{
+    &.sale-price {
+      display: inline-block;
 
-    label.form-label {
-      display: block;
+      label {
+        &.form-label {
+          display: block;
 
-      a.sale_schedule,
-      a.cancel_sale_schedule {
-        float: right;
+          a {
+            &.sale_schedule,
+            &.cancel_sale_schedule {
+              float: right;
+            }
+          }
+        }
       }
     }
   }
