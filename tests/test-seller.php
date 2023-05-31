@@ -6,24 +6,20 @@ class Dokan_Test_Seller extends WP_UnitTestCase {
 
     private $seller_two = 0;
 
-    public function setup() {
-        parent::setup();
+    public function set_up() {
+        parent::set_up();
 
         $this->create_sellers();
     }
 
-    public function tearDown() {
-        parent::tearDown();
-    }
-
     public function create_sellers() {
-        $this->seller_one = $this->factory->user->create( [
+        $this->seller_one = $this->factory()->user->create( [
             'role'        => 'seller',
             'user_login'  => 'seller_one',
             'description' => 'seller_one',
         ] );
 
-        $this->seller_two = $this->factory->user->create( [
+        $this->seller_two = $this->factory()->user->create( [
             'role'        => 'seller',
             'user_login'  => 'seller_two',
             'description' => 'seller_two',
