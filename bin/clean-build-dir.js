@@ -1,5 +1,9 @@
+/**
+ * This file cleans and removes everything that is in production build directory.
+ */
 const fs = require('fs-extra');
 const dir = 'build/';
+
 // Removing old files.
 fs.remove( dir, ( error ) => {
   if ( error ) {

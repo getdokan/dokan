@@ -124,13 +124,13 @@ exec(
             console.log( chalk.green( `✅  ${zipFile} is ready. 🎉` ) );
           }
         ).catch( ( error ) => {
-          console.log( chalk.red( `Could not make ${ zipFile }.`) );
+          console.log( chalk.red( `❌ Could not make ${ zipFile }.`) );
           console.log( error );
         } );
       }
     ).catch( ( error ) => {
       console.log(
-        chalk.red( `Could not install composer in ${dest} directory.` )
+        chalk.red( `❌ Could not install composer in ${dest} directory.` )
       );
       console.log( error );
     } );
