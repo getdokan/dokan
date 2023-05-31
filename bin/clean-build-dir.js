@@ -10,6 +10,6 @@ fs.remove( dir, ( error ) => {
   if ( error ) {
     console.log( error );
   } else {
-    console.log( chalk.greenBright(`🗑️Deleted the production directory - ${dir}.`) );
+    console.log( chalk.greenBright(`✅ Cleaned dokan-lite production directory - ${dir}.`) );
   }
 } );
