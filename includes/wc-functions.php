@@ -1284,3 +1284,24 @@ function dokan_vendor_own_product_purchase_restriction( bool $is_purchasable, $p
 
 add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_restriction', 10, 2 );
 
+/**
+ * Restricts vendor from reviewing own product
+ *
+ * @param array $data
+ * @return array
+ */
+function dokan_vendor_product_review_restriction( array $data ): array {
+    global $product;
+    if ( ! is_user_logged_in() ) {
+        return $data;
+    }
+    if ( dokan_is_product_author( $product->get_id() ) ) {
+        $data['title_reply'] = __( 'Reviews cannot be posted for products that you own.', 'dokan-lite' );
+        $data['comment_field'] = '';
+        $data['fields'] = [];
+        $data['submit_field'] = '';
+        $data['submit_button'] = '';
+    }
+    return $data;
+}
+add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_product_review_restriction' );
