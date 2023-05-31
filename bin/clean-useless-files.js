@@ -7,29 +7,40 @@ const fs = require('fs-extra');
 const chalk = require('chalk');
 const path = require('path');
 
-const buidJsFiles = [
-  'admin.js',
-  'dokan-admin-product-style.js',
-  'dokan-product-category-ui.js',
-  'global-admin.js',
-  'plugin.js',
-  'reverse-withdrawal-style.js',
-  'rtl.js',
-  'setup.js',
-  'setup-no-wc-style.js',
-  'style.js',
+const buidFiles = [
+  'assets/js/admin.js',
+  'assets/js/dokan-admin-product-style.js',
+  'assets/js/dokan-product-category-ui.js',
+  'assets/js/global-admin.js',
+  'assets/js/plugin.js',
+  'assets/js/reverse-withdrawal-style.js',
+  'assets/js/rtl.js',
+  'assets/js/setup.js',
+  'assets/js/setup-no-wc-style.js',
+  'assets/js/style.js',
+  'assets/js/dokan-promo-notice.js.LICENSE.txt',
+  'assets/js/vue-admin.js.LICENSE.txt',
+  'assets/js/vue-bootstrap.js.LICENSE.txt',
+  'assets/js/vue-frontend.js.LICENSE.txt',
+  'assets/js/vue-vendor.js.LICENSE.txt',
+
+  'assets/css/style.css.map',
+  'assets/css/vue-admin.css.map',
+  'assets/css/vue-bootstrap.css.map',
+  'assets/css/vue-frontend.css.map',
+  'assets/css/vue-vendor.css.map',
 ];
 
-console.log( chalk.bgYellowBright.black('🧹Removing useless .js files same named as .less files.') );
+console.log( chalk.bgYellowBright.black('🧹Removing files that are unnecessery for production build in dokan-lite.') );
 
-buidJsFiles.forEach( jsFile => {
-  const jsFileDir = path.resolve(`assets/js/${jsFile}`);
+buidFiles.forEach( file => {
+  const fileDir = path.resolve(file);
 
-  fs.remove( jsFileDir, ( error ) => {
+  fs.remove( fileDir, ( error ) => {
     if ( error ) {
       console.log( chalk.red(error) );
     } else {
-      console.log( chalk.green( `🗑️Removed: assets/js/${jsFile}` ) );
+      console.log( chalk.green( `🗑️Removed: ${file}` ) );
     }
   } );
 } );

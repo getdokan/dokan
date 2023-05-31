@@ -110,13 +110,13 @@ const updatedConfig = {
           {
             loader: "css-loader",
             options: {
-              sourceMap: false,
+              sourceMap: ! isProduction,
             },
           },
           {
             loader: "less-loader",
             options: {
-              sourceMap: false,
+              sourceMap: ! isProduction,
             },
           },
         ],
