@@ -41,7 +41,7 @@ buidFiles.forEach( file => {
     if ( error ) {
       console.log( chalk.red(error) );
     } else {
-      console.log( chalk.green( `🗑️Removed: ${file}` ) );
+      console.log( chalk.greenBright( `🗑️Removed: ${file}` ) );
     }
   } );
 } );
