@@ -16,7 +16,7 @@
     "clean": "node bin/clean-build-dir",
     "clean-files": "node bin/clean-useless-files",
     "zip": "node bin/zip",
-    "release": "npm run clean && npm run readme && npm run build && npm run makepot && npm run version && npm run zip"
+    "release": "npm run clean && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip"
   },
   "dependencies": {
     "@wordpress/hooks": "^3.34.0",
