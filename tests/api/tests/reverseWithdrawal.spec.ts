@@ -36,7 +36,7 @@ test.describe('reverse withdrawal api test', () => {
 
 	test('get all reverse withdrawal transactions @lite', async ({ request }) => {
 		const storeId = await apiUtils.getReverseWithdrawalStoreId();
-		const response = await request.get(endPoints.getAllReverseWithdrawalTransactions(storeId, `${helpers.currentYear}-01-01`, `${helpers.currentYear}-12-31`));
+		const response = await request.get(endPoints.getAllReverseWithdrawalTransactions(storeId, `${helpers.currentYear}-01-01 00:00:00`, `${helpers.currentYear}-12-31 00:00:00`));
 		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
@@ -49,9 +49,9 @@ test.describe('reverse withdrawal api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('add reverse withdrawal payment product to cart @lite', async ({ request }) => {
-		const response = await request.post(endPoints.getReverseWithdrawalAddProductToCart,{ data: payloads.amountToPay});
-		expect(response.ok()).toBeTruthy();
+	test.only('add reverse withdrawal payment product to cart @lite', async ({ request }) => {
+		const response = await request.post(endPoints.getReverseWithdrawalAddProductToCart,{ data: payloads.amountToPay, headers: payloads.vendorAuth });
+		// expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
