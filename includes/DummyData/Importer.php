@@ -50,7 +50,7 @@ class Importer extends \WC_Product_Importer {
         $data['featured']                = isset( $data['featured'] ) ? sanitize_text_field( $data['featured'] ) : '';
         $data['description']             = isset( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '';
         $data['email']                   = isset( $data['email'] ) ? sanitize_text_field( $data['email'] ) : '';
-        $data['password']                = isset( $data['password'] ) ? sanitize_text_field( $data['password'] ) : '';
+        $data['user_pass']               = isset( $data['user_pass'] ) ? sanitize_text_field( $data['user_pass'] ) : '';
         $data['store_name']              = isset( $data['store_name'] ) ? sanitize_text_field( $data['store_name'] ) : '';
         $data['user_login']              = $data['store_name'];
         $data['social']                  = isset( $data['social'] ) ? json_decode( sanitize_text_field( $data['social'] ), true ) : [];
