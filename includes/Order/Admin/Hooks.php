@@ -281,7 +281,7 @@ class Hooks {
                         this.parentElement.parentElement.bgColor = '#ECFFF2';
                     });
                 }
-                <?php else: ?>
+                <?php else : ?>
                 $('tr.sub-order').hide();
 
                 $('button.show-sub-orders').on('click', function (e) {
