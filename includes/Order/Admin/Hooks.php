@@ -60,7 +60,7 @@ class Hooks {
     /**
      * Remove child orders from WC reports
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
      *
      * @param array $query
      *
@@ -75,8 +75,8 @@ class Hooks {
     /**
      * Change the columns shown in admin.
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param array $existing_columns
      *
@@ -101,8 +101,8 @@ class Hooks {
     /**
      * Adds custom column on dokan admin shop order table
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param string       $col
      * @param int|WC_Order $post_id
@@ -165,8 +165,8 @@ class Hooks {
     /**
      * Adds css classes on admin shop order table
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param string[] $classes An array of post class names.
      * @param string[] $class   An array of additional class names added to the post.
@@ -205,8 +205,8 @@ class Hooks {
     /**
      * Show/hide sub order css/js
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Added HPOS support
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Added HPOS support
      *
      * @return void
      */
@@ -393,8 +393,8 @@ class Hooks {
     /**
      * Delete sub orders when parent order is trashed
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param int $post_id
      */
@@ -417,8 +417,8 @@ class Hooks {
     /**
      * Un-trash sub orders when parent orders are un-trashed
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param int $post_id
      *
@@ -456,8 +456,8 @@ class Hooks {
     /**
      * Delete sub orders and from dokan sync table when a order is deleted
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param int $post_id
      *
@@ -475,8 +475,8 @@ class Hooks {
     /**
      * Show a toggle button to toggle all the sub orders
      *
-     * @since DOKAN_PRO_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_PRO_SINCE Rewritten for HPOS
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
      *
      * @param string $typenow
      *
