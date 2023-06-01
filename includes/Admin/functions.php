@@ -122,7 +122,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
  * @param string $start
  * @param string $end
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
  *
  * @return array
  */
@@ -372,7 +372,7 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
  * @global object $wp_locale
  *
  * @global WPDB   $wpdb
- * @deprecated DOKAN_SINCE
+ * @deprecated DOKAN_SINCE since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
  *
  * @return array
  */
@@ -386,23 +386,19 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
     $now        = dokan_current_datetime();
     $year       = $now->format( 'Y' );
     $start_date = $now->modify( 'first day of this month' )->format( 'Y-m-d' );
-    $end_date   = $now->format( 'Y-m-d' );;
+    $end_date   = $now->format( 'Y-m-d' );
     $current_year = $now->format( 'Y' );
 
     if ( empty( $chosen_seller_id ) ) {
         return [];
     }
 
-    if ( ! empty( $start_date ) ) {
-        if ( $group_by === 'month' ) {
-            $start_date = $year . '-01-01';
-        }
+    if ( $group_by === 'month' ) {
+        $start_date = $year . '-01-01';
     }
 
-    if ( ! empty( $end_date ) ) {
-        if ( $group_by === 'month' && ( $year < $current_year ) ) {
-            $end_date = $year . '-12-31';
-        }
+    if ( $group_by === 'month' && ( $year < $current_year ) ) {
+        $end_date = $year . '-12-31';
     }
 
     $date_where         = '';
