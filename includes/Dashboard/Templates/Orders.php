@@ -63,7 +63,7 @@ class Orders {
         }
 
         // get order id
-        $order_id = intval( wp_unslash( $_GET['order_id'] ) );
+        $order_id = absint( wp_unslash( $_GET['order_id'] ) );
         $order = wc_get_order( $order_id );
         if ( ! $order ) {
             dokan_get_template_part(
