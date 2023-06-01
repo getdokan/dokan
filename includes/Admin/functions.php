@@ -83,11 +83,11 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
     }
 
     if ( 'day' === $group_by ) {
-        $group_by_query = "YEAR(p.$date_field), MONTH(p.$date_field), DAY(p.$date_field)";
-        $date_where     = " AND DATE(p.$date_field) >= '$start_date' AND DATE(p.$date_field) <= '$end_date'";
+        $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field}), DAY(p.{$date_field})";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.${date_field}) <= '{$end_date}'";
     } else {
-        $group_by_query = "YEAR(p.$date_field), MONTH(p.$date_field)";
-        $date_where     = " AND DATE(p.$date_field) >= '$start_date' AND DATE(p.$date_field) <= '$end_date'";
+        $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field})";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
     }
 
     $left_join    = apply_filters( 'dokan_report_left_join', '' );
@@ -97,17 +97,17 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
     $sql = "SELECT
                 SUM((do.order_total - do.net_amount)) AS earning,
                 SUM(do.order_total) AS order_total,
-                COUNT(DISTINCT p.$id_field) AS total_orders,
-                p.$date_field AS order_date
+                COUNT(DISTINCT p.{$id_field}) AS total_orders,
+                p.{$date_field} AS order_date
             FROM {$wpdb->prefix}dokan_orders AS do
-            LEFT JOIN $order_table_name p ON do.order_id = p.$id_field
-            $left_join
+            LEFT JOIN {$order_table_name} p ON do.order_id = p.{$id_field}
+            {$left_join}
             WHERE
-                $seller_where AND
-                p.$status_field != 'trash' AND
+                {$seller_where} AND
+                p.{$status_field} != 'trash' AND
                 do.order_status IN ('wc-on-hold', 'wc-completed', 'wc-processing')
-                $date_where
-            GROUP BY $group_by_query";
+                    {$date_where}
+            GROUP BY {$group_by_query}";
 
     $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
 
