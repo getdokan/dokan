@@ -8,7 +8,7 @@ let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed');
+	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 
 test.describe('reverse withdrawal api test', () => {
@@ -49,9 +49,9 @@ test.describe('reverse withdrawal api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test.only('add reverse withdrawal payment product to cart @lite', async ({ request }) => {
+	test('add reverse withdrawal payment product to cart @lite', async ({ request }) => {
 		const response = await request.post(endPoints.getReverseWithdrawalAddProductToCart,{ data: payloads.amountToPay, headers: payloads.vendorAuth });
-		// expect(response.ok()).toBeTruthy();
+		expect(response.ok()).toBeTruthy();
 		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});

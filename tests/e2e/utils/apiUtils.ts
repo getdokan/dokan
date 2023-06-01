@@ -119,10 +119,10 @@ export class ApiUtils {
 
 	// get responseBody
 	async getResponseBody(response: APIResponse, assert = true) {
-		let responseBody: any;
+		// let responseBody: any;
 		try {
 			assert && expect(response.ok()).toBeTruthy();
-			responseBody = await response.json();
+			const responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody);
 			// String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
@@ -130,7 +130,7 @@ export class ApiUtils {
 		catch (err: any) {
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
-			console.log('Error: ', err.message);
+			console.log('Error: ', err.message);  // TODO: showing playwright instead of api error
 			console.log('Response text: ', await response.text());
 			return false; //TODO: WHY FALSE
 		}
@@ -184,7 +184,7 @@ export class ApiUtils {
 	// create store
 	async createStore(payload: any, auth? : auth) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response, false);
+		const responseBody = await this.getResponseBody(response, false);   //TODO: covert to this.get , implement multiple optional function parameter to pass false to responsebody
 		let sellerId;
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
@@ -1300,9 +1300,9 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(productPayload: object, orderPayload: any, auth? : auth): Promise<[object, string, string]> {
-		const [, productId] = await this.createProduct(productPayload, auth);
-		const payload = orderPayload;
+	async createOrder(product: object, order: any, auth? : auth): Promise<[object, string, string]> {
+		const [, productId] = await this.createProduct(product, auth);
+		const payload = order;
 		payload.line_items[0].product_id = productId;
 		// const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
 		// const responseBody = await this.getResponseBody(response);
@@ -1312,7 +1312,7 @@ export class ApiUtils {
 	}
 
 	// create complete order
-	async createOrderWithStatus(product: object, order: any, status: string, auth? : auth) {
+	async createOrderWithStatus(product: object, order: any, status: string, auth? : auth): Promise<string> {
 		const [, orderId] = await this.createOrder(product, order, auth);
 		await this.updateOrderStatus(orderId, status);
 		return orderId;

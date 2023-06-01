@@ -206,7 +206,7 @@ export class BasePage {
 	}
 
 	// type & wait for response
-	async typeAndWaitForResponse(subUrl: string,selector: string,text: string,code = 200,): Promise<Response> {
+	async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200,): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			// await this.page.type(selector, text),
@@ -227,7 +227,7 @@ export class BasePage {
 	// click & wait for event
 	async clickAndWaitForEvent(event: any, selector: string): Promise<void> {
 		await Promise.all([
-			this.page.waitForEvent(event), 
+			this.page.waitForEvent(event),
 			this.page.locator(selector).click()
 		]);
 		// const popupPromise = this.page.waitForEvent(event)
@@ -380,7 +380,7 @@ export class BasePage {
 	async getElementTextIfVisible(selector: string): Promise<string | null> {
 		const isVisible = await this.isVisible(selector);
 		if (isVisible) {
-			return await this.getElementText(selector)
+			return await this.getElementText(selector);
 		}
 	}
 
@@ -469,7 +469,7 @@ export class BasePage {
 	}
 
 	// get pseudo element style
-	async getPseudoElementStyles(selector: string,pseudoElement: string,property: string ): Promise<string> {
+	async getPseudoElementStyles(selector: string, pseudoElement: string, property: string ): Promise<string> {
 		const element = this.getElement(selector);
 		const value = await element.evaluate(
 			(element, [pseudoElement, property]) =>

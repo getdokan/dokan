@@ -66,9 +66,10 @@ export class ApiUtils {
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		} catch (err: any) {
+			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);
-			console.log('Response text: ', await response.text());
+			console.log('Response text: ', await response.text())
 			return false; //TODO: WHY FALSE	
 		}
 	}
@@ -986,7 +987,7 @@ export class ApiUtils {
 					name: String((filePath.split('/')).pop()),
 					mimeType: 'image/' + (filePath.split('.')).pop(),
 					buffer: fs.readFileSync(filePath),
-					// buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous
+					// buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous, not working debug why
 				},
 			},
 		};
@@ -1181,11 +1182,16 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(productPayload: object, orderPayload: any, auth?: auth): Promise<[object, string, string]> {
-		const [, productId] = await this.createProduct(productPayload, auth);
+	async createOrder(product: object | string, orderPayload: any, auth?: auth): Promise<[object, string, string]> {
+		let productId: string;
+		if (typeof(product) != 'string'){
+		 [, productId] = await this.createProduct(product, auth);
+		} else {
+			productId = product;
+		}
 		const payload = orderPayload;
 		payload.line_items[0].product_id = productId;
-		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: auth });
+		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }); 
 		const responseBody = await this.getResponseBody(response);
 		const orderId = responseBody.id;
 		return [responseBody, orderId, productId];
@@ -1193,8 +1199,9 @@ export class ApiUtils {
 
 	// create complete order
 	async createOrderWithStatus(product: object, order: any, status: string, auth?: auth) {
+		//TODO: add feature for productID, creator of product(who will be the owner), create order auth, update order auth
 		const [, orderId] = await this.createOrder(product, order, auth);
-		await this.updateOrderStatus(orderId, status);
+		await this.updateOrderStatus(orderId, status, auth);
 		return orderId;
 	}
 

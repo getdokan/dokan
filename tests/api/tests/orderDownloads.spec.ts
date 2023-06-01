@@ -22,7 +22,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 
-test.describe.only('order downloads api test', () => {
+test.describe('order downloads api test', () => {
 	
 	test('get all order downloads @v2 @lite', async ({ request }) => {
 		const response = await request.get(endPoints.getAllOrderDownloads(orderId));

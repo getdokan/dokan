@@ -292,7 +292,7 @@ export const payloads = {
 		line_items: [
 			{
 				product_id: '',
-				quantity: 20,
+				quantity: 10,
 			},
 		],
 		shipping_lines: [

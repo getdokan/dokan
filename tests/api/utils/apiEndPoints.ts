@@ -203,7 +203,7 @@ export const endPoints = {
 	getReverseWithdrawalTransactionTypes: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transaction-types`,
 	getAllReverseWithdrawalStores: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores`,
 	getAllReverseWithdrawalStoreBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores-balance`,
-	getAllReverseWithdrawalTransactions: (sellerId: string, dateFrom: string, dateTo: string) => `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions/${sellerId}${QUERY}trn_date[from]=${dateFrom}&trn_date[to]=${dateTo}&vendor_id=${sellerId}`,
+	getAllReverseWithdrawalTransactions: (sellerId: string, dateFrom: string, dateTo: string) => `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions/${QUERY}trn_date[from]=${dateFrom}&trn_date[to]=${dateTo}&vendor_id=${sellerId}`,
 
 	// modules
 	getAllModules: `${SERVER_URL}/dokan/v1/admin/modules`,
