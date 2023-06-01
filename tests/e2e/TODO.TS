@@ -32,6 +32,33 @@
 getAllOrders: ${SERVER_URL}/v1/orders to endPoints.getAllOrders
 
 
+
+
+
+
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+
+
+
+
+
+
+
 // TODO: woocommerce
 
 // TODO: implement this for checkbox assert
@@ -180,3 +207,52 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 	//TODO: use this instead of networkidle
 	// Start test
 	await page.waitForLoadState( 'networkidle' );
+
+
+
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+
+
+
+// TODO: ********************api suite******************
+
+// TODO: convert admin as vendor to vendor as vendor whole suite
+//todo: add support ticket via db-query
+//TODO: add abuse report via db-query
+//TODO: add refund via db-query
+//TODO: fix rank math api
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:
+//TODO:

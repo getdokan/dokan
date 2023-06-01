@@ -14,6 +14,11 @@ export const helpers = {
 		return Math.round( ( Number( num ) + Number.EPSILON ) * 100 ) / 100;
 	},
 
+	// current date-time [2023-06-02 00:46:11]
+	currentDateTime1: new Date().toLocaleString('en-CA', { 
+		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric',}).replace(',', ''),
+	
+
 	//calculate percentage
 	percentage( number: number, percentage: number ) {
 		return this.roundToTwo( Number( number ) * ( percentage / 100 ) );

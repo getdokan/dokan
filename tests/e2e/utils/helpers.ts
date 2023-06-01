@@ -52,10 +52,14 @@ export const helpers = {
 	// current day
 	currentDate: new Date().toLocaleDateString('en-CA'),
 
-	// current date-time
+	// current date-time [2023-06-02, 00:33]
 	currentDateTime: new Date().toLocaleString('en-CA', {
-		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric',
-	}),
+		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric',}),	
+	
+	// current date-time [2023-06-02 00:46:11]
+	currentDateTime1: new Date().toLocaleString('en-CA', { 
+		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric',}).replace(',', ''),
+
 
 	// add two input days
 	addDays(date: string | number | Date, days: number) {

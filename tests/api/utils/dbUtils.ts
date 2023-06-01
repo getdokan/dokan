@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from './dbData';
+import { helpers } from './helpers';
 // const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
 
 const dbPrefix = process.env.DB_PREFIX;
@@ -61,7 +62,14 @@ export const dbUtils = {
 		const commissionType = res.commission_type;
 		const commission = [res.admin_percentage, res.additional_fee ];
 		return [commissionType, commission];
-	}
+	},
 
+	// create abuse report
+	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ) {
+		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTime1}');`;
+		const res = await dbUtils.dbQuery(querySelect);
+		// console.log(res);
+		return res
+	}
 
 };

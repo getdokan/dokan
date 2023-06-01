@@ -113,7 +113,7 @@ export class ApiUtils {
 	async createStore(payload: any, auth?: auth) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
-		let sellerId;
+		let sellerId :string;
 		if (responseBody.code) {
 			expect(response.status()).toBe(500);
 			sellerId = await this.getSellerId(payload.store_name, auth);
@@ -560,12 +560,12 @@ export class ApiUtils {
 	}
 
 	/**
-	 * customers  api methods
+	 * customers  api methods [woocommerce endpoint used instead of request-for-quote/customer ]
 	 */
 
 	// get all customers
 	async getAllCustomers(auth?: auth) {
-		const response = await this.request.get(endPoints.getAllCustomers, { headers: auth });
+		const response = await this.request.get(endPoints.wc.getAllCustomers, { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}
@@ -581,7 +581,7 @@ export class ApiUtils {
 	async createCustomer(payload: any, auth?: auth) {
 		const response = await this.request.post(endPoints.wc.createCustomer, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
-		let customerId;
+		let customerId: string;
 		if (responseBody.code) {
 			expect(response.status()).toBe(400);
 			customerId = await this.getCustomerId(payload.username, auth);
@@ -594,7 +594,7 @@ export class ApiUtils {
 
 	// delete customer
 	async deleteCustomer(userId: string, auth?: auth) {
-		const response = await this.request.delete(endPoints.deleteCustomer(userId), { headers: auth });
+		const response = await this.request.delete(endPoints.wc.deleteCustomer(userId), { headers: auth });
 		const responseBody = await this.getResponseBody(response);
 		return responseBody;
 	}

@@ -1498,7 +1498,7 @@ export const payloads = {
 
 	amountToPay: {
 		amount: '10'
-	}
+	},
 
 
 };
