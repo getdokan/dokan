@@ -4,6 +4,57 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.19',
+        'released' => '2023-05-24',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Separated shipping tax fee recipient from the product tax fee recipient.',
+                    'description' => 'According to the <a href="https://wedevs.com/docs/dokan/settings/selling-options/">Selling Options</a> section of the Dokan documentation, you can set the recipient (Admin or Vendor) who will be receiving the shipping fee using the “Shipping Fee Recipient” option. Similarly, you can set the recipient (Admin or Vendor) who will be receiving the Tax fee using the “Tax Fee Recipient” option. <br>
+                                      It seems that there was a <a href="https://github.com/weDevsOfficial/dokan/issues/1384">bug</a>  where if the Shipping Fee Recipient is the Admin and Tax Fee Recipient is the Vendor, then the Shipping Tax adds to the Vendor Earnings instead of Admin Commission. This issue has been resolved by separating shipping tax fee recipient from tax fee recipient by adding a new settings field named: Shipping Tax Fee Recipient under Dokan —> Settings —> Selling Options —> Commission section where admin will be able to select who will receive the shipping tax fee.',
+                ],
+                [
+                    'title'       => 'Added support for multiple shipping line items for suborders',
+                    'description' => 'It seems that when products from two or more sellers are placed in the cart and two products from the same seller with two different shipping methods are ordered, the sub-order that should have two shipping methods ends up losing the second freight. More details on the issue are mentioned <a href="https://github.com/weDevsOfficial/dokan/issues/1690">here</a>',
+                ],
+                [
+                    'title'       => 'Moved shipping splitting functionality to Dokan Lite from Dokan Pro. Previously, this feature was only available on Dokan Pro.',
+                    'description' => 'With this release, we have moved this feature to Dokan Lite. Note that the built-in <a href="https://woocommerce.com/documentation/plugins/woocommerce/getting-started/shipping/core-shipping-options/">shipping gateways</a> of WooCommerce can only be configured by the admin and will be automatically applied to the vendor order. Vendors will not be able to configure any shipping methods. The Dokan <a href="https://wedevs.com/docs/dokan/dokan-zone-wise-shipping/">Vendor Shipping</a> feature is still available with Dokan Pro.',
+                ],
+                [
+                    'title'       => 'Improved the responsiveness of tables on the Vendor Dashboard by making them horizontally scrollable on smaller-sized screens.',
+                    'description' => 'Previously, the order listing, product listing, and all other tables on the Vendor Dashboard were not responsive on smaller-sized screens. With this update, all of the tables are now made horizontally scrollable on smaller-sized screens.',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Disabling product review from WooCommerce settings doesn’t remove the review section from the vendor profile.',
+                    'description' => 'Fixed an issue where disabling product reviews in WooCommerce by going to WP-Admin > WooCommerce > Settings > Products does not remove the review section from the vendor profile. Additionally, disabling product reviews in WooCommerce does not hide the message “No ratings found yet!” from the single product page under the vendor info tab.',
+                ],
+                [
+                    'title'       => 'Broken layout of Discounted Price section in Vendor Dashboard product edit page on full-width page layout themes.',
+                    'description' => 'Fixed an issue where the layout of the Discounted Price section in the Vendor Dashboard product edit page was broken on full-width page layout themes. The issue was caused by the CSS styles of the theme that were conflicting with the Dokan plugin styles. With this fix, the Discounted Price section will now display correctly on full-width page layout themes.',
+                ],
+                [
+                    'title'       => 'Fixed some warnings and fatal errors for PHP versions 8.1 and 8.2.',
+                    'description' => 'The issue was caused by the Dokan plugin code that was not compatible with the latest PHP versions. With this fix, the Dokan plugin code is now compatible with PHP versions 8.1 and 8.2. Note that, WordPress and WooCommerce still doesn’t support PHP version 8.1 and 8.2',
+                ],
+                [
+                    'title'       => 'Fixed incorrectly closed product category menu after_widget args',
+                    'description' => 'Fixed an issue where the product category menu was incorrectly closed due to reassigned arguments that left after_widget undefined and broke the layout.',
+                ],
+                [
+                    'title'       => '[VendorSetupWizard] Fixed an issue where the ‘Hide Email Address’ option was still displayed on the Vendor Setup wizard page even when it was enabled from Dokan Admin Settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Email notification for withdrawal approval no longer shows HTML code in its header.',
+                    'description' => 'Previously when the site admin approves a withdrawal request, an email is sent to the corresponding vendor. However, in the email header, the text appears including its HTML elements. This issue now has been fixed.',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.18',
         'released' => '2023-05-10',
         'changes'  => [
