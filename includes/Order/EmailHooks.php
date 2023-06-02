@@ -67,7 +67,7 @@ class EmailHooks {
     /**
      * Send email to the vendor/seller when cancel the order
      *
-     * @since Moved this method from includes/wc-functions.php file
+     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
      *
      * @param string   $recipient
      * @param WC_Order $order

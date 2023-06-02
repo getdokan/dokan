@@ -20,7 +20,7 @@ class Controller {
     /**
      * Class constructor
      *
-     * @since DOKAN_PRO_SINCE
+     * @since DOKAN_SINCE
      */
     public function __construct() {
         $this->init_classes();
