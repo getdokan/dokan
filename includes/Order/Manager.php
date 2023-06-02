@@ -325,6 +325,7 @@ class Manager {
             $order_table_name = OrderUtil::get_order_table_name();
             if ( OrderUtil::is_hpos_enabled() ) {
                 // HPOS usage is enabled.
+                // phpcs:disable
                 $query = $wpdb->prepare(
                     "SELECT do.order_status as order_status, count(do.id) as order_count
                     FROM {$wpdb->prefix}dokan_orders AS do
@@ -335,8 +336,10 @@ class Manager {
                     GROUP BY do.order_status",
                     [ $seller_id ]
                 );
+                // phpcs:enable
             } else {
                 // Traditional CPT-based orders are in use.
+                // phpcs:disable
                 $query = $wpdb->prepare(
                     "SELECT do.order_status as order_status, count(do.id) as order_count
                     FROM {$wpdb->prefix}dokan_orders AS do
@@ -347,6 +350,7 @@ class Manager {
                     GROUP BY do.order_status",
                     [ $seller_id ]
                 );
+                // phpcs:enable
             }
 
             $results = $wpdb->get_results( $query ); // phpcs:ignore
