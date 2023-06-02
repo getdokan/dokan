@@ -12,7 +12,7 @@ use WeDevs\Dokan\Cache;
  * @return float|array|WP_Error
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
-    wc_deprecated_function( 'dokan_get_seller_amount_from_order', '3.7.111', 'dokan()->commission->get_earning_by_order()' );
+    wc_deprecated_function( 'dokan_get_seller_amount_from_order', 'DOKAN_SINCE', 'dokan()->commission->get_earning_by_order()' );
 
     $order = wc_get_order( $order_id );
     if ( ! $order ) {
@@ -61,7 +61,7 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @return WP_Error|int[]|WC_Order[]
  */
 function dokan_get_seller_orders( $seller_id, $args ) {
-    wc_deprecated_function( 'dokan_get_seller_orders', '3.7.111', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders', 'DOKAN_SINCE', 'dokan()->order->all()' );
 
     $args['seller_id'] = $seller_id;
 
@@ -87,7 +87,7 @@ function dokan_get_seller_orders( $seller_id, $args ) {
  * @return WP_Error|WC_Order[]
  */
 function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = false, $status = 'all' ) {
-    wc_deprecated_function( 'dokan_get_seller_orders_by_date', '3.7.111', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders_by_date', 'DOKAN_SINCE', 'dokan()->order->all()' );
 
     // format start and end date
     $start_date = dokan_current_datetime()->modify( $start_date );
@@ -116,7 +116,7 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
  * @return int
  */
 function dokan_get_seller_orders_number( $args = [] ) {
-    wc_deprecated_function( 'dokan_get_seller_orders_number', '3.7.111', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders_number', 'DOKAN_SINCE', 'dokan()->order->all()' );
 
     $args['return'] = 'count';
 
@@ -190,7 +190,7 @@ function dokan_count_orders( $seller_id ) {
  * @return void
  */
 function dokan_delete_sync_order( $order_id ) {
-    wc_deprecated_function( 'dokan_delete_sync_order', '3.7.111', 'dokan()->order->delete_seller_order()' );
+    wc_deprecated_function( 'dokan_delete_sync_order', 'DOKAN_SINCE', 'dokan()->order->delete_seller_order()' );
 
     dokan()->order->delete_seller_order( $order_id );
 }
@@ -208,7 +208,7 @@ function dokan_delete_sync_order( $order_id ) {
  * @return void
  */
 function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_delete_sync_duplicate_order', '3.7.111', 'dokan()->order->delete_seller_order()' );
+    wc_deprecated_function( 'dokan_delete_sync_duplicate_order', 'DOKAN_SINCE', 'dokan()->order->delete_seller_order()' );
 
     dokan()->order->delete_seller_order( $order_id, $seller_id );
 }
@@ -502,7 +502,7 @@ function dokan_is_sub_order( $order_id ) {
  * @return  int Order_count
  */
 function dokan_total_orders() {
-    wc_deprecated_function( 'dokan_total_orders', '3.7.111', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_total_orders', 'DOKAN_SINCE', 'dokan()->order->all()' );
 
     global $wpdb;
 
@@ -615,7 +615,7 @@ function dokan_get_admin_commission_by( $order, $context ) {
  * @return array|null on failure
  */
 function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_get_customer_orders_by_seller', '3.7.111', 'dokan()->order->get_customer_order_ids_by_seller()' );
+    wc_deprecated_function( 'dokan_get_customer_orders_by_seller', 'DOKAN_SINCE', 'dokan()->order->get_customer_order_ids_by_seller()' );
 
     return dokan()->order->get_customer_order_ids_by_seller( $customer_id, $seller_id );
 }
@@ -840,7 +840,7 @@ function dokan_get_seller_id_by_order_id( $order_id ) {
  * @return boolean
  */
 function dokan_is_order_already_exists( $order_id ) {
-    wc_deprecated_function( 'dokan_is_order_already_exists', '3.7.111', 'dokan()->order->is_order_already_synced()' );
+    wc_deprecated_function( 'dokan_is_order_already_exists', 'DOKAN_SINCE', 'dokan()->order->is_order_already_synced()' );
 
     return dokan()->order->is_order_already_synced( $order_id );
 }
@@ -915,7 +915,7 @@ if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
      * @return int $earned
      */
     function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-        wc_deprecated_function( 'dokan_get_seller_earnings_by_order', '3.7.111', 'dokan()->commission->get_earning_by_order( $order, \'seller\' )' );
+        wc_deprecated_function( 'dokan_get_seller_earnings_by_order', 'DOKAN_SINCE', 'dokan()->commission->get_earning_by_order( $order, \'seller\' )' );
         $earned = dokan()->commission->get_earning_by_order( $order, 'seller' );
 
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );

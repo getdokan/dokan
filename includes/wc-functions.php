@@ -423,7 +423,7 @@ function dokan_process_product_meta( $post_id, $data = [] ) {
  * @return void
  */
 function dokan_process_product_file_download_paths( $product_id, $variation_id, $downloadable_files ) {
-    wc_deprecated_function( 'dokan_process_product_file_download_paths', '3.7.111' );
+    wc_deprecated_function( 'dokan_process_product_file_download_paths', 'DOKAN_SINCE' );
 
     global $wpdb;
 
@@ -479,7 +479,7 @@ function dokan_process_product_file_download_paths( $product_id, $variation_id, 
  * @return int
  */
 function dokan_sub_order_get_total_coupon( $order_id ) {
-    wc_deprecated_function( 'dokan_sub_order_get_total_coupon', '3.7.111' );
+    wc_deprecated_function( 'dokan_sub_order_get_total_coupon', 'DOKAN_SINCE' );
 
     global $wpdb;
 

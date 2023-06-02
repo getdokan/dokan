@@ -127,7 +127,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
  * @return array
  */
 function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
-    wc_deprecated_function( 'dokan_admin_report', '3.7.111' );
+    wc_deprecated_function( 'dokan_admin_report', 'DOKAN_SINCE' );
 
     global $wp_locale;
 
@@ -377,7 +377,7 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
  * @return array
  */
 function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
-    wc_deprecated_function( 'dokan_admin_report_by_seller', '3.7.111' );
+    wc_deprecated_function( 'dokan_admin_report_by_seller', 'DOKAN_SINCE' );
 
     global $wpdb, $wp_locale;
 

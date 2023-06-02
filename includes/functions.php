@@ -3804,7 +3804,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
      * @return string
      */
     function dokan_date_time_format( $time, $date_only = false ) {
-        wc_deprecated_function( 'dokan_date_time_format', '3.7.111', 'dokan_format_datetime()' );
+        wc_deprecated_function( 'dokan_date_time_format', 'DOKAN_SINCE', 'dokan_format_datetime()' );
         $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
 
         if ( $date_only ) {
