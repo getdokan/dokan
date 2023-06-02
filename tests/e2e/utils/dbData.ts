@@ -543,6 +543,12 @@ export const dbData = {
 
 	},
 
+	// abuse report
+	createAbuseReport:{
+		reason:'This content is spam',
+		description:'spam product'
+	},
+
 	siteSettings : {
 		users_can_register: 1,
 		start_of_week: 1,
@@ -558,6 +564,5 @@ export const dbData = {
 		woocommerce_enable_myaccount_registration:	'yes'
 
 	}
-
 
 };

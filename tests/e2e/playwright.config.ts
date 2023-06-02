@@ -1,4 +1,5 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 // // api
@@ -11,8 +12,8 @@ require('dotenv').config();
  */
 
 const config: PlaywrightTestConfig = {
-	// test directory
-	testDir: './tests',
+	// // test directory
+	// testDir: './tests',
 
 	/* Maximum time one test can run for. */
 	// timeout: 60 * 1000,
@@ -25,7 +26,8 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 10 * 1000, },
+		timeout: 10 * 1000,
+	},
 
 	/* Run tests in files in parallel */
 	// fullyParallel: true,
@@ -42,47 +44,97 @@ const config: PlaywrightTestConfig = {
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: process.env.CI
 		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }], ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]],
+		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }],
+		// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]
+		],
 
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	globalSetup: require.resolve('./global-setup'),
 
-	use: {
-		// storageState: 'storageState.json',  // location of sign in state
-		headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-		actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
-		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
-		ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
-		trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
-		screenshot: 'only-on-failure', // Capture screenshot after each test failure.
-		video: 'on-first-retry', // Record video only when retrying a test for the first time.
-		// viewport: { width: 1440, height: 900 },
+	// use: {
+	// storageState: 'storageState.json',  // location of sign in state
+	// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+	// actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
+	// baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
+	// ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
+	// trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
+	// screenshot: 'only-on-failure', // Capture screenshot after each test failure.
+	// video: 'on-first-retry', // Record video only when retrying a test for the first time.
+	// viewport: { width: 1440, height: 900 },
 
-		// launch options
-		launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
-		},
+	// // launch options
+	// launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
+	// },
 
-		// api request headers
-		// extraHTTPHeaders: {
-		// 	Accept: '*/*',
-		// 	Authorization: basicAuth,
-		// },
-	},
+	// api request headers
+	// extraHTTPHeaders: {
+	// 	Accept: '*/*',
+	// 	Authorization: basicAuth,
+	// },
+	// },
 
 	/* Configure projects for major browsers */
 	projects: [
-		// Setup project
+		// Setup  api project
+		{
+			name: 'api_setup',
+			testDir: './tests/api',
+			testMatch: /.*\.setup\.ts/,
+			use: {
+				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
+				ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
+				// api request headers
+				extraHTTPHeaders: {
+					Accept: '*/*',
+					Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
+				},
+			},
+		},
+
+		{
+			name: 'api_tests',
+			testDir: './tests/api',
+			testMatch: /.*\.spec\.ts/,
+			dependencies: process.env.SETUP ? ['api_setup'] : [],
+			use: {
+				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
+				ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
+				// api request headers
+				extraHTTPHeaders: {
+					Accept: '*/*',
+					Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
+				},
+			},
+		},
+
+		// Setup  e2e project
 		{
 			name: 'e2e_setup',
+			testDir: './tests/e2e',
 			testMatch: /.*\.setup\.ts/
 		},
 
 		{
 			name: 'e2e_tests',
+			testDir: './tests/e2e',
 			testMatch: /.*\.spec\.ts/,
-			use: { ...devices['Desktop Chrome'], },
 			dependencies: process.env.SETUP ? ['e2e_setup'] : [],
+			use: { ...devices['Desktop Chrome'],
+				// storageState: 'storageState.json',  // location of sign in state
+				headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+				actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
+				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
+				ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
+				trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
+				screenshot: 'only-on-failure', // Capture screenshot after each test failure.
+				video: 'on-first-retry', // Record video only when retrying a test for the first time.
+				// viewport: { width: 1440, height: 900 },
+
+				// launch options
+				launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
+				},
+			},
 		},
 
 		//     {

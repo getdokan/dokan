@@ -9,8 +9,7 @@ const config: PlaywrightTestConfig = {
 	// test directory
 	testDir: './tests',
 
-	/* Maximum time one test can run for. */
-	// timeout: 120 * 1000,
+	/* Maximum time one test can run for. *
 	// timeout: 60 * 1000,
 	timeout: 40 * 1000,
 	
@@ -19,7 +18,7 @@ const config: PlaywrightTestConfig = {
 		 * Maximum time expect() should wait for the condition to be met.
 		 * For example in `await expect(locator).toHaveText();`
 		 */
-		timeout: 5000,
+		timeout: 5 * 1000,
 	},
 
 	/* Run tests in files in parallel */

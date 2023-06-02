@@ -1,6 +1,7 @@
 import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
 import { endPoints } from './apiEndPoints';
 import fs from 'fs';
+// import FormData from 'form-data';
 import { payloads } from './payloads';
 
 //TODO: gather all interfaces in one place
@@ -108,7 +109,7 @@ export class ApiUtils {
 		return [response, responseBody];
 	}
 
-	async storageState(path?: string | undefined){  //TODO: test it
+	async storageState(path?: string | undefined){  //TODO: test it with getCurrentUser()
 		await this.request.storageState({ path: path });
 	}
 
@@ -124,7 +125,7 @@ export class ApiUtils {
 			assert && expect(response.ok()).toBeTruthy();
 			const responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody);
-			// String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}
 		catch (err: any) {
@@ -185,12 +186,11 @@ export class ApiUtils {
 	async createStore(payload: any, auth? : auth) {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);   //TODO: covert to this.get , implement multiple optional function parameter to pass false to responsebody
-		let sellerId;
+		let sellerId :string;
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
 			sellerId = await this.getSellerId(payload.store_name, auth);
-		}
-		else {
+		} else {
 			expect(response.ok()).toBeTruthy();
 			sellerId = responseBody.id;
 		}
@@ -257,7 +257,7 @@ export class ApiUtils {
 	// delete all products
 	async deleteAllProducts( productName = '', auth? : auth) {
 		const allProducts = await this.getAllProducts(auth);
-		let allProductIds;
+		let allProductIds: any;
 		// delete all products with same name
 		if (productName){
 			allProductIds = (allProducts.filter((o: { name: string; }) => o.name === productName)).map((a: { id: string }) => a.id);
@@ -402,12 +402,11 @@ export class ApiUtils {
 	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ) { // TODO: need to update; handle productIds can be empty
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
-		let couponId;
-		if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
+		let couponId: string;
+		if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 			expect(response.status()).toBe(400);
 			couponId = await this.getCouponId(coupon.code, auth);
-		}
-		else {
+		} else {
 			expect(response.ok()).toBeTruthy();
 			couponId = responseBody.id;
 		}
@@ -459,7 +458,7 @@ export class ApiUtils {
 	}
 
 	// create withdraw
-	async createWithdraw(payload: object, auth? : auth): Promise<[object, string]> {
+	async createWithdraw(payload: object, auth? : auth): Promise<[any, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false); //TODO: test if false is necessary
 		const withdrawId = responseBody.id;
@@ -673,7 +672,7 @@ export class ApiUtils {
 	}
 
 	/**
-	 * customers  api methods
+	 * customers  api methods [woocommerce endpoint used instead of request-for-quote/customer ]
 	 */
 
 	// get all customers
@@ -695,12 +694,11 @@ export class ApiUtils {
 	async createCustomer(payload: any, auth? : auth) {
 		const response = await this.request.post(endPoints.wc.createCustomer, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
-		let customerId;
+		let customerId: string;
 		if(responseBody.code){
 			expect(response.status()).toBe(400);
 			customerId = await this.getCustomerId(payload.username, auth);
-		}
-		else {
+		} else {
 			expect(response.ok()).toBeTruthy();
 			customerId = responseBody.id;
 		}
@@ -711,7 +709,7 @@ export class ApiUtils {
 	async deleteCustomer(userId: string, auth? : auth) {
 		// const response = await this.request.delete(endPoints.deleteCustomer(userId), { headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.delete(endPoints.deleteCustomer(userId), { headers: auth });
+		const [, responseBody] = await this.delete(endPoints.wc.deleteCustomer(userId), { headers: auth });
 		return responseBody;
 	}
 
@@ -732,7 +730,7 @@ export class ApiUtils {
 		const [, customerId] = await this.createCustomer(payload, auth);
 		// const response = await this.request.post(endPoints.createWholesaleCustomer, { data: { id: customerId }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, { data: { id: customerId }, headers: auth });
+		const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) }, headers: auth });
 		return [responseBody, customerId];
 	}
 
@@ -1018,10 +1016,16 @@ export class ApiUtils {
 	async updateBatchSellerBadges(action: string, allIds: string[], auth? : auth) {
 		// const response = await this.request.put(endPoints.updateBatchSellerBadges, { data: { [action]: allIds }, headers: auth });
 		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.put(endPoints.updateBatchSellerBadges, { data: { [action]: allIds }, headers: auth });
+		const [, responseBody] = await this.put(endPoints.updateBatchSellerBadges, { data: { ids: allIds, action: action }, headers: auth });
 		return responseBody;
 	}
 
+	// delete all seller badges
+	async deleteAllSellerBadges(auth? : auth) {
+		const allBadgeIds = (await this.getAllSellerBadges()).map((a: { id: any }) => a.id);
+		if(allBadgeIds.length < 1) return; //TODO: apply this to all batch update/ anywhere a action can be lessened
+		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
+	}
 
 	/**
 	 * wp  api methods
@@ -1139,16 +1143,22 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia(filePath: string) { //TODO: handle different file upload, hardcoded: image
-		const payload = { headers: { Accept: '*/*',
-			ContentType: 'multipart/form-data',
-			// Authorization: auth.Authorization  //TODO: handle authorization
-		},
-		multipart: { file: { name: String((filePath.split('/')).pop()),
-			mimeType: 'image/' + (filePath.split('.')).pop(),
-			// buffer: fs.readFileSync(filePath),
-			buffer: Buffer.from(filePath), //TODO: test then use it instead of previous
-		}, } };
+	async uploadMedia(filePath: string, auth?: auth) { //TODO: handle different file upload, hardcoded: image
+		const payload = {
+			headers: {
+				Accept: '*/*',
+				ContentType: 'multipart/form-data',
+				// Authorization: auth.Authorization  //TODO: handle authorization
+			},
+			multipart: {
+				file: {
+					name: String((filePath.split('/')).pop()),
+					mimeType: 'image/' + (filePath.split('.')).pop(),
+					buffer: fs.readFileSync(filePath),
+					// buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous, not working debug why
+				},
+			},
+		};
 		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = responseBody.id;
@@ -1156,9 +1166,62 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia3(filePath: string) {
+	async uploadMedia2(filePath: any, attributes: any, auth?: auth) { //TODO: handle different file upload, hardcoded: image
+		const form: any = new FormData();
+		// form.append("file", fs.createReadStream(filePath));
+		// const base64 = { 'base64': fs.readFileSync(filePath) }
+		// function base64_encode(file) {
+		// 	const body = fs.readFileSync(file);
+		// 	return body.toString('base64');
+		// }
+
+		form.append('file',
+			// fs.readFileSync(filePath, { encoding: 'base64' }),
+
+			// base64_encode(filePath),
+			fs.createReadStream(filePath),
+			{
+				name: String((filePath.split('/')).pop()),
+				type: 'image/' + (filePath.split('.')).pop(),
+			}
+
+		);
+
+		form.append('title', attributes.title);
+		form.append('caption', attributes.caption);
+		form.append('caption', attributes.description);
+		form.append('alt_text', attributes.alt_text);
+
+		// const payload = {
+		// 	headers: {
+		// 		Accept: '*/*',
+		// 		ContentType: 'multipart/form-data',
+		// 		// ContentType: 'image/png',
+		// 		'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
+		// 		// Authorization: auth.Authorization  //TODO: handle authorization
+		// 	},
+		// 	form: form
+		// }
+		const headers = {
+			Accept: '*/*',
+			ContentType: 'multipart/form-data',
+			// ContentType: 'image/png',
+			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
+			// Authorization: auth.Authorization  //TODO: handle authorization
+		};
+
+
+		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
+		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });
+		const responseBody = await this.getResponseBody(response);
+		const mediaId = responseBody.id;
+		return [responseBody, mediaId];
+	}
+
+	// upload media
+	async uploadMedia3(filePath: string, auth?: auth) {
 		// const payload = fs.readFileSync(filePath);
-		const payload = Buffer.from(filePath); //TODO: test then use it instead of previous
+		const payload = Buffer.from(filePath);  //TODO: test then use it instead of previous
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
@@ -1300,21 +1363,26 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(product: object, order: any, auth? : auth): Promise<[object, string, string]> {
-		const [, productId] = await this.createProduct(product, auth);
-		const payload = order;
+	async createOrder(product: object | string, orderPayload: any, auth?: auth): Promise<[any, string, string]> {
+		let productId: string;
+		if (typeof(product) != 'string'){
+			[, productId] = await this.createProduct(product, auth);
+		} else {
+			productId = product;
+		}
+		const payload = orderPayload;
 		payload.line_items[0].product_id = productId;
-		// const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
-		// const responseBody = await this.getResponseBody(response);
-		const [, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
+		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
+		const responseBody = await this.getResponseBody(response);
 		const orderId = responseBody.id;
 		return [responseBody, orderId, productId];
 	}
 
 	// create complete order
-	async createOrderWithStatus(product: object, order: any, status: string, auth? : auth): Promise<string> {
+	async createOrderWithStatus(product: object, order: any, status: string, auth?: auth) {
+		//TODO: add feature for productID, creator of product(who will be the owner), create order auth, update order auth
 		const [, orderId] = await this.createOrder(product, order, auth);
-		await this.updateOrderStatus(orderId, status);
+		await this.updateOrderStatus(orderId, status, auth);
 		return orderId;
 	}
 

@@ -1,9 +1,32 @@
 import { faker } from '@faker-js/faker';
 
-const basicAuth = (username: string, password: string) =>
-	'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 export const payloads = {
+
+	// wp
+	createPost: {
+		title: 'Hello World',
+		content: 'My Post Content.',
+		status: 'publish'
+	},
+
+	createMedia: {
+		title: 'avatar',
+		alt_text: 'avatar_img',
+		status: 'publish',
+		post: '1'
+
+	},
+
+	mediaAttributes: {
+		title: 'avatar',
+		caption: 'avatar_img',
+		description: 'avatar_img',
+		alt_text: 'avatar_img',
+
+	},
+
 	// user auth
 
 	aAuth: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD),
@@ -50,9 +73,10 @@ export const payloads = {
 	// product
 
 	createProduct: () => ({
-		name: faker.commerce.productName() + ' Simple',
+		name: faker.commerce.productName() + ' (Simple)',
 		type: 'simple',
 		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		// regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
 		categories: [
 			{
 				// id: 48
@@ -64,6 +88,21 @@ export const payloads = {
 		name: faker.commerce.productName() + ' (Variable)',
 		type: 'variable',
 		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		categories: [
+			{
+				// id: 48
+			},
+		],
+	}),
+
+	createDownloadableProduct: () => ({
+		name: faker.commerce.productName() + ' (Downloadable)',
+		type: 'simple',
+		downloadable: true,
+		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		downloads: [],
+		// download_limit: 100,
+		// download_expiry: 100,
 		categories: [
 			{
 				// id: 48
@@ -139,7 +178,7 @@ export const payloads = {
 		amount: faker.number.int({ min: 1, max: 10 }).toString(),
 		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
 		product_ids: [15],
-		individual_use: true, // TODO: why true in e2e 
+		individual_use: false, // TODO: why true in e2e
 		meta_data: [
 			{
 				key: 'apply_before_tax',
@@ -169,26 +208,26 @@ export const payloads = {
 		payment_method_title: 'Direct Bank Transfer',
 		set_paid: true,
 		billing: {
-			first_name: 'John',
-			last_name: 'Doe',
-			address_1: '969 Market',
-			address_2: '',
-			city: 'San Francisco',
-			state: 'CA',
-			postcode: '94103',
+			first_name: 'customer1',
+			last_name: 'c1',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			state: 'NY',
+			postcode: '10003',
 			country: 'US',
-			email: 'john.doe@example.com',
+			email: 'customer1@yopmail.com',
 			phone: '(555) 555-5555',
 		},
 
 		shipping: {
-			first_name: 'John',
-			last_name: 'Doe',
-			address_1: '969 Market',
-			address_2: '',
-			city: 'San Francisco',
-			state: 'CA',
-			postcode: '94103',
+			first_name: 'customer1',
+			last_name: 'c1',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			state: 'NY',
+			postcode: '10003',
 			country: 'US',
 		},
 
@@ -213,32 +252,32 @@ export const payloads = {
 		payment_method_title: 'Cash on delivery',
 		set_paid: true,
 		billing: {
-			first_name: 'John',
-			last_name: 'Doe',
-			address_1: '969 Market',
-			address_2: '',
-			city: 'San Francisco',
-			state: 'CA',
-			postcode: '94103',
+			first_name: 'customer1',
+			last_name: 'c1',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			state: 'NY',
+			postcode: '10003',
 			country: 'US',
-			email: 'john.doe@example.com',
+			email: 'customer1@yopmail.com',
 			phone: '(555) 555-5555',
 		},
 
 		shipping: {
-			first_name: 'John',
-			last_name: 'Doe',
-			address_1: '969 Market',
-			address_2: '',
-			city: 'San Francisco',
-			state: 'CA',
-			postcode: '94103',
+			first_name: 'customer1',
+			last_name: 'c1',
+			address_1: 'abc street',
+			address_2: 'xyz street',
+			city: 'New York',
+			state: 'NY',
+			postcode: '10003',
 			country: 'US',
 		},
 		line_items: [
 			{
 				product_id: '',
-				quantity: 1,
+				quantity: 10,
 			},
 		],
 		shipping_lines: [
@@ -275,6 +314,14 @@ export const payloads = {
 		notes: 'Withdraw notes',
 		method: 'paypal',
 	},
+
+	updateWithdrawDisbursementSettings: {
+		schedule: 'quarterly',
+		minimum: 50,
+		reserve: 0,
+		method: 'paypal'
+	},
+
 
 	// settings
 
@@ -326,7 +373,7 @@ export const payloads = {
 		enable_tnc: 'off',
 		store_tnc: '',
 		show_min_order_discount: '',
-		store_seso: [],
+		store_seo: [],
 		dokan_store_time_enabled: 'no',
 		dokan_store_open_notice: 'Store is open',
 		dokan_store_close_notice: 'Store is closed',
@@ -402,8 +449,8 @@ export const payloads = {
 	createAttribute: () => ({
 		name: 'Test_attribute_' + faker.string.alpha(8),
 		// slug: `pa_${payloads.createAttribute.name}`,
-		// type: "select",
-		// order_by: "menu_order",
+		// type: 'select',
+		// order_by: 'menu_order',
 		// has_archives: false
 	}),
 
@@ -1178,7 +1225,7 @@ export const payloads = {
 		status: 'active',
 	},
 
-	adminContactStore: {
+	clientContactStore: {
 		name: 'admin',
 		email: 'admin@g.c',
 		message: 'Test admin connect with vendor message',
@@ -1264,8 +1311,8 @@ export const payloads = {
 		categories: [
 			{
 				// id: 74,
-				// name: "Uncategorized",
-				// slug: "uncategorized"
+				// name: 'Uncategorized',
+				// slug: 'uncategorized'
 			},
 		],
 		admin_commission: '',
@@ -1331,6 +1378,7 @@ export const payloads = {
 		hide_cart_button: 'keep_and_add_new',
 		button_text: ' To quote',
 		apply_on_all_product: '1',
+
 	},
 
 	// request quote
@@ -1360,10 +1408,101 @@ export const payloads = {
 		product_ids: [''],
 		offer_price: ['30'],
 		offer_product_quantity: ['20'],
+
 	},
 
 	convertToOrder: {
 		quote_id: '10',
 		status: 'converted',
 	},
+
+	//settings
+	updateSettingsGroup: {
+		items: [
+			{
+				id: 'store_name',
+				value: 'adminStore1',
+			},
+			{
+				id: 'phone',
+				value: '164877665544433',
+			},
+		],
+	},
+
+	updateSubSettingFromSingleSettingGroup: {
+		value: 'adminStore1',
+	},
+
+	updateSubSubSettingFromSingleSettingGroup: {
+		value: 'zzz street',
+	},
+
+	setDefaultAttribute: {
+
+	},
+
+	filterParams: {
+		product_type: 'simple',
+	},
+
+
+	// seller badge
+
+	createSellerBadgeExclusiveToPlatform: {
+		event_type: 'exclusive_to_platform',
+		badge_name: 'Exclusive to Platform',
+		badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
+		badge_status: 'published',
+		levels: [
+			{
+				level: 0,
+				level_condition: '',
+				level_data: ''
+			}
+		]
+	},
+
+	createSellerBadgeProductPublished: {
+		event_type: 'product_published',
+		badge_name: 'Product Published',
+		badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
+		badge_status: 'published',
+		levels: [
+			{
+				level_condition: '<',
+				level_data: '10'
+			},
+			{
+				level_condition: '<',
+				level_data: '20'
+			},
+			{
+				level_condition: '<',
+				level_data: '30'
+			}
+		]
+	},
+
+	updateSellerBadge: {
+		event_type: 'exclusive_to_platform',
+		badge_name: 'Exclusive to Platform',
+		badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
+		badge_status: 'draft',
+		levels: [
+			{
+				level: 0,
+				level_condition: '',
+				level_data: ''
+			}
+		]
+	},
+
+	// reverse withdrawal
+
+	amountToPay: {
+		amount: '10'
+	},
+
+
 };

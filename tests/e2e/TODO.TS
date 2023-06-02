@@ -1,4 +1,4 @@
-//TODO: add get, post, put, delete request in api utils
+
 //TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //TODO: slack integration
 //TODO: working-directory: ./path/to/tests
@@ -32,11 +32,9 @@
 getAllOrders: ${SERVER_URL}/v1/orders to endPoints.getAllOrders
 
 
+//TODO: use only one password for every user FOR both suite e2e and api
 
 
-
-
-//TODO:
 //TODO:
 //TODO:
 //TODO:
@@ -231,13 +229,13 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 
 // TODO: ********************api suite******************
 
-// TODO: convert admin as vendor to vendor as vendor whole suite
-//todo: add support ticket via db-query
+//TODO: convert admin as vendor to vendor as vendor whole suite
+//TODO: add support ticket via db-query
 //TODO: add abuse report via db-query
 //TODO: add refund via db-query
 //TODO: fix rank math api
-//TODO:
-//TODO:
+//TODO: add get, post, put, delete request in api utils
+//TODO: create valid payload for every request : which doesn't cause php warning
 //TODO:
 //TODO:
 //TODO:

@@ -13,7 +13,7 @@ export const helpers = {
 	// returns a random integer number between min (inclusive) and max (exclusive)
 	getRandomArbitraryInteger: (min: number, max: number) => Math.floor(Math.random() * (max - min) + min),
 
-	//random number between 0 and 1000
+	// random number between 0 and 1000
 	randomNumber: () => Math.floor(Math.random() * 1000),
 
 	// random array element
@@ -22,26 +22,14 @@ export const helpers = {
 	// remove array element
 	removeItem: (arr: any[], removeItem: any) => arr.filter((item) => item !== removeItem),
 
-	// string to slug
-	slugify: (str: string) => {
-		return str
-			.toString() 							// Cast to string (optional)
-			.normalize('NFKD') 						// The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
-			.replace(/[\u0300-\u036f]/g, '')
-			.toLowerCase() 							// Convert the string to lowercase letters
-			.trim()									// Remove whitespace from both sides of a string (optional)
-			.replace(/\s+/g, '-') 					// Replace spaces with -
-			.replace(/[^\w\-]+/g, '') 				// Remove all non-word chars
-			// .replace(/\_/g, '-')           		// Replace _ with -
-			.replace(/\-\-+/g, '-') 				// Replace multiple - with single -
-			.replace(/\-$/g, ''); 					// Remove trailing -
-	}, // TODO: might fail sometimes, need to update with string-to-slug see google
+	// check if object is empty
+	isObjEmpty: ( obj: object ) => Object.keys( obj ).length === 0,
 
 	// opens the url in the default browser
 	openUrl: (url: string) => open(url),
 
 	// opens test report in the default browser
-	openReport: () => open('./artifacts/jest-stare/index.html'),
+	openReport: () => open('./artifacts/jest-stare/index.html'), //TODO: update for playwright
 
 	// convert string to price format
 	price: (str: string) => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
@@ -54,11 +42,11 @@ export const helpers = {
 
 	// current date-time [2023-06-02, 00:33]
 	currentDateTime: new Date().toLocaleString('en-CA', {
-		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric',}),	
-	
+		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', }),
+
 	// current date-time [2023-06-02 00:46:11]
-	currentDateTime1: new Date().toLocaleString('en-CA', { 
-		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric',}).replace(',', ''),
+	currentDateTime1: new Date().toLocaleString('en-CA', {
+		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
 
 	// add two input days
@@ -82,64 +70,99 @@ export const helpers = {
 		return Math.round((Number(num) + Number.EPSILON) * 100) / 100;
 	},
 
-	//calculate percentage
+	// calculate percentage
 	percentage(number: number, percentage: number) {
 		return this.roundToTwo(number * (percentage / 100));
 	},
 
-	//calculate percentage
+	// calculate percentage
 	percentage1(number: number, percentage: number) {
 		return ((number * (percentage / 100)).toFixed(2));
 	},
 
-	//subtotal
+	// subtotal
 	subtotal(price: number[], quantity: number[]) {
 		const subtotal = price.map((e, index) => e * quantity[index]);
 		return subtotal.reduce((a, b) => a + b, 0);
 	},
 
-	//tax
-	tax(taxRate: any, subtotal: any, shipping = 0) {
-		const tax = this.percentage(subtotal, taxRate) + this.percentage(shipping, taxRate);
-		return this.roundToTwo(tax);
+	// product tax
+	productTax( taxRate: number, subtotal: number) {
+		const productTax = this.percentage( subtotal, taxRate );
+		return this.roundToTwo( productTax );
 	},
 
-	//order total
-	orderTotal(subtotal: number, tax = 0, shipping = 0) {
-		const orderTotal = subtotal + tax + shipping;
-		return this.roundToTwo(orderTotal);
+	// product tax
+	shippingTax( taxRate: number, shippingFee = 0 ) {
+		const shippingTax = this.percentage( shippingFee, taxRate );
+		return this.roundToTwo( shippingTax );
 	},
 
-	//calculate admin commission
-	adminCommission(subTotal: any, commissionRate: any, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
-		if (taxReceiver === 'vendor') {
-			tax = 0;
-		}
-		if (shippingReceiver === 'vendor') {
-			shipping = 0;
-		}
-		if (gatewayFeeGiver === 'vendor') {
-			gatewayFee = 0;
-		}
-
-		const adminCommission = this.percentage(subTotal, commissionRate) - gatewayFee + tax + shipping;
-		return this.roundToTwo(adminCommission);
+	// order total
+	orderTotal( subtotal: number, productTax = 0, shippingTax = 0, shippingFee = 0 ) {
+		const orderTotal = Number( subtotal ) + Number( productTax )  + Number( shippingTax ) + Number( shippingFee );
+		return this.roundToTwo( orderTotal );
 	},
 
-	//calculate vendor earning
-	vendorEarning(subTotal: number, commission: number, tax = 0, shipping = 0, gatewayFee = 0, taxReceiver = 'vendor', shippingReceiver = 'vendor', gatewayFeeGiver = 'vendor') {
-		if (taxReceiver !== 'vendor') {
-			tax = 0;
-		}
-		if (shippingReceiver !== 'vendor') {
-			shipping = 0;
-		}
-		if (gatewayFeeGiver !== 'vendor') {
-			gatewayFee = 0;
+	// calculate admin commission
+	adminCommission( subTotal: number, commission:any, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient:any, gatewayFeeGiver = 'seller' ) {
+
+		let subTotalCommission = 0;
+
+		switch(commission.type){
+
+		case 'percentage' :
+			subTotalCommission = this.percentage( Number( subTotal ), Number( commission.amount ) );
+			break;
+
+		case 'flat' :
+			subTotalCommission = Number( commission.amount );
+			break;
+
+		case 'combine' :
+			subTotalCommission = this.percentage( Number( subTotal ), Number( commission.amount ) ) + Number( commission.additionalAmount );
+			break;
+
+		default :
+			break;
+
 		}
 
-		const vendorEarning = subTotal - commission - gatewayFee + tax + shipping;
-		return this.roundToTwo(vendorEarning);
+		productTax = feeRecipient.taxFeeRecipient === 'seller' ? 0 : productTax;
+		shippingTax = feeRecipient.shippingTaxFeeRecipient === 'seller' ? 0 : shippingTax;
+		shippingFee = feeRecipient.shippingFeeRecipient === 'seller' ? 0 : shippingFee;
+		gatewayFee = gatewayFeeGiver === 'seller' ? 0 : gatewayFee;
+
+		const adminCommission = subTotalCommission - Number( gatewayFee ) + Number( productTax ) + Number( shippingTax ) + Number( shippingFee );
+		return this.roundToTwo( adminCommission );
 	},
+
+	// calculate vendor earning
+	vendorEarning( subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient:any, gatewayFeeGiver = 'seller' ) {
+
+		productTax = feeRecipient.taxFeeRecipient !== 'seller' ? 0 : productTax;
+		shippingTax = feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
+		shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;
+		gatewayFee = gatewayFeeGiver !== 'seller' ? 0 : gatewayFee;
+
+		const vendorEarning = Number( subTotal ) - Number( commission ) - Number( gatewayFee ) + Number( productTax ) + Number( shippingTax )  + Number( shippingFee );
+		return this.roundToTwo( vendorEarning );
+	},
+
+	// string to slug
+	slugify (str: string) {
+		return str
+			.toString() 							// Cast to string (optional)
+			.normalize('NFKD') 						// The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
+			.replace(/[\u0300-\u036f]/g, '')
+			.toLowerCase() 							// Convert the string to lowercase letters
+			.trim()									// Remove whitespace from both sides of a string (optional)
+			.replace(/\s+/g, '-') 					// Replace spaces with -
+			.replace(/[^\w-]+/g, '') 				// Remove all non-word chars
+		// .replace(/\_/g, '-')           		// Replace _ with -
+			.replace(/--+/g, '-') 				// Replace multiple - with single -
+			.replace(/-$/g, ''); 					// Remove trailing -
+	}, // TODO: might fail sometimes, need to update with string-to-slug see google
+
 
 };

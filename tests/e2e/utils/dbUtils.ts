@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from './dbData';
+import { helpers } from './helpers';
 // const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
 
 const dbPrefix = process.env.DB_PREFIX;
@@ -24,7 +25,7 @@ export const dbUtils = {
 			try{
 				const result = await dbContext.executeAsync(query);
 				const res = JSON.parse(JSON.stringify(result));
-				expect(res).not.toHaveProperty('errno'); //TODO: ADD Actual ASSERT DBQUERY IS SUCCESSES, update it
+				expect(res).not.toHaveProperty('errno'); //TODO: ADD Actual ASSERT DB_QUERY IS SUCCESSES, update it
 				return res;
 			}
 			catch(err: unknown){
@@ -55,13 +56,28 @@ export const dbUtils = {
 		return res;
 	},
 
-	// get admin commission info
-	async getCommissionInfo(): Promise<any> {
+	// get selling info
+	async getSellingInfo(): Promise<object[]> {
 		const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
-		const commissionType = res.commission_type;
-		const commission = [res.admin_percentage, res.additional_fee ];
-		return [commissionType, commission];
-	}
+		const commission = {
+			type: res.commission_type,
+			amount:res.admin_percentage,
+			additionalAmount: res.additional_fee
+		};
+		const feeRecipient = {
+			shippingFeeRecipient: res.shipping_fee_recipient,
+			taxFeeRecipient: res.tax_fee_recipient,
+			shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
+		};
+		return [commission, feeRecipient];
+	},
 
+	// create abuse report
+	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ) {
+		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTime1}');`;
+		const res = await dbUtils.dbQuery(querySelect);
+		// console.log(res);
+		return res;
+	}
 
 };
