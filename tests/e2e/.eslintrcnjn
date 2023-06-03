@@ -1,0 +1,52 @@
+//  {
+//     "env": {
+//       "browser": true,//TODO: what should be the value
+//       "es2021": true, //TODO: what should be the value
+//       "node": true //TODO: what should be the value
+//     },
+//     "extends": [
+//       "eslint:recommended",
+//       "plugin:@typescript-eslint/recommended", //TODO : recommend meaning Also ********* learn eslint
+//       "plugin:@typescript-eslint/recommended", //TODO : recommend meaning Also ********* learn eslint
+//       "plugin:playwright/playwright-test/recommended"
+//   ],
+//     "parserOptions": {
+//       "ecmaVersion": 12, //TODO: what should be the value
+//       "sourceType": "module",
+//       "parser": "@typescript-eslint/parser"
+//     },
+//     "plugins": [
+//       "@typescript-eslint"
+//   ],
+//     "rules": {
+//         // we want single quotes
+//         "quotes": ["error", "single"],
+//         // we want to force semicolons
+//         "semi": ["error", "always"],
+//         // we use 2 spaces to indent our code
+//         "indent": ["error", 4],
+//         // we want to avoid extraneous spaces
+//         "no-multi-spaces": ["error"],
+
+
+
+
+//         //TODO:  remove before push
+//         // disable no unused vars rule
+//         "no-unused-vars": "off",
+//         "@typescript-eslint/no-unused-vars": "error"
+
+//        //TODO: test any un-comment any necessary
+//       // "node/exports-style": ["error", "module.exports"],
+//       //   "node/file-extension-in-import": ["error", "always"],
+//       //   "node/prefer-global/buffer": ["error", "always"],
+//       //   "node/prefer-global/console": ["error", "always"],
+//       //   "node/prefer-global/process": ["error", "always"],
+//       //   "node/prefer-global/url-search-params": ["error", "always"],
+//       //   "node/prefer-global/url": ["error", "always"],
+//       //   "node/prefer-promises/dns": "error",
+//       //   "node/prefer-promises/fs": "error"
+
+//       }
+//       // "ignorePatterns": ["/**/*.test.ts"]
+//   }

@@ -4,7 +4,10 @@ Automated API tests for Dokan API endpoints.
 
 ## Table of contents
 
--   [Pre-requisites](#pre-requisites) - [Install Node.js](#install-node.js) - [Install NVM](#install-nvm) - [Install Docker](#install-docker)  
+-   [Pre-requisites](#pre-requisites) 
+    - [Install Node.js](#install-node.js) 
+    - [Install NVM](#install-nvm) 
+    - [Install Docker](#install-docker) 
     &nbsp;
 -   [Running tests](#running-tests)
 
@@ -42,11 +45,11 @@ npm i
 
 ### How to run tests
 
-Running all tests
+Run all tests
 
     npx playwright test
 
-Running a single test file
+Run a single test file
 
     npx playwright test coupons.spec.ts
 
@@ -62,11 +65,15 @@ Run the test with the title
 
     npx playwright test -g "user login"
 
+Run a single project
+
+    npx playwright test --project=e2e_tests
+
 Run group of tests with certain tag
 
     npx playwright test --grep @pro
 
-Run multiple groups of tags 
+Run multiple groups of tags
 
     npx playwright test --grep @lite | @pro
 
