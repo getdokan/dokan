@@ -31,7 +31,7 @@ test.describe('reverse withdrawal api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test.only('get all reverse withdrawal transactions @lite', async () => {
+	test('get all reverse withdrawal transactions @lite', async () => {
 		const storeId = await apiUtils.getReverseWithdrawalStoreId();
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalTransactions, { params: { ...payloads.paramsReverseWithdrawalTransactions, vendor_id: storeId } });
 		expect(response.ok()).toBeTruthy();

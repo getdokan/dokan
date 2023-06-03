@@ -10,7 +10,7 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-test.describe.only('support ticket api test', () => {
+test.describe.skip('support ticket api test', () => {
 	//TODO: prerequisite => multiple support tickets
 
 	test('get all support ticket customers @pro', async () => {

@@ -22,12 +22,12 @@ setup.describe(' setup environment', () => {
 
 	setup('create customer @lite @pro', async () => {
 		const [, customerId] = await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
-		process.env.customerId = customerId;
+		process.env.CUSTOMER_ID = customerId;
 	});
 
 	setup('create vendor @lite @pro', async () => {
 		const [, sellerId] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
-		process.env.vendorId = sellerId;
+		process.env.VENDOR_ID = sellerId;
 	});
 
 	setup('set dokan general settings @lite @pro', async () => {

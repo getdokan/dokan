@@ -11,7 +11,7 @@ let apiUtils: ApiUtils;
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	const[, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
-	//TODO: handle vendorId and customerId
+	//TODO: get vendorId and customerId in beforeAll
 	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 });

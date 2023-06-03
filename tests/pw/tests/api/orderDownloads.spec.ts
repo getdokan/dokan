@@ -10,7 +10,7 @@ let downloadId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	const [responseBody,] = await apiUtils.uploadMedia('../../tests/api/utils/sampleData/avatar.png');
+	const [responseBody,] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png');
 	const downloads = [{
 		id: String(responseBody.id),
 		name: responseBody.title.raw,

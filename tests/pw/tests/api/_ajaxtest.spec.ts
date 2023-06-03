@@ -1,19 +1,19 @@
 // import { test, expect } from '@playwright/test'
-// import { ApiUtils } from '../utils/apiUtils'
-// import { endPoints } from '../utils/apiEndPoints'
-// import * as storageState from '../storageState.json'
-// import qs from 'qs'
-// import cookie from './storageState.json'
+// import { ApiUtils } from '../../utils/apiUtils'
+// // import { endPoints } from '../../utils/apiEndPoints'
+// // import * as storageState from '../storageState.json'
+// // import qs from 'qs'
+// // import cookie from './storageState.json'
 
 // let apiUtils: any
 
-// // get cookie
-// function getCookie() {
-//     let cookieName = String(storageState.cookies[3].name)
-//     let cookieValue = String(storageState.cookies[3].value)
-//     let cookie = cookieName + '=' + cookieValue
-//     return cookie
-// }
+// // // get cookie
+// // function getCookie() {
+// //     let cookieName = String(storageState.cookies[3].name)
+// //     let cookieValue = String(storageState.cookies[3].value)
+// //     let cookie = cookieName + '=' + cookieValue
+// //     return cookie
+// // }
 
 // test.beforeAll(async ({ request }) => {
 //     apiUtils = new ApiUtils(request)

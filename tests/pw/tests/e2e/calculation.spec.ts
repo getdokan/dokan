@@ -1,10 +1,10 @@
 // import { test, expect, Page } from '@playwright/test';
-// import { data } from '../utils/testData';
-// import { helpers } from '../utils/helpers';
-// import { LoginPage } from '../pages/loginPage';
-// import { AdminPage } from '../pages/adminPage';
-// import { CustomerPage } from '../pages/customerPage';
-// import { VendorPage } from '../pages/vendorPage';
+// import { data } from '../../utils/testData';
+// import { helpers } from '../../utils/helpers';
+// import { LoginPage } from '../../pages/loginPage';
+// import { AdminPage } from '../../pages/adminPage';
+// import { CustomerPage } from '../../pages/customerPage';
+// import { VendorPage } from '../../pages/vendorPage';
 
 
 // test.describe.skip( 'Calculation functionality test', () => {
