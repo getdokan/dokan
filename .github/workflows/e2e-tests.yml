@@ -168,20 +168,21 @@ jobs:
           cd tests/e2e 
           npm run test:api
         env:
-          CI: true
           ADMIN: ${{ secrets.ADMIN }}
           ADMIN_PASSWORD: ${{ secrets.PASSWORD }}
           VENDOR: ${{ secrets.VENDOR }}
-          VENDOR_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
           CUSTOMER: ${{ secrets.CUSTOMER }}
-          CUSTOMER_PASSWORD: ${{ secrets.VENDOR_PASSWORD }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+
+
           # BASE_URL: ${{ secrets.BASE_URL }}
           BASE_URL: 'http://localhost:9999'
+          CI: true
           GMAP : ${{secrets.GMAP}}
           SETUP: true
           FORCE_COLOR: 1
+
           DB_HOST_NAME: localhost
-          # HOST_NAME: 127.0.0.1
           DB_USER_NAME: root
           DB_USER_PASSWORD: password
           DATABASE: tests-wordpress

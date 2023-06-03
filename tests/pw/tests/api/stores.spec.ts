@@ -96,7 +96,7 @@ test.describe('stores api test', () => {
 	});
 
 	test('update batch stores @lite', async () => {
-		const allStoreIds = (await apiUtils.getAllStores()).map((a: { id: any }) => a.id);
+		const allStoreIds = (await apiUtils.getAllStores()).map((a: { id: unknown }) => a.id);
 		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStores, { data: { approved: allStoreIds } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

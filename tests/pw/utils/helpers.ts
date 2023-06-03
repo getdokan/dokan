@@ -17,7 +17,7 @@ export const helpers = {
 	randomNumber: () => Math.floor(Math.random() * 1000),
 
 	// random array element
-	randomItem: (array: string | any[]) => array[Math.floor(Math.random() * array.length)],
+	randomItem: (arr: string | any[]) => arr[Math.floor(Math.random() * arr.length)],
 
 	// remove array element
 	removeItem: (arr: any[], removeItem: any) => arr.filter((item) => item !== removeItem),

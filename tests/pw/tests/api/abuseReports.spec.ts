@@ -4,7 +4,7 @@ import { endPoints } from '../../utils/apiEndPoints';
 import { payloads } from '../../utils/payloads';
 import { dbUtils } from '../../utils/dbUtils';
 import { dbData } from '../../utils/dbData';
-const { vendorId, customerId } = process.env;
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 let apiUtils: ApiUtils;
 
@@ -12,39 +12,35 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	const[, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
 	//TODO: handle vendorId and customerId
-	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, vendorId, customerId);
-	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, vendorId, customerId);
+	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+	await dbUtils.createAbuseReport(dbData.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 });
 
 test.describe('abuse report api test', () => {
 
-	test('get all abuse report reasons @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllAbuseReportReasons);
+	test('get all abuse report reasons @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReportReasons);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get all abuse reports @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllAbuseReports);
+	test('get all abuse reports @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReports);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a abuse report @pro', async ({ request }) => {
+	test('delete a abuse report @pro', async () => {
 		const abuseReportId = await apiUtils.getAbuseReportId();
-		const response = await request.delete(endPoints.deleteAbuseReport(abuseReportId));
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteAbuseReport(abuseReportId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete batch abuse reports @pro', async ({ request }) => {
-		const allAbuseReportIds = (await apiUtils.getAllAbuseReports()).map((a: { id: any }) => a.id);
-		const response = await request.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
+	test('delete batch abuse reports @pro', async () => {
+		const allAbuseReportIds = (await apiUtils.getAllAbuseReports()).map((a: { id : unknown }) => a.id);
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

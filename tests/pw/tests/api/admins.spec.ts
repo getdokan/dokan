@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '../../utils/apiUtils';
 import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
 
 let apiUtils: ApiUtils;
 
@@ -12,73 +11,63 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('admin api test', () => {
 
-	test('get admin report overview @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminReportOverview);
+	test('get admin report overview @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportOverview);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin report summary @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminReportSummary);
+	test('get admin report summary @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportSummary);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin dashboard feed @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminDashboardFeed);
+	test('get admin dashboard feed @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminDashboardFeed);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin help @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminHelp);
+	test('get admin help @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminHelp);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get changelog lite @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminChangelogLite);
+	test('get changelog lite @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogLite);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get changelog pro @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminChangelogPro);
+	test('get changelog pro @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogPro);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin notices @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminNotices);
+	test('get admin notices @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminNotices);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin promo notices  @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminPromoNotices);
+	test('get admin promo notices  @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminPromoNotices);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin logs @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminLogs);
+	test('get admin logs @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminLogs);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get admin export logs @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAdminExportLogs);
+	test('get admin export logs @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAdminExportLogs);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

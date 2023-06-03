@@ -18,66 +18,58 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('withdraw api test', () => {
 
-	test('get balance details @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getBalanceDetails);
+	test('get balance details @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get all withdraws @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllWithdraws);
+	test('get all withdraws @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get all withdraws by status @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllWithdraws, { params: { status: 'pending' } } ); // pending, cancelled, approved
+	test('get all withdraws by status @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws, { params: { status: 'pending' } } ); // pending, cancelled, approved
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single withdraw @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleWithdraw(withdrawId));
+	test('get single withdraw @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleWithdraw(withdrawId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a withdraw @lite', async ({ request }) => {
-		const response = await request.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw });
+	test('update a withdraw @lite', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('cancel a withdraw @lite', async ({ request }) => {
-		const response = await request.delete(endPoints.cancelWithdraw(withdrawId));
+	test('cancel a withdraw @lite', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.cancelWithdraw(withdrawId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch withdraws @lite', async ({ request }) => {
-		const allWithdrawIds = (await apiUtils.getAllWithdraws()).map((a: { id: any }) => a.id);
-
-		const response = await request.put(endPoints.updateBatchWithdraws, { data: { approved: allWithdrawIds } });
+	test('update batch withdraws @lite', async () => {
+		const allWithdrawIds = (await apiUtils.getAllWithdraws()).map((a: { id: unknown }) => a.id);
+		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWithdraws, { data: { approved: allWithdrawIds } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a withdraw @lite', async ({ request }) => {
+	test('create a withdraw @lite', async () => {
 		// cancel any pending withdraw
 		const pendingRequest = await apiUtils.getAllWithdrawsByStatus('pending');
 		helpers.isObjEmpty(pendingRequest) === false && await apiUtils.cancelWithdraw(withdrawId);
 
-		const response = await request.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } });
-		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(responseBody).toBeTruthy();
+		const [response, responseBody] = await apiUtils.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } });
 		expect(response.status()).toBe(201);
+		expect(response.ok()).toBeTruthy();
+		expect(responseBody).toBeTruthy();
+
 	});
 });

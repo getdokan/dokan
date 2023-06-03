@@ -16,59 +16,52 @@ test.beforeAll(async ({ request }) => {
 
 test.describe.skip('refunds api test', () => {
 	//TODO: need to refund from dokan not via wc
-	test('get all refunds @pro', async ({ request }) => {
-		// const orderId = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
-		// await apiUtils.createRefund(orderId, payloads.createRefund);
-
-		const response = await request.get(endPoints.getAllRefunds);
+	test('get all refunds @pro', async () => {
+		const orderId = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
+		await apiUtils.createRefund(orderId, payloads.createRefund);
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get all refunds by status @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllRefunds, { params :{ status:'completed' } }); // pending, cancelled, completed
+	test('get all refunds by status @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params :{ status:'completed' } }); // pending, cancelled, completed
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('approve a refund @pro', async ({ request }) => {
+	test('approve a refund @pro', async () => {
 		// let refundId = await apiUtils.getRefundId();
 		// const orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed');
 		// let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund);
 
-		const response = await request.put(endPoints.approveRefund(refundId));
+		const [response, responseBody] = await apiUtils.put(endPoints.approveRefund(refundId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('cancel a refund @pro', async ({ request }) => {
+	test('cancel a refund @pro', async () => {
 		// let refundId = await apiUtils.getRefundId()
 		// let orderId = await apiUtils.createOrderWithStatus(payloads.createOrder, 'wc-completed')
 		// let [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund)
 
-		const response = await request.put(endPoints.cancelRefund(refundId));
+		const [response, responseBody] = await apiUtils.put(endPoints.cancelRefund(refundId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a refund @pro', async ({ request }) => {
+	test('delete a refund @pro', async () => {
 		// let refundId = await apiUtils.getRefundId()
 
-		const response = await request.delete(endPoints.deleteRefund(refundId));
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteRefund(refundId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch refunds @pro', async ({ request }) => {
-		const allRefundIds = (await apiUtils.getAllRefunds()).map((a: { id: any }) => a.id);
-		const response = await request.put(endPoints.updateBatchRefunds, { data: { cancelled: allRefundIds } });
+	test('update batch refunds @pro', async () => {
+		const allRefundIds = (await apiUtils.getAllRefunds()).map((a: { id: unknown }) => a.id);
+		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allRefundIds } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

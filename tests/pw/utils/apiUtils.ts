@@ -887,7 +887,7 @@ export class ApiUtils {
 
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth) {
-		const allBadgeIds = (await this.getAllSellerBadges()).map((a: { id: any }) => a.id);
+		const allBadgeIds = (await this.getAllSellerBadges()).map((a: { id: unknown }) => a.id);
 		if(allBadgeIds.length < 1) return; //TODO: apply this to all batch update/ anywhere a action can be lessened
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}

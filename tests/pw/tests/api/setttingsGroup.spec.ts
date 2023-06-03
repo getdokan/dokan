@@ -10,61 +10,54 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => {
-// 	// TODO: remove after update setting cause disable selling fix
-// 	const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
-// 	const responseBody = await apiUtils.getResponseBody(response);
+// test.afterAll(async () => {
+// TODO: remove after update setting cause disable selling fix
+// 	const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
 // 	expect(response.ok()).toBeTruthy();
+// 	expect(responseBody).toBeTruthy();
 // });
 
 test.describe('new settings api test', () => {
 
-	test('get store settings @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getStoreSettings);
+	test('get store settings @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getStoreSettings);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single setting group @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleSettingGroup('store'));
+	test('get single setting group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleSettingGroup('store'));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update single setting group @v2 @lite', async ({ request }) => {
-		const response = await request.post(endPoints.updateSingleSettingGroup('store'), { data: payloads.updateSettingsGroup });
+	test('update single setting group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateSingleSettingGroup('store'), { data: payloads.updateSettingsGroup });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get sub settings from single settings group @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSubSettingFromSingleSettingGroup('store', 'store_name'));
+	test('get sub settings from single settings group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSubSettingFromSingleSettingGroup('store', 'store_name'));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update sub settings from single settings group @v2 @lite', async ({ request }) => {
-		const response = await request.post(endPoints.updateSubSettingFromSingleSettingGroup('store', 'store_name'), { data: payloads.updateSubSettingFromSingleSettingGroup });
+	test('update sub settings from single settings group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateSubSettingFromSingleSettingGroup('store', 'store_name'), { data: payloads.updateSubSettingFromSingleSettingGroup });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get sub sub settings from single settings group @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSubSubSettingFromSingleSettingGroup('store', 'address', 'street_1'));
+	test('get sub sub settings from single settings group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSubSubSettingFromSingleSettingGroup('store', 'address', 'street_1'));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update sub sub settings from single settings group @v2 @lite', async ({ request }) => {
-		const response = await request.post(endPoints.updateSubSubSettingFromSingleSettingGroup('store', 'address', 'street_1'), { data: payloads.updateSubSubSettingFromSingleSettingGroup });
+	test('update sub sub settings from single settings group @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateSubSubSettingFromSingleSettingGroup('store', 'address', 'street_1'), { data: payloads.updateSubSubSettingFromSingleSettingGroup });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

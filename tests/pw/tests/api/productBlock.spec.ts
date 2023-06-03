@@ -14,19 +14,17 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product block api test', () => {
 
-	test('get product block details @lite', async ({ request }) => {
+	test('get product block details @lite', async () => {
 		[, productId] = await apiUtils.createProduct(payloads.createDownloadableProduct());
-		const response = await request.get(endPoints.getProductBlockDetails(productId));
+		const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get variable product block details @pro', async ({ request }) => {
+	test('get variable product block details @pro', async () => {
 		[, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
-		const response = await request.get(endPoints.getProductBlockDetails(variationId));
+		const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(variationId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

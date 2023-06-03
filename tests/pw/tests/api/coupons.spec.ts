@@ -15,38 +15,33 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('coupon api test', () => {
 
-	test('get all coupons @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllCoupons);
+	test('get all coupons @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllCoupons);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single coupon @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleCoupon(couponId));
+	test('get single coupon @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleCoupon(couponId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a coupon @pro', async ({ request }) => {
-		const response = await request.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } });
+	test('create a coupon @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a coupon @pro', async ({ request }) => {
-		const response = await request.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() });
+	test('update a coupon @pro', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a coupon @pro', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteCoupon(couponId));
+	test('delete a coupon @pro', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteCoupon(couponId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

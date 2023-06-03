@@ -13,53 +13,46 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('announcements api test', () => {
 
-	test('get all announcements @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllAnnouncements);
+	test('get all announcements @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllAnnouncements);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single announcement @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleAnnouncement(announcementId));
+	test('get single announcement @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncement(announcementId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a announcement @pro', async ({ request }) => {
-		const response = await request.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement });
+	test('create a announcement @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a announcement @pro', async ({ request }) => {
-		const response = await request.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement });
+	test('update a announcement @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a announcement @pro', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteAnnouncement(announcementId));
+	test('delete a announcement @pro', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteAnnouncement(announcementId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('restore a deleted announcement  @pro', async ({ request }) => {
-		const response = await request.put(endPoints.restoreDeletedAnnouncement(announcementId));
+	test('restore a deleted announcement  @pro', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.restoreDeletedAnnouncement(announcementId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch announcements @pro', async ({ request }) => {
-		const allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map((a: { id: any }) => a.id);
-		const response = await request.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } });
+	test('update batch announcements @pro', async () => {
+		const allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map((a: { id : unknown }) => a.id);
+		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 
 		// restore all announcements

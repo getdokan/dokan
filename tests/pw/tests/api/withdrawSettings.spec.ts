@@ -11,35 +11,31 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('withdraw api test', () => {
-	test('get withdraw settings @v2', async ({ request }) => {
-		const response = await request.get(endPoints.getWithdrawSettings);
+	test('get withdraw settings @v2', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSettings);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get withdraw summary @v2', async ({ request }) => {
-		const response = await request.get(endPoints.getWithdrawSummary);
+	test('get withdraw summary @v2', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSummary);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get withdraw disbursement settings @v2 @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'feature not merged yet');
+	test('get withdraw disbursement settings @v2 @pro', async () => {
+		test.fail(!!process.env.CI, 'feature not merged yet'); //TODO
 
-		const response = await request.get(endPoints.getWithdrawDisbursementSettings);
+		const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawDisbursementSettings);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update withdraw disbursement settings @v2 @pro', async ({ request }) => {
-		test.fail(!!process.env.CI, 'feature not merged yet');
+	test('update withdraw disbursement settings @v2 @pro', async () => {
+		test.fail(!!process.env.CI, 'feature not merged yet'); //TODO
 
-		const response = await request.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
+		const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 

@@ -6,9 +6,9 @@ import { payloads } from '../../utils/payloads';
 let apiUtils: ApiUtils;
 let productId: string;
 let attributeId: string;
-let attributeTermId: string;
 let attribute: any;
 let attributeTerm: any;
+let attributeTermId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
@@ -19,70 +19,63 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('attribute api test', () => {
 
-	test('get all attributes @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllAttributes);
+	test('get all attributes @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributes);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single attribute @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleAttribute(attributeId));
+	test('get single attribute @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleAttribute(attributeId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create an attribute @lite', async ({ request }) => {
-		const response = await request.post(endPoints.createAttribute, { data: payloads.createAttribute() });
-		expect(response.ok()).toBeTruthy();
+	test('create an attribute @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createAttribute, { data: payloads.createAttribute() });
 		expect(response.status()).toBe(201);
-		const responseBody = await apiUtils.getResponseBody(response);
-		expect(responseBody).toBeTruthy();
-	});
-
-	test('update an attribute @lite', async ({ request }) => {
-		const response = await request.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete an attribute @lite', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteAttribute(attributeId));
+	test('update an attribute @lite', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch attributes @lite', async ({ request }) => {
-		const allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: any }) => a.id);
+	test('delete an attribute @lite', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteAttribute(attributeId));
+		expect(response.ok()).toBeTruthy();
+		expect(responseBody).toBeTruthy();
+	});
+
+	test('update batch attributes @lite', async () => {
+		const allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: unknown }) => a.id);
 
 		const batchAttributes: object[] = [];
 		for (const attributeId of allAttributeIds.slice(0, 2)) {
 			batchAttributes.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeId });
 		}
 
-		const response = await request.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
+		const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('set default attribute @lite', async ({ request }) => {
+	test('set default attribute @lite', async () => {
 		const payload = {
 			id: attribute.id,
 			name: attribute.name,
 			option: attributeTerm.name,
 			options: [],
 		};
-		const response = await request.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
+		const [response, responseBody] = await apiUtils.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update product attribute @lite', async ({ request }) => {
+	test('update product attribute @lite', async () => {
 		const payload = {
 			attributes: [
 				{
@@ -104,9 +97,8 @@ test.describe('attribute api test', () => {
 				},
 			],
 		};
-		const response = await request.post(endPoints.updateProductAttribute(productId), { data: payload });
+		const [response, responseBody] = await apiUtils.post(endPoints.updateProductAttribute(productId), { data: payload });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

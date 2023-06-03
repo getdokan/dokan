@@ -12,24 +12,21 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('dummy Data api test', () => {
 
-	test('get dummy data status @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getDummyDataStatus);
+	test('get dummy data status @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getDummyDataStatus);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('import dummy data @lite', async ({ request }) => {
-		const response = await request.post(endPoints.importDummyData, { data: payloads.dummyData });
+	test('import dummy data @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.importDummyData, { data: payloads.dummyData });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('clear dummy data @lite', async ({ request }) => {
-		const response = await request.delete(endPoints.clearDummyData);
+	test('clear dummy data @lite', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.clearDummyData);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

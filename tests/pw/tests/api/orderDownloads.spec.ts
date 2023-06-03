@@ -24,24 +24,21 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('order downloads api test', () => {
 
-	test('get all order downloads @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllOrderDownloads(orderId));
+	test('get all order downloads @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderDownloads(orderId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create order downloads @v2 @lite', async ({ request }) => {
-		const response = await request.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
+	test('create order downloads @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete order downloads @v2 @lite', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
+	test('delete order downloads @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

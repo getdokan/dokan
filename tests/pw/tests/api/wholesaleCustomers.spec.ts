@@ -13,41 +13,35 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('wholesale customers api test', () => {
 
-	test('get all wholesale customers @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllWholesaleCustomers);
+	test('get all wholesale customers @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllWholesaleCustomers);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a wholesale customer @pro', async ({ request }) => {
+	test('create a wholesale customer @pro', async () => {
 		const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
-		const response = await request.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
+		const [response, responseBody] = await apiUtils.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a wholesale customer @pro', async ({ request }) => {
-		const response = await request.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.updateWholesaleCustomer });
+	test('update a wholesale customer @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.updateWholesaleCustomer });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a wholesale customer @pro', async ({ request }) => {
-		const response = await request.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.deleteWholesaleCustomer });
+	test('delete a wholesale customer @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.deleteWholesaleCustomer });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch wholesale customers @pro', async ({ request }) => {
-		const allWholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map((a: { id: any }) => a.id);
-
-		const response = await request.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
+	test('update batch wholesale customers @pro', async () => {
+		const allWholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map((a: { id: unknown }) => a.id);
+		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

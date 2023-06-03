@@ -12,31 +12,27 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('report api test', () => {
 
-	test('get sales overview report @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getSalesOverviewReport);
+	test('get sales overview report @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSalesOverviewReport);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get summary report @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getSummaryReport);
+	test('get summary report @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSummaryReport);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get top earners report @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getTopEarnersReport);
+	test('get top earners report @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getTopEarnersReport);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get top selling products report  @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getTopSellingProductsReport);
+	test('get top selling products report  @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getTopSellingProductsReport);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

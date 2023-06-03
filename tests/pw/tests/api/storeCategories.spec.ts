@@ -13,57 +13,50 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('store categories api test', () => {
 
-	test('get default store category @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getDefaultStoreCategory);
+	test('get default store category @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getDefaultStoreCategory);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('set default store category @pro', async ({ request }) => {
+	test('set default store category @pro', async () => {
 		const [, defaultCategoryId] = await apiUtils.getDefaultStoreCategory();
-		const response = await request.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } });
+		const [response, responseBody] = await apiUtils.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 
 		// restore default store category
 		await apiUtils.setDefaultStoreCategory(defaultCategoryId);
 	});
 
-	test('get all store categories @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getAllStoreCategories);
+	test('get all store categories @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllStoreCategories);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single store category @pro', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleStoreCategory(categoryId));
+	test('get single store category @pro', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleStoreCategory(categoryId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a store category @pro', async ({ request }) => {
-		const response = await request.post(endPoints.createStoreCategory, { data: payloads.createStoreCategory() });
-		expect(response.ok()).toBeTruthy();
+	test('create a store category @pro', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createStoreCategory, { data: payloads.createStoreCategory() });
 		expect(response.status()).toBe(201);
-		const responseBody = await apiUtils.getResponseBody(response);
+		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a store category @pro', async ({ request }) => {
-		const response = await request.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() });
+	test('update a store category @pro', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a store category @pro', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteStoreCategory(categoryId), { params: payloads.paramsDeleteStoreCategory });
+	test('delete a store category @pro', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteStoreCategory(categoryId), { params: payloads.paramsDeleteStoreCategory });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 

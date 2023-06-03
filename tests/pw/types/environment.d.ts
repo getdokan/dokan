@@ -9,6 +9,9 @@ declare global {
             VENDOR: string;
             USER_PASSWORD: string;
             CUSTOMER: string;
+            ADMIN_ID: string;
+            VENDOR_ID: string;
+            CUSTOMER_ID: string;
             GMAP: string;
             BASE_URL:string;
             QUERY:string;

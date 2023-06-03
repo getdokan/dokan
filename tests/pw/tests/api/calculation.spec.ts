@@ -13,25 +13,24 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('calculation test', () => {
-	test('calculation test', async ({ request }) => {
-		let discountTotal: any, discountTax: any, shippingFee: number, shippingTax: any, cartTax: any, totalTax: any, orderTotal: any, paymentMethod: any, productPrice: number, productQuantity: number, gatewayFee = 0;
-
+	test('calculation test', async () => {
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
 		const [res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 		// console.log( res );
 		console.log( 'Cal: order id:', oid );
 
-		discountTotal = res.discount_total;
-		discountTax = res.discount_tax;
-		shippingFee = res.shipping_total;
-		shippingTax = res.shipping_tax;
-		cartTax = res.cart_tax;
-		totalTax = res.total_tax;
-		orderTotal = res.total;
-		paymentMethod = res.payment_method_ti;
-		productPrice = res.line_items[0].subtotal;
-		productQuantity = res.line_items[0].quantity;
+		// const discountTotal = res.discount_total;
+		// const discountTax = res.discount_tax;
+		const shippingFee = res.shipping_total;
+		const shippingTax = res.shipping_tax;
+		const cartTax = res.cart_tax;
+		const totalTax = res.total_tax;
+		const orderTotal = res.total;
+		const gatewayFee = 0;
+		// const paymentMethod = res.payment_method_ti;
+		const productPrice = res.line_items[0].subtotal;
+		const productQuantity = res.line_items[0].quantity;
 
 		const orderReport = await apiUtils.getSingleOrderLog(String(oid));
 		// console.log(orderReport);

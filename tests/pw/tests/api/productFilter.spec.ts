@@ -12,10 +12,9 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product filter api test', () => {
 
-	test('get products filter by data @v2 @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getProductsFilterByData);
+	test('get products filter by data @v2 @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getProductsFilterByData);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 

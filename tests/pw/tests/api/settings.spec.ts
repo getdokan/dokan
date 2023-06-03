@@ -10,26 +10,23 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
-// test.afterAll(async ({ request }) => {
-// 	// TODO: remove after update setting cause disable selling fix
-// 	const response = await request.put(endPoints.updateSettings, { data: payloads.setupStore });
-// 	const responseBody = await apiUtils.getResponseBody(response);
+// test.afterAll(async () => {
+// TODO: remove after update setting cause disable selling fix
+// 	const [response,] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
 // 	expect(response.ok()).toBeTruthy();
 // });
 
 test.describe('settings api test', () => {
 
-	test('get settings @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSettings);
+	test('get settings @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSettings);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update settings @lite', async ({ request }) => {
-		const response = await request.put(endPoints.updateSettings, { data: payloads.updateSettings });
+	test('update settings @lite', async () => {
+		const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.updateSettings });
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });

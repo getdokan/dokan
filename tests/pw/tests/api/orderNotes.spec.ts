@@ -15,32 +15,28 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('order note api test', () => {
 
-	test('get all order notes @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getAllOrderNotes(orderId));
+	test('get all order notes @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderNotes(orderId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single order note @lite', async ({ request }) => {
-		const response = await request.get(endPoints.getSingleOrderNote(orderId, orderNoteId));
+	test('get single order note @lite', async () => {
+		const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrderNote(orderId, orderNoteId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create an order note @lite', async ({ request }) => {
-		const response = await request.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote });
+	test('create an order note @lite', async () => {
+		const [response, responseBody] = await apiUtils.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote });
 		expect(response.status()).toBe(201);
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete an order note @lite', async ({ request }) => {
-		const response = await request.delete(endPoints.deleteOrderNote(orderId, orderNoteId));
+	test('delete an order note @lite', async () => {
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderNote(orderId, orderNoteId));
 		expect(response.ok()).toBeTruthy();
-		const responseBody = await apiUtils.getResponseBody(response);
 		expect(responseBody).toBeTruthy();
 	});
 });
