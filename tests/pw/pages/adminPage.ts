@@ -1339,4 +1339,31 @@ export class AdminPage extends BasePage {
 			throw new Error('Inactive modules: ' + inActiveModuleNames);
 		}
 	}
+
+	async setupWp() {
+		await this.goto(data.subUrls.backend.setupWP);
+		const alreadyInstalledIsVisible = await this.isVisible(selector.backend.alreadyInstalled);
+		if (alreadyInstalledIsVisible) {
+			return;
+		}
+		await this.click(selector.backend.languageContinue);
+		const letsGoIsVisible = await this.isVisible(selector.backend.letsGo);
+		if (letsGoIsVisible) {
+			await this.click(selector.backend.letsGo);
+			await this.fill(selector.backend.dbName, data.installWp.dbName);
+			await this.fill(selector.backend.dbUserName, data.installWp.dbUserName);
+			await this.fill(selector.backend.dbPassword, data.installWp.dbPassword);
+			await this.fill(selector.backend.dbHost, data.installWp.dbHost);
+			await this.fill(selector.backend.dbTablePrefix, data.installWp.dbTablePrefix);
+			await this.click(selector.backend.submit);
+			await this.click(selector.backend.runTheInstallation);
+		} else {
+			await this.fill(selector.backend.siteTitle, data.installWp.siteTitle);
+			await this.fill(selector.backend.adminUserName, data.installWp.adminUserName);
+			await this.fill(selector.backend.adminPassword, data.installWp.adminPassword);
+			await this.fill(selector.backend.adminEmail, data.installWp.adminEmail);
+			await this.click(selector.backend.installWp);
+			await this.click(selector.backend.successLoginIn);
+		}
+	}
 }

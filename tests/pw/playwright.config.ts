@@ -1,200 +1,120 @@
-import { PlaywrightTestConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-// // api
-// const username = process.env.ADMIN;
-// const password = process.env.ADMIN_PASSWORD;
-// const basicAuth = 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+const apiUse = {
+	baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base url
+	ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
+	// api request headers
+	extraHTTPHeaders: {
+		Accept: '*/*',
+		Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
+	}
+};
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
+const e2eUse  = {
+	...devices['Desktop Chrome'],
+	headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+	actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit).
+	baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', // Base url
+	ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
+	launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, // whether to slow down test execution by provided seconds
+	}
+};
 
-const config: PlaywrightTestConfig = {
-	// // test directory
-	// testDir: './tests',
+export default defineConfig({
 
-	/* Maximum time one test can run for. */
-	// timeout: 60 * 1000,
-	timeout: 45 * 1000,
-	// timeout: 30 * 1000,
-	// timeout: 10 * 1000,
+	globalSetup: './global-setup', /*Path to the global setup file. This file will be required and run before all the tests. */
+	// // globalTeardown: './global-teardown', /*Path to the global teardown file. This file will be required and run after all the tests. */
+	// globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
+	// maxFailures: process.env.CI ? 20 : 20, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
+	// timeout: 45 * 1000, /* Maximum time one test can run for. */
+	// // timeout: 30 * 1000,
+	// // timeout: 10 * 1000,
+	outputDir: 'playwright/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
+	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
+	// // fullyParallel: true, 	/* Run tests in files in parallel */
+	// // forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
+	// // repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
+	// // retries: process.env.CI ? 1 : 0,  	/*The maximum number of retry attempts given to failed tests.  */
+	// workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
+	// reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
+	// reporter: process.env.CI
+	// 	? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
+	// 	: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }],
+	// 	// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]
+	// 	],
+	// expect: { timeout: 10 * 1000, /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
+	// },  /* Configuration for the expect assertion library */
 
-	expect: {
-		/**
-		 * Maximum time expect() should wait for the condition to be met.
-		 * For example in `await expect(locator).toHaveText();`
-		 */
-		timeout: 10 * 1000,
-	},
-
-	/* Run tests in files in parallel */
-	// fullyParallel: true,
-
-	/* Fail the build on CI if you accidentally left test.only in the source code. */
-	// forbidOnly: !!process.env.CI,
-
-	/* Retry on CI only */
-	// retries: process.env.CI ? 1 : 0,
-
-	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? 1 : 1,
-
-	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI
-		? [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/junit-report/e2e-results.xml' }], ['list', { printSteps: true }],
-		// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]
-		],
-
-
-	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-	globalSetup: require.resolve('./global-setup'),
 
 	// use: {
-	// storageState: 'storageState.json',  // location of sign in state
-	// headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-	// actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
-	// baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
-	// ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
-	// trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
-	// screenshot: 'only-on-failure', // Capture screenshot after each test failure.
-	// video: 'on-first-retry', // Record video only when retrying a test for the first time.
-	// viewport: { width: 1440, height: 900 },
-
-	// // launch options
-	// launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
-	// },
-
-	// api request headers
-	// extraHTTPHeaders: {
-	// 	Accept: '*/*',
-	// 	Authorization: basicAuth,
-	// },
+	// 	acceptDownloads: true, /* Whether to automatically download all the attachments. */
+	// 	actionTimeout: 0, /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
+	// baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base url
+	// browserName: 'chromium', /* Name of the browser that runs tests. */
+	// 	bypassCSP: true, /* Toggles bypassing page's Content-Security-Policy. */
+	// 	channel: 'chrome', /* Browser distribution channel. */
+	// 	colorScheme: 'dark', /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
+	// 	headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
+	// 	ignoreHTTPSErrors: false, // Whether to ignore HTTPS errors during navigation.
+	// 	trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
+	// 	screenshot: 'only-on-failure', // Capture screenshot after each test failure.
+	// 	video: 'on-first-retry', // Record video only when retrying a test for the first time.
+	// 	launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
+	// 	},
 	// },
 
 	/* Configure projects for major browsers */
 	projects: [
-		// Setup  api project
+
+		// Api project
 		{
 			name: 'api_setup',
 			testDir: './tests/api',
 			testMatch: /.*\.setup\.ts/,
-			use: {
-				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
-				ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
-				// api request headers
-				extraHTTPHeaders: {
-					Accept: '*/*',
-					Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
-				},
-			},
+			use: apiUse,
 		},
-
 		{
 			name: 'api_tests',
 			testDir: './tests/api',
 			testMatch: /.*\.spec\.ts/,
 			dependencies: process.env.SETUP ? ['api_setup'] : [],
-			use: {
-				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
-				ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
-				// api request headers
-				extraHTTPHeaders: {
-					Accept: '*/*',
-					Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
-				},
-			},
+			use: apiUse
 		},
 
-		// Setup  e2e project
+		// E2e project
 		{
 			name: 'e2e_setup',
 			testDir: './tests/e2e',
 			testMatch: /.*\.setup\.ts/
 		},
-
 		{
 			name: 'e2e_tests',
 			testDir: './tests/e2e',
 			testMatch: /.*\.spec\.ts/,
 			dependencies: process.env.SETUP ? ['e2e_setup'] : [],
-			use: { ...devices['Desktop Chrome'],
-				// storageState: 'storageState.json',  // location of sign in state
-				headless: process.env.CI ? !! process.env.CI : false, // Whether to run tests on headless or non-headless mode
-				actionTimeout: 0, // Maximum time each action such as `click()` can take. Defaults to 0 (no limit). //
-				baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999', //Base URL
-				ignoreHTTPSErrors: true, // Whether to ignore HTTPS errors during navigation.
+			use: {
+				...e2eUse,
 				trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
 				screenshot: 'only-on-failure', // Capture screenshot after each test failure.
 				video: 'on-first-retry', // Record video only when retrying a test for the first time.
-				// viewport: { width: 1440, height: 900 },
-
-				// launch options
-				launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, //whether to slow down test execution by provided seconds
-				},
 			},
 		},
 
-		//     {
-		//         name: 'chromium',
-		//         use: {
-		//             ...devices['Desktop Chrome'],
-		//         },
-		//     },
+		// local site setup project
+		{
+			name: 'site_setup',
+			testDir: './tests/e2e',
+			testMatch: /.*\.setup\.ts/,
+			use: {
+				...e2eUse,
+				trace: 'on-first-retry', // Record trace only when retrying a test for the first time.
+				screenshot: 'only-on-failure', // Capture screenshot after each test failure.
+				video: 'on-first-retry', // Record video only when retrying a test for the first time.
+			},
+		},
 
-		// {
-		//   name: 'firefox',
-		//   use: {
-		//     ...devices['Desktop Firefox'],
-		//   },
-		// },
-		//
-		// {
-		//   name: 'webkit',
-		//   use: {
-		//     ...devices['Desktop Safari'],
-		//   },
-		// },
-
-		/* Test against mobile viewports. */
-		// {
-		//   name: 'Mobile Chrome',
-		//   use: {
-		//     ...devices['Pixel 5'],
-		//   },
-		// },
-		// {
-		//   name: 'Mobile Safari',
-		//   use: {
-		//     ...devices['iPhone 12'],
-		//   },
-		// },
-
-		/* Test against branded browsers. */
-		// {
-		//   name: 'Microsoft Edge',
-		//   use: {
-		//     channel: 'msedge',
-		//   },
-		// },
-		// {
-		//   name: 'Google Chrome',
-		//   use: {
-		//     channel: 'chrome',
-		//   },
-		// },
 	],
 
-	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
-	outputDir: 'playwright/test-artifacts/',
-
-	/* Run your local dev server before starting the tests */
-	// webServer: {
-	//   command: 'npm run start',
-	//   port: 3000,
-	// },
-};
-
-export default config;
+});

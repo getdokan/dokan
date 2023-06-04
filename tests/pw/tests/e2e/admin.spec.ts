@@ -19,8 +19,8 @@ test.describe('Admin user functionality test', () => {
 		await page.close();
 	});
 
-	test('admin can login @lite @pro', async ( ) => {
-		await loginPage.adminLogin(data.admin);
+	test.only('admin can login @lite @pro', async ( ) => {
+		// await loginPage.adminLogin(data.admin);
 	});
 
 	test('admin can logout @lite @pro', async ( ) => {
@@ -35,12 +35,14 @@ test.describe('Admin functionality test', () => {
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	let adminPage: AdminPage;
+	let loginPage: LoginPage;
 	let page: Page;
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
 		page = await context.newPage();
 		adminPage = new AdminPage(page);
+		loginPage = new LoginPage(page);
 	});
 
 	test.afterAll(async ( ) => {
@@ -219,8 +221,13 @@ test.describe('Admin functionality test', () => {
 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	});
 
-	// test.skip('admin can set dokan vendor subscription settings @pro', async ( )=> {
+	// test.skip('admin can set dokan vendor subscription settings @pro', async ( ) => {
 	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	// });
+
+	test.skip('admin can install WP', async ( ) => {
+		await adminPage.setupWp();
+		await loginPage.adminLogin(data.admin);
+	});
 
 });

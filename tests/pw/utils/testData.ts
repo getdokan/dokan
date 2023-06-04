@@ -710,6 +710,7 @@ export const data = {
 
 	subUrls: {
 		backend: {
+			setupWP: '/wp-admin/install.php',
 			login: 'wp-login.php',
 			adminLogin: 'wp-admin',
 			adminLogout: 'wp-login.php?action=logout',
@@ -1176,6 +1177,23 @@ export const data = {
 		zipCode: '10006',
 		state: 'New York',
 	},
+
+	// install wordpress
+	installWp: {
+		// db info
+		dbName: 'dokan5',
+		dbUserName: 'root',
+		dbPassword: '01dokan01',
+		dbHost: 'localhost',
+		dbTablePrefix: 'dok',
+		// site info
+		siteTitle: 'dokan5',
+		adminUserName: process.env.ADMIN,
+		adminPassword: process.env.USER_PASSWORD,
+		adminEmail: 'shashwata@wedevs.com',
+
+	},
+
 
 	// predefined  test data
 	predefined: {

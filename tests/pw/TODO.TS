@@ -232,9 +232,8 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 //TODO: add abuse report via db-query
 //TODO: add refund via db-query
 //TODO: fix rank math api
-//TODO: add get, post, put, delete request in api utils
 //TODO: create valid payload for every request : which doesn't cause php warning
-//TODO:
+//TODO: declare baseURL only in one place, global setup should get from config file
 //TODO:
 //TODO:
 //TODO:

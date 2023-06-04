@@ -1,14 +1,18 @@
-import { FullConfig, request } from '@playwright/test';
+import { FullConfig, request  } from '@playwright/test';
+import { ApiUtils } from './utils/apiUtils';
 
 async function globalSetup(config: FullConfig) {
 	console.log('Global Setup running....');
 	// get site url structure
-	let serverUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999';
-	const apiContext = await request.newContext({ ignoreHTTPSErrors: true });
-	const head = await apiContext.head(serverUrl);  //TODO: add retry fro these step
-	const headers = head.headers();
-	const link = headers.link;
-	process.env.SERVER_URL =  link.includes('rest_route') ? serverUrl + '?rest_route=': serverUrl = serverUrl + '/wp-json';
+	const serverUrl = config.projects[0]?.use.baseURL as string;
+	for ( let i = 0; i <= 3; i++ ) {
+		const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
+		const headers = await apiUtils.getSiteHeaders(serverUrl);
+		if(headers.link) {
+			process.env.SERVER_URL =  (headers.link).includes('rest_route') ? serverUrl + '?rest_route=' : serverUrl + '/wp-json';
+			break;
+		}
+	}
 	console.log('ServerUrl:', process.env.SERVER_URL);
 	console.log('Global Setup Finished!');
 }

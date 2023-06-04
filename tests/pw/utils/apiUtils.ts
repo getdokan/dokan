@@ -11,7 +11,10 @@ interface auth {
 	[key: string]: string;
  }
 
- interface user { username: string; password: string; }
+ interface user {
+	username: string;
+	password: string;
+}
 
  interface taxRate {
 	// [key: string]: string | number | boolean | string [];
@@ -100,8 +103,7 @@ export class ApiUtils {
 
 	async head(url: string, options?: reqOptions | undefined){
 		const response = await this.request.head(url, options);
-		const responseBody = await this.getResponseBody(response);
-		return [response, responseBody];
+		return response;
 	}
 
 	async fetch(urlOrRequest: string | Request, options?: reqOptions | undefined){
@@ -121,18 +123,18 @@ export class ApiUtils {
 
 	// get responseBody
 	async getResponseBody(response: APIResponse, assert = true) {
-		// let responseBody: any;
 		try {
 			assert && expect(response.ok()).toBeTruthy();
 			const responseBody = await response.json();
-			// console.log('ResponseBody: ', responseBody);
+			console.log('ResponseBody: ', responseBody);
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}
 		catch (err: any) {
+			console.log('End-point: ', err);
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
-			console.log('Error: ', err.message);  // TODO: showing playwright instead of api error
+			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
 			console.log('Response text: ', await response.text());
 			return false; //TODO: WHY FALSE
 		}
@@ -140,7 +142,7 @@ export class ApiUtils {
 
 	// get site headers
 	async getSiteHeaders(url: string = endPoints.serverUrl ) {
-		const response = await this.request.head(url);
+		const response= await this.head(url);
 		const headers = response.headers();
 		return headers;
 	}
@@ -173,7 +175,7 @@ export class ApiUtils {
 	// get sellerId
 	async getSellerId(storeName?: string, auth? : auth): Promise<string> {
 		const allStores = await this.getAllStores(auth);
-		const sellerId = storeName ? (allStores.find((o: { store_name: string; }) => o.store_name === storeName)).id : allStores[0].id;
+		const sellerId = storeName ? (allStores.find((o: { store_name: unknown; }) => o.store_name === storeName)).id : allStores[0].id;
 		return sellerId;
 	}
 
@@ -222,7 +224,7 @@ export class ApiUtils {
 	// get productId
 	async getProductId(productName: string, auth? : auth) {
 		const allProducts = await this.getAllProducts(auth);
-		const productId = productName ? (allProducts.find((o: { name: string; }) => o.name === productName)).id : allProducts[0].id;
+		const productId = productName ? (allProducts.find((o: { name: unknown; }) => o.name === productName)).id : allProducts[0].id;
 		return productId;
 	}
 
@@ -245,10 +247,10 @@ export class ApiUtils {
 		let allProductIds: any;
 		// delete all products with same name
 		if (productName){
-			allProductIds = (allProducts.filter((o: { name: string; }) => o.name === productName)).map((a: { id: string }) => a.id);
+			allProductIds = (allProducts.filter((o: { name: unknown; }) => o.name === productName)).map((o: { id: unknown; }) => o.id);
 		}
 		else {
-			allProductIds = (await this.getAllProducts(auth)).map((a: { id: string }) => a.id);
+			allProductIds = (await this.getAllProducts(auth)).map((o: { id: unknown; }) => o.id);
 		}
 		const [, responseBody] = await this.put(endPoints.wc.updateBatchProducts, { data: { delete: allProductIds }, headers: payloads.adminAuth });
 		return responseBody;
@@ -277,8 +279,7 @@ export class ApiUtils {
 	async createVariableProductWithVariation(attribute: object, attributeTerm: object, product: object, auth? : auth) {
 		const [, productId] = await this.createProduct(product, auth);
 		const [body, attributeId] = await this.createAttributeTerm(attribute, attributeTerm, auth);
-		const payload = { ...product, attributes: [{ id: attributeId,
-			option: body.name, }], };
+		const payload = { ...product, attributes: [{ id: attributeId, option: body.name, }], };
 		const [, variationId] = await this.createProductVariation(productId, payload);
 		return [productId, variationId];
 	}
@@ -357,7 +358,7 @@ export class ApiUtils {
 	// get couponId
 	async getCouponId(couponCode: string, auth? : auth) {
 		const allCoupons = await this.getAllCoupons(auth);
-		const couponId = couponCode ? (allCoupons.find((o: { code: string; }) => o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode)).id : allCoupons[0].id;
 		return couponId;
 	}
 
@@ -480,7 +481,7 @@ export class ApiUtils {
 	// get single order log
 	async getSingleOrderLog(orderId: string, auth? : auth) {
 		const allOrderLogs = await this.getAllOrderLogs(auth);
-		const singleOrderLog = (allOrderLogs.find((o: { order_id: string; }) => o.order_id === orderId));
+		const singleOrderLog = (allOrderLogs.find((o: { order_id: unknown; }) => o.order_id === orderId));
 		return singleOrderLog;
 	}
 
@@ -578,7 +579,7 @@ export class ApiUtils {
 	// get all modules ids
 	async getAllModuleIds(params = {}, auth? : auth) {
 		const allModules = await this.getAllModules(params, auth);
-		const allModuleIds = allModules.map((a: { id: string; }) => a.id);
+		const allModuleIds = allModules.map((o: { id: unknown; }) => o.id);
 		return allModuleIds;
 	}
 
@@ -607,7 +608,7 @@ export class ApiUtils {
 	// get customerId
 	async getCustomerId(username: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { username: string; }) => o.username === username)).id;
+		const customerId = (allCustomers.find((o: { username: unknown; }) => o.username === username)).id;
 		return customerId;
 	}
 
@@ -809,7 +810,7 @@ export class ApiUtils {
 
 	// delete store review
 	async deleteAllQuoteRules(auth? : auth) {
-		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((a: { id: string }) => a.id);
+		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((o: { id: unknown; }) => o.id);
 		const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers : auth });
 		return responseBody;
 	}
@@ -867,7 +868,7 @@ export class ApiUtils {
 	// get all seller badges
 	async getSellerBadgeId(eventType: string, auth? : auth) {
 		const allBadges = await this.getAllSellerBadges(auth);
-		const badgeId = allBadges.find((o: { event_type: string; }) => o.event_type === eventType).id;
+		const badgeId = allBadges.find((o: { event_type: unknown; }) => o.event_type === eventType).id;
 		return badgeId;
 	}
 
@@ -887,7 +888,7 @@ export class ApiUtils {
 
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth) {
-		const allBadgeIds = (await this.getAllSellerBadges()).map((a: { id: unknown }) => a.id);
+		const allBadgeIds = (await this.getAllSellerBadges()).map((o: { id: unknown; }) => o.id);
 		if(allBadgeIds.length < 1) return; //TODO: apply this to all batch update/ anywhere a action can be lessened
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
@@ -1144,7 +1145,7 @@ export class ApiUtils {
 	// get categoryId
 	async getCategoryId(categoryName: string, auth? : auth) {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { name: string; }) => o.name === categoryName)).id;
+		const customerId = (allCustomers.find((o: { name: unknown; }) => o.name === categoryName)).id;
 		return customerId;
 	}
 
@@ -1234,7 +1235,7 @@ export class ApiUtils {
 		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
 
 		// delete previous tax rates
-		const allTaxRateIds = (await this.getAllTaxRates()).map((a: { id: string }) => a.id);
+		const allTaxRateIds = (await this.getAllTaxRates()).map((o: { id: unknown; }) => o.id);
 		if (allTaxRateIds.length) {
 			await this.updateBatchTaxRates('delete', allTaxRateIds);
 		}
@@ -1256,7 +1257,7 @@ export class ApiUtils {
 	// get zoneId
 	async getZoneId(zoneName: string, auth? : auth) {
 		const allZones = await this.getAllShippingZones(auth);
-		const zoneId = (allZones.find((o: { name: string; }) => o.name === zoneName)).id;
+		const zoneId = (allZones.find((o: { name: unknown; }) => o.name === zoneName)).id;
 		return zoneId;
 	}
 

@@ -36,6 +36,28 @@ export const selector = {
 	},
 
 	backend: {
+		// setup
+		alreadyInstalled: '//h1[contains(text(), "Already Installed")]',
+		languageContinue: '#language-continue',
+		letsGo: '//a[contains(text(), "go!")]',
+		// db setup
+		dbName: '#dbname',
+		dbUserName: '#uname',
+		dbPassword: '#pwd',
+		dbHost: '#dbhost',
+		dbTablePrefix: '#prefix',
+		submit: '.step input',
+		runTheInstallation: '.step a',
+		// site info
+		siteTitle: '#weblog_title',
+		adminUserName: '#user_login',
+		adminPassword: '#pass1',
+		adminEmail: '#admin_email',
+		searchEngineVisibility: '#blog_public',
+		installWp: '#submit',
+		successLoginIn: '.step a',
+
+
 		// Admin Login
 		email: '#user_login',
 		password: '#user_pass',
