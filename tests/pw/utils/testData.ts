@@ -1185,7 +1185,7 @@ export const data = {
 		dbUserName: 'root',
 		dbPassword: '01dokan01',
 		dbHost: 'localhost',
-		dbTablePrefix: 'dok',
+		dbTablePrefix: 'dok_',
 		// site info
 		siteTitle: 'dokan5',
 		adminUserName: process.env.ADMIN,

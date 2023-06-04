@@ -10,7 +10,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 	setup('check active plugins @lite @pro', async ({ request }) => {
-		setup.skip(!process.env.CI, 'skip plugin check');
+		setup.skip(!process.env.CI, 'skip plugin check on local');
 		const apiUtils = new ApiUtils(request);
 		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));

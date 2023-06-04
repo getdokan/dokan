@@ -19,8 +19,8 @@ test.describe('Admin user functionality test', () => {
 		await page.close();
 	});
 
-	test.only('admin can login @lite @pro', async ( ) => {
-		// await loginPage.adminLogin(data.admin);
+	test('admin can login @lite @pro', async ( ) => {
+		await loginPage.adminLogin(data.admin);
 	});
 
 	test('admin can logout @lite @pro', async ( ) => {
@@ -225,9 +225,5 @@ test.describe('Admin functionality test', () => {
 	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	// });
 
-	test.skip('admin can install WP', async ( ) => {
-		await adminPage.setupWp();
-		await loginPage.adminLogin(data.admin);
-	});
 
 });

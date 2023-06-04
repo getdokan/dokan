@@ -131,7 +131,7 @@ export class ApiUtils {
 			return responseBody;
 		}
 		catch (err: any) {
-			console.log('End-point: ', err);
+			console.log('End-point: ', err); //TODO: check it to fix later error
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
@@ -1052,7 +1052,7 @@ export class ApiUtils {
 
 
 		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });
+		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //TODO: update all request.post to this.post/get/put/delete
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = responseBody.id;
 		return [responseBody, mediaId];
