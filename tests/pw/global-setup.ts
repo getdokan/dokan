@@ -12,6 +12,7 @@ async function globalSetup(config: FullConfig) {
 			process.env.SERVER_URL =  (headers.link).includes('rest_route') ? serverUrl + '?rest_route=' : serverUrl + '/wp-json';
 			break;
 		}
+		console.log('retrying...');
 	}
 	console.log('ServerUrl:', process.env.SERVER_URL);
 	console.log('Global Setup Finished!');

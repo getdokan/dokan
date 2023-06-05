@@ -30,6 +30,7 @@ export const dbData = {
 			spmv: 'dokan_spmv',
 			vendorSubscription: 'dokan_product_subscription',
 			// vendorAnalytics:
+			dokanActiveModules: 'dokan_pro_active_modules',
 		},
 
 		generalSettings: {
@@ -541,13 +542,34 @@ export const dbData = {
 
 		//TODO:  vendorAnalyticsSettings:
 
+		//modules
+		modules: ['booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search', 'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv', 'store_reviews', 'store_support', 'stripe', 'product_advertising', 'product_subscription', 'vendor_analytics', 'vendor_staff', 'vsp', 'vendor_verification', 'wholesale', 'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation'],
+
+		// abuse report
+		createAbuseReport:{
+			reason:'This content is spam',
+			description:'spam product'
+		},
+
 	},
 
-	// abuse report
-	createAbuseReport:{
-		reason:'This content is spam',
-		description:'spam product'
+	// wp
+
+	optionName: {
+		activePlugins: 'active_plugins',
 	},
+
+	plugins: {
+		'0':'Basic-Auth-master/basic-auth.php',
+		// '1':'woocommerce/woocommerce.php',
+		// '2':'dokan/dokan.php',
+		// '3':'dokan-pro/dokan-pro.php',
+		// '4':'woocommerce-bookings/woocommerce-bookings.php',
+		// '5':'woocommerce-product-addons/woocommerce-product-addons.php',
+		// '6':'woocommerce-simple-auctions/woocommerce-simple-auctions.php',
+		// '7':'woocommerce-subscriptions/woocommerce-subscriptions.php'
+	},
+
 
 	siteSettings : {
 		users_can_register: 1,
@@ -559,6 +581,8 @@ export const dbData = {
 		timezone_string: 'Asia/Dhaka',
 
 	},
+
+	// woocommerce
 
 	woocommerceSettings: {
 		woocommerce_enable_myaccount_registration:	'yes'

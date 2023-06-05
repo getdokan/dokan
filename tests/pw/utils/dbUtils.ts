@@ -78,6 +78,14 @@ export const dbUtils = {
 		const res = await dbUtils.dbQuery(querySelect);
 		// console.log(res);
 		return res;
+	},
+
+	// update option table
+	async UpdateWpOptionTable(optionName: string, optionValue: object ) {
+		const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
+		const res = await dbUtils.dbQuery(queryUpdate);
+		// console.log(res);
+		return res;
 	}
 
 };
