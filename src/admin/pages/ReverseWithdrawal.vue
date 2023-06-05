@@ -3,6 +3,7 @@
         <h1 class="wp-heading-inline">
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
         </h1>
+        <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
         <AdminNotice />
         <hr class="wp-header-end">
 
@@ -100,12 +101,15 @@
                 </template>
             </list-table>
         </div>
+
+        <add-reverse-withdraw v-if='loadAddNewModal'/>
     </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import moment from "moment";
+import AddReverseWithdraw from '../components/AddReverseWithdraw.vue'
 
 const ListTable       = dokan_get_lib('ListTable');
 const Multiselect     = dokan_get_lib('Multiselect');
@@ -136,11 +140,13 @@ export default {
         swal,
         DateRangePicker,
         AdminNotice,
-        CardFunFact
+        CardFunFact,
+        AddReverseWithdraw
     },
 
     data () {
         return {
+            loadAddNewModal: false,
             transactionData: [],
             loading: false,
             clearingFilters: false,
@@ -187,7 +193,7 @@ export default {
                     startDate: '',
                     endDate: '',
                 },
-            },
+            }
         }
     },
 
@@ -195,6 +201,11 @@ export default {
         this.setDefaultTransactionDate();
         this.fetchStoreLists();
         this.fetchBalances();
+
+        // close modal
+        this.$root.$on('modalClosed', () => {
+            this.loadAddNewModal = false;
+        } );
     },
 
     mounted() {
@@ -279,6 +290,10 @@ export default {
     },
 
     methods: {
+        addNew() {
+            this.loadAddNewModal = true;
+        },
+
         updatedCounts( xhr ) {
             this.counts.debit  = parseFloat( xhr.getResponseHeader('X-Status-Debit') ?? 0 );
             this.counts.credit = parseFloat( xhr.getResponseHeader('X-Status-Credit') ?? 0 );
@@ -436,7 +451,7 @@ export default {
                 message = jqXHR.responseText;
             }
             return message;
-        }
+        },
     }
 };
 </script>
