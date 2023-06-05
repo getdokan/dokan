@@ -295,6 +295,12 @@ class Ajax {
         $order = dokan()->order->get( $order_id );
         $order->update_status( $order_status );
 
+        // Get the new order status. This is needed since plugin/theme authors might
+        // change the order status behind the scenes in certain cases.
+        // For example by moving `wc-paused` to `wc-cancelled` automatically or by
+        // moving `wc-pending` to `wc-processing`.
+        $order_status = "wc-{$order->get_status()}";
+
         $statuses     = wc_get_order_statuses();
         $status_label = isset( $statuses[ $order_status ] ) ? $statuses[ $order_status ] : $order_status;
         $status_class = dokan_get_order_status_class( $order_status );
