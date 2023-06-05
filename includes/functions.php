@@ -137,13 +137,19 @@ function dokan_is_product_edit_page() {
  * @return bool
  */
 function dokan_is_seller_dashboard() {
-    $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
+    global $wp_query;
 
-    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
+
+    if ( ! $page_id ) {
         return false;
     }
 
-    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( ! $wp_query ) {
+        return false;
+    }
+
+    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', $wp_query->queried_object_id ) ) {
         return true;
     }
 
