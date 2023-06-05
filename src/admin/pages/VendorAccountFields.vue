@@ -51,20 +51,9 @@
                 </div>
                 <div class="column">
                     <label for="store-category">{{ __( 'Store Category', 'dokan-lite' ) }}</label>
-                    <Multiselect
-                        type='text'
-                        id="store-category"
-                        class="dokan-form-input dokan-store-category"
-                        :options='storeCategoryList'
-                        :multiple="true"
-                        :close-on-select="false"
-                        :clear-on-select="false"
-                        :preserve-search="true"
-                        label="name"
-                        trackBy="id"
-                        selectedLabel='name'
-                        v-model='selectedCategories'
-                        :showLabels="false"
+                    <StoreCategory
+                        :categories=vendorInfo.categories
+                        @categories='( categories ) => vendorInfo.categories = categories'
                     />
                 </div>
                 <div class="column" v-if="! getId()">
@@ -156,16 +145,16 @@ import { debounce } from "debounce";
 import Switches from "admin/components/Switches.vue";
 import UploadImage from "admin/components/UploadImage.vue";
 import PasswordGenerator from "admin/components/PasswordGenerator.vue";
-import { Multiselect } from "vue-multiselect";
+import StoreCategory from 'admin/components/StoreCategory.vue';
 
 export default {
     name: 'VendorAccountFields',
 
     components: {
+        StoreCategory,
         Switches,
         UploadImage,
         PasswordGenerator,
-        Multiselect,
     },
 
     props: {
@@ -195,8 +184,6 @@ export default {
             userNameAvailabilityText: '',
             emailAvailabilityText: '',
             getAccountFields: dokan.hooks.applyFilters( 'getVendorAccountFields', [] ),
-            storeCategoryList: [],
-            selectedCategories: [],
         }
     },
 
