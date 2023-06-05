@@ -399,7 +399,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         'dokan_product_short_description',
                                         [
                                             'editor_height' => 50,
-                                            'quicktags'     => false,
+                                            'quicktags'     => true,
                                             'media_buttons' => false,
                                             'teeny'         => false,
                                             'editor_class'  => 'post_excerpt',
@@ -419,7 +419,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         'dokan_product_description',
                                         [
                                             'editor_height' => 50,
-                                            'quicktags'     => false,
+                                            'quicktags'     => true,
                                             'media_buttons' => false,
                                             'teeny'         => false,
                                             'editor_class'  => 'post_content',
