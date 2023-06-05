@@ -4,6 +4,7 @@ import { LoginPage } from '../../pages/loginPage';
 import { AdminPage } from '../../pages/adminPage';
 import { ApiUtils } from '../../utils/apiUtils';
 import { payloads } from '../../utils/payloads';
+import { config } from 'dotenv';
 
 setup.describe('authenticate users & set permalink', () => {
 

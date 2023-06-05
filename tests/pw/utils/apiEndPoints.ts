@@ -1,4 +1,6 @@
-const { SERVER_URL } = process.env;
+// const { SERVER_URL  } = process.env;
+
+const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL  : process.env.BASE_URL + '/wp-json';
 
 export const endPoints = {
 

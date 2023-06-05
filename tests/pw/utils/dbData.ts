@@ -568,6 +568,8 @@ export const dbData = {
 		// '5':'woocommerce-product-addons/woocommerce-product-addons.php',
 		// '6':'woocommerce-simple-auctions/woocommerce-simple-auctions.php',
 		// '7':'woocommerce-subscriptions/woocommerce-subscriptions.php'
+		// curl --user admin:01dokan01 http://dokan5.test/wp-json
+		// curl --user admin:01dokan01 http://dokan5.test/wp-json/wp/v2/plugins
 	},
 
 

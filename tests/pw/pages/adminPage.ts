@@ -59,8 +59,11 @@ export class AdminPage extends BasePage {
 
 		// set permalinks settings
 		await this.click(selector.admin.settings.postName);
-		await this.click(selector.admin.settings.customBase);
-		await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput);
+		const customBaseIsVisible = await this.isVisible(selector.admin.settings.customBase);
+		if(customBaseIsVisible){
+			await this.click(selector.admin.settings.customBase);
+			await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput);
+		}
 		await this.click(selector.admin.settings.permalinkSaveChanges);
 		await expect(this.page.locator(selector.admin.settings.updatedSuccessMessage)).toContainText(permalink.saveSuccessMessage);
 	}

@@ -3,7 +3,7 @@ import { data } from '../../utils/testData';
 import { LoginPage } from '../../pages/loginPage';
 import { AdminPage } from '../../pages/adminPage';
 import { ApiUtils } from '../../utils/apiUtils';
-import { apiEndpoints } from '../../utils/apiEndPoints';
+// import { apiEndpoints } from '../../utils/apiEndPoints';
 import { payloads } from '../../utils/payloads';
 import { dbUtils } from '../../utils/dbUtils';
 import { dbData } from '../../utils/dbData';
@@ -34,25 +34,19 @@ test.describe('setup local site', () => {
 		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
 	});
 
-	test.only('set site permalink', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
-
-		const l = await apiUtils.getAllPlugins(payloads.adminAuth);
-		console.log(l);
-	});
-
-	test.only('activate plugins & modules', async () => {
+	test('activate basic auth plugin', async () => {
 		await dbUtils.UpdateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins);
 		// await dbUtils.UpdateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules);
 	});
 
-
-	// test.only('admin activate all plugins', async ({ request }) => {
-	// 	//TODO: need to activate basic_auth via db first
-	// 	const apiUtils = new ApiUtils(request);
-	// 	const res =await apiUtils.getAllPlugins(payloads.adminAuth);
-	// 	console.log(res);
-	// });
-
+	test('activate dokan & woocommerce plugins', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
+		const plugins = ['woocommerce/woocommerce',
+			'dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce-bookings/woocommerce-bookings', 'woocommerce-product-addons/woocommerce-product-addons', 'woocommerce-simple-auctions/woocommerce-simple-auctions', 'woocommerce-subscriptions/woocommerce-subscriptions'
+		];
+		for (const plugin of plugins){
+			const activePlugins = await apiUtils.updatePlugin(plugin, { status:'active' }, payloads.adminAuth);
+			console.log(activePlugins);}
+	});
 
 });
