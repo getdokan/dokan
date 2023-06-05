@@ -313,8 +313,7 @@ class Manager {
                 $newly_enabled      = dokan_validate_boolean( $data['enabled'] );
 
                 if ( $previously_enabled !== $newly_enabled ) {
-                    $vendor->update_meta( 'dokan_enable_selling', $newly_enabled ? 'yes' : 'no' );
-                    $vendor->change_product_status( $newly_enabled ? 'publish' : 'pending' );
+                    $newly_enabled ? $vendor->make_active() : $vendor->make_inactive();
                 }
             }
 

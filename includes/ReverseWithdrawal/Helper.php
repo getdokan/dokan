@@ -192,7 +192,18 @@ class Helper {
      */
     public static function get_reverse_withdrawal_base_product() {
         // get product id from option table
-        return (int) get_option( static::get_base_product_option_key(), 0 );
+        $base_product_id = (int) get_option( static::get_base_product_option_key(), 0 );
+
+        $product = wc_get_product( $base_product_id );
+        if ( $product ) {
+            // temporary adding this code to set sold individually to true, will remove this after some time
+            if ( ! $product->is_sold_individually() ) {
+                $product->set_sold_individually( true );
+                $product->save();
+            }
+            return $base_product_id;
+        }
+        return 0;
     }
 
     /**
@@ -670,7 +681,7 @@ class Helper {
     /**
      * Get formatted billing type
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param string $billing_type
      *
@@ -686,7 +697,7 @@ class Helper {
     /**
      * This method will add reverse payment amount to cart
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param string $amount
      *

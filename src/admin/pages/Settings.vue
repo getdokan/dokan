@@ -532,6 +532,7 @@
 
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
+                this.$root.$emit('reinitWpTextEditor');
             },
 
             scrollToTop() {
@@ -930,11 +931,14 @@
             .dashicons.dashicons-no-alt {
                 position: absolute;
                 top: 50%;
-                right: 15px;
+                right: 5px;
                 cursor: pointer;
                 color: #000;
                 font-size: 25px;
                 transform: translate( 0%, -60%);
+                &:hover {
+                    color: #d43f3a;
+                }
             }
 
             .dokan-admin-search-settings {
@@ -942,7 +946,7 @@
                 border: 0;
                 height: 48px;
                 display: block;
-                padding: 0 15px;
+                padding: 0 45px 0 0;
                 background: #FFF;
                 border-top: 0;
                 font-weight: 400;

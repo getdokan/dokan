@@ -59,7 +59,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Saves product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param WP_REST_Request $request
      *
@@ -76,7 +76,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Updates product.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param WP_REST_Request $request
      *

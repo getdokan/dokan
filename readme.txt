@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.4
-Tested up to: 6.1.1
+Tested up to: 6.2.2
 WC requires at least: 5.0.0
-WC tested up to: 7.5.1
+WC tested up to: 7.7.0
 Requires PHP: 7.2
-Stable tag: 3.7.15
+Stable tag: 3.7.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,46 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.19 ( May 24, 2023 ) =
+
+- **update:** Separated shipping tax fee recipient from the product tax fee recipient
+- **update:** Added support for multiple shipping line items for suborders
+- **update:** Moved shipping splitting functionality to Dokan Lite from Dokan Pro.Previously, this feature was only available on Dokan Pro.
+- **update:** Improved the responsiveness of tables on the Vendor Dashboard by making them horizontally scrollable on smaller-sized screens.
+- **fix:** Disabling product review from WooCommerce settings doesn’t remove the review section from the vendor profile.
+- **fix:** Broken layout of Discounted Price section in Vendor Dashboard product edit page on full-width page layout themes.
+- **fix:** Fixed some warnings and fatal errors for PHP versions 8.1 and 8.2.
+- **fix:** Fixed incorrectly closed product category menu after_widget args
+- **fix:** [VendorSetupWizard] Fixed an issue where the ‘Hide Email Address’ option was still displayed on the Vendor Setup wizard page even when it was enabled from Dokan Admin Settings.
+- **fix:** Email notification for withdrawal approval no longer shows HTML code in its header.
+
+
+= v3.7.18 ( May 10, 2023 ) =
+
+- **fix:** Fixed product getting published after enabling vendor selling status from admin dashboard
+- **update:** [ReverseWithdrawal] Added sold individually param to true for reverse withdrawal base product when creating it, so that quantity can't be changed
+- **update:** [ColorSchemeCustomizer] Used color set by Color Scheme Customizer Module instead of hardcoded value for login form popup and withdraw schedule popup header color
+- **update:** Remove expected earning calculation from product listing and editing pages
+- **update:** Added a notice before deleting products via bulk action under Vendor Dashboard → Product listing page
+- **update:** Added dokan_store_name meta-key for all users with administrator and shop_manager roles during plugin activation
+
+= v3.7.17 ( Apr 17, 2023 ) =
+
+- **fix:** JS console error while uploading non-image files to product gallery under vendor dashboard product add/edit page
+- **fix:** Fixed order invoice and packaging slip broken CSS under vendor dashboard order list page
+- **fix:** Fixed users are unable to register as customers on some themes, also fixed a JS console error on the My Account page
+- **fix:** Fixed TinyMCE editor and search box overlap under Dokan Admin Settings page.
+- **update:** Allow whitelisted countries in location selectors based on admin-allowed countries under WooCommerce settings.
+
+= v3.7.16 ( Apr 10, 2023 ) =
+
+- **fix:** [VendorDashboardAPI] Fixed an issue where the seller lifetime sales report wasn’t possible to retrieve via API.
+- **fix:** [VendorDashboard]: Fixed wrong product count showing under vendor dashboard product listing page.
+- **update:** [ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/vendor-due-status` to get reverse balance due status for a vendor
+- **update:** [ReverseWithdrawalAPI] Added a new API Endpoint `dokan/v1/reverse-withdrawal/add-to-cart` to add reverse balance to the cart.
+- **update:** Allow only image format files as product featured and gallery images on vendor dashboard
+- **update:** Added multistep category support in product API
 
 = v3.7.15 ( Mar 23, 2023 ) =
 

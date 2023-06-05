@@ -175,6 +175,25 @@
   .featured-image {
     width: 25%;
   }
+
+  .content-half-part{
+    &.sale-price {
+      display: inline-block;
+
+      label {
+        &.form-label {
+          display: block;
+
+          a {
+            &.sale_schedule,
+            &.cancel_sale_schedule {
+              float: right;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .dokan-product-edit-area {
@@ -365,6 +384,10 @@
 
   .content-half-part.featured-image {
     padding-left: 25px;
+  }
+
+  .content-half-part.sale-price {
+    display: inline-block;
   }
 
   .dokan-new-product-featured-img {

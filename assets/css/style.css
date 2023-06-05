@@ -2833,6 +2833,10 @@ div.media-sidebar a.edit-attachment {
   border-color: #ccc;
   border-radius: 3px;
   background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 40px;
+  width: 40px;
 }
 .dokan-orders-content .dokan-orders-area td.dokan-order-action .wpo_wcpdf img {
   width: 22px !important;
@@ -3251,6 +3255,9 @@ div.media-sidebar a.edit-attachment {
 }
 .product-edit-new-container .content-half-part.featured-image {
   padding-left: 25px;
+}
+.product-edit-new-container .content-half-part.sale-price {
+  display: inline-block;
 }
 .product-edit-new-container .dokan-new-product-featured-img {
   border: 4px dashed #dddddd;
@@ -6129,6 +6136,10 @@ p.vendor-customer-registration .radio:hover {
 @media (max-width: 1199px) {
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery .profile-info .dokan-store-info {
     max-width: 590px;
+  }
+  .dokan-dashboard .dokan-dashboard-content .dokan-table {
+    display: block;
+    overflow: scroll;
   }
 }
 @media (max-width: 992px) {

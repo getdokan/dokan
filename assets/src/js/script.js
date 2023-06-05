@@ -103,10 +103,11 @@ jQuery(function($) {
     form_group.addClass('has-error').append(error);
   };
 
-  var validatorSuccess = function(label, element) {
+  var validatorSuccess = function(error, element) {
     $(element)
       .closest('.dokan-form-group')
       .removeClass('has-error');
+    $(error).remove();
   };
 
   var api = wp.customize;
@@ -1242,5 +1243,29 @@ jQuery(function($) {
   }
   else {
     return false;
+  }
+}
+
+/**
+ * Shows bulk action delete operation confirmation
+ *
+ * @param {object} event
+ * @param {string} message
+ * @param {string} inputSelector
+ * @param {string} formSelector
+ */
+async function dokan_bulk_delete_prompt( event, message, inputSelector, formSelector ) {
+  if ( 'delete' === jQuery( inputSelector ).val() ) {
+    // only prevent default if action is delete
+    event.preventDefault();
+
+    let answer = await dokan_sweetalert( message, {
+      action  : 'confirm',
+      icon    : 'warning'
+    } );
+
+    if( answer.isConfirmed ) {
+      jQuery( formSelector ).submit()
+    }
   }
 }

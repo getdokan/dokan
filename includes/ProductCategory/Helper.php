@@ -265,7 +265,7 @@ class Helper {
     /**
      * Generates and sets products categories.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.16
      *
      * @param int $product_id
      *
