@@ -49,7 +49,13 @@
                         :class="{'dokan-form-input': true, 'has-error': getError('store_name')}"
                         :placeholder="getError( 'store_name' ) ? __( 'Store Name is required', 'dokan-lite' ) : __( 'Store Name', 'dokan-lite' )">
                 </div>
-
+                <div class="column">
+                    <label for="store-category">{{ __( 'Store Category', 'dokan-lite' ) }}</label>
+                    <StoreCategory
+                        :categories=vendorInfo.categories
+                        @categories='( categories ) => vendorInfo.categories = categories'
+                    />
+                </div>
                 <div class="column" v-if="! getId()">
                     <label for="user-nicename">{{ __( 'Store URL', 'dokan-lite') }}</label>
                     <input type="text" id="user-nicename" class="dokan-form-input" v-model="vendorInfo.user_nicename" :placeholder="__( 'Store Url', 'dokan-lite')">
@@ -139,14 +145,16 @@ import { debounce } from "debounce";
 import Switches from "admin/components/Switches.vue";
 import UploadImage from "admin/components/UploadImage.vue";
 import PasswordGenerator from "admin/components/PasswordGenerator.vue";
+import StoreCategory from 'admin/components/StoreCategory.vue';
 
 export default {
     name: 'VendorAccountFields',
 
     components: {
+        StoreCategory,
         Switches,
         UploadImage,
-        PasswordGenerator
+        PasswordGenerator,
     },
 
     props: {
