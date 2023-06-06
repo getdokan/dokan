@@ -102,7 +102,9 @@
             </list-table>
         </div>
 
+        <Transition name="animate">
         <add-reverse-withdraw v-if='loadAddNewModal'/>
+        </Transition>
     </div>
 </template>
 
@@ -457,6 +459,27 @@ export default {
 </script>
 
 <style lang="less">
+
+.animate-enter-active {
+    animation: animate 150ms;
+}
+.animate-leave-active {
+    animation: animate 150ms reverse;
+}
+@keyframes animate {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
 .swal2-actions button {
     margin-right: 10px !important;
 }

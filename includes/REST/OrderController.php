@@ -435,7 +435,7 @@ class OrderController extends DokanRESTController {
             'limit'       => $request['per_page'],
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
-            'seller_id'   => dokan_get_current_user_id(),
+            'seller_id'   => isset( $request['seller_id'] ) && is_numeric( $request['seller_id'] ) ?  $request['seller_id'] : dokan_get_current_user_id(),
             'date'        => [
                 'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
                 'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
@@ -896,9 +896,10 @@ class OrderController extends DokanRESTController {
                     'context'     => array( 'view' ),
                 ),
                 'seller_id'            => array(
-                    'description' => __( 'Orders belongs to specific seller', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => array( 'view' ),
+                    'description'       => __( 'Orders belongs to specific seller', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'context'           => array( 'view' ),
+                    'sanitize_callback' => 'sanitize_text_field',
                 ),
                 'number'               => array(
                     'description' => __( 'Order number.', 'dokan-lite' ),

@@ -31,12 +31,12 @@ export default {
     align-self: center;
 
     label {
-        border: 0.882967px solid #b0a7a7;
+        border: 1px solid #b0a7a7;
         padding: 10px 15px;
         display: inline-block;
         overflow: hidden;
         font-size: 12px;
-        box-shadow: 0 3.53187px 3.53187px rgba(0,0,0,.1);
+        //box-shadow: 0 3.53187px 3.53187px rgba(0,0,0,.1);
         font-family: Roboto,sans-serif;
         font-weight: 400;
         line-height: 14px;
@@ -71,7 +71,7 @@ export default {
             border: 1px solid rgba(3,58,163,.81) !important;
             background: rgba(182,206,254,.38);
             box-sizing: border-box;
-            box-shadow: 0 4px 4px rgba(0,0,0,.1);
+            //box-shadow: 0 4px 4px rgba(0,0,0,.1);
 
             .dashicons-yes {
                 display: inline-block;
@@ -82,7 +82,7 @@ export default {
             border-bottom-left-radius: 5px;
         }
         &:last-child {
-            border-right: 0.882967px solid #b0a7a7;
+            border-right: 1px solid #b0a7a7;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
         }
