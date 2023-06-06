@@ -1,6 +1,6 @@
 <?php
 /**
- * Dokan Account Migration Button Template.
+ * Dokan Become A Vendor Section Template.
  *
  * @since DOKAN_LITE_SINCE
  *

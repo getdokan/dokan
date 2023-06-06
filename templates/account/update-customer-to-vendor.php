@@ -1,6 +1,6 @@
 <?php
 /**
- * Dokan Update Customer Into Vendor Template.
+ * Dokan Update Customer to Vendor Template.
  *
  * @since DOKAN_LITE_SINCE
  *

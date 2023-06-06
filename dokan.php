@@ -305,10 +305,6 @@ final class WeDevs_Dokan {
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', [ \WeDevs\Dokan\Install\Installer::class, 'in_plugin_update_message' ] );
 
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
-
-        add_action( 'init', [ $this, 'account_migration_endpoint' ] );
-        add_action( 'woocommerce_after_my_account', [ $this, 'dokan_account_migration_button' ] );
-        add_action( 'woocommerce_account_account-migration_endpoint', [ $this, 'account_migration' ] );
     }
 
     /**
@@ -370,6 +366,7 @@ final class WeDevs_Dokan {
         } else {
             new \WeDevs\Dokan\Vendor\StoreListsFilter();
             new \WeDevs\Dokan\ThemeSupport\Manager();
+            new \WeDevs\Dokan\Frontend\MyAccount\BecomeVendor();
         }
 
         $this->container['product_block']       = new \WeDevs\Dokan\Blocks\ProductBlock();
@@ -559,41 +556,6 @@ final class WeDevs_Dokan {
      */
     public function get_db_version_key() {
         return $this->db_version_key;
-    }
-
-    /**
-     * Register account migration endpoint on my-account page.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function account_migration_endpoint() {
-        add_rewrite_endpoint( 'account-migration', EP_PAGES );
-    }
-
-    /**
-     * Dokan render account migration button.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function dokan_account_migration_button() {
-        $user = wp_get_current_user();
-
-        dokan_get_template_part( 'account/account-migration-btn', '' );
-    }
-
-    /**
-     * Load account migration template.
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function account_migration() {
-        dokan_get_template_part( 'account/update-account', '' );
     }
 }
 
