@@ -1,6 +1,219 @@
 @import "mixins.less";
 @import "tooltip.less";
 
+.dokan-admin-header {
+    background: #fff;
+    padding: 15px 15px 15px 22px;
+    margin: 0 0 0 -20px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .dokan-admin-header-logo {
+        display: flex;
+
+        img {
+            height: 25px;
+            width: auto;
+            margin-right: 12px;
+        }
+
+        span {
+            color: #F1634C;
+            background: #FFF4F2;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: "SF Pro Text", sans-serif;
+            border: 1px solid rgba(241, 99, 76, 0.2);
+            border-radius: 93px;
+        }
+    }
+
+    .dokan-admin-header-menu {
+        padding-right: 6px;
+        display: flex;
+
+        .menu-item {
+            margin-right: 12px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            .menu-icon {
+                position: relative;
+                background: #e4e6eb;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+                box-sizing: border-box;
+                border-radius: 42px;
+                cursor: pointer;
+                transition: all .2s ease;
+
+                .notification-count {
+                    position: absolute;
+                    top: -5px;
+                    right: -5px;
+                    width: 15px;
+                    height: 15px;
+                    padding: 1px;
+                    background-color: #ff5a40;
+                    border-radius: 53px;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .whats-new-pointer {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 6px;
+                    height: 6px;
+                    background-color: #ff5a40;
+                    border-radius: 53px;
+                    border: 2px solid #fff;
+                }
+
+                &:hover {
+                    background: #0C5F9A;
+
+                    & > svg path {
+                        fill: #fff
+                    }
+
+                    .dropdown {
+                        opacity: 1;
+                        visibility: visible;
+                        top: 42px;
+                    }
+                }
+
+                .dropdown {
+                    position: absolute;
+                    cursor: context-menu;
+                    top: 80px;
+                    right: -10px;
+                    z-index: 1;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 3px;
+                    border: 1px solid #e2e2e2;
+                    box-shadow: 0 6px 12px rgb(129 129 129 / 6%);
+                    min-width: 255px;
+                    max-width: 255px;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all .2s ease;
+
+                    &:before,
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        top: -10px;
+                        right: 14px;
+                    }
+
+                    &:before {
+                        border-bottom: 10px solid #e2e2e2;
+                        margin-top: -1px;
+                    }
+
+                    &:after {
+                        border-bottom: 10px solid white;
+                        margin-top: 0;
+                        z-index: 1;
+                    }
+
+                    h3 {
+                          margin: 0;
+                          font-weight: bold;
+                          font-size: 18px;
+                          font-family: "SF Pro Text", sans-serif;
+                    }
+
+                    .list-item {
+                        margin-top: 13px;
+
+                        a {
+                            display: flex;
+                            align-items: center;
+                            color: #000;
+                            font-size: 15px;
+                            font-weight: 600;
+                            font-family: "SF Pro Text", sans-serif;
+                            text-decoration: none;
+                            transition: all .2s ease;
+                            margin-bottom: 10px;
+
+                            &:last-child {
+                              margin-bottom: 0;
+                            }
+
+                            &.active {
+                                color: #dd452c;
+
+                                .dokan-icon {
+                                    background-color: rgba(221, 69, 44, 0.15);
+
+                                    svg path {
+                                        fill: #f1634c;
+                                    }
+                                }
+
+                                &:after {
+                                    content: "";
+                                    width: 6px;
+                                    height: 6px;
+                                    background-color: #dd452c;
+                                    border-radius: 53px;
+                                    margin-left: 10px;
+                                }
+                            }
+
+                            .dokan-icon {
+                                background: #e4e6eb;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                width: 38px;
+                                height: 38px;
+                                box-sizing: border-box;
+                                border-radius: 42px;
+                                margin-right: 11px;
+                            }
+
+                            &:hover {
+                                color: #dd452c;
+
+                                .dokan-icon {
+                                    background-color: rgba(221, 69, 44, 0.15);
+
+                                    svg path {
+                                        fill: #f1634c;
+                                    }
+                                }
+                            }
+
+                            &:focus {
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 .dokan-dashboard {
     .post-box-container {
         width: 49%;
@@ -28,7 +241,7 @@
             h4 {
                 margin: 0 0 7px 0;
                 padding: 0 0 7px 0;
-                border-bottom: 1px solid #EEE;
+                border-bottom: 1px solid #eee;
             }
         }
 
@@ -59,8 +272,8 @@
                         display: block;
                         color: #aaa;
                         padding: 10px;
-                        -webkit-transition: all ease .5s;
-                        transition: all ease .5s;
+                        -webkit-transition: all ease 0.5s;
+                        transition: all ease 0.5s;
                         position: relative;
                         font-size: 12px;
                         .details {
@@ -72,19 +285,19 @@
                             span.up {
                                 color: green;
                                 &::before {
-                                    content: '+';
+                                    content: "+";
                                 }
                                 &::after {
-                                    content: '%';
+                                    content: "%";
                                 }
                             }
                             span.down {
                                 color: red;
                                 &::before {
-                                    content: '-';
+                                    content: "-";
                                 }
                                 &::after {
-                                    content: '%';
+                                    content: "%";
                                 }
                             }
                         }
@@ -173,7 +386,7 @@
 }
 
 .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
-    height:23px;
+    height: 23px;
 }
 
 .dokan-settings-wrap {
@@ -243,6 +456,32 @@
     background: #fff;
 }
 
+td.tooltips-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+  padding-right: 0;
+}
+
+.tooltips-data span {
+  width: 20px;
+}
+
+ul.dokan-settings-repeatable-list {
+  margin: 0;
+}
+
+.form-table tr td.dokan_checkbox_up {
+  vertical-align: top;
+  margin-top: 0.45em !important;
+}
+
+td.combine-tips-style {
+  display: table-cell;
+  vertical-align: top;
+}
+
 .wc_error_tip {
     max-width: 20em;
     line-height: 1.8em;
@@ -269,14 +508,12 @@
     }
 }
 
-
-
 .dokan-settings-radio-image {
     display: block;
     width: 50%;
     background: #fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
-    box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
     margin: 0 0 15px;
     position: relative;
     line-height: 0;
@@ -292,7 +529,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        background-color: #4CAF50;
+        background-color: #4caf50;
         color: #fff;
         padding: 4px;
         z-index: 2;
@@ -339,8 +576,7 @@
 }
 
 .wp-pointer-buttons {
-
-    button.next{
+    button.next {
         margin-right: 5px;
     }
     a.dokan {
@@ -349,5 +585,10 @@
     a.dokan:before {
         content: unset;
     }
+}
 
+.dokan-admin-notices {
+      a {
+          text-decoration: none;
+      }
 }

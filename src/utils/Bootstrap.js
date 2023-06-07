@@ -35,8 +35,9 @@ import Currency from "admin/components/Currency.vue"
 import LazyInput from "admin/components/LazyInput.vue"
 import Progressbar from "admin/components/Progressbar.vue"
 import Search from "admin/components/Search.vue"
-import Datepicker from "admin/components/Datepicker.vue"
-import VueSweetalert2 from 'vue-sweetalert2';
+import Datepicker from "admin/components/Datepicker.vue";
+import DateRangePicker from 'vue2-daterange-picker';
+import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
 import ColorPicker from "admin/components/ColorPicker.vue"
 import GoogleMaps from "admin/components/GoogleMaps.vue"
 import Mapbox from "admin/components/Mapbox.vue"
@@ -47,11 +48,12 @@ import VendorAccountFields from "admin/pages/VendorAccountFields.vue";
 import VendorAddressFields from "admin/pages/VendorAddressFields.vue";
 import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
 import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
+import AdminNotice from "../admin/components/AdminNotice.vue";
+import CardFunFact from "../admin/components/CardFunFact.vue";
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
 Vue.use(Notifications)
-Vue.use(VueSweetalert2);
 
 Vue.mixin( Mixin );
 
@@ -101,6 +103,7 @@ window.dokan.libs['LazyInput']           = LazyInput;
 window.dokan.libs['Progressbar']         = Progressbar;
 window.dokan.libs['Search']              = Search;
 window.dokan.libs['Datepicker']          = Datepicker;
+window.dokan.libs['DateRangePicker']     = DateRangePicker;
 window.dokan.libs['Multiselect']         = Multiselect;
 window.dokan.libs['ColorPicker']         = ColorPicker;
 window.dokan.libs['debounce']            = Debounce;
@@ -114,6 +117,8 @@ window.dokan.libs['VendorAddressFields'] = VendorAddressFields;
 window.dokan.libs['VendorSocialFields']  = VendorSocialFields;
 window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
+window.dokan.libs['AdminNotice']         = AdminNotice;
+window.dokan.libs['CardFunFact']         = CardFunFact;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

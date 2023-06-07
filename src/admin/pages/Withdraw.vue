@@ -1,92 +1,126 @@
 <template>
-    <div class="withdraw-requests">
-        <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
+    <div>
+        <div class="withdraw-requests">
+            <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
+            <AdminNotice></AdminNotice>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
-        <modal
-            :title="__( 'Update Note', 'dokan-lite' )"
-            v-if="showModal"
-            @close="showModal = false"
-        >
-            <template slot="body">
-                <textarea v-model="editing.note" rows="3"></textarea>
-            </template>
-
-            <template slot="footer">
-                <button class="button button-primary button-large" @click="updateNote()">{{ __( 'Update Note', 'dokan-lite' ) }}</button>
-            </template>
-        </modal>
-
-        <ul class="subsubsub">
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.approved )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" active-class="current" exact v-html="sprintf( __( 'Cancelled <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.cancelled )"></router-link></li>
-        </ul>
-
-        <list-table
-            :columns="columns"
-            :rows="requests"
-            :loading="loading"
-            :action-column="actionColumn"
-            :actions="actions"
-            :show-cb="showCb"
-            :bulk-actions="bulkActions"
-            :not-found="notFound"
-            :total-pages="totalPages"
-            :total-items="totalItems"
-            :per-page="perPage"
-            :current-page="currentPage"
-            @pagination="goToPage"
-            @action:click="onActionClick"
-            @bulk:click="onBulkAction"
-        >
-            <template slot="seller" slot-scope="data">
-                <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
-                <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : __( '(no name)', 'dokan-lite' ) }}</a></strong>
-            </template>
-
-            <template slot="amount" slot-scope="data">
-                <currency :amount="data.row.amount"></currency>
-            </template>
-
-            <template slot="status" slot-scope="data">
-                <span :class="data.row.status">{{ data.row.status | capitalize }}</span>
-            </template>
-
-            <template slot="created" slot-scope="data">
-                {{ moment(data.row.created).format('MMM D, YYYY') }}
-            </template>
-
-            <template slot="method_details" slot-scope="data">
-                {{ getPaymentDetails(data.row.method, data.row.user.payment) }}
-            </template>
-
-            <template slot="actions" slot-scope="data">
-                <template v-if="data.row.status === 'pending'">
-                    <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" :title="__( 'Approve Request', 'dokan-lite' )"><span class="dashicons dashicons-yes"></span></button>
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
-                    </div>
+            <modal
+                :title="__( 'Update Note', 'dokan-lite' )"
+                v-if="showModal"
+                @close="showModal = false"
+            >
+                <template slot="body">
+                    <textarea v-model="editing.note" rows="3"></textarea>
                 </template>
-                <template v-else-if="data.row.status === 'approved'">
-                    <div class="button-group">
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
-                    </div>
+
+                <template slot="footer">
+                    <button class="button button-primary button-large" @click="updateNote()">{{ __( 'Update Note', 'dokan-lite' ) }}</button>
                 </template>
-                <template v-else>
-                    <div class="button-group">
-                        <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
-                        <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
-                    </div>
+            </modal>
+
+            <ul class="subsubsub">
+                <li><router-link :class="{current: currentStatus === 'pending'}" :to="{ name: 'Withdraw', query: { status: 'pending' }}" >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'approved'}" :to="{ name: 'Withdraw', query: { status: 'approved' }}">{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
+                <li><router-link :class="{current: currentStatus === 'cancelled'}" :to="{ name: 'Withdraw', query: { status: 'cancelled' }}" >{{ __( 'Cancelled', 'dokan-lite' ) }} <span class="count">{{ counts.cancelled }}</span></router-link> | </li>
+            </ul>
+
+            <list-table
+                :columns="columns"
+                :rows="requests"
+                :loading="loading"
+                :action-column="actionColumn"
+                :actions="actions"
+                :show-cb="showCb"
+                :bulk-actions="bulkActions"
+                :not-found="notFound"
+                :total-pages="totalPages"
+                :total-items="totalItems"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :text="$root.listTableTexts()"
+                @pagination="goToPage"
+                @action:click="onActionClick"
+                @bulk:click="onBulkAction"
+            >
+                <template slot="seller" slot-scope="data">
+                    <img :src="data.row.user.gravatar" :alt="data.row.user.store_name" width="50">
+                    <strong><a :href="vendorUrl(data.row.user.id)">{{ data.row.user.store_name ? data.row.user.store_name : __( '(no name)', 'dokan-lite' ) }}</a></strong>
                 </template>
-            </template>
-        </list-table>
+
+                <template slot="vendor" slot-scope="{ row }">
+                    <router-link :to="'/vendors/' + row.vendor.id">
+                        {{ row.vendor.name ? row.vendor.name : __('(no name)', 'dokan-lite') }}
+                    </router-link>
+                </template>
+
+                <template slot="amount" slot-scope="data">
+                    <currency :amount="data.row.amount"></currency>
+                </template>
+
+                <template slot="status" slot-scope="data">
+                    <span :class="data.row.status">{{ data.row.status | capitalize }}</span>
+                </template>
+
+                <template slot="created" slot-scope="data">
+                    {{ moment(data.row.created).format('MMM D, YYYY') }}
+                </template>
+
+                <template slot="method_title" slot-scope="data">
+                    <div class="method_title_inner" v-html="getPaymentTitle(data.row.method, data.row)"></div>
+                </template>
+
+                <template slot="method_details" slot-scope="data">
+                    <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.details)"></div>
+                </template>
+
+                <template slot="filters">
+                    <select
+                        id="filter-vendors"
+                        style="width: 190px;"
+                        :data-placeholder="__('Filter by vendor', 'dokan-lite')"
+                    />
+                    <button
+                        v-if="filter.user_id"
+                        type="button"
+                        class="button"
+                        @click="filter.user_id = 0"
+                    >&times;</button>
+                </template>
+
+                <template slot="actions" slot-scope="data">
+                    <template v-if="data.row.status === 'pending'">
+                        <div class="button-group">
+                            <button class="button button-small" @click.prevent="changeStatus('approved', data.row.id)" :title="__( 'Approve Request', 'dokan-lite' )"><span class="dashicons dashicons-yes"></span></button>
+                            <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
+                        </div>
+                    </template>
+                    <template v-else-if="data.row.status === 'approved'">
+                        <div class="button-group">
+                            <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="button-group">
+                            <button class="button button-small" @click.prevent="changeStatus('pending', data.row.id)" :title="__( 'Mark as Pending', 'dokan-lite' )"><span class="dashicons dashicons-backup"></span></button>
+                            <button class="button button-small" @click.prevent="openNoteModal(data.row.note, data.row.id)" :title="__( 'Add Note', 'dokan-lite' )"><span class="dashicons dashicons-testimonial"></span></button>
+                        </div>
+                    </template>
+                </template>
+            </list-table>
+        </div>
     </div>
 </template>
 
 <script>
-let ListTable = dokan_get_lib('ListTable');
-let Modal     = dokan_get_lib('Modal');
-let Currency  = dokan_get_lib('Currency');
+let ListTable    = dokan_get_lib('ListTable');
+let Modal        = dokan_get_lib('Modal');
+let Currency     = dokan_get_lib('Currency');
+let AdminNotice  = dokan_get_lib('AdminNotice');
+
+import $ from 'jquery';
+import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+
 
 export default {
 
@@ -95,7 +129,9 @@ export default {
     components: {
         ListTable,
         Modal,
-        Currency
+        Currency,
+        UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
@@ -109,7 +145,9 @@ export default {
             totalPages: 1,
             perPage: 10,
             totalItems: 0,
-
+            filter: {
+                user_id: 0
+            },
             counts: {
                 pending: 0,
                 approved: 0,
@@ -131,16 +169,31 @@ export default {
             },
             requests: [],
             actionColumn: 'seller',
+            hasPro: dokan.hasPro ? true : false
         };
     },
 
     watch: {
         '$route.query.status'() {
+            this.filter.user_id = 0;
+            this.clearSelection('#filter-vendors');
             this.fetchRequests();
         },
 
         '$route.query.page'() {
             this.fetchRequests();
+        },
+
+        '$route.query.user_id'() {
+            this.fetchRequests();
+        },
+
+        'filter.user_id'(user_id) {
+            if (user_id === 0) {
+                this.clearSelection('#filter-vendors');
+            }
+
+            this.goTo(this.query);
         }
     },
 
@@ -234,6 +287,39 @@ export default {
         this.fetchRequests();
     },
 
+    mounted() {
+        const self = this;
+
+        $('#filter-vendors').selectWoo({
+            ajax: {
+                url: "".concat(dokan.rest.root, "dokan/v1/stores"),
+                dataType: 'json',
+                headers: {
+                    "X-WP-Nonce" : dokan.rest.nonce
+                },
+                data(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults(data) {
+                    return {
+                        results: data.map((store) => {
+                            return {
+                                id: store.id,
+                                text: store.store_name
+                            };
+                        })
+                    };
+                }
+            }
+        });
+
+        $('#filter-vendors').on('select2:select', (e) => {
+            self.filter.user_id = e.params.data.id;
+        });
+    },
+
     methods: {
 
         updatedCounts(xhr) {
@@ -257,8 +343,18 @@ export default {
 
         fetchRequests() {
             this.loading = true;
+            var user_id = '';
+            if (parseInt(this.filter.user_id) > 0) {
+                user_id = this.filter.user_id;
+            }
 
-            dokan.api.get('/withdraw?per_page=' + this.perPage + '&page=' + this.currentPage + '&status=' + this.currentStatus)
+            const data = {
+                per_page: this.perPage,
+                page: this.currentPage,
+                status: this.currentStatus,
+                user_id: user_id,
+            };
+            dokan.api.get('/withdraw', data)
             .done((response, status, xhr) => {
                 this.requests = response;
                 this.loading = false;
@@ -273,7 +369,18 @@ export default {
                 name: 'Withdraw',
                 query: {
                     status: this.currentStatus,
-                    page: page
+                    page: page,
+                    user_id: this.filter.user_id
+                }
+            });
+        },
+
+        goTo(page) {
+            this.$router.push({
+                name: 'Withdraw',
+                query: {
+                    status: this.currentStatus,
+                    user_id: this.filter.user_id
                 }
             });
         },
@@ -318,6 +425,16 @@ export default {
             }
         },
 
+        getPaymentTitle(method, data) {
+            let title = data.method_title;
+
+            if ( data.details[method] !== undefined && 'dokan_custom' === method  ) {
+                title = data.details[method].method ?? '';
+            }
+
+            return dokan.hooks.applyFilters( 'dokan_get_payment_title', title, method, data );
+        },
+
         getPaymentDetails(method, data) {
             let details = '—';
 
@@ -327,20 +444,30 @@ export default {
 
                 } else if ( 'bank' === method ) {
                     if ( data.bank.hasOwnProperty('ac_name') ) {
-                        details = this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ),  data.bank.ac_name );
+                        details = '<p>' + this.sprintf( this.__( 'Account Name: %s', 'dokan-lite' ), data.bank.ac_name ) + '</p>';
                     }
 
                     if ( data.bank.hasOwnProperty('ac_number') ) {
-                        details += this.sprintf( this.__( ', Account Number: %s', 'dokan-lite' ), data.bank.ac_number );
+                        details += '<p>' + this.sprintf( this.__( 'Account Number: %s', 'dokan-lite' ), data.bank.ac_number ) + '</p>';
                     }
 
                     if ( data.bank.hasOwnProperty('bank_name') ) {
-                        details += this.sprintf( this.__( ', Bank Name: %s', 'dokan-lite' ), data.bank.bank_name );
+                        details += '<p>' + this.sprintf( this.__( 'Bank Name: %s', 'dokan-lite' ), data.bank.bank_name ) + '</p>';
+                    }
+
+                    if ( data.bank.hasOwnProperty('iban') ) {
+                        details += '<p>' + this.sprintf( this.__( 'IBAN: %s', 'dokan-lite' ), data.bank.iban ) + '</p>';
                     }
 
                     if ( data.bank.hasOwnProperty('routing_number') ) {
-                        details += this.sprintf( this.__( ', Routing Number: %s', 'dokan-lite' ), data.bank.routing_number );
+                        details += '<p>' + this.sprintf( this.__( 'Routing Number: %s', 'dokan-lite' ), data.bank.routing_number ) + '</p>';
                     }
+
+                    if ( data.bank.hasOwnProperty('swift') ) {
+                        details += '<p>' + this.sprintf( this.__( 'Swift Code: %s', 'dokan-lite' ), data.bank.swift ) + '</p>';
+                    }
+                } else if ( 'dokan_custom' === method ) {
+                    details = data[method].value ?? '';
                 }
             }
 
@@ -454,7 +581,11 @@ export default {
                     note: null
                 }
             });
-        }
+        },
+
+        clearSelection(element) {
+            $(element).val(null).trigger('change');
+        },
     }
 };
 </script>
@@ -520,6 +651,12 @@ export default {
         .cancelled {
             background: #eba3a3;
             color: #761919
+        }
+    }
+
+    .method_details_inner {
+        p {
+            margin-bottom: 2px;
         }
     }
 }

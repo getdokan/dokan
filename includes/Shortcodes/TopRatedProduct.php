@@ -47,7 +47,7 @@ class TopRatedProduct extends DokanShortcode {
             ?>
         </ul>
         <?php
-
+        wp_reset_postdata();
         return ob_get_clean();
     }
 }

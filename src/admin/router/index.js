@@ -2,8 +2,14 @@ import Dashboard from 'admin/pages/Dashboard.vue'
 import Withdraw from 'admin/pages/Withdraw.vue'
 import Premium from 'admin/pages/Premium.vue'
 import Help from 'admin/pages/Help.vue'
+import ChangeLog from 'admin/pages/ChangeLog.vue'
 import Settings from 'admin/pages/Settings.vue'
 import Vendors from 'admin/pages/Vendors.vue'
+import DummyData from 'admin/pages/DummyData.vue'
+import VendorCapabilities from "admin/pages/VendorCapabilities.vue"
+import ProModules from "admin/pages/ProModules.vue"
+import ReverseWithdrawal from "admin/pages/ReverseWithdrawal.vue"
+import ReverseWithdrawalTransactions from "admin/pages/ReverseWithdrawalTransactions.vue"
 
 let Vue            = dokan_get_lib('Vue')
 let Router         = dokan_get_lib('Router')
@@ -14,8 +20,14 @@ Vue.use(Router)
 dokan_add_route(Dashboard)
 dokan_add_route(Withdraw)
 dokan_add_route(Premium)
+dokan_add_route(ChangeLog)
 dokan_add_route(Help)
 dokan_add_route(Settings)
+dokan_add_route(VendorCapabilities)
+dokan_add_route(ProModules)
+dokan_add_route(DummyData)
+dokan_add_route(ReverseWithdrawal)
+dokan_add_route(ReverseWithdrawalTransactions)
 
 // if dokan pro not installed or dokan pro is greater than 2.9.14 register the `vendors` route.
 if ( ! dokan.hasPro || VersionCompare( dokan.proVersion, '2.9.14', '>' ) ) {

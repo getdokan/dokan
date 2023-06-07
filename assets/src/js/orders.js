@@ -32,7 +32,9 @@ jQuery(function($) {
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
             } else {
-                alert( response.data );
+                dokan_sweetalert( response.data, {
+                    icon: 'success',
+                } );
             }
         });
     });
@@ -86,7 +88,7 @@ jQuery(function($) {
         var data = {
             action: 'dokan_grant_access_to_download',
             product_ids: product,
-            loop: $('.order_download_permissions .panel').size(),
+            loop: $('.order_download_permissions .panel').length,
             order_id: self.data('order-id'),
             security: self.data('nonce')
         };
@@ -98,8 +100,9 @@ jQuery(function($) {
                 $('#accordion').append( response );
 
             } else {
-
-                alert('Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.');
+                dokan_sweetalert( dokan.i18n_download_access , {
+                    icon: 'warning',
+                } );
 
             }
 
@@ -111,11 +114,14 @@ jQuery(function($) {
         return false;
     });
 
-    $('.order_download_permissions').on('click', 'button.revoke_access', function(e){
+    $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
-        var answer = confirm('Are you sure you want to revoke access to this download?');
+        const answer = await dokan_sweetalert( dokan.i18n_download_permission, {
+            action : 'confirm',
+            icon   : 'warning',
+        } );
 
-        if (answer){
+        if ( 'undefined' !== answer && answer.isConfirmed ){
 
             var self = $(this),
                 el = self.closest('.dokan-panel');
@@ -332,10 +338,15 @@ jQuery(function($) {
 
         refunds: {
 
-            do_refund: function() {
+            do_refund: async function() {
                 dokan_seller_meta_boxes_order_items.block();
 
-                if ( window.confirm( dokan_refund.i18n_do_refund ) ) {
+                const isRefund = await dokan_sweetalert( dokan_refund.i18n_do_refund, {
+                    action : 'confirm',
+                    icon   : 'warning',
+                } );
+
+                if ( 'undefined' !== isRefund && isRefund.isConfirmed ) {
                     var refund_amount = $( 'input#refund_amount' ).val();
                     var refund_reason = $( 'input#refund_reason' ).val();
 
@@ -379,12 +390,14 @@ jQuery(function($) {
                         line_item_totals:       JSON.stringify( line_item_totals, null, '' ),
                         line_item_tax_totals:   JSON.stringify( line_item_tax_totals, null, '' ),
                         api_refund:             $( this ).is( '.do-api-refund' ),
-                        restock_refunded_items: $( '#restock_refunded_items:checked' ).size() ? 'true' : 'false',
+                        restock_refunded_items: $( '#restock_refunded_items:checked' ).length ? 'true' : 'false',
                         security:               dokan_refund.order_item_nonce
                     };
 
                     $.post( dokan_refund.ajax_url, data, function( response ) {
-                        response.data.message ? window.alert( response.data.message ) : null;
+                        response.data.message ? dokan_sweetalert( response.data.message, {
+                            icon: 'success',
+                        } ) : null;
                         dokan_seller_meta_boxes_order_items.reload_items();
                     }).fail( function ( jqXHR ) {
                         var message = [];
@@ -401,7 +414,7 @@ jQuery(function($) {
                             }
                         }
 
-                        window.alert( message.join( ' ' ) );
+                        dokan_sweetalert( message.join( ' ' ), { icon: 'error', } );
                         dokan_seller_meta_boxes_order_items.unblock();
                     } );
                 } else {
@@ -429,7 +442,7 @@ jQuery(function($) {
                         '',
                         dokan_refund.mon_decimal_point
                     ) )
-                    .change();
+                    .trigger( 'change' );
             },
 
             amount_changed: function() {
@@ -459,22 +472,27 @@ jQuery(function($) {
                     parseFloat( accounting.formatNumber( unit_total * refund_qty, dokan_refund.rounding_precision, '' ) )
                         .toString()
                         .replace( '.', dokan_refund.mon_decimal_point )
-                ).change();
+                ).trigger( 'change' );
 
                 // Taxes
                 $( 'td.line_tax', $row ).each( function() {
                     var line_total_tax        = $( 'input.line_tax', $( this ) );
                     var refund_line_total_tax = $( 'input.refund_line_tax', $( this ) );
-                    var unit_total_tax = accounting.unformat( line_total_tax.attr( 'data-total_tax' ), dokan_refund.mon_decimal_point ) / qty;
+                    var unit_total_tax        = accounting.unformat(
+                        line_total_tax.attr( 'data-total_tax' ),
+                        dokan_refund.mon_decimal_point
+                    ) / qty;
 
                     if ( 0 < unit_total_tax ) {
+                        var round_at_subtotal = 'yes' === dokan_refund.round_at_subtotal;
+
                         refund_line_total_tax.val(
                             parseFloat( accounting.formatNumber( unit_total_tax * refund_qty, dokan_refund.rounding_precision, '' ) )
                                 .toString()
                                 .replace( '.', dokan_refund.mon_decimal_point )
-                        ).change();
+                        ).trigger( 'change' );
                     } else {
-                        refund_line_total_tax.val( 0 ).change();
+                        refund_line_total_tax.val( 0 ).trigger( 'change' );
                     }
                 });
 
@@ -505,6 +523,46 @@ jQuery(function($) {
             minimumInputLength: $( this ).data( 'minimum_input_length' ) ? $( this ).data( 'minimum_input_length' ) : '1',
             escapeMarkup: function( m ) {
                 return m;
+            },
+            language: {
+                errorLoading: function() {
+                    // Workaround for https://github.com/select2/select2/issues/4355 instead of i18n_ajax_error.
+                    return dokan.i18n_searching;
+                },
+                inputTooLong: function( args ) {
+                    var overChars = args.input.length - args.maximum;
+
+                    if ( 1 === overChars ) {
+                        return dokan.i18n_input_too_long_1;
+                    }
+
+                    return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                },
+                inputTooShort: function( args ) {
+                    var remainingChars = args.minimum - args.input.length;
+
+                    if ( 1 === remainingChars ) {
+                        return dokan.i18n_input_too_short_1;
+                    }
+
+                    return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                },
+                loadingMore: function() {
+                    return dokan.i18n_load_more;
+                },
+                maximumSelected: function( args ) {
+                    if ( args.maximum === 1 ) {
+                        return dokan.i18n_selection_too_long_1;
+                    }
+
+                    return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                },
+                noResults: function() {
+                    return dokan.i18n_no_matches;
+                },
+                searching: function() {
+                    return dokan.i18n_searching;
+                }
             },
             ajax: {
                 url:         dokan.ajaxurl,
@@ -557,6 +615,4 @@ jQuery(function($) {
             });
         }
     });
-
 })(jQuery);
-

@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\ProductCategory\Helper;
+
 /**
  * Dokan Commission Class
  *
@@ -66,17 +68,18 @@ class Commission {
                 continue;
             }
 
-            $gateway_fee = ( $processing_fee / $order->get_total() ) * $tmp_order->get_total();
+            $gateway_fee = wc_format_decimal( ( $processing_fee / $order->get_total() ) * $tmp_order->get_total() );
 
             // Ensure sub-orders also get the correct payment gateway fee (if any)
             $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
 
-            $net_amount  = $vendor_earning - $gateway_fee;
+            $net_amount = $vendor_earning - $gateway_fee;
+            $net_amount = apply_filters( 'dokan_orders_vendor_net_amount', $net_amount, $vendor_earning, $gateway_fee, $tmp_order, $order );
 
             $wpdb->update(
                 $wpdb->dokan_orders,
                 [ 'net_amount' => (float) $net_amount ],
-                [ 'order_id'   => $tmp_order->get_id() ],
+                [ 'order_id' => $tmp_order->get_id() ],
                 [ '%f' ],
                 [ '%d' ]
             );
@@ -84,14 +87,26 @@ class Commission {
             $wpdb->update(
                 $wpdb->dokan_vendor_balance,
                 [ 'debit' => (float) $net_amount ],
-                [ 'trn_id'   => $tmp_order->get_id(), 'trn_type' => 'dokan_orders' ],
+                [
+                    'trn_id' => $tmp_order->get_id(),
+                    'trn_type' => 'dokan_orders',
+                ],
                 [ '%f' ],
                 [ '%d', '%s' ]
             );
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
-            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), round( $gateway_fee, 2 ) ) );
+            // translators: %s: Geteway fee
+            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
             $tmp_order->save_meta_data();
+
+            //remove cache for seller earning
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
+            Cache::delete( $cache_key );
+
+            // remove cache for seller earning
+            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_admin";
+            Cache::delete( $cache_key );
         }
     }
 
@@ -104,17 +119,16 @@ class Commission {
      *
      * @return array
      */
-    public function hide_extra_data( $formated_meta ) {
-        $meta_to_hide   = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
-        $meta_to_return = [];
+    public function hide_extra_data( $formatted_meta ) {
+        $meta_to_hide = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
 
-        foreach ( $formated_meta as $key => $meta ) {
-            if ( ! in_array( $meta->key, $meta_to_hide ) ) {
-                array_push( $meta_to_return, $meta );
+        foreach ( $formatted_meta as $key => $meta ) {
+            if ( in_array( $meta->key, $meta_to_hide, true ) ) {
+                unset( $formatted_meta[ $key ] );
             }
         }
 
-        return $meta_to_return;
+        return $formatted_meta;
     }
 
     /**
@@ -198,11 +212,12 @@ class Commission {
      * Get earning by order
      *
      * @since  2.9.21
+     * @since  3.7.19 Shipping tax recipient support added.
      *
-     * @param  int|WC_Order $order
+     * @param  int|\WC_Order $order Order.
      * @param  string $context
      *
-     * @return float|null on failure
+     * @return float|void|\WP_Error|null on failure
      */
     public function get_earning_by_order( $order, $context = 'seller' ) {
         if ( ! $order instanceof \WC_Order ) {
@@ -210,7 +225,7 @@ class Commission {
         }
 
         if ( ! $order ) {
-           return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
+            return new \WP_Error( __( 'Order not found', 'dokan-lite' ), 404 );
         }
 
         if ( $order->get_meta( 'has_sub_order' ) ) {
@@ -221,8 +236,8 @@ class Commission {
         // So we'll return the previously earned commission to keep backward compatability.
         $saved_admin_fee = get_post_meta( $order->get_id(), '_dokan_admin_fee', true );
 
-        if ( $saved_admin_fee != '' ) {
-            $saved_fee = ( 'seller' == $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+        if ( $saved_admin_fee !== '' ) {
+            $saved_fee = ( 'seller' === $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
@@ -247,20 +262,27 @@ class Commission {
 
             $product_id = $item->get_product()->get_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
+            $vendor_id  = (int) get_post_field( 'post_author', $product_id );
 
-            if ( $refund ) {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() - $refund );
+            if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) ) {
+                $earning += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
-                $earning += $this->get_earning_by_product( $product_id, $context, $item->get_total() );
+                $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
+                $item_price = $refund ? $item_price - $refund : $item_price;
+                $earning   += $this->get_earning_by_product( $product_id, $context, $item_price );
             }
         }
 
         if ( $context === $this->get_shipping_fee_recipient( $order->get_id() ) ) {
-            $earning += $order->get_total_shipping() - $order->get_total_shipping_refunded();
+            $earning += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
         }
 
         if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning += $order->get_total_tax() - $order->get_total_tax_refunded();
+            $earning += ( ( $order->get_total_tax() - $order->get_total_tax_refunded() ) - ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) ) );
+        }
+
+        if ( $context === $this->get_shipping_tax_fee_recipient( $order ) ) {
+            $earning += ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) );
         }
 
         $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
@@ -331,14 +353,15 @@ class Commission {
      * @return float
      */
     public function get_category_wise_rate( $product_id ) {
-        $terms = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
+        $terms = Helper::get_product_chosen_category( $this->validate_product_id( $product_id ) );
 
-        if ( empty( $terms ) || count( $terms ) > 1 ) {
+        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
+        if ( ! is_array( $terms ) || empty( $terms ) || count( $terms ) > 1 || ! Helper::product_category_selection_is_single() ) {
             return null;
         }
 
-        $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_commission', true );
+        $term_id = $terms[0];
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true );
 
         return $this->validate_rate( $rate );
     }
@@ -538,30 +561,30 @@ class Commission {
             foreach ( $line_items as $item ) {
                 $items = array_keys( $line_items );
 
-                if ( ! isset( $items[$i] ) ) {
+                if ( ! isset( $items[ $i ] ) ) {
                     continue;
                 }
 
-                $saved_commission_rate = wc_get_order_item_meta( $items[$i], '_dokan_commission_rate', true );
-                $saved_commission_type = wc_get_order_item_meta( $items[$i], '_dokan_commission_type', true );
-                $saved_additional_fee  = wc_get_order_item_meta( $items[$i], '_dokan_additional_fee', true );
+                $saved_commission_rate = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_rate', true );
+                $saved_commission_type = wc_get_order_item_meta( $items[ $i ], '_dokan_commission_type', true );
+                $saved_additional_fee  = wc_get_order_item_meta( $items[ $i ], '_dokan_additional_fee', true );
 
                 if ( $saved_commission_rate ) {
                     $commission_rate = $saved_commission_rate;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_rate', $commission_rate );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_rate', $commission_rate );
                 }
 
                 if ( $saved_commission_type ) {
                     $commission_type = $saved_commission_type;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_commission_type', $commission_type );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_commission_type', $commission_type );
                 }
 
                 if ( $saved_additional_fee ) {
                     $additional_fee = $saved_additional_fee;
                 } else {
-                    wc_add_order_item_meta( $items[$i], '_dokan_additional_fee', $additional_fee );
+                    wc_add_order_item_meta( $items[ $i ], '_dokan_additional_fee', $additional_fee );
                 }
 
                 $i++;
@@ -657,7 +680,7 @@ class Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null: get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
 
         return $this->validate_rate( $rate );
     }
@@ -675,24 +698,26 @@ class Commission {
     public function get_earning_from_order_table( $order_id, $context = 'seller' ) {
         global $wpdb;
 
-        $cache_key = 'dokan_get_earning_from_order_table' . $order_id . $context;
-        $earning = wp_cache_get( $cache_key );
+        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}";
+        $earning   = Cache::get( $cache_key );
 
         if ( false !== $earning ) {
             return $earning;
         }
 
-        $result = $wpdb->get_row( $wpdb->prepare(
-            "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
-            $order_id
-        ) );
+        $result = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
+                $order_id
+            )
+        );
 
         if ( ! $result ) {
             return null;
         }
 
         $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        wp_cache_set( $cache_key, $earning );
+        Cache::set( $cache_key, $earning );
 
         return $earning;
     }
@@ -701,6 +726,7 @@ class Commission {
      * Get shipping fee recipient
      *
      * @since  2.9.21
+     * @since 3.4.1 introduced the shipping fee recipient hook
      *
      * @param  int $order_id
      *
@@ -712,7 +738,7 @@ class Commission {
         if ( $saved_shipping_recipient ) {
             $shipping_recipient = $saved_shipping_recipient;
         } else {
-            $shipping_recipient = dokan_get_option( 'shipping_fee_recipient', 'dokan_general', 'seller' );
+            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
             update_post_meta( $order_id, 'shipping_fee_recipient', $shipping_recipient );
         }
 
@@ -723,6 +749,7 @@ class Commission {
      * Get tax fee recipient
      *
      * @since  2.9.21
+     * @since 3.4.1 introduced the tax fee recipient hook
      *
      * @param  int $order_id
      *
@@ -734,11 +761,61 @@ class Commission {
         if ( $saved_tax_recipient ) {
             $tax_recipient = $saved_tax_recipient;
         } else {
-            $tax_recipient = dokan_get_option( 'tax_fee_recipient', 'dokan_general', 'seller' );
+            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order_id );
             update_post_meta( $order_id, 'tax_fee_recipient', $tax_recipient );
         }
 
         return $tax_recipient;
+    }
+
+    /**
+     * Get shipping tax fee recipient.
+     *
+     * @since 3.7.19
+     *
+     * @param \WC_Order $order Order.
+     *
+     * @return string
+     */
+    public function get_shipping_tax_fee_recipient( $order ): string {
+        // get saved tax recipient
+        $saved_shipping_tax_recipient = $order->get_meta( 'shipping_tax_fee_recipient', true );
+        if ( ! empty( $saved_shipping_tax_recipient ) ) {
+            return $saved_shipping_tax_recipient;
+        }
+
+        $default_tax_fee_recipient = $this->get_tax_fee_recipient( $order->get_id() ); // this is needed for backward compatibility
+        $shipping_tax_recipient    = dokan_get_option( 'shipping_tax_fee_recipient', 'dokan_selling', $default_tax_fee_recipient );
+        $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
+
+        $order->add_meta_data( 'shipping_tax_fee_recipient', $shipping_tax_recipient, true );
+        $order->save();
+
+        return $shipping_tax_recipient;
+    }
+
+    /**
+     * Get total shipping tax refunded for the order.
+     *
+     * @since 3.7.19
+     *
+     * @param \WC_Order $order Order.
+     *
+     * @return float
+     */
+    public function get_total_shipping_tax_refunded( \WC_Order $order ): float {
+        $tax_refunded = 0.0;
+
+        foreach ( $order->get_items( 'shipping' ) as $item_id => $item ) {
+            /**
+             * @var \WC_Order_Item_Shipping $item Shipping item.
+             */
+            foreach ( $item->get_taxes()['total'] as $tax_id => $tax_amount ) {
+                $tax_refunded += $order->get_tax_refunded_for_item( $item->get_id(), $tax_id, 'shipping' );
+            }
+        }
+
+        return $tax_refunded;
     }
 
     /**
@@ -779,7 +856,13 @@ class Commission {
         $all_orders   = [];
 
         if ( $has_suborder ) {
-            $sub_order_ids = get_children( [ 'post_parent' => $order->get_id(), 'post_type' => 'shop_order', 'fields' => 'ids' ] );
+            $sub_order_ids = get_children(
+                [
+                    'post_parent' => $order->get_id(),
+                    'post_type' => 'shop_order',
+                    'fields' => 'ids',
+                ]
+            );
 
             foreach ( $sub_order_ids as $sub_order_id ) {
                 $sub_order    = wc_get_order( $sub_order_id );

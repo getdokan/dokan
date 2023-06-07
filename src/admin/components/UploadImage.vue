@@ -1,8 +1,10 @@
 <template>
     <div class="dokan-upload-image" @click="uploadImage">
-        <img v-if="! showButton" :src="image.src ? image.src : src" :style="">
-
-        <button v-if="showButton" @click.prevent="uploadImage">
+        <div v-if="! showButton" class="dokan-upload-image-container">
+            <img :src="image.src ? image.src : src">
+            <slot name="imagePlaceholder"></slot>
+        </div>
+        <button v-else @click.prevent="uploadImage">
             {{ buttonLabel }}
         </button>
     </div>
@@ -16,6 +18,7 @@ export default {
 
     props: {
         src: {
+            type: String,
             default: dokan.urls.assetsUrl + '/images/store-pic.png',
         },
         showButton: {
@@ -43,9 +46,28 @@ export default {
         }
     },
 
+    created() {
+        this.$root.$on('resetDokanUploadImage', ( obj ) => {
+            this.resetImage( obj );
+        } );
+    },
+
+    mounted() {
+
+    },
+
     methods: {
+        getDefaultImageSrc() {
+            return dokan.urls.assetsUrl + '/images/store-pic.png';
+        },
+
         uploadImage() {
             this.openMediaManager( this.onSelectImage );
+        },
+
+        resetImage( obj = {} ) {
+            this.image.src = obj.src ?? this.getDefaultImageSrc();
+            this.image.id = 0;
         },
 
         onSelectImage( image ) {

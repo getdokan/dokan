@@ -14,7 +14,7 @@
                     </div>
 
                     <p class="picture-footer"
-                        v-html="sprintf( __( 'You can change your profile picutre on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
+                        v-html="sprintf( __( 'You can change your profile picture on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
                     />
                 </div>
 
@@ -30,13 +30,13 @@
             <div class="dokan-form-group">
 
                 <div class="column">
-                    <label for="store-email">{{ __( 'First Name', 'dokan-lite') }}</label>
-                    <input type="email" class="dokan-form-input" v-model="vendorInfo.first_name" :placeholder="__( 'First Name', 'dokan-lite')">
+                    <label for="first-name">{{ __( 'First Name', 'dokan-lite') }}</label>
+                    <input type="email" id="first-name" class="dokan-form-input" v-model="vendorInfo.first_name" :placeholder="__( 'First Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
-                    <label for="store-email">{{ __( 'Last Name', 'dokan-lite') }}</label>
-                    <input type="email" class="dokan-form-input" v-model="vendorInfo.last_name" :placeholder="__( 'Last Name', 'dokan-lite')">
+                    <label for="last-name">{{ __( 'Last Name', 'dokan-lite') }}</label>
+                    <input type="email" id="last-name" class="dokan-form-input" v-model="vendorInfo.last_name" :placeholder="__( 'Last Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
@@ -44,14 +44,15 @@
                     <span v-if="! getId()" class="required-field">*</span>
 
                     <input type="text"
+                        id="store-name"
                         v-model="vendorInfo.store_name"
                         :class="{'dokan-form-input': true, 'has-error': getError('store_name')}"
                         :placeholder="getError( 'store_name' ) ? __( 'Store Name is required', 'dokan-lite' ) : __( 'Store Name', 'dokan-lite' )">
                 </div>
 
                 <div class="column" v-if="! getId()">
-                    <label for="store-url">{{ __( 'Store URL', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.user_nicename" :placeholder="__( 'Store Url', 'dokan-lite')">
+                    <label for="user-nicename">{{ __( 'Store URL', 'dokan-lite') }}</label>
+                    <input type="text" id="user-nicename" class="dokan-form-input" v-model="vendorInfo.user_nicename" :placeholder="__( 'Store Url', 'dokan-lite')">
 
                     <div class="store-avaibility-info">
                         <p class="store-url" v-if="showStoreUrl">{{ storeUrl }}</p>
@@ -62,7 +63,7 @@
 
                 <div class="column">
                     <label for="store-phone">{{ __( 'Phone Number', 'dokan-lite') }}</label>
-                    <input type="number" class="dokan-form-input" v-model="vendorInfo.phone" :placeholder="__( '123456789', 'dokan-lite')">
+                    <input type="number" id="store-phone" class="dokan-form-input" v-model="vendorInfo.phone" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
@@ -70,6 +71,7 @@
                     <span v-if="! getId()" class="required-field">*</span>
 
                     <input type="email"
+                        id="store-email"
                         v-model="vendorInfo.email"
                         :class="{'dokan-form-input': true, 'has-error': getError('email')}"
                         :placeholder="getError( 'email' ) ? __( 'Email is required', 'dokan-lite' ) : __( 'store@email.com', 'dokan-lite' )"
@@ -82,8 +84,9 @@
 
                 <template v-if="! getId()">
                     <div class="column">
-                        <label for="store-username">{{ __( 'Username', 'dokan-lite') }}</label><span class="required-field">*</span>
+                        <label for="user-login">{{ __( 'Username', 'dokan-lite') }}</label><span class="required-field">*</span>
                         <input type="text" class="dokan-form-input"
+                            id="user-login"
                             v-model="vendorInfo.user_login"
                             :class="{'dokan-form-input': true, 'has-error': getError('user_login')}"
                             :placeholder="getError( 'user_login' ) ? __( 'Username is required', 'dokan-lite' ) : __( 'Username', 'dokan-lite' )">
@@ -102,6 +105,7 @@
                     <div class="column">
                         <label for="store-password">{{ __( 'Password', 'dokan-lite') }}</label>
                         <input
+                            id="store-password"
                             v-if="showPassword"
                             type="text"
                             v-model="vendorInfo.user_pass"
@@ -183,8 +187,8 @@ export default {
         'vendorInfo.user_nicename'( newValue ) {
             if ( typeof newValue !== 'undefined' ) {
                 this.showStoreUrl = false;
-                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-');
-                this.vendorInfo.user_nicename = newValue.split(' ').join('-');
+                this.otherStoreUrl = this.defaultUrl + newValue.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
+                this.vendorInfo.user_nicename = newValue.split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
 
                 // check if the typed url is available
                 this.checkStoreName();
@@ -202,10 +206,9 @@ export default {
 
     computed: {
         storeUrl() {
-            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-');
+            let storeUrl = this.vendorInfo.store_name.trim().split(' ').join('-').toLowerCase().replace(/[^\w\s/-]/g, '').replace( /-+/g, '-' );
             this.vendorInfo.user_nicename = storeUrl;
             this.otherStoreUrl = this.defaultUrl + storeUrl;
-
             return this.defaultUrl + storeUrl;
         }
     },

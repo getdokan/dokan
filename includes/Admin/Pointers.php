@@ -11,7 +11,7 @@ namespace WeDevs\Dokan\Admin;
  *
  * @category Admin
  */
-if ( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
@@ -43,7 +43,7 @@ class Pointers {
      * @return void
      */
     public function dismiss_screen( $screen = false ) {
-        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] )) : $screen; // WPCS: CSRF ok.
+        $screen = isset( $_POST['screen'] ) ? sanitize_text_field( wp_unslash( $_POST['screen'] ) ) : $screen; // phpcs:ignore.
 
         if ( ! $screen ) {
             return;
@@ -57,7 +57,7 @@ class Pointers {
      *
      * @param String $screen
      *
-     * @return void
+     * @return bool
      */
     public function is_dismissed( $screen ) {
         return get_option( 'dokan_pointer_' . $screen, false );
@@ -67,18 +67,18 @@ class Pointers {
      * Setup pointers for screen.
      */
     public function setup_pointers_for_screen() {
-        if ( ! $screen = get_current_screen() ) {
+        if ( ! $screen = get_current_screen() ) { // phpcs:ignore
             return;
         }
 
         $this->screen_id = $screen->id;
 
         switch ( $screen->id ) {
-            case 'toplevel_page_dokan' :
+            case 'toplevel_page_dokan':
                 $this->dashboard_tutorial();
                 break;
 
-            case 'dokan_page_dokan-settings' :
+            case 'dokan_page_dokan-settings':
                 $this->settings_tutorial();
                 break;
         }
@@ -97,7 +97,7 @@ class Pointers {
         $pointers = array(
             'pointers' => array(
                 'title'    => array(
-                    'target'       => ".at-glance",
+                    'target'       => '.at-glance',
                     'next'         => 'overview',
                     'next_trigger' => array(
                         'target' => '.next',
@@ -111,10 +111,10 @@ class Pointers {
                             'align' => 'left',
                         ),
                     ),
-                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . "</button>"
+                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . '</button>',
                 ),
                 'overview' => array(
-                    'target'       => ".overview",
+                    'target'       => '.overview',
                     'next'         => 'updates',
                     'next_trigger' => array(
                         'target' => '.next',
@@ -128,10 +128,10 @@ class Pointers {
                             'align' => 'left',
                         ),
                     ),
-                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . "</button>"
+                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . '</button>',
                 ),
                 'updates'  => array(
-                    'target'       => ".news-updates",
+                    'target'       => '.news-updates',
                     'next'         => '',
                     'next_trigger' => array(),
                     'options'      => array(
@@ -154,7 +154,7 @@ class Pointers {
     /**
      * Renders Settings tutorial pointers
      *
-     * @return type
+     * @return void
      */
     public function settings_tutorial() {
         if ( $this->is_dismissed( $this->screen_id ) ) {
@@ -164,7 +164,7 @@ class Pointers {
         $pointers = array(
             'pointers' => array(
                 'general'  => array(
-                    'target'       => "#dokan_general-tab",
+                    'target'       => '#dokan_general-tab',
                     'next'         => 'selling',
                     'next_trigger' => array(
                         'target' => '.next',
@@ -178,10 +178,10 @@ class Pointers {
                             'align' => 'left',
                         ),
                     ),
-                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . "</button>"
+                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . '</button>',
                 ),
                 'selling'  => array(
-                    'target'       => "#dokan_selling-tab",
+                    'target'       => '#dokan_selling-tab',
                     'next'         => 'withdraw',
                     'next_trigger' => array(
                         'target' => '.next',
@@ -195,10 +195,10 @@ class Pointers {
                             'align' => 'left',
                         ),
                     ),
-                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . "</button>"
+                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . '</button>',
                 ),
                 'withdraw' => array(
-                    'target'       => "#dokan_withdraw-tab",
+                    'target'       => '#dokan_withdraw-tab',
                     'next'         => 'pages',
                     'next_trigger' => array(
                         'target' => '.next',
@@ -212,10 +212,10 @@ class Pointers {
                             'align' => 'left',
                         ),
                     ),
-                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . "</button>"
+                    'next_button'  => "<button class='next button button-primary right'>" . __( 'Next', 'dokan-lite' ) . '</button>',
                 ),
                 'pages'    => array(
-                    'target'  => "#dokan_pages-tab",
+                    'target'  => '#dokan_pages-tab',
                     'next'    => '',
                     'options' => array(
                         'content'  => '<h3>' . esc_html__( 'Dokan Pages', 'dokan-lite' ) . '</h3>' .
@@ -242,7 +242,7 @@ class Pointers {
         wp_enqueue_style( 'wp-pointer' );
         wp_enqueue_script( 'wp-pointer' );
 
-        wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST . '/js/pointers.js', array( 'wp-pointer' ) );
+        wp_register_script( 'dokan-pointers', DOKAN_PLUGIN_ASSEST . '/js/pointers.js', array( 'wp-pointer' ), DOKAN_PLUGIN_VERSION, true );
         wp_enqueue_script( 'dokan-pointers' );
 
         $data = array(

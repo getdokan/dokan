@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Install;
 
+use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
 use WP_Roles;
 
@@ -13,15 +14,17 @@ use WP_Roles;
 class Installer {
     public function do_install() {
         // installs
+        $this->add_version_info();
         $this->user_roles();
         $this->setup_pages();
         $this->woocommerce_settings();
         $this->create_tables();
+        $this->create_reverse_withdrawal_base_product();
         $this->product_design();
+        $this->add_store_name_meta_key_for_admin_users();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
-            dokan()->include_backgorund_processing_files();
             dokan()->upgrades->do_upgrade();
         }
 
@@ -46,6 +49,52 @@ class Installer {
     }
 
     /**
+     * Add store name meta key for admin users
+     *
+     * Since we are assuming admin/shop_manager users as vendors by default, and since dokan_store_name meta key is used for
+     * various sql queries, we are assigning dokan_store_name meta key for admin users as well.
+     *
+     * @since 3.7.18
+     *
+     * @return void
+     */
+    public function add_store_name_meta_key_for_admin_users() {
+        // get admin only users via WP_User_Query
+        $args = [
+            'role__in'    => [ 'administrator', 'shop_manager' ],
+            'fields'  => 'ID',
+        ];
+
+        $users = new \WP_User_Query( $args );
+
+        if ( ! empty( $users->get_results() ) ) {
+            foreach ( $users->get_results() as $user_id ) {
+                $meta = get_user_meta( $user_id, 'dokan_store_name', true );
+                if ( ! empty( $meta ) ) {
+                    continue;
+                }
+
+                $user = get_user_by( 'id', $user_id );
+                update_user_meta( $user_id, 'dokan_store_name', $user->display_name );
+            }
+        }
+    }
+
+    /**
+     * Adds plugin installation time.
+     *
+     * @since 3.3.1
+     *
+     * @return boolean
+     */
+    public function add_version_info() {
+        if ( empty( get_option( 'dokan_installed_time' ) ) ) {
+            $current_time = dokan_current_datetime()->getTimestamp();
+            update_option( 'dokan_installed_time', $current_time );
+        }
+    }
+
+    /**
      * Update WooCommerce mayaccount registration settings
      *
      * @since 1.0
@@ -59,7 +108,7 @@ class Installer {
     /**
      * Update product new style options
      *
-     * when user first install this plugin
+     * When user first install this plugin
      * the new product style options changed to new
      *
      * @since 2.3
@@ -86,39 +135,38 @@ class Installer {
         global $wp_roles;
 
         if ( class_exists( 'WP_Roles' ) && ! isset( $wp_roles ) ) {
-            $wp_roles = new WP_Roles();
+            $wp_roles = new WP_Roles(); // @codingStandardsIgnoreLine
         }
 
-        add_role( 'seller', __( 'Vendor', 'dokan-lite' ), [
-            'read'                      => true,
-            'publish_posts'             => true,
-            'edit_posts'                => true,
-            'delete_published_posts'    => true,
-            'edit_published_posts'      => true,
-            'delete_posts'              => true,
-            'manage_categories'         => true,
-            'moderate_comments'         => true,
-            'unfiltered_html'           => true,
-            'upload_files'              => true,
-            'edit_shop_orders'          => true,
-            'edit_product'              => true,
-            'read_product'              => true,
-            'delete_product'            => true,
-            'edit_products'             => true,
-            'publish_products'          => true,
-            'read_private_products'     => true,
-            'delete_products'           => true,
-            'delete_products'           => true,
-            'delete_private_products'   => true,
-            'delete_published_products' => true,
-            'delete_published_products' => true,
-            'edit_private_products'     => true,
-            'edit_published_products'   => true,
-            'manage_product_terms'      => true,
-            'delete_product_terms'      => true,
-            'assign_product_terms'      => true,
-            'dokandar'                  => true,
-        ] );
+        add_role(
+            'seller', __( 'Vendor', 'dokan-lite' ), [
+				'read'                      => true,
+				'publish_posts'             => true,
+				'edit_posts'                => true,
+				'delete_published_posts'    => true,
+				'edit_published_posts'      => true,
+				'delete_posts'              => true,
+				'manage_categories'         => true,
+				'moderate_comments'         => true,
+				'upload_files'              => true,
+				'edit_shop_orders'          => true,
+				'edit_product'              => true,
+				'read_product'              => true,
+				'delete_product'            => true,
+				'edit_products'             => true,
+				'publish_products'          => true,
+				'read_private_products'     => true,
+				'delete_products'           => true,
+				'delete_private_products'   => true,
+				'delete_published_products' => true,
+				'edit_private_products'     => true,
+				'edit_published_products'   => true,
+				'manage_product_terms'      => true,
+				'delete_product_terms'      => true,
+				'assign_product_terms'      => true,
+				'dokandar'                  => true,
+			]
+        );
 
         $capabilities = [];
         $all_cap      = dokan_get_all_caps();
@@ -189,10 +237,12 @@ class Installer {
                             if ( $child_page_id ) {
                                 $dokan_page_settings[ $child_page['page_id'] ] = $child_page_id;
 
-                                wp_update_post( [
-                                    'ID'          => $child_page_id,
-                                    'post_parent' => $page_id,
-                                ] );
+                                wp_update_post(
+                                    [
+										'ID'          => $child_page_id,
+										'post_parent' => $page_id,
+									]
+                                );
                             }
                         }
                     }
@@ -209,14 +259,16 @@ class Installer {
         $page_obj = get_page_by_path( $page['post_title'] );
 
         if ( ! $page_obj ) {
-            $page_id = wp_insert_post( [
-                'post_title'     => $page['post_title'],
-                'post_name'      => $page['slug'],
-                'post_content'   => $page['content'],
-                'post_status'    => 'publish',
-                'post_type'      => 'page',
-                'comment_status' => 'closed',
-            ] );
+            $page_id = wp_insert_post(
+                [
+					'post_title'     => $page['post_title'],
+					'post_name'      => $page['slug'],
+					'post_content'   => $page['content'],
+					'post_status'    => 'publish',
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+				]
+            );
 
             if ( $page_id && ! is_wp_error( $page_id ) ) {
                 if ( isset( $page['template'] ) ) {
@@ -245,6 +297,7 @@ class Installer {
         $this->create_sync_table();
         $this->create_refund_table();
         $this->create_vendor_balance_table();
+        $this->create_reverse_withdrawal_table();
     }
 
     /**
@@ -256,16 +309,17 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_withdraw` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `user_id` bigint(20) unsigned NOT NULL,
-               `amount` decimal(19,4) NOT NULL,
-               `date` timestamp NOT NULL,
-               `status` int(1) NOT NULL,
-               `method` varchar(30) NOT NULL,
-               `note` text NOT NULL,
-               `ip` varchar(50) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `user_id` bigint(20) unsigned NOT NULL,
+                    `amount` decimal(19,4) NOT NULL,
+                    `date` timestamp NOT NULL,
+                    `status` int(1) NOT NULL,
+                    `method` varchar(30) NOT NULL,
+                    `note` text NOT NULL,
+                    `details` longtext DEFAULT NULL,
+                    `ip` varchar(50) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -279,16 +333,16 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_orders` (
-          `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-          `order_id` bigint(20) DEFAULT NULL,
-          `seller_id` bigint(20) DEFAULT NULL,
-          `order_total` decimal(19,4) DEFAULT NULL,
-          `net_amount` decimal(19,4) DEFAULT NULL,
-          `order_status` varchar(30) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          KEY `order_id` (`order_id`),
-          KEY `seller_id` (`seller_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `order_id` bigint(20) DEFAULT NULL,
+                    `seller_id` bigint(20) DEFAULT NULL,
+                    `order_total` decimal(19,4) DEFAULT NULL,
+                    `net_amount` decimal(19,4) DEFAULT NULL,
+                    `order_status` varchar(30) DEFAULT NULL,
+                    PRIMARY KEY (`id`),
+                    KEY `order_id` (`order_id`),
+                    KEY `seller_id` (`seller_id`)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -303,17 +357,14 @@ class Installer {
     public function create_announcement_table() {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . 'dokan_announcement';
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_announcement` (
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `user_id` bigint(20) unsigned NOT NULL,
+                    `post_id` bigint(11) NOT NULL,
+                    `status` varchar(30) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
-        $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `user_id` bigint(20) unsigned NOT NULL,
-               `post_id` bigint(11) NOT NULL,
-               `status` varchar(30) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
     }
 
@@ -328,20 +379,20 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_refund` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `order_id` bigint(20) unsigned NOT NULL,
-               `seller_id` bigint(20) NOT NULL,
-               `refund_amount` decimal(19,4) NOT NULL,
-               `refund_reason` text NULL,
-               `item_qtys` varchar(200) NULL,
-               `item_totals` varchar(200) NULL,
-               `item_tax_totals` varchar(200) NULL,
-               `restock_items` varchar(10) NULL,
-               `date` timestamp NOT NULL,
-               `status` int(1) NOT NULL,
-               `method` varchar(30) NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `order_id` bigint(20) unsigned NOT NULL,
+                    `seller_id` bigint(20) NOT NULL,
+                    `refund_amount` decimal(19,4) NOT NULL,
+                    `refund_reason` text NULL,
+                    `item_qtys` varchar(200) NULL,
+                    `item_totals` text NULL,
+                    `item_tax_totals` text NULL,
+                    `restock_items` varchar(10) NULL,
+                    `date` timestamp NOT NULL,
+                    `status` int(1) NOT NULL,
+                    `method` varchar(30) NOT NULL,
+                    PRIMARY KEY (id)
+               ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
     }
@@ -355,20 +406,42 @@ class Installer {
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_vendor_balance` (
-               `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-               `vendor_id` bigint(20) unsigned NOT NULL,
-               `trn_id` bigint(20) unsigned NOT NULL,
-               `trn_type` varchar(30) NOT NULL,
-               `perticulars` text NOT NULL,
-               `debit` decimal(19,4) NOT NULL,
-               `credit` decimal(19,4) NOT NULL,
-               `status` varchar(30) DEFAULT NULL,
-               `trn_date` timestamp NOT NULL,
-               `balance_date` timestamp NOT NULL,
-              PRIMARY KEY (id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+                    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+                    `vendor_id` bigint(20) unsigned NOT NULL,
+                    `trn_id` bigint(20) unsigned NOT NULL,
+                    `trn_type` varchar(30) NOT NULL,
+                    `perticulars` text NOT NULL,
+                    `debit` decimal(19,4) NOT NULL,
+                    `credit` decimal(19,4) NOT NULL,
+                    `status` varchar(30) DEFAULT NULL,
+                    `trn_date` timestamp NOT NULL,
+                    `balance_date` timestamp NOT NULL,
+                    PRIMARY KEY (id)
+                ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
 
         dbDelta( $sql );
+    }
+
+    /**
+     * Create Reverse Withdrawal Table
+     *
+     * @since 3.5.1
+     *
+     * @return void
+     */
+    private function create_reverse_withdrawal_table() {
+        ReverseWithdrawalInstallerHelper::create_reverse_withdrawal_table();
+    }
+
+    /**
+     * This method will create reverse withdrawal base product
+     *
+     * @since 3.5.1
+     *
+     * @return void
+     */
+    private function create_reverse_withdrawal_base_product() {
+        ReverseWithdrawalInstallerHelper::create_reverse_withdrawal_base_product();
     }
 
     /**
@@ -405,7 +478,7 @@ class Installer {
     private static function parse_update_notice( $content, $new_version ) {
         // Output Upgrade Notice.
         $matches        = null;
-        $regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( DOKAN_PLUGIN_VERSION ) . '\s*=|$)~Uis';
+        $regexp         = '~==\s*Upgrade Notice\s*==\s*=\s*(.*)\s*=(.*)(=\s*' . preg_quote( DOKAN_PLUGIN_VERSION, '/' ) . '\s*=|$)~Uis';
         $upgrade_notice = '';
 
         if ( preg_match( $regexp, $content, $matches ) ) {
@@ -415,7 +488,7 @@ class Installer {
             $notice_version_parts  = explode( '.', trim( $matches[1] ) );
             $current_version_parts = explode( '.', DOKAN_PLUGIN_VERSION );
 
-            if ( 3 !== sizeof( $notice_version_parts ) ) {
+            if ( 3 !== count( $notice_version_parts ) ) {
                 return;
             }
 

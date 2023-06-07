@@ -1,74 +1,80 @@
 <template>
-    <div class="vendor-list">
-        <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan-lite') }}</h1>
-        <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
+    <div>
+        <div class="vendor-list">
+            <h1 class="wp-heading-inline">{{ __( 'Vendors', 'dokan-lite') }}</h1>
+            <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
 
-        <!-- Add other component here here -->
-        <component v-for="(vendorHeaderArea, index) in dokanVendorHeaderArea"
-            :key="index"
-            :is="vendorHeaderArea"
-        />
+            <!-- Add other component here here -->
+            <component v-for="(vendorHeaderArea, index) in dokanVendorHeaderArea"
+                       :key="index"
+                       :is="vendorHeaderArea"
+            />
 
-        <hr class="wp-header-end">
+            <AdminNotice></AdminNotice>
 
-        <ul class="subsubsub">
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact v-html="sprintf( __( 'All <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.all )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact v-html="sprintf( __( 'Approved <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.approved )"></router-link> | </li>
-            <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact v-html="sprintf( __( 'Pending <span class=\'count\'>(%s)</span>', 'dokan-lite' ), counts.pending )"></router-link></li>
-        </ul>
+            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
-        <search title="Search Vendors" @searched="doSearch"></search>
+            <hr class="wp-header-end">
 
-        <list-table
-            :columns="columns"
-            :loading="loading"
-            :rows="vendors"
-            :actions="actions"
-            actionColumn="store_name"
-            :show-cb="showCb"
-            :total-items="totalItems"
-            :bulk-actions="bulkActions"
-            :total-pages="totalPages"
-            :per-page="perPage"
-            :current-page="currentPage"
-            :action-column="actionColumn"
+            <ul class="subsubsub">
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'all' }}" active-class="current" exact >{{ __( 'All', 'dokan-lite' ) }} <span class="count">{{ counts.all }}</span></router-link> | </li>
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'approved' }}" active-class="current" exact >{{ __( 'Approved', 'dokan-lite' ) }} <span class="count">{{ counts.approved }}</span></router-link> | </li>
+                <li><router-link :to="{ name: 'Vendors', query: { status: 'pending' }}" active-class="current" exact >{{ __( 'Pending', 'dokan-lite' ) }} <span class="count">{{ counts.pending }}</span></router-link> | </li>
+            </ul>
 
-            not-found="No vendors found."
+            <search :title="__( 'Search Vendors', 'dokan-lite')" @searched="doSearch"></search>
 
-            :sort-by="sortBy"
-            :sort-order="sortOrder"
-            @sort="sortCallback"
+            <list-table
+                :columns="columns"
+                :loading="loading"
+                :rows="vendors"
+                :actions="actions"
+                actionColumn="store_name"
+                :show-cb="showCb"
+                :total-items="totalItems"
+                :bulk-actions="bulkActions"
+                :total-pages="totalPages"
+                :per-page="perPage"
+                :current-page="currentPage"
+                :action-column="actionColumn"
 
-            @pagination="goToPage"
-            @action:click="onActionClick"
-            @bulk:click="onBulkAction"
-            @searched="doSearch"
-        >
-            <template slot="store_name" slot-scope="data">
-                <img :src="data.row.gravatar" :alt="data.row.store_name" width="50">
-                <strong>
-                    <router-link v-if="hasPro" :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
-                    <a v-else :href="editUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a>
-                </strong>
-            </template>
+                not-found="No vendors found."
 
-            <template slot="email" slot-scope="data">
-                <a :href="'mailto:' + data.row.email">{{ data.row.email }}</a>
-            </template>
+                :sort-by="sortBy"
+                :sort-order="sortOrder"
+                :text="$root.listTableTexts()"
+                @sort="sortCallback"
 
-            <template slot="categories" slot-scope="{ row }">
-                {{ row.categories.map( category => category.name ).join( ', ' ) }}
-            </template>
+                @pagination="goToPage"
+                @action:click="onActionClick"
+                @bulk:click="onBulkAction"
+                @searched="doSearch"
+            >
+                <template slot="store_name" slot-scope="data">
+                    <img :src="data.row.gravatar" :alt="data.row.store_name" width="50">
+                    <strong>
+                        <router-link v-if="hasPro" :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
+                        <a v-else :href="editUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a>
+                    </strong>
+                </template>
 
-            <template slot="registered" slot-scope="data">
-                {{ moment(data.row.registered).format('MMM D, YYYY') }}
-            </template>
+                <template slot="email" slot-scope="data">
+                    <a :href="'mailto:' + data.row.email">{{ data.row.email }}</a>
+                </template>
 
-            <template slot="enabled" slot-scope="data">
-                <switches :enabled="data.row.enabled" :value="data.row.id" @input="onSwitch"></switches>
-            </template>
+                <template slot="categories" slot-scope="{ row }">
+                    {{ row.categories.map( category => category.name ).join( ', ' ) }}
+                </template>
 
-            <template slot="row-actions" slot-scope="data">
+                <template slot="registered" slot-scope="data">
+                    {{ moment(data.row.registered).format('MMM D, YYYY') }}
+                </template>
+
+                <template slot="enabled" slot-scope="data">
+                    <switches :enabled="data.row.enabled" :value="data.row.id" @input="onSwitch"></switches>
+                </template>
+
+                <template slot="row-actions" slot-scope="data">
                 <span v-for="(action, index) in actions" :class="action.key">
                     <router-link v-if="hasPro && action.key == 'edit'" :to="{ path: 'vendors/' + data.row.id, query:{edit:'true'} }">{{ action.label }}</router-link>
                     <a v-else-if="! hasPro && action.key == 'edit'" :href="editUrl(data.row.id)">{{ action.label }}</a>
@@ -78,19 +84,30 @@
                     <a v-else href="#">{{ action.label }}</a>
                     <template v-if="index !== (actions.length - 1)"> | </template>
                 </span>
-            </template>
-        </list-table>
+                </template>
+                <template slot="filters" slot-scope="data">
+                    <component v-for="(dokanVendorFilterSection, index) in dokanVendorFilterSectionStart"
+                               :key="index"
+                               :is="dokanVendorFilterSection"
+                               @updateVendorComponent="updateVendorComponent"
+                    />
+                </template>
+            </list-table>
 
-        <add-vendor :vendor-id="vendorId" v-if="loadAddVendor" />
+            <add-vendor :vendor-id="vendorId" v-if="loadAddVendor" />
 
+        </div>
     </div>
 </template>
 
 <script>
 import AddVendor from './AddVendor.vue'
-let ListTable = dokan_get_lib('ListTable');
-let Switches  = dokan_get_lib('Switches');
-let Search    = dokan_get_lib('Search');
+import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+
+let ListTable   = dokan_get_lib('ListTable');
+let Switches    = dokan_get_lib('Switches');
+let Search      = dokan_get_lib('Search');
+let AdminNotice = dokan_get_lib('AdminNotice');
 
 export default {
 
@@ -100,7 +117,9 @@ export default {
         ListTable,
         Switches,
         Search,
-        AddVendor
+        AddVendor,
+        UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
@@ -165,7 +184,8 @@ export default {
             vendors: [],
             loadAddVendor: false,
             dokanVendorHeaderArea: dokan.hooks.applyFilters( 'getDokanVendorHeaderArea', [] ),
-            isVendorSwitchingEnabled: false
+            isVendorSwitchingEnabled: false,
+            dokanVendorFilterSectionStart: dokan.hooks.applyFilters( 'dokanVendorFilterSectionStart', [] ),
         }
     },
 
@@ -199,7 +219,7 @@ export default {
         },
 
         sortBy() {
-            return this.$route.query.orderby || 'registered';
+            return this.$route.query.orderby || 'ID';
         },
 
         sortOrder() {
@@ -207,7 +227,7 @@ export default {
         },
 
         storeCategory() {
-            return this.$route.query.store_category || null;
+            return this.$route.query.store_categories || null;
         }
     },
 
@@ -247,12 +267,17 @@ export default {
         addNew() {
             this.loadAddVendor = true;
         },
-
+        updateVendorComponent (rerender=false) {
+            if (rerender) {
+                this.fetchVendors()
+            }
+        },
         doSearch(payload) {
             let self     = this;
             self.loading = true;
 
-            dokan.api.get(`/stores?search=${payload}`, {
+            dokan.api.get(`/stores`, {
+                search: payload,
                 page: this.currentPage,
                 orderby: this.sortBy,
                 order: this.sortOrder
@@ -283,15 +308,16 @@ export default {
 
             self.loading = true;
 
-            const data = {
+            let data = {
                 per_page: self.perPage,
                 page: self.currentPage,
                 status: self.currentStatus,
                 orderby: self.sortBy,
                 order: self.sortOrder,
-                store_category: self.storeCategory
+                store_categories: self.storeCategory
             };
 
+            data = dokan.hooks.applyFilters( 'DokanGetVendorArgs', data, this.$route.query );
             dokan.api.get('/stores', data)
                 .done((response, status, xhr) => {
                     self.vendors = response;
@@ -324,7 +350,7 @@ export default {
                     text: message,
                 });
 
-                if (this.currentStatus !== 'all' ) {
+                if ( 'all' === this.currentStatus || 'pending' === this.currentStatus || 'approved' === this.currentStatus ) {
                     this.fetchVendors();
                 }
             });

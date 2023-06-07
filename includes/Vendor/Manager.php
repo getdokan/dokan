@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use WeDevs\Dokan\Cache;
 use WP_Error;
 use WP_User_Query;
 use WeDevs\Dokan\Vendor\Vendor;
@@ -23,13 +24,13 @@ class Manager {
     /**
      * Get all vendors
      *
-     * @since 2.8.0
+     * @param array $args
      *
-     * @param  array  $args
+     * @since 2.8.0
      *
      * @return array
      */
-    public function all( $args = array() ) {
+    public function all( $args = [] ) {
         return $this->get_vendors( $args );
     }
 
@@ -40,56 +41,78 @@ class Manager {
      *
      * @return array
      */
-    public function get_vendors( $args = array() ) {
-        $vendors = array();
+    public function get_vendors( $args = [] ) {
+        $vendors = [];
 
-        $defaults = array(
-            'role__in'   => array( 'seller', 'administrator' ),
+        $defaults = [
+            'role__in'   => [ 'seller', 'administrator' ],
             'number'     => 10,
             'offset'     => 0,
-            'orderby'    => 'registered',
+            'orderby'    => 'ID',
             'order'      => 'ASC',
-            'status'     => 'approved',
+            'status'     => [ 'approved' ],
             'featured'   => '', // yes or no
-            'meta_query' => array(),
-        );
+            'meta_query' => [],
+            'fields'     => 'all',
+        ];
 
-        $args   = wp_parse_args( $args, $defaults );
-        $status = $args['status'];
+        $args = wp_parse_args( $args, $defaults );
 
-        // check if the user has permission to see pending vendors
-        if ( 'approved' != $args['status'] && current_user_can( 'manage_woocommerce' ) ) {
-            $status = $args['status'];
+        $status = (array) $args['status'];
+
+        $meta_query = [ 'relation' => 'OR' ];
+
+        foreach ( $status as $stat ) {
+            if ( $stat === 'all' ) {
+                continue;
+            }
+
+            $meta_query[] = [
+                'key'     => 'dokan_enable_selling',
+                'value'   => ( $stat == 'approved' ) ? 'yes' : 'no',
+                'compare' => '=',
+            ];
         }
 
-        if ( in_array( $status, array( 'approved', 'pending' ) ) ) {
-            $operator = ( $status == 'approved' ) ? '=' : '!=';
-
-            $args['meta_query'][] = array(
-                'key'     => 'dokan_enable_selling',
-                'value'   => 'yes',
-                'compare' => $operator
-            );
+        if ( ! empty( $args['meta_query'] ) ) {
+            $args['meta_query']['relation'] = 'AND';
+            $args['meta_query'][]           = $meta_query;
+        } else {
+            $args['meta_query'] = $meta_query;
         }
 
         // if featured
         if ( 'yes' == $args['featured'] ) {
-            $args['meta_query'][] = array(
+            $args['meta_query']['relation'] = 'AND';
+            $args['meta_query'][] = [
                 'key'     => 'dokan_feature_seller',
                 'value'   => 'yes',
-                'compare' => '='
-            );
+                'compare' => '=',
+            ];
         }
 
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $user_query = new WP_User_Query( $args );
-        $results    = $user_query->get_results();
+        $cache_group = 'vendors';
+        $cache_key   = 'vendors_' . md5( wp_json_encode( $args ) );
+        $user_query  = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $user_query ) {
+            $user_query = new WP_User_Query( $args );
+
+            Cache::set( $cache_key, $user_query, $cache_group );
+        }
+
+        $results = $user_query->get_results();
 
         $this->total_users = $user_query->total_users;
 
-        foreach ( $results as $key => $result ) {
+        if ( $args['fields'] !== 'all' ) {
+            return $results;
+        }
+
+        foreach ( $results as $result ) {
             $vendors[] = $this->get( $result );
         }
 
@@ -101,7 +124,7 @@ class Manager {
      *
      * @since 1.0.0
      *
-     * @return void
+     * @return int
      */
     public function get_total() {
         return $this->total_users;
@@ -112,7 +135,7 @@ class Manager {
      *
      * @param object|integer $vendor
      *
-     * @return object|vednor instance
+     * @return object|Vendor instance
      */
     public function get( $vendor ) {
         return new Vendor( $vendor );
@@ -123,11 +146,10 @@ class Manager {
      *
      * @param array $data
      *
-     * @return Dokan_Vendor|WP_Error on failure
+     * @return Vendor|WP_Error on failure
      */
     public function create( $data = [] ) {
         $defaults = [
-            'role'       => 'seller',
             'user_login' => '', // dokan_generate_username()
             'user_pass'  => wp_generate_password(),
         ];
@@ -138,6 +160,7 @@ class Manager {
         }
 
         $vendor_data = wp_parse_args( $data, $defaults );
+        $vendor_data['role'] = 'seller'; // this value can't be edited
         $vendor_id   = wp_insert_user( $vendor_data );
 
         if ( is_wp_error( $vendor_id ) ) {
@@ -145,16 +168,22 @@ class Manager {
         }
 
         // send vendor registration email to admin and vendor
-        if ( isset( $data['notify_vendor'] ) && dokan_validate_boolean( $data['notify_vendor' ] ) ) {
+        if ( isset( $data['notify_vendor'] ) && dokan_validate_boolean( $data['notify_vendor'] ) ) {
             wp_send_new_user_notifications( $vendor_id, 'both' );
         } else {
             wp_send_new_user_notifications( $vendor_id, 'admin' );
         }
 
+        /**
+         * @since 3.2.7 added $data parameter
+         */
         $store_data = apply_filters( 'dokan_vendor_create_data', [
             'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
             'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
-            'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [ 'paypal' => [ 'email' ], 'bank' => [] ],
+            'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [
+                'paypal' => [ 'email' ],
+                'bank'   => [],
+            ],
             'phone'                   => ! empty( $data['phone'] ) ? $data['phone'] : '',
             'show_email'              => ! empty( $data['show_email'] ) ? $data['show_email'] : 'no',
             'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
@@ -163,13 +192,13 @@ class Manager {
             'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
             'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
             'show_more_ptab'          => ! empty( $data['show_more_ptab'] ) ? $data['show_more_ptab'] : 'yes',
-            'store_ppp'               => ! empty( $data['store_ppp'] ) ? $data['store_ppp'] : 10,
+            'store_ppp'               => ! empty( $data['store_ppp'] ) ? $data['store_ppp'] : (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
             'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
             'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
-            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : []
-        ] );
+            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
+        ], $data );
 
         $vendor = dokan()->vendor->get( $vendor_id );
 
@@ -196,7 +225,14 @@ class Manager {
         }
 
         $vendor->update_meta( 'dokan_profile_settings', $store_data );
+        $vendor->update_meta( 'dokan_store_name', $store_data['store_name'] );
         $vendor->set_store_name( $store_data['store_name'] );
+
+        /**
+         * @since 3.2.7 hook introduced
+         */
+        do_action( 'dokan_before_create_vendor', $vendor->get_id(), $data );
+
         $vendor->save();
 
         do_action( 'dokan_new_vendor', $vendor_id );
@@ -223,37 +259,37 @@ class Manager {
         // default wp based user data
         if ( ! empty( $data['user_pass'] ) ) {
             wp_update_user(
-                array(
+                [
                     'ID'        => $vendor->get_id(),
-                    'user_pass' => $data['user_pass']
-                )
+                    'user_pass' => $data['user_pass'],
+                ]
             );
         }
 
         if ( ! empty( $data['first_name'] ) ) {
             wp_update_user(
-                array(
+                [
                     'ID'         => $vendor->get_id(),
-                    'first_name' => wc_clean( $data['first_name'] )
-                )
+                    'first_name' => wc_clean( $data['first_name'] ),
+                ]
             );
         }
 
         if ( ! empty( $data['last_name'] ) ) {
             wp_update_user(
-                array(
+                [
                     'ID'        => $vendor->get_id(),
-                    'last_name' => wc_clean( $data['last_name'] )
-                )
+                    'last_name' => wc_clean( $data['last_name'] ),
+                ]
             );
         }
 
         if ( ! empty( $data['user_nicename'] ) ) {
             wp_update_user(
-                array(
+                [
                     'ID'            => $vendor->get_id(),
-                    'user_nicename' => wc_clean( $data['user_nicename'] )
-                )
+                    'user_nicename' => wc_clean( $data['user_nicename'] ),
+                ]
             );
         }
 
@@ -263,19 +299,22 @@ class Manager {
             }
 
             wp_update_user(
-                array(
+                [
                     'ID'         => $vendor->get_id(),
                     'user_email' => sanitize_email( $data['email'] ),
-                )
+                ]
             );
         }
 
         // update vendor other metadata | @todo: move all other metadata to 'dokan_profile_settings' meta
         if ( current_user_can( 'manage_woocommerce' ) ) {
-            if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
-                $vendor->update_meta( 'dokan_enable_selling', 'yes' );
-            } else {
-                $vendor->update_meta( 'dokan_enable_selling', 'no' );
+            if ( isset( $data['enabled'] ) ) {
+                $previously_enabled = $vendor->is_enabled();
+                $newly_enabled      = dokan_validate_boolean( $data['enabled'] );
+
+                if ( $previously_enabled !== $newly_enabled ) {
+                    $newly_enabled ? $vendor->make_active() : $vendor->make_inactive();
+                }
             }
 
             if ( isset( $data['featured'] ) && dokan_validate_boolean( $data['featured'] ) ) {
@@ -294,7 +333,7 @@ class Manager {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
             }
 
-            if ( isset( $data['admin_commission'] ) && ( is_numeric( $data['admin_commission'] ) || '' === $data['admin_commission'] ) ) {
+            if ( isset( $data['admin_commission'] ) && ( is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', wc_format_decimal( $data['admin_commission'] ) );
             }
         }
@@ -302,6 +341,7 @@ class Manager {
         // update vendor store data
         if ( ! empty( $data['store_name'] ) ) {
             $vendor->set_store_name( $data['store_name'] );
+            $vendor->update_meta( 'dokan_store_name', $data['store_name'] );
         }
 
         if ( ! empty( $data['phone'] ) ) {
@@ -324,7 +364,7 @@ class Manager {
 
         // for backward compatibility we'll allow both `enable_tnc` and `toc_enabled` to set store trams and condition settings
         if ( ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) )
-            || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
+             || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
             $vendor->set_enable_tnc( 'on' );
         } else {
             $vendor->set_enable_tnc( 'off' );
@@ -412,6 +452,9 @@ class Manager {
     /**
      * Delete vendor with reassign data
      *
+     * @param $vendor_id
+     * @param null $reassign
+     *
      * @since 2.9.11
      *
      * @return array
@@ -422,21 +465,24 @@ class Manager {
         require_once ABSPATH . 'wp-admin/includes/user.php';
         wp_delete_user( $vendor_id, $reassign );
 
+        do_action( 'dokan_delete_vendor', $vendor_id );
+
         return $vendor;
     }
 
     /**
      * Get all featured Vendor
      *
-     * @return object
+     * @param array $args
+     *
+     * @return array
      */
-    public function get_featured( $args = array() ) {
-
-        $defaults = array(
+    public function get_featured( $args = [] ) {
+        $defaults = [
             'number'   => 10,
             'offset'   => 0,
             'featured' => 'yes',
-        );
+        ];
 
         $args = wp_parse_args( $args, $defaults );
 

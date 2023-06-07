@@ -1,15 +1,86 @@
 .dokan-withdraw-content {
 
-	.dokan-withdraw-area {
+    .dokan-withdraw-area {
 
-		h1 {
-			margin:0px 0px 20px;
-		}
+        h1 {
+            margin:0px 0px 20px;
+        }
 
-		ul li {
-			display:inline-block;
-			padding:0px 5px;
-		}
+        ul li {
+            display:inline-block;
+            padding:0px 5px;
+        }
 
-	}
+        .dokan-panel-body {
+            .dokan-panel-inner-container {
+                position: relative;
+                border-bottom: 1px solid #EDEDED;
+                padding: 15px 0;
+
+                &:last-child {
+                    border-bottom: none;
+                    margin-bottom: -15px;
+                }
+                &:first-child {
+                    margin-top: -15px;
+                }
+                p {
+                    margin-bottom: 5px;
+                }
+                .dokan-w8 {
+                    .dokan-withdraw-method-logo {
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin-right: 10px;
+                    }
+
+                    strong {
+                        a {
+                            color: #f05025;
+                        }
+                    }
+                }
+                .dokan-w5 {
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translate(10px, -50%);
+                    button, a.dokan-btn {
+                        float: right;
+                    }
+                    #dokan-withdraw-display-requests-button {
+                        float: right;
+                        text-decoration: none;
+
+                    }
+                }
+            }
+        }
+
+        .dokan-withdraw-status-filter-container {
+            margin-bottom: 15px;
+        }
+
+    }
+}
+.dokan-withdraw-popup {
+    h2 {
+        font-size: 17px;
+        padding: 15px 20px 10px;
+        margin: 0px;
+        border-bottom: 1px solid #eee;
+    }
+    .withdraw-schedule-select-container,
+    .dokan-form-horizontal .withdraw {
+        padding: 15px 30px 0;
+    }
+    .withdraw {
+        margin-top: 15px;
+    }
+    .footer {
+        width: 100%;
+        padding: 10px 20px;
+        text-align: right;
+        border-top: 1px solid #eee;
+    }
 }

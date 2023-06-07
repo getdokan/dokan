@@ -13,7 +13,10 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void
      **/
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-category-menu', 'description' => __( 'Dokan product category menu', 'dokan-lite' ) );
+        $widget_ops = array(
+			'classname' => 'dokan-category-menu',
+			'description' => __( 'Dokan product category menu', 'dokan-lite' ),
+		);
         parent::__construct( 'dokan-category-menu', 'Dokan: Product Category', $widget_ops );
     }
 
@@ -25,40 +28,38 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
-        extract( $args, EXTR_SKIP );
+        // load frontend script
+        wp_enqueue_script( 'dokan-frontend' );
 
-        $title = apply_filters( 'widget_title', $instance['title'] );
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
-        echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
-        if ( ! empty( $title ) )
+        if ( ! empty( $title ) ) {
             echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-
+        }
         ?>
-            <div id="cat-drop-stack" class="product-cat-stack-dokan">
+            <div class="product-cat-stack-dokan cat-drop-stack">
                 <?php
-                $args = apply_filters( 'dokan_category_widget', array(
-                    'hide_empty' => false,
-                    'orderby' => 'name',
-                    'depth' => 3
-                ) );
-
-                $categories = get_terms( 'product_cat', $args );
-
-                $args = array(
-                    'taxonomy' => 'product_cat',
-                    'selected_cats' => ''
+                $term_args = apply_filters(
+                    'dokan_category_widget', array(
+						'hide_empty' => false,
+						'orderby' => 'name',
+						'depth' => 3,
+                    )
                 );
 
+                $categories = get_terms( 'product_cat', $term_args );
+
                 $walker = new CategoryWalker();
-                echo "<ul>";
-                echo call_user_func_array( array(&$walker, 'walk'), array( $categories, 0, array()) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-                echo "</ul>";
+                echo '<ul>';
+                echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo '</ul>';
                 ?>
             </div>
         <?php
 
-        echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
     }
 
     /**
@@ -82,9 +83,11 @@ class ProductCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Product Category', 'dokan-lite' )
-        ) );
+        $instance = wp_parse_args(
+            (array) $instance, array(
+				'title' => __( 'Product Category', 'dokan-lite' ),
+            )
+        );
 
         $title = $instance['title'];
         ?>

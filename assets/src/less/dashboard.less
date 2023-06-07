@@ -34,6 +34,10 @@ div.media-sidebar a.edit-attachment{
         * {
             box-sizing: border-box;
         }
+
+        a:focus {
+            outline-color: #ff5a40;
+        }
     }
 
     header.dokan-dashboard-header {
@@ -90,6 +94,19 @@ div.media-sidebar a.edit-attachment{
                         color: #ccc;
                         padding-right: 5px;
                     }
+
+                    .pull-right {
+                        float: right;
+
+                        a {
+                            color: #6d6d6d;
+                            transition: .2s linear;
+
+                            &:hover {
+                              color: #000;
+                            }
+                        }
+                    }
                 }
 
                 &.big-counter {
@@ -128,10 +145,7 @@ div.media-sidebar a.edit-attachment{
                     }
 
                     #order-stats {
-                        width: 250px !important;
-                        height: 100% !important;
-                        margin-top: 15px;
-                        margin-left: -10px;
+                        padding: 20px;
                     }
                 }
 
@@ -153,6 +167,10 @@ div.media-sidebar a.edit-attachment{
                 }
 
                 .list-count {
+                    a {
+                        color: #6d6d6d;
+                    }
+
                     .count {
                         float: right;
                     }
@@ -186,6 +204,258 @@ div.media-sidebar a.edit-attachment{
                 .dokan-google-map {
                     width: 100%;
                     height: 300px;
+                }
+            }
+
+            .dokan-payment-settings-summary {
+
+                #vendor-dashboard-payment-settings-error {
+                    padding: 25px;
+                    display: none;
+                    background-color: palevioletred;
+                }
+
+                div.payment-methods-listing-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    background-color: #EEEEEE;
+
+                    > h2 {
+                        margin: 5px 0;
+                        flex-grow: 1;
+                    }
+
+                    > div {
+                        flex-grow: 2;
+                        text-align: right;
+
+                        #vendor-dashboard-payment-settings-toggle-dropdown {
+                            display: inline-block;
+
+                            #toggle-vendor-payment-method-drop-down {
+                                color: #333333;
+                                cursor: pointer;
+                                padding: 10px 35px 10px 10px;
+                                white-space: nowrap;
+                                border-radius: 3px;
+                                background: #DDDDDD;
+                                position: relative;
+
+                                &::after {
+                                    content: '\25BC';
+                                    display: inline-block;
+                                    transition: transform 300ms ease-in-out;
+                                    position: absolute;
+                                    right: 5px;
+                                    top: 20%;
+                                }
+                            }
+
+                            #vendor-payment-method-drop-down-wrapper {
+                                position: relative;
+                                top: 5px;
+                            }
+
+                            #vendor-payment-method-drop-down {
+                                display: none;
+                                max-height: 200px;
+                                border: 1px black solid;
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                background-color: white;
+
+                                ul {
+                                    list-style: none;
+                                    margin: 0;
+                                    max-height: 199px;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+
+                                    li:not(:last-child) {
+                                        border-bottom: 1px #dddddd solid;
+                                    }
+
+                                    li {
+                                        div {
+                                            white-space: nowrap;
+                                            display: flex;
+                                            align-items: center;
+                                            padding: 10px 20px 10px 10px;
+
+                                            img {
+                                                width: calc(12px + 1.5vw);
+                                                border: 1px solid lightgray;
+                                                border-radius: 50%;
+                                            }
+
+                                            span {
+                                                padding-right: 30px;
+                                                margin-left: 10px;
+                                                color: #333333;
+                                            }
+                                        }
+
+                                        &:hover {
+                                            background-color: #EFEFEF;
+                                        }
+                                    }
+                                }
+
+                                .no-content {
+                                    padding: 20px;
+                                    width: 300px;
+                                    text-align: center;
+                                }
+                            }
+
+                            &:hover {
+                                #toggle-vendor-payment-method-drop-down {
+                                    background-color: #CCCCCC;
+                                    &::after {
+                                        transform: rotate( 180deg );
+                                    }
+                                }
+
+                                #vendor-payment-method-drop-down {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                > ul {
+                    list-style: none;
+                    min-height: 200px;
+                    margin-left: 0;
+
+                    li {
+                        > div {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 10px;
+                            border-bottom: #CCCCCC solid 1px;
+
+                            > div {
+                                display: flex;
+                                align-items: center;
+
+                                img {
+                                    width: calc( 12px + 3vw );
+                                    border: 1px solid grey;
+                                    border-radius: 50%;
+                                }
+
+                                span {
+                                    margin-left: 10px; color: #333333
+                                }
+
+                                button {
+                                    margin-bottom: 3px !important;
+                                    min-height: 30px !important;
+                                }
+
+                                a {
+                                    button {
+                                        margin-left: 3px !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                > .no-content {
+                    min-height: 200px;
+                    padding: 20px;
+                }
+            }
+
+            #payment-form {
+                .payment-field-bank {
+                    > div.dokan-form-group {
+                        > div {
+                            background-color: white;
+                            box-shadow: 0 0 5px #bbbbbb;
+                            margin-right: 10px;
+                            padding: 20px;
+
+                            div.dokan-form-group {
+                                > div {
+                                    .dokan-text-left();
+
+                                    label {
+                                        color: black;
+                                        font-weight: bold;
+                                    }
+
+                                    select {
+                                        padding: 10px 15px;
+                                        border-radius: 5px;
+                                        min-height: 50px;
+                                    }
+                                }
+                            }
+
+                            div.data-warning {
+                                display: flex;
+                                box-shadow: 0 0 5px #AAAAAA;
+                                padding: 10px;
+                                margin-bottom: 10px;
+
+                                div.left-icon-container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    padding: 5px;
+
+                                    i {
+                                        color: orange;
+                                    }
+                                }
+
+                                div.vr-separator {
+                                    margin: 0 10px;
+                                    border-left: 1px #dddddd solid;
+                                }
+                            }
+
+                            .bottom-note {
+                                text-align: left;
+                                margin-bottom: 2em;
+                            }
+
+                            .bottom-actions {
+                                background-color: #EEEEEE;
+                                text-align: left;
+                                border-top: 1px #cccccc solid;
+                                padding: 20px;
+                                margin: -20px;
+                                position: relative;
+
+                                button.dokan-btn-danger {
+                                    position: absolute;
+                                    right: 20px;
+                                }
+
+                                a {
+                                    margin-left: 10px;
+                                    text-decoration: none;
+                                    color: #2B78E4;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                > div.dokan-form-group {
+                    > div.ajax_prev.dokan-w4 {
+                        margin-left: 24%;
+                    }
                 }
             }
         }
@@ -223,6 +493,22 @@ div.media-sidebar a.edit-attachment{
             p {
                 margin-bottom: 10px;
             }
+        }
+    }
+
+    div.chart-container > div.chart-placeholder > div.legend {
+        table {
+          border-spacing: 0.5em;
+          width: auto;
+          margin: 0;
+          border-collapse: separate;
+
+          td {
+              padding: 0;
+              text-align: left;
+              vertical-align: middle;
+              background: none;
+          }
         }
     }
 }

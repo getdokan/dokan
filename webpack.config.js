@@ -20,7 +20,10 @@ var entryPoint = {
     'vue-bootstrap': './src/utils/Bootstrap.js',
     'vue-vendor': vueVendor,
     'dokan-wp': './src/wp-packages/index.js',
-    'dokan-upgrade': './src/upgrade/main.js',
+    'dokan-promo-notice': './src/promo-notice/main.js',
+    'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
+    'product-category-ui': './assets/src/js/product-category-ui.js',
+    'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
     // style: './less/style.less',
 };
 
@@ -76,7 +79,7 @@ plugins.push(new OptimizeCSSPlugin({
 if ( isProduction() ) {
 
     plugins.push(new UglifyJsPlugin({
-        sourceMap: true,
+        sourceMap: false,
     }));
 
     plugins.push(new webpack.DefinePlugin({

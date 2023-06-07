@@ -12,10 +12,14 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
      * @see Walker::$db_fields
      * @var array
      */
-    var $db_fields = array('parent' => 'parent', 'id' => 'term_id');
+    public $db_fields = array(
+        'parent' => 'parent',
+        'id'     => 'term_id',
+    );
 
-    public function __construct( $post_id )  {
+    public function __construct( $post_id ) {
         $this->post_id = $post_id;
+        parent::__construct( $post_id );
     }
 
 
@@ -31,9 +35,9 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
             }
         }
 
-        $pad      = str_repeat( '&nbsp;', $depth * 3 );
+        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output   .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
+        $output   .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
         if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
@@ -41,12 +45,12 @@ class CategoryDropdownSingle extends TaxonomyDropdown {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         }
 
-        if ( $category->term_id == $args['selected'] ) {
+        if ( (int) $category->term_id === (int) $args['selected'] ) {
             $output .= ' selected="selected"';
         }
 
         $output .= '>';
-        $output .= $pad . $cat_name;
+        $output .= $pad . ' ' . $cat_name;
         $output .= "</option>\n";
     }
 }

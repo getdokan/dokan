@@ -24,13 +24,13 @@ class V_2_6_9 extends DokanUpgrader {
     public static function replace_seller_commission_by_seller() {
         $args = [
             'role'       => 'seller',
-            'meta_query' => [
+            'meta_query' => [ //phpcs:ignore
                 [
                     'key'     => 'dokan_seller_percentage',
                     'value'   => '',
-                    'compare' => '!='
-                ]
-            ]
+                    'compare' => '!=',
+                ],
+            ],
         ];
 
         $user_query = new WP_User_Query( $args );
@@ -45,13 +45,13 @@ class V_2_6_9 extends DokanUpgrader {
     public static function replace_product_commissions() {
         $args = [
             'post_type'  => 'product',
-            'meta_query' => [
+            'meta_query' => [ //phpcs:ignore
                 [
                     'key'     => '_per_product_commission',
                     'value'   => '',
-                    'compare' => '!='
-                ]
-            ]
+                    'compare' => '!=',
+                ],
+            ],
         ];
 
         $query    = new WP_Query( $args );
@@ -65,10 +65,10 @@ class V_2_6_9 extends DokanUpgrader {
     }
 
     public static function replace_category_commission_meta() {
-        $args      = [
+        $args = [
             'taxonomy'   => 'product_cat',
             'hide_empty' => true,
-            'meta_key'   => 'per_category_commission'
+            'meta_key'   => 'per_category_commission', //phpcs:ignore
         ];
 
         $the_query = new WP_Term_Query( $args );

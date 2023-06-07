@@ -16,12 +16,13 @@ class Dashboard extends DokanShortcode {
      *
      * @param array $atts
      *
-     * @return void
+     * @return string
      */
     public function render_shortcode( $atts ) {
         global $wp;
 
         if ( ! function_exists( 'WC' ) ) {
+            // translators: 1) wooCommerce installation url
             return sprintf( __( 'Please install <a href="%s"><strong>WooCommerce</strong></a> plugin first', 'dokan-lite' ), 'http://wordpress.org/plugins/woocommerce/' );
         }
 
@@ -71,8 +72,18 @@ class Dashboard extends DokanShortcode {
             return ob_get_clean();
         }
 
+        if ( isset( $wp->query_vars['reverse-withdrawal'] ) ) {
+            if ( ! current_user_can( 'dokan_view_withdraw_menu' ) ) {
+                dokan_get_template_part( 'global/no-permission' );
+            } else {
+                dokan_get_template_part( 'reverse-withdrawal/reverse-withdrawal' );
+            }
+
+            return ob_get_clean();
+        }
+
         if ( isset( $wp->query_vars['settings'] ) ) {
-            dokan_get_template_part('settings/store');
+            dokan_get_template_part( 'settings/store' );
 
             return ob_get_clean();
         }

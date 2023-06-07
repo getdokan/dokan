@@ -76,12 +76,12 @@ class Withdraws {
         $args = $this->args;
 
         // @note: empty variables may use in future
-        $fields = '*';
-        $join = '';
-        $where = '';
-        $groupby = '';
-        $orderby = '';
-        $limits = '';
+        $fields     = '*';
+        $join       = '';
+        $where      = '';
+        $groupby    = '';
+        $orderby    = '';
+        $limits     = '';
         $query_args = [ 1, 1 ];
 
         if ( isset( $args['ids'] ) && is_array( $args['ids'] ) ) {
@@ -91,7 +91,7 @@ class Withdraws {
             $placeholders = [];
             foreach ( $ids as $id ) {
                 $placeholders[] = '%d';
-                $query_args[] = $id;
+                $query_args[]   = $id;
             }
 
             $where .= ' and id in ( ' . implode( ',', $placeholders ) . ' )';
@@ -143,10 +143,14 @@ class Withdraws {
             $found_rows = 'SQL_CALC_FOUND_ROWS';
         }
 
-        $withdraws = $wpdb->get_results( $wpdb->prepare(
-            "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
-            ...$query_args
-        ), ARRAY_A );
+        // @codingStandardsIgnoreStart
+        $withdraws = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
+                ...$query_args
+            ), ARRAY_A
+        );
+        // @codingStandardsIgnoreEnd
 
         if ( ! empty( $withdraws ) ) {
             foreach ( $withdraws as $withdraw ) {
@@ -168,7 +172,7 @@ class Withdraws {
         global $wpdb;
 
         if ( ! isset( $this->total ) ) {
-            $this->total = absint( $wpdb->get_var( "SELECT FOUND_ROWS()" ) );
+            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
         }
 
         return $this->total;
@@ -185,7 +189,7 @@ class Withdraws {
         $total = $this->get_total();
 
         if ( ! $this->max_num_pages && $total && ! empty( $this->args['limit'] ) ) {
-            $limit = absint( $this->args['limit'] );
+            $limit               = absint( $this->args['limit'] );
             $this->max_num_pages = ceil( $total / $limit );
         }
 

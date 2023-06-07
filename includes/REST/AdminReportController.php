@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\REST;
 
 use DateTime;
+use WP_Error;
+use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 
@@ -28,21 +30,25 @@ class AdminReportController extends DokanRESTAdminController {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->base . '/summary', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_summary' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/summary', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_summary' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+				),
+            )
+        );
 
-        register_rest_route( $this->namespace, '/' . $this->base . '/overview', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_overview' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/overview', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_overview' ),
+					'permission_callback' => array( $this, 'check_permission' ),
+				),
+            )
+        );
     }
 
     /**
@@ -50,7 +56,7 @@ class AdminReportController extends DokanRESTAdminController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function get_summary( $request ) {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
@@ -69,7 +75,7 @@ class AdminReportController extends DokanRESTAdminController {
             'vendors'  => dokan_get_seller_count( $from, $to ),
             'sales'    => $sales['sales'],
             'orders'   => $sales['orders'],
-            'earning'  => $sales['earning']
+            'earning'  => $sales['earning'],
         );
 
         return rest_ensure_response( $data );
@@ -80,7 +86,7 @@ class AdminReportController extends DokanRESTAdminController {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function get_overview( $request ) {
         require_once DOKAN_INC_DIR . '/Admin/functions.php';
@@ -104,7 +110,7 @@ class AdminReportController extends DokanRESTAdminController {
         $order_commision = array();
 
         // initialize data
-        for ( $i = $start_date; $i <= $end_date; $i->modify( $date_modifier ) ){
+        for ( $i = $start_date; $i <= $end_date; $i->modify( $date_modifier ) ) {
             $date                     = $i->format( 'Y-m-d' );
             $labels[ $date ]          = $date;
             $order_counts[ $date ]    = 0;
@@ -114,12 +120,12 @@ class AdminReportController extends DokanRESTAdminController {
 
         // fillup real datea
         foreach ( $data as $row ) {
-            if ( 'month' == $group_by ) {
+            if ( 'month' === $group_by ) {
                 $date = new DateTime( $row->order_date );
                 $date->modify( 'first day of this month' );
                 $date = $date->format( 'Y-m-d' );
             } else {
-                $date = date( 'Y-m-d', strtotime( $row->order_date ) );
+                $date = dokan_current_datetime()->modify( $row->order_date )->format( 'Y-m-d' );
             }
 
             $order_counts[ $date ]    = (int) $row->total_orders;
@@ -136,7 +142,7 @@ class AdminReportController extends DokanRESTAdminController {
                     'fill'            => false,
                     'data'            => array_values( $order_amounts ),
                     'tooltipLabel'    => __( 'Total', 'dokan-lite' ),
-                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() ),
                 ),
                 array(
                     'label'           => __( 'Number of orders', 'dokan-lite' ),
@@ -150,9 +156,9 @@ class AdminReportController extends DokanRESTAdminController {
                     'borderColor'     => '#73a724',
                     'fill'            => false,
                     'data'            => array_values( $order_commision ),
-                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() )
+                    'tooltipPrefix'   => html_entity_decode( get_woocommerce_currency_symbol() ),
                 ),
-            )
+            ),
         );
 
         return rest_ensure_response( $response );

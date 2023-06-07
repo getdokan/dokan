@@ -15,14 +15,16 @@ class V_2_4_12 extends DokanUpgrader {
      * @return void
      */
     public static function upgrade_seller_meta() {
-        $query = new WP_User_Query( [
-            'role'    => 'seller',
-        ] );
+        $query = new WP_User_Query(
+            [
+				'role'    => 'seller',
+			]
+        );
 
         $sellers = $query->get_results();
 
         foreach ( $sellers as $seller ) {
-            $store_info    = dokan_get_store_info( $seller->ID );
+            $store_info = dokan_get_store_info( $seller->ID );
             update_user_meta( $seller->ID, 'dokan_store_name', esc_html( $store_info['store_name'] ) );
         }
     }

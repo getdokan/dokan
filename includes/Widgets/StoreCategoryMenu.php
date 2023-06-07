@@ -12,8 +12,11 @@ class StoreCategoryMenu extends WP_Widget {
      * @return void
      **/
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-menu', 'description' => __( 'Dokan Seller Store Menu', 'dokan-lite' ) );
-        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Category Menu', 'dokan-lite' ), $widget_ops );
+        $widget_ops = array(
+			'classname' => 'dokan-store-menu',
+			'description' => __( 'Dokan Seller Store Menu', 'dokan-lite' ),
+		);
+        parent::__construct( 'dokan-store-menu', __( 'Dokan: Store Product Category Menu', 'dokan-lite' ), $widget_ops );
     }
 
     /**
@@ -25,9 +28,10 @@ class StoreCategoryMenu extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP );
+            // load frontend script
+            wp_enqueue_script( 'dokan-frontend' );
 
-            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             $defaults = array(
                 'title' => __( 'Store Product Category', 'dokan-lite' ),
@@ -35,7 +39,7 @@ class StoreCategoryMenu extends WP_Widget {
 
             $instance = wp_parse_args( $instance, $defaults );
 
-            $title      = apply_filters( 'widget_title', $instance['title'] );
+            $title      = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
             $seller_id  = (int) get_query_var( 'author' );
 
             if ( ! empty( $title ) ) {
@@ -44,7 +48,7 @@ class StoreCategoryMenu extends WP_Widget {
 
             dokan_store_category_menu( $seller_id, $title );
 
-            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
         do_action( 'dokan_widget_store_categories_render', $args, $instance, $this );
@@ -72,9 +76,11 @@ class StoreCategoryMenu extends WP_Widget {
      * @return void Echoes it's output
      **/
     public function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Store Product Category', 'dokan-lite' ),
-        ) );
+        $instance = wp_parse_args(
+            (array) $instance, array(
+				'title' => __( 'Store Product Category', 'dokan-lite' ),
+            )
+        );
 
         $title = $instance['title'];
         ?>

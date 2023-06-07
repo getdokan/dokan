@@ -2,7 +2,11 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
+use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Product\ProductCache;
 use WP_Query;
+use WP_User;
 
 /**
  * Dokan Vendor
@@ -10,6 +14,39 @@ use WP_Query;
  * @since 2.6.10
  */
 class Vendor {
+    /**
+     * Set class public properties
+     *
+     * @since 3.7.19
+     *
+     * @return void
+     */
+    public function __set( $key, $value ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return;
+        }
+        $this->{$key} = $value;
+    }
+
+    /**
+     * Get public properties
+     *
+     * @since 3.7.19
+     *
+     * @return mixed|null
+     */
+    public function __get( $key ) {
+        // exclude private properties from accessing directly
+        if ( in_array( $key, [ 'shop_data', 'changes' ], true ) ) {
+            return null;
+        }
+        // check isset
+        if ( isset( $this->{$key} ) ) {
+            return $this->{$key};
+        }
+        return null;
+    }
 
     /**
      * The vendor ID
@@ -196,12 +233,12 @@ class Vendor {
             'icon'                    => 0,
             'gravatar'                => 0,
             'show_more_ptab'          => 'yes',
-            'store_ppp'               => 10,
+            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
             'store_seo'               => array(),
-            'dokan_store_time_enabled' => 'yes',
+            'dokan_store_time_enabled' => 'no',
             'dokan_store_open_notice'  => '',
             'dokan_store_close_notice' => ''
         );
@@ -232,7 +269,7 @@ class Vendor {
     public function get_shop_info() {
 
         // return if already populated
-        if ( $this->shop_data ) {
+        if ( ! empty( $this->shop_data ) ) {
             return $this->shop_data;
         }
 
@@ -251,7 +288,7 @@ class Vendor {
     public function get_info_part( $item ) {
         $info = $this->get_shop_info();
 
-        if ( array_key_exists( $item, $info ) ) {
+        if ( is_array( $info ) && array_key_exists( $item, $info ) ) {
             return $info[ $item ];
         }
     }
@@ -261,7 +298,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return int
      */
     public function get_id() {
         return $this->id;
@@ -529,6 +566,207 @@ class Vendor {
     }
 
     /**
+     * Get a vendor all published products
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_published_products() {
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key   = "get_published_products_{$this->get_id()}";
+
+        if ( false === ( $products = Cache::get_transient( $transient_key, $transient_group ) ) ) {
+            $products = dokan()->product->all( [
+                'author'      => $this->id,
+                'post_status' => 'publish',
+                'fields'      => 'ids'
+            ] );
+            $products = $products->posts;
+            Cache::set_transient( $transient_key, $products, $transient_group );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor all published products
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_best_selling_products() {
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key   = "get_best_selling_products_{$this->get_id()}";
+
+        if ( false === ( $products = Cache::get_transient( $transient_key, $transient_group ) ) ) {
+            $args = [
+                'author'         => $this->id,
+                'post_status'    => 'publish',
+                'fields'         => 'ids',
+                'posts_per_page' => -1,
+            ];
+
+            $args['meta_query'] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                [
+                    'key'     => '_stock_status',
+                    'value'   => 'outofstock',
+                    'compare' => '!=',
+                ],
+            ];
+
+            $products = dokan()->product->best_selling( $args );
+            $products = $products->posts;
+            Cache::set_transient( $transient_key, $products, $transient_group );
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a vendor store published products categories
+     *
+     * @param bool $best_selling
+     *
+     * @since 3.2.11
+     *
+     * @return array
+     */
+    public function get_store_categories( $best_selling = false ) {
+        $transient_group = "seller_product_data_{$this->get_id()}";
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_store_categories_' . wpml_get_current_language() . '_' . $this->get_id()  : 'get_store_categories_' . $this->get_id();
+        if ( $best_selling ) {
+            $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->get_id() : 'get_best_selling_categories_' . $this->get_id();
+        }
+
+        if ( false === ( $all_categories = Cache::get_transient( $transient_key, $transient_group ) ) ) {
+            $products = true === $best_selling ? $this->get_best_selling_products() : $this->get_published_products();
+            if ( empty( $products ) ) {
+                return [];
+            }
+
+            $all_categories = [];
+            $category_index = [];
+            foreach ( $products as $product_id ) {
+                $terms = get_the_terms( $product_id, 'product_cat' );
+
+                //allow when there is terms and do not have any wp_errors
+                if ( $terms && ! is_wp_error( $terms ) ) {
+                    foreach ( $terms as $term ) {
+                        if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                            // get extra information
+                            $display_type            = get_term_meta( $term->term_id, 'display_type', true );
+                            $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
+                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
+                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
+                            $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
+                            $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
+
+
+                            // get category image url
+                            if ( $thumbnail_id ) {
+                                $thumbnail = wp_get_attachment_thumb_url( $thumbnail_id );
+                                // get the image URL
+                                $image = wp_get_attachment_url( $thumbnail_id );
+                            } else {
+                                $image = $thumbnail = wc_placeholder_img_src();
+                            }
+
+                            // fix commission
+                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
+
+                            // set extra fields to term object
+                            $term->thumbnail = $thumbnail;
+                            $term->image     = $image;
+                            // set icon and icon color
+                            $term->icon         = $category_icon;
+                            $term->icon_color   = $category_icon_color;
+                            $term->display_type = $display_type;
+                            // set commissions
+                            $term->admin_commission_type = $category_commision_type;
+                            $term->admin_commission      = $category_commision;
+
+                            // finally store category data
+                            $all_categories[] = $term;
+                            $category_index[] = $term->term_id;
+                        }
+                    }
+                }
+            }
+
+            Cache::set_transient( $transient_key, $all_categories, $transient_group );
+        }
+
+        return $all_categories;
+    }
+
+    /**
+     * Get vendor used terms list.
+     *
+     * @since 3.5.0
+     *
+     * @param $vendor_id
+     * @param $taxonomy
+     *
+     * @return array|mixed
+     */
+    public function get_vendor_used_terms_list( $vendor_id, $taxonomy ){
+        $transient_group = "seller_taxonomy_widget_data_{$this->get_id()}";
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'product_taxonomy_'. $taxonomy .'_' . wpml_get_current_language() : 'product_taxonomy_'. $taxonomy;
+
+        // get the author's posts
+        $products = $this->get_published_products();
+        if ( empty( $products ) ) {
+            return [];
+        }
+
+        $author_terms = Cache::get_transient( $transient_key, $transient_group );
+
+        if ( false !== $author_terms ) {
+            return $author_terms;
+        }
+
+        $author_terms = [];
+        //loop over the posts and collect the terms
+        $category_index = [];
+        foreach ( $products as $product ) {
+            $terms = get_the_terms( $product, $taxonomy );
+            if ( ! $terms || is_wp_error( $terms ) ) {
+                continue;
+            }
+
+            foreach ( $terms as $term ) {
+                $args = [
+                    'nopaging' => true,
+                    'post_type' => 'product',
+                    'author' => $vendor_id,
+                    'tax_query' => [
+                        [
+                            'taxonomy' => $taxonomy,
+                            'field' => 'slug',
+                            'terms' => $term
+                        ],
+                    ],
+                    'fields' => 'ids'
+                ];
+
+                $all_posts = get_posts( $args );
+
+                if ( ! in_array( $term->term_id, $category_index, true ) ) {
+                    $term->count  = count( $all_posts );
+                    $category_index[] = $term->term_id;
+                    $author_terms[]   = $term;
+                }
+            }
+        }
+
+//        Cache::set_transient( $transient_key, $author_terms, $transient_group );
+
+        return $author_terms;
+    }
+
+    /**
      * Get vendor orders
      *
      * @since 3.0.0
@@ -560,42 +798,39 @@ class Vendor {
     /**
      * Get vendor total earnings
      *
-     * @return float
+     * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
         global $wpdb;
 
-        $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = 'dokan_seller_data_'.$this->id;
-        $cache_key     = 'dokan_seller_earnings_' . $this->id;
-        $earning       = wp_cache_get( $cache_key, $cache_group );
-        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-        $trn_type      = 'dokan_refund';
-        $refund_status = 'approved';
+        $on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
+        $cache_group = "seller_order_data_{$this->get_id()}";
+        $cache_key   = "seller_earnings_{$this->get_id()}_{$on_date->format('Y_m_d')}";
+        $earning     = Cache::get( $cache_key, $cache_group );
+        $on_date     = $on_date->format( 'Y-m-d H:i:s' );
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
+            $status            = dokan_withdraw_get_active_order_status_in_comma();
 
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $debit_balance  = $wpdb->get_row( $wpdb->prepare(
+                $debit_balance  = $wpdb->get_var( $wpdb->prepare(
                     "SELECT SUM(debit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
                     $this->id, $on_date ) );
 
-               $credit_balance = $wpdb->get_row( $wpdb->prepare(
+               $credit_balance = $wpdb->get_var( $wpdb->prepare(
                     "SELECT SUM(credit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
-                    $this->id, $on_date, $trn_type, $refund_status ) );
+                    $this->id, $on_date, 'dokan_refund', 'approved' ) );
 
-                $earnings         = $debit_balance->earnings - $credit_balance->earnings;
-                $result           = new \stdClass;
-                $result->earnings = $earnings;
+                $earning = floatval( $debit_balance - $credit_balance );
             } else {
-                $result = $wpdb->get_row( $wpdb->prepare(
+                $earning = (float) $wpdb->get_var( $wpdb->prepare(
                     "SELECT
                         SUM(net_amount) as earnings
                     FROM
@@ -605,10 +840,7 @@ class Vendor {
                     $this->id, $on_date ) );
             }
 
-            $earning = (float) $result->earnings;
-
-            wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan_cache_update_group( $cache_key , $cache_group );
+            Cache::set( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {
@@ -623,45 +855,55 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @param bool $formatted
+     * @param string $on_date
+     *
+     * @return float|string float if formatted is false, string otherwise
      */
-    public function get_balance( $formatted = true, $on_date= '' ) {
+    public function get_balance( $formatted = true, $on_date = '' ) {
         global $wpdb;
 
-        $status        = dokan_withdraw_get_active_order_status_in_comma();
-        $cache_group   = 'dokan_seller_data_'.$this->id;
-        $cache_key     = 'dokan_seller_balance_' . $this->id;
-        $earning       = wp_cache_get( $cache_key, $cache_group );
-        $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
-        $on_date       = $on_date ? date( 'Y-m-d', strtotime( $on_date ) ) : current_time( 'mysql' );
-        $date          = date( 'Y-m-d', strtotime( $on_date . ' -'.$threshold_day.' days' ) );
+        $seller_id     = $this->get_id() ? $this->get_id() : dokan_get_current_user_id();
+        $threshold_day = dokan_get_withdraw_threshold( $seller_id );
+        $on_date       = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
+        $date          = $on_date->modify( "- $threshold_day days" )->format( 'Y-m-d' );
+        $cache_group   = "withdraws_seller_{$seller_id}";
+        $cache_key     = "seller_balance_{$seller_id}_{$on_date->format( 'Y_m_d' )}";
+        $earning       = Cache::get( $cache_key, $cache_group );
+        $on_date       = $on_date->format( 'Y-m-d H:i:s' );
+
 
         if ( false === $earning ) {
             $installed_version = get_option( 'dokan_theme_version' );
+            $status            = dokan_withdraw_get_active_order_status_in_comma();
+
             if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
                 $result = $wpdb->get_row( $wpdb->prepare(
                         "SELECT SUM(debit) as earnings,
                         ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s ) as withdraw
                         from {$wpdb->prefix}dokan_vendor_balance
                         WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
-                    $this->id, $on_date, $this->id, $on_date ) );
+                    $seller_id, $on_date, $seller_id, $on_date ) );
             } else {
                 $result = $wpdb->get_row( $wpdb->prepare(
                     "SELECT SUM(net_amount) as earnings,
                     (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
                     FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
                     WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
-                    $this->id, $on_date, $this->id, $date ) );
+                    $seller_id, $on_date, $seller_id, $date ) );
             }
 
-            $earning = (float) $result->earnings - (float) round( $result->withdraw, wc_get_rounding_precision() );
+            $earning = (float) $result->earnings - (float) NumberUtil::round( $result->withdraw, wc_get_rounding_precision() );
 
-            wp_cache_set( $cache_key, $earning, $cache_group );
-            dokan_cache_update_group( $cache_key , $cache_group );
+            Cache::set( $cache_key, $earning, $cache_group );
         }
 
         if ( $formatted ) {
-            return apply_filters( 'dokan_get_formatted_seller_balance', wc_price( $earning ), $this->id );
+            $decimal = ( 0 === wc_get_price_decimals() ) ? 2 : wc_get_price_decimals();
+            return apply_filters(
+                'dokan_get_formatted_seller_balance',
+                wc_price( $earning, [ 'decimals' => $decimal ]
+            ), $this->id );
         }
 
         return apply_filters( 'dokan_get_seller_balance', $earning, $this->id );
@@ -672,7 +914,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return array
      */
     public function get_rating() {
         global $wpdb;
@@ -686,7 +928,7 @@ class Vendor {
             ORDER BY wc.comment_post_ID", $this->id ) );
 
         $rating_value = apply_filters( 'dokan_seller_rating_value', array(
-            'rating' => number_format( $result->average, 2 ),
+            'rating' => number_format( (float) $result->average, 2 ),
             'count'  => (int) $result->count
         ), $this->id );
 
@@ -698,7 +940,7 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return void
+     * @return void|string
      */
     public function get_readable_rating( $display = true ) {
         $rating = $this->get_rating( $this->id );
@@ -714,13 +956,8 @@ class Vendor {
             if ( function_exists( 'dokan_get_review_url' ) ) {
                 $review_text = sprintf( '<a href="%s">%s</a>', esc_url( dokan_get_review_url( $this->id ) ), $review_text );
             }
-            $html = '<span class="seller-rating">
-                        <span title=" '. esc_attr( $text ) . '" class="star-rating" itemtype="http://schema.org/Rating" itemscope="" itemprop="reviewRating">
-                            <span class="width" style="width: ' . $width . '%"></span>
-                            <span style=""><strong itemprop="ratingValue">' . $rating['rating'] . '</strong></span>
-                        </span>
-                    </span>
-                    <span class="text">' . $review_text . '</span>';
+            $stars = wc_get_rating_html( $rating['rating'], $rating['count'] );
+            $html = '<span class="text">' . $review_text . '</span>' . '<span class="seller-rating">' . $stars . '</span>';
         }
 
         if ( ! $display ) {
@@ -746,11 +983,13 @@ class Vendor {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return array
      */
     public function make_active() {
         $this->update_meta( 'dokan_enable_selling', 'yes' );
-        $this->change_product_status( 'publish' );
+
+        // change product status to publish
+        $this->change_product_status( 'revert' );
 
         do_action( 'dokan_vendor_enabled', $this->get_id() );
 
@@ -762,11 +1001,13 @@ class Vendor {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return array
      */
     public function make_inactive() {
         $this->update_meta( 'dokan_enable_selling', 'no' );
-        $this->change_product_status( 'pending' );
+
+        // change product status to pending
+        $this->change_product_status( 'change_status' );
 
         do_action( 'dokan_vendor_disabled', $this->get_id() );
 
@@ -774,37 +1015,20 @@ class Vendor {
     }
 
     /**
-     * Chnage product status when toggling seller active status
+     * Change product status when toggling seller active status
      *
      * @since 2.6.9
+     * @since 3.7.18 introduced new bg process to change product status
      *
-     * @param int $seller_id
-     * @param string $status
+     * @param string $task_type
      *
      * @return void
      */
-    function change_product_status( $status ) {
-        $args = array(
-            'post_type'      => 'product',
-            'post_status'    => ( $status == 'pending' ) ? 'publish' : 'pending',
-            'posts_per_page' => -1,
-            'author'         => $this->get_id(),
-            'orderby'        => 'post_date',
-            'order'          => 'DESC'
-        );
-
-        $product_query = new WP_Query( $args );
-        $products = $product_query->get_posts();
-
-        if ( $products ) {
-            foreach ( $products as $pro ) {
-                if ( 'publish' != $status ) {
-                    update_post_meta( $pro->ID, 'inactive_product_flag', 'yes' );
-                }
-
-                wp_update_post( array( 'ID' => $pro->ID, 'post_status' => $status ) );
-            }
-        }
+    public function change_product_status( $task_type ) {
+        $product_status_changer = dokan()->bg_process->change_vendor_product_status;
+        $product_status_changer->reset();
+        $product_status_changer->set_vendor_id( $this->get_id() );
+        $product_status_changer->add_to_queue( $task_type );
     }
 
     /**
@@ -955,7 +1179,7 @@ class Vendor {
         $this->set_social_prop( 'gplus', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -964,7 +1188,7 @@ class Vendor {
         $this->set_social_prop( 'twitter', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -973,7 +1197,7 @@ class Vendor {
         $this->set_social_prop( 'pinterest', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -982,7 +1206,7 @@ class Vendor {
         $this->set_social_prop( 'linkedin', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -991,7 +1215,7 @@ class Vendor {
         $this->set_social_prop( 'youtube', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set show email
      *
      * @param string
@@ -1000,7 +1224,7 @@ class Vendor {
         $this->set_social_prop( 'instagram', 'social', esc_url_raw( $value ) );
     }
 
-   /**
+    /**
      * Set flickr
      *
      * @param string
@@ -1025,6 +1249,15 @@ class Vendor {
      */
     public function set_bank_ac_name( $value ) {
         $this->set_payment_prop( 'ac_name', 'bank', wc_clean( $value ) );
+    }
+
+    /**
+     * Set bank ac type
+     *
+     * @param string $value
+     */
+    public function set_bank_ac_type( $value ) {
+        $this->set_payment_prop( 'ac_type', 'bank', wc_clean( $value ) );
     }
 
     /**
@@ -1183,7 +1416,7 @@ class Vendor {
      * @return void
      */
     public function update_meta( $key, $value ) {
-        update_user_meta( $this->get_id(), $key, wc_clean( $value ) );
+        update_user_meta( $this->get_id(), $key, $value );
     }
 
     /**
@@ -1212,7 +1445,7 @@ class Vendor {
      * @param string $social Name of social settings to set, fb, twitter
      * @param string $value
      */
-    protected function set_social_prop( $prop, $social = 'social', $value ) {
+    protected function set_social_prop( $prop, $social = 'social', $value = '' ) {
         if ( ! $this->shop_data ) {
             $this->popluate_store_data();
         }
@@ -1233,7 +1466,7 @@ class Vendor {
      * @param string $address
      * @param string value
      */
-    protected function set_address_prop( $prop, $address = 'address', $value ) {
+    protected function set_address_prop( $prop, $address = 'address', $value = '' ) {
         $this->set_social_prop( $prop, $address, $value );
     }
 
@@ -1244,7 +1477,7 @@ class Vendor {
      * @param string $paypal
      * @param mix value
      */
-    protected function set_payment_prop( $prop, $paypal = 'paypal', $value ) {
+    protected function set_payment_prop( $prop, $paypal = 'paypal', $value = '' ) {
         if ( ! $this->shop_data ) {
             $this->popluate_store_data();
         }

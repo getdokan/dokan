@@ -8,37 +8,46 @@
             <div class="dokan-form-group">
                 <div class="column">
                     <label for="account-name">{{ __( 'Account Name', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_name" :placeholder="__( 'Account Name', 'dokan-lite')">
+                    <input type="text" id="account-name" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_name" :placeholder="__( 'Account Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
                     <label for="account-number">{{ __( 'Account Number', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_number" :placeholder="__( '1233456789', 'dokan-lite')">
+                    <input type="text" id="account-number" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_number" :placeholder="__( '1233456789', 'dokan-lite')">
+                </div>
+
+                <div class="column">
+                    <label for="account-type">{{ __( 'Account Type', 'dokan-lite') }}</label>
+                    <select id="account-type" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_type" >
+                        <option value="">{{__('Please Select...', 'dokan-lite')}}</option>
+                        <option value="personal">{{__('Personal', 'dokan-lite')}}</option>
+                        <option value="business">{{__('Business', 'dokan-lite')}}</option>
+                    </select>
                 </div>
 
                 <div class="column">
                     <label for="bank-name">{{ __( 'Bank Name', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_name" :placeholder="__( 'Bank Name', 'dokan-lite')">
+                    <input type="text" id="bank-name" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_name" :placeholder="__( 'Bank Name', 'dokan-lite')">
                 </div>
 
                 <div class="column">
                     <label for="bank-address">{{ __( 'Bank Address', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_addr" :placeholder="__( 'Bank Address', 'dokan-lite')">
+                    <input type="text" id="bank-address" class="dokan-form-input" v-model="vendorInfo.payment.bank.bank_addr" :placeholder="__( 'Bank Address', 'dokan-lite')">
                 </div>
 
                 <div class="column">
                     <label for="routing-number">{{ __( 'Routing Number', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.routing_number" :placeholder="__( '123456789', 'dokan-lite')">
+                    <input type="text" id="routing-number" class="dokan-form-input" v-model="vendorInfo.payment.bank.routing_number" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
                     <label for="iban">{{ __( 'IBAN', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.iban" :placeholder="__( '123456789', 'dokan-lite')">
+                    <input type="text" id="iban" class="dokan-form-input" v-model="vendorInfo.payment.bank.iban" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <div class="column">
                     <label for="swift">{{ __( 'Swift', 'dokan-lite') }}</label>
-                    <input type="text" class="dokan-form-input" v-model="vendorInfo.payment.bank.swift" :placeholder="__( '123456789', 'dokan-lite')">
+                    <input type="text" id="swift" class="dokan-form-input" v-model="vendorInfo.payment.bank.swift" :placeholder="__( '123456789', 'dokan-lite')">
                 </div>
 
                 <!-- Add other bank fields here -->
@@ -52,16 +61,16 @@
             <div class="dokan-form-group">
 
                 <div :class="{'column': getId(), 'checkbox-group': ! getId()}">
-                    <label for="account-name">{{ __( 'PayPal Email', 'dokan-lite') }}</label>
-                    <input type="email" class="dokan-form-input" v-model="vendorInfo.payment.paypal.email" :placeholder="__( 'store@email.com', 'dokan-lite')">
+                    <label for="paypal-email">{{ __( 'PayPal Email', 'dokan-lite') }}</label>
+                    <input type="email" id="paypal-email" class="dokan-form-input" v-model="vendorInfo.payment.paypal.email" :placeholder="__( 'store@email.com', 'dokan-lite')">
                 </div>
 
                 <!-- Admin commission only load on vendor edit page -->
                 <template v-if="getId()">
                     <div class="column">
                         <div class="column">
-                            <label>{{ __( 'Admin Commission Type', 'dokan-lite' ) }}</label>
-                            <Multiselect @input="saveCommissionType" v-model="selectedCommissionType" :options="commissionTypes" track-by="name" label="label" :allow-empty="false" :multiselect="false" :searchable="false" :showLabels="false" />
+                            <label for="commission-type">{{ __( 'Admin Commission Type', 'dokan-lite' ) }}</label>
+                            <Multiselect id="commission-type" @input="saveCommissionType" v-model="selectedCommissionType" :options="commissionTypes" track-by="name" label="label" :allow-empty="false" :multiselect="false" :searchable="false" :showLabels="false" />
                         </div>
                     </div>
 
@@ -100,6 +109,13 @@
                         <span class="desc">{{ __( 'Make Vendor Featured', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
+
+                <!-- Add other payment fields here -->
+                <component v-for="(component, index) in afterFeaturedCheckbox"
+                    :key="index"
+                    :is="component"
+                    :vendorInfo="vendorInfo"
+                />
 
             </div>
 
@@ -156,6 +172,7 @@ export default {
             },
             getBankFields: dokan.hooks.applyFilters( 'getVendorBankFields', [] ),
             getPyamentFields: dokan.hooks.applyFilters( 'AfterPyamentFields', [] ),
+            afterFeaturedCheckbox: dokan.hooks.applyFilters( 'afterFeaturedCheckbox', [] ),
         }
     },
 

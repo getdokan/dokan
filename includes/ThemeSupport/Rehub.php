@@ -12,7 +12,7 @@ class Rehub {
      * The constructor
      */
     public function __construct() {
-        add_filter( 'dokan_load_hamburger_menu', [ $this, 'load_hamburger_menu'] );
+        add_filter( 'dokan_load_hamburger_menu', [ $this, 'load_hamburger_menu' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'set_content_type' ] );
     }
 

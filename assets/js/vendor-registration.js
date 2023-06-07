@@ -8,14 +8,15 @@ var Dokan_Vendor_Registration = {
         // bind events
         $( '.user-role input[type=radio]', form ).on( 'change', this.showSellerForm );
         $( '.tc_check_box', form ).on( 'click', this.onTOC );
-        $( '#shop-phone', form ).keydown( this.ensurePhoneNumber );
+        $( '#shop-phone', form ).on( 'keydown', this.ensurePhoneNumber );
         $( '#company-name', form ).on( 'focusout', this.generateSlugFromCompany );
 
-        $( '#seller-url', form ).keydown( this.constrainSlug );
-        $( '#seller-url', form ).keyup( this.renderUrl );
+        $( '#seller-url', form ).on( 'keydown', this.constrainSlug );
+        $( '#seller-url', form ).on( 'keyup', this.renderUrl );
         $( '#seller-url', form ).on( 'focusout', this.checkSlugAvailability );
 
         this.validationLocalized();
+        this.handlePasswordStrengthObserver();
         // this.validate(this);
     },
 
@@ -83,9 +84,17 @@ var Dokan_Vendor_Registration = {
                 return;
         }
 
+        if ( e.shiftKey && e.key === '.' ) {
+            return;
+        }
+
         // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
+        if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
+            return;
+        }
+
+        if ( isNaN( Number(e.key) ) ) {
+           e.preventDefault();
         }
     },
 
@@ -135,9 +144,11 @@ var Dokan_Vendor_Registration = {
             if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
+                $('.woocommerce-form-register__submit').prop('disabled', false);
             } else {
                 $('#url-alart').removeClass('text-success').addClass('text-danger');
                 $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
+                $('.woocommerce-form-register__submit').prop('disabled', true);
             }
 
             row.unblock();
@@ -160,12 +171,55 @@ var Dokan_Vendor_Registration = {
         dokan_messages.min         = $.validator.format( dokan_messages.min_msg );
 
         $.validator.messages = dokan_messages;
+    },
+
+    handlePasswordStrengthObserver: function() {
+        // Identify the password input element to observe.
+        const elementToObserve  = document.querySelector( '.woocommerce-form-register .password-input' ),
+              AllowedClassNames = [ 'good', 'strong' ];
+
+        // If registration password input field is not exists.
+        if ( ! elementToObserve ) {
+            return;
+        }
+
+        // Create a new instance of `MutationObserver` named `observer`.
+        const observer = new MutationObserver( ( mutationList, observer ) => {
+            for ( const mutation of mutationList ) {
+                // Check if the mutation element class list contains at least an allowed class names.
+                if ( AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
+                    this.ensureShopSlugAvailability();
+                }
+            }
+        });
+
+        // Call `observe()` on that MutationObserver instance.
+        observer.observe( elementToObserve, { subtree: true, childList: true } );
+    },
+
+    ensureShopSlugAvailability: function() {
+        const slugAvailabilityStatus = $( '#url-alart-mgs' ).hasClass( 'text-success' ),
+              registrationRoleInput  = $( '.vendor-customer-registration input[name="role"]:checked' ),
+              submitButton           = $( '.woocommerce-form-register__submit' );
+
+        // Check if the registration role is `seller`.
+        if ( 'seller' !== registrationRoleInput.val() ) {
+            return;
+        }
+
+        // Enable/disable submit button based on shop slug availability.
+        if ( slugAvailabilityStatus ) {
+            submitButton.prop( 'disabled', false );
+        } else {
+            submitButton.prop( 'disabled', true );
+        }
     }
 };
 
 // boot the class onReady
 $(function() {
-    Dokan_Vendor_Registration.init();
+    window.Dokan_Vendor_Registration = Dokan_Vendor_Registration;
+    window.Dokan_Vendor_Registration.init();
 
     $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 

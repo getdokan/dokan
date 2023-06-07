@@ -2,7 +2,7 @@
 /**
  * Dokan Header Menu Template
  *
- * @since 2.4
+ * @since   2.4
  *
  * @package dokan
  */
@@ -10,7 +10,13 @@
 
 <ul class="nav navbar-nav navbar-right">
     <li>
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo wp_kses_post( sprintf( __( 'Cart %s', 'dokan-lite' ), '<span class="dokan-cart-amount-top">(' . WC()->cart->get_cart_total() . ')</span>' ) ); ?> <b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <?php
+            // translators: 1) cart total amount
+            echo wp_kses_post( sprintf( __( 'Cart %s', 'dokan-lite' ), '<span class="dokan-cart-amount-top">(' . WC()->cart->get_cart_total() . ')</span>' ) );
+            ?>
+            <b class="caret"></b>
+        </a>
 
         <ul class="dropdown-menu">
             <li>
@@ -29,7 +35,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php esc_html_e( 'Vendor Dashboard', 'dokan-lite' ); ?> <b class="caret"></b></a>
 
                 <ul class="dropdown-menu">
-                    <li><a href="<?php echo esc_url( dokan_get_store_url( $user_id ) ); ?>" target="_blank"><?php esc_html_e( 'Visit your store', 'dokan-lite' ); ?> <i class="fa fa-external-link"></i></a></li>
+                    <li><a href="<?php echo esc_url( dokan_get_store_url( $user_id ) ); ?>" target="_blank"><?php esc_html_e( 'Visit your store', 'dokan-lite' ); ?> <i class="fas fa-external-link-alt"></i></a></li>
                     <li class="divider"></li>
                     <?php
                     foreach ( $nav_urls as $key => $item ) {

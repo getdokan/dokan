@@ -35,12 +35,12 @@ class V_3_0_4 extends DokanUpgrader {
         foreach ( self::get_tables() as $table => $columns ) {
             $table_name = $wpdb->prefix . $table;
 
-            if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) ) !== $table_name ) {
+            if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) !== $table_name ) {
                 continue;
             }
 
             foreach ( $columns as $column ) {
-                $wpdb->query( "ALTER TABLE `{$table_name}` MODIFY COLUMN `{$column}` DECIMAL(19,4)" );
+                $wpdb->query( "ALTER TABLE `{$table_name}` MODIFY COLUMN `{$column}` DECIMAL(19,4)" ); // phpcs:ignore
             }
         }
     }

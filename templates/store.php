@@ -6,11 +6,14 @@
  * @package dokan - 2014 1.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 
 $store_user   = dokan()->vendor->get( get_query_var( 'author' ) );
 $store_info   = $store_user->get_shop_info();
 $map_location = $store_user->get_location();
+$layout       = get_theme_mod( 'store_layout', 'left' );
 
 get_header( 'shop' );
 
@@ -18,11 +21,23 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
     yoast_breadcrumb( '<p id="breadcrumbs">', '</p>' );
 }
 ?>
-    <?php do_action( 'woocommerce_before_main_content' ); ?>
+<?php do_action( 'woocommerce_before_main_content' ); ?>
 
-    <?php dokan_get_template_part( 'store', 'sidebar', array( 'store_user' => $store_user, 'store_info' => $store_info, 'map_location' => $map_location ) ); ?>
+<div class="dokan-store-wrap layout-<?php echo esc_attr( $layout ); ?>">
 
-    <div id="dokan-primary" class="dokan-single-store dokan-w8">
+    <?php if ( 'left' === $layout ) { ?>
+        <?php
+        dokan_get_template_part(
+            'store', 'sidebar', [
+                'store_user'   => $store_user,
+                'store_info'   => $store_info,
+                'map_location' => $map_location,
+            ]
+        );
+        ?>
+    <?php } ?>
+
+    <div id="dokan-primary" class="dokan-single-store">
         <div id="dokan-content" class="store-page-wrap woocommerce" role="main">
 
             <?php dokan_get_template_part( 'store-header' ); ?>
@@ -35,11 +50,14 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
                     <?php woocommerce_product_loop_start(); ?>
 
-                        <?php while ( have_posts() ) : the_post(); ?>
+                    <?php
+                    while ( have_posts() ) :
+                        the_post();
+						?>
 
-                            <?php wc_get_template_part( 'content', 'product' ); ?>
+                        <?php wc_get_template_part( 'content', 'product' ); ?>
 
-                        <?php endwhile; // end of the loop. ?>
+                    <?php endwhile; // end of the loop. ?>
 
                     <?php woocommerce_product_loop_end(); ?>
 
@@ -56,8 +74,20 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
     </div><!-- .dokan-single-store -->
 
-    <div class="dokan-clearfix"></div>
+    <?php if ( 'right' === $layout ) { ?>
+        <?php
+        dokan_get_template_part(
+            'store', 'sidebar', [
+                'store_user'   => $store_user,
+                'store_info'   => $store_info,
+                'map_location' => $map_location,
+            ]
+        );
+        ?>
+    <?php } ?>
 
-    <?php do_action( 'woocommerce_after_main_content' ); ?>
+</div><!-- .dokan-store-wrap -->
+
+<?php do_action( 'woocommerce_after_main_content' ); ?>
 
 <?php get_footer( 'shop' ); ?>

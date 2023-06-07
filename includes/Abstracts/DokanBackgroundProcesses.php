@@ -83,7 +83,8 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
         // Adds every 5 minutes to the existing schedules.
         $schedules[ $this->identifier . '_cron_interval' ] = array(
             'interval' => MINUTE_IN_SECONDS * $interval,
-            'display'  => sprintf( __( 'Every %d Minutes' ), $interval ),
+            // translators: 1) interval period
+            'display'  => sprintf( __( 'Every %d Minutes', 'dokan-lite' ), $interval ),
         );
 
         return $schedules;
@@ -151,7 +152,7 @@ abstract class DokanBackgroundProcesses extends \WP_Background_Process {
     public function clear_process() {
         $processes = get_option( 'dokan_background_processes', array() );
 
-        if ( array_key_exists( static::class , $processes ) ) {
+        if ( array_key_exists( static::class, $processes ) ) {
             unset( $processes[ static::class ] );
             update_option( 'dokan_background_processes', $processes, 'no' );
         }

@@ -22,19 +22,6 @@ class Manager {
             return;
         }
 
-        $this->class_map = apply_filters( 'dokan_rest_api_class_map', array(
-            DOKAN_DIR . '/includes/REST/AdminReportController.php'           => 'WeDevs\Dokan\REST\AdminReportController',
-            DOKAN_DIR . '/includes/REST/AdminDashboardController.php'        => 'WeDevs\Dokan\REST\AdminDashboardController',
-            DOKAN_DIR . '/includes/REST/AdminMiscController.php'             => 'WeDevs\Dokan\REST\AdminMiscController',
-            DOKAN_DIR . '/includes/REST/StoreController.php'                 => '\WeDevs\Dokan\REST\StoreController',
-            DOKAN_DIR . '/includes/REST/ProductController.php'               => '\WeDevs\Dokan\REST\ProductController',
-            DOKAN_DIR . '/includes/REST/ProductAttributeController.php'      => '\WeDevs\Dokan\REST\ProductAttributeController',
-            DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php' => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
-            DOKAN_DIR . '/includes/REST/OrderController.php'                 => '\WeDevs\Dokan\REST\OrderController',
-            DOKAN_DIR . '/includes/REST/WithdrawController.php'              => '\WeDevs\Dokan\REST\WithdrawController',
-            DOKAN_DIR . '/includes/REST/StoreSettingController.php'              => '\WeDevs\Dokan\REST\StoreSettingController',
-        ) );
-
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
         add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
@@ -54,10 +41,32 @@ class Manager {
      * @since 1.2.0
      */
     public function register_rest_routes() {
+        // get rest api class map
+        $this->get_rest_api_class_map();
+
         foreach ( $this->class_map as $file_name => $controller ) {
+            // return if file not exists
+            if ( ! file_exists( $file_name ) ) {
+                continue;
+            }
+
+            // include file
             require_once $file_name;
-            $this->$controller = new $controller();
-            $this->$controller->register_routes();
+
+            // check if class exists
+            if ( ! class_exists( $controller ) ) {
+                continue;
+            }
+
+            // get controller object
+            $object = new $controller();
+            // check if object is instance of WP_REST_Controller
+            if ( ! is_a( $object, 'WP_REST_Controller' ) ) {
+                continue;
+            }
+
+            // register routes
+            $object->register_routes();
         }
     }
 
@@ -79,7 +88,7 @@ class Manager {
             'name'      => $store->get_name(),
             'shop_name' => $store->get_shop_name(),
             'url'       => $store->get_shop_url(),
-            'address'   => $store->get_address()
+            'address'   => $store->get_address(),
         );
 
         $response->set_data( $data );
@@ -129,7 +138,7 @@ class Manager {
      *
      * @since  2.9.13
      *
-     * @return data
+     * @return array
      */
     public function populate_admin_commission( $data, $store ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -155,8 +164,8 @@ class Manager {
     /**
      * Send email to admin on adding a new product
      *
-     * @param  WC_Data $object
-     * @param  WP_REST_Request $request
+     * @param  \WC_Data $object
+     * @param  \WP_REST_Request $request
      * @param  Boolean $creating
      *
      * @return void
@@ -191,5 +200,41 @@ class Manager {
         }
 
         return $data;
+    }
+
+    /**
+     * Generate Rest API class map
+     *
+     * @since 3.5.1
+     *
+     * @return void
+     */
+    private function get_rest_api_class_map() {
+        if ( ! empty( $this->class_map ) ) {
+            return;
+        }
+        $this->class_map = apply_filters(
+            'dokan_rest_api_class_map', array(
+                DOKAN_DIR . '/includes/REST/AdminReportController.php'           => 'WeDevs\Dokan\REST\AdminReportController',
+                DOKAN_DIR . '/includes/REST/AdminDashboardController.php'        => 'WeDevs\Dokan\REST\AdminDashboardController',
+                DOKAN_DIR . '/includes/REST/AdminMiscController.php'             => 'WeDevs\Dokan\REST\AdminMiscController',
+                DOKAN_DIR . '/includes/REST/StoreController.php'                 => '\WeDevs\Dokan\REST\StoreController',
+                DOKAN_DIR . '/includes/REST/ProductController.php'               => '\WeDevs\Dokan\REST\ProductController',
+                DOKAN_DIR . '/includes/REST/ProductControllerV2.php'             => '\WeDevs\Dokan\REST\ProductControllerV2',
+                DOKAN_DIR . '/includes/REST/ProductAttributeController.php'      => '\WeDevs\Dokan\REST\ProductAttributeController',
+                DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php' => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
+                DOKAN_DIR . '/includes/REST/OrderController.php'                 => '\WeDevs\Dokan\REST\OrderController',
+                DOKAN_DIR . '/includes/REST/WithdrawController.php'              => '\WeDevs\Dokan\REST\WithdrawController',
+                DOKAN_DIR . '/includes/REST/WithdrawControllerV2.php'            => '\WeDevs\Dokan\REST\WithdrawControllerV2',
+                DOKAN_DIR . '/includes/REST/StoreSettingController.php'          => '\WeDevs\Dokan\REST\StoreSettingController',
+                DOKAN_DIR . '/includes/REST/AdminNoticeController.php'           => '\WeDevs\Dokan\REST\AdminNoticeController',
+                DOKAN_DIR . '/includes/REST/ChangeLogController.php'             => '\WeDevs\Dokan\REST\ChangeLogController',
+                DOKAN_DIR . '/includes/REST/DummyDataController.php'             => '\WeDevs\Dokan\REST\DummyDataController',
+                DOKAN_DIR . '/includes/REST/OrderControllerV2.php'               => '\WeDevs\Dokan\REST\OrderControllerV2',
+                DOKAN_DIR . '/includes/REST/StoreSettingControllerV2.php'        => '\WeDevs\Dokan\REST\StoreSettingControllerV2',
+                DOKAN_DIR . '/includes/REST/VendorDashboardController.php'       => '\WeDevs\Dokan\REST\VendorDashboardController',
+                DOKAN_DIR . '/includes/REST/ProductBlockController.php'          => '\WeDevs\Dokan\REST\ProductBlockController',
+            )
+        );
     }
 }

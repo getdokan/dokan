@@ -37,17 +37,19 @@ class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
      *
      * @since 2.9.4
      *
-     * @return void
+     * @return array
      */
     private function update_shop_order_post_author( $paged ) {
         global $wpdb;
 
         $limit  = 100;
         $count  = $limit * $paged;
-        $orders = $wpdb->get_results( $wpdb->prepare(
-            "SELECT `id`, `post_author` FROM {$wpdb->posts} WHERE `post_type` = 'shop_order' LIMIT %d OFFSET %d",
-            $limit, $count
-        ));
+        $orders = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT `id`, `post_author` FROM {$wpdb->posts} WHERE `post_type` = 'shop_order' LIMIT %d OFFSET %d",
+                $limit, $count
+            )
+        );
 
         if ( empty( $orders ) ) {
             return;
@@ -56,18 +58,20 @@ class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
         foreach ( $orders as $key => $order ) {
             $customer_id = get_post_meta( $order->id, '_customer_user', true );
 
-            if ( $order->post_author != $customer_id ) {
-                wp_update_post( array(
-                    'ID'          => $order->id,
-                    'post_type'   => 'shop_order',
-                    'post_author' => $customer_id
-                ) );
+            if ( (int) $order->post_author !== (int) $customer_id ) {
+                wp_update_post(
+                    array(
+						'ID'          => $order->id,
+						'post_type'   => 'shop_order',
+						'post_author' => $customer_id,
+                    )
+                );
             }
         }
 
         return array(
             'updating' => 'shop_order_post_author',
-            'paged'    => ++$paged
+            'paged'    => ++$paged,
         );
     }
 }

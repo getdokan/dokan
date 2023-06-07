@@ -18,7 +18,10 @@ class StoreOpenClose extends WP_Widget {
      * @return void
      */
     public function __construct() {
-        $widget_ops = array( 'classname' => 'dokan-store-open-close', 'description' => __( 'Dokan Store Opening Closing Time', 'dokan-lite' ) );
+        $widget_ops = array(
+			'classname' => 'dokan-store-open-close',
+			'description' => __( 'Dokan Store Opening Closing Time', 'dokan-lite' ),
+		);
         parent::__construct( 'dokan-store-open-close-widget', __( 'Dokan: Store Opening Closing Time Widget', 'dokan-lite' ), $widget_ops );
     }
 
@@ -32,15 +35,13 @@ class StoreOpenClose extends WP_Widget {
      **/
     public function widget( $args, $instance ) {
         if ( dokan_is_store_page() ) {
-            extract( $args, EXTR_SKIP );
-
             $defaults = array(
                 'title' => __( 'Store Time', 'dokan-lite' ),
             );
 
             $instance = wp_parse_args( $instance, $defaults );
 
-            $title      = apply_filters( 'widget_title', $instance['title'] );
+            $title      = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
             $seller_id  = (int) get_query_var( 'author' );
 
             if ( empty( $seller_id ) ) {
@@ -48,30 +49,33 @@ class StoreOpenClose extends WP_Widget {
             }
 
             $store_info               = dokan_get_store_info( $seller_id );
-            $dokan_store_time         = isset ( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : '';
+            $dokan_store_time         = isset( $store_info['dokan_store_time'] ) ? $store_info['dokan_store_time'] : [];
             $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
             $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
 
-            if ( $show_store_open_close != 'on' ) {
+            if ( $show_store_open_close !== 'on' ) {
                 return;
             }
 
-            if ( $dokan_store_time_enabled != 'yes' || empty( $dokan_store_time ) ) {
+            if ( $dokan_store_time_enabled !== 'yes' || empty( $dokan_store_time ) ) {
                 return;
             }
 
-            echo $before_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 
             if ( ! empty( $title ) ) {
                 echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
             }
 
-            dokan_get_template_part( 'widgets/store-open-close', '', array(
-                'seller_id' => $seller_id,
-                'dokan_store_time' => $dokan_store_time,
-            ) );
+            dokan_get_template_part(
+                'widgets/store-open-close', '', [
+					'seller_id'        => $seller_id,
+					'dokan_store_time' => $dokan_store_time,
+                    'dokan_days'       => dokan_get_translated_days(),
+                ]
+            );
 
-            echo $after_widget; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         }
 
         do_action( 'dokan_widget_store_open_close_render', $args, $instance, $this );
@@ -101,9 +105,11 @@ class StoreOpenClose extends WP_Widget {
      * @return void Echoes it's output
      */
     public function form( $instance ) {
-        $instance = wp_parse_args( (array) $instance, array(
-            'title' => __( 'Store Time', 'dokan-lite' ),
-        ) );
+        $instance = wp_parse_args(
+            (array) $instance, array(
+				'title' => __( 'Store Time', 'dokan-lite' ),
+            )
+        );
 
         $title = $instance['title'];
         ?>

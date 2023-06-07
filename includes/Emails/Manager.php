@@ -16,7 +16,7 @@ class Manager {
         //Dokan Email filters for WC Email
         add_filter( 'woocommerce_email_classes', array( $this, 'load_dokan_emails' ), 35 );
         add_filter( 'woocommerce_template_directory', array( $this, 'set_email_template_directory' ), 15, 2 );
-        add_filter( 'woocommerce_email_actions' , array( $this, 'register_email_actions' ) );
+        add_filter( 'woocommerce_email_actions', array( $this, 'register_email_actions' ) );
     }
 
     /**
@@ -54,7 +54,7 @@ class Manager {
      * @return string
      */
     public function get_user_agent() {
-        $agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ): '';
+        $agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
         return substr( $agent, 0, 150 );
     }
 
@@ -81,15 +81,17 @@ class Manager {
      * @return $wc_emails
      */
     public function load_dokan_emails( $wc_emails ) {
-        $wc_emails['Dokan_Email_New_Product']             = new NewProduct();
-        $wc_emails['Dokan_Email_New_Product_Pending']     = new NewProductPending();
-        $wc_emails['Dokan_Email_Product_Published']       = new ProductPublished();
-        $wc_emails['Dokan_Email_New_Seller']              = new NewSeller();
-        $wc_emails['Dokan_Email_Vendor_Withdraw_Request'] = new VendorWithdrawRequest();
-        $wc_emails['Dokan_Email_Withdraw_Approved']       = new WithdrawApproved();
-        $wc_emails['Dokan_Email_Withdraw_Cancelled']      = new WithdrawCancelled();
-        $wc_emails['Dokan_Email_Contact_Seller']          = new ContactSeller();
-        $wc_emails['Dokan_Email_New_Order']               = new VendorNewOrder();
+        $wc_emails['Dokan_Email_New_Product']                = new NewProduct();
+        $wc_emails['Dokan_Email_New_Product_Pending']        = new NewProductPending();
+        $wc_emails['Dokan_Email_Product_Published']          = new ProductPublished();
+        $wc_emails['Dokan_Email_New_Seller']                 = new NewSeller();
+        $wc_emails['Dokan_Email_Vendor_Withdraw_Request']    = new VendorWithdrawRequest();
+        $wc_emails['Dokan_Email_Withdraw_Approved']          = new WithdrawApproved();
+        $wc_emails['Dokan_Email_Withdraw_Cancelled']         = new WithdrawCancelled();
+        $wc_emails['Dokan_Email_Contact_Seller']             = new ContactSeller();
+        $wc_emails['Dokan_Email_New_Order']                  = new VendorNewOrder();
+        $wc_emails['Dokan_Email_Completed_Order']            = new VendorCompletedOrder();
+        $wc_emails['Dokan_Email_Reverse_Withdrawal_Invoice'] = new ReverseWithdrawalInvoice();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -106,8 +108,8 @@ class Manager {
      * @return string
      */
     public function set_email_template_directory( $template_dir, $template ) {
-
-        $dokan_emails = apply_filters( 'dokan_email_list',
+        $dokan_emails = apply_filters(
+            'dokan_email_list',
             array(
                 'new-product.php',
                 'new-product-pending.php',
@@ -117,13 +119,14 @@ class Manager {
                 'withdraw-new.php',
                 'withdraw-cancel.php',
                 'withdraw-approve.php',
-                'vendor-new-order.php'
+                'vendor-new-order.php',
+                'vendor-completed-order.php',
             )
         );
 
         $template_name = basename( $template );
 
-        if ( in_array( $template_name, $dokan_emails ) ) {
+        if ( in_array( $template_name, $dokan_emails, true ) ) {
             return 'dokan';
         }
 
@@ -140,17 +143,18 @@ class Manager {
      * @return $actions
      */
     public function register_email_actions( $actions ) {
-
-        $dokan_email_actions = apply_filters( 'dokan_email_actions', array(
-            'dokan_new_product_added',
-            'dokan_email_trigger_new_pending_product',
-            'dokan_new_seller_created',
-            'dokan_after_withdraw_request',
-            'dokan_withdraw_request_approved',
-            'dokan_withdraw_request_cancelled',
-            'dokan_pending_product_published_notification',
-            'dokan_trigger_contact_seller_mail'
-        ) );
+        $dokan_email_actions = apply_filters(
+            'dokan_email_actions', array(
+				'dokan_new_product_added',
+				'dokan_email_trigger_new_pending_product',
+				'dokan_new_seller_created',
+				'dokan_after_withdraw_request',
+				'dokan_withdraw_request_approved',
+				'dokan_withdraw_request_cancelled',
+				'dokan_pending_product_published_notification',
+				'dokan_trigger_contact_seller_mail',
+            )
+        );
 
         foreach ( $dokan_email_actions as $action ) {
             $actions[] = $action;
@@ -181,7 +185,7 @@ class Manager {
             '%user_agent%',
             '%message%',
             '%site_name%',
-            '%site_url%'
+            '%site_url%',
         );
 
         $replace = array(
@@ -191,23 +195,25 @@ class Manager {
             $this->get_user_agent(),
             $message,
             $this->get_from_name(),
-            home_url()
+            home_url(),
         );
-
-        $subject = sprintf( __( '"%s" sent you a message from your "%s" store', 'dokan-lite' ), $from_name, $this->get_from_name() );
-        $body = str_replace( $find, $replace, $body);
+        // translators: %1: from name, %2: from name
+        $subject = sprintf( __( '"%1$s" sent you a message from your "%2$s" store', 'dokan-lite' ), $from_name, $this->get_from_name() );
+        $body = str_replace( $find, $replace, $body );
         $headers = array( "Reply-To: {$from_name}<{$from_email}>" );
 
         $this->send( $seller_email, $subject, $body, $headers );
 
-        do_action( 'dokan_contact_seller_email_sent', array(
-            'to'           => $seller_email,
-            'subject'      => $subject,
-            'message'      => $body,
-            'sender_email' => $from_email,
-            'sender_name'  => $from_name,
-            'headers'      => $headers,
-        ) );
+        do_action(
+            'dokan_contact_seller_email_sent', array(
+				'to'           => $seller_email,
+				'subject'      => $subject,
+				'message'      => $body,
+				'sender_email' => $from_email,
+				'sender_name'  => $from_name,
+				'headers'      => $headers,
+            )
+        );
     }
 
     /**
@@ -243,8 +249,9 @@ class Manager {
             home_url(),
         );
 
-        $subject = sprintf( __( '[%s] Refund Request %s', 'dokan-lite' ), $this->get_from_name(), $status );
-        $body = str_replace( $find, $replace, $body);
+        // translators: %1: from name, %2: status
+        $subject = sprintf( __( '[%1$s] Refund Request %2$s', 'dokan-lite' ), $this->get_from_name(), $status );
+        $body = str_replace( $find, $replace, $body );
 
         $this->send( $seller_mail, $subject, $body );
         do_action( 'dokan_after_refund_seller_mail', $seller_mail, $subject, $body );
@@ -276,9 +283,9 @@ class Manager {
             $this->get_from_name(),
             home_url(),
         );
-
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Refund Request', 'dokan-lite' ), $this->get_from_name() );
-        $body = str_replace( $find, $replace, $body);
+        $body = str_replace( $find, $replace, $body );
         $this->send( $this->admin_email(), $subject, $body );
         do_action( 'after_dokan_refund_request', $this->admin_email(), $subject, $body );
     }
@@ -303,7 +310,7 @@ class Manager {
             '%withdraw_page%',
             '%site_name%',
             '%site_url%',
-            '%notes%'
+            '%notes%',
         );
 
         $replace = array(
@@ -314,10 +321,10 @@ class Manager {
             admin_url( 'admin.php?page=dokan#/withdraw?status=pending' ),
             $this->get_from_name(),
             home_url(),
-            $note
+            $note,
         );
 
-        $body = str_replace( $find, $replace, $body);
+        $body = str_replace( $find, $replace, $body );
 
         return $body;
     }
@@ -333,7 +340,7 @@ class Manager {
         ob_start();
         dokan_get_template_part( 'emails/withdraw-new' );
         $body = ob_get_clean();
-
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Withdraw Request', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
@@ -356,6 +363,7 @@ class Manager {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your Withdraw Request has been approved', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method );
 
@@ -379,6 +387,7 @@ class Manager {
         $body = ob_get_clean();
 
         $user = get_user_by( 'id', $user_id );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your Withdraw Request has been cancelled', 'dokan-lite' ), $this->get_from_name() );
         $body = $this->prepare_withdraw( $body, $user, $amount, $method, $note );
 
@@ -394,7 +403,6 @@ class Manager {
      * @return void
      */
     public function new_seller_registered_mail( $seller_id ) {
-
         ob_start();
         dokan_get_template_part( 'emails/new-seller-registered' );
         $body = ob_get_clean();
@@ -406,7 +414,7 @@ class Manager {
             '%store_url%',
             '%seller_edit%',
             '%site_name%',
-            '%site_url%'
+            '%site_url%',
         );
 
         $replace = array(
@@ -416,8 +424,9 @@ class Manager {
             $this->get_from_name(),
             home_url(),
         );
-
-        $body = str_replace( $find, $replace, $body);
+        // translators: %s: from name
+        $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Vendor Registered', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
@@ -435,11 +444,11 @@ class Manager {
     public function new_product_added( $product_id, $status = 'pending' ) {
         $template = 'emails/new-product-pending';
 
-        if ( $status == 'publish' ) {
+        if ( 'publish' === $status ) {
             $template = 'emails/new-product';
         }
         ob_start();
-        dokan_get_template_part($template);
+        dokan_get_template_part( $template );
         $body = ob_get_clean();
 
         $product       = wc_get_product( $product_id );
@@ -456,7 +465,7 @@ class Manager {
             '%category%',
             '%product_link%',
             '%site_name%',
-            '%site_url%'
+            '%site_url%',
         );
 
         $replace = array(
@@ -470,7 +479,8 @@ class Manager {
             home_url(),
         );
 
-        $body = str_replace( $find, $replace, $body);
+        $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] New Product Added', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $this->admin_email(), $subject, $body );
@@ -498,7 +508,7 @@ class Manager {
             '%product_link%',
             '%product_edit_link%',
             '%site_name%',
-            '%site_url%'
+            '%site_url%',
         );
 
         $replace = array(
@@ -510,7 +520,8 @@ class Manager {
             home_url(),
         );
 
-        $body = str_replace( $find, $replace, $body);
+        $body = str_replace( $find, $replace, $body );
+        // translators: %s: from name
         $subject = sprintf( __( '[%s] Your product has been approved!', 'dokan-lite' ), $this->get_from_name() );
 
         $this->send( $seller->user_email, $subject, $body );

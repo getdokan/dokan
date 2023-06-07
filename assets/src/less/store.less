@@ -9,13 +9,205 @@
     }
 }
 
+.dokan-store-wrap {
+    display: flex;
+    margin: 20px 0;
+    flex-direction: column;
+
+    &.layout-left {
+        flex-direction: column-reverse;
+    }
+
+    @media (min-width: 1000px) {
+        &.layout-left,
+        &.layout-right {
+            flex-direction: row;
+        }
+
+        .dokan-store-sidebar {
+            flex: 0 1 26%;
+        }
+
+        .dokan-single-store {
+            flex: 0 1 100%;
+        }
+
+        &.layout-left .dokan-store-sidebar {
+            margin-right: 4%;
+        }
+
+        &.layout-right .dokan-store-sidebar {
+            margin-left: 4%;
+        }
+    }
+
+}
+
+.dokan-store-products-filter-area {
+    margin-bottom: 30px;
+
+    .product-name-search {
+        height: 40px;
+        border: solid 1px #eee;
+        background-color: #fff;
+        float: left;
+        width: 250px;
+    }
+
+    .product-name-search:focus {
+        outline: 0px;
+    }
+
+    .orderby-search {
+        height: 40px;
+        border: solid 1px #eee;
+        background-color: #fff;
+        float: right;
+    }
+
+    .search-store-products {
+        height: 40px;
+        height: 40px;
+        border: solid 1px #ccc;
+        background-color: #eee;
+        float: left;
+        line-height: 40px;
+        padding: 0px 25px;
+    }
+
+    .dokan-store-products-ordeby {
+        width: 100%;
+        margin-right: 0px;
+        position: relative;
+    }
+
+    .dokan-store-products-search-has-results {
+        border: 1px solid #e0e0e0;
+    }
+
+    #dokan-store-products-search-result {
+        display: none;
+        position: absolute;
+        width: 100%;
+        background: #ffffff;
+        z-index: 15;
+        transform: translateY(-1px);
+        max-width: 349px;
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        top: 42px;
+
+        ul{
+            list-style: none;
+            margin:0 !important;
+            padding:15px;
+        }
+
+        li{
+            display: block;
+            padding: 8px 0;
+            position: relative;
+            border-bottom: 1px dashed #e0e0e0;
+            margin-left: 0px;
+        }
+
+        li:last-child{
+            border-bottom: none;
+        }
+
+        a{
+            display: table;
+            width: 100%;
+        }
+
+        a > * {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        .dokan-ls-product-image{
+            width: 40px;
+            max-width: 40px;
+        }
+
+        .dokan-ls-product-data {
+            padding-left: 20px;
+
+            div:not(.dokan-ls-product-categories){
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .dokan-ls-product-price{
+                position: absolute;
+                top: 12px;
+                right: 0;
+            }
+
+            .dokan-ls-product-stock{
+                padding: 4px 8px;
+                background: #eeeeee;
+                border-radius: 4px;
+                position: absolute;
+                bottom: 10px;
+                right: 0;
+            }
+        }
+
+        h3{
+            display: block;
+            margin: 0px;
+            font-size: 15px;
+        }
+
+        .dokan-ls-product-categories {
+
+            span{
+                display: inline-block;
+                margin-right: 4px;
+                font-size: 13px;
+            }
+
+            span:after{
+                content: ",";
+            }
+
+            span:last-child:after{
+                content: "";
+            }
+
+            span:last-child{
+                margin-right:0;
+            }
+        }
+
+        .product-price{
+            font-size: 14px;
+            font-weight: bold;
+            bottom: 10px;
+            text-align: right;
+        }
+
+        .dokan-ls-sale-price{
+            color: #8f949b;
+            text-decoration: line-through;
+            margin-left: 8px;
+        }
+    }
+
+    .dokan-ajax-search-loader{
+        background-image: url('../images/spinner-2x.gif');
+        background-position:right center;
+        background-repeat: no-repeat;
+        background-size: 25px 25px;
+        z-index: 999;
+    }
+}
+
 // store
 .dokan-single-store {
     margin: 0;
-
-    &.dokan-w8 {
-        width: 72%;
-    }
 
     .profile-frame {
         padding: 0px;
@@ -69,6 +261,8 @@
                                 background: #fff;
                                 width: 80px;
                                 height: 80px;
+                                margin-left: auto;
+                                margin-right: auto;
                             }
 
                             &.profile-img-square img {
@@ -83,9 +277,15 @@
                             font-weight: bold;
                             padding: 0;
                             font-size: 20px;
-                            text-align: center;
                             margin: 0 0 18px;
                             color: #fff;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            svg {
+                                margin-left: 5px;
+                            }
                         }
                     }
 
@@ -93,6 +293,8 @@
                         padding: 0 30px;
 
                         .dokan-store-info {
+                            cursor: pointer;
+                            position: relative;
                             list-style: none;
 
                             .dokan-store-phone,
@@ -100,6 +302,150 @@
                                 a {
                                     text-decoration: none;
                                     color: inherit;
+                                }
+                            }
+
+                            span.fa-angle-down {
+                                margin-left: 10px;
+                            }
+
+                            .dokan-store-open-close {
+                                .store-open-close-notice {
+                                    display: flex;
+                                    align-items: center;
+                                    position: relative;
+                                    z-index: 1;
+
+                                    .store-notice {
+                                        min-width: 96px;
+                                    }
+
+                                    #vendor-store-times {
+                                        top: 110%;
+                                        left: -20%;
+                                        color: #3E474F;
+                                        width: 310px;
+                                        z-index: 1;
+                                        display: none;
+                                        padding: 1.5em 2em;
+                                        overflow: auto;
+                                        position: absolute;
+                                        max-height: 435px;
+                                        background: #fff;
+                                        box-shadow: 0 10px 15px -3px #00000040, 0 4px 6px -4px #00000010;
+                                        border-radius: 6px;
+
+                                        .store-times-heading {
+                                            margin: 10px 0 25px;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+
+                                            i.fa-calendar-day {
+                                                color: #2471A9;
+                                                width: 30px;
+                                                margin: 0 10px 0 -10px;
+                                                height: 30px;
+                                                border: 1px solid #CBD9DC;
+                                                display: flex;
+                                                align-items: center;
+                                                border-radius: 50%;
+                                                justify-content: center;
+                                            }
+
+                                            h4 {
+                                                font-size: 20px;
+                                                font-weight: 700;
+                                                margin-bottom: 0;
+                                            }
+                                        }
+
+                                        span {
+                                            margin-left: 10px;
+                                        }
+
+                                        .store-time-tags {
+                                            display: flex;
+                                            font-size: 15px;
+                                            margin-bottom: 12px;
+
+                                            .store-days {
+                                                flex: 2.3;
+                                            }
+
+                                            .current_day,
+                                            .current_time {
+                                                font-weight: 700;
+                                            }
+
+                                            .store-times {
+                                                flex: 4;
+
+                                                .store-open,
+                                                .store-close {
+                                                    cursor: pointer;
+                                                    display: inline-block;
+                                                    padding: 2px 3px 3.5px;
+                                                    transition: 0.5s ease;
+                                                    list-style: none;
+                                                    margin-bottom: 5.5px;
+                                                    border-radius: 0.375rem;
+                                                    text-decoration: none;
+                                                }
+
+                                                .store-close {
+                                                    color: #D07272;
+                                                    padding: 1px 12px;
+                                                    border-radius: 16px;
+                                                    background-color: #F8E8E7;
+                                                    max-width: 75px;
+                                                    text-align: center;
+                                                }
+                                            }
+
+                                            &:last-child {
+                                                margin-bottom: 0;
+                                            }
+                                        }
+
+                                        &::-webkit-scrollbar {
+                                            width: 10px;
+                                        }
+
+                                        &::-webkit-scrollbar-thumb {
+                                            background: #8d9399;
+                                            border-radius: 5px;
+                                        }
+
+                                        &::-webkit-scrollbar-thumb:hover {
+                                            background: #555;
+                                        }
+
+                                        &:hover {
+                                            display: block;
+                                        }
+                                    }
+
+                                    &:hover {
+                                        #vendor-store-times {
+                                            display: block;
+                                        }
+
+                                        span.fa-angle-down {
+                                            &:after {
+                                                content: "";
+                                                top: 75%;
+                                                right: 44%;
+                                                width: 25px;
+                                                height: 40px;
+                                                z-index: 1;
+                                                position: absolute;
+                                                transform: rotate(45deg);
+                                                border-radius: 5px;
+                                                background-color: #fff;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -141,7 +487,11 @@
                                     color: #55acee;
                                 }
 
-                                &.fa-linkedin-square {
+                                &.fa-pinterest-square {
+                                    color: #bd081c;
+                                }
+
+                                &.fa-linkedin {
                                     color: #007bb5;
                                 }
 
@@ -171,19 +521,17 @@
 
                 .profile-info-summery-wrapper {
                     position: relative;
-                    height: 135px;
                     background-color: #fff;
                     color: inherit;
                     border: 1px solid @borderColor;
                     padding: 0 15px;
 
                     .profile-info-summery {
+                        top: -55px;
+                        color: #444;
                         width: 100%;
                         padding: 0;
-                        position: absolute;
-                        top: -55px;
-                        height: 140px;
-                        color: #444;
+                        position: relative;
                         background: none;
 
                         .profile-info-head {
@@ -234,15 +582,13 @@
                 }
 
                 .profile-info-summery-wrapper {
+                    border: 1px solid @borderColor;
                     position: relative;
 
                     .profile-info-summery {
                         background-color: #fff;
                         width: 100%;
                         padding: 10px;
-                        overflow: hidden;
-                        border: 1px solid @borderColor;
-
 
                         .profile-info-head {
                             width: 150px;
@@ -273,7 +619,23 @@
                             }
 
                             .dokan-store-info {
+                                margin: 0;
                                 padding-left: 25px;
+                                clear: both;
+
+                                .store-open-close-notice {
+                                    #vendor-store-times {
+                                        left: -30%;
+                                    }
+
+                                    &:hover {
+                                        span.fa-angle-down {
+                                            &:after {
+                                                right: -2.5px;
+                                            }
+                                        }
+                                    }
+                                }
 
                                 li {
                                     float: left;
@@ -312,9 +674,11 @@
                             }
 
                             .store-social-wrapper {
+                                clear:  both;
                                 position: relative;
 
                                 .store-social {
+                                    display: flex;
                                     padding-left: 0;
 
                                     li {
@@ -337,7 +701,25 @@
     }
 
     .dokan-store-tabs {
-        ul {
+        text-align: center;
+
+        ul.dokan-modules-button {
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row-reverse;
+            justify-content: center;
+            margin: 0;
+            padding: 10px 0;
+            border: 1px solid #EDEDED;
+
+            li {
+                display: inline-block;
+            }
+        }
+
+        ul.dokan-list-inline {
+            display: flex;
             background-color: #fff;
             border-width: 0 1px 1px 1px;
             border-color: @borderColor;
@@ -345,13 +727,20 @@
             margin: 0;
             padding: 0;
             margin-bottom: 20px;
+            font-size: 14px;
 
             li {
                 display: inline-block;
+                flex: auto;
                 border-right: 1px solid @borderColor;
                 margin-right: -4px;
 
+                &:last-child {
+                    border-right: unset;
+                }
+
                 a {
+                    width: 100%;
                     text-decoration: none;
                     color: #666;
                     padding: 10px 15px;
@@ -381,6 +770,13 @@
 
             li {
                 margin-bottom: 8px;
+                border-bottom: none;
+
+                label.error {
+                    font-size: 12px;
+                    margin-top: 2px;
+                    margin-bottom: 0px;
+                }
             }
         }
     }
@@ -457,7 +853,7 @@
             }
 
             @media (min-width: 768px) and (max-width: 991px) {
-                width: 50%;
+                width: 50% !important;
             }
 
             @media (min-width: 992px) {
@@ -574,7 +970,7 @@
                     position: absolute;
                     width: 80px;
                     height: 80px;
-                    top: -40px;
+                    top: -70px;
                     right: 20px;
                     border-radius: 40px;
                     box-shadow: 0px 0px 30px -6px #afafaf;
@@ -728,7 +1124,7 @@
 
                             .profile-info {
                                 position: relative;
-                                top: -75px;
+                                top: -40%;
 
                                 .store-name {
                                     color: inherit;
@@ -742,8 +1138,19 @@
                                     width: 100%;
                                     margin: 0;
                                     display: block;
-                                    overflow: hidden;
                                     text-align: center;
+
+                                    .store-open-close-notice {
+                                        display: inline-block;
+
+                                        &:hover {
+                                            span.fa-angle-down {
+                                                &:after {
+                                                    right: -2.5px;
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     li {
                                         text-align: left;
@@ -885,6 +1292,18 @@
 
                                     i {
                                         display: none;
+                                    }
+
+                                    span.fa-angle-down {
+                                        display: none;
+                                    }
+
+                                    .dokan-times {
+                                        margin-left: 5px;
+                                    }
+
+                                    .store-open-close-notice {
+                                        justify-content: center;
                                     }
                                 }
                             }

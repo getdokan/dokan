@@ -74,7 +74,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
      */
     public function setup_wizard_content() {
         if ( empty( $this->steps[ $this->step ]['view'] ) ) {
-            wp_redirect( esc_url_raw( add_query_arg( 'step', 'install_woocommerce' ) ) );
+            wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'install_woocommerce' ) ) );
             exit;
         }
 
@@ -226,6 +226,8 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @return void
      */
     public static function save_wc_store_setup_data() {
+        check_admin_referer( 'dokan-setup' );
+
         $address        = isset( $_POST['store_address'] ) ? wc_clean( wp_unslash( $_POST['store_address'] ) ) : '';
         $address_2      = isset( $_POST['store_address_2'] ) ? wc_clean( wp_unslash( $_POST['store_address_2'] ) ) : '';
         $city           = isset( $_POST['store_city'] ) ? wc_clean( wp_unslash( $_POST['store_city'] ) ) : '';
@@ -283,7 +285,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
      *
      * @since 2.9.27
      *
-     * @param \Dokan_Setup_Wizard $dokan_admin_setup_wizard
+     * @param SetupWizard $dokan_admin_setup_wizard
      *
      * @return void
      */
@@ -314,7 +316,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
      *
      * @since 2.9.27
      *
-     * @param \Dokan_Setup_Wizard $dokan_admin_setup_wizard
+     * @param SetupWizard $dokan_admin_setup_wizard
      *
      * @return void
      */

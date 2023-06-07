@@ -25,8 +25,8 @@ class V_2_3 extends DokanUpgrader {
         $product_query = new WP_Query( $args );
 
         if ( $product_query->posts ) {
-            foreach ($product_query->posts as $post ) {
-                $product = wc_get_product( $post->ID  );
+            foreach ( $product_query->posts as $post ) {
+                $product = wc_get_product( $post->ID );
 
                 if ( get_post_meta( $post->ID, '_product_attributes', true ) ) {
                     update_post_meta( $post->ID, '_has_attribute', 'yes' );
@@ -49,9 +49,11 @@ class V_2_3 extends DokanUpgrader {
      * @return void
      */
     public static function upgrade_store_meta() {
-        $query = new WP_User_Query( [
-            'role'    => 'seller',
-        ] );
+        $query = new WP_User_Query(
+            [
+				'role'    => 'seller',
+			]
+        );
         $sellers = $query->get_results();
 
         $default_settings = [
@@ -63,21 +65,21 @@ class V_2_3 extends DokanUpgrader {
             'show_email'   => '',
             'gravatar'     => '',
             'payment'      => [],
-            'social'       => []
+            'social'       => [],
         ];
 
         foreach ( $sellers as $seller ) {
             $current_settings = dokan_get_store_info( $seller->ID );
-            $current_settings = wp_parse_args($current_settings, $default_settings);
+            $current_settings = wp_parse_args( $current_settings, $default_settings );
             $old_address      = $current_settings['address'];
 
-            $new_address =  [
+            $new_address = [
                 'street_1' => $old_address,
                 'street_2' => '',
                 'city'     => '',
                 'zip'      => '',
                 'country'  => '',
-                'state'    => ''
+                'state'    => '',
             ];
 
             $current_settings['address'] = $new_address;

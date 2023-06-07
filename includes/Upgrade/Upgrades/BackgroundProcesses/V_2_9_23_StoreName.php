@@ -37,7 +37,7 @@ class V_2_9_23_StoreName extends DokanBackgroundProcesses {
      *
      * @since 2.9.23
      *
-     * @return void
+     * @return void|array
      */
     private function update_store_name( $paged ) {
         $limit = 50;
@@ -46,7 +46,7 @@ class V_2_9_23_StoreName extends DokanBackgroundProcesses {
         $query_args = [
             'status' => '',
             'number' => $limit,
-            'offset' => $count
+            'offset' => $count,
         ];
 
         $vendors = dokan()->vendor->all( $query_args );
@@ -65,7 +65,7 @@ class V_2_9_23_StoreName extends DokanBackgroundProcesses {
 
         return array(
             'updating' => 'store_name',
-            'paged'    => ++$paged
+            'paged'    => ++$paged,
         );
     }
 }

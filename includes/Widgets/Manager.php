@@ -16,15 +16,18 @@ class Manager {
      * @return void
      */
     public function __construct() {
-        $dokan_widgets = apply_filters( 'dokan_widgets', [
-            'best_selling_products' => 'WeDevs\Dokan\Widgets\BestSellingProducts',
-            'product_category_menu' => 'WeDevs\Dokan\Widgets\ProductCategoryMenu',
-            'store_contact_form'    => 'WeDevs\Dokan\Widgets\StoreContactForm',
-            'store_location'        => 'WeDevs\Dokan\Widgets\StoreLocation',
-            'store_category_menu'   => 'WeDevs\Dokan\Widgets\StoreCategoryMenu',
-            'toprated_products'     => 'WeDevs\Dokan\Widgets\TopratedProducts',
-            'store_open_close'      => 'WeDevs\Dokan\Widgets\StoreOpenClose',
-        ] );
+        $dokan_widgets = apply_filters(
+            'dokan_widgets', [
+				'best_selling_products' => 'WeDevs\Dokan\Widgets\BestSellingProducts',
+				'product_category_menu' => 'WeDevs\Dokan\Widgets\ProductCategoryMenu',
+				'store_contact_form'    => 'WeDevs\Dokan\Widgets\StoreContactForm',
+				'store_location'        => 'WeDevs\Dokan\Widgets\StoreLocation',
+				'store_category_menu'   => 'WeDevs\Dokan\Widgets\StoreCategoryMenu',
+				'toprated_products'     => 'WeDevs\Dokan\Widgets\TopratedProducts',
+				'store_open_close'      => 'WeDevs\Dokan\Widgets\StoreOpenClose',
+				'filter_by_attribute'   => 'WeDevs\Dokan\Widgets\FilterByAttributes',
+			]
+        );
 
         foreach ( $dokan_widgets as $widget_id => $widget_class ) {
             register_widget( $widget_class );
@@ -56,6 +59,6 @@ class Manager {
      * @return bool|string Returns widget id if found, outherwise returns false
      */
     public function get_id( $widget_class ) {
-        return array_search( $widget_class, $this->container );
+        return array_search( $widget_class, $this->container, true );
     }
 }

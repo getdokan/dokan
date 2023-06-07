@@ -62,9 +62,9 @@ class TaxonomyDropdown extends Walker {
             }
         }
 
-        $pad      = str_repeat( '&nbsp;', $depth * 3 );
+        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output .= "\<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
+        $output .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
         if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
             $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
@@ -72,12 +72,15 @@ class TaxonomyDropdown extends Walker {
             $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
         }
 
-        if ( in_array( $category->term_id, $args['selected'] ) ) {
+        $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
+        $selected = array_map( 'intval', $selected );
+
+        if ( in_array( $category->term_id, $selected, true ) ) {
             $output .= ' selected="selected"';
         }
 
         $output .= '>';
-        $output .= $pad . $cat_name;
+        $output .= $pad . ' ' . $cat_name;
 
         if ( $args['show_count'] ) {
             $output .= '&nbsp;&nbsp;(' . $category->count . ')';

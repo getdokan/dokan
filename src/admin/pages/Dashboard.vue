@@ -1,15 +1,18 @@
 <template>
     <div class="dokan-dashboard">
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
+        <AdminNotice></AdminNotice>
+        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
         <div class="widgets-wrapper">
+
             <div class="left-side">
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
                     <div class="dokan-status" v-if="overview !== null">
                         <ul>
                             <li class="sale">
                                 <div class="dashicons dashicons-chart-bar"></div>
-                                <router-link :to="hasPro ? {name: 'Reports'} : ''">
+                                <router-link :to="hasPro ? { name: 'Reports' } : ''">
                                     <strong>
                                         <currency :amount="overview.sales.this_month"></currency>
                                     </strong>
@@ -32,7 +35,7 @@
                             <li class="vendor">
                                 <div class="dashicons dashicons-id"></div>
                                 <router-link :to="hasPro ? {name: 'Vendors'} : ''">
-                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.this_month ) }}</strong>
+                                    <strong>{{ overview.vendors.this_month }} {{ __( 'Vendor', 'dokan-lite' ) }}</strong>
                                     <div class="details">
                                         {{ __( 'signup this month', 'dokan-lite' ) }} <span :class="overview.vendors.class">{{ overview.vendors.parcent }}</span>
                                     </div>
@@ -41,14 +44,14 @@
                             <li class="approval">
                                 <div class="dashicons dashicons-businessman"></div>
                                 <router-link :to="hasPro ? {name: 'Vendors', query: {status: 'pending'} } : ''">
-                                    <strong>{{ sprintf( __( '%s Vendor', 'dokan-lite' ), overview.vendors.inactive ) }}</strong>
+                                    <strong>{{ overview.vendors.inactive }} {{ __( 'Vendor', 'dokan-lite' ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </router-link>
                             </li>
                             <li class="product">
                                 <div class="dashicons dashicons-cart"></div>
                                 <a href="#">
-                                    <strong>{{ sprintf( __( '%s Products', 'dokan-lite' ), overview.products.this_month ) }}</strong>
+                                    <strong>{{ overview.products.this_month }} {{ __( 'Products', 'dokan-lite' ) }}</strong>
                                     <div class="details">
                                         {{ __( 'created this month', 'dokan-lite' ) }} <span :class="overview.products.class">{{ overview.products.parcent }}</span>
                                     </div>
@@ -57,7 +60,7 @@
                             <li class="withdraw">
                                 <div class="dashicons dashicons-money"></div>
                                 <router-link :to="{name: 'Withdraw', query: {status: 'pending'}}">
-                                    <strong>{{ sprintf( __( '%s Withdrawals', 'dokan-lite' ), overview.withdraw.pending ) }}</strong>
+                                    <strong>{{ overview.withdraw.pending }} {{ __( 'Withdrawals', 'dokan-lite' ) }}</strong>
                                     <div class="details">{{ __( 'awaiting approval', 'dokan-lite' ) }}</div>
                                 </router-link>
                             </li>
@@ -86,7 +89,8 @@
                                     {{ __( 'We\'re constantly developing new features, stay up-to-date by subscribing to our newsletter.', 'dokan-lite' ) }}
                                 </p>
                                 <div class="form-wrap">
-                                    <input type="email" v-model="subscribe.email" required placeholder="Your Email Address" @keyup.enter="emailSubscribe()">
+                                    <input type="text" :placeholder="__( 'Your Name', 'dokan-lite' )" v-model="subscribe.full_name" />
+                                    <input type="email" v-model="subscribe.email" :placeholder="__( 'Your Email Address', 'dokan-lite' )" @keyup.enter="emailSubscribe()">
                                     <button class="button" @click="emailSubscribe()">{{ __( 'Subscribe', 'dokan-lite' ) }}</button>
                                 </div>
                             </template>
@@ -101,7 +105,9 @@
 
             <div class="right-side">
                 <postbox :title="__( 'Overview', 'dokan-lite' )" class="overview-chart">
-                    <chart :data="report" v-if="report !== null"></chart>
+                    <div v-if="report !== null">
+                        <chart :data="report"></chart>
+                    </div>
                     <div class="loading" v-else>
                         <loading></loading>
                     </div>
@@ -113,11 +119,13 @@
 </template>
 
 <script>
-let Postbox  = dokan_get_lib('Postbox');
-let Loading  = dokan_get_lib('Loading');
-let Currency = dokan_get_lib('Currency');
+let Postbox     = dokan_get_lib('Postbox');
+let Loading     = dokan_get_lib('Loading');
+let Currency    = dokan_get_lib('Currency');
+let AdminNotice = dokan_get_lib('AdminNotice');
 
 import Chart from "admin/components/Chart.vue"
+import UpgradeBanner from "admin/components/UpgradeBanner.vue"
 
 export default {
 
@@ -127,7 +135,9 @@ export default {
         Postbox,
         Loading,
         Chart,
-        Currency
+        Currency,
+        UpgradeBanner,
+        AdminNotice,
     },
 
     data () {
@@ -138,7 +148,8 @@ export default {
             subscribe: {
                 success: false,
                 loading: false,
-                email: ''
+                email: '',
+                full_name: '',
             },
             hasPro: dokan.hasPro ? true : false
         }
@@ -179,25 +190,27 @@ export default {
         },
 
         emailSubscribe() {
-            let action = 'https://wedevs.us16.list-manage.com/subscribe/post-json?u=66e606cfe0af264974258f030&id=0d176bb256&c=?';
-
             if ( ! this.validEmail(this.subscribe.email) ) {
                 return;
             }
 
+            let action = 'https://api.getwemail.io/v1/embed/subscribe/8da67b42-c367-4ad3-ae70-5cf63635a832';
             this.subscribe.loading = true;
 
-            jQuery.ajax({
-                url: action,
+            let options = {
+                type: 'POST',
+                url:  action,
                 data: {
-                    EMAIL: this.subscribe.email,
-                    'group[3555][8]': '1'
+                    email: this.subscribe.email,
+                    full_name: this.subscribe.full_name,
+                    tag: '8e0ae2bb-e838-4ec8-9aa1-c9e5dd96fe34'
                 },
-                type: 'GET',
-                dataType: 'json',
-                cache: false,
-                contentType: "application/json; charset=utf-8",
-            }).always(response => {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+            };
+
+            wp.ajax.send( options, options.data ).always( (response) => {
                 this.subscribe.success = true;
                 this.subscribe.loading = false;
             });

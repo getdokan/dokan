@@ -7,6 +7,7 @@ use WC_REST_Exception;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
+use WP_REST_Request;
 use WP_REST_Response;
 
 /**
@@ -25,6 +26,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return object WC_Data object or WP_Error object.
      */
     protected function get_object( $id ) {
+        // translators: 1) rest api method name
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'dokan-lite' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
@@ -82,10 +84,9 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
     public function create_item( $request ) {
-
         $validate = $this->validation_before_create_item( $request );
 
         if ( is_wp_error( $validate ) ) {
@@ -102,7 +103,12 @@ abstract class DokanRESTController extends WP_REST_Controller {
             $object->save();
 
             //Update post author
-            wp_update_post( array( 'ID' => $object->get_id(), 'post_author' => dokan_get_current_user_id() ) );
+            wp_update_post(
+                array(
+					'ID' => $object->get_id(),
+					'post_author' => dokan_get_current_user_id(),
+                )
+            );
 
             /**
              * Fires after a single object is created or updated via the REST API.
@@ -126,7 +132,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
     public function update_item( $request ) {
         $validate = $this->validation_before_update_item( $request );
@@ -167,10 +173,9 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return WP_REST_Response|WP_Error
      */
     public function delete_item( $request ) {
-
         $validate = $this->validation_before_delete_item( $request );
 
         if ( is_wp_error( $validate ) ) {
@@ -182,10 +187,12 @@ abstract class DokanRESTController extends WP_REST_Controller {
         $response = rest_ensure_response( $data );
 
         // If we're forcing, then delete permanently.
-        $object->delete( true );
+        $object->delete( $request['force'] );
+
         $result = 0 === $object->get_id();
 
         if ( ! $result ) {
+            // translators: 1) post type name
             return new WP_Error( 'dokan_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'dokan-lite' ), $this->post_type ), array( 'status' => 500 ) );
         }
 
@@ -202,6 +209,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return void
      */
     protected function prepare_object_for_database( $request ) {
+        // translators: 1) rest api method name string
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'dokan-lite' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
@@ -239,7 +247,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     protected function validation_before_create_item( $request ) {
         return true;
@@ -250,7 +258,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     protected function validation_before_update_item( $request ) {
         return true;
@@ -261,7 +269,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
-     * @return void
+     * @return bool|WP_Error
      */
     protected function validation_before_delete_item( $request ) {
         return true;
@@ -276,6 +284,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
      */
     protected function prepare_data_for_response( $object, $request ) {
+        // translators: 1) rest api method name string
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'dokan-lite' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
@@ -289,8 +298,8 @@ abstract class DokanRESTController extends WP_REST_Controller {
     protected function prepare_objects_query( $request ) {
         $args                        = array();
         $args['fields']              = 'ids';
-        $args['post_status']         = !isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
-        $args['author']              = !isset( $request['id'] ) ? dokan_get_current_user_id() : $request['id'];
+        $args['post_status']         = ! isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
+        $args['author']              = ! isset( $request['id'] ) ? dokan_get_current_user_id() : $request['id'];
         $args['offset']              = $request['offset'];
         $args['order']               = $request['order'];
         $args['orderby']             = $request['orderby'];
@@ -348,13 +357,12 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return array          $query_args
      */
     protected function prepare_items_query( $prepared_args = array(), $request = null ) {
-
         $valid_vars = array_flip( $this->get_allowed_query_vars() );
 
         $query_args = array();
         foreach ( $valid_vars as $var => $index ) {
             if ( isset( $prepared_args[ $var ] ) ) {
-                $query_args[ $var ] = apply_filters( "dokan_rest_query_var-{$var}", $prepared_args[ $var ] );
+                $query_args[ $var ] = apply_filters( "dokan_rest_query_var_{$var}", $prepared_args[ $var ] );
             }
         }
 
@@ -407,15 +415,14 @@ abstract class DokanRESTController extends WP_REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @param  object $response
-     * @param  object $request
-     * @param  array $items
+     * @param  WP_REST_Response $response
+     * @param  WP_REST_Request $request
      * @param  int $total_items
      *
-     * @return object
+     * @return WP_REST_Response
      */
     public function format_collection_response( $response, $request, $total_items ) {
-        if ( $total_items === 0 ) {
+        if ( intval( $total_items ) === 0 ) {
             return $response;
         }
 
@@ -439,7 +446,6 @@ abstract class DokanRESTController extends WP_REST_Controller {
             $response->link_header( 'prev', $prev_link );
         }
         if ( $max_pages > $page ) {
-
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );
@@ -460,7 +466,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      */
     protected function add_meta_query( $args, $meta_query ) {
         if ( empty( $args['meta_query'] ) ) {
-            $args['meta_query'] = array();
+            $args['meta_query'] = array(); //phpcs:ignore
         }
 
         $args['meta_query'][] = $meta_query;

@@ -46,7 +46,7 @@ class V_2_9_16_StoreSettings extends DokanBackgroundProcesses {
         $query_args = [
             'status' => '',
             'number' => $limit,
-            'offset' => $count
+            'offset' => $count,
         ];
 
         $vendors = dokan()->vendor->all( $query_args );
@@ -87,7 +87,7 @@ class V_2_9_16_StoreSettings extends DokanBackgroundProcesses {
 
         return array(
             'updating' => 'store_settings',
-            'paged'    => ++$paged
+            'paged'    => ++$paged,
         );
     }
 }

@@ -371,6 +371,29 @@
         }
     }
 
+    .store_open_is_on{
+        margin-top:35px;
+    }
+
+    .dokan-store-is-open-close-status {
+        padding: 0px 10px;
+        display: block;
+        border-radius: 30px;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        font-size:14px;
+        box-shadow: 0px 0px 25px -5px #afafaf;
+    }
+
+    .dokan-store-is-open-status {
+        background-color: #1dbf73;
+    }
+    
+    .dokan-store-is-closed-status {
+        background-color: #999;
+    }
+
     .dokan-single-seller {
         .store-wrapper {
             .store-header {
@@ -387,6 +410,7 @@
                         width: -moz-available;
                         width: -webkit-fill-available;
                         width: fill-available;
+                        object-fit: cover;
                     }
                 }
             }
@@ -479,7 +503,7 @@
 
                                 .store-address {
                                     &:before {
-                                        content: "\f230";
+                                        content: "\f082";
                                         font-family: dashicons;
                                         color: #0bb90b;
                                         font-size: 22px;
@@ -513,13 +537,17 @@
                         flex-basis: 20%;
                     }
 
+                    .dokan-store-is-open-close-status{
+                      color:#fff;
+                    }
+
                     .store-footer[class] {
                         display: flex;
                         flex-direction: row-reverse;
                         flex-basis: 33%;
                         border: none;
                         text-align: right;
-                        background: #fff;
+                        background: transparent;
 
                         a {
                             &:active,

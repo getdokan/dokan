@@ -68,7 +68,6 @@ abstract class DokanRESTAdminController extends WP_REST_Controller {
             $response->link_header( 'prev', $prev_link );
         }
         if ( $max_pages > $page ) {
-
             $next_page = $page + 1;
             $next_link = add_query_arg( 'page', $next_page, $base );
             $response->link_header( 'next', $next_link );
