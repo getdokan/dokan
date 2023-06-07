@@ -69,6 +69,9 @@ class Helper {
             // vendor paid to admin (credit)
             'vendor_payment'           => esc_html__( 'Payment', 'dokan-lite' ),
             'order_refund'             => esc_html__( 'Refund', 'dokan-lite' ),
+            'manual_product'           => esc_html__( 'Manual', 'dokan-lite' ),
+            'manual_order'             => esc_html__( 'Manual', 'dokan-lite' ),
+            'other'                    => esc_html__( 'Other', 'dokan-lite' ),
         ];
 
         if ( $transaction_type ) {

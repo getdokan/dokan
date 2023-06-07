@@ -14,7 +14,7 @@
                                 :placeholder="this.__( 'Select vendor', 'dokan-lite' )"
                                 :options="allVendors"
                                 @select="onStoreSelectVendor"
-                                track-by="vendor_id"
+                                track-by="vendorId"
                                 label="store_name"
                                 :internal-search="false"
                                 :clear-on-select="false"
@@ -24,6 +24,7 @@
                                 :showLabels="false"
                             />
                         </div>
+                        <span v-if="errors.vendorId" class='dokan-error'>{{ __( 'Please select a vendor', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
@@ -38,7 +39,7 @@
                             :items="transectionTypeItems"
                         />
 
-                        <div class="form-group dokan-rw-multiselect" v-if="'product' === transectionType">
+                        <div class="form-group dokan-rw-multiselect" v-if="'manual_product' === transectionType">
                             <multiselect
                                 @search-change="getProducts"
                                 v-model="selectedProduct"
@@ -52,12 +53,12 @@
                                 :multiselect="false"
                                 :searchable="true"
                                 :showLabels="false"
-                                :disabled="isProductSelectDisabled || ! selectedVendor.vendor_id"
+                                :disabled="isProductSelectDisabled || ! selectedVendor.vendorId"
                             />
+                            <span v-if="errors.trId" class='dokan-error'>{{ __( 'Please select a product', 'dokan-lite' ) }}</span>
                         </div>
 
-                        <Transition>
-                        <div class="form-group dokan-rw-multiselect" v-if="'order' === transectionType">
+                        <div class="form-group dokan-rw-multiselect" v-if="'manual_order' === transectionType">
                             <multiselect
                                 @search-change="getOrders"
                                 v-model="selectedOrder"
@@ -72,8 +73,9 @@
                                 :searchable="true"
                                 :showLabels="false"
                             />
+                            <span v-if="errors.trId" class='dokan-error'>{{ __( 'Please select a order', 'dokan-lite' ) }}</span>
                         </div>
-                        </Transition>
+
                     </div>
                 </div>
 
@@ -95,6 +97,7 @@
                                 :placeholder="__( 'Enter withdrawal amount', 'dokan-lite' )"
                             />
                         </div>
+                        <span v-if="errors.withdrawalAmount" class='dokan-error'>{{ __( 'Please enter withdrawal amount', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
@@ -106,6 +109,7 @@
                         <div class="dokan-rw-note-area">
                             <textarea v-model="withdrawalNote" :placeholder="__( 'Write withdrawal note', 'dokan-lite' )"/>
                         </div>
+                        <span v-if="errors.withdrawalNote" class='dokan-error'>{{ __( 'Please write withdrawal note', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
             </div>
@@ -134,6 +138,14 @@ const Loading = dokan_get_lib('Loading');
 const Multiselect     = dokan_get_lib('Multiselect');
 const Debounce        = dokan_get_lib('debounce');
 
+const swal = Swal.mixin({
+    showCloseButton: true,
+    showCancelButton: false,
+    focusConfirm: false,
+    showConfirmButton: false,
+    timer: 5000
+});
+
 export default {
     name: 'AddReverseWithdraw',
 
@@ -143,23 +155,24 @@ export default {
         DokanRadioGroup,
         Loading,
         Multiselect,
-        Debounce
+        Debounce,
+        swal
     },
 
     data() {
         return {
             loader: window.dokan.ajax_loader,
             title: this.__( 'Add new reverse withdrawal', 'dokan-lite' ),
-            transectionType: 'product',
+            transectionType: 'manual_product',
             withdrawalType: 'debit',
             transectionTypeItems: [
                 {
                     label: this.__( 'Ptoduct', 'dokan-lite' ),
-                    value: 'product'
+                    value: 'manual_product'
                 },
                 {
                     label: this.__( 'Order', 'dokan-lite' ),
-                    value: 'order'
+                    value: 'manual_order'
                 },
                 {
                     label: this.__( 'Other', 'dokan-lite' ),
@@ -185,7 +198,10 @@ export default {
             withdrawalAmount: '',
             withdrawalNote: '',
             isProductSelectDisabled: false,
-            loading: false
+            loading: false,
+            errors: {
+
+            }
         }
     },
 
@@ -194,30 +210,89 @@ export default {
             this.$root.$emit('modalClosed');
         },
 
-        addNewWithdraw() {
-            let data = {
-                store: this.selectedVendor.vendor_id ?? '',
-                transectionType: this.transectionType,
-                orderId: this.selectedOrder.id ?? '',
-                productId: this.selectedProduct.id ?? '',
-                type: this.withdrawalType,
-                amount: this.withdrawalAmount,
-                note: this.withdrawalNote
+        validateData() {
+            let newErrors = {};
+
+            if( ! this.selectedVendor.vendorId ) {
+                newErrors.vendorId = true;
             }
 
-            console.log(data);
+            if ( ('manual_product' === this.transectionType && ! this.selectedProduct.id) || ('manual_order' === this.transectionType && ! this.selectedOrder.id) ) {
+                newErrors.trId = true;
+            }
+
+
+            if ( ('debit' === this.withdrawalType && ! this.withdrawalAmount) || ('credit' === this.withdrawalType && ! this.withdrawalAmount) ) {
+                newErrors.withdrawalAmount = true;
+            }
+
+
+            if( ! this.withdrawalNote ) {
+                newErrors.withdrawalNote = true;
+            }
+
+            if (Object.keys(newErrors).length) {
+                this.errors = newErrors;
+                return '';
+            }
+
+            let debit = 'debit' === this.withdrawalType ? this.withdrawalAmount : 0;
+            let credit ='credit' === this.withdrawalType ? this.withdrawalAmount : 0;
+            let trn_id = 0;
+
+            if ( 'manual_product' === this.transectionType ) {
+                trn_id = this.selectedProduct.id ?? '';
+            } else if ( 'order_product' === this.transectionType ) {
+                trn_id = this.selectedOrder.id ?? '';
+            }
+
+            let data = {
+                trn_id,
+                trn_type: this.transectionType,
+                vendor_id: this.selectedVendor.vendorId ?? '',
+                note: this.withdrawalNote,
+                debit,
+                credit,
+            };
+
+            this.errors = {};
+            return data;
+        },
+
+        addNewWithdraw() {
+            let data = this.validateData();
+
+            if ( ! data ) {
+                return;
+            }
+
             this.loading = true;
-            setTimeout(()=>{
+
+            dokan.api.post('/reverse-withdrawal/transactions', data ).done( ( response ) => {
+                this.closeModal();
+                this.$notify({
+                    title: this.__( 'Success!', 'dokan-lite' ),
+                    type: 'success',
+                    text: this.__( 'Reverse withdrawal created successfully.', 'dokan-lite' ),
+                });
+                this.$emit( 'onWithdrawCreate' )
+            } ).fail( ( jqXHR ) => {
+                swal.fire(
+                    '',
+                    dokan_handle_ajax_error(jqXHR),
+                    'error'
+                );
+            } ).always(() => {
                 this.loading = false;
-            }, 3000);
+            })
         },
 
         handleTransectionType(newValue) {
             this.transectionType = newValue;
 
-            if( 'product' === newValue ) {
+            if( 'manual_product' === newValue ) {
                 this.getProducts();
-            } else if ( 'order' === newValue ) {
+            } else if ( 'manual_order' === newValue ) {
                 this.getOrders();
             }
         },
@@ -230,9 +305,9 @@ export default {
             this.selectedOrder = '';
             this.selectedProduct = '';
 
-            if ( 'product' === this.transectionType ) {
+            if ( 'manual_product' === this.transectionType ) {
                 this.getProducts();
-            } else if ( 'order' === this.transectionType ) {
+            } else if ( 'manual_order' === this.transectionType ) {
                 this.getOrders();
             }
         },
@@ -243,27 +318,31 @@ export default {
                 paged: 1,
                 search: search
             } ).done( ( response ) => {
-                self.allVendors = [ { vendor_id: 0, store_name: self.__( 'Select vendor', 'dokan' ) } ].concat( response.map((item) => {
+                self.allVendors = [ { vendorId: 0, store_name: self.__( 'Select vendor', 'dokan' ) } ].concat( response.map((item) => {
                     return {
-                        vendor_id: item.id,
+                        vendorId: item.id,
                         store_name: item.store_name
                     };
                 }) );
             } ).fail( ( jqXHR ) => {
-                self.allVendors = [ { vendor_id: 0, store_name: self.__( 'Select vendor', 'dokan' ) } ];
+                swal.fire(
+                    '',
+                    dokan_handle_ajax_error(jqXHR),
+                    'error'
+                );
             } );
         }, 300 ),
 
         getProducts: Debounce( function( search = '' ) {
             let self = this;
 
-            if ( ! this.selectedVendor.vendor_id ) {
+            if ( ! this.selectedVendor.vendorId ) {
                 return;
             }
 
             dokan.api.get('/products', {
                 paged: 1,
-                id: self.selectedVendor.vendor_id,
+                id: self.selectedVendor.vendorId,
                 search: search,
                 post_status: 'publish'
             } ).done( ( response ) => {
@@ -274,18 +353,22 @@ export default {
                     };
                 });
             } ).fail( ( jqXHR ) => {
-                self.filter.stores = [ { id: 0, name: self.__( 'No product found', 'dokan' ) } ];
+                swal.fire(
+                    '',
+                    dokan_handle_ajax_error(jqXHR),
+                    'error'
+                );
             } );
         }, 300 ),
 
         getOrders: Debounce( function( search = '' ) {
             let self = this;
 
-            if ( ! this.selectedVendor.vendor_id ) {
+            if ( ! this.selectedVendor.vendorId ) {
                 return;
             }
 
-            dokan.api.get(`/orders?seller_id=${this.selectedVendor.vendor_id}`, {} ).done( ( response ) => {
+            dokan.api.get(`/orders?seller_id=${this.selectedVendor.vendorId}`, {} ).done( ( response ) => {
                 self.allOrders = response.map((item) => {
                     return {
                         id: item.id,
@@ -293,7 +376,11 @@ export default {
                     };
                 });
             } ).fail( ( jqXHR ) => {
-                self.filter.stores = [ { id: 0, name: self.__( 'No orders found', 'dokan' ) } ];
+                swal.fire(
+                    '',
+                    dokan_handle_ajax_error(jqXHR),
+                    'error'
+                );
             } );
         }, 300 ),
     },

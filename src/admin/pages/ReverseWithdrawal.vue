@@ -103,7 +103,7 @@
         </div>
 
         <Transition name="animate">
-        <add-reverse-withdraw v-if='loadAddNewModal'/>
+            <add-reverse-withdraw v-if='loadAddNewModal' v-on:onWithdrawCreate="onCreatedReverseWithdrawal()"/>
         </Transition>
     </div>
 </template>
@@ -260,7 +260,12 @@ export default {
 
         bulkActions() {
             return [];
-        }
+        },
+
+        onCreatedReverseWithdrawal() {
+            console.log('yes worked...');
+            this.fetchBalances();
+        },
     },
 
     watch: {
