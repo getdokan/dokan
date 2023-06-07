@@ -13,7 +13,7 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 
-test.describe.only('reverse withdrawal api test', () => {
+test.describe('reverse withdrawal api test', () => {
 
 	test('get reverse withdrawal transaction types @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalTransactionTypes);

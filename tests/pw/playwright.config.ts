@@ -111,13 +111,19 @@ export default defineConfig({
 	// // forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	// repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 	// retries: process.env.CI ? 1 : 0,  	/*The maximum number of retry attempts given to failed tests.  */
-	workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
+	// workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
 	// reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
-	// reporter: process.env.CI
-	// 	? [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }]]
-	// 	: [['html', { open: 'never', outputFolder: 'playwright-report/html-report' }], ['junit', { outputFile: 'playwright-report/junit-report/results.xml' }], ['list', { printSteps: true }],
-	// 	// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]
-	// 	],
+	reporter: process.env.CI
+		? [
+			// ['html', { open: 'never', outputFolder: 'playwright-report/html-report' }],
+			['junit', { outputFile: 'playwright-report/junit-report/results.xml' }],
+			['list', { printSteps: true }]]
+		: [
+			// ['html', { open: 'never', outputFolder: 'playwright-report/html-report' }],
+			['junit', { outputFile: 'playwright-report/junit-report/results.xml' }],
+			['list', { printSteps: true }],
+		// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/allure-report', suiteTitle: false }]
+		],
 	// use: {
 	// 	...devices['Desktop Chrome'],
 	// 	acceptDownloads: true, /* Whether to automatically download all the attachments. */

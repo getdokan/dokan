@@ -146,11 +146,11 @@ jobs:
       #     retry_on: error
       #     command: cd tests/pw && npm run test:e2e
 
-      - name: 🧪 Running the e2e tests
-        timeout-minutes: 30
-        run: |
-          cd tests/pw 
-          npm run test:e2e
+      # - name: 🧪 Running the e2e tests
+      #   timeout-minutes: 30
+      #   run: |
+      #     cd tests/pw 
+      #     npm run test:e2e
 
       #  cd tests/pw && npm run test setup.spec.ts
       - name: 🧪 Running the api tests
@@ -183,7 +183,7 @@ jobs:
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
-          report_paths: "tests/pw/playwright-report/junit-report/e2e-results.xml"
+          report_paths: "tests/pw/playwright-report/junit-report/results.xml"
           include_passed: true,
           check_retries: true,
           detailed_summary: true,

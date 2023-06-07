@@ -234,7 +234,7 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 //TODO: fix rank math api
 //TODO: create valid payload for every request : which doesn't cause php warning
 //TODO: declare baseURL only in one place, global setup should get from config file
-//TODO:
+//TODO: add tag on all tests, withdraw
 //TODO:
 //TODO:
 //TODO:

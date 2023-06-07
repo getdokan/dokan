@@ -131,7 +131,6 @@ export class ApiUtils {
 			return responseBody;
 		}
 		catch (err: any) {
-			console.log('actual error: ', err); //TODO: check it to fix later error
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
