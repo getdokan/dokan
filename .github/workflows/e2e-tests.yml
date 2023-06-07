@@ -90,10 +90,10 @@ jobs:
           cd tests/pw 
           echo "The value of TEST_DB_PORT is ${{ env.DB_PORT }}"
 
-      - name: Activate theme:Storefront
-        run: |
-          cd tests/pw 
-          npm run activate:theme
+      # - name: Activate theme:Storefront
+      #   run: |
+      #     cd tests/pw 
+      #     npm run activate:theme
 
       - name: Set Permalink structure
         run: |
