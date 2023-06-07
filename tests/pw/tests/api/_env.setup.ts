@@ -38,6 +38,10 @@ setup.describe(' setup environment', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 	});
 
+	setup('admin set dokan withdraw settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
+	});
+
 	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});

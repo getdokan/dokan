@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { helpers } from './helpers';
+import { dbData } from './dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -318,7 +319,7 @@ export const payloads = {
 
 	updateWithdrawDisbursementSettings: {
 		schedule: 'quarterly',
-		minimum: 50,
+		minimum: dbData.dokan.withdrawSettings.withdraw_limit, // should be equal to minimum limit
 		reserve: 0,
 		method: 'paypal'
 	},

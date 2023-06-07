@@ -8,10 +8,12 @@ let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
+	// check reverse withdrawal payment product exists
+	await apiUtils.getReverseWithdrawalProductId();
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 
-test.describe('reverse withdrawal api test', () => {
+test.describe.only('reverse withdrawal api test', () => {
 
 	test('get reverse withdrawal transaction types @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalTransactionTypes);

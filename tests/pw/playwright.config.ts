@@ -6,7 +6,7 @@ const apiSuiteConfig = {
 	name: 'api_suite',
 	testDir: './tests/api',
 	testMatch: /.*\.spec\.ts/,
-	outputDir: 'playwright/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
+	outputDir: 'playwright/api/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: './global-setup', /* Path to the global setup file. This file will be required and run before all the tests. */
 	// globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
 	globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
@@ -22,8 +22,14 @@ const apiSuiteConfig = {
 	// workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
 	reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
 	reporter: process.env.CI
-		? [['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }], ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }], ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }], ['list', { printSteps: true }],
+		? [
+			['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+			['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+			['list', { printSteps: true }]]
+		: [
+			['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+			['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+			['list', { printSteps: true }],
 			['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/api/allure/allure-report', suiteTitle: false }]
 		],
 	use : {
@@ -42,7 +48,7 @@ const e2eSuiteConfig = {
 	name: 'e2e_suite',
 	testDir: './tests/e2e',
 	testMatch: /.*\.spec\.ts/,
-	outputDir: 'playwright/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
+	outputDir: 'playwright/e2e/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: require.resolve( './global-setup' ), /* Path to the global setup file. This file will be required and run before all the tests. */
 	// globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
 	globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
@@ -58,8 +64,14 @@ const e2eSuiteConfig = {
 	workers: process.env.CI ? 1 : 0, 	/* Opt out of parallel tests on CI. */
 	reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
 	reporter: process.env.CI
-		? [['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }], ['list', { printSteps: true }]]
-		: [['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }], ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }], ['list', { printSteps: true }],
+		? [
+			['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+			['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+			['list', { printSteps: true }]]
+		: [
+			['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+			['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+			['list', { printSteps: true }],
 			['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/e2e/allure/allure-report', suiteTitle: false }]
 		],
 	use: {

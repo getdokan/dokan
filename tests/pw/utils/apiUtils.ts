@@ -124,7 +124,6 @@ export class ApiUtils {
 	// get responseBody
 	async getResponseBody(response: APIResponse, assert = true) {
 		try {
-			console.log('End-point: ', response.url());
 			assert && expect(response.ok()).toBeTruthy();
 			const responseBody = await response.json();
 			// console.log('ResponseBody: ', responseBody);
@@ -132,7 +131,7 @@ export class ApiUtils {
 			return responseBody;
 		}
 		catch (err: any) {
-			console.log('End-point: ', err); //TODO: check it to fix later error
+			console.log('actual error: ', err); //TODO: check it to fix later error
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
@@ -565,6 +564,12 @@ export class ApiUtils {
 		const allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores(auth);
 		const reverseWithdrawalStoreId = allReverseWithdrawalStores[0].id;
 		return reverseWithdrawalStoreId;
+	}
+
+	// get reverseWithdrawal payment productId
+	async getReverseWithdrawalProductId(auth? : auth) {
+		const productId = await this.getProductId('Reverse Withdrawal Payment', auth);
+		return productId;
 	}
 
 	/**
