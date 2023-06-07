@@ -66,14 +66,14 @@ jobs:
       - name: Npm install and build (Dokan-pro)
         run: |
           cd plugins/dokan-pro
-          npm i
+          npm ci
           npm run dev:build
           npm run build
 
       - name: Install dependencies 
         run: |
           cd tests/pw 
-          npm ci --production
+          npm i --production
 
       - name: Start WordPress Env
         run: |
