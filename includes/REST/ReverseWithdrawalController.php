@@ -389,12 +389,12 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         $manager = new Manager();
         $inserted_id = $manager->insert(
             [
-                'trn_id'    => $request->get_param('trn_id'),
-                'trn_type'  => $request->get_param('trn_type'),
-                'vendor_id' => $request->get_param('vendor_id'),
-                'note'      => $request->get_param('note'),
-                'debit'     => $request->get_param('debit'),
-                'credit'    => $request->get_param('credit'),
+                'trn_id'    => $request->get_param( 'trn_id' ),
+                'trn_type'  => $request->get_param( 'trn_type' ),
+                'vendor_id' => $request->get_param( 'vendor_id' ),
+                'note'      => $request->get_param( 'note' ),
+                'debit'     => $request->get_param( 'debit' ),
+                'credit'    => $request->get_param( 'credit' ),
             ]
         );
 
