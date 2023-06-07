@@ -66,7 +66,7 @@ jobs:
       - name: Npm install and build (Dokan-pro)
         run: |
           cd plugins/dokan-pro
-          npm ci
+          npm i
           npm run dev:build
           npm run build
 
