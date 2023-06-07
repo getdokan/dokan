@@ -9,5 +9,5 @@ namespace WeDevs\Dokan\Emails;
  */
 class FakeMailer {
 
-    public function Send() {}
+    function Send() {}
 }
