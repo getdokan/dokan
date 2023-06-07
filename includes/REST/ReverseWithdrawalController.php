@@ -398,7 +398,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             ]
         );
 
-        if( is_wp_error( $inserted_id ) ) {
+        if ( is_wp_error( $inserted_id ) ) {
             return $inserted_id;
         }
 
