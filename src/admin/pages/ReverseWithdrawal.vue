@@ -263,7 +263,7 @@ export default {
         },
 
         onCreatedReverseWithdrawal() {
-            console.log('yes worked...');
+            this.fetchStoreLists();
             this.fetchBalances();
         },
     },
