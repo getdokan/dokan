@@ -119,7 +119,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $attribute_position      = array_map( 'absint', $data['attribute_position'] );
         $attribute_names_max_key = max( array_keys( $attribute_names ) );
 
-        for ( $i = 0; $i <= $attribute_names_max_key; $i ++ ) {
+        for ( $i = 0; $i <= $attribute_names_max_key; $i++ ) {
             if ( empty( $attribute_names[ $i ] ) ) {
                 continue;
             }
@@ -355,7 +355,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $file_urls     = array_map( 'esc_url_raw', array_map( 'trim', $data['_wc_file_urls'] ) );
             $file_url_size = count( $file_urls );
 
-            for ( $i = 0; $i < $file_url_size; $i ++ ) {
+            for ( $i = 0; $i < $file_url_size; $i++ ) {
                 if ( ! empty( $file_urls[ $i ] ) ) {
                     $files[ md5( $file_urls[ $i ] ) ] = [
                         'name' => $file_names[ $i ],
