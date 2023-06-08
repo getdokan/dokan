@@ -201,8 +201,10 @@ class Helper {
                 $product->set_sold_individually( true );
                 $product->save();
             }
+
             return $base_product_id;
         }
+
         return 0;
     }
 
@@ -300,16 +302,17 @@ class Helper {
         }
 
         return [
-            'id'        => $id,
-            'trn_id'    => $trn_id,
-            'trn_url'   => $trn_url,
-            'trn_date'  => $trn_date,
-            'trn_type'  => $trn_type,
-            'vendor_id' => $vendor_id,
-            'note'      => $note,
-            'debit'     => $debit,
-            'credit'    => $credit,
-            'balance'   => $current_balance,
+            'id'           => $id,
+            'trn_id'       => $trn_id,
+            'trn_url'      => $trn_url,
+            'trn_date'     => $trn_date,
+            'trn_type'     => $trn_type,
+            'trn_type_raw' => $item['trn_type'],
+            'vendor_id'    => $vendor_id,
+            'note'         => $note,
+            'debit'        => $debit,
+            'credit'       => $credit,
+            'balance'      => $current_balance,
         ];
     }
 

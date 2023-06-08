@@ -42,7 +42,7 @@ class Manager {
             'return'      => 'objects', // objects, ids, count
         ];
 
-        $args = wp_parse_args( $args, $default );
+        $args = apply_filters( 'dokan_get_vendor_orders_args', wp_parse_args( $args, $default ), $args, $default );
 
         global $wpdb;
 
@@ -250,7 +250,7 @@ class Manager {
             Cache::set( $cache_key, $orders, $cache_group );
         }
 
-        return $orders;
+        return apply_filters( 'dokan_get_vendor_orders', $orders, $args );
     }
 
     /**

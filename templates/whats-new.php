@@ -4,6 +4,52 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.20',
+        'released' => '2023-06-08',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added two new filter hooks named `dokan_get_vendor_orders_args` and `dokan_get_vendor_orders` to filter vendor’s order data.',
+                    'description' => 'You can now filter orders returned by the `dokan()->order->all()` method using the dokan_get_vendor_orders hook.',
+                ],
+                [
+                    'title'       => 'Added a new filter named `dokan_get_new_post_status` for the function dokan_get_new_post_status()',
+                    'description' => 'Now you’ll be able to use your desired status for new products created by vendors using this filter.',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a security issue related to insecure deserialization in the Dummy Data importer API endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where the dokan_is_seller_dashboard() method was returning false when called from a WP Post Query Loop.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensured that the correct order status is displayed for vendors after updating an order.',
+                    'description' => 'Previously, in some cases, plugin or theme authors would hook into actions like woocommerce_order_status_changed and change the order status after it had been updated by the vendor. This update ensures that the correct order status is displayed to vendors after they update an order. Thanks to https://github.com/rmilesson for your contribution to fixing this issue.',
+                ],
+                [
+                    'title'       => 'Resolved an issue where store categories filtering was not showing proper results due to nonce validation fails.',
+                    'description' => 'Previously, when using store categories as a direct link to filter vendors with no valid nonce key attached to it, the filtering was not working correctly and vendors were not being displayed under their assigned store category. This issue has been addressed and store categories filtering now shows the correct results.',
+                ],
+                [
+                    'title'       => 'Resolved inconsistent behavior of pagination on the Single Store Page.',
+                    'description' => 'Previously, there were several issues with the pagination on the Single Store Page, including the “Previous” text displaying like the “Next” icon, the Last Page Menu icon not showing when all menus were visible, and the Active Page Menu background color not changing from the 4th page. These issues have been addressed and the pagination behavior is now consistent.',
+                ],
+                [
+                    'title'       => 'Resolved an issue where the discounted price field was not displayed correctly according to the theme used.',
+                    'description' => 'Previously, when viewing the “Add/Edit a product” page on the Vendor Dashboard, the discounted price field was not displayed in the same way as the price field box when using certain themes. This issue has been addressed and the discounted price field now displays correctly according to the theme used.',
+                ],
+                [
+                    'title'       => '[AdminSetupWizard] The custom withdrawal method is now conditionally displayed in the admin setup wizard.',
+                    'description' => 'Previously, the custom withdrawal method could not be enabled in the wizard because it required the method name and type to be populated. Now, if the admin has previously saved these values, the custom withdrawal method will be displayed and can be activated in the wizard.',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.19',
         'released' => '2023-05-24',
         'changes'  => [
