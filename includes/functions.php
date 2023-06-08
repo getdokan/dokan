@@ -659,7 +659,7 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 /**
  * Get product status based on user id and settings
  *
- * @since DOKAN_SINCE added a new filter hook `dokan_get_new_post_status`
+ * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
  *
  * @return string
  */
