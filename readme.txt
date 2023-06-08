@@ -61,7 +61,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👏 “Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”
 
-= SUCCESS STORIES OF PEOPLE WE ARE PROUD TO BE A PART OF =
+= SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
 ✌️ “[Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org).” – Bernd Payer, Founder [JOSHi](https://www.joshi.at/)
 
