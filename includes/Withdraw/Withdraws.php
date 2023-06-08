@@ -107,9 +107,10 @@ class Withdraws {
             $query_args[] = $args['amount'];
         }
 
-        if ( isset( $args['date'] ) ) {
-            $where        .= ' and date = %s';
-            $query_args[] = $args['date'];
+        if ( isset( $args['start_date'] ) && isset( $args['end_date'] ) ) {
+            $where        .= ' and date(date) between %s and %s';
+            $query_args[] = current_datetime()->modify( $args['start_date'] )->format( 'Y-m-d' );
+            $query_args[] = current_datetime()->modify( $args['end_date'] )->format( 'Y-m-d' );
         }
 
         if ( isset( $args['status'] ) ) {

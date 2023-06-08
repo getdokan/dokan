@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use Cassandra\Date;
 use Exception;
 use WeDevs\Dokan\Cache;
 use WP_Error;
@@ -269,6 +270,14 @@ class WithdrawController extends WP_REST_Controller {
 
         if ( isset( $request['ids'] ) ) {
             $args['ids'] = $request['ids'];
+        }
+
+//        $request['start_date'] = date("y-m-d",strtotime("-1 day"));
+//        $request['end_date'] = date( "y-m-d" );
+
+        if ( ! empty( $request['start_date'] ) && ! empty( $request['end_date'] ) ) {
+            $args['start_date'] = $request['start_date'];
+            $args['end_date']   = $request['end_date'];
         }
 
         $cache_group = 'withdraws';

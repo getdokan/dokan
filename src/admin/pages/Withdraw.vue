@@ -86,6 +86,30 @@
                         class="button"
                         @click="filter.user_id = 0"
                     >&times;</button>
+
+                    <date-range-picker
+                        class="mr-5"
+                        ref="picker"
+                        :locale-data="this.dateTimePickerFormat"
+                        :singleDatePicker="false"
+                        :showDropdowns="true"
+                        :autoApply="false"
+                        :ranges="this.dateRangePickerRanges"
+                        v-model="filter.transaction_date">
+
+                        <!--    Date Selection Slot-->
+                        <template v-slot:input="picker">
+                            <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }} - {{ filter.transaction_date.endDate | getFormattedDate }}</span>
+                            <span class="date-range-placeholder" v-if="! filter.transaction_date.startDate">{{ __( 'Filter by Date', 'dokan-lite' ) }}</span>
+                        </template>
+
+                        <!--    Footer Slot-->
+                        <div slot="footer" slot-scope="data" class="drp-buttons">
+                            <span class="drp-selected">{{ data.rangeText }}</span>
+                            <button @click="setDefaultTransactionDate()" type="button" class="cancelBtn btn btn-sm btn-secondary">{{ __( 'Cancel', 'dokan-lite' ) }}</button>
+                            <button @click="data.clickApply" v-if="! data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan-lite' ) }}</button>
+                        </div>
+                    </date-range-picker>
                 </template>
 
                 <template slot="actions" slot-scope="data">
@@ -113,10 +137,13 @@
 </template>
 
 <script>
-let ListTable    = dokan_get_lib('ListTable');
-let Modal        = dokan_get_lib('Modal');
-let Currency     = dokan_get_lib('Currency');
-let AdminNotice  = dokan_get_lib('AdminNotice');
+import moment from 'moment/moment';
+
+let ListTable         = dokan_get_lib('ListTable');
+let Modal             = dokan_get_lib('Modal');
+let Currency          = dokan_get_lib('Currency');
+let AdminNotice       = dokan_get_lib('AdminNotice');
+const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
@@ -132,6 +159,7 @@ export default {
         Currency,
         UpgradeBanner,
         AdminNotice,
+        DateRangePicker,
     },
 
     data () {
@@ -141,12 +169,27 @@ export default {
                 id: null,
                 note: null
             },
-
+            dateTimePickerFormat: {
+                format: dokan_get_daterange_picker_format().toLowerCase(),
+                ...dokan_helper.daterange_picker_local,
+            },
+            dateRangePickerRanges: {
+                'Today': [moment().toDate(), moment().toDate()],
+                'Last 30 Days': [moment().subtract(29, 'days').toDate(), moment().toDate()],
+                'This Month': [moment().startOf('month').toDate(), moment().endOf('month').toDate()],
+                'Last Month': [moment().subtract(1, 'month').startOf('month').toDate(), moment().subtract(1, 'month').endOf('month').toDate()],
+                'This Year': [moment().month(0).startOf('month').toDate(), moment().month(11).endOf('month').toDate()],
+                'Last Year': [moment().month(0).subtract(1, 'year').startOf('month').toDate(), moment().month(11).subtract(1, 'year').endOf('month').toDate()]
+            },
             totalPages: 1,
             perPage: 10,
             totalItems: 0,
             filter: {
-                user_id: 0
+                user_id: 0,
+                transaction_date: {
+                    startDate: '',
+                    endDate: '',
+                }
             },
             counts: {
                 pending: 0,
@@ -194,6 +237,10 @@ export default {
             }
 
             this.goTo(this.query);
+        },
+
+        'filter.transaction_date.startDate'() {
+            this.fetchRequests();
         }
     },
 
@@ -280,6 +327,26 @@ export default {
                     },
                 ];
             }
+        },
+
+        filterTransactionDate() {
+            let data = {
+                start_date: '',
+                end_date: '',
+            };
+
+            if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
+                return data;
+            }
+
+            data.start_date = moment( this.filter.transaction_date.startDate ).format( 'YYYY-MM-DD HH:mm:ss' );
+            data.end_date = moment( this.filter.transaction_date.endDate ).format( 'YYYY-MM-DD HH:mm:ss' );
+
+            // fix from param
+            // if ( data.start_date === data.end_date ) {
+            //     data.start_date = '';
+            // }
+            return data;
         }
     },
 
@@ -320,6 +387,12 @@ export default {
         });
     },
 
+    filters: {
+        getFormattedDate(date) {
+            return date ? $.datepicker.formatDate(dokan_get_i18n_date_format(), new Date(date)) : '';
+        }
+    },
+
     methods: {
 
         updatedCounts(xhr) {
@@ -341,6 +414,25 @@ export default {
             return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
+        getDefaultTransactionDate() {
+            // let today = moment().endOf('today').hour(23).minute(59).second(59).toDate();
+            return {
+                startDate: '',
+                endDate: '',
+            }
+        },
+
+        setDefaultTransactionDate() {
+            let transaction_date = this.getDefaultTransactionDate();
+
+            this.filter.transaction_date.startDate = transaction_date.startDate;
+            this.filter.transaction_date.endDate   = transaction_date.endDate;
+
+            if ( this.$refs.picker ) {
+                this.$refs.picker.togglePicker( false );
+            }
+        },
+
         fetchRequests() {
             this.loading = true;
             var user_id = '';
@@ -353,6 +445,8 @@ export default {
                 page: this.currentPage,
                 status: this.currentStatus,
                 user_id: user_id,
+                start_date: this.filterTransactionDate.start_date,
+                end_date: this.filterTransactionDate.end_date
             };
             dokan.api.get('/withdraw', data)
             .done((response, status, xhr) => {
