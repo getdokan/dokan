@@ -308,27 +308,25 @@
         },
         {
             "name": "phar-io/manifest",
-            "version": "dev-master",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/manifest.git",
-                "reference": "36d8a21e851a9512db2b086dc5ac2c61308f0138"
+                "reference": "97803eca37d319dfa7826cc2437fc020857acb53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/36d8a21e851a9512db2b086dc5ac2c61308f0138",
-                "reference": "36d8a21e851a9512db2b086dc5ac2c61308f0138",
+                "url": "https://api.github.com/repos/phar-io/manifest/zipball/97803eca37d319dfa7826cc2437fc020857acb53",
+                "reference": "97803eca37d319dfa7826cc2437fc020857acb53",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
-                "ext-libxml": "*",
                 "ext-phar": "*",
                 "ext-xmlwriter": "*",
                 "phar-io/version": "^3.0.1",
                 "php": "^7.2 || ^8.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -364,15 +362,9 @@
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
             "support": {
                 "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/master"
+                "source": "https://github.com/phar-io/manifest/tree/2.0.3"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/theseer",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-02-21T19:55:33+00:00"
+            "time": "2021-07-20T11:28:43+00:00"
         },
         {
             "name": "phar-io/version",
@@ -670,12 +662,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "9fe6c2fcbff9e2974219b9672dc4fdc7b88037a3"
+                "reference": "5a85dc13aa9439dc5119e6a0950bc6d4e008e23f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/9fe6c2fcbff9e2974219b9672dc4fdc7b88037a3",
-                "reference": "9fe6c2fcbff9e2974219b9672dc4fdc7b88037a3",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/5a85dc13aa9439dc5119e6a0950bc6d4e008e23f",
+                "reference": "5a85dc13aa9439dc5119e6a0950bc6d4e008e23f",
                 "shasum": ""
             },
             "require": {
@@ -736,7 +728,7 @@
                 "issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-            "time": "2023-05-21T11:54:38+00:00"
+            "time": "2023-05-27T14:12:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1041,12 +1033,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "22c8daa4759be4e93940e31382825c9996d7ae8f"
+                "reference": "f37fc18f5309c96fd2ff9e3747505d46dd4f49bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/22c8daa4759be4e93940e31382825c9996d7ae8f",
-                "reference": "22c8daa4759be4e93940e31382825c9996d7ae8f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f37fc18f5309c96fd2ff9e3747505d46dd4f49bd",
+                "reference": "f37fc18f5309c96fd2ff9e3747505d46dd4f49bd",
                 "shasum": ""
             },
             "require": {
@@ -1131,7 +1123,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-07T07:03:13+00:00"
+            "time": "2023-05-31T14:54:01+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1868,12 +1860,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "2e59060b93b3720ff3aab2b57efda0c3ada069b0"
+                "reference": "d148febc2a2eb82972121d7f962883f7a5697b55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/2e59060b93b3720ff3aab2b57efda0c3ada069b0",
-                "reference": "2e59060b93b3720ff3aab2b57efda0c3ada069b0",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d148febc2a2eb82972121d7f962883f7a5697b55",
+                "reference": "d148febc2a2eb82972121d7f962883f7a5697b55",
                 "shasum": ""
             },
             "require": {
@@ -1918,7 +1910,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2023-05-22T23:17:44+00:00"
+            "time": "2023-05-26T22:32:02+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
@@ -2014,12 +2006,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "203b168d7d107cf9c5b878947bf15c2945b297a3"
+                "reference": "3f608b2b0b2ef702f5917332d8b4f6606d3a45a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/203b168d7d107cf9c5b878947bf15c2945b297a3",
-                "reference": "203b168d7d107cf9c5b878947bf15c2945b297a3",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/3f608b2b0b2ef702f5917332d8b4f6606d3a45a6",
+                "reference": "3f608b2b0b2ef702f5917332d8b4f6606d3a45a6",
                 "shasum": ""
             },
             "require": {
@@ -2063,7 +2055,7 @@
                 "source": "https://github.com/WordPress/WordPress-Coding-Standards",
                 "wiki": "https://github.com/WordPress/WordPress-Coding-Standards/wiki"
             },
-            "time": "2023-05-23T06:36:37+00:00"
+            "time": "2023-06-08T05:06:46+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
@@ -2120,12 +2112,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Yoast/PHPUnit-Polyfills.git",
-                "reference": "d5a196cc2cb39a9efeeff72ce712efef3c107a45"
+                "reference": "f4c425a8aae6c1f2d448289b42311d58af5ff7a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/d5a196cc2cb39a9efeeff72ce712efef3c107a45",
-                "reference": "d5a196cc2cb39a9efeeff72ce712efef3c107a45",
+                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/f4c425a8aae6c1f2d448289b42311d58af5ff7a4",
+                "reference": "f4c425a8aae6c1f2d448289b42311d58af5ff7a4",
                 "shasum": ""
             },
             "require": {
@@ -2172,7 +2164,7 @@
                 "issues": "https://github.com/Yoast/PHPUnit-Polyfills/issues",
                 "source": "https://github.com/Yoast/PHPUnit-Polyfills"
             },
-            "time": "2023-05-19T05:47:22+00:00"
+            "time": "2023-06-06T15:51:44+00:00"
         }
     ],
     "aliases": [],
