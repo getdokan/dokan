@@ -63,9 +63,9 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 = SUCCESS STORIES OF PEOPLE WE ARE PROUD TO BE A PART OF =
 
-✌️ “[Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors.](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)” – Bernd Payer, Founder [JOSHi](https://www.joshi.at/)
+✌️ “[Dokan is a solution for us to provide a fully automized shop-in-shop-system with a very helpful commission-calculation and reports to do all financial details with the vendors](https://wedevs.com/blog/173305/a-success-story-of-a-healthcare-marketplace/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org).” – Bernd Payer, Founder [JOSHi](https://www.joshi.at/)
 
-✌️ “[The functionality delivers everything that you need to grow your marketplace.](https://wedevs.com/blog/89525/dokan-customer-dream-multivendor-marketplace/)” – [Hawk and Peddle ](https://hawkandpeddle.co.uk/)
+✌️ “[The functionality delivers everything that you need to grow your marketplace](https://wedevs.com/blog/89525/dokan-customer-dream-multivendor-marketplace/).” – [Hawk and Peddle ](https://hawkandpeddle.co.uk/)
 
 
 [youtube https://www.youtube.com/watch?v=4id-EwbfUko]
@@ -141,9 +141,9 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 * Beautiful storefront styles with contact details and widgets.
 
-* [Store location map on the store front.](https://wedevs.com/dokan/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
+* [Store location map on the store front](https://wedevs.com/dokan/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 
-* [Single products can be offered by different merchants.](https://wedevs.com/dokan/modules/single-product-multivendor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
+* [Single products can be offered by different merchants](https://wedevs.com/dokan/modules/single-product-multivendor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 
 **Frontend Dashboard For Each Seller**
 
