@@ -357,6 +357,7 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
+        [ $suffix ]     = dokan_get_script_suffix_and_version();
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
@@ -369,8 +370,8 @@ class Assets {
 
         $scripts = [
             'jquery-tiptip'             => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.js',
-                'deps'    => [ 'jquery' ],
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'deps' => [ 'jquery' ],
             ],
             'dokan-i18n-jed'            => [
                 'src'  => $asset_url . '/vendors/i18n/jed.js',

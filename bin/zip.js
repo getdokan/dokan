@@ -1,11 +1,8 @@
-const fs       = require('fs-extra');
+const fs= require('fs-extra');
 const path     = require('path');
 const { exec } = require('child_process');
-const util     = require('util');
-const chalk    = require('Chalk');
-const _        = require('lodash');
-
-const asyncExec = util.promisify( exec );
+const chalk = require('Chalk');
+const _ = require('lodash');
 
 const pluginFiles = [
   'assets/',
@@ -69,16 +66,27 @@ exec(
       }
     } catch (err) {
       console.error(err);
+
+      return;
     }
 
     console.log(`📂 Finished copying files.`);
 
-    asyncExec(
+    exec(
       'composer install --optimize-autoloader --no-dev',
       {
         cwd: dest,
       },
-      () => {
+      (error) => {
+        if (error) {
+          console.log(
+            chalk.red( `❌ Could not install composer in ${dest} directory.` )
+          );
+          console.log( chalk.bgRed.black(error) );
+
+          return;
+        }
+
         console.log(
           `⚡️ Installed composer packages in ${dest} directory.`
         );
@@ -114,25 +122,24 @@ exec(
         console.log(`📦 Making the zip file ${ zipFile }`);
 
         // Making the zip file here.
-        asyncExec(
+        exec(
           `zip ${ zipFile } dokan -rq`,
           {
             cwd: planDir,
           },
-          () => {
+          (error) => {
+            if (error) {
+              console.log( chalk.red( `❌ Could not make ${ zipFile }.`) );
+              console.log( chalk.bgRed.black(error) );
+
+              return;
+            }
+
             fs.removeSync( dest );
             console.log( chalk.green( `✅  ${zipFile} is ready. 🎉` ) );
           }
-        ).catch( ( error ) => {
-          console.log( chalk.red( `❌ Could not make ${ zipFile }.`) );
-          console.log( error );
-        } );
+        );
       }
-    ).catch( ( error ) => {
-      console.log(
-        chalk.red( `❌ Could not install composer in ${dest} directory.` )
-      );
-      console.log( error );
-    } );
+    );
   }
 );

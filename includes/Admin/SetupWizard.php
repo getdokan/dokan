@@ -64,9 +64,10 @@ class SetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
+        [ $suffix ] = dokan_get_script_suffix_and_version();
         if ( ! is_admin() ) {
-            wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full.js', [ 'jquery' ], '1.0.1', true );
-            wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
+            wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
+            wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
             wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], WC_VERSION );
             wp_localize_script(
                 'wc-enhanced-select',

@@ -7,8 +7,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 var vueVendor = Object.keys(package.dependencies);
 
-vueVendor.splice( vueVendor.indexOf( '@wordpress/hooks' ), 1 );
-
 var entryPoint = {
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
