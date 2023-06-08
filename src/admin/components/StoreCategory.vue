@@ -1,10 +1,10 @@
 <template>
     <Multiselect
+        v-if='storeCategoryList.length'
         type='text'
         id="store-category"
         class="dokan-form-input dokan-store-category"
         :options='storeCategoryList'
-        :multiple="true"
         :close-on-select="false"
         :clear-on-select="false"
         :preserve-search="true"
@@ -13,6 +13,7 @@
         selectedLabel='name'
         v-model='selectedCategories'
         :showLabels="false"
+        :multiple='isCategoryMultiple'
     />
 </template>
 
@@ -39,13 +40,18 @@ export default {
     data() {
         return {
             storeCategoryList: [],
-            selectedCategories: []
+            selectedCategories: [],
+            isCategoryMultiple: false
         }
     },
 
     watch: {
         'selectedCategories'( value ) {
-            this.$emit('categories', this.selectedCategories);
+            if ( typeof this.selectedCategories === 'object' ) {
+                this.$emit( 'categories', [ this.selectedCategories ] );
+            } else {
+                this.$emit( 'categories', this.selectedCategories );
+            }
         }
     },
 
@@ -56,15 +62,18 @@ export default {
 
     methods: {
         setStoreCategories() {
-            dokan.api.get('/store-categories?per_page=50', {})
-                .then( ( response ) => {
-                    let storeCategoryIds = [];
-                    this.categories.map( ( value ) => { storeCategoryIds.push( value.id ) } );
-                    this.storeCategoryList = response;
-                    this.selectedCategories = this.storeCategoryList.filter( ( category ) => {
-                        return storeCategoryIds.includes( category.id );
+            if( dokan.store_category_type !== 'none' ) {
+                dokan.api.get('/store-categories?per_page=50', {})
+                    .then( ( response, status, xhr ) => {
+                        let storeCategoryIds = [];
+                        this.categories.map( ( value ) => { storeCategoryIds.push( value.id ) } );
+                        this.storeCategoryList = response;
+                        this.selectedCategories = this.storeCategoryList.filter( ( category ) => {
+                            return storeCategoryIds.includes( category.id );
+                        } );
+                        this.isCategoryMultiple = ( 'multiple' === xhr.getResponseHeader( 'X-WP-Store-Category-Type' ) );
                     } );
-                } );
+            }
         }
     }
 }
