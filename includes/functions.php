@@ -137,13 +137,19 @@ function dokan_is_product_edit_page() {
  * @return bool
  */
 function dokan_is_seller_dashboard() {
-    $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
+    global $wp_query;
 
-    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
+
+    if ( ! $page_id ) {
         return false;
     }
 
-    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( ! $wp_query ) {
+        return false;
+    }
+
+    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', $wp_query->queried_object_id ) ) {
         return true;
     }
 
@@ -653,20 +659,16 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 /**
  * Get product status based on user id and settings
  *
+ * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
+ *
  * @return string
  */
 function dokan_get_new_post_status() {
-    $user_id = get_current_user_id();
+	$user_id    = get_current_user_id();
+	$is_trusted = dokan_is_seller_trusted( $user_id );
+	$status     = $is_trusted ? 'publish' : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
 
-    // trusted seller
-    if ( dokan_is_seller_trusted( $user_id ) ) {
-        return 'publish';
-    }
-
-    // if not trusted, send the option
-    $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-
-    return $status;
+	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
 }
 
 /**

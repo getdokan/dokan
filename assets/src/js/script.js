@@ -1255,9 +1255,10 @@ jQuery(function($) {
  * @param {string} formSelector
  */
 async function dokan_bulk_delete_prompt( event, message, inputSelector, formSelector ) {
-  event.preventDefault();
-
   if ( 'delete' === jQuery( inputSelector ).val() ) {
+    // only prevent default if action is delete
+    event.preventDefault();
+
     let answer = await dokan_sweetalert( message, {
       action  : 'confirm',
       icon    : 'warning'
@@ -1266,6 +1267,5 @@ async function dokan_bulk_delete_prompt( event, message, inputSelector, formSele
     if( answer.isConfirmed ) {
       jQuery( formSelector ).submit()
     }
-
   }
 }
