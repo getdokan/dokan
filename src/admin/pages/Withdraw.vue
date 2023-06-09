@@ -218,8 +218,6 @@ export default {
 
     watch: {
         '$route.query.status'() {
-            this.filter.user_id = 0;
-            this.clearSelection('#filter-vendors');
             this.fetchRequests();
         },
 
