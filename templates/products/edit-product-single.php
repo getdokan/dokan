@@ -6,6 +6,7 @@ use WeDevs\Dokan\ProductCategory\Helper;
 global $post;
 
 $from_shortcode = false;
+$new_product    = false;
 
 if (
     ! isset( $post->ID )
@@ -36,6 +37,22 @@ if ( isset( $_GET['product_id'] ) ) {
     $post_status    = $post->post_status;
     $product        = wc_get_product( $post_id );
     $from_shortcode = true;
+}
+
+if ( isset( $_GET['product_id'] ) && 0 === absint( $_GET['product_id'] ) ) {
+    $post_id      = intval( $_GET['product_id'] );
+    $post_title   = '';
+    $post_content = '';
+    $post_excerpt = '';
+    $post_status  = 'draft';
+    $product      = new WC_Product( $post_id );
+
+    $product->set_name( $post_title );
+    $product->set_status( $post_status );
+    $post_id        = $product->save();
+    $post           = get_post( $post_id );
+    $from_shortcode = true;
+    $new_product    = true;
 }
 
 if ( ! dokan_is_product_author( $post_id ) ) {
@@ -113,7 +130,13 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
             <header class="dokan-dashboard-header dokan-clearfix">
                 <h1 class="entry-title">
-                    <?php esc_html_e( 'Edit Product', 'dokan-lite' ); ?>
+                    <?php
+                    if ( $new_product ) {
+                        esc_html_e( 'Add New Product', 'dokan-lite' );
+                    } else {
+                        esc_html_e( 'Edit Product', 'dokan-lite' );
+                    }
+                    ?>
                     <span class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $post->post_status ) ); ?> dokan-product-status-label">
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>

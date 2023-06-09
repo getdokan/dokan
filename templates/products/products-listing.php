@@ -36,8 +36,9 @@
                 <article class="dokan-product-listing-area">
 
                     <?php
-                    $disable_product_popup = 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
-                    $new_product_url       = add_query_arg(
+                    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'off' );
+                    $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
+                    $new_product_url         = $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
                         [
                             '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
                         ],
