@@ -540,12 +540,23 @@ class Settings {
                     'default' => 'on',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
+                'one_step_product_create'     => [
+                    'name'    => 'one_step_product_create',
+                    'label'   => __( 'One Page Product Creation', 'dokan-lite' ),
+                    'desc'    => __( 'Add new product in single page view', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
+                    'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
+                ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
                     'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
                     'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                    'show_if' => [
+                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                    ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
