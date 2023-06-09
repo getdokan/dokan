@@ -46,7 +46,7 @@ exec(
   },
   () => {
     const planDir      = `build`; // Production build directory.
-    const dest         = `${ planDir }/dokan`; // Temporary folder name after coping all the files here.
+    const dest         = `${ planDir }/dokan-lite`; // Temporary folder name after coping all the files here.
     const composerfile = `composer.json`;
 
     // Removing the old build folder.
@@ -130,7 +130,7 @@ exec(
 
         // Making the zip file here.
         exec(
-          `zip ${ zipFile } dokan -rq`,
+          `zip ${ zipFile } dokan-lite -rq`,
           {
             cwd: planDir,
           },
