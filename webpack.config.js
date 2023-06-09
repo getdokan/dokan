@@ -11,8 +11,10 @@ var entryPoint = {
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
   'vue-bootstrap': './src/utils/Bootstrap.js',
-  'vue-vendor': vueVendor,
-  'dokan-wp': './src/wp-packages/index.js',
+  'vue-vendor': [
+    ...vueVendor,
+    './src/utils/vue-vendor.js',
+  ],
   'dokan-promo-notice': './src/promo-notice/main.js',
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',

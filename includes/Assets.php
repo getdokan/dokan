@@ -362,12 +362,6 @@ class Assets {
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
 
-        if ( version_compare( $wp_version, '5.0', '<' ) ) {
-            $bootstrap_deps[] = 'dokan-wp-packages';
-        } else {
-            $bootstrap_deps[] = 'wp-hooks';
-        }
-
         $scripts = [
             'jquery-tiptip'             => [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
@@ -503,11 +497,7 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
-            'dokan-wp-packages'         => [
-                'src'     => $asset_url . '/js/dokan-wp.js',
-                'deps'    => [ 'jquery' ],
-                'version' => filemtime( $asset_path . 'js/dokan-wp.js' ),
-            ],
+
             'dokan-login-form-popup'    => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
                 'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
