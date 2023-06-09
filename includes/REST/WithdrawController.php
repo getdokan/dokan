@@ -272,39 +272,28 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-//        $request['start_date'] = date("y-m-d",strtotime("-1 day"));
-//        $request['end_date'] = date( "y-m-d" );
-
         if ( ! empty( $request['start_date'] ) && ! empty( $request['end_date'] ) ) {
             $args['start_date'] = $request['start_date'];
             $args['end_date']   = $request['end_date'];
         }
 
-        $cache_group = 'withdraws';
-        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
-        $withdraws   = Cache::get( $cache_key, $cache_group );
-
-        if ( false === $withdraws ) {
-            $withdraws = dokan()->withdraw->all( $args );
-
-            Cache::set( $cache_key, $withdraws, $cache_group );
-        }
-
-        $data = [];
+        $withdraws = dokan()->withdraw->all( $args );
+        $data      = [];
         foreach ( $withdraws->withdraws as $withdraw ) {
             $item   = $this->prepare_item_for_response( $withdraw, $request );
             $data[] = $this->prepare_response_for_collection( $item );
         }
+        $response = rest_ensure_response( $data );
 
-        $response       = rest_ensure_response( $data );
-        $withdraw_count = dokan_get_withdraw_count();
+        // Get withdraw counts.
+        $args['return'] = 'count';
+        $withdraw_count = dokan()->withdraw->all( $args );
 
         $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
         $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
         $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
 
-        $response = $this->format_collection_response( $response, $request, $withdraws->total );
-        return $response;
+        return $this->format_collection_response( $response, $request, $withdraws->total );
     }
 
     /**
