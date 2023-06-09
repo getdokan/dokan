@@ -102,11 +102,19 @@ abstract class DokanRESTController extends WP_REST_Controller {
 
             $object->save();
 
+            $author_id = dokan_get_current_user_id();
+
+            if ( current_user_can( 'manage_options' ) ) {
+                $post_author = absint( $request->get_param( 'post_author' ) );
+                $author      = new \WP_User( $post_author );
+                $author_id   = ( ! empty( $post_author ) && $author->exists() && user_can( $author->ID, 'dokan_add_product' ) ) ? $author->ID : $author_id;
+            }
+
             //Update post author
             wp_update_post(
                 array(
 					'ID' => $object->get_id(),
-					'post_author' => dokan_get_current_user_id(),
+					'post_author' => $author_id,
                 )
             );
 
@@ -149,6 +157,23 @@ abstract class DokanRESTController extends WP_REST_Controller {
             }
 
             $object->save();
+
+            $author_id = dokan_get_current_user_id();
+
+            if ( current_user_can( 'manage_options' ) ) {
+                $post_author = absint( $request->get_param( 'post_author' ) );
+                $author      = new \WP_User( $post_author );
+                $author_id   = ( ! empty( $post_author ) && $author->exists() && user_can( $author->ID, 'dokan_add_product' ) ) ? $author->ID : $author_id;
+            }
+
+            //Update post author
+            wp_update_post(
+                array(
+                    'ID' => $object->get_id(),
+                    'post_author' => $author_id,
+                )
+            );
+
             $this->update_additional_fields_for_object( $object, $request );
 
             /**
