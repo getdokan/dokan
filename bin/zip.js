@@ -25,7 +25,14 @@ const removeFiles = [
   'composer.lock',
 ];
 
-const allowedVendorFiles = {};
+const allowedVendorFiles = {
+  'appsero/client': [
+    'src'
+  ],
+  'jakeasmith/http_build_url': [
+    'src'
+  ],
+};
 
 const { version } = JSON.parse( fs.readFileSync( 'package.json' ) );
 
