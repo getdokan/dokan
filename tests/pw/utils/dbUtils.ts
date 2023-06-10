@@ -3,18 +3,17 @@ import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from './dbData';
 import { helpers } from './helpers';
-// const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
-
-const dbPrefix = process.env.DB_PREFIX;
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
 
 const mySql =  new MySqlConnection({
-	hostname: process.env.DB_HOST_NAME,
-	username: process.env.DB_USER_NAME,
-	password: process.env.DB_USER_PASSWORD,
-	db: process.env.DATABASE,
-	port: Number(process.env.DB_PORT)
+	hostname: DB_HOST_NAME,
+	username: DB_USER_NAME,
+	password: DB_USER_PASSWORD,
+	db: DATABASE,
+	port: Number(DB_PORT)
 });
 
+const dbPrefix = DB_PREFIX;
 
 export const dbUtils = {
 
@@ -33,6 +32,23 @@ export const dbUtils = {
 				return err;
 			}
 		});
+	},
+
+	// get max id
+	async getMaxId(columnName: string, tableName: string ): Promise<any> {
+		const querySelect = `SELECT MAX(${columnName}) as id FROM ${dbPrefix}_${tableName};`;
+		const res = await dbUtils.dbQuery(querySelect);
+		// console.log(res);
+		const id = res[0].id;
+		return id;
+	},
+
+	// update option table
+	async UpdateWpOptionTable(optionName: string, optionValue: object ): Promise<any> {
+		const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
+		const res = await dbUtils.dbQuery(queryUpdate);
+		// console.log(res);
+		return res;
 	},
 
 	// get dokan settings
@@ -73,19 +89,36 @@ export const dbUtils = {
 	},
 
 	// create abuse report
-	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ) {
+	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ): Promise<any> {
 		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTime1}');`;
 		const res = await dbUtils.dbQuery(querySelect);
 		// console.log(res);
 		return res;
 	},
 
-	// update option table
-	async UpdateWpOptionTable(optionName: string, optionValue: object ) {
-		const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
-		const res = await dbUtils.dbQuery(queryUpdate);
+	// create refund
+	async createRefund(responseBody: any): Promise<[any, string]>{
+		const refundId = await this.getMaxId('id', 'dokan_refund') + 1;
+
+		const refund = {
+			id: refundId,
+			orderId: responseBody.id,
+			sellerId: responseBody.stores[0].id,
+			refundAmount: 20.5,
+			refundReason: 'test refund',
+			itemQtys: `{"${responseBody.line_items[0].id}": 1 }`,
+			itemTotals: `{"${responseBody.line_items[0].id}":"10.000000","${responseBody.shipping_lines[0].id}":"5.000000"}`,
+			itemTaxTotals: `{"${responseBody.line_items[0].id}":{"${responseBody.line_items[0].taxes[0].id}":5},"${responseBody.shipping_lines[0].id}":{"${responseBody.line_items[0].taxes[0].id}":0.5}}`,
+			restockItems: 1,
+			date: helpers.currentDateTime1,
+			status: 0, // 0 for pending, 1 for completed
+			method: 0,
+		};
+		// console.log('refund data:', refund);
+		const queryInsert = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', '${refund.status}', '${refund.method}' );`;
+		const res = await dbUtils.dbQuery(queryInsert);
 		// console.log(res);
-		return res;
-	}
+		return [res, refundId];
+	},
 
 };

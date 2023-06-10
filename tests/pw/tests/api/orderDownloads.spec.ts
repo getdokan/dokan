@@ -17,7 +17,7 @@ test.beforeAll(async ({ request }) => {
 		file: responseBody.source_url,
 	}];
 	[, downloadableProductId] = await apiUtils.createProduct({ ...payloads.createDownloadableProduct(), downloads });
-	[, orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+	[,, orderId,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 	[, downloadId] = await apiUtils.createOrderDownload(orderId, [downloadableProductId],);
 });
 

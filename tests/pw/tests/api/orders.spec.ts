@@ -8,7 +8,7 @@ let orderId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+	[,, orderId,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 });
 
 const versions = ['v1', 'v2'];

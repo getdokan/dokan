@@ -17,7 +17,7 @@ test.describe('calculation test', () => {
 		//TODO: modify for lite as well if needed
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
-		const [res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+		const [, res, oid,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 		// console.log( res );
 		console.log( 'Cal: order id:', oid );
 

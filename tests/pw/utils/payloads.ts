@@ -306,6 +306,7 @@ export const payloads = {
 		api_refund: false,
 		amount: '25',
 		reason: 'testing refund',
+		refunded_by: 3,
 		// line_items: [{ refund_total: 1 }],
 	},
 	// withdraw
