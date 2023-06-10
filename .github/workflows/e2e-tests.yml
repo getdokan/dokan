@@ -179,7 +179,7 @@ jobs:
           DB_USER_NAME: root
           DB_USER_PASSWORD: password
           DATABASE: tests-wordpress
-          DB_PREFIX: wp_
+          DB_PREFIX: wp
 
       # - name: Publish Test Report
       #   uses: mikepenz/action-junit-report@v3
