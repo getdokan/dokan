@@ -14,7 +14,6 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
 	const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
 	withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
-	//ToDO: cancel withdraw if any instead of getting existing id
 });
 
 test.describe('withdraw api test', () => {

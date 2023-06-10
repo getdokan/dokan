@@ -24,17 +24,10 @@
 // filter received & expected test
 // trim if necessary
 // lowercase
-
 //TODO: add system info after git action info via system status function, current theme should be there
-//TODO: shorter api endpoints, try to remove parameter as much as possible , /productid or query ...
-getAllOrders: ${SERVER_URL}/v1/orders to endPoints.getAllOrders
-
-
 //TODO: use only one password for every user FOR both suite e2e and api
-
-
-//TODO:
-//TODO:
+//TODO: theme is not activating fix this
+//TODO: test cli dont work
 //TODO:
 //TODO:
 //TODO:
@@ -227,14 +220,13 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 
 // TODO: ********************api suite******************
 
-//TODO: convert admin as vendor to vendor as vendor whole suite
-//TODO: add support ticket via db-query
-//TODO: add abuse report via db-query
+//TODO: convert admin as vendor to vendor for whole suite
 //TODO: add refund via db-query
 //TODO: fix rank math api
 //TODO: create valid payload for every request : which doesn't cause php warning
-//TODO: declare baseURL only in one place, global setup should get from config file
-//TODO: add tag on all tests, withdraw
+//TODO: how customerID, vendorId will be feed in tests , from env_setup, from payload (might be cause circular error, or empty value 
+// because import before call, on beforeall)
+//TODO: run every test separately and update if necessary
 //TODO:
 //TODO:
 //TODO:
@@ -247,7 +239,19 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 //TODO:
 //TODO:
 //TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
+//TODO: USe this for global setup, reporter or use two separate file for both suite
+To expand on the process.env solution:
+
+// playwright.config.ts
+const config = {
+	globalSetup: process.env.MODE === 'test' ? './test-global-setup.ts' : './production-global-setup.ts',
+  };
+  export default config;
+  Run it like this:
+  
+  MODE=production npx playwright test
+
+
+
+
+//TODO: read every playwright github issue & playwright comment

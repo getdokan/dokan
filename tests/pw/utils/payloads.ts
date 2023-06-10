@@ -8,7 +8,7 @@ export const payloads = {
 
 	// wp
 	createPost: {
-		title: 'Hello World',
+		title: 'Hello rk',
 		content: 'My Post Content.',
 		status: 'publish'
 	},
@@ -79,17 +79,20 @@ export const payloads = {
 		type: 'simple',
 		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
 		// regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
+		status: 'publish',
 		categories: [
 			{
 				// id: 48
 			},
 		],
+
 	}),
 
 	createVariableProduct: () => ({
 		name: faker.commerce.productName() + ' (Variable)',
 		type: 'variable',
 		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		status: 'publish',
 		categories: [
 			{
 				// id: 48
@@ -115,6 +118,7 @@ export const payloads = {
 	createProductVariation: {
 		// id: '47',
 		regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+		status: 'publish',
 		categories: [
 			{
 				//  id: 48
@@ -300,8 +304,9 @@ export const payloads = {
 
 	createRefund: {
 		api_refund: false,
+		amount: '25',
 		reason: 'testing refund',
-		line_items: [{ refund_total: 1 }],
+		// line_items: [{ refund_total: 1 }],
 	},
 	// withdraw
 
@@ -949,6 +954,17 @@ export const payloads = {
 	},
 
 	// support ticket
+	createSupportTicket: {
+		author: 2,
+		title: 'support ticket subject',
+		content: 'support ticket message',
+		status: 'open',
+		comment_status: 'open',
+		meta:  {
+			store_id: 8,
+			// order_id: ''
+		}
+	},
 
 	createSupportTicketComment: {
 		replay: 'sp replay...1',

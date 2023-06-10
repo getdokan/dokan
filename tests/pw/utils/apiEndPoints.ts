@@ -496,7 +496,8 @@ export const endPoints = {
 		//posts
 		getAllPosts: `${SERVER_URL}/wp/v2/posts`,
 		getSinglePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
-		createPost: `${SERVER_URL}/wp/v2/posts`,
+		createPost: `${SERVER_URL}/wp/v2/pots/posts`,
+		createCustomPost: (postType: string) => `${SERVER_URL}/wp/v2/${postType}`,
 		updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
 		deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
 	}

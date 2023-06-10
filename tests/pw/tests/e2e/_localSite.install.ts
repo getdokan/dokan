@@ -10,12 +10,13 @@ import { dbData } from '../../utils/dbData';
 
 
 test.describe('setup local site', () => {
+	test.skip(!!process.env.CI, 'skip site setup on CI');
 
 	// test('download wordpress to desired folder', async ({ page }) => {
 	// 	//TODO: create everything using bash script if needed
 	// 	//TODO: get desired folder path
 	// 	//TODO: download wordpress zip and unzip it
-	// 	//TODO: clone desired plugins to wp-plugings
+	// 	//TODO: clone desired plugins to wp-plugins
 	// 	//TODO:
 	// 	//TODO:
 	// 	//TODO:

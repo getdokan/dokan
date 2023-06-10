@@ -10,6 +10,7 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	// check reverse withdrawal payment product exists
 	await apiUtils.getReverseWithdrawalProductId();
+	//TODO: add create product to admin after feature merged with pro
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 

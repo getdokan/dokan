@@ -4,7 +4,6 @@ import { LoginPage } from '../../pages/loginPage';
 import { AdminPage } from '../../pages/adminPage';
 import { ApiUtils } from '../../utils/apiUtils';
 import { payloads } from '../../utils/payloads';
-import { config } from 'dotenv';
 
 setup.describe('authenticate users & set permalink', () => {
 
@@ -22,12 +21,14 @@ setup.describe('authenticate users & set permalink', () => {
 
 	setup('add customer', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
+		const [, customerId] = await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
+		process.env.CUSTOMER_ID = customerId;
 	});
 
 	setup('add vendor', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		const [, sellerId] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		process.env.VENDOR_ID = sellerId;
 	});
 
 	setup('authenticate customer', async ({ page }) => {

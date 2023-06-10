@@ -548,6 +548,12 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	async createSupportTicket(payload: object, auth? : auth) {
+		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: auth });
+		const supportTicketId = responseBody.id;
+		return [responseBody, supportTicketId];
+	}
+
 	/**
 	 * reverse withdrawal  api methods
 	 */
