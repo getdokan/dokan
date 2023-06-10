@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies 
         run: |
           cd tests/pw 
-          npm ci --production
+          npm i --production
 
       - name: Start WordPress Env
         run: |
