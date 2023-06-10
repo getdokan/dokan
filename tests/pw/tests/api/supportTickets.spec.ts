@@ -14,6 +14,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('support ticket api test', () => {
+	test.skip(!!process.env.CI, 'feature not merged yet');
 
 	test('get all support ticket customers @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTicketCustomers);

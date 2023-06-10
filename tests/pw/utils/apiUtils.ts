@@ -487,7 +487,7 @@ export class ApiUtils {
 
 	// create attribute term
 	async createOrderNote(product: object, order: object, orderNote: object, auth? : auth): Promise<[responseBody, string, string]> {
-		const [, orderId] = await this.createOrder(product, order, auth);
+		const [,, orderId] = await this.createOrder(product, order, auth);
 		const [, responseBody] = await this.post(endPoints.createOrderNote(orderId), { data: orderNote, headers: auth });
 		const orderNoteId = responseBody.id;
 		return [responseBody, orderId, orderNoteId];

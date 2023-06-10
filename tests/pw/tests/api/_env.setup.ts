@@ -30,20 +30,20 @@ setup.describe(' setup environment', () => {
 		process.env.VENDOR_ID = sellerId;
 	});
 
-	// setup('set dokan general settings @lite @pro', async () => {
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_category_type: 'single' });
-	// });
+	setup('set dokan general settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_category_type: 'single' });
+	});
 
-	// setup('admin set dokan selling settings @lite @pro', async () => {
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
-	// });
+	setup('admin set dokan selling settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+	});
 
-	// setup('admin set dokan withdraw settings @lite @pro', async () => {
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
-	// });
+	setup('admin set dokan withdraw settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
+	});
 
-	// setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
-	// });
+	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+	});
 
 });

@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies 
         run: |
           cd tests/pw 
-          npm i --production
+          npm ci --production
 
       - name: Start WordPress Env
         run: |
@@ -181,19 +181,33 @@ jobs:
           DATABASE: tests-wordpress
           DB_PREFIX: wp_
 
+      # - name: Publish Test Report
+      #   uses: mikepenz/action-junit-report@v3
+      #   if: always() # always run even if the previous step fails
+      #   with:
+      #     report_paths: "tests/pw/playwright-report/e2e/junit-report/e2e-results.xml"
+      #     # include_passed: true,
+      #     check_retries: true,
+      #     # detailed_summary: true,
+      #     check_name: 'E2E Test Report'
+      #     summary: 'E2E Test Summary'
+      #     # annotate_only: true,
+      #     # annotate_notice: true,
+      #     # job_name: 'e2e2e2e2e2e2e2e_jobName'
+
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
-          report_paths: "tests/pw/playwright-report/junit-report/results.xml"
-          include_passed: true,
+          report_paths: "tests/pw/playwright-report/api/junit-report/api-results.xml"
+          # include_passed: true,
           check_retries: true,
-          detailed_summary: true,
-          check_name: 'E2E Test Report (JUnit)_check_nem'
-          summary: 'E2E Test Summary Report (JUnit)_summary'
+          # detailed_summary: true,
+          check_name: 'API Test Report'
+          summary: 'API Test Summary'
           # annotate_only: true,
-          annotate_notice: true,
-          job_name: 'e2e2e2e2e2e2e2e_jobName'
+          # annotate_notice: true,
+          # job_name: 'e2e2e2e2e2e2e2e_jobName'
 
 
       # - name: Generate Test Report
