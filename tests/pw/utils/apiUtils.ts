@@ -138,7 +138,7 @@ export class ApiUtils {
 		return [response, responseBody];
 	}
 
-	async storageState(path?: string | undefined): Promise<storageState> {  //TODO: test it with getCurrentUser()
+	async storageState(path?: string | undefined): Promise<storageState> {
 		return await this.request.storageState({ path: path });
 	}
 

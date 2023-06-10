@@ -68,7 +68,7 @@ export const dbUtils = {
 			const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
 			res = await dbUtils.dbQuery(queryUpdate);
 		}
-		// console.log(res);
+		console.log(res);
 		return res;
 	},
 
@@ -92,7 +92,7 @@ export const dbUtils = {
 	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ): Promise<any> {
 		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTime1}');`;
 		const res = await dbUtils.dbQuery(querySelect);
-		// console.log(res);
+		console.log(res);
 		return res;
 	},
 
