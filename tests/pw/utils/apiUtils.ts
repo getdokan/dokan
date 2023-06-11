@@ -1355,8 +1355,19 @@ export class ApiUtils {
 	}
 
 	// get system status
-	async getSystemStatus(auth? : auth): Promise<responseBody> {
+	async getSystemStatus(auth? : auth): Promise<[responseBody, object]> {
 		const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
-		return responseBody;
+		const activePlugins = (responseBody.active_plugins).map((a: { plugin: string; version: string; }) => (a.plugin).split('/')[0] + ' v' + a.version );
+		activePlugins.shift();
+		activePlugins.sort();
+		const compactInfo = {
+			wpVersion: 'WordPress Version: ' + responseBody.environment.wp_version,
+			phpVersion: 'PHP Version: ' + responseBody.environment.php_version,
+			mysqlVersion: 'MySql Version: ' + responseBody.environment.mysql_version,
+			theme: 'Theme: ' + responseBody.theme.name + ' v' + responseBody.theme.version,
+			wpDebugMode: 'Debug Mode: ' + responseBody.environment.wp_debug_mode,
+			activePlugins:  activePlugins
+		};
+		return [responseBody, compactInfo];
 	}
 }

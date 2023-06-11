@@ -28,7 +28,7 @@
 //TODO: use only one password for every user FOR both suite e2e and api
 //TODO: theme is not activating fix this
 //TODO: test cli dont work
-//TODO:
+//TODO: fix permalink issue 
 //TODO:
 //TODO:
 //TODO:
@@ -221,13 +221,12 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 // TODO: ********************api suite******************
 
 //TODO: convert admin as vendor to vendor for whole suite
-//TODO: add refund via db-query
 //TODO: fix rank math api
 //TODO: create valid payload for every request : which doesn't cause php warning
 //TODO: how customerID, vendorId will be feed in tests , from env_setup, from payload (might be cause circular error, or empty value 
-// because import before call, on beforeall)
+// because import before call, on before-all)
 //TODO: run every test separately and update if necessary
-//TODO:
+//TODO: run with parallel mode on , make tests independent if necessary
 //TODO:
 //TODO:
 //TODO:

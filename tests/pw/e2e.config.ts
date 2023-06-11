@@ -31,6 +31,7 @@ export default defineConfig({
 			['list', { printSteps: true }],
 			// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/e2e/allure/allure-report', suiteTitle: false }]
 		],
+
 	use: {
 		...devices['Desktop Chrome'],
 		acceptDownloads: true, /* Whether to automatically download all the attachments. */

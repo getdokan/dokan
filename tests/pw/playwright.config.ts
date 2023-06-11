@@ -100,14 +100,14 @@ export default defineConfig({
 	// testMatch: /.*\.spec\.ts/,
 	// outputDir: 'playwright/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: './global-setup', /*Path to the global setup file. This file will be required and run before all the tests. */
-	// // globalTeardown: './global-teardown', /*Path to the global teardown file. This file will be required and run after all the tests. */
+	// globalTeardown: './global-teardown', /*Path to the global teardown file. This file will be required and run after all the tests. */
 	globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
 	maxFailures: process.env.CI ? 20 : 20, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
 	// timeout: 45 * 1000, /* Maximum time one test can run for. */
 	// expect: { timeout: 10 * 1000, /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
 	// },  /* Configuration for the expect assertion library */
 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
-	// // fullyParallel: true, 	/* Run tests in files in parallel */
+	// fullyParallel: true, 	/* Run tests in files in parallel */
 	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	// repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 	// retries: process.env.CI ? 1 : 0,  	/*The maximum number of retry attempts given to failed tests.  */
