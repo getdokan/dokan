@@ -546,7 +546,7 @@ class Settings {
                     'desc'    => __( 'Add new product in single page view', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
-                    'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
+                    'tooltip' => __( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
