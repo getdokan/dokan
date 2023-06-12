@@ -1357,9 +1357,9 @@ export class ApiUtils {
 	// get system status
 	async getSystemStatus(auth? : auth): Promise<[responseBody, object]> {
 		const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
-		const activePlugins = (responseBody.active_plugins).map((a: { plugin: string; version: string; }) => (a.plugin).split('/')[0] + ' v' + a.version );
-		activePlugins.shift();
+		let activePlugins = (responseBody.active_plugins).map((a: { plugin: string; version: string; }) => (a.plugin).split('/')[0] + ' v' + a.version );
 		activePlugins.sort();
+		activePlugins = activePlugins.slice(1, -4);
 		const compactInfo = {
 			wpVersion: 'WordPress Version: ' + responseBody.environment.wp_version,
 			phpVersion: 'PHP Version: ' + responseBody.environment.php_version,
