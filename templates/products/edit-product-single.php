@@ -128,6 +128,10 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
              *  @since 2.4
              */
             do_action( 'dokan_product_content_inside_area_before' );
+
+            if ( $new_product ) {
+                do_action( 'dokan_new_product_before_product_area' );
+            }
             ?>
 
             <header class="dokan-dashboard-header dokan-clearfix">
