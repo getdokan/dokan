@@ -70,7 +70,42 @@
 
             this.attribute.disbalePredefinedAttribute();
 
+            this.setCorrectProductId();
+
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+        },
+
+        setCorrectProductId : function () {
+            let productForm = $('.dokan-product-edit-form');
+            if ( ! productForm ) {
+              return;
+            }
+            let productId    = $( '#dokan_product_id' ).val();
+            let dokanOnePage = '1' === $('#dokan_one_page').val();
+
+            if ( window.history.replaceState ) {
+                //prevents browser from storing history with each change:
+
+                let url = new URL( document.location );
+                let searchParams = url.searchParams;
+
+                // new value of "product_id" is set to new value
+                searchParams.set('product_id', productId );
+                let action = searchParams.get( 'action' );
+
+                // change the search property of the main url
+                url.search = searchParams.toString();
+
+                // the new url string
+                let newUrl = url.toString();
+                let stateData = {
+                    product_id: productId,
+                }
+
+                if ( 'edit' === action && dokanOnePage ) {
+                    window.history.replaceState( stateData, document.title, newUrl );
+                }
+            }
         },
 
         saleSchedule: function() {
