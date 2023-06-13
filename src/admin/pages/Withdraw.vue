@@ -110,6 +110,10 @@
                             <button @click="data.clickApply" v-if="! data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan-lite' ) }}</button>
                         </div>
                     </date-range-picker>
+
+                    <a @click="exportAllLogs()" id="export-all-logs" class="button router-link-active" style="float: right; margin-left: 5px;">
+                        {{ __('Export Logs', 'dokan') }}
+                    </a>
                 </template>
 
                 <template slot="actions" slot-scope="data">
@@ -148,7 +152,6 @@ const DateRangePicker = dokan_get_lib('DateRangePicker');
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
-
 export default {
 
     name: 'Withdraw',
@@ -180,6 +183,10 @@ export default {
                 'Last Month': [moment().subtract(1, 'month').startOf('month').toDate(), moment().subtract(1, 'month').endOf('month').toDate()],
                 'This Year': [moment().month(0).startOf('month').toDate(), moment().month(11).endOf('month').toDate()],
                 'Last Year': [moment().month(0).subtract(1, 'year').startOf('month').toDate(), moment().month(11).subtract(1, 'year').endOf('month').toDate()]
+            },
+            progressbar: {
+                value: 0,
+                isActive: false,
             },
             totalPages: 1,
             perPage: 10,
@@ -564,6 +571,58 @@ export default {
             }
 
             return dokan.hooks.applyFilters( 'dokan_get_payment_details', details, method, data );
+        },
+
+        recursiveWriteLogsToFile( page = 1 ) {
+            this.loading = true;
+            let user_id  = '';
+
+            if ( parseInt( this.filter.user_id ) > 0 ) {
+                user_id = this.filter.user_id;
+            }
+
+            const data = {
+                per_page: this.perPage,
+                page: this.currentPage,
+                // status: this.currentStatus,
+                user_id: user_id,
+                start_date: this.filterTransactionDate.start_date,
+                end_date: this.filterTransactionDate.end_date
+            };
+
+            dokan.api.get('/withdraw/export', data )
+                .done( ( response, status, xhr ) => {
+                    if ('success' in response && response.success === false) {
+                        this.loading              = false;
+                        this.progressbar.isActive = false;
+                        return;
+                    }
+
+                    if ( 'data' in response ) {
+                        this.progressbar.value = response.data.percentage;
+
+                        if ( response.data.percentage >= 100 ) {
+                            this.loading              = false;
+                            this.progressbar.isActive = false;
+
+                            let url = response.data.url;
+
+                            window.location.assign(url);
+                        }
+
+                        if ( response.data.percentage < 100 ) {
+                            this.recursiveWriteLogsToFile( response.data.step );
+                        }
+                    }
+                } )
+        },
+
+        exportAllLogs() {
+            this.loading              = true;
+            this.progressbar.isActive = true;
+            this.progressbar.value    = 0;
+
+            this.recursiveWriteLogsToFile( 1 );
         },
 
         moment(date) {

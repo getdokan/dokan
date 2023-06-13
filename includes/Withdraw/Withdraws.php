@@ -185,9 +185,8 @@ class Withdraws {
                 'completed' => 0,
                 'cancelled' => 0,
             ];
-
-            foreach ( $withdraws as $withdraw ) {
-                $this->status[ $withdraw['status'] ] = $withdraw['count'];
+            foreach ( $withdraws as $row ) {
+                $this->status[ $row['status'] ] = $row['count'];
             }
         } else {
             $this->withdraws = [];
@@ -202,7 +201,7 @@ class Withdraws {
     }
 
     /**
-     * Get withdraw status count.
+     * Get withdraw status count
      *
      * @since DOKAN_SINCE
      *

@@ -14,6 +14,7 @@ class Hooks {
      * @return void
      */
     public function __construct() {
+        add_action( 'init', [ $this, 'download_withdraw_log_export_file' ] );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         // change custom withdraw method title
         add_filter( 'dokan_get_withdraw_method_title', [ $this, 'dokan_withdraw_dokan_custom_method_title' ], 10, 3 );
@@ -25,6 +26,27 @@ class Hooks {
             add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'ajax_handle_withdraw_request' ] );
             add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'ajax_handle_make_default_method' ] );
         }
+    }
+
+    /**
+     * Download Withdraw Log Export File.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function download_withdraw_log_export_file() {
+        if ( ! isset( $_GET['download-withdraw-log-csv'] ) || ! wp_verify_nonce( wp_unslash( $_GET['download-withdraw-log-csv'] ), 'download-withdraw-log-csv-nonce' ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            return;
+        }
+
+        // Export withdraw logs.
+        $exporter = new \WeDevs\Dokan\Admin\WithdrawLogExporter();
+        $exporter->export();
     }
 
     /**
