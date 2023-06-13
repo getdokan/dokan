@@ -41,7 +41,6 @@ if ( isset( $_GET['product_id'] ) ) {
 }
 
 if ( isset( $_GET['product_id'] ) && 0 === absint( $_GET['product_id'] ) ) {
-    wp_delete_auto_drafts();
     $post_id      = intval( $_GET['product_id'] );
     $post_title   = '';
     $post_content = '';
