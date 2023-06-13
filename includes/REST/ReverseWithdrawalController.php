@@ -90,7 +90,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'create_transaction' ],
-                    'permission_callback' => [ $this, 'get_store_transactions_permissions_check' ],
+                    'permission_callback' => [ $this, 'create_transactions_permissions_check' ],
                     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
@@ -201,6 +201,19 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      */
     public function get_store_transactions_permissions_check( $request ) {
         return is_user_logged_in() && dokan_is_user_seller( dokan_get_current_user_id() );
+    }
+
+    /**
+     * Checks if a given request has access to create items.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool True if the request has read access, false otherwise.
+     */
+    public function create_transactions_permissions_check( $request ) {
+        return is_user_logged_in() && current_user_can( 'manage_options' );
     }
 
     /**
@@ -393,8 +406,8 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 'trn_type'  => $request->get_param( 'trn_type' ),
                 'vendor_id' => $request->get_param( 'vendor_id' ),
                 'note'      => $request->get_param( 'note' ),
-                'debit'     => $request->get_param( 'debit' ),
-                'credit'    => $request->get_param( 'credit' ),
+                'debit'     => wc_format_decimal( $request->get_param( 'debit' ) ),
+                'credit'    => wc_format_decimal( $request->get_param( 'credit' ) ),
             ]
         );
 
@@ -402,7 +415,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             return $inserted_id;
         }
 
-        return rest_ensure_response( $inserted_id );
+        return rest_ensure_response( [ 'trn_id' => $inserted_id ] );
     }
 
     /**
@@ -725,7 +738,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 ],
                 'trn_id'    => [
                     'description' => __( 'Transaction ID', 'dokan-lite' ),
-                    'type'        => 'number',
+                    'type'        => 'integer',
                     'context'     => [ 'view', 'edit' ],
                     'default'     => 0,
                 ],
@@ -766,14 +779,14 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 ],
                 'debit'     => [
                     'description' => __( 'Amount that site admin charged to store owner', 'dokan-lite' ),
-                    'type'        => 'number',
-                    'default'     => 0,
+                    'type'        => 'string',
+                    'default'     => '0',
                     'context'     => [ 'view', 'edit' ],
                 ],
                 'credit'    => [
                     'description' => __( 'Amount that has been paid via store owner to site admin', 'dokan-lite' ),
-                    'type'        => 'number',
-                    'default'           => 0,
+                    'type'        => 'string',
+                    'default'     => '0',
                     'context'     => [ 'view', 'edit' ],
                 ],
                 'balance'   => [

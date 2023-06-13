@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style scoped lang='less'>
 .dokan-radio-fields {
     display: flex;
     flex: 2;

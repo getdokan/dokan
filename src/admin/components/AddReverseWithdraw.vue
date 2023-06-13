@@ -4,14 +4,14 @@
             <div slot='body' class='dokan-rw-body'>
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
-                        <h3>{{ __('Vendor', 'dokan-lite') }}</h3>
+                        <h3>{{ __('Select vendor', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="form-group dokan-rw-multiselect">
                             <multiselect
                                 @search-change="getVendorList"
                                 v-model="selectedVendor"
-                                :placeholder="this.__( 'Select vendor', 'dokan-lite' )"
+                                :placeholder="this.__( 'Search vendor', 'dokan-lite' )"
                                 :options="allVendors"
                                 @select="onStoreSelectVendor"
                                 track-by="vendorId"
@@ -22,6 +22,7 @@
                                 :multiselect="false"
                                 :searchable="true"
                                 :showLabels="false"
+                                :class="'dokan-rw-multiselect-container'"
                             />
                         </div>
                         <span v-if="errors.vendorId" class='dokan-error'>{{ __( 'Please select a vendor', 'dokan-lite' ) }}</span>
@@ -30,7 +31,7 @@
 
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
-                        <h3>{{ __('Transection type', 'dokan-lite') }}</h3>
+                        <h3>{{ __('Transection Type', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <dokan-radio-group
@@ -38,12 +39,19 @@
                             :value="transectionType"
                             :items="transectionTypeItems"
                         />
+                    </div>
+                </div>
 
-                        <div class="form-group dokan-rw-multiselect" v-if="'manual_product' === transectionType">
+                <div class='dokan-rw-section' v-if="'manual_product' === transectionType">
+                    <div class='dokan-rw-section-heading'>
+                        <h3>{{ __('Select Product', 'dokan-lite') }}</h3>
+                    </div>
+                    <div class='dokan-rw-section-body'>
+                        <div class="form-group dokan-rw-multiselect">
                             <multiselect
                                 @search-change="getProducts"
                                 v-model="selectedProduct"
-                                :placeholder="this.__( 'Select product', 'dokan-lite' )"
+                                :placeholder="this.__( 'Search product', 'dokan-lite' )"
                                 :options="allProducts"
                                 track-by="id"
                                 label="name"
@@ -57,12 +65,19 @@
                             />
                             <span v-if="errors.trId" class='dokan-error'>{{ __( 'Please select a product', 'dokan-lite' ) }}</span>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="form-group dokan-rw-multiselect" v-if="'manual_order' === transectionType">
+                <div class='dokan-rw-section' v-if="'manual_order' === transectionType">
+                    <div class='dokan-rw-section-heading'>
+                        <h3>{{ __('Select Order', 'dokan-lite') }}</h3>
+                    </div>
+                    <div class='dokan-rw-section-body'>
+                        <div class="form-group dokan-rw-multiselect">
                             <multiselect
                                 @search-change="getOrders"
                                 v-model="selectedOrder"
-                                :placeholder="this.__( 'Select order', 'dokan-lite' )"
+                                :placeholder="this.__( 'Search order', 'dokan-lite' )"
                                 :options="allOrders"
                                 track-by="id"
                                 label="name"
@@ -81,7 +96,7 @@
 
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
-                        <h3>{{ __('Withdrawal amount', 'dokan-lite') }}</h3>
+                        <h3>{{ __('Withdrawal Balance Type', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <dokan-radio-group
@@ -89,27 +104,35 @@
                             :value="withdrawalType"
                             :items="withdrawalTypeItems"
                         />
-                        <div class="dokan-rw-input">
-                            <input
-                                v-model='withdrawalAmount'
-                                type='number'
-                                class='regular-text'
-                                :placeholder="__( 'Enter withdrawal amount', 'dokan-lite' )"
-                            />
-                        </div>
-                        <span v-if="errors.withdrawalAmount" class='dokan-error'>{{ __( 'Please enter withdrawal amount', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
 
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
-                        <h3>{{ __('Withdrawal note', 'dokan-lite') }}</h3>
+                        <h3>{{ __('Reverse Withdrawal Amount', 'dokan-lite') }}</h3>
+                    </div>
+                    <div class='dokan-rw-section-body'>
+                        <div class="dokan-rw-input">
+                            <input
+                                v-model='withdrawalAmount'
+                                type='text'
+                                class='regular-text wc_input_decimal'
+                                :placeholder="__( 'Enter amount', 'dokan-lite' )"
+                            />
+                        </div>
+                        <span v-if="errors.withdrawalAmount" class='dokan-error'>{{ __( 'Kindly provide the withdrawal amount', 'dokan-lite' ) }}</span>
+                    </div>
+                </div>
+
+                <div class='dokan-rw-section'>
+                    <div class='dokan-rw-section-heading'>
+                        <h3>{{ __('Notes', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="dokan-rw-note-area">
-                            <textarea v-model="withdrawalNote" :placeholder="__( 'Write withdrawal note', 'dokan-lite' )"/>
+                            <textarea v-model="withdrawalNote" :placeholder="__( 'Write reverse withdrawal note', 'dokan-lite' )"/>
                         </div>
-                        <span v-if="errors.withdrawalNote" class='dokan-error'>{{ __( 'Please write withdrawal note', 'dokan-lite' ) }}</span>
+                        <span v-if="errors.withdrawalNote" class='dokan-error'>{{ __( 'Please write reverse withdrawal note', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
             </div>
@@ -133,10 +156,10 @@
 import FieldHeading from 'admin/components/FieldHeading.vue';
 import DokanRadioGroup from 'admin/components/DokanRadioGroup.vue'
 
-const Modal   = dokan_get_lib('Modal');
-const Loading = dokan_get_lib('Loading');
-const Multiselect     = dokan_get_lib('Multiselect');
-const Debounce        = dokan_get_lib('debounce');
+const Modal       = dokan_get_lib('Modal');
+const Loading     = dokan_get_lib('Loading');
+const Multiselect = dokan_get_lib('Multiselect');
+const Debounce    = dokan_get_lib('debounce');
 
 const swal = Swal.mixin({
     showCloseButton: true,
@@ -162,12 +185,12 @@ export default {
     data() {
         return {
             loader: window.dokan.ajax_loader,
-            title: this.__( 'Add new reverse withdrawal', 'dokan-lite' ),
+            title: this.__( 'Add New Reverse Withdrawal', 'dokan-lite' ),
             transectionType: 'manual_product',
             withdrawalType: 'debit',
             transectionTypeItems: [
                 {
-                    label: this.__( 'Ptoduct', 'dokan-lite' ),
+                    label: this.__( 'Product', 'dokan-lite' ),
                     value: 'manual_product'
                 },
                 {
@@ -211,42 +234,43 @@ export default {
         },
 
         validateData() {
-            let newErrors = {};
+            let debit  = 0,
+                credit = 0,
+                trn_id = 0;
+            this.errors = {};
 
             if( ! this.selectedVendor.vendorId ) {
-                newErrors.vendorId = true;
+                errors.vendorId = true;
             }
 
             if ( ('manual_product' === this.transectionType && ! this.selectedProduct.id) || ('manual_order' === this.transectionType && ! this.selectedOrder.id) ) {
-                newErrors.trId = true;
+                errors.trId = true;
             }
 
 
-            if ( ('debit' === this.withdrawalType && ! this.withdrawalAmount) || ('credit' === this.withdrawalType && ! this.withdrawalAmount) ) {
-                newErrors.withdrawalAmount = true;
+            if ( ! this.withdrawalAmount ) {
+                errors.withdrawalAmount = true;
             }
 
 
             if( ! this.withdrawalNote ) {
-                newErrors.withdrawalNote = true;
+                errors.withdrawalNote = true;
             }
 
-            if (Object.keys(newErrors).length) {
-                this.errors = newErrors;
+            if (Object.keys(errors).length) {
                 return '';
             }
 
-            let debit = 'debit' === this.withdrawalType ? this.withdrawalAmount : 0;
-            let credit ='credit' === this.withdrawalType ? this.withdrawalAmount : 0;
-            let trn_id = 0;
+            debit = 'debit' === this.withdrawalType ? this.withdrawalAmount : 0;
+            credit ='credit' === this.withdrawalType ? this.withdrawalAmount : 0;
 
             if ( 'manual_product' === this.transectionType ) {
-                trn_id = this.selectedProduct.id ?? '';
+                trn_id = this.selectedProduct.id ?? 0;
             } else if ( 'order_product' === this.transectionType ) {
-                trn_id = this.selectedOrder.id ?? '';
+                trn_id = this.selectedOrder.id ?? 0;
             }
 
-            let data = {
+            return {
                 trn_id,
                 trn_type: this.transectionType,
                 vendor_id: this.selectedVendor.vendorId ?? '',
@@ -254,9 +278,6 @@ export default {
                 debit,
                 credit,
             };
-
-            this.errors = {};
-            return data;
         },
 
         addNewWithdraw() {
@@ -417,12 +438,14 @@ export default {
     }
 }
 
-.multiselect {
-    .multiselect__tags {
-        border: 1px solid #b0a7a7;
+.dokan-rw-multiselect-container {
+    .multiselect {
+        .multiselect__tags {
+            border: 1px solid #b0a7a7;
 
-        .multiselect__placeholder {
-            color: #b0a7a7;
+            .multiselect__placeholder {
+                color: #b0a7a7;
+            }
         }
     }
 }
@@ -473,7 +496,6 @@ export default {
 .dokan-rw-input {
     input {
         width: 100%;
-        margin-top: 1rem;
         padding: .2rem;
         border: 1px solid #b0a7a7;
 
