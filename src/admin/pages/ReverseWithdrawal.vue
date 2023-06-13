@@ -261,11 +261,6 @@ export default {
         bulkActions() {
             return [];
         },
-
-        onCreatedReverseWithdrawal() {
-            this.fetchStoreLists();
-            this.fetchBalances();
-        },
     },
 
     watch: {
@@ -458,6 +453,11 @@ export default {
                 message = jqXHR.responseText;
             }
             return message;
+        },
+
+        onCreatedReverseWithdrawal() {
+            this.fetchStoreLists();
+            this.fetchBalances();
         },
     }
 };

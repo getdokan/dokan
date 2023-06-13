@@ -240,24 +240,24 @@ export default {
             this.errors = {};
 
             if( ! this.selectedVendor.vendorId ) {
-                errors.vendorId = true;
+                this.errors.vendorId = true;
             }
 
             if ( ('manual_product' === this.transectionType && ! this.selectedProduct.id) || ('manual_order' === this.transectionType && ! this.selectedOrder.id) ) {
-                errors.trId = true;
+                this.errors.trId = true;
             }
 
 
             if ( ! this.withdrawalAmount ) {
-                errors.withdrawalAmount = true;
+                this.errors.withdrawalAmount = true;
             }
 
 
             if( ! this.withdrawalNote ) {
-                errors.withdrawalNote = true;
+                this.errors.withdrawalNote = true;
             }
 
-            if (Object.keys(errors).length) {
+            if (Object.keys(this.errors).length) {
                 return '';
             }
 
