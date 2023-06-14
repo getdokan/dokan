@@ -867,11 +867,6 @@ jQuery(function($) {
       }
     });
 
-    /**
-     * Coupon category search
-     */
-    $('.dokan-category-search').select2({});
-
   /**
    * Trigger bulk item checkbox selections
    */
