@@ -631,6 +631,7 @@ export default {
             }
 
             const data = {
+                is_export: true,
                 per_page: this.perPage,
                 page: this.currentPage,
                 // status: this.currentStatus,
@@ -640,7 +641,7 @@ export default {
                 end_date: this.filterTransactionDate.end_date
             };
 
-            dokan.api.get('/withdraw/export', data )
+            dokan.api.get('/withdraw', data )
                 .done( ( response, status, xhr ) => {
                     if ('success' in response && response.success === false) {
                         this.loading              = false;

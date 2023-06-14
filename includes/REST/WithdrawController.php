@@ -53,6 +53,12 @@ class WithdrawController extends WP_REST_Controller {
 									'type'    => 'integer',
 								],
 							],
+                            'is_export' => [
+                                'description' => __( 'Is withdraws exportable', 'dokan-lite' ),
+                                'type'        => 'boolean',
+                                'context'     => [ 'view' ],
+                                'default'     => false,
+                            ],
 						]
 					),
 					'permission_callback' => [ $this, 'get_items_permissions_check' ],
@@ -113,28 +119,6 @@ class WithdrawController extends WP_REST_Controller {
                     'permission_callback' => [ $this, 'get_payment_method_items_permissions_check' ],
                 ],
                 'schema' => [ $this, 'get_payment_method_item_schema' ],
-            ]
-        );
-
-        register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/export', [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'export_items' ],
-                    'args'                => array_merge(
-                        $this->get_collection_params(), [
-                            'ids' => [
-                                'description' => __( 'IDs of withdraws', 'dokan-lite' ),
-                                'type'        => 'array',
-                                'context'     => [ 'view' ],
-                                'items'       => [
-                                    'type'    => 'integer',
-                                ],
-                            ],
-                        ]
-                    ),
-                    'permission_callback' => [ $this, 'export_items_permissions_check' ],
-                ],
             ]
         );
 
@@ -230,17 +214,6 @@ class WithdrawController extends WP_REST_Controller {
      * @return bool
      */
     public function get_payment_method_items_permissions_check( $request ) {
-        return current_user_can( 'dokan_manage_withdraw' );
-    }
-
-    /**
-     * Check Permission for Exporting Withdraw Items.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public function export_items_permissions_check( $request ) {
         return current_user_can( 'dokan_manage_withdraw' );
     }
 
@@ -343,17 +316,55 @@ class WithdrawController extends WP_REST_Controller {
             $item   = $this->prepare_item_for_response( $withdraw, $request );
             $data[] = $this->prepare_response_for_collection( $item );
         }
-        $response = rest_ensure_response( $data );
 
         // Get withdraw counts.
         $args['return'] = 'count';
         $withdraw_count = dokan()->withdraw->all( $args );
 
-        $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
-        $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
-        $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+        if ( empty( $request['is_export'] ) ) {
+            $response = rest_ensure_response( $data );
 
-        return $this->format_collection_response( $response, $request, $withdraws->total );
+            $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
+            $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
+            $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+
+            return $this->format_collection_response( $response, $request, $withdraws->total );
+        }
+
+
+        // Export items.
+        $exporter = new WithdrawLogExporter();
+        $step     = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
+
+        $exporter->set_items( $data );
+        $exporter->set_page( $step );
+        $exporter->set_limit( $args['limit'] );
+        $exporter->set_total_rows( $withdraw_count[ $args['status'] ] );
+        $exporter->generate_file();
+
+        if ( $exporter->get_percent_complete() >= 100 ) {
+            wp_send_json_success(
+                [
+                    'step'       => 'done',
+                    'percentage' => 100,
+                    'url'        => add_query_arg(
+                        [
+                            'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
+                        ], admin_url( 'admin.php' )
+                    ),
+                ], 200
+            );
+        } else {
+            wp_send_json_success(
+                [
+                    'step'       => ++$step,
+                    'percentage' => $exporter->get_percent_complete(),
+                    'columns'    => $exporter->get_column_names(),
+                ], 200
+            );
+        }
+
+        exit();
     }
 
     /**
@@ -574,97 +585,6 @@ class WithdrawController extends WP_REST_Controller {
         }
 
         return rest_ensure_response( $data );
-    }
-
-    /**
-     * Export Items.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param $request
-     *
-     * @return WP_REST_Response|WP_Error
-     */
-    public function export_items( $request ) {
-        $args = [
-            'status'   => dokan()->withdraw->get_status_code( $request['status'] ),
-            'paginate' => true,
-            'page'     => $request['page'],
-            'limit'    => $request['per_page'],
-        ];
-
-        $user_id = null;
-
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            // Vendors can only see their own requests.
-            $user_id = dokan_get_current_user_id();
-
-            if ( empty( $user_id ) ) {
-                return new WP_Error( 'dokan_rest_withdraw_no_vendor_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
-            }
-        } elseif ( isset( $request['user_id'] ) ) {
-            // Allow manager to filter request with user or vendor id.
-            $user_id = $request['user_id'];
-        }
-
-        if ( $user_id ) {
-            $args['user_id'] = $user_id;
-        }
-
-        if ( isset( $request['ids'] ) ) {
-            $args['ids'] = $request['ids'];
-        }
-
-        if ( ! empty( $request['start_date'] ) && ! empty( $request['end_date'] ) ) {
-            $args['start_date'] = $request['start_date'];
-            $args['end_date']   = $request['end_date'];
-        }
-
-        $withdraws = dokan()->withdraw->all( $args );
-        $logs      = [];
-        foreach ( $withdraws->withdraws as $withdraw ) {
-            $item   = $this->prepare_item_for_response( $withdraw, $request );
-            $logs[] = $this->prepare_response_for_collection( $item );
-        }
-
-        $step   = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
-
-        // Get withdraw counts.
-        $args['return'] = 'count';
-        $withdraw_count = dokan()->withdraw->all( $args );
-
-        // Export items.
-        $exporter = new WithdrawLogExporter();
-
-        $exporter->set_items( $logs );
-        $exporter->set_page( $step );
-        $exporter->set_limit( $args['limit'] );
-        $exporter->set_total_rows( $withdraw_count[ $args['status'] ] );
-        $exporter->generate_file();
-
-        if ( $exporter->get_percent_complete() >= 100 ) {
-            wp_send_json_success(
-                [
-                    'step'       => 'done',
-                    'percentage' => 100,
-                    'url'        => add_query_arg(
-                        [
-                            'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
-                        ], admin_url( 'admin.php' )
-                    ),
-                ], 200
-            );
-        } else {
-            wp_send_json_success(
-                [
-                    'step'       => ++$step,
-                    'percentage' => $exporter->get_percent_complete(),
-                    'columns'    => $exporter->get_column_names(),
-                ], 200
-            );
-        }
-
-        exit();
     }
 
     /**
