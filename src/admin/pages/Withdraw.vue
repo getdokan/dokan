@@ -78,7 +78,7 @@
                     <select
                         id="filter-vendors"
                         style="width: 190px;"
-                        :data-placeholder="__('Filter by vendor', 'dokan-lite')"
+                        :data-placeholder="__('Filter by Vendor', 'dokan-lite')"
                     />
                     <button
                         v-if="filter.user_id"
@@ -86,6 +86,12 @@
                         class="button"
                         @click="filter.user_id = 0"
                     >&times;</button>
+
+                    <select
+                        id="filter-payment-methods"
+                        style="width: 190px;"
+                        :data-placeholder="__('Filter by Payment Methods', 'dokan-lite')"
+                    />
 
                     <date-range-picker
                         class="mr-5"
@@ -188,11 +194,16 @@ export default {
                 value: 0,
                 isActive: false,
             },
+            paymentMethods: [],
             totalPages: 1,
             perPage: 10,
             totalItems: 0,
             filter: {
                 user_id: 0,
+                payment_method: {
+                    id: '',
+                    title: '',
+                },
                 transaction_date: {
                     startDate: '',
                     endDate: '',
@@ -242,6 +253,14 @@ export default {
             }
 
             this.goTo(this.query);
+        },
+
+        'filter.payment_method.id'( id ) {
+            if ( ! id ) {
+                this.clearSelection('#filter-payment-methods');
+            }
+
+            this.fetchRequests();
         },
 
         'filter.transaction_date.startDate'() {
@@ -362,6 +381,8 @@ export default {
     mounted() {
         const self = this;
 
+        self.getPaymentMethodSelector();
+
         $('#filter-vendors').selectWoo({
             ajax: {
                 url: "".concat(dokan.rest.root, "dokan/v1/stores"),
@@ -390,6 +411,17 @@ export default {
         $('#filter-vendors').on('select2:select', (e) => {
             self.filter.user_id = e.params.data.id;
         });
+
+        $('#filter-payment-methods').on('select2:select', (e) => {
+            self.filter.payment_method.id = e.params.data.id;
+            self.filter.payment_method.title = e.params.data.text;
+        });
+
+        $('#filter-payment-methods').on('select2:clear', (e) => {
+            console.log(self.filter.payment_method);
+            console.log(e);
+            self.filter.payment_method.id = "";
+        } );
     },
 
     filters: {
@@ -399,6 +431,22 @@ export default {
     },
 
     methods: {
+        async getPaymentMethodSelector() {
+            await dokan.api.get("/withdraw/payment_methods" )
+                .done( ( response, status, xhr ) => {
+                    this.paymentMethods = [ { id: '', text: '' } ].concat( response.map( payment_method => {
+                        return {
+                            id: payment_method.id,
+                            text: payment_method.title
+                        }
+                    } ) );
+
+                    jQuery( '#filter-payment-methods' ).select2( {
+                        data: this.paymentMethods,
+                        allowClear: true
+                    } ).val( this.filter.payment_method ).trigger( 'change' );
+                } );
+        },
 
         updatedCounts(xhr) {
             this.counts.pending   = parseInt( xhr.getResponseHeader('X-Status-Pending') );
@@ -450,6 +498,7 @@ export default {
                 page: this.currentPage,
                 status: this.currentStatus,
                 user_id: user_id,
+                payment_method: this.filter.payment_method.id,
                 start_date: this.filterTransactionDate.start_date,
                 end_date: this.filterTransactionDate.end_date
             };
@@ -586,6 +635,7 @@ export default {
                 page: this.currentPage,
                 // status: this.currentStatus,
                 user_id: user_id,
+                payment_method: this.paymentMethods.id,
                 start_date: this.filterTransactionDate.start_date,
                 end_date: this.filterTransactionDate.end_date
             };
