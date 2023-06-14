@@ -2,6 +2,8 @@
  * This file is created to delte the unnecessery files.
  * For ex: webpack creates a simple.js file simple.less file and also for every less files and we don't need the simple.js file.
  * if any specific file is needed to delete the file dir can be added and file will be deleted when run the below code.
+ *
+ * @since DOKAN_SINCE
  */
 const fs = require( 'fs-extra' );
 const chalk = require( 'chalk' );
