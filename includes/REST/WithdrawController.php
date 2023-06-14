@@ -106,6 +106,17 @@ class WithdrawController extends WP_REST_Controller {
         );
 
         register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/payment_methods', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_payment_method_items' ],
+                    'permission_callback' => [ $this, 'get_payment_method_items_permissions_check' ],
+                ],
+                'schema' => [ $this, 'get_payment_method_item_schema' ],
+            ]
+        );
+
+        register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/export', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -212,7 +223,18 @@ class WithdrawController extends WP_REST_Controller {
     }
 
     /**
-     * Check permission for exporting withdraw items.
+     * Check Permission for Wthdraw Payment Method Items.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_payment_method_items_permissions_check( $request ) {
+        return current_user_can( 'dokan_manage_withdraw' );
+    }
+
+    /**
+     * Check Permission for Exporting Withdraw Items.
      *
      * @since DOKAN_SINCE
      *
@@ -304,6 +326,10 @@ class WithdrawController extends WP_REST_Controller {
 
         if ( isset( $request['ids'] ) ) {
             $args['ids'] = $request['ids'];
+        }
+
+        if ( ! empty( $request['payment_method'] ) ) {
+            $args['method'] = $request['payment_method'];
         }
 
         if ( ! empty( $request['start_date'] ) && ! empty( $request['end_date'] ) ) {
@@ -527,6 +553,27 @@ class WithdrawController extends WP_REST_Controller {
         } catch ( Exception $e ) {
             return $this->send_response_error( $e );
         }
+    }
+
+    /**
+     * Get Withdraw Payment Method Items.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response
+     */
+    public function get_payment_method_items( $request ) {
+        global $wpdb;
+
+        $payment_methods = $wpdb->get_col( "SELECT DISTINCT method FROM {$wpdb->prefix}dokan_withdraw" ); //phpcs:ignore
+        $data            = [];
+
+        foreach ( $payment_methods as $payment_method ) {
+            $item   = $this->prepare_payment_method_item_for_response( $payment_method, $request );
+            $data[] = $this->prepare_response_for_collection( $item );
+        }
+
+        return rest_ensure_response( $data );
     }
 
     /**
@@ -759,6 +806,24 @@ class WithdrawController extends WP_REST_Controller {
     }
 
     /**
+     * Prepare Payment Method Item Data for Response.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function prepare_payment_method_item_for_response( $payment_method, $request ) {
+        $data = [
+            'id'    => $payment_method,
+            'title' => dokan_withdraw_get_method_title( $payment_method ),
+        ];
+
+        $response = rest_ensure_response( $data );
+
+        return apply_filters( 'dokan_rest_prepare_withdraw_payment_method_object', $response, $payment_method, $request );
+    }
+
+    /**
      * Format item's collection for response
      *
      * @param  WP_REST_Response $response
@@ -895,6 +960,39 @@ class WithdrawController extends WP_REST_Controller {
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
+                ],
+            ],
+        ];
+
+        return $this->add_additional_fields_schema( $schema );
+    }
+
+    /**
+     * Item Schema for Withdraw Payment Methods.
+     *
+     * @since DOKAN_LITE
+     *
+     * @return array
+     */
+    public function get_payment_method_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'Withdraw Payment Methods',
+            'type'       => 'object',
+            'properties' => [
+                'id' => [
+                    'description' => __( 'Unique identifier for the payment method.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                    'required'    => true,
+                ],
+                'title' => [
+                    'description' => __( 'Title for the payment method.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                    'required'    => false,
                 ],
             ],
         ];
