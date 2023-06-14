@@ -357,7 +357,7 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
-        [ $suffix ]     = dokan_get_script_suffix_and_version();
+        $suffix         = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
@@ -1127,7 +1127,7 @@ class Assets {
                 'showPromoBanner'                   => empty( Helper::dokan_get_promo_notices() ),
                 'hasNewVersion'                     => Helper::dokan_has_new_version(),
                 'proVersion'                        => dokan()->is_pro_exists() ? dokan_pro()->version : '',
-                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],
+                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite', DOKAN_DIR . '/languages/' ) ],
                 'urls'                              => [
                     'adminRoot'    => admin_url(),
                     'siteUrl'      => home_url( '/' ),

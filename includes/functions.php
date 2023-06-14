@@ -3072,6 +3072,15 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  * @return array
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
+    // get transient key
+    $transient_key = md5( $domain . '_' . filectime( $language_dir ) );
+
+    // check if data exists on cache or not
+    $locale = Cache::get_transient( $transient_key );
+    if ( false !== $locale ) {
+        return $locale;
+    }
+
     $plugin_translations = dokan_get_translations_for_plugin_domain( $domain, $language_dir );
     $translations        = get_translations_for_domain( $domain );
 
@@ -3098,6 +3107,9 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
     foreach ( $entries as $msgid => $entry ) {
         $locale['locale_data'][ $domain ][ $msgid ] = $entry->translations;
     }
+
+    // store data into cache
+    Cache::set_transient( $transient_key, $locale );
 
     return $locale;
 }
