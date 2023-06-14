@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Admin;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Include dependencies.
+ * Include Dependencies.
  */
 if ( ! class_exists( 'WC_CSV_Batch_Exporter', false ) ) {
     include_once WC_ABSPATH . 'includes/export/abstract-wc-csv-batch-exporter.php';
@@ -38,7 +38,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     protected $filename = 'dokan-withdraw-log-export.csv';
 
     /**
-     * Query parameters.
+     * Items to export.
      *
      * @since DOKAN_SINCE
      *
@@ -47,11 +47,11 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     protected $items = [];
 
     /**
-     * Query parameters.
+     * Total rows to export.
      *
      * @since DOKAN_SINCE
      *
-     * @var array
+     * @var int
      */
     protected $total_rows = 0;
 
@@ -91,7 +91,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $total_rows
+     * @param int $total_rows
      */
     public function set_total_rows( $total_rows ) {
         $this->total_rows = absint( $total_rows );
@@ -107,15 +107,27 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     public function get_default_column_names() {
         return apply_filters(
             'dokan_withdraw_logs_export_columns', [
-                'id'                   => __( 'ID', 'dokan' ),
-                'vendor_id'            => __( 'Vendor ID', 'dokan-lite' ),
-                'store_name'           => __( 'Store Name', 'dokan-lite' ),
-                'amount'               => __( 'Withdraw Total', 'dokan-lite' ),
-                'status'               => __( 'Status', 'dokan-lite' ),
-                'method_title'         => __( 'Method', 'dokan-lite' ),
-                'date'                 => __( 'Date', 'dokan-lite' ),
-                'details'              => __( 'Details', 'dokan-lite' ),
-                'note'                 => __( 'Note', 'dokan-lite' ),
+                'id'                  => __( 'ID', 'dokan' ),
+                'vendor_id'           => __( 'Vendor ID', 'dokan-lite' ),
+                'store_name'          => __( 'Store Name', 'dokan-lite' ),
+                'amount'              => __( 'Withdraw Total', 'dokan-lite' ),
+                'status'              => __( 'Status', 'dokan-lite' ),
+                'method_title'        => __( 'Method', 'dokan-lite' ),
+                'date'                => __( 'Date', 'dokan-lite' ),
+                'bank_ac_name'        => __( 'Bank Acc Name', 'dokan-lite' ),
+                'bank_ac_number'      => __( 'Bank Acc No.', 'dokan-lite' ),
+                'bank_ac_type'        => __( 'Bank Acc Type', 'dokan-lite' ),
+                'bank_bank_name'      => __( 'Bank Name', 'dokan-lite' ),
+                'bank_bank_addr'      => __( 'Bank Address', 'dokan-lite' ),
+                'bank_declaration'    => __( 'Bank Declaration', 'dokan-lite' ),
+                'bank_iban'           => __( 'Bank IBAN', 'dokan-lite' ),
+                'bank_routing_number' => __( 'Bank Routing No.', 'dokan-lite' ),
+                'bank_swift'          => __( 'Bank SWIFT Code', 'dokan-lite' ),
+                'paypal_email'        => __( 'Paypal Email', 'dokan-lite' ),
+                'skrill_email'        => __( 'Skrill Email', 'dokan-lite' ),
+                'dokan_custom_method' => __( 'Custom Payment Method', 'dokan-lite' ),
+                'dokan_custom_value'  => __( 'Custom Payment Value', 'dokan-lite' ),
+                'note'                => __( 'Note', 'dokan-lite' ),
             ]
         );
     }
@@ -139,7 +151,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     }
 
     /**
-     * Take an withdraw item and generate row data from it for export.
+     * Take a withdraw item and generate row data from it for export.
      *
      * @since DOKAN_SINCE
      *
@@ -176,16 +188,48 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     protected function get_column_value( $withdraw_item, $key ) {
         switch ( $key ) {
             case 'vendor_id':
-                $column_value = isset( $withdraw_item['user']['id'] ) ? $withdraw_item['user']['id'] : '';
+                $column_value = $withdraw_item['user']['id'] ?? '';
                 break;
+
             case 'store_name':
-                $column_value = isset( $withdraw_item['user']['store_name'] ) ? $withdraw_item['user']['store_name'] : '';
+                $column_value = $withdraw_item['user']['store_name'] ?? '';
                 break;
+
             case 'date':
-                $column_value = isset( $withdraw_item['created'] ) ? $withdraw_item['created'] : '';
+                $column_value = $withdraw_item['created'] ?? '';
                 break;
+
+            case "paypal_email":
+                $column_value = $withdraw_item['details']['paypal']['email'] ?? '';
+                break;
+
+            case "skrill_email":
+                $column_value = $withdraw_item['details']['skrill']['email'] ?? '';
+                break;
+
+            case "dokan_custom_method":
+                $column_value = $withdraw_item['details']['dokan_custom']['method'] ?? '';
+                break;
+
+            case "dokan_custom_value":
+                $column_value = $withdraw_item['details']['dokan_custom']['value'] ?? '';
+                break;
+
+            case "bank_ac_name":
+            case "bank_ac_number":
+            case "bank_ac_type":
+            case "bank_bank_name":
+            case "bank_bank_addr":
+            case "bank_declaration":
+            case "bank_iban":
+            case "bank_routing_number":
+            case "bank_swift":
+                $field = substr_replace( $key, '', 0, 5 );
+                $column_value = $withdraw_item['details']['bank'][ $field ] ?? '';
+                break;
+
             default:
-                $column_value = isset( $withdraw_item[ $key ] ) ? $withdraw_item[ $key ] : '';
+                $column_value = $withdraw_item[$key] ?? '';
         }
 
         return $column_value;
