@@ -11,14 +11,15 @@ const pluginFiles = [
     'templates/',
     'lib/',
     'deprecated/',
+    'vendor/',
     'CHANGELOG.md',
     'readme.txt',
     'dokan.php',
     'uninstall.php',
-    'vendor/',
+    'composer.json',
 ];
 
-const removeFiles = [ 'src', 'assets/src', 'composer.json', 'composer.lock' ];
+const removeFiles = [ 'assets/src', 'composer.json', 'composer.lock' ];
 
 const allowedVendorFiles = {
     'appsero/client': [ 'src' ],
@@ -27,53 +28,48 @@ const allowedVendorFiles = {
 
 const { version } = JSON.parse( fs.readFileSync( 'package.json' ) );
 
-// Removing old files.
-fs.removeSync( 'build/*.zip' );
-
 exec(
-    'rm -rf versions && rm *.zip',
+    'rm -rf *',
     {
         cwd: 'build',
     },
-    () => {
-        const planDir = `build`; // Production build directory.
-        const dest = `${ planDir }/dokan-lite`; // Temporary folder name after coping all the files here.
-        const composerfile = `composer.json`;
-
-        // Removing the old build folder.
-        fs.removeSync( planDir );
-
-        console.log( `🗜 Started making the zip...` );
-
-        const fileList = [ ...pluginFiles ];
-
-        // Making build folder.
-        fs.mkdirp( dest );
-
-        // Coping all the files into build folder.
-        fileList.forEach( ( file ) => {
-            fs.copySync( file, `${ dest }/${ file }` );
-        } );
-
-        // copy composer.json file
-        try {
-            if ( fs.pathExistsSync( composerfile ) ) {
-                fs.copySync( composerfile, `${ dest }/composer.json` );
-            } else {
-                fs.copySync( `composer.json`, `${ dest }/composer.json` );
-            }
-        } catch ( err ) {
-            console.error( err );
-
-            return;
+    ( error ) => {
+        if ( error ) {
+          console.log(
+            chalk.yellow(
+              `⚠️ Could not find the build directory.`
+            )
+          );
+          console.log(
+            chalk.green(
+              `🗂 Creating the build directory ...`
+            )
+          );
+          // Making build folder.
+          fs.mkdirp( 'build' );
         }
 
-        console.log( `📂 Finished copying files.` );
+        const dest = 'build/dokan-lite'; // Temporary folder name after coping all the files here.
+        fs.mkdirp( dest );
+
+        console.log( `🗜 Started making the zip ...` );
+        try {
+          console.log( `⚙️ Copying plugin files ...` );
+
+          // Coping all the files into build folder.
+          pluginFiles.forEach( ( file ) => {
+              fs.copySync( file, `${ dest }/${ file }` );
+          } );
+          console.log( `📂 Finished copying files.` );
+        } catch ( err ) {
+            console.error( chalk.red( '❌ Could not copy plugin files.' ), err );
+            return;
+        }
 
         exec(
             'composer install --optimize-autoloader --no-dev',
             {
-                cwd: dest,
+                cwd: dest
             },
             ( error ) => {
                 if ( error ) {
@@ -123,14 +119,14 @@ exec(
                 // Output zip file name.
                 const zipFile = `dokan-lite-v${ version }.zip`;
 
-                console.log( `📦 Making the zip file ${ zipFile }` );
+                console.log( `📦 Making the zip file ${ zipFile } ...` );
 
                 // Making the zip file here.
                 exec(
                     `zip ${ zipFile } dokan-lite -rq`,
-                    {
-                        cwd: planDir,
-                    },
+                  {
+                    cwd: 'build'
+                  },
                     ( error ) => {
                         if ( error ) {
                             console.log(

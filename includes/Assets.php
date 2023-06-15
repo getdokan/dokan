@@ -439,8 +439,8 @@ class Assets {
 
             // Register core scripts
             'dokan-flot-main'           => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.js',
-                'deps'    => [ 'jquery' ],
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot' . $suffix . '.js',
+                'deps' => [ 'jquery' ],
             ],
             'dokan-flot-resize'         => [
                 'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize.js',
