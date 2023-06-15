@@ -80,12 +80,12 @@
                         style="width: 190px;"
                         :data-placeholder="__('Filter by Vendor', 'dokan-lite')"
                     />
-                    <button
-                        v-if="filter.user_id"
-                        type="button"
-                        class="button"
-                        @click="filter.user_id = 0"
-                    >&times;</button>
+<!--                    <button-->
+<!--                        v-if="filter.user_id"-->
+<!--                        type="button"-->
+<!--                        class="button"-->
+<!--                        @click="filter.user_id = 0"-->
+<!--                    >&times;</button>-->
 
                     <select
                         id="filter-payment-methods"
@@ -117,8 +117,12 @@
                         </div>
                     </date-range-picker>
 
-                    <a @click="exportAllLogs()" id="export-all-logs" class="button router-link-active" style="float: right; margin-left: 5px;">
-                        {{ __('Export Logs', 'dokan') }}
+                    <a @click="clearAllFiltering()" id="clear-all-filtering" class="button router-link-active">
+                        {{ __( 'Clear', 'dokan' ) }}
+                    </a>
+
+                    <a @click="exportAllLogs()" id="export-all-logs" class="button router-link-active">
+                        {{ __( 'Export', 'dokan' ) }}
                     </a>
                 </template>
 
@@ -157,6 +161,7 @@ const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import {isEmpty} from "lodash";
 
 export default {
 
@@ -366,10 +371,6 @@ export default {
             data.start_date = moment( this.filter.transaction_date.startDate ).format( 'YYYY-MM-DD HH:mm:ss' );
             data.end_date = moment( this.filter.transaction_date.endDate ).format( 'YYYY-MM-DD HH:mm:ss' );
 
-            // fix from param
-            // if ( data.start_date === data.end_date ) {
-            //     data.start_date = '';
-            // }
             return data;
         }
     },
@@ -443,7 +444,7 @@ export default {
 
                     jQuery( '#filter-payment-methods' ).select2( {
                         data: this.paymentMethods,
-                        allowClear: true
+                        // allowClear: true
                     } ).val( this.filter.payment_method ).trigger( 'change' );
                 } );
         },
@@ -668,9 +669,21 @@ export default {
             } );
         },
 
+        clearAllFiltering() {
+            // if ( isEmpty( this.$route.query ) ) {
+            //     return;
+            // }
+            //
+            // this.$router.replace({ 'query': null } );
+
+            this.filter.user_id = 0;
+            this.filter.payment_method.id = '';
+            this.filter.payment_method.title = '';
+            this.filter.transaction_date.startDate = '';
+            this.filter.transaction_date.endDate = '';
+        },
+
         exportAllLogs() {
-            this.loading              = true;
-            this.progressbar.isActive = true;
             this.progressbar.value    = 0;
 
             this.recursiveWriteLogsToFile( 1 );
