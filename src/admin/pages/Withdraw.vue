@@ -623,49 +623,49 @@ export default {
         },
 
         recursiveWriteLogsToFile( page = 1 ) {
-            this.loading = true;
+            let self     = this;
             let user_id  = '';
+            this.loading = true;
 
             if ( parseInt( this.filter.user_id ) > 0 ) {
                 user_id = this.filter.user_id;
             }
 
-            const data = {
+            const args = {
                 is_export: true,
-                per_page: this.perPage,
-                page: this.currentPage,
-                // status: this.currentStatus,
+                per_page: self.perPage,
+                page: self.currentPage,
+                status: self.currentStatus,
                 user_id: user_id,
-                payment_method: this.paymentMethods.id,
-                start_date: this.filterTransactionDate.start_date,
-                end_date: this.filterTransactionDate.end_date
+                payment_method: self.paymentMethods.id,
+                start_date: self.filterTransactionDate.start_date,
+                end_date: self.filterTransactionDate.end_date
             };
 
-            dokan.api.get('/withdraw', data )
-                .done( ( response, status, xhr ) => {
-                    if ('success' in response && response.success === false) {
-                        this.loading              = false;
-                        this.progressbar.isActive = false;
-                        return;
-                    }
+            dokan.api.get('/withdraw', args ).done( ( response, status, xhr ) => {
+                if ( ! response.percentage ) {
+                    self.loading              = false;
+                    self.progressbar.isActive = false;
 
-                    if ( 'data' in response ) {
-                        this.progressbar.value = response.data.percentage;
+                    return;
+                }
 
-                        if ( response.data.percentage >= 100 ) {
-                            this.loading              = false;
-                            this.progressbar.isActive = false;
+                self.progressbar.value = response.percentage;
 
-                            let url = response.data.url;
+                if ( response.percentage >= 100 ) {
+                    this.loading              = false;
+                    this.progressbar.isActive = false;
 
-                            window.location.assign(url);
-                        }
-
-                        if ( response.data.percentage < 100 ) {
-                            this.recursiveWriteLogsToFile( response.data.step );
-                        }
-                    }
-                } )
+                    // Redirect to the response URL.
+                    window.location.assign( response.url );
+                } else {
+                    // Run recursive logs to file method again.
+                    self.recursiveWriteLogsToFile( response.step );
+                }
+            } ).fail( ( jqXHR ) => {
+                self.loading              = false;
+                self.progressbar.isActive = false;
+            } );
         },
 
         exportAllLogs() {

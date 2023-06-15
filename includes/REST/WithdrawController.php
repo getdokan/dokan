@@ -321,6 +321,7 @@ class WithdrawController extends WP_REST_Controller {
         $args['return'] = 'count';
         $withdraw_count = dokan()->withdraw->all( $args );
 
+        // Check if not exportable.
         if ( empty( $request['is_export'] ) ) {
             $response = rest_ensure_response( $data );
 
@@ -331,40 +332,37 @@ class WithdrawController extends WP_REST_Controller {
             return $this->format_collection_response( $response, $request, $withdraws->total );
         }
 
-
         // Export items.
         $exporter = new WithdrawLogExporter();
         $step     = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
+        $statuses = [ 'pending', 'completed', 'cancelled' ];
 
         $exporter->set_items( $data );
         $exporter->set_page( $step );
         $exporter->set_limit( $args['limit'] );
-        $exporter->set_total_rows( $withdraw_count[ $args['status'] ] );
+        $exporter->set_total_rows( $statuses[ $args['status'] ] );
         $exporter->generate_file();
 
-        if ( $exporter->get_percent_complete() >= 100 ) {
-            wp_send_json_success(
+        $percent     = $exporter->get_percent_complete();
+        $export_data = [
+            'percentage' => $percent,
+        ];
+
+        if ( $percent >= 100 ) {
+            $export_data['step'] = 'done';
+            $export_data['url']  = add_query_arg(
                 [
-                    'step'       => 'done',
-                    'percentage' => 100,
-                    'url'        => add_query_arg(
-                        [
-                            'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
-                        ], admin_url( 'admin.php' )
-                    ),
-                ], 200
+                    'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
+                ],
+                admin_url( 'admin.php' )
             );
         } else {
-            wp_send_json_success(
-                [
-                    'step'       => ++$step,
-                    'percentage' => $exporter->get_percent_complete(),
-                    'columns'    => $exporter->get_column_names(),
-                ], 200
-            );
+            $export_data['step']       = ++$step;
+            $export_data['percentage'] = $exporter->get_percent_complete();
+            $export_data['columns']    = $exporter->get_column_names();
         }
 
-        exit();
+        return rest_ensure_response( $export_data );
     }
 
     /**
