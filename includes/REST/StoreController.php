@@ -45,7 +45,7 @@ class StoreController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
-                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_collection_params() ),
+                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_store_collection_params() ),
                     'permission_callback' => '__return_true',
                 ],
                 [
@@ -945,5 +945,44 @@ class StoreController extends WP_REST_Controller {
         $response      = rest_ensure_response( $category_data );
 
         return $response;
+    }
+
+    /**
+     * Retrieves the query params for the collections.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Query parameters for the collection.
+     */
+    public function get_store_collection_params(): array {
+        $params = array(
+            'status'     => array(
+                'description'       => __( 'Status of the store', 'dokan-lite' ),
+                'type'              => 'string',
+                'default'           => 'all',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'orderby'     => array(
+                'description'       => __( 'Store List Order By', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'order'     => array(
+                'description'       => __( 'Store List Order', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'featured'     => array(
+                'description'       => __( 'Store List Order', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+        );
+
+        return array_merge( parent::get_collection_params(), $params );
     }
 }
