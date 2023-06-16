@@ -365,8 +365,15 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <label class="social-switch-wraper" v-if="fieldData.enable_status">
+                        <switches
+                            @input="onSocialToggleSwitch"
+                            :enabled="socialChecked === 'on' ? true : false"
+                            value="isSocialChecked"
+                        ></switches>
+                    </label>
                 </fieldset>
-                <div class="field scl_fields">
+                <div class="field scl_fields" :class="fieldData.enable_status && 'off' === socialChecked ? 'scl_fields_disable' : ''">
                     <div class="scl_header">
                         <div class="scl_contents">
                             <div class="scl_icon">
@@ -438,6 +445,7 @@
             return {
                 hideMap               : false,
                 checked               : this.isChecked(),
+                socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
                 repeatableItem        : {},
                 repeatableTime        : [],
@@ -622,7 +630,8 @@
             },
 
             isSocialChecked() {
-                return ! this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : this.fieldValue[ this.fieldData.name ];
+                // return ! this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : this.fieldValue[ this.fieldData.name ];
+                return this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : 'off';
             },
 
             thisSomeEvent(value) {
@@ -660,6 +669,15 @@
                 this.fieldValue[ this.fieldData.name ] = status ? 'on' : 'off';
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
+            },
+
+            onSocialToggleSwitch( status, key ) {
+                if ( 'isSocialChecked' !== key ) {
+                    return;
+                }
+
+                this.socialChecked                     = status ? 'on' : 'off';
+                this.fieldValue.enable_status          = status ? 'on' : 'off';
             },
 
             hasError( key ) {
@@ -867,7 +885,7 @@
 
                     a {
                         display: inline-block;
-                        
+
                         &:hover {
                             box-shadow: 0 0 0 1px transparent;
                         }
@@ -879,6 +897,11 @@
                         }
                     }
                 }
+            }
+
+            .social-switch-wraper {
+                display: flex;
+                align-items: center;
             }
         }
 
@@ -1083,6 +1106,10 @@
                 padding-top: 0;
                 border-radius: 50%;
             }
+        }
+
+        .scl_fields_disable {
+            filter: grayscale(1);
         }
 
         .scl_fields {
