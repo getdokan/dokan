@@ -129,7 +129,7 @@ class SetupWizard {
      * Add admin menus/screens.
      */
     public function admin_menus() {
-        add_submenu_page( null, '', '', 'manage_woocommerce', 'dokan-setup', '' );
+        add_submenu_page( '', '', '', 'manage_woocommerce', 'dokan-setup', '' );
     }
 
     /**
