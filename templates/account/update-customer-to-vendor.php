@@ -2,7 +2,7 @@
 /**
  * Dokan Update Customer to Vendor Template.
  *
- * @since DOKAN_LITE_SINCE
+ * @since DOKAN_SINCE
  *
  * @package dokan
  */
@@ -66,7 +66,6 @@ if (
 }
 ?>
 
-
 <h2><?php esc_html_e( 'Update account to Vendor', 'dokan-lite' ); ?></h2>
 <form method="post" action="" class="register">
 
@@ -102,21 +101,18 @@ if (
         </p>
 
         <?php
+        /**
+         * Hook for adding fields after vendor migration.
+         *
+         * @since DOKAN_SINCE
+         */
+        do_action( 'dokan_after_seller_migration_fields' );
 
-            /**
-             * Hook for adding fields after vendor migration.
-             *
-             * @since DOKAN_LITE_SINCE
-             */
-            do_action( 'dokan_after_seller_migration_fields' );
-        ?>
-
-        <?php
         $show_toc = dokan_get_option( 'enable_tc_on_reg', 'dokan_general', 'on' );
 
         if ( $show_toc === 'on' ) {
             $toc_page_id = (int) dokan_get_option( 'reg_tc_page', 'dokan_pages' );
-            if ( $toc_page_id !== -1 ) {
+            if ( ! empty( $toc_page_id ) ) {
                 $toc_page_url = get_permalink( $toc_page_id );
                 ?>
                 <p class="form-row form-group form-row-wide">

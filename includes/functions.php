@@ -4599,3 +4599,89 @@ function dokan_override_author_for_product_variations( $product, $seller_id ) {
         }
     }
 }
+
+/**
+ * Handle user update from customer to seller.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param object $user User Object
+ * @param array  $data Data to Update
+ *
+ * @return void
+ */
+if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
+
+    function dokan_user_update_to_seller( $user, $data ) {
+        if ( ! is_a( $user, WP_User::class ) || dokan_is_user_seller( $user->ID ) ) {
+            return;
+        }
+
+        $user_id       = $user->ID;
+        $current_roles = (array) $user->roles;
+
+        // Remove the customer role.
+        $user->remove_role( 'customer' );
+        if ( ! empty( $current_roles ) ) {
+            foreach ( $current_roles as $current_role ) {
+                $user->remove_role( $current_role );
+            }
+        }
+
+        // Add the seller role.
+        $user->add_role( 'seller' );
+
+        $user_id = wp_update_user(
+            [
+                'ID'            => $user_id,
+                'user_nicename' => $data['shopurl'],
+            ]
+        );
+        update_user_meta( $user_id, 'first_name', $data['fname'] );
+        update_user_meta( $user_id, 'last_name', $data['lname'] );
+
+        if ( 'off' === dokan_get_option( 'new_seller_enable_selling', 'dokan_selling', 'on' ) ) {
+            update_user_meta( $user_id, 'dokan_enable_selling', 'no' );
+        } else {
+            update_user_meta( $user_id, 'dokan_enable_selling', 'yes' );
+        }
+
+        $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
+        $default_location  = '';
+
+        if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
+            $default_locations = array(
+                'latitude'  => '',
+                'longitude' => '',
+                'address'   => '',
+            );
+        }
+
+        if ( ! empty( $default_locations['latitude'] ) && ! empty( $default_locations['longitude'] ) ) {
+            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
+        }
+
+        $dokan_settings = [
+            'store_name'     => $data['shopname'],
+            'social'         => [],
+            'payment'        => [],
+            'phone'          => $data['phone'],
+            'show_email'     => 'no',
+            'address'        => $data['address'],
+            'location'       => $default_location,
+            'find_address'   => $default_locations['address'],
+            'dokan_category' => '',
+            'banner'         => 0,
+        ];
+
+        update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
+        update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
+
+        $publishing = dokan_get_option( 'product_status', 'dokan_selling' );
+        //$percentage = dokan_get_option( 'seller_percentage', 'dokan_selling' ); //phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+
+        update_user_meta( $user_id, 'dokan_publishing', $publishing );
+        //update_user_meta( $user_id, 'dokan_seller_percentage', $percentage ); //phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+        do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
+    }
+}
