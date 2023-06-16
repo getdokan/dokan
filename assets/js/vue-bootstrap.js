@@ -10,7 +10,7 @@ module.exports = jQuery;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(33);
 var disposed = false
@@ -71,7 +71,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_chartjs_adapter_moment__ = __webpack_require__(27);
 
 
@@ -145,7 +145,9 @@ if (false) {(function () {
 
 /***/ }),
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -283,7 +285,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -318,7 +320,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -700,10 +702,12 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
 //
 //
 //
@@ -946,7 +950,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1029,7 +1033,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1210,7 +1214,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1456,7 +1460,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1655,8 +1659,6 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 18 */,
-/* 19 */,
 /* 20 */,
 /* 21 */,
 /* 22 */,
@@ -1664,7 +1666,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(36);
 var disposed = false
@@ -1720,7 +1722,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(16);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(37);
 var disposed = false
@@ -1826,7 +1828,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(31);
 var disposed = false
@@ -2014,7 +2016,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(38);
 var disposed = false
@@ -2081,11 +2083,19 @@ var render = function() {
     { staticClass: "dokan-upload-image", on: { click: _vm.uploadImage } },
     [
       !_vm.showButton
-        ? _c("img", { attrs: { src: _vm.image.src ? _vm.image.src : _vm.src } })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showButton
         ? _c(
+            "div",
+            { staticClass: "dokan-upload-image-container" },
+            [
+              _c("img", {
+                attrs: { src: _vm.image.src ? _vm.image.src : _vm.src }
+              }),
+              _vm._v(" "),
+              _vm._t("imagePlaceholder")
+            ],
+            2
+          )
+        : _c(
             "button",
             {
               on: {
@@ -2097,7 +2107,6 @@ var render = function() {
             },
             [_vm._v("\n        " + _vm._s(_vm.buttonLabel) + "\n    ")]
           )
-        : _vm._e()
     ]
   )
 }
@@ -2687,7 +2696,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(17);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(41);
 var disposed = false
@@ -3024,7 +3033,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(18);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(44);
 var disposed = false
@@ -3739,7 +3748,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AdminNotice_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_AdminNotice_vue__ = __webpack_require__(19);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_0f724387_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_AdminNotice_vue__ = __webpack_require__(46);
 var disposed = false
@@ -4270,6 +4279,12 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
+
+
 //
 //
 //
@@ -4291,73 +4306,103 @@ if (false) {
       fileFrame: null
     };
   },
-  mounted: function mounted() {
-    var vm = this;
-    window.tinymce.init({
-      selector: "#dokan-tinymce-".concat(this.editorId),
-      branding: false,
-      height: 200,
-      menubar: false,
-      convert_urls: false,
-      theme: 'modern',
-      skin: 'lightgray',
-      fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
-      font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
-      plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
-      toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
-      setup: function setup(editor) {
-        var shortcodeMenuItems = [];
+  created: function created() {
+    var _this = this;
 
-        _.forEach(vm.shortcodes, function (shortcodeObj, shortcodeType) {
-          shortcodeMenuItems.push({
-            text: shortcodeObj.title,
-            classes: 'menu-section-title'
-          });
-
-          _.forEach(shortcodeObj.codes, function (codeObj, shortcode) {
-            shortcodeMenuItems.push({
-              text: codeObj.title,
-              onclick: function onclick() {
-                var code = "[".concat(shortcodeType, ":").concat(shortcode, "]");
-
-                if (codeObj.default) {
-                  code = "[".concat(shortcodeType, ":").concat(shortcode, " default=\"").concat(codeObj.default, "\"]");
-                }
-
-                if (codeObj.text) {
-                  code = "[".concat(shortcodeType, ":").concat(shortcode, " text=\"").concat(codeObj.text, "\"]");
-                }
-
-                if (codeObj.plainText) {
-                  code = codeObj.text;
-                }
-
-                editor.insertContent(code);
+    /**
+     * When admin searches text editor setting in dokan admin setting, the text editors
+     * disables and does not works, thats why we need to distroy the text editors and
+     * reinitiate the text editors.
+     */
+    this.$root.$on('reinitWpTextEditor', /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!window.tinymce.activeEditor) {
+                _context.next = 5;
+                break;
               }
-            });
-          });
-        }); // editor.addButton('shortcodes', {
-        //     type: 'menubutton',
-        //     icon: 'shortcode',
-        //     tooltip: 'Shortcodes',
-        //     menu: shortcodeMenuItems
-        // });
 
+              _context.next = 3;
+              return window.tinymce.activeEditor.destroy();
 
-        editor.addButton('image', {
-          icon: 'image',
-          onclick: function onclick() {
-            vm.browseImage(editor);
+            case 3:
+              _context.next = 5;
+              return _this.initWpEditor();
+
+            case 5:
+            case "end":
+              return _context.stop();
           }
-        }); // editor change triggers
-
-        editor.on('change keyup NodeChange', function () {
-          vm.$emit('input', editor.getContent());
-        });
-      }
-    });
+        }
+      }, _callee);
+    })));
+  },
+  mounted: function mounted() {
+    this.initWpEditor();
   },
   methods: {
+    initWpEditor: function initWpEditor() {
+      var vm = this;
+      window.tinymce.init({
+        selector: ".dokan-tinymce",
+        branding: false,
+        height: 200,
+        menubar: false,
+        convert_urls: false,
+        theme: 'modern',
+        skin: 'lightgray',
+        fontsize_formats: '10px 11px 13px 14px 16px 18px 22px 25px 30px 36px 40px 45px 50px 60px 65px 70px 75px 80px',
+        font_formats: 'Arial=arial,helvetica,sans-serif;' + 'Comic Sans MS=comic sans ms,sans-serif;' + 'Courier New=courier new,courier;' + 'Georgia=georgia,palatino;' + 'Lucida=Lucida Sans Unicode, Lucida Grande, sans-serif;' + 'Tahoma=tahoma,arial,helvetica,sans-serif;' + 'Times New Roman=times new roman,times;' + 'Trebuchet MS=trebuchet ms,geneva;' + 'Verdana=verdana,geneva;',
+        plugins: 'textcolor colorpicker wplink wordpress code hr wpeditimage',
+        toolbar: ['shortcodes bold italic underline bullist numlist alignleft aligncenter alignjustify alignright link image wp_adv', 'formatselect forecolor backcolor blockquote hr code fontselect fontsizeselect removeformat undo redo'],
+        setup: function setup(editor) {
+          var shortcodeMenuItems = [];
+
+          _.forEach(vm.shortcodes, function (shortcodeObj, shortcodeType) {
+            shortcodeMenuItems.push({
+              text: shortcodeObj.title,
+              classes: 'menu-section-title'
+            });
+
+            _.forEach(shortcodeObj.codes, function (codeObj, shortcode) {
+              shortcodeMenuItems.push({
+                text: codeObj.title,
+                onclick: function onclick() {
+                  var code = "[".concat(shortcodeType, ":").concat(shortcode, "]");
+
+                  if (codeObj.default) {
+                    code = "[".concat(shortcodeType, ":").concat(shortcode, " default=\"").concat(codeObj.default, "\"]");
+                  }
+
+                  if (codeObj.text) {
+                    code = "[".concat(shortcodeType, ":").concat(shortcode, " text=\"").concat(codeObj.text, "\"]");
+                  }
+
+                  if (codeObj.plainText) {
+                    code = codeObj.text;
+                  }
+
+                  editor.insertContent(code);
+                }
+              });
+            });
+          });
+
+          editor.addButton('image', {
+            icon: 'image',
+            onclick: function onclick() {
+              vm.browseImage(editor);
+            }
+          }); // editor change triggers
+
+          editor.on('change keyup NodeChange', function () {
+            vm.$emit('input', editor.getContent());
+          });
+        }
+      });
+    },
     browseImage: function browseImage(editor) {
       var vm = this;
       var selectedFile = {
@@ -5410,7 +5455,7 @@ var SearchButtonControl = /*#__PURE__*/function () {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_notification__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_notification___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_notification__);
@@ -5418,7 +5463,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_multiselect__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue_multiselect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue_multiselect__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_Api__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_chartjs__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_chartjs__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Mixin__ = __webpack_require__(224);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_debounce__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_debounce___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_debounce__);
@@ -6370,6 +6415,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("textarea", {
+    staticClass: "dokan-tinymce",
     attrs: { id: "dokan-tinymce-" + _vm.editorId },
     domProps: { value: _vm.value }
   })

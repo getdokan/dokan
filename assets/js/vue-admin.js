@@ -10,7 +10,7 @@ module.exports = jQuery;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Switches_vue__ = __webpack_require__(13);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_aa8ad7dc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Switches_vue__ = __webpack_require__(33);
 var disposed = false
@@ -126,7 +126,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_chartjs_adapter_moment__ = __webpack_require__(27);
 
 
@@ -200,7 +200,9 @@ if (false) {(function () {
 
 /***/ }),
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -338,7 +340,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -373,7 +375,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -755,10 +757,12 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
 //
 //
 //
@@ -1001,7 +1005,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1084,7 +1088,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1265,7 +1269,7 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1511,8 +1515,6 @@ if (false) {(function () {
 });
 
 /***/ }),
-/* 17 */,
-/* 18 */,
 /* 19 */,
 /* 20 */,
 /* 21 */,
@@ -1521,7 +1523,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_UploadImage_vue__ = __webpack_require__(15);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_40b3524c_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_UploadImage_vue__ = __webpack_require__(36);
 var disposed = false
@@ -1577,7 +1579,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_PasswordGenerator_vue__ = __webpack_require__(16);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4084a478_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_PasswordGenerator_vue__ = __webpack_require__(37);
 var disposed = false
@@ -1683,7 +1685,7 @@ if (false) {(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_ColorPicker_vue__ = __webpack_require__(12);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_01dc0d51_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_ColorPicker_vue__ = __webpack_require__(31);
 var disposed = false
@@ -1871,7 +1873,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAccountFields_vue__ = __webpack_require__(14);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2b13daea_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAccountFields_vue__ = __webpack_require__(38);
 var disposed = false
@@ -1938,11 +1940,19 @@ var render = function() {
     { staticClass: "dokan-upload-image", on: { click: _vm.uploadImage } },
     [
       !_vm.showButton
-        ? _c("img", { attrs: { src: _vm.image.src ? _vm.image.src : _vm.src } })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.showButton
         ? _c(
+            "div",
+            { staticClass: "dokan-upload-image-container" },
+            [
+              _c("img", {
+                attrs: { src: _vm.image.src ? _vm.image.src : _vm.src }
+              }),
+              _vm._v(" "),
+              _vm._t("imagePlaceholder")
+            ],
+            2
+          )
+        : _c(
             "button",
             {
               on: {
@@ -1954,7 +1964,6 @@ var render = function() {
             },
             [_vm._v("\n        " + _vm._s(_vm.buttonLabel) + "\n    ")]
           )
-        : _vm._e()
     ]
   )
 }
@@ -2544,7 +2553,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorAddressFields_vue__ = __webpack_require__(17);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_9504c01e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorAddressFields_vue__ = __webpack_require__(41);
 var disposed = false
@@ -2881,7 +2890,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_VendorPaymentFields_vue__ = __webpack_require__(18);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_2ed34783_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_VendorPaymentFields_vue__ = __webpack_require__(44);
 var disposed = false
@@ -5897,9 +5906,9 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_admin_components_Fields_vue__ = __webpack_require__(159);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_admin_components_SettingsBanner_vue__ = __webpack_require__(190);
@@ -6039,6 +6048,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       searchText: '',
       awaitingSearch: false,
       withdrawMethods: {},
+      disbursementSchedule: {},
       isSaveConfirm: false,
       dokanAssetsUrl: dokan.urls.assetsUrl
     };
@@ -6105,6 +6115,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
           self.showLoading = false;
           self.isLoaded = true;
           self.setWithdrawMethods();
+          self.setWithdrawDisbursementSchedule();
         }
       });
     },
@@ -6127,7 +6138,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       var _this = this;
 
       return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var consent, self, data;
+        var consent, consentOfScheduleChange, self, data;
         return __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -6141,7 +6152,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
               case 2:
                 if (!('dokan_withdraw' === section)) {
-                  _context.next = 9;
+                  _context.next = 15;
                   break;
                 }
 
@@ -6156,9 +6167,22 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                   fieldData.send_announcement_for_payment_change = _this.getDifference(_this.withdrawMethods, fieldData.withdraw_methods);
                 }
 
-                _this.withdrawMethods = fieldData.withdraw_methods;
+                _this.withdrawMethods = fieldData.withdraw_methods; // Disbursement Schedule Option Change.
 
-              case 9:
+                _context.next = 11;
+                return _this.setDisbursementScheduleChangeAnnouncementAction(fieldData, section);
+
+              case 11:
+                consentOfScheduleChange = _context.sent;
+                fieldData.send_announcement_for_disbursement_schedule_change = false;
+
+                if ('value' in consentOfScheduleChange && consentOfScheduleChange.value === true) {
+                  fieldData.send_announcement_for_disbursement_schedule_change = _this.getDifference(_this.disbursementSchedule, fieldData.disbursement_schedule);
+                }
+
+                _this.disbursementSchedule = fieldData.disbursement_schedule;
+
+              case 15:
                 self = _this, data = {
                   action: 'dokan_save_settings',
                   nonce: dokan.nonce,
@@ -6194,7 +6218,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
                   behavior: 'smooth'
                 });
 
-              case 13:
+              case 19:
               case "end":
                 return _context.stop();
             }
@@ -6205,6 +6229,11 @@ var AdminNotice = dokan_get_lib('AdminNotice');
     setWithdrawMethods: function setWithdrawMethods() {
       if ('withdraw_methods' in this.settingValues.dokan_withdraw) {
         this.withdrawMethods = _objectSpread({}, this.settingValues.dokan_withdraw.withdraw_methods);
+      }
+    },
+    setWithdrawDisbursementSchedule: function setWithdrawDisbursementSchedule() {
+      if ('disbursement_schedule' in this.settingValues.dokan_withdraw) {
+        this.disbursementSchedule = _objectSpread({}, this.settingValues.dokan_withdraw.disbursement_schedule);
       }
     },
     setPaymentChangeAnnouncementAction: function setPaymentChangeAnnouncementAction(fieldData, section) {
@@ -6257,6 +6286,56 @@ var AdminNotice = dokan_get_lib('AdminNotice');
         }, _callee2);
       }))();
     },
+    setDisbursementScheduleChangeAnnouncementAction: function setDisbursementScheduleChangeAnnouncementAction(fieldData, section) {
+      var _this3 = this;
+
+      return __WEBPACK_IMPORTED_MODULE_1__babel_runtime_helpers_asyncToGenerator___default()( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var diff;
+        return __WEBPACK_IMPORTED_MODULE_2__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!(!('disbursement_schedule' in fieldData) || 'dokan_withdraw' !== section)) {
+                  _context3.next = 2;
+                  break;
+                }
+
+                return _context3.abrupt("return", Promise.resolve({
+                  value: false
+                }));
+
+              case 2:
+                diff = _this3.getDifference(_this3.disbursementSchedule, fieldData.disbursement_schedule);
+
+                if (!(Object.keys(diff).length === 0)) {
+                  _context3.next = 5;
+                  break;
+                }
+
+                return _context3.abrupt("return", Promise.resolve({
+                  value: false
+                }));
+
+              case 5:
+                return _context3.abrupt("return", Swal.fire({
+                  title: _this3.__('Disbursement Schedule Updated', 'dokan-lite'),
+                  text: _this3.__('Do you want to inform your vendors about the removal of the previous disbursement schedule by sending them an announcement?', 'dokan-lite'),
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: _this3.__('Save and Send Announcement', 'dokan-lite'),
+                  cancelButtonText: _this3.__('Save Only', 'dokan-lite'),
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }));
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
     getDifference: function getDifference(objA, objB) {
       var keys = Object.keys(objB);
       var difference = {};
@@ -6268,7 +6347,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return difference;
     },
     formIsValid: function formIsValid(section) {
-      var _this3 = this;
+      var _this4 = this;
 
       var allFields = Object.keys(this.settingFields);
       var requiredFields = this.requiredFields;
@@ -6279,7 +6358,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       allFields.forEach(function (fields, index) {
         if (section === fields) {
-          var sectionFields = _this3.settingFields[fields];
+          var sectionFields = _this4.settingFields[fields];
           Object.values(sectionFields).forEach(function (field) {
             var subFields = field.fields;
 
@@ -6302,15 +6381,15 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       this.errors = [];
       requiredFields.forEach(function (field) {
-        Object.values(_this3.settingValues).forEach(function (value) {
+        Object.values(_this4.settingValues).forEach(function (value) {
           if (field in value && value[field].length < 1) {
-            if (!_this3.errors.includes(field)) {
-              _this3.errors.push(field); // If flat or percentage commission is set. Remove the required field.
+            if (!_this4.errors.includes(field)) {
+              _this4.errors.push(field); // If flat or percentage commission is set. Remove the required field.
 
 
               if ('flat' === value['commission_type'] || 'percentage' === value['commission_type']) {
-                _this3.errors = _this3.arrayRemove(_this3.errors, 'admin_percentage');
-                _this3.errors = _this3.arrayRemove(_this3.errors, 'additional_fee');
+                _this4.errors = _this4.arrayRemove(_this4.errors, 'admin_percentage');
+                _this4.errors = _this4.arrayRemove(_this4.errors, 'additional_fee');
               }
             }
           }
@@ -6347,7 +6426,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       return true;
     },
     searchInSettings: function searchInSettings(input) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (!this.validateBlankSearch()) {
         return;
@@ -6355,23 +6434,23 @@ var AdminNotice = dokan_get_lib('AdminNotice');
 
       if (!this.awaitingSearch) {
         setTimeout(function () {
-          var searchText = _this4.$refs.searchInSettings.value; // If more than two (space/tab) found, replace with space > trim > lowercase.
+          var searchText = _this5.$refs.searchInSettings.value; // If more than two (space/tab) found, replace with space > trim > lowercase.
 
           searchText = searchText.replace(/\s\s+/g, ' ').trim().toLowerCase(); // Create an empty string search first to resolve all previous-state issues.
 
-          _this4.doSearch(''); // Search now with searchText.
+          _this5.doSearch(''); // Search now with searchText.
 
 
-          _this4.doSearch(searchText);
+          _this5.doSearch(searchText);
 
-          _this4.awaitingSearch = false;
+          _this5.awaitingSearch = false;
         }, 1000);
       }
 
       this.awaitingSearch = true;
     },
     doSearch: function doSearch(searchText) {
-      var _this5 = this;
+      var _this6 = this;
 
       var self = this;
       var settingFields = {};
@@ -6415,7 +6494,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       Object.keys(dokan.settings_sections).forEach(function (section) {
         if (filteredSettingSections.indexOf(dokan.settings_sections[section].id) !== -1) {
           if (!currentTab) {
-            _this5.changeTab(dokan.settings_sections[section]);
+            _this6.changeTab(dokan.settings_sections[section]);
 
             currentTab = 1;
           }
@@ -6425,6 +6504,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
       });
       self.settingFields = settingFields;
       self.settingSections = settingSections;
+      this.$root.$emit('reinitWpTextEditor');
     },
     scrollToTop: function scrollToTop() {
       this.$refs.settingsWrapper.scrollIntoView({
@@ -6438,7 +6518,7 @@ var AdminNotice = dokan_get_lib('AdminNotice');
     }
   },
   created: function created() {
-    var _this6 = this;
+    var _this7 = this;
 
     this.fetchSettingValues();
     this.currentTab = 'dokan_general';
@@ -6448,19 +6528,19 @@ var AdminNotice = dokan_get_lib('AdminNotice');
     }
 
     this.$root.$on('onFieldSwitched', function (value, fieldName) {
-      if ('on' === value && 'dokan_general' in _this6.settingValues && 'data_clear_on_uninstall' === fieldName) {
+      if ('on' === value && 'dokan_general' in _this7.settingValues && 'data_clear_on_uninstall' === fieldName) {
         Swal.fire({
           icon: 'warning',
-          html: _this6.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
-          title: _this6.__('Are you sure?', 'dokan-lite'),
+          html: _this7.__('All data and tables related to Dokan and Dokan Pro will be deleted permanently after deleting the Dokan plugin. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite'),
+          title: _this7.__('Are you sure?', 'dokan-lite'),
           showCancelButton: true,
-          cancelButtonText: _this6.__('Cancel', 'dokan-lite'),
-          confirmButtonText: _this6.__('Okay', 'dokan-lite')
+          cancelButtonText: _this7.__('Cancel', 'dokan-lite'),
+          confirmButtonText: _this7.__('Okay', 'dokan-lite')
         }).then(function (response) {
           if (response.dismiss) {
-            _this6.settingValues.dokan_general.data_clear_on_uninstall = 'off';
+            _this7.settingValues.dokan_general.data_clear_on_uninstall = 'off';
 
-            _this6.$emit('switcHandler', 'data_clear_on_uninstall', _this6.settingValues.dokan_general.data_clear_on_uninstall);
+            _this7.$emit('switcHandler', 'data_clear_on_uninstall', _this7.settingValues.dokan_general.data_clear_on_uninstall);
           }
         });
       }
@@ -7961,9 +8041,9 @@ var Loading = dokan_get_lib('Loading');
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_asyncToGenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_papaparse___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_papaparse__);
@@ -8775,7 +8855,7 @@ var Loading = dokan_get_lib('Loading');
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
 
 
@@ -9009,8 +9089,8 @@ var swal = Swal.mixin({
         return data;
       }
 
-      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.startDate);
-      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', this.filter.transaction_date.endDate); // fix from param
+      data.from = __WEBPACK_IMPORTED_MODULE_2_moment___default()(this.filter.transaction_date.startDate).format('YYYY-MM-DD HH:mm:ss');
+      data.to = __WEBPACK_IMPORTED_MODULE_2_moment___default()(this.filter.transaction_date.endDate).format('YYYY-MM-DD HH:mm:ss'); // fix from param
 
       if (data.from === data.to) {
         data.from = '';
@@ -9207,7 +9287,7 @@ var swal = Swal.mixin({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_defineProperty__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
 
 
@@ -9455,8 +9535,8 @@ var swal = Swal.mixin({
         return data;
       }
 
-      data.from = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.startDate));
-      data.to = __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.datepicker.formatDate('yy-mm-dd', new Date(this.filter.transaction_date.endDate));
+      data.from = __WEBPACK_IMPORTED_MODULE_2_moment___default()(new Date(this.filter.transaction_date.startDate)).format('YYYY-MM-DD HH:mm:ss');
+      data.to = __WEBPACK_IMPORTED_MODULE_2_moment___default()(new Date(this.filter.transaction_date.endDate)).format('YYYY-MM-DD HH:mm:ss');
       return data;
     },
     bulkActions: function bulkActions() {
@@ -9545,7 +9625,7 @@ var swal = Swal.mixin({
         trn_date: self.filterTransactionDate,
         per_page: -1
       };
-      dokan.api.get('/reverse-withdrawal/transactions/' + self.ID, data).done(function (response, status, xhr) {
+      dokan.api.get('/reverse-withdrawal/transactions/', data).done(function (response, status, xhr) {
         self.transactionData = response;
         self.updatedCounts(xhr);
         self.updatePagination(xhr);

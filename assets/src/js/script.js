@@ -103,10 +103,11 @@ jQuery(function($) {
     form_group.addClass('has-error').append(error);
   };
 
-  var validatorSuccess = function(label, element) {
+  var validatorSuccess = function(error, element) {
     $(element)
       .closest('.dokan-form-group')
       .removeClass('has-error');
+    $(error).remove();
   };
 
   var api = wp.customize;
@@ -1226,7 +1227,7 @@ jQuery(function($) {
  *
  * @returns boolean
  */
- async function dokan_show_delete_prompt( event, messgae ) {
+window.dokan_show_delete_prompt = async function ( event, messgae ) {
   event.preventDefault();
 
   let answer = await dokan_sweetalert( messgae, {
@@ -1242,5 +1243,29 @@ jQuery(function($) {
   }
   else {
     return false;
+  }
+}
+
+/**
+ * Shows bulk action delete operation confirmation
+ *
+ * @param {object} event
+ * @param {string} message
+ * @param {string} inputSelector
+ * @param {string} formSelector
+ */
+window.dokan_bulk_delete_prompt = async function ( event, message, inputSelector, formSelector ) {
+  if ( 'delete' === jQuery( inputSelector ).val() ) {
+    // only prevent default if action is delete
+    event.preventDefault();
+
+    let answer = await dokan_sweetalert( message, {
+      action  : 'confirm',
+      icon    : 'warning'
+    } );
+
+    if( answer.isConfirmed ) {
+      jQuery( formSelector ).submit()
+    }
   }
 }

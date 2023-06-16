@@ -21,6 +21,7 @@ class Installer {
         $this->create_tables();
         $this->create_reverse_withdrawal_base_product();
         $this->product_design();
+        $this->add_store_name_meta_key_for_admin_users();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
@@ -44,6 +45,38 @@ class Installer {
         if ( ! $was_installed_before ) {
             update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
+        }
+    }
+
+    /**
+     * Add store name meta key for admin users
+     *
+     * Since we are assuming admin/shop_manager users as vendors by default, and since dokan_store_name meta key is used for
+     * various sql queries, we are assigning dokan_store_name meta key for admin users as well.
+     *
+     * @since 3.7.18
+     *
+     * @return void
+     */
+    public function add_store_name_meta_key_for_admin_users() {
+        // get admin only users via WP_User_Query
+        $args = [
+            'role__in'    => [ 'administrator', 'shop_manager' ],
+            'fields'  => 'ID',
+        ];
+
+        $users = new \WP_User_Query( $args );
+
+        if ( ! empty( $users->get_results() ) ) {
+            foreach ( $users->get_results() as $user_id ) {
+                $meta = get_user_meta( $user_id, 'dokan_store_name', true );
+                if ( ! empty( $meta ) ) {
+                    continue;
+                }
+
+                $user = get_user_by( 'id', $user_id );
+                update_user_meta( $user_id, 'dokan_store_name', $user->display_name );
+            }
         }
     }
 

@@ -105,16 +105,15 @@ function dokan_withdraw_get_method( $method_key ) {
  * @param string      $method_key
  * @param object|null $request //@since 3.3.7
  *
- * @return string|void
+ * @return string
  */
 function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     $registered = dokan_withdraw_register_methods();
-    if ( isset( $registered[ $method_key ] ) ) {
-        /**
-         * @since 3.3.7 added filter dokan_get_withdraw_method_title
-         */
-        return apply_filters( 'dokan_get_withdraw_method_title', $registered[ $method_key ]['title'], $method_key, $request );
-    }
+
+    /**
+     * @since 3.3.7 added filter dokan_get_withdraw_method_title
+     */
+    return apply_filters( 'dokan_get_withdraw_method_title', isset( $registered[ $method_key ] ) ?  $registered[ $method_key ]['title'] : ucfirst( $method_key ), $method_key, $request );
 }
 
 /**
@@ -396,7 +395,7 @@ function dokan_withdraw_get_active_order_status() {
  */
 function dokan_withdraw_get_active_order_status_in_comma() {
     $order_status = dokan_withdraw_get_active_order_status();
-    $status       = "'" . implode( "', '", $order_status ) . "'";
+    $status       = "'" . implode( "', '", esc_sql( $order_status ) ) . "'";
 
     return $status;
 }

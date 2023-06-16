@@ -198,7 +198,7 @@ class SetupWizard extends DokanSetupWizard {
         $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
 
         $country_obj = new WC_Countries();
-        $countries   = $country_obj->countries;
+        $countries   = $country_obj->get_allowed_countries();
         $states      = $country_obj->states;
         ?>
         <h1><?php esc_attr_e( 'Store Setup', 'dokan-lite' ); ?></h1>
@@ -249,15 +249,17 @@ class SetupWizard extends DokanSetupWizard {
 
                 <?php do_action( 'dokan_seller_wizard_store_setup_after_address_field', $this ); ?>
 
-                <tr>
-                    <th scope="row"><label for="show_email"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label></th>
-                    <td class="checkbox">
-                        <input type="checkbox" name="show_email" id="show_email" class="switch-input" value="1" <?php echo ( $show_email === 'yes' ) ? 'checked="true"' : ''; ?>>
-                        <label for="show_email">
-                            <?php esc_html_e( 'Show email address in store', 'dokan-lite' ); ?>
-                        </label>
-                    </td>
-                </tr>
+                <?php if ( empty( dokan_is_vendor_info_hidden( 'email' ) ) ) : ?>
+                    <tr>
+                        <th scope="row"><label for="show_email"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label></th>
+                        <td class="checkbox">
+                            <input type="checkbox" name="show_email" id="show_email" class="switch-input" value="1" <?php echo ( $show_email === 'yes' ) ? 'checked="true"' : ''; ?>>
+                            <label for="show_email">
+                                <?php esc_html_e( 'Show email address in store', 'dokan-lite' ); ?>
+                            </label>
+                        </td>
+                    </tr>
+                <?php endif; ?>
 
                 <?php do_action( 'dokan_seller_wizard_store_setup_field', $this ); ?>
 
