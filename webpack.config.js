@@ -25,6 +25,7 @@ var entryPoint = {
   'customize-preview': './assets/src/js/customize-preview.js',
   'pointers': './assets/src/js/pointers.js',
   'dokan': [
+    './assets/src/js/orders.js',
     './assets/src/js/product-editor.js',
     './assets/src/js/script.js',
     './assets/src/js/store-lists.js',
