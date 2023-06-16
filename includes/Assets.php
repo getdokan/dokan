@@ -443,19 +443,19 @@ class Assets {
                 'deps' => [ 'jquery' ],
             ],
             'dokan-flot-resize'         => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.resize' . $suffix . '.js',
                 'deps'    => [ 'dokan-flot-main' ],
             ],
             'dokan-flot-time'           => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.time.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.time' . $suffix . '.js',
                 'deps'    => [ 'dokan-flot-main' ],
             ],
             'dokan-flot-pie'            => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.pie.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.pie' . $suffix . '.js',
                 'deps'    => [ 'dokan-flot-main' ],
             ],
             'dokan-flot'                => [
-                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack.js',
+                'src'     => WC()->plugin_url() . '/assets/js/jquery-flot/jquery.flot.stack' . $suffix . '.js',
                 'deps'    => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
             ],
             'speaking-url'              => [
