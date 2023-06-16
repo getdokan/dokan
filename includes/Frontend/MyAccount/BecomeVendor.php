@@ -75,21 +75,21 @@ class BecomeVendor {
         $errors = [];
 
         if ( ! $user ) {
-            wc_add_notice( __( 'You need to login before applying for vendor.', 'dokan' ), 'error' );
+            wc_add_notice( __( 'You need to login before applying for vendor.', 'dokan-lite' ), 'error' );
             return;
         }
 
         if ( dokan_is_user_seller( $user->ID ) ) {
-            wc_add_notice( __( 'You are already a vendor.', 'dokan' ), 'error' );
+            wc_add_notice( __( 'You are already a vendor.', 'dokan-lite' ), 'error' );
             return;
         }
 
         $required_field_checks = apply_filters(
             'dokan_customer_migration_required_fields',
             [
-                'fname'    => __( 'Enter your first name', 'dokan' ),
-                'shopname' => __( 'Enter your shop name', 'dokan' ),
-                'phone'    => __( 'Enter your phone number', 'dokan' ),
+                'fname'    => __( 'Enter your first name.', 'dokan-lite' ),
+                'shopname' => __( 'Enter your shop name.', 'dokan-lite' ),
+                'phone'    => __( 'Enter your phone number.', 'dokan-lite' ),
             ]
         );
 
