@@ -69,7 +69,7 @@ class Store extends Page {
             'id'        => 'banner',
             'title'     => __( 'Store Banner', 'dokan-lite' ),
             // translators: 1) store banner width, 2) store banner height.
-            'desc'      => sprintf( __( 'Upload your store banner [ jpg or png, %d X %d pixels (max), 5 mb (max) ]', 'dokan-lite' ), dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ), dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ),
+            'desc'      => sprintf( __( 'Upload your store banner [ jpg or png, %1$d X %2$d pixels (max), 5 mb (max) ]', 'dokan-lite' ), dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ), dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) ),
             'icon'      => '',
             'type'      => 'image',
             'parent_id' => 'store',
