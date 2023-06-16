@@ -357,7 +357,7 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
-        $suffix         = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
