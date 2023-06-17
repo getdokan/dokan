@@ -16,7 +16,7 @@ const getFormattedDuration = ( time) => {
 	// const sec = Math.floor( ( time / 1000 ) % 60 );
 	// return `${ min }m ${ (sec < 10 ? '0' : '') + sec }s`;
 	const date = new Date(time);
-	return `${date.getMinutes()}m${date.getSeconds()}s`;
+	return `${date.getMinutes()}m ${date.getSeconds()}s`;
 	// return `${date.getMinutes()}.${date.getSeconds()}s`;
 };
 
