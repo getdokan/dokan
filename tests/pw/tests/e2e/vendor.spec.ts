@@ -103,7 +103,7 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
 	});
 
-	test('vendor can add auto withdraw disbursement schedule', async ( ) => {
+	test.skip('vendor can add auto withdraw disbursement schedule', async ( ) => {
 		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
 	});
 

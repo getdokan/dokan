@@ -4,6 +4,7 @@ import { endPoints } from '../../utils/apiEndPoints';
 import { payloads } from '../../utils/payloads';
 import { dbUtils } from '../../utils/dbUtils';
 import { dbData } from '../../utils/dbData';
+import { helpers } from '../../utils/helpers';
 
 let apiUtils: ApiUtils;
 
@@ -44,6 +45,11 @@ setup.describe(' setup environment', () => {
 
 	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+	});
+
+	setup('get test environment info @lite @pro', async () => {
+		const [, summaryInfo] = await apiUtils.getSystemStatus();
+		helpers.writeFile('systemInfo.json', JSON.stringify(summaryInfo));
 	});
 
 });

@@ -4,7 +4,7 @@ require('dotenv').config();
 
 
 export default defineConfig({
-	testDir: './tests/api',
+	testDir: './tests/api',  /* test directory */
 	outputDir: 'playwright/api/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: './global-setup', /* Path to the global setup file. This file will be required and run before all the tests. */
 	// globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
@@ -33,9 +33,9 @@ export default defineConfig({
 		],
 
 	use: {
-		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:8888', //Base URL
-		ignoreHTTPSErrors: true, //Whether to ignore HTTPS errors during navigation.
-		// api request headers
+		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999',  /* Base URL */
+		ignoreHTTPSErrors: true, /* Whether to ignore HTTPS errors during navigation. */
+		/* api request headers */
 		extraHTTPHeaders: {
 			Accept: '*/*',
 			Authorization: 'Basic ' + Buffer.from( process.env.ADMIN + ':' + process.env.ADMIN_PASSWORD ).toString( 'base64' ),
@@ -55,7 +55,7 @@ export default defineConfig({
 		{
 			name: 'api_tests',
 			testMatch: /.*\.spec\.ts/,
-			dependencies: process.env.SETUP ? ['api_setup'] : [],
+			dependencies: process.env.SETUP ? ['api_setup'] : [],   /* whether to run setup tests before running actual tests */
 		},
 
 	],

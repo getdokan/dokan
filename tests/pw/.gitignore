@@ -178,6 +178,7 @@ storageState.json
 adminStorageState.json
 customerStorageState.json
 vendorStorageState.json
+systemInfo.json
 
 # vscode
 .vscode/

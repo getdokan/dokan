@@ -254,3 +254,44 @@ const config = {
 
 
 //TODO: read every playwright github issue & playwright comment
+
+//TODO: convert testSummary from commonjs module to ex module
+//TODO: implement new playwright settings 
+//TODO: ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, ust json report for test summary
+//TODO: fix npm run error without npx
+//TODO: add last updated time on test summary
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TODO: readme
+//TODO: add emoji to readme
+//TODO: make readme follow readme guideline
+//TODO: use chatgpt to rephrase readme
+//TODO: test test env to doc
+// About the environment
+// The default values are:
+
+// Latest stable WordPress version
+// PHP 7.4
+// Latest stable WordPress version
+// MariaDB
+// URL: http://localhost:8086/
+// Admin credentials: admin/password
+
+
+
+//TODO: add os and browsers in env info
+lll

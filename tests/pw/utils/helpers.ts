@@ -1,4 +1,6 @@
 // const open = require( 'open' );
+import fs from 'fs';
+
 export const helpers = {
 
 	// replace '_' to space & capitalize first letter of string
@@ -163,6 +165,27 @@ export const helpers = {
 			.replace(/--+/g, '-') 				// Replace multiple - with single -
 			.replace(/-$/g, ''); 					// Remove trailing -
 	}, // TODO: might fail sometimes, need to update with string-to-slug see google
+
+	// create env
+	createEnvVariable(key: string, value: string) {
+		const content = '\n' + key + '=' + value;
+		fs.appendFile('.env', content, 'utf8', (err) => {
+			if (err) throw err;
+		});
+	},
+
+	// read file
+	readFile (filePath: string) {
+		return fs.readFileSync(filePath, 'utf8');
+	},
+
+	// write file
+	writeFile(filePath: string, content: string) {
+		fs.writeFileSync(filePath, content,  { encoding: 'utf8' } );
+		// fs.writeFile(filePath, content, (err) => {
+		// 	if (err) throw err;
+		// });
+	},
 
 
 };

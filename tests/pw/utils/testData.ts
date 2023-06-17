@@ -1181,13 +1181,13 @@ export const data = {
 	// install wordpress
 	installWp: {
 		// db info
-		dbName: 'dokan5',
-		dbUserName: 'root',
-		dbPassword: '01dokan01',
-		dbHost: 'localhost',
-		dbTablePrefix: 'dok_',
+		dbHost: process.env.DB_HOST_NAME,
+		dbUserName: process.env.DB_USER_NAME,
+		dbPassword: process.env.DB_USER_PASSWORD,
+		dbName: process.env.DATABASE,
+		dbTablePrefix: process.env.DB_PREFIX,
 		// site info
-		siteTitle: 'dokan5',
+		siteTitle: process.env.DATABASE,
 		adminUserName: process.env.ADMIN,
 		adminPassword: process.env.USER_PASSWORD,
 		adminEmail: 'shashwata@wedevs.com',
