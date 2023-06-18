@@ -11,7 +11,7 @@
 
 **Step 2: Setup wordpress development environment**
 
-1. Set wordPress debugging mode values:
+1. Set wordpress debugging mode values in your wordpress directory`wp-config.php`:
 
 ```
 define( 'WP_DEBUG', true );
