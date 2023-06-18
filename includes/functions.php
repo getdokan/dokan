@@ -4390,8 +4390,10 @@ function dokan_get_recaptcha_site_and_secret_keys( $boolean = false ) {
         'secret_key' => dokan_get_option( 'recaptcha_secret_key', 'dokan_appearance' ),
     ];
 
+    $is_disabled = 'off' === dokan_get_option( 'recaptcha_enable_status', 'dokan_appearance', 'on' );
+
     if ( $boolean ) {
-        if ( empty( $recaptcha_keys['site_key'] ) || empty( $recaptcha_keys['secret_key'] ) ) {
+        if ( empty( $recaptcha_keys['site_key'] ) || empty( $recaptcha_keys['secret_key'] ) || $is_disabled ) {
             return false;
         }
 

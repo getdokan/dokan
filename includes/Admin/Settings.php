@@ -706,7 +706,10 @@ class Settings {
                     'label'                => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
                     'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
                     'social_desc'          => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
-                    'enable_status'        => 'on',
+                    'enable_status'        => [
+                        'name'    => 'recaptcha_enable_status',
+                        'default' => 'on',
+                    ],
                     'recaptcha_site_key'   => [
                         'name'         => 'recaptcha_site_key',
                         'type'         => 'text',

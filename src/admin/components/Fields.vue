@@ -630,9 +630,20 @@
             },
 
             isSocialChecked() {
-                // return ! this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : this.fieldValue[ this.fieldData.name ];
-                return this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : 'off';
+                /**
+                 * If social field has enabled status saved return it or return the default value or return 'on'
+                 *
+                 * @since DOKAN_SINCE
+                 */
+                if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['name'] && this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ) {
+                    return this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ];
+                } else if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['default'] ) {
+                    return this.fieldData[ 'enable_status' ]['default'];
+                }
+
+                return 'on';
             },
+
 
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
@@ -677,7 +688,7 @@
                 }
 
                 this.socialChecked                     = status ? 'on' : 'off';
-                this.fieldValue.enable_status          = status ? 'on' : 'off';
+                this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ]          = status ? 'on' : 'off';
             },
 
             hasError( key ) {
