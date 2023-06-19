@@ -2,14 +2,18 @@
 
 namespace WeDevs\Dokan\Frontend\MyAccount;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 /**
  * Dokan Become Vendor Class.
  *
- * @since DOKAN_SINCE
+ * @since   DOKAN_SINCE
  *
  * @package dokan
  */
-class BecomeVendor {
+class BecomeAVendor {
     /**
      * Class Constructor.
      *
@@ -44,7 +48,7 @@ class BecomeVendor {
      */
     public function remove_account_update_feature_from_dokan_pro() {
         // If Dokan Pro plugin activated.
-        if ( ! defined( 'DOKAN_PRO_PLUGIN_VERSION' ) ) {
+        if ( ! dokan()->is_pro_exists() ) {
             return;
         }
 
@@ -76,11 +80,13 @@ class BecomeVendor {
 
         if ( ! $user ) {
             wc_add_notice( __( 'You need to login before applying for vendor.', 'dokan-lite' ), 'error' );
+
             return;
         }
 
         if ( dokan_is_user_seller( $user->ID ) ) {
             wc_add_notice( __( 'You are already a vendor.', 'dokan-lite' ), 'error' );
+
             return;
         }
 
@@ -149,6 +155,46 @@ class BecomeVendor {
      * @return void
      */
     public function load_customer_to_vendor_update_template() {
-        dokan_get_template_part( 'account/update-customer-to-vendor', '' );
+        $user_id       = get_current_user_id();
+        $error_message = '';
+
+        if ( ! $user_id ) {
+            $error_message = __( 'You need to login before applying for vendor.', 'dokan-lite' );
+        } elseif ( $user_id && dokan_is_user_seller( $user_id ) ) {
+            $error_message = __( 'You are already a vendor.', 'dokan-lite' );
+        } elseif ( $user_id && current_user_can( 'manage_options' ) ) {
+            $error_message = __( 'You are an administrator. Please use dokan admin settings to enable your selling capabilities.', 'dokan-lite' );
+        }
+
+        if ( $error_message ) {
+            if ( function_exists( 'wc_add_notice' ) && function_exists( 'wc_print_notices' ) ) {
+                wc_add_notice( $error_message, 'error' );
+                // print error message
+                wc_print_notices();
+            }
+
+            return;
+        }
+
+        $data = [
+            'user_id'     => $user_id,
+            'first_name'  => get_user_meta( $user_id, 'first_name', true ),
+            'last_name'   => get_user_meta( $user_id, 'last_name', true ),
+            'shop_url'    => get_user_meta( $user_id, 'nickname', true ),
+            'show_toc'    => dokan_get_option( 'enable_tc_on_reg', 'dokan_general', 'on' ),
+            'toc_page_id' => (int) dokan_get_option( 'reg_tc_page', 'dokan_pages', 0 ),
+            'shop_name'   => '',
+            'phone'       => '',
+        ];
+
+        if ( isset( $_POST['dokan_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_nonce'] ) ), 'account_migration' ) ) {
+            $data['first_name'] = isset( $_POST['fname'] ) ? sanitize_text_field( wp_unslash( $_POST['fname'] ) ) : $data['first_name'];
+            $data['last_name']  = isset( $_POST['lname'] ) ? sanitize_text_field( wp_unslash( $_POST['lname'] ) ) : $data['last_name'];
+            $data['shop_url']   = isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : $data['shop_url'];
+            $data['shop_name']  = isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : $data['shop_name'];
+            $data['phone']      = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : $data['phone'];
+        }
+
+        dokan_get_template_part( 'account/update-customer-to-vendor', '', $data );
     }
 }

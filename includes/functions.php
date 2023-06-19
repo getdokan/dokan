@@ -4632,15 +4632,15 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         $user_id       = $user->ID;
         $current_roles = (array) $user->roles;
 
-        // Remove the customer role.
+        // Remove role
         $user->remove_role( 'customer' );
-        if ( ! empty( $current_roles ) ) {
+        if ( is_array( $current_roles ) ) {
             foreach ( $current_roles as $current_role ) {
                 $user->remove_role( $current_role );
             }
         }
 
-        // Add the seller role.
+        // Add role
         $user->add_role( 'seller' );
 
         $user_id = wp_update_user(
@@ -4652,48 +4652,24 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         update_user_meta( $user_id, 'first_name', $data['fname'] );
         update_user_meta( $user_id, 'last_name', $data['lname'] );
 
+        /**
+         * @var $vendor \WeDevs\Dokan\Vendor\Vendor
+         */
+        $vendor = dokan()->vendor->get( $user_id );
+        $vendor->set_store_name( $data['shopname'] );
+        $vendor->set_phone( $data['phone'] );
+        $vendor->set_address( $data['address'] );
+        $vendor->save();
+
         if ( 'off' === dokan_get_option( 'new_seller_enable_selling', 'dokan_selling', 'on' ) ) {
-            update_user_meta( $user_id, 'dokan_enable_selling', 'no' );
+            $vendor->make_inactive();
         } else {
-            update_user_meta( $user_id, 'dokan_enable_selling', 'yes' );
+            $vendor->make_active();
         }
 
-        $default_locations = dokan_get_option( 'location', 'dokan_geolocation' );
-        $default_location  = '';
-
-        if ( ! is_array( $default_locations ) || empty( $default_locations ) ) {
-            $default_locations = array(
-                'latitude'  => '',
-                'longitude' => '',
-                'address'   => '',
-            );
-        }
-
-        if ( ! empty( $default_locations['latitude'] ) && ! empty( $default_locations['longitude'] ) ) {
-            $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
-        }
-
-        $dokan_settings = [
-            'store_name'     => $data['shopname'],
-            'social'         => [],
-            'payment'        => [],
-            'phone'          => $data['phone'],
-            'show_email'     => 'no',
-            'address'        => $data['address'],
-            'location'       => $default_location,
-            'find_address'   => $default_locations['address'],
-            'dokan_category' => '',
-            'banner'         => 0,
-        ];
-
-        update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
-        update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
-
-        $publishing = dokan_get_option( 'product_status', 'dokan_selling' );
-        //$percentage = dokan_get_option( 'seller_percentage', 'dokan_selling' ); //phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-
+        $publishing = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
-        //update_user_meta( $user_id, 'dokan_seller_percentage', $percentage ); //phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-        do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
+
+        do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
 }
