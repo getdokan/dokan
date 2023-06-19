@@ -9,6 +9,7 @@ import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
 import VersionCompare from '@/utils/VersionCompare'
+import { parse } from 'papaparse'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -121,6 +122,7 @@ window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
 window.dokan.libs['StoreCategory']       = StoreCategory;
+window.dokan.libs['papaparse']           = parse;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
@@ -133,7 +135,7 @@ window.dokan.libs['ContentLoading']  = {
 };
 
 // wp npm packages with backward compatibility
-dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;
+dokan.hooks = window.wp.hooks;
 
 if ( dokan.hooks ) {
     dokan.addFilterComponent = (hookName, namespace, component, priority = 10) => {
