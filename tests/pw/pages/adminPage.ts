@@ -1369,4 +1369,34 @@ export class AdminPage extends BasePage {
 			await this.clickAndWaitForNavigation(selector.backend.successLoginIn);
 		}
 	}
+
+
+	// dokan pro features promo
+	async dokanProFeaturesPromo(){
+
+		// dokan promo banner
+		await this.goto(data.subUrls.backend.dokan);
+		// check promo banner elements are visible
+		this.multipleElementVisible(selector.admin.dokan.promoBanner);
+
+		// dokan lite modules
+		await this.goto(data.subUrls.backend.dokanLiteModules);
+		// check pro upgrade popup elements are visible
+		this.multipleElementVisible(selector.admin.dokan.modules.lite.popup);
+
+		// check module cards are visible
+		await this.click(selector.admin.dokan.modules.lite.popup.closeDokanUpgradePopup);
+		await expect(this.page.locator(selector.admin.dokan.modules.lite.moduleCard)).toHaveCount(27);
+
+		// dokan pro features menu
+		await this.goto(data.subUrls.backend.dokanProFeatures);
+		// check dokan pro feature sections are visible
+		this.multipleElementVisible(selector.admin.dokan.proFeatures);
+
+		// dokan settings pro advertisement
+		await this.goToDokanSettings();
+		// check settings pro advertisement banner elements are visible
+		this.multipleElementVisible(selector.admin.dokan.settings.proAdvertisementBanner);
+	}
+
 }

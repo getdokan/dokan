@@ -2,6 +2,9 @@ import { test, Page } from '@playwright/test';
 import { data } from '../../utils/testData';
 import { LoginPage } from '../../pages/loginPage';
 import { AdminPage } from '../../pages/adminPage';
+import { ApiUtils } from '../../utils/apiUtils';
+import { payloads } from '../../utils/payloads';
+
 
 test.describe('Admin user functionality test', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
@@ -224,6 +227,14 @@ test.describe('Admin functionality test', () => {
 	// test.skip('admin can set dokan vendor subscription settings @pro', async ( ) => {
 	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	// });
+
+
+	test.skip('dokan pro features promo @lite', async ({ request } ) => {
+		const apiUtils = new ApiUtils(request);
+		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'inactive' }, payloads.adminAuth);
+		await adminPage.dokanProFeaturesPromo();
+		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'inactive' }, payloads.adminAuth);
+	});
 
 
 });

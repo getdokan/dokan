@@ -172,6 +172,7 @@ export const selector = {
 			refundsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[contains(text(),"Refunds")]',
 			reportsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Reports"]',
 			modulesMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
+			proFeatureMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
 			toolsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Tools"]',
 			verificationsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
 			advertisingMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
@@ -179,6 +180,15 @@ export const selector = {
 			helpMenu: '//li[contains(@class,"toplevel_page_dokan")]//span[text()="Help"]/..',
 			settingsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Settings"]',
 			licenseMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="License"]',
+
+			// promo banner
+			promoBanner: {
+				promoBanner: '.dokan-promo-banner',
+				bannerThumbnail: '.dokan-promo-banner .thumbnail',
+				promoContent: '.dokan-promo-banner .content',
+				upgradeToPremium: '.btn-upgrade',
+				closePromoBanner: '.close-banner',
+			},
 
 			// Dashboard
 			dashboard: {
@@ -435,6 +445,23 @@ export const selector = {
 
 			// Modules
 			modules: {
+
+				lite : {
+
+					// dokan upgrade popup
+					popup: {
+						dokanUpgradePopup: '#dokan-upgrade-popup',
+						closeDokanUpgradePopup: '#dokan-upgrade-popup .close',
+						upgradeToProText: '.upgrade-text',
+						upgradeToPro: '.upgrade-button',
+						proCard:'.promo-card',
+						alreadyUpdated: '.already-updated',
+					},
+
+					// modules
+					moduleCard: '.plugin-card',
+				},
+
 				// Nav Tabs
 				active: '//li//a[contains(text(),"Active")]',
 				inActive: '//li//a[contains(text(),"Inactive")]',
@@ -450,6 +477,45 @@ export const selector = {
 				deActivateAll: '.deactivate',
 				// No Modules Message
 				noModulesFound: '.not-found h5',
+			},
+			// pro features
+			proFeatures: {
+				dokanProFeatures: '.dokan-pro-features',
+
+				// header section
+				headerSection: '.header-section',
+
+				// vender capabilities
+				vendorCapabilitiesBanner: '.vendor-capabilities-banner',
+				checkOutAllVendorFunctionalities: '//a[normalize-space()="Check Out All Vendor Functionalities"]',
+
+				// service section
+				serviceSection: '.service-section',
+				serviceList: '.service-section .service-list',
+				andManyMore: '//a[normalize-space()="And Many More"]',
+
+				// compare section
+				comparisonSection: '.comparison-section',
+				comparisonBoxDokanLite: '.comparison-section .compare-box.dokan-lite',
+				comparisonBoxDokanPro: '.comparison-section .compare-box.dokan-pro',
+
+				// pricing section
+				pricingSection: '.pricing-section',
+				pricingTable: '.pricing-section .pricing-wrapper',
+
+				// payment section
+				paymentSection: '.payment-section',
+				guaranteeSection: '.payment-section .guarantee-section',
+				paymentOptions: '.payment-section .payment-area',
+
+				// testimonial section
+				testimonialSection: '.testimonial-section',
+				testimonials: '.testimonial-section .testimonial-wrapper',
+
+				// cta section
+				ctaSection: '.cta-section',
+				upgradeToPro: '//a[normalize-space()="Upgrade to Pro"]',
+
 			},
 			// Tools
 			tools: {
@@ -501,6 +567,13 @@ export const selector = {
 
 			// Dokan Settings
 			settings: {
+				// settings pro advertisement
+				proAdvertisementBanner: {
+					settingsBanner: '#dokan-settings-banner',
+					upgradeToPro: '//a[normalize-space()="Upgrade to Pro"]',
+					checkOutAllVendorFunctionalities:'//a[normalize-space()="Check Out All Vendor Functionalities"]'
+				},
+
 				// Setting Menus
 				general: '//div[@class="nav-title" and contains(text(),"General")]',
 				sellingOptions: '//div[@class="nav-title" and contains(text(),"Selling Options")]',

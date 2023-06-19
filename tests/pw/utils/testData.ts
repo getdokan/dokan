@@ -710,15 +710,19 @@ export const data = {
 
 	subUrls: {
 		backend: {
-			setupWP: '/wp-admin/install.php',
+			setupWP: 'wp-admin/install.php',
 			login: 'wp-login.php',
 			adminLogin: 'wp-admin',
 			adminLogout: 'wp-login.php?action=logout',
 			adminDashboard: 'wp-admin',
+			dokan: 'wp-admin/admin.php?page=dokan#/',
 			dokanWholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
 			dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
 			dokanVendors: 'wp-admin/admin.php?page=dokan#/vendors',
 			dokanSetupWizard: 'wp-admin/admin.php?page=dokan-setup',
+			dokanLiteModules: 'wp-admin/admin.php?page=dokan#/pro-modules',
+			dokanProModules: 'wp-admin/admin.php?page=dokan#/modules',
+			dokanProFeatures: 'wp-admin/admin.php?page=dokan#/premium',
 			woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
 			wcAddNewProducts: 'wp-admin/post-new.php?post_type=product',
 			wcAddNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',

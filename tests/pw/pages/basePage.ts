@@ -432,10 +432,7 @@ export class BasePage {
 	// set attribute/class value
 	async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
 		const element = this.page.locator(selector);
-		await element.evaluate(
-			(element, [attribute, value]) => element.setAttribute(attribute, value),
-			[attribute, value],
-		);
+		await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute, value), [attribute, value],);
 	}
 
 	// remove element attribute
@@ -1172,6 +1169,27 @@ export class BasePage {
 	getAllPages(): Page[] {
 		return this.page.context().pages();
 	}
+
+	/**
+	 * Extra methods
+	 */
+
+	multipleElementVisible(selectors: any){
+
+		//TODO: implement for arrays
+		selectors = Object.values(selectors);
+		selectors.forEach( async (selector: string) => {
+			// console.log(selector);
+			await expect(this.page.locator(selector)).toBeVisible();
+		});
+
+		// for (const selector in selectors ) {
+		// 	console.log(selectors[selector]);
+		// 	await expect(this.page.locator(selectors[selector])).toBeVisible();
+		// }
+
+	}
+
 
 	/**
 	 * custom methods
