@@ -571,16 +571,12 @@
 
             isSocialFieldActivated() {
                 for (const data in this.fieldData) {
-                    if ( this.fieldData[data].social_field ) {
-                        console.log(this.fieldData[data]);
-                    }
-                }
-                for (const data in this.fieldData) {
-                    if ( this.fieldData[data].social_field && ! this.fieldValue[data] ) {
+                    if (this.fieldData[data].social_field && 'html' !== this.fieldData[data].type && ! this.fieldValue[this.fieldData[data].name]) {
                         return false;
                     }
                 }
-                return true
+
+                return true;
             }
         },
 
