@@ -382,7 +382,7 @@
                             <p class="scl_desc">{{ fieldData.social_desc }}</p>
                         </div>
                         <div class="expand_btn" @click="expandSocial">
-                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
+                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2', isSocialFieldActivated ? 'active-social-expend-btn' : '']"></span>
                         </div>
                     </div>
                     <template v-for="( fields, index ) in fieldData">
@@ -567,6 +567,20 @@
 
             mapboxAccessToken() {
                 return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
+            },
+
+            isSocialFieldActivated() {
+                for (const data in this.fieldData) {
+                    if ( this.fieldData[data].social_field ) {
+                        console.log(this.fieldData[data]);
+                    }
+                }
+                for (const data in this.fieldData) {
+                    if ( this.fieldData[data].social_field && ! this.fieldValue[data] ) {
+                        return false;
+                    }
+                }
+                return true
             }
         },
 
@@ -1190,6 +1204,10 @@
                             position: absolute;
                             transform: translate(-50%, -50%);
                         }
+                    }
+
+                    .active-social-expend-btn {
+                        background: #4CAF4F;
                     }
                 }
             }
