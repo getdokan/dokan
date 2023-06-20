@@ -312,8 +312,12 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
             'dokan-flaticon'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon/flaticon.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon/flaticon.css' ),
+            ],
+            'dokan-sf-pro-text'              => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
@@ -330,6 +334,7 @@ class Assets {
             ],
             'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
+                'deps'    => [ 'dokan-sf-pro-text' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
             'dokan-product-category-ui-css' => [
@@ -337,12 +342,12 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-product-category-ui.css' ),
             ],
             'dokan-reverse-withdrawal'      => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal-style.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal-style.css' ),
             ],
             'dokan-admin-product' => [
-                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product.css',
-                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product.css' ),
+                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
+                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
         ];
 
@@ -361,12 +366,6 @@ class Assets {
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
         $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
-
-        if ( version_compare( $wp_version, '5.0', '<' ) ) {
-            $bootstrap_deps[] = 'dokan-wp-packages';
-        } else {
-            $bootstrap_deps[] = 'wp-hooks';
-        }
 
         $scripts = [
             'jquery-tiptip'             => [
@@ -465,7 +464,7 @@ class Assets {
                 'deps' => [ 'dokan-flot-main', 'dokan-flot-pie', 'dokan-flot-time' ],
             ],
             'speaking-url'              => [
-                'src'  => $asset_url . '/js/speakingurl.min.js',
+                'src'  => $asset_url . '/vendors/speakingurl/speakingurl.min.js',
                 'deps' => [ 'jquery' ],
             ],
             'dokan-admin'               => [
@@ -503,11 +502,7 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
-            'dokan-wp-packages'         => [
-                'src'     => $asset_url . '/js/dokan-wp.js',
-                'deps'    => [ 'jquery' ],
-                'version' => filemtime( $asset_path . 'js/dokan-wp.js' ),
-            ],
+
             'dokan-login-form-popup'    => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
                 'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
@@ -1137,7 +1132,7 @@ class Assets {
                 'showPromoBanner'                   => empty( Helper::dokan_get_promo_notices() ),
                 'hasNewVersion'                     => Helper::dokan_has_new_version(),
                 'proVersion'                        => dokan()->is_pro_exists() ? dokan_pro()->version : '',
-                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite' ) ],
+                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite', DOKAN_DIR . '/languages/' ) ],
                 'urls'                              => [
                     'adminRoot'    => admin_url(),
                     'siteUrl'      => home_url( '/' ),

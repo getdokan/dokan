@@ -3102,6 +3102,16 @@ div.media-sidebar a.edit-attachment {
 .dokan-new-product-area .featured-image {
   width: 25%;
 }
+.dokan-new-product-area .content-half-part.sale-price {
+  display: inline-block;
+}
+.dokan-new-product-area .content-half-part.sale-price label.form-label {
+  display: block;
+}
+.dokan-new-product-area .content-half-part.sale-price label.form-label a.sale_schedule,
+.dokan-new-product-area .content-half-part.sale-price label.form-label a.cancel_sale_schedule {
+  float: right;
+}
 .dokan-product-edit-area header.dokan-pro-edit-breadcrumb {
   display: block;
   border-bottom: 1px solid #EDEDED;
