@@ -26,7 +26,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return object WC_Data object or WP_Error object.
      */
     protected function get_object( $id ) {
-        // translators: 1) rest api method name
+        // translators: 1) rest api method name string
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'dokan-lite' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
