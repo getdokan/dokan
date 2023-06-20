@@ -44,7 +44,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
     public function enqueue_scripts() {
         wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', [ 'jquery' ], '2.70', true );
 
-        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc.css', [ 'install' ], DOKAN_PLUGIN_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc-style.css', [ 'install' ], DOKAN_PLUGIN_VERSION );
 
         wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', [ 'jquery', 'jquery-blockui' ], DOKAN_PLUGIN_VERSION, true );
         wp_localize_script(
