@@ -1419,7 +1419,7 @@ export class AdminPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
 
 		await this.click(selector.admin.dokan.vendors.selectAll);
-		await this.selectByValue(selector.admin.dokan.vendors.bulkAction, 'approved');
+		await this.selectByValue(selector.admin.dokan.vendors.bulkActions, 'approved');
 		await this.clickAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.vendors.applyBulkAction);
 	}
 
@@ -1469,6 +1469,25 @@ export class AdminPage extends BasePage {
 		await this.click(selector.admin.users.dokanSelling);
 		await this.click(selector.admin.users.dokanPublishing);
 		await this.click(selector.admin.users.dokanFeaturedVendor);
+	}
+
+
+	// withdraw bulk action
+	async withdrawBulkAction(){
+		await this.goIfNotThere(data.subUrls.backend.dokanWithdraw);
+		await this.click(selector.admin.dokan.withdraw.selectAll);
+		await this.selectByValue(selector.admin.dokan.withdraw.bulkActions, 'approved');
+		await this.clickAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.withdraw.applyBulkAction);
+	}
+
+	// filter withdraw
+	async filterWithdraws(vendorName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokanWithdraw);
+
+		await this.click(selector.admin.dokan.withdraw.filterByVendor);
+		await this.typeAndWaitForResponse(data.subUrls.backend.withdraws, selector.admin.dokan.withdraw.filterByVendorInput, vendorName);
+		await this.pressAndWaitForResponse(data.subUrls.backend.withdraws, data.key.enter);
+
 	}
 
 }

@@ -223,9 +223,15 @@ export const selector = {
 				pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
 				approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
 				cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+
 				// Bulk Actions
-				bulkActions: '#bulk-action-selector-top',
-				selectAllCheckbox: '.check-column input',
+				bulkActions: '.tablenav.top #bulk-action-selector-top',  // approved, cancelled, delete, paypal
+				applyBulkAction: '.tablenav.top .button.action',
+				selectAll: 'thead .manage-column',
+
+				//filters
+				filterByVendor: '.select2-selection__arrow',
+				filterByVendorInput: '.select2-search.select2-search--dropdown .select2-search__field',
 			},
 			// Vendors
 			vendors: {
@@ -343,7 +349,7 @@ export const selector = {
 				},
 
 				search: '#post-search-input',
-				bulkAction: '.tablenav.top #bulk-action-selector-top',  // approved, pending
+				bulkActions: '.tablenav.top #bulk-action-selector-top',  // approved, pending
 				applyBulkAction: '.tablenav.top .button.action',
 				selectAll: 'thead .manage-column',
 				statusSlider: (username: string) => `//td//a[contains(text(), '${username}')]/../../..//label[@class='switch tips']`,
@@ -351,7 +357,6 @@ export const selector = {
 				vendorEdit: '.row-actions .edit',
 				vendorProducts: '.row-actions .products',
 				vendorOrders: '.row-actions .orders',
-
 
 			},
 			// Abuse Reports
