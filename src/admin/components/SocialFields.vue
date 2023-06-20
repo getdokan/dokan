@@ -10,12 +10,21 @@
             <p class="field_desc" v-html="fieldData.desc"></p>
         </div>
         <div class="fields" v-bind:class="[fieldData.type === 'radio' ? 'radio_fields' : '']" v-if="fieldData.url || fieldData.type !== 'html'">
-            <input
-                disabled
-                type='text'
-                class='regular-text large'
-                v-if="fieldData.url"
-                :value='fieldData.url' />
+            <div v-if="fieldData.url" class="disabled-input">
+                <input
+                    disabled
+                    type='text'
+                    class='regular-text large'
+                    :value='fieldData.url'
+                />
+
+                <div :title="'Copy to clipboard'" v-tooltip="'Copy to clipboard'">
+                    <button type='button'>
+                        <i v-if="copied" class="fa fa-check" aria-hidden="true"></i>
+                        <i v-else class="fa fa-clipboard" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
             <input
                 class="regular-text large"
                 :type="fieldData.type"
@@ -43,6 +52,8 @@
 </template>
 
 <script>
+    import __ from 'lodash/fp/__';
+
     export default {
         props: {
             fieldData: {
@@ -56,7 +67,14 @@
             },
         },
 
+        data() {
+            return {
+                copied: false,
+            }
+        },
+
         methods: {
+            __,
             isSocialOptionChecked( optionKey ) {
                 if ( 'radio' === this.fieldData.type ) {
                     return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
@@ -67,3 +85,23 @@
         },
     }
 </script>
+
+<style lang='less' scoped>
+.disabled-input {
+    display: flex;
+
+    div {
+        button {
+            cursor: pointer;
+            height: 20px;
+            min-height: 32px;
+            min-width: 32px;
+            border: 0.957434px solid #686666;
+            box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            background: white;
+            color: #686666;
+        }
+    }
+}
+</style>
