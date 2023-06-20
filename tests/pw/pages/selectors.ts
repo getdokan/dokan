@@ -181,6 +181,15 @@ export const selector = {
 			settingsMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Settings"]',
 			licenseMenu: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="License"]',
 
+			// dokan notice
+			notice : {
+				notice: '.dokan-admin-notices',
+				closeNotice: '.close-notice',
+				slider: '.slide-notice',
+				sliderPrev: '.slide-notice .prev',
+				sliderNext: '.slide-notice .next'
+			},
+
 			// promo banner
 			promoBanner: {
 				promoBanner: '.dokan-promo-banner',
@@ -332,6 +341,18 @@ export const selector = {
 					saveChangesOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Save Changes")]',
 					confirmSaveChanges: '.swal2-confirm',
 				},
+
+				search: '#post-search-input',
+				bulkAction: '.tablenav.top #bulk-action-selector-top',  // approved, pending
+				applyBulkAction: '.tablenav.top .button.action',
+				selectAll: 'thead .manage-column',
+				statusSlider: (username: string) => `//td//a[contains(text(), '${username}')]/../../..//label[@class='switch tips']`,
+				vendorCell: (username: string) => `//td//a[contains(text(), '${username}')]/../../..`,
+				vendorEdit: '.row-actions .edit',
+				vendorProducts: '.row-actions .products',
+				vendorOrders: '.row-actions .orders',
+
+
 			},
 			// Abuse Reports
 			abuseReports: {
@@ -1636,10 +1657,15 @@ export const selector = {
 			dokanAddress2: '//input[@name="dokan_store_address[street_2]"]',
 			dokanCity: '//input[@name="dokan_store_address[city]"]',
 			dokanPostcode: '//input[@name="dokan_store_address[zip]"]',
-			dokanCountry: '#select2-country-container',
-			dokanCountryValues: '.select2-results ul li',
-			dokanState: '##select2-state-container',
-			dokanStateValues: '.select2-results ul li',
+			// dokanCountry: '#select2-country-container',
+			// dokanCountryValues: '.select2-results ul li',
+			// dokanState: '##select2-state-container',
+			// dokanStateValues: '.select2-results ul li',
+			dokanCountry: '(//span[@class="select2-selection__arrow"])[1]',
+			dokanCountryInput: '.select2-search.select2-search--dropdown .select2-search__field',
+			dokanState: '(//span[@class="select2-selection__arrow"])[2]',
+			dokanStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
+
 			dokanPhone: '//input[@name="dokan_store_phone"]',
 			dokanCompanyName: '//input[@name="dokan_company_name"]',
 			dokanCompanyIdOrEuidNumber: '//input[@name="dokan_company_id_number"]',

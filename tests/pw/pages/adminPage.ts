@@ -1371,16 +1371,23 @@ export class AdminPage extends BasePage {
 	}
 
 
+	// dokan notice
+	async dokanNotice(){
+		await this.goto(data.subUrls.backend.dokan);
+		// check dokan notice elements are visible
+		this.multipleElementVisible(selector.admin.dokan.notice);
+	}
+
 	// dokan pro features promo
 	async dokanProFeaturesPromo(){
 
 		// dokan promo banner
-		await this.goto(data.subUrls.backend.dokan);
+		await this.goIfNotThere(data.subUrls.backend.dokan);
 		// check promo banner elements are visible
 		this.multipleElementVisible(selector.admin.dokan.promoBanner);
 
 		// dokan lite modules
-		await this.goto(data.subUrls.backend.dokanLiteModules);
+		await this.goIfNotThere(data.subUrls.backend.dokanLiteModules);
 		// check pro upgrade popup elements are visible
 		this.multipleElementVisible(selector.admin.dokan.modules.lite.popup);
 
@@ -1389,7 +1396,7 @@ export class AdminPage extends BasePage {
 		await expect(this.page.locator(selector.admin.dokan.modules.lite.moduleCard)).toHaveCount(27);
 
 		// dokan pro features menu
-		await this.goto(data.subUrls.backend.dokanProFeatures);
+		await this.goIfNotThere(data.subUrls.backend.dokanProFeatures);
 		// check dokan pro feature sections are visible
 		this.multipleElementVisible(selector.admin.dokan.proFeatures);
 
@@ -1397,6 +1404,71 @@ export class AdminPage extends BasePage {
 		await this.goToDokanSettings();
 		// check settings pro advertisement banner elements are visible
 		this.multipleElementVisible(selector.admin.dokan.settings.proAdvertisementBanner);
+	}
+
+	// search vendor
+	async searchVendor(vendorName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
+
+		await this.typeAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.vendors.search, vendorName);
+		await expect(this.page.locator(selector.admin.dokan.vendors.search)).toBeVisible();
+	}
+
+	// vendor bulk action
+	async vendorBulkAction(){
+		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
+
+		await this.click(selector.admin.dokan.vendors.selectAll);
+		await this.selectByValue(selector.admin.dokan.vendors.bulkAction, 'approved');
+		await this.clickAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.vendors.applyBulkAction);
+	}
+
+	// update vendor status
+	async updateVendorStatus(vendorName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
+		await this.clickAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.vendors.statusSlider(vendorName));
+		// The vendor has been disabled.
+		// Selling has been enabled
+	}
+
+	// editVendor
+	async editVendorDokanLite(vendorName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
+		await this.click(selector.admin.dokan.vendors.vendorCell(vendorName));
+		await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorEdit);
+
+		// store settings
+		await this.clearAndType(selector.admin.users.dokanStoreName, vendorName );
+
+		// vendor address
+		await this.clearAndType(selector.admin.users.dokanStoreUrl, vendorName );
+		await this.clearAndType(selector.admin.users.dokanAddress1, vendorName );
+		await this.clearAndType(selector.admin.users.dokanAddress2, vendorName);
+		await this.clearAndType(selector.admin.users.dokanCity, vendorName);
+		await this.clearAndType(selector.admin.users.dokanPostcode, vendorName);
+		await this.clearAndType(selector.admin.users.dokanStoreName, vendorName);
+		await this.clearAndType(selector.admin.users.dokanStoreName, vendorName);
+		await this.click(selector.admin.users.dokanCountry);
+		await this.clearAndType(selector.admin.users.dokanCountryInput, vendorName);
+		await this.press(data.key.enter);
+		await this.click(selector.admin.users.dokanState);
+		await this.clearAndType(selector.admin.users.dokanStateInput, vendorName);
+		await this.press(data.key.enter);
+
+		await this.clearAndType(selector.admin.users.dokanPhone, vendorName);
+
+		// social options
+		await this.clearAndType(selector.admin.users.dokanFacebook, vendorName);
+		await this.clearAndType(selector.admin.users.dokanTwitter, vendorName);
+		await this.clearAndType(selector.admin.users.dokanPinterest, vendorName);
+		await this.clearAndType(selector.admin.users.dokanLinkedin, vendorName);
+		await this.clearAndType(selector.admin.users.dokanInstagram, vendorName);
+		await this.clearAndType(selector.admin.users.dokanFlicker, vendorName);
+
+		// other settings
+		await this.click(selector.admin.users.dokanSelling);
+		await this.click(selector.admin.users.dokanPublishing);
+		await this.click(selector.admin.users.dokanFeaturedVendor);
 	}
 
 }

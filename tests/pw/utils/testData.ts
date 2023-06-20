@@ -730,6 +730,7 @@ export const data = {
 			permalinks: 'wp-admin/options-permalink.php',
 			general: 'wp-admin/options-general.php',
 			plugins: 'wp-admin/plugins.php',
+			stores: 'dokan/v1/stores',
 		},
 
 		frontend: {
