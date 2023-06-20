@@ -1428,7 +1428,7 @@ export class AdminPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.backend.dokanVendors);
 		await this.clickAndWaitForResponse(data.subUrls.backend.stores, selector.admin.dokan.vendors.statusSlider(vendorName));
 		// The vendor has been disabled.
-		// Selling has been enabled
+		// Selling has been enabled 
 	}
 
 	// editVendor
