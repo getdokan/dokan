@@ -1,6 +1,6 @@
 /**
- * This file is created to delte the unnecessery files.
- * For ex: webpack creates a simple.js file simple.less file and also for every less files and we don't need the simple.js file.
+ * This file is created to delete the unnecessery files.
+ * For ex: webpack creates a simple.js file for simple.less file and also creates a js file for every single less files and we don't need the js file like simple.js file.
  * if any specific file is needed to delete the file dir can be added and file will be deleted when run the below code.
  *
  * @since DOKAN_SINCE
@@ -10,7 +10,7 @@ const chalk = require( 'chalk' );
 const path = require( 'path' );
 
 // Files directories.
-const buidFiles = [
+const targetFiles = [
     'assets/js/admin.js',
     'assets/js/dokan-admin-product-style.js',
     'assets/js/dokan-product-category-ui.js',
@@ -40,7 +40,7 @@ console.log(
     )
 );
 
-buidFiles.forEach( ( file ) => {
+targetFiles.forEach( ( file ) => {
     const fileDir = path.resolve( file );
 
     fs.remove( fileDir, ( error ) => {
