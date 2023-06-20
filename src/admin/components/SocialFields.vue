@@ -26,11 +26,17 @@
                     </button>
                 </div>
             </div>
-            <input
-                class="regular-text large"
-                :type="fieldData.type"
-                v-model="fieldValue[fieldData.name]"
-                v-if="fieldData.type === 'text'" />
+            <div class='secret-input-box' v-if="fieldData.type === 'text'">
+                <input
+                    class="regular-text large secret-input blurry-input"
+                    @focus="removeBlurryEffect"
+                    @blur="addBlurryEffect"
+                    :type="fieldData.type"
+                    v-model="fieldValue[fieldData.name]"
+                    ref="secretInput"
+                />
+                <span v-on:click="handleClickView" ref="secretInputPlaceholder" class="secret-input-placeholder">{{__( 'Click to view', 'dokan-lite' )}}</span>
+            </div>
             <textarea
                 class="large"
                 v-model="fieldValue[fieldData.name]"
@@ -80,6 +86,7 @@
 
                 return false;
             },
+
             copyHandler(text) {
                 const textarea = document.createElement('textarea');
                 document.body.appendChild(textarea);
@@ -96,6 +103,21 @@
                         this.copied = false;
                     }, 1000);
                 }
+            },
+
+            addBlurryEffect( evt ) {
+                evt.target.closest('.secret-input').classList.add('blurry-input');
+                this.$refs.secretInputPlaceholder.style.display = 'block';
+            },
+
+            removeBlurryEffect( evt ) {
+                evt.target.closest('.secret-input').classList.remove('blurry-input');
+                this.$refs.secretInputPlaceholder.style.display = 'none';
+            },
+
+            handleClickView() {
+                let secretInput = this.$refs.secretInput;
+                secretInput.focus();
             }
         },
     }
@@ -117,6 +139,23 @@
             background: white;
             color: #686666;
         }
+    }
+}
+
+.secret-input-box {
+    position: relative;
+
+    .secret-input {
+        &.blurry-input {
+            color: transparent;
+            text-shadow: 0 0 7px #333;
+        }
+    }
+
+    .secret-input-placeholder {
+        position: absolute;
+        left: 35%;
+        top: 25%;
     }
 }
 </style>
