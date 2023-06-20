@@ -684,6 +684,11 @@ class Settings {
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
                     'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'google_maps',
+                        ],
+                    ],
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
@@ -691,6 +696,11 @@ class Settings {
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
                     'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'mapbox',
+                        ],
+                    ],
                 ],
                 'recaptcha_validation_label' => [
                     'name'                 => 'recaptcha_validation_label',
