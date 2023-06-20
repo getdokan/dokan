@@ -10,33 +10,19 @@
             <p class="field_desc" v-html="fieldData.desc"></p>
         </div>
         <div class="fields" v-bind:class="[fieldData.type === 'radio' ? 'radio_fields' : '']" v-if="fieldData.url || fieldData.type !== 'html'">
-            <div v-if="fieldData.url" class="disabled-input">
-                <input
-                    disabled
-                    type='text'
-                    class='regular-text large'
-                    :value='fieldData.url'
-                    ref="toCopyClipboard"
-                />
-
-                <div :title="copied ? __( 'Copied', 'dokan-lite' ) : __('Copy to clipboard', 'dokan-lite' )">
-                    <button type='button' v-on:click="copyHandler(fieldData.url)">
-                        <i v-if="copied" class="fa fa-check" aria-hidden="true"></i>
-                        <i v-else class="fa fa-clipboard" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
-            <div class='secret-input-box' v-if="fieldData.type === 'text'">
-                <input
-                    class="regular-text large secret-input blurry-input"
-                    @focus="removeBlurryEffect"
-                    @blur="addBlurryEffect"
-                    :type="fieldData.type"
-                    v-model="fieldValue[fieldData.name]"
-                    ref="secretInput"
-                />
-                <span v-on:click="handleClickView" ref="secretInputPlaceholder" class="secret-input-placeholder">{{__( 'Click to view', 'dokan-lite' )}}</span>
-            </div>
+            <secret-input
+                v-model="fieldData.url"
+                :type="'text'"
+                v-if="fieldData.url"
+                :copy-btn="true"
+                :disabled="true"
+                :is-secret="false"
+            />
+            <secret-input
+                v-model="fieldValue[fieldData.name]"
+                :type='fieldData.type'
+                v-if="fieldData.type === 'text'"
+            />
             <textarea
                 class="large"
                 v-model="fieldValue[fieldData.name]"
@@ -59,7 +45,12 @@
 </template>
 
 <script>
+    import SecretInput from './SecretInput.vue';
+
     export default {
+        components: {
+            SecretInput
+        },
         props: {
             fieldData: {
                 type: Object,
@@ -86,76 +77,6 @@
 
                 return false;
             },
-
-            copyHandler(text) {
-                const textarea = document.createElement('textarea');
-                document.body.appendChild(textarea);
-                textarea.value = text;
-                textarea.select();
-                textarea.setSelectionRange(0, 99999);
-                let copiedSuccessfully = document.execCommand('copy');
-                document.body.removeChild(textarea);
-
-                if (copiedSuccessfully) {
-                    this.copied = true;
-
-                    setTimeout(() => {
-                        this.copied = false;
-                    }, 1000);
-                }
-            },
-
-            addBlurryEffect( evt ) {
-                evt.target.closest('.secret-input').classList.add('blurry-input');
-                this.$refs.secretInputPlaceholder.style.display = 'block';
-            },
-
-            removeBlurryEffect( evt ) {
-                evt.target.closest('.secret-input').classList.remove('blurry-input');
-                this.$refs.secretInputPlaceholder.style.display = 'none';
-            },
-
-            handleClickView() {
-                let secretInput = this.$refs.secretInput;
-                secretInput.focus();
-            }
         },
     }
 </script>
-
-<style lang='less' scoped>
-.disabled-input {
-    display: flex;
-
-    div {
-        button {
-            cursor: pointer;
-            height: 20px;
-            min-height: 32px;
-            min-width: 32px;
-            border: 0.957434px solid #686666;
-            box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            background: white;
-            color: #686666;
-        }
-    }
-}
-
-.secret-input-box {
-    position: relative;
-
-    .secret-input {
-        &.blurry-input {
-            color: transparent;
-            text-shadow: 0 0 7px #333;
-        }
-    }
-
-    .secret-input-placeholder {
-        position: absolute;
-        left: 35%;
-        top: 25%;
-    }
-}
-</style>

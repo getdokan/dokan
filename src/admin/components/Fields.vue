@@ -14,9 +14,20 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <input :type="fieldData.type || 'text'" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
+                        <secret-input
+                            v-if="fieldData.secret_text"
+                            :type="fieldData.type || 'text'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"
+                        />
+                        <input
+                            v-else
+                            :type="fieldData.type || 'text'"
+                            class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                             :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
-                            :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" />
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            v-model="fieldValue[fieldData.name]"
+                        />
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -163,12 +174,18 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select
+                            v-if="!fieldData.grouped"
+                            class="regular medium"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            v-on:change="e => fieldValue[fieldData.name] = e.target.value"
+                            :value="fieldValue[fieldData.name] ?? fieldData.default ?? ''"
+                        >
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
-
-                        <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-else class="regular medium" :value="fieldData.default ?? ''" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                             <optgroup v-for="( optionGroup, optionGroupKey ) in fieldData.options" :key="optionGroupKey" :label="optionGroup.group_label">
                                 <option v-for="(option, optionKey ) in optionGroup.group_values" :key="optionKey" :value="option.value" v-html="option.label" />
@@ -420,6 +437,7 @@
     import Switches from "admin/components/Switches.vue";
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
+    import SecretInput from './SecretInput.vue';
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -436,7 +454,8 @@
             colorPicker,
             FieldHeading,
             SocialFields,
-            RefreshSettingOptions
+            RefreshSettingOptions,
+            SecretInput
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
