@@ -312,8 +312,12 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
             'dokan-flaticon'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon/flaticon.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon/flaticon.css' ),
+            ],
+            'dokan-sf-pro-text'              => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
@@ -330,6 +334,7 @@ class Assets {
             ],
             'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
+                'deps'    => [ 'dokan-sf-pro-text' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/global-admin.css' ),
             ],
             'dokan-product-category-ui-css' => [
