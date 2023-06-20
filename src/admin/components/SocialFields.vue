@@ -16,10 +16,11 @@
                     type='text'
                     class='regular-text large'
                     :value='fieldData.url'
+                    ref="toCopyClipboard"
                 />
 
-                <div :title="'Copy to clipboard'" v-tooltip="'Copy to clipboard'">
-                    <button type='button'>
+                <div :title="copied ? __( 'Copied', 'dokan-lite' ) : __('Copy to clipboard', 'dokan-lite' )">
+                    <button type='button' v-on:click="copyHandler(fieldData.url)">
                         <i v-if="copied" class="fa fa-check" aria-hidden="true"></i>
                         <i v-else class="fa fa-clipboard" aria-hidden="true"></i>
                     </button>
@@ -52,8 +53,6 @@
 </template>
 
 <script>
-    import __ from 'lodash/fp/__';
-
     export default {
         props: {
             fieldData: {
@@ -74,7 +73,6 @@
         },
 
         methods: {
-            __,
             isSocialOptionChecked( optionKey ) {
                 if ( 'radio' === this.fieldData.type ) {
                     return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
@@ -82,6 +80,23 @@
 
                 return false;
             },
+            copyHandler(text) {
+                const textarea = document.createElement('textarea');
+                document.body.appendChild(textarea);
+                textarea.value = text;
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                let copiedSuccessfully = document.execCommand('copy');
+                document.body.removeChild(textarea);
+
+                if (copiedSuccessfully) {
+                    this.copied = true;
+
+                    setTimeout(() => {
+                        this.copied = false;
+                    }, 1000);
+                }
+            }
         },
     }
 </script>
