@@ -131,8 +131,8 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      *
      * @since 2.9.21
      */
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
 
         $this->create_vendor();
         $this->create_product();
@@ -143,10 +143,6 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
         $this->set_product_settings();
 
         add_filter( 'dokan_prepare_for_calculation', [ $this, 'dokan_add_combine_commission' ], 10, 8 );
-    }
-
-    public function tearDown() {
-        parent::tearDown();
     }
 
     /**
