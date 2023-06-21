@@ -94,7 +94,9 @@ class Assets {
             }
 
             // load fontawesome styles
-            wp_enqueue_style( 'dokan-fontawesome' );
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {
@@ -571,7 +573,9 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-modal' );
-            wp_enqueue_style( 'dokan-fontawesome' );
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
