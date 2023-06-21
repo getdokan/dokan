@@ -64,38 +64,39 @@ class ProductPublished extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $post, $seller ) {
-		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+		if ( ! $this->is_enabled() || ! $this->get_recipient() || ! $seller ) {
 			return;
 		}
 
-            $product = wc_get_product( $post->ID );
+        $product = wc_get_product( $post->ID );
+        if ( ! $product ) {
+            return;
+        }
 
-		if ( is_a( $product, 'WC_Product' ) ) {
-			$this->object = $product;
+        $this->object = $product;
 
-			$this->find['product-title']     = '{product_title}';
-			$this->find['price']             = '{price}';
-			$this->find['seller-name']       = '{seller_name}';
-			$this->find['product_url']       = '{product_url}';
-			$this->find['product_edit_link'] = '{product_edit_link}';
-			$this->find['site_name']         = '{site_name}';
-			$this->find['site_url']          = '{site_url}';
+        $this->find['product-title']     = '{product_title}';
+        $this->find['price']             = '{price}';
+        $this->find['seller-name']       = '{seller_name}';
+        $this->find['product_url']       = '{product_url}';
+        $this->find['product_edit_link'] = '{product_edit_link}';
+        $this->find['site_name']         = '{site_name}';
+        $this->find['site_url']          = '{site_url}';
 
-			$this->replace['product-title']     = $product->get_title();
-			$this->replace['price']             = $product->get_price();
-			$this->replace['seller-name']       = $seller->display_name;
-			$this->replace['product_url']       = get_permalink( $post->ID );
-			$this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
-			$this->replace['site_name']         = $this->get_from_name();
-			$this->replace['site_url']          = site_url();
-		}
+        $this->replace['product-title']     = $product->get_title();
+        $this->replace['price']             = $product->get_price();
+        $this->replace['seller-name']       = $seller->display_name;
+        $this->replace['product_url']       = get_permalink( $post->ID );
+        $this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
+        $this->replace['site_name']         = $this->get_from_name();
+        $this->replace['site_url']          = site_url();
 
-            $this->setup_locale();
-            $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-            $this->restore_locale();
+        $this->setup_locale();
+        $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->restore_locale();
     }
 
-        /**
+    /**
      * Get content html.
      *
      * @access public

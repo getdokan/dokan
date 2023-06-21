@@ -137,13 +137,19 @@ function dokan_is_product_edit_page() {
  * @return bool
  */
 function dokan_is_seller_dashboard() {
-    $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
+    global $wp_query;
 
-    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
+
+    if ( ! $page_id ) {
         return false;
     }
 
-    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( ! $wp_query ) {
+        return false;
+    }
+
+    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', $wp_query->queried_object_id ) ) {
         return true;
     }
 
@@ -653,20 +659,16 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 /**
  * Get product status based on user id and settings
  *
+ * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
+ *
  * @return string
  */
 function dokan_get_new_post_status() {
-    $user_id = get_current_user_id();
+	$user_id    = get_current_user_id();
+	$is_trusted = dokan_is_seller_trusted( $user_id );
+	$status     = $is_trusted ? 'publish' : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
 
-    // trusted seller
-    if ( dokan_is_seller_trusted( $user_id ) ) {
-        return 'publish';
-    }
-
-    // if not trusted, send the option
-    $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-
-    return $status;
+	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
 }
 
 /**
@@ -3070,6 +3072,15 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  * @return array
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
+    // get transient key
+    $transient_key = sprintf( 'dokan_i18n-%s-%d', $domain, filectime( $language_dir ) );
+
+    // check if data exists on cache or not
+    $locale = Cache::get_transient( $transient_key );
+    if ( false !== $locale ) {
+        return $locale;
+    }
+
     $plugin_translations = dokan_get_translations_for_plugin_domain( $domain, $language_dir );
     $translations        = get_translations_for_domain( $domain );
 
@@ -3096,6 +3107,9 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
     foreach ( $entries as $msgid => $entry ) {
         $locale['locale_data'][ $domain ][ $msgid ] = $entry->translations;
     }
+
+    // store data into cache
+    Cache::set_transient( $transient_key, $locale );
 
     return $locale;
 }
@@ -4546,4 +4560,54 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
  */
 function dokan_sanitize_phone_number( $phone ) {
     return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+}
+
+/**
+ * Dokan override author ID from admin
+ *
+ * @since  2.6.2
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param  WC_Product $product
+ * @param  integer $seller_id
+ *
+ * @return void
+ */
+function dokan_override_product_author( $product, $seller_id ) {
+    wp_update_post(
+        [
+            'ID'          => $product->get_id(),
+            'post_author' => $seller_id,
+        ]
+    );
+
+    dokan_override_author_for_product_variations( $product, $seller_id );
+
+    do_action( 'dokan_after_override_product_author', $product, $seller_id );
+}
+
+/**
+ * Overrides author for products with variations.
+ *
+ * @since 3.7.4
+ * @since 3.7.18 moved this method from includes/Admin/functions.php file
+ *
+ * @param WC_Product $product
+ * @param int        $seller_id
+ *
+ * @return void
+ */
+function dokan_override_author_for_product_variations( $product, $seller_id ) {
+    if ( 'variable' === $product->get_type() || 'variable-subscription' === $product->get_type() ) {
+        $variations = $product->get_children();
+
+        foreach ( $variations as $variation_id ) {
+            wp_update_post(
+                [
+                    'ID'          => $variation_id,
+                    'post_author' => $seller_id,
+                ]
+            );
+        }
+    }
 }
