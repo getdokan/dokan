@@ -29,7 +29,8 @@ var entryPoint = {
     './assets/src/js/product-editor.js',
     './assets/src/js/script.js',
     './assets/src/js/store-lists.js',
-    './assets/src/js/withdraw.js'
+    './assets/src/js/withdraw.js',
+    './assets/src/js/dokan-daterangepicker.js'
   ],
   'login-form-popup': './assets/src/js/login-form-popup.js',
   'dokan-maps-compat': './assets/src/js/dokan-maps-compat.js',
