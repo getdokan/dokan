@@ -256,10 +256,10 @@ class SetupWizard extends DokanSetupWizard {
 
                 <?php do_action( 'dokan_seller_wizard_store_setup_before_map_field', $this ); ?>
 
-                <?php if ( dokan_has_map_api_key() ) { ?>
+                <?php if ( dokan_has_map_api_key() ) : ?>
                     <tr>
-                        <th><label class="dokan-w3 dokan-control-label" for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label></th>
-                        <td class="">
+                        <th><label for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label></th>
+                        <td>
                             <?php
                             dokan_get_template(
                                 'maps/dokan-maps-with-search.php', [
@@ -270,7 +270,7 @@ class SetupWizard extends DokanSetupWizard {
                             ?>
                         </td>
                     </tr>
-                <?php } ?>
+                <?php endif; ?>
 
                 <?php do_action( 'dokan_seller_wizard_store_setup_after_map_field', $this ); ?>
 
