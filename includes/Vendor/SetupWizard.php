@@ -117,6 +117,7 @@ class SetupWizard extends DokanSetupWizard {
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
         wp_enqueue_script( 'jquery-blockui' );
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_script( 'wc-enhanced-select' );
 
         // Load map scripts.
