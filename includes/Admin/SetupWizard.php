@@ -64,8 +64,7 @@ class SetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         if ( ! is_admin() ) {
             wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
             wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
@@ -130,7 +129,7 @@ class SetupWizard {
      * Add admin menus/screens.
      */
     public function admin_menus() {
-        add_submenu_page( null, '', '', 'manage_woocommerce', 'dokan-setup', '' );
+        add_submenu_page( '', '', '', 'manage_woocommerce', 'dokan-setup', '' );
     }
 
     /**
@@ -479,6 +478,7 @@ class SetupWizard {
         $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : [];
         $withdraw_limit        = ! empty( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : 0;
         $withdraw_order_status = ! empty( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : [];
+        $hide_custom_method    = empty( $options['withdraw_method_name'] ) || empty( $options['withdraw_method_type'] );
         ?>
         <h1><?php esc_html_e( 'Withdraw Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
@@ -489,7 +489,12 @@ class SetupWizard {
                 <tr>
                     <td colspan="2">
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
-                            <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
+                            <?php
+                            foreach ( dokan_withdraw_register_methods() as $key => $method ) :
+                                if ( 'dokan_custom' === $key && $hide_custom_method ) {
+                                    continue;
+                                }
+                                ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
                                         <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>

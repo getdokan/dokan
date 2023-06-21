@@ -16,3 +16,4 @@ config.json
 /vendor/
 phpcs-report.txt
 /phpcs.xml
+.phpunit.result.cache
