@@ -73,7 +73,7 @@
 
                     <span class="form-group">
                         <date-range-picker
-                            class="mr-5"
+                            class="mr-5 ml-5"
                             ref="picker"
                             :locale-data="dateTimePickerFormat()"
                             :singleDatePicker="false"
