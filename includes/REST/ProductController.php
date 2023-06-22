@@ -20,6 +20,8 @@ use WeDevs\Dokan\Product\ProductAttribute;
 /**
  * Store API Controller
  *
+ * phpcs:disable WordPress.WP.Capabilities.Unknown
+ *
  * @package dokan
  *
  * @author weDevs <info@wedevs.com>
@@ -383,7 +385,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function get_product_permissions_check() {
-        return current_user_can( 'dokan_view_product_menu' );
+        return current_user_can( 'dokan_view_product_menu' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -394,7 +396,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function create_product_permissions_check() {
-        return current_user_can( 'dokan_add_product' );
+        return current_user_can( 'dokan_add_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -405,7 +407,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function get_single_product_permissions_check() {
-        return current_user_can( 'dokandar' );
+        return current_user_can( 'dokandar' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -416,7 +418,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function update_product_permissions_check() {
-        return current_user_can( 'dokan_edit_product' );
+        return current_user_can( 'dokan_edit_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -427,7 +429,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function delete_product_permissions_check() {
-        return current_user_can( 'dokan_delete_product' );
+        return current_user_can( 'dokan_delete_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
