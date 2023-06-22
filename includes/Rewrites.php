@@ -87,6 +87,7 @@ class Rewrites {
                 'reverse-withdrawal',
                 'settings',
                 'edit-account',
+                'account-migration',
             ]
         );
 
