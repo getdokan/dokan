@@ -16,7 +16,7 @@
 ?>
 
 <h2><?php esc_html_e( 'Update account to Vendor', 'dokan-lite' ); ?></h2>
-<form method="post" action="" class="register">
+<form method="post" action="" class="update-customer-to-vendor register">
     <div class="dokan-become-seller">
         <div class="split-row form-row-wide">
             <p class="form-row form-group">
@@ -76,3 +76,10 @@
         </p>
     </div>
 </form>
+
+<script>
+    (function($) {
+        // Validate phone input characters.
+        $( 'form.update-customer-to-vendor.register input#shop-phone' ).on( 'keydown', dokan_ensure_phone_number_characters );
+    })(jQuery);
+</script>
