@@ -95,6 +95,9 @@ class Assets {
 
             // load fontawesome styles
             wp_enqueue_style( 'dokan-fontawesome' );
+
+            // load wooCommerce select2 styles
+            wp_enqueue_style( 'woocommerce_select2', WC()->plugin_url() . '/assets/css/select2.css', [], WC_VERSION );
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {
