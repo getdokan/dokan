@@ -339,4 +339,40 @@
     }
     return error_message;
   }
+
+  /**
+   * Ensure proper phone number characters.
+   *
+   * @since DOKAN_SINCE
+   *
+   * @param evt Event Object
+   *
+   * @return {void}
+   */
+  window.dokan_ensure_phone_number_characters = function ( evt ) {
+    // Allow: backspace, delete, tab, escape, enter and .
+    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190].indexOf( evt.keyCode ) !== -1 ||
+
+      // Allow: Ctrl+A
+      (evt.keyCode == 65 && evt.ctrlKey === true) ||
+
+      // Allow: home, end, left, right
+      (evt.keyCode >= 35 && evt.keyCode <= 39)) {
+      // let it happen, don't do anything
+      return;
+    }
+
+    if ( evt.shiftKey && evt.key === '.' ) {
+      return;
+    }
+
+    // Ensure that it is a number and stop the keypress
+    if ( ( evt.shiftKey && ! isNaN( Number(evt.key) ) ) ) {
+      return;
+    }
+
+    if ( isNaN( Number(evt.key) ) ) {
+      evt.preventDefault();
+    }
+  }
 })(document, window);
