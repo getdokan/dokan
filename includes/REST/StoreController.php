@@ -240,6 +240,9 @@ class StoreController extends WP_REST_Controller {
             'status' => 'all',
         ];
 
+        // To avoid args overriding, we are settings filter here. Then setting args changed from parameter.
+        $args = apply_filters( 'dokan_seller_listing_args', $args, $request );
+
         if ( ! empty( $params['search'] ) ) {
             $args['search']         = '*' . sanitize_text_field( ( $params['search'] ) ) . '*';
             $args['search_columns'] = [ 'user_login', 'user_email', 'display_name', 'user_nicename' ];
