@@ -114,10 +114,16 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     public function frontend_enqueue_scripts() {
+        wp_enqueue_style( 'jquery-ui' );
+        
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
         wp_enqueue_script( 'jquery-blockui' );
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_script( 'wc-enhanced-select' );
+
+        // Load map scripts.
+        dokan()->scripts->load_gmap_script();
     }
 
     /**
@@ -196,6 +202,8 @@ class SetupWizard extends DokanSetupWizard {
         $address_zip     = isset( $store_info['address']['zip'] ) ? $store_info['address']['zip'] : '';
         $address_country = isset( $store_info['address']['country'] ) ? $store_info['address']['country'] : '';
         $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
+        $map_location    = isset( $store_info['location'] ) ? $store_info['location'] : '';
+        $map_address     = isset( $store_info['find_address'] ) ? $store_info['find_address'] : '';
 
         $country_obj = new WC_Countries();
         $countries   = $country_obj->get_allowed_countries();
@@ -248,6 +256,26 @@ class SetupWizard extends DokanSetupWizard {
                 </tr>
 
                 <?php do_action( 'dokan_seller_wizard_store_setup_after_address_field', $this ); ?>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_before_map_field', $this ); ?>
+
+                <?php if ( dokan_has_map_api_key() ) : ?>
+                    <tr>
+                        <th><label for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label></th>
+                        <td>
+                            <?php
+                            dokan_get_template(
+                                'maps/dokan-maps-with-search.php', [
+                                    'map_location' => $map_location,
+                                    'map_address'  => $map_address,
+                                ]
+                            );
+                            ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_after_map_field', $this ); ?>
 
                 <?php if ( empty( dokan_is_vendor_info_hidden( 'email' ) ) ) : ?>
                     <tr>
@@ -366,9 +394,11 @@ class SetupWizard extends DokanSetupWizard {
 
         $dokan_settings = $this->store_info;
 
-        $dokan_settings['store_ppp']  = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
-        $dokan_settings['address']    = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : [];
-        $dokan_settings['show_email'] = isset( $_POST['show_email'] ) ? 'yes' : 'no';
+        $dokan_settings['store_ppp']    = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
+        $dokan_settings['address']      = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : [];
+        $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
+        $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
+        $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         // Check address and add manually values on Profile Completion also increase progress value
         if ( $dokan_settings['address'] ) {
