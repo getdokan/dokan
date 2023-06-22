@@ -390,6 +390,7 @@ final class WeDevs_Dokan {
         $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
         $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
         $this->container['bg_process']          = new \WeDevs\Dokan\BackgroundProcess\Manager();
+        $this->container['frontend_manager']    = new \WeDevs\Dokan\Frontend\Frontend();
 
         //fix rewrite rules
         if ( ! isset( $this->container['rewrite'] ) ) {
