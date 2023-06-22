@@ -7,6 +7,7 @@ var Dokan_Vendor_Registration = {
 
         // bind events
         $( '.user-role input[type=radio]', form ).on( 'change', this.showSellerForm );
+        $( document ).on( 'dokan_event_seller_registration_form', this.showSellerForm );
         $( '.tc_check_box', form ).on( 'click', this.onTOC );
         $( '#shop-phone', form ).on( 'keydown', this.ensurePhoneNumber );
         $( '#company-name', form ).on( 'focusout', this.generateSlugFromCompany );
@@ -18,6 +19,7 @@ var Dokan_Vendor_Registration = {
         this.validationLocalized();
         this.handlePasswordStrengthObserver();
         // this.validate(this);
+        $( document ).trigger( 'dokan_event_seller_registration_form' );
     },
 
     validate: function(self) {
@@ -46,7 +48,7 @@ var Dokan_Vendor_Registration = {
             if ( $( '.tc_check_box' ).length > 0 ) {
                 $('button[name=register]').attr('disabled','disabled');
             }
-
+            $('.user-role .dokan-role-seller').prop("checked",true);
         } else {
             $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
             $('.show_if_seller').slideUp();
@@ -54,6 +56,7 @@ var Dokan_Vendor_Registration = {
             if ( $( '.tc_check_box' ).length > 0 ) {
                 $( 'button[name=register]' ).removeAttr( 'disabled' );
             }
+            $('.user-role .dokan-role-customer').prop("checked",true);
         }
     },
 
