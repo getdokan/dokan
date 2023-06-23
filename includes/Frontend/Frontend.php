@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Frontend Manager
  *
- * @since DOKAN_SINCE
+ * @since 3.7.21
  */
 class Frontend {
 
@@ -21,7 +21,7 @@ class Frontend {
     /**
      * Shortcodes container
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      */
     public function __construct() {
         $this->set_controllers();
@@ -30,7 +30,7 @@ class Frontend {
     /**
      * Set controllers
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */

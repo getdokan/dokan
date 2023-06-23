@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Dokan Become Vendor Class.
  *
- * @since   DOKAN_SINCE
+ * @since   3.7.21
  *
  * @package dokan
  */
@@ -17,7 +17,7 @@ class BecomeAVendor {
     /**
      * Class Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      */
     public function __construct() {
         $this->init_hooks();
@@ -26,7 +26,7 @@ class BecomeAVendor {
     /**
      * Init Hooks Method.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class BecomeAVendor {
     /**
      * Remove Account Update Feature from Dokan Pro.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */
@@ -66,7 +66,7 @@ class BecomeAVendor {
     /**
      * Become A Seller Form Handler.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */
@@ -134,7 +134,7 @@ class BecomeAVendor {
     /**
      * Render Become A Vendor Section.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */
@@ -150,7 +150,7 @@ class BecomeAVendor {
     /**
      * Load Customer to Vendor Update Form Template.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      *
      * @return void
      */
