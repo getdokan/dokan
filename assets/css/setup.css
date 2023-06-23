@@ -2,7 +2,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url('../images/spinner-2x.gif') center center no-repeat;
+  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
   z-index: 99;
   background-size: 20px;
 }
@@ -246,3 +246,14 @@
 .dokan-vendor-setup-wizard #wc-logo img {
   max-width: 100%;
 }
+.dokan-vendor-setup-wizard .wc-setup-content .dokan-seller-setup-form .dokan-map-wrap .dokan-map-search-bar input#dokan-map-add {
+  width: 100%;
+}
+.dokan-vendor-setup-wizard .wc-setup-content .dokan-seller-setup-form .dokan-map-wrap .dokan-map-search-bar a#dokan-location-find-btn {
+  display: none;
+}
+.dokan-vendor-setup-wizard .wc-setup-content .dokan-seller-setup-form .dokan-map-wrap .dokan-google-map {
+  width: 100%;
+  height: 300px;
+}
+
