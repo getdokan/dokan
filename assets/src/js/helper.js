@@ -350,23 +350,22 @@
    * @return {void}
    */
   window.dokan_ensure_phone_number_characters = function ( evt ) {
-    // Allow: backspace, delete, tab, escape, enter and .
-    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190].indexOf( evt.keyCode ) !== -1 ||
-
-      // Allow: Ctrl+A
-      (evt.keyCode == 65 && evt.ctrlKey === true) ||
-
-      // Allow: home, end, left, right
-      (evt.keyCode >= 35 && evt.keyCode <= 39)) {
-      // let it happen, don't do anything
+    // Allow: backspace, delete, tab, escape, enter and dot (.).
+    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190].indexOf( evt.keyCode ) !== -1 ) {
       return;
     }
 
-    if ( evt.shiftKey && evt.key === '.' ) {
+    // Allow: Ctrl+A.
+    if ( evt.keyCode == 65 && evt.ctrlKey === true ) {
       return;
     }
 
-    // Ensure that it is a number and stop the keypress
+    // Allow: home, end, left, right.
+    if ( evt.keyCode >= 35 && evt.keyCode <= 39 ) {
+      return;
+    }
+
+    // Ensure that it is a number and stop the keypress.
     if ( ( evt.shiftKey && ! isNaN( Number(evt.key) ) ) ) {
       return;
     }

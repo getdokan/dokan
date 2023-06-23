@@ -415,7 +415,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             }
 
             // Validate phone number field.
-            $('#setting_phone').on( 'keydown', dokan_ensure_phone_number_characters );
+            $( '#setting_phone' ).on( 'keydown', dokan_ensure_phone_number_characters );
         });
     })(jQuery);
 </script>
