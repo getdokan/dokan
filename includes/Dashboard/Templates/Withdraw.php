@@ -453,7 +453,6 @@ class Withdraw {
             'payment_details'         => $payment_details,
             'active_methods'          => dokan_withdraw_get_withdrawable_active_methods(),
             'default_method'          => dokan_withdraw_get_default_method(),
-            'is_setup_payment_method' => ! empty( array_intersect( dokan_get_seller_active_withdraw_methods(), dokan_withdraw_get_active_methods() ) ),
         ];
         dokan_get_template_part( 'withdraw/withdraw-dashboard', '', $args );
     }
