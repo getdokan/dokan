@@ -2,7 +2,7 @@
 /**
  * Dokan Update Customer to Vendor Template.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.21
  *
  * @var int    $user_id
  * @var string $first_name
@@ -50,7 +50,7 @@
         /**
          * Hook for adding fields after vendor migration.
          *
-         * @since DOKAN_SINCE
+         * @since 3.7.21
          */
         do_action( 'dokan_after_seller_migration_fields' );
 

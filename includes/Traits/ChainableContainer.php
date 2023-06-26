@@ -14,7 +14,7 @@ trait ChainableContainer {
     /**
      * Cloning is forbidden.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      */
     public function __clone() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -24,7 +24,7 @@ trait ChainableContainer {
     /**
      * Unserializing instances of this class is forbidden.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.21
      */
     public function __wakeup() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
