@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="dokan-settings">
-            <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+            <h1 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
             <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
