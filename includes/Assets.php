@@ -97,6 +97,9 @@ class Assets {
             if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
                 wp_enqueue_style( 'dokan-fontawesome' );
             }
+
+            // load wooCommerce select2 styles
+            wp_enqueue_style( 'woocommerce_select2', WC()->plugin_url() . '/assets/css/select2.css', [], WC_VERSION );
         }
 
         if ( 'dokan_page_dokan-modules' === $hook ) {
@@ -371,7 +374,7 @@ class Assets {
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
-        $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed' ];
+        $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed', 'wp-hooks' ];
 
         $scripts = [
             'jquery-tiptip'             => [
