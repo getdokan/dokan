@@ -9,7 +9,7 @@ var Dokan_Vendor_Registration = {
         $( '.user-role input[type=radio]', form ).on( 'change', this.showSellerForm );
         $( document ).on( 'dokan_event_seller_registration_form', this.showSellerForm );
         $( '.tc_check_box', form ).on( 'click', this.onTOC );
-        $( '#shop-phone', form ).on( 'keydown', dokan_ensure_phone_number_characters );
+        $( '#shop-phone', form ).on( 'keydown', dokan_sanitize_phone_number );
         $( '#company-name', form ).on( 'focusout', this.generateSlugFromCompany );
 
         $( '#seller-url', form ).on( 'keydown', this.constrainSlug );

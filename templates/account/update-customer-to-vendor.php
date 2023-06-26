@@ -79,7 +79,7 @@
 
 <script>
     (function($) {
-        // Validate phone input characters.
-        $( 'form.update-customer-to-vendor.register input#shop-phone' ).on( 'keydown', dokan_ensure_phone_number_characters );
+        // Sanitize phone input characters.
+        $( 'form.update-customer-to-vendor.register input#shop-phone' ).on( 'keydown', dokan_sanitize_phone_number );
     })(jQuery);
 </script>

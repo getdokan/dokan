@@ -414,8 +414,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 $('#dokan-states-box').hide();
             }
 
-            // Validate phone number field.
-            $( '#setting_phone' ).on( 'keydown', dokan_ensure_phone_number_characters );
+            // Sanitize phone number field.
+            $( '#setting_phone' ).on( 'keydown', dokan_sanitize_phone_number );
         });
     })(jQuery);
 </script>
