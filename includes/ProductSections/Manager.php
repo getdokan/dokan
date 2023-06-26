@@ -226,7 +226,7 @@ class Manager {
                             <input
                                 type="checkbox"
                                 name="product_sections[<?php echo sanitize_key( $section_object->get_section_id() ); ?>]"
-                                <?php /* translators: %s: product section name. */ ?>
+                                <?php // translators: %s: product section name. ?>
                                 value="yes" <?php checked( $show_products_section, 'yes' ); ?>> <?php echo esc_html( sprintf( __( 'Show %s section', 'dokan-lite' ), $section_object->get_section_label() ) ); ?>
                         </label>
                     </div>
