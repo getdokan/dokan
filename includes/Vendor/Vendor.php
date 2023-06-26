@@ -478,7 +478,7 @@ class Vendor {
             return wp_get_attachment_url( $avatar_id );
         }
 
-        return dokan_get_option( 'default_store_profile', 'dokan_appearance', '' );
+        return dokan_get_option( 'default_store_profile', 'dokan_appearance', DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg' );
     }
 
     /**
