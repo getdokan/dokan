@@ -1083,21 +1083,26 @@ function dokan_add_subpage_to_url( $url, $subpage ) {
  * Get edit product url
  *
  * @param int|WC_Product $product
+ * @param bool $is_new_product Is new product. Default `false`.
  *
  * @return string|false on failure
  */
-function dokan_edit_product_url( $product, $force = false ) {
+function dokan_edit_product_url( $product, bool $is_new_product = false ) {
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
 
-    if ( ! $product && ! $force ) {
+    if ( ! $product && ! $is_new_product ) {
         return false;
+    }
+
+    if ( ! $product && $is_new_product ) {
+        $product = new WC_Product();
     }
 
     $url = add_query_arg(
         [
-            'product_id'                => $force ? 0 : $product->get_id(),
+            'product_id'                => $is_new_product ? 0 : $product->get_id(),
             'action'                    => 'edit',
             '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
         ],

@@ -469,7 +469,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                             <?php wp_nonce_field( 'dokan_edit_product', 'dokan_edit_product_nonce' ); ?>
 
                             <input type="hidden" name="dokan_product_id" id="dokan_product_id" value="<?php echo esc_attr( $post_id ); ?>" />
-                            <input type="hidden" name="dokan_one_page" id="dokan_one_page" value="<?php echo esc_attr( $new_product ); ?>" />
                             <!--hidden input for Firefox issue-->
                             <input type="hidden" name="dokan_update_product" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
                             <input type="submit" name="dokan_update_product" id="publish" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>

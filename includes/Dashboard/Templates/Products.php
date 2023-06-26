@@ -438,8 +438,11 @@ class Products {
             $errors[] = __( 'No product found!', 'dokan-lite' );
         }
 
+        $current_post_status = get_post_status( $post_id );
+        $is_new_product      = 'auto-draft' === $current_post_status;
+
         if ( empty( $post_status ) ) {
-            $post_status = get_post_status( $post_id );
+            $post_status = $current_post_status;
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {
@@ -521,7 +524,11 @@ class Products {
         /**  Process all variation products meta */
         dokan_process_product_meta( $post_id, $postdata );
 
-        do_action( 'dokan_product_updated', $post_id, $postdata );
+        if ( $is_new_product ) {
+            do_action( 'dokan_new_product_added', $post_id, $postdata );
+        } else {
+            do_action( 'dokan_product_updated', $post_id, $postdata );
+        }
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $post_id ), $post_id );
 
