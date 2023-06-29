@@ -6,6 +6,7 @@ use WC_Order;
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
+use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
 /**
  * Dokan Commission Class
@@ -52,6 +53,7 @@ class Commission {
         add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_extra_data' ] );
         add_action( 'woocommerce_order_status_changed', [ $this, 'calculate_gateway_fee' ], 100 );
         add_action( 'woocommerce_thankyou_ppec_paypal', [ $this, 'calculate_gateway_fee' ] );
+        add_action( 'woocommerce_paypal_payments_order_captured', [ $this, 'calculate_gateway_fee' ], 99 );
     }
 
     /**
@@ -873,14 +875,17 @@ class Commission {
      */
     public function get_processing_fee( $order ) {
         $processing_fee = 0;
-        $payment_mthod  = $order->get_payment_method();
+        $payment_method  = $order->get_payment_method();
 
-        if ( 'paypal' === $payment_mthod ) {
+        if ( 'paypal' === $payment_method ) {
             $processing_fee = $order->get_meta( 'PayPal Transaction Fee' );
-        }
-
-        if ( 'ppec_paypal' === $payment_mthod && defined( 'PPEC_FEE_META_NAME_NEW' ) ) {
+        } elseif ( 'ppec_paypal' === $payment_method && defined( 'PPEC_FEE_META_NAME_NEW' ) ) {
             $processing_fee = $order->get_meta( PPEC_FEE_META_NAME_NEW );
+        } elseif ( 'ppcp-gateway' === $payment_method && class_exists( PayPalGateway::class ) ) {
+            $breakdown = $order->get_meta( PayPalGateway::FEES_META_KEY );
+            if ( is_array( $breakdown ) && isset( $breakdown['paypal_fee'] ) && is_array( $breakdown['paypal_fee'] ) ) {
+                $processing_fee = $breakdown['paypal_fee']['value'];
+            }
         }
 
         return apply_filters( 'dokan_get_processing_fee', $processing_fee, $order );

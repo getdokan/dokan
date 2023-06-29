@@ -137,13 +137,19 @@ function dokan_is_product_edit_page() {
  * @return bool
  */
 function dokan_is_seller_dashboard() {
-    $page_id = dokan_get_option( 'dashboard', 'dokan_pages' );
+    global $wp_query;
 
-    if ( ! apply_filters( 'dokan_get_dashboard_page_id', $page_id ) ) {
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
+
+    if ( ! $page_id ) {
         return false;
     }
 
-    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', get_the_ID() ) ) {
+    if ( ! $wp_query ) {
+        return false;
+    }
+
+    if ( absint( $page_id ) === apply_filters( 'dokan_get_current_page_id', $wp_query->queried_object_id ) ) {
         return true;
     }
 
@@ -548,20 +554,16 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 /**
  * Get product status based on user id and settings
  *
+ * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
+ *
  * @return string
  */
 function dokan_get_new_post_status() {
-    $user_id = get_current_user_id();
+	$user_id    = get_current_user_id();
+	$is_trusted = dokan_is_seller_trusted( $user_id );
+	$status     = $is_trusted ? 'publish' : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
 
-    // trusted seller
-    if ( dokan_is_seller_trusted( $user_id ) ) {
-        return 'publish';
-    }
-
-    // if not trusted, send the option
-    $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-
-    return $status;
+	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
 }
 
 /**
@@ -2848,6 +2850,15 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  * @return array
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
+    // get transient key
+    $transient_key = sprintf( 'dokan_i18n-%s-%d', $domain, filectime( $language_dir ) );
+
+    // check if data exists on cache or not
+    $locale = Cache::get_transient( $transient_key );
+    if ( false !== $locale ) {
+        return $locale;
+    }
+
     $plugin_translations = dokan_get_translations_for_plugin_domain( $domain, $language_dir );
     $translations        = get_translations_for_domain( $domain );
 
@@ -2874,6 +2885,9 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
     foreach ( $entries as $msgid => $entry ) {
         $locale['locale_data'][ $domain ][ $msgid ] = $entry->translations;
     }
+
+    // store data into cache
+    Cache::set_transient( $transient_key, $locale );
 
     return $locale;
 }
@@ -4141,5 +4155,67 @@ function dokan_override_author_for_product_variations( $product, $seller_id ) {
                 ]
             );
         }
+    }
+}
+
+/**
+ * Handle user update from customer to seller.
+ *
+ * @since 3.7.21
+ *
+ * @param object $user User Object
+ * @param array  $data Data to Update
+ *
+ * @return void
+ */
+if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
+
+    function dokan_user_update_to_seller( $user, $data ) {
+        if ( ! is_a( $user, WP_User::class ) || dokan_is_user_seller( $user->ID ) ) {
+            return;
+        }
+
+        $user_id       = $user->ID;
+        $current_roles = (array) $user->roles;
+
+        // Remove role
+        $user->remove_role( 'customer' );
+        if ( is_array( $current_roles ) ) {
+            foreach ( $current_roles as $current_role ) {
+                $user->remove_role( $current_role );
+            }
+        }
+
+        // Add role
+        $user->add_role( 'seller' );
+
+        $user_id = wp_update_user(
+            [
+                'ID'            => $user_id,
+                'user_nicename' => $data['shopurl'],
+            ]
+        );
+        update_user_meta( $user_id, 'first_name', $data['fname'] );
+        update_user_meta( $user_id, 'last_name', $data['lname'] );
+
+        /**
+         * @var $vendor \WeDevs\Dokan\Vendor\Vendor
+         */
+        $vendor = dokan()->vendor->get( $user_id );
+        $vendor->set_store_name( $data['shopname'] );
+        $vendor->set_phone( $data['phone'] );
+        $vendor->set_address( $data['address'] );
+        $vendor->save();
+
+        if ( 'off' === dokan_get_option( 'new_seller_enable_selling', 'dokan_selling', 'on' ) ) {
+            $vendor->make_inactive();
+        } else {
+            $vendor->make_active();
+        }
+
+        $publishing = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+        update_user_meta( $user_id, 'dokan_publishing', $publishing );
+
+        do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
 }

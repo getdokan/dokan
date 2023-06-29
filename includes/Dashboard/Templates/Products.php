@@ -463,7 +463,7 @@ class Products {
             // Setting limitation for how many product tags that vendor can input.
             $tag_count = count( (array) $_POST['product_tag'] );
             if ( $maximum_tags_select_length !== - 1 && $tag_count > $maximum_tags_select_length ) {
-                // translators: 1) number of acceptable tag count
+                // translators: %s: maximum tag length
                 $errors[] = sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) );
             }
         }
