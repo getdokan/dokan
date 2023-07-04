@@ -293,7 +293,7 @@ class ProductController extends DokanRESTController {
             return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        if ( ! dokan_is_seller_enabled( $store_id ) ) {
+        if ( ! dokan_is_seller_enabled( $store_id ) && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( 'invalid_request', __( 'Error! Your account is not enabled for selling, please contact the admin', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
