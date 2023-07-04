@@ -908,7 +908,7 @@ class ProductController extends DokanRESTController {
             }
         } else {
             $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-            $product->set_status( get_post_status_object( $status ) ? $status : 'draft' );
+            $product->set_status( ( get_post_status_object( $status ) && get_current_user_id() === $this->validate_post_author_override( $request, get_current_user_id() ) ) ? $status : 'draft' );
         }
 
         // Post slug.
