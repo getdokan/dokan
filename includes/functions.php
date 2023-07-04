@@ -4620,7 +4620,7 @@ function dokan_override_author_for_product_variations( $product, $seller_id ) {
 /**
  * Handle user update from customer to seller.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.21
  *
  * @param object $user User Object
  * @param array  $data Data to Update

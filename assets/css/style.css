@@ -9,7 +9,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url('../images/spinner-2x.gif') center center no-repeat;
+  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
   z-index: 99;
   background-size: 20px;
 }
@@ -1842,7 +1842,7 @@ table.dokan-table .is-expanded .toggle-row::before {
   }
 }
 span.dokan-loading {
-  background: url('../images/wpspin_light.gif') no-repeat;
+  background: url(../js/../images/wpspin_light.gif) no-repeat;
   float: right;
   height: 16px;
   margin: 5px 5px 0;
@@ -1857,7 +1857,7 @@ span.error {
   border: 2px solid #ccc !important;
   border-radius: 4px !important;
   background-color: white !important;
-  background-image: url('../images/searchicon.png') !important;
+  background-image: url(../js/../images/searchicon.png) !important;
   background-position: 8px 8px !important;
   background-repeat: no-repeat !important;
   padding: 5px 0 5px 36px !important;
@@ -1888,7 +1888,7 @@ span.error {
   -webkit-animation: spin 1s ease-in-out infinite;
   -moz-animation: spin 1s ease-in-out infinite;
   animation: spin 1s ease-in-out infinite;
-  background: url(../images/loader.svg) center center;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgOTEuMyA5MS4xIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA5MS4zIDkxLjEiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGNpcmNsZSBjeD0iNDUuNyIgY3k9IjQ1LjciIHI9IjQ1LjciLz4NCjxjaXJjbGUgZmlsbD0iI0ZGRkZGRiIgY3g9IjQ1LjciIGN5PSIyNC40IiByPSIxMi41Ii8+DQo8L3N2Zz4NCg==) center center;
   background-size: cover;
   line-height: 1;
   text-align: center;
@@ -2290,7 +2290,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   top: 10px;
   right: 15px;
   width: 33px;
-  z-index: 99999;
+  z-index: 1;
   cursor: pointer;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -4603,7 +4603,7 @@ div.media-sidebar a.edit-attachment {
   margin-left: 8px;
 }
 .dokan-store-products-filter-area .dokan-ajax-search-loader {
-  background-image: url('../images/spinner-2x.gif');
+  background-image: url(../js/../images/spinner-2x.gif);
   background-position: right center;
   background-repeat: no-repeat;
   background-size: 25px 25px;
@@ -4632,7 +4632,7 @@ div.media-sidebar a.edit-attachment {
   height: auto;
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-img.dummy-image {
-  background-image: url(../images/default-store-banner.png);
+  background-image: url(../js/../images/default-store-banner.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -6135,6 +6135,33 @@ p.vendor-customer-registration .radio:hover {
 #dokan-seller-listing-wrap.list-view .dokan-seller-wrap .dokan-single-seller .store-wrapper .store-footer[class] button {
   margin-right: 20px;
 }
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #eee;
+}
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists li {
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists li:last-child {
+  border-bottom: none;
+}
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists li .left-content {
+  text-align: left;
+  flex: 2;
+}
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists li .left-content p {
+  margin: 0px;
+}
+.woocommerce-MyAccount-content ul.dokan-account-migration-lists li .right-content {
+  text-align: right;
+  flex: 1;
+}
 /*--------------------------------------------------
 :: Responsive Styles
 -------------------------------------------------- */
@@ -6338,6 +6365,10 @@ p.vendor-customer-registration .radio:hover {
     width: 100%;
     padding: 20px;
   }
+  .dokan-dashboard .dokan-dash-sidebar .dokan-table,
+  .dokan-dashboard .dokan-dashboard-content .dokan-table {
+    display: table;
+  }
   .dokan-dashboard .dokan-dash-sidebar article,
   .dokan-dashboard .dokan-dashboard-content article {
     overflow: scroll;
@@ -6471,3 +6502,4 @@ p.vendor-customer-registration .radio:hover {
     max-width: 200px;
   }
 }
+

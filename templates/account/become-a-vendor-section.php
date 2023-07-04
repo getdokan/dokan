@@ -2,7 +2,7 @@
 /**
  * Dokan Become A Vendor Section Template.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.21
  *
  * @package dokan
  */
