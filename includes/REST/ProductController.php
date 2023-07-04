@@ -615,7 +615,7 @@ class ProductController extends DokanRESTController {
         $author      = new \WP_User( $post_author );
 
         // phpcs:ignore WordPress.WP.Capabilities.Unknown
-        return ( ! empty( $post_author ) && $author->exists() && user_can( $author->ID, 'dokan_add_product' ) ) ? $author->ID : $store_id;
+        return ( ! empty( $post_author ) && $author->exists() ) ? $author->ID : $store_id;
     }
 
     /**
