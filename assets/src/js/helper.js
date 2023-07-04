@@ -366,11 +366,11 @@
     }
 
     // Ensure that it is a number and stop the keypress.
-    if ( ( evt.shiftKey && ! isNaN( Number(evt.key) ) ) ) {
+    if ( ( evt.shiftKey && ! isNaN( Number( evt.key ) ) ) ) {
       return;
     }
 
-    if ( isNaN( Number(evt.key) ) ) {
+    if ( isNaN( Number( evt.key ) ) ) {
       evt.preventDefault();
     }
   }
