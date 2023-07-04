@@ -853,7 +853,7 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare object for database mapping
      *
-     * @param object $request
+     * @param WP_REST_Request $request
      * @param boolean $creating
      *
      * @return object
@@ -902,7 +902,7 @@ class ProductController extends DokanRESTController {
         }
 
         // Post status.
-        if ( dokan_is_seller_trusted( get_current_user_id() ) ) {
+        if ( dokan_is_seller_trusted( $this->validate_post_author_override( $request, get_current_user_id() ) ) ) {
             if ( isset( $request['status'] ) ) {
                 $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
             }
