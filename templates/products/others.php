@@ -21,6 +21,11 @@
                     ],
                     $post
                 );
+
+                if ( 'pending' === dokan_get_new_post_status() && $post_status === 'auto-draft' ) {
+                    $post_statuses['publish'] = __( 'Pending Review', 'dokan-lite' );
+                }
+
                 ?>
 
                 <select id="post_status" class="dokan-form-control" name="post_status">
