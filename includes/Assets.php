@@ -93,10 +93,7 @@ class Assets {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
 
-            // load fontawesome styles
-            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
-                wp_enqueue_style( 'dokan-fontawesome' );
-            }
+            wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
             wp_enqueue_style( 'woocommerce_select2', WC()->plugin_url() . '/assets/css/select2.css', [], WC_VERSION );
@@ -278,6 +275,9 @@ class Assets {
             'jquery-ui'                     => [
                 'src' => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
             ],
+            'dokan-fontawesome'             => [
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
+            ],
             'dokan-modal'                   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
@@ -352,13 +352,6 @@ class Assets {
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
         ];
-
-        // The scenario is like there is already fontawesome library added by the theme,but with this setting user can control it that if he/she want to load the dokan fontawesome library or not.
-        if ( is_admin() || 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
-            $styles['dokan-fontawesome'] = [
-                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
-            ];
-        }
 
         return $styles;
     }
