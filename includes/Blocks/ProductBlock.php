@@ -26,9 +26,11 @@ class ProductBlock {
                 'statuses' => apply_filters(
                     'dokan_post_status',
                     [
-                        'publish' => __( 'Online', 'dokan-lite' ),
-                        'draft'   => __( 'Draft', 'dokan-lite' ),
-                    ]
+                        'publish' => __( 'Online', 'dokan' ),
+                        'draft'   => __( 'Draft', 'dokan' ),
+                        'pending' => __( 'Pending', 'dokan' ),
+                    ],
+                    0
                 ),
                 'visibility_options' => dokan_get_product_visibility_options(),
                 'manage_stocks' => 'yes' === get_option( 'woocommerce_manage_stock' ),

@@ -1,3 +1,17 @@
+<?php
+$post_statuses = [
+    'publish' => __( 'Online', 'dokan' ),
+    'draft'   => __( 'Draft', 'dokan' ),
+    'pending' => __( 'Pending', 'dokan' ),
+];
+
+$post_statuses = apply_filters(
+    'dokan_post_status',
+    $post_statuses,
+    $post
+);
+?>
+
 <div class="dokan-other-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_other_options">
         <h2><i class="fas fa-cog" aria-hidden="true"></i> <?php esc_html_e( 'Other Options', 'dokan-lite' ); ?></h2>
@@ -11,18 +25,6 @@
     <div class="dokan-section-content">
         <div class="dokan-form-group content-half-part">
             <label for="post_status" class="form-label"><?php esc_html_e( 'Product Status', 'dokan-lite' ); ?></label>
-            <?php if ( $post_status !== 'pending' ) : ?>
-                <?php
-                $post_statuses = apply_filters(
-                    'dokan_post_status',
-                    [
-                        'publish' => __( 'Online', 'dokan-lite' ),
-                        'draft'   => __( 'Draft', 'dokan-lite' ),
-                    ],
-                    $post
-                );
-                ?>
-
                 <select id="post_status" class="dokan-form-control" name="post_status">
                     <?php foreach ( $post_statuses as $status => $label ) : // phpcs:ignore ?>
                         <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
@@ -30,11 +32,6 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-            <?php else : ?>
-                <span class="dokan-toggle-selected-display <?php echo 'pending' === $post_status ? 'dokan-label dokan-label-warning' : ''; ?>">
-                    <?php echo esc_html( dokan_get_post_status( $post_status ) ); ?>
-                </span>
-            <?php endif; ?>
         </div>
 
         <div class="dokan-form-group content-half-part">
