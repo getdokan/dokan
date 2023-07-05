@@ -1,8 +1,8 @@
 <?php
 $post_statuses = [
-    'publish' => __( 'Online', 'dokan' ),
-    'draft'   => __( 'Draft', 'dokan' ),
-    'pending' => __( 'Pending', 'dokan' ),
+    'publish' => __( 'Online', 'dokan-lite' ),
+    'draft'   => __( 'Draft', 'dokan-lite' ),
+    'pending' => __( 'Pending', 'dokan-lite' ),
 ];
 
 $post_statuses = apply_filters(
