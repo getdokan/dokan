@@ -296,7 +296,7 @@ class ProductController extends DokanRESTController {
         }
 
         if ( ! empty( $request['id'] ) ) {
-            /* translators: %s: product */
+            // translators: 1) %s: post type name
             return new WP_Error( "woocommerce_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), 'product' ), [ 'status' => 400 ] );
         }
 
