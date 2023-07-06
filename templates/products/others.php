@@ -1,12 +1,5 @@
 <?php
-$post_statuses = apply_filters(
-    'dokan_post_status',
-    [
-        'publish' => __( 'Online', 'dokan-lite' ),
-        'draft'   => __( 'Draft', 'dokan-lite' ),
-    ],
-    $post
-);
+$post_statuses = dokan_get_available_post_status( $post->ID );
 ?>
 
 <div class="dokan-other-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">

@@ -307,27 +307,26 @@ class Hooks {
     /**
      * Set product edit status
      *
-     * @since DOKAN_PRO_SINCE
+     * @since DOKAN_SINCE
      *
      * @param array $all_statuses
-     * @param int|array|\WC_Product $post
+     * @param int $product_id
      *
      * @return array
      */
-    public function set_product_status( $all_statuses, $post ) {
+    public function set_product_status( $all_statuses, int $product_id ) {
         if ( dokan()->is_pro_exists() ) {
             return $all_statuses;
         }
 
-        $product_id = is_numeric( $post ) ? $post : $post->ID;
-        $product    = wc_get_product( $product_id );
+        $product = wc_get_product( $product_id );
         if ( ! $product ) {
             return $all_statuses;
         }
 
         // Pending review is pro feature. if product status is pending (already from deactivated pro) then add it other size don't show it on lite.
         if ( 'pending' === $product->get_status() ) {
-            $all_statuses['pending'] = __( 'Pending', 'dokan-lite' );
+            $all_statuses['pending'] = dokan_get_post_status( 'pending' );
         }
 
         return $all_statuses;

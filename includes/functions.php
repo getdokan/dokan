@@ -847,6 +847,27 @@ function dokan_get_post_status( $status = '' ) {
 }
 
 /**
+ * Get product statuses
+ *
+ * @since DOKAN_SINCE
+ *
+ * @args int|object $product_id
+ *
+ * @return array
+ */
+function dokan_get_available_post_status( $product_id = 0 ) {
+    return apply_filters(
+        'dokan_post_status',
+        [
+            'publish' => dokan_get_post_status( 'publish' ),
+            'draft'   => dokan_get_post_status( 'draft' ),
+        ],
+        $product_id
+    );
+}
+
+
+/**
  * Get user friendly post status label based class
  *
  * @param string $status

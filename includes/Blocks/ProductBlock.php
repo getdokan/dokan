@@ -23,14 +23,7 @@ class ProductBlock {
             'dokan_get_product_block_configurations',
             [
                 'disable_popup' => 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' ),
-                'statuses' => apply_filters(
-                    'dokan_post_status',
-                    [
-                        'publish' => __( 'Online', 'dokan-lite' ),
-                        'draft'   => __( 'Draft', 'dokan-lite' ),
-                    ],
-                    0
-                ),
+                'statuses' => dokan_get_available_post_status(),
                 'visibility_options' => dokan_get_product_visibility_options(),
                 'manage_stocks' => 'yes' === get_option( 'woocommerce_manage_stock' ),
                 'stock_statuses' => [
