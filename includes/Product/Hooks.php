@@ -325,7 +325,7 @@ class Hooks {
             return $all_statuses;
         }
 
-        // peding review is pro feature. if product status is pending (already from )
+        // Pending review is pro feature. if product status is pending (already from deactivated pro) then add it other size don't show it on lite.
         if ( 'pending' === $product->get_status() ) {
             $all_statuses['pending'] = __( 'Pending', 'dokan-lite' );
         }

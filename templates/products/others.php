@@ -1,13 +1,10 @@
 <?php
-$post_statuses = [
-    'publish' => __( 'Online', 'dokan-lite' ),
-    'draft'   => __( 'Draft', 'dokan-lite' ),
-    'pending' => __( 'Pending', 'dokan-lite' ),
-];
-
 $post_statuses = apply_filters(
     'dokan_post_status',
-    $post_statuses,
+    [
+        'publish' => __( 'Online', 'dokan-lite' ),
+        'draft'   => __( 'Draft', 'dokan-lite' ),
+    ],
     $post
 );
 ?>

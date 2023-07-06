@@ -28,7 +28,6 @@ class ProductBlock {
                     [
                         'publish' => __( 'Online', 'dokan-lite' ),
                         'draft'   => __( 'Draft', 'dokan-lite' ),
-                        'pending' => __( 'Pending', 'dokan-lite' ),
                     ],
                     0
                 ),
