@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.4
 Tested up to: 6.2.2
 WC requires at least: 5.0.0
-WC tested up to: 7.7.2
+WC tested up to: 7.8.0
 Requires PHP: 7.2
-Stable tag: 3.7.20
+Stable tag: 3.7.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.21 ( Jun 23, 2023 ) =
+
+- **fix:** Fixed an issue where gateway fees from WooCommerce PayPal Payments were not being deducted from vendors’ earnings.
+Previously, Dokan deducted PayPal Checkout fees from vendors’ earnings but did not deduct PayPal Payments fees. This was due to the fact that PayPal Payments did not set transaction fee metadata at the time. With this fix, Dokan now correctly deducts PayPal Payments fees from vendors’ earnings.
+- **fix:** [VendorDashboard] Fixed some CSS issues under the vendor dashboard.
+Previously, the positioning of the mobile navigation icon on the vendor dashboard was problematic on mobile screens. Additionally, there were inconsistencies in some table columns, including the order ID column, causing visual issues. These issues have now been fixed.
+- **fix:** [DokanVendorRegistration] Registration page's user selection modal is not working properly when any theme tries to use the modal for the vendor registration form.
+In earlier versions, there was a lack of synchronization between the user registration form on the "My Account" page and the user registration forms inside the modal implemented within the theme. This inconsistency created confusion and hindered the seamless registration process. However, with the latest update, significant improvements have been made to address this issue.
+- **update:** Added `Become A Vendor` feature to Dokan Lite.
+Previously, this option was only available in Dokan Pro. This enhancement ensures that even customers of the Lite version can easily become vendors and start selling their products through the platform.
+- **update:** [SellerSetupWizard] Added store location map on the seller setup wizard
+Introducing a new enhancement in the seller setup wizard: seamless integration of a store location map. This enhancement allows sellers to effortlessly navigate and locate their store's position within the wizard interface.
 
 = v3.7.20 ( Jun 8, 2023 ) =
 

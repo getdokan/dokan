@@ -1,3 +1,132 @@
+body {
+  margin: 65px auto 24px;
+  box-shadow: none;
+  background: #f1f1f1;
+  padding: 0;
+}
+#wc-logo {
+  border: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  text-align: center;
+}
+#wc-logo img {
+  max-width: 30%;
+}
+.wc-setup-content {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+  padding: 2em;
+  margin: 0 0 20px;
+  background: #fff;
+  overflow: hidden;
+  zoom: 1;
+  text-align: left;
+}
+.wc-setup-content h1 {
+  margin: 0 0 20px;
+  border: 0;
+  padding: 0;
+  color: #666;
+  clear: none;
+  font-weight: 500;
+}
+.wc-setup-content p {
+  margin: 20px 0;
+  font-size: 1em;
+  line-height: 1.75;
+  color: #666;
+}
+.wc-setup-content table {
+  font-size: 1em;
+  line-height: 1.75;
+  color: #666;
+}
+.wc-setup-content a {
+  color: #a16696;
+  text-decoration: none;
+}
+.wc-setup-content a:hover,
+.wc-setup-content a:focus {
+  color: #111;
+}
+.wc-setup-content .dokan-no-wc-warning {
+  border: 1px solid #f1f1f1;
+  padding: 10px 12px;
+  border-left-width: 4px;
+  border-left-color: #dc3232;
+}
+.wc-setup .wc-setup-actions {
+  overflow: hidden;
+  margin: 20px 0 0;
+  position: relative;
+}
+.wc-setup .wc-setup-actions .button-primary {
+  background-color: #bb77ae;
+  border-color: #a36597;
+  text-shadow: none;
+  margin: 0;
+  opacity: 1;
+}
+.wc-setup .wc-setup-actions .button-primary:hover,
+.wc-setup .wc-setup-actions .button-primary:focus,
+.wc-setup .wc-setup-actions .button-primary:active {
+  background: #a36597;
+  border-color: #a36597;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 #a36597;
+}
+.wc-setup-content p:last-child {
+  margin-bottom: 0;
+}
+.step {
+  text-align: center;
+}
+.wc-setup .wc-setup-actions .button {
+  font-weight: 300;
+  font-size: 16px;
+  padding: 1em 2em;
+  box-shadow: none;
+  min-width: 12em;
+  margin-top: 10px;
+  line-height: 1;
+  margin-right: 0.5em;
+  margin-bottom: 2px;
+  height: auto;
+  border-radius: 4px;
+}
+.wc-setup .wc-setup-actions .button:focus,
+.wc-setup .wc-setup-actions .button:hover,
+.wc-setup .wc-setup-actions .button:active {
+  box-shadow: none;
+}
+@media only screen and (max-width: 400px) {
+  #wc-logo img {
+    max-width: 80%;
+  }
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.blockUI.blockOverlay::before {
+  height: 1em;
+  width: 1em;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+  content: '';
+  -webkit-animation: spin 1s ease-in-out infinite;
+  animation: spin 1s ease-in-out infinite;
+  background: url(../js/../images/spinner-2x.gif) center center;
+  background-size: cover;
+  line-height: 1;
+  text-align: center;
+  font-size: 2em;
+  color: rgba(0, 0, 0, 0.75);
+}
 .dokan-spinner {
   position: absolute;
   width: 20px;
@@ -255,5 +384,16 @@
 .dokan-vendor-setup-wizard .wc-setup-content .dokan-seller-setup-form .dokan-map-wrap .dokan-google-map {
   width: 100%;
   height: 300px;
+}
+.wc-return-to-dashboard {
+  text-align: center;
+  display: block;
+  color: #bdbdbd;
+  font-size: 12px;
+  text-decoration: none;
+}
+.wc-return-to-dashboard:hover {
+  color: #bdbdbd;
+  text-decoration: underline;
 }
 
