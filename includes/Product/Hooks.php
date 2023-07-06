@@ -314,7 +314,7 @@ class Hooks {
      *
      * @return array
      */
-    public function set_product_status( $all_statuses = [], $post ) {
+    public function set_product_status( $all_statuses, $post ) {
         if ( dokan()->is_pro_exists() ) {
             return $all_statuses;
         }
