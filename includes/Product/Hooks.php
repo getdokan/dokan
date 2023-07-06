@@ -28,6 +28,7 @@ class Hooks {
         add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
         add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
 
         // Init Product Cache Class
         new VendorStoreInfo();
@@ -301,5 +302,34 @@ class Hooks {
         $chosen_categories = Helper::generate_chosen_categories( $terms );
 
         Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+    }
+
+    /**
+     * Set product edit status
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param array $all_statuses
+     * @param int|array|\WC_Product $post
+     *
+     * @return array
+     */
+    public function set_product_status( $all_statuses = [], $post ) {
+        if ( dokan()->is_pro_exists() ) {
+            return $all_statuses;
+        }
+
+        $product_id = is_numeric( $post ) ? $post : $post->ID;
+        $product    = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return $all_statuses;
+        }
+
+        // peding review is pro feature. if product status is pending (already from )
+        if ( 'pending' === $product->get_status() ) {
+            $all_statuses['pending'] = __( 'Pending', 'dokan-lite' );
+        }
+
+        return $all_statuses;
     }
 }
