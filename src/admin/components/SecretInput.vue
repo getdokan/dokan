@@ -1,5 +1,5 @@
 <template>
-    <div class='secret-input-box' :style="! showCopyBtn ? 'display: block' : 'display: flex'">
+    <div class='secret-input-box' :style="! showCopyBtn ? 'display: block' : 'display: flex; justify-content: end;'">
         <input
             class="regular-text large"
             :class="[secret && hide && value ? 'secret-input blurry-input' : 'secret-input', inputClasses]"
