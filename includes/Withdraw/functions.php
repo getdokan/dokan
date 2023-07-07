@@ -447,6 +447,9 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
             // translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
             $method_info = empty( $payment_methods[ $method_key ]['ac_number'] ) ? $no_information : sprintf( __( '- %1$s - %2$s - ****%3$s', 'dokan-lite' ), $payment_methods[ $method_key ]['ac_name'], $payment_methods[ $method_key ]['bank_name'], substr( $payment_methods[ $method_key ]['ac_number'], - 4 ) );
             break;
+        case 'dokan_custom':
+            $method_info = empty( $payment_methods[ $method_key ]['value'] ) ? $no_information : sprintf( __( '( %1$s )', 'dokan-lite' ), substr( $payment_methods[ $method_key ]['value'], - 4 ) );
+            break;
         default:
             $method_info = '';
     }
