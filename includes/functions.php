@@ -847,7 +847,7 @@ function dokan_get_post_status( $status = '' ) {
 }
 
 /**
- * Get product statuses
+ * Get product available statuses
  *
  * @since DOKAN_SINCE
  *
@@ -855,17 +855,19 @@ function dokan_get_post_status( $status = '' ) {
  *
  * @return array
  */
-function dokan_get_available_post_status( $product_id = 0 ) {
-    return apply_filters(
-        'dokan_post_status',
-        [
-            'publish' => dokan_get_post_status( 'publish' ),
-            'draft'   => dokan_get_post_status( 'draft' ),
-        ],
-        $product_id
-    );
-}
+if ( ! function_exists( 'dokan_get_available_post_status' ) ) {
 
+    function dokan_get_available_post_status( $product_id = 0 ) {
+        return apply_filters(
+            'dokan_post_status',
+            [
+                'publish' => dokan_get_post_status( 'publish' ),
+                'draft'   => dokan_get_post_status( 'draft' ),
+            ],
+            $product_id
+        );
+    }
+}
 
 /**
  * Get user friendly post status label based class
