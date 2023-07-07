@@ -4694,3 +4694,26 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
 }
+
+/**
+ * Get product available statuses
+ *
+ * @since DOKAN_SINCE
+ *
+ * @args int|object $product_id
+ *
+ * @return array
+ */
+if ( ! function_exists( 'dokan_get_available_post_status' ) ) {
+
+    function dokan_get_available_post_status( $product_id = 0 ) {
+        return apply_filters(
+            'dokan_post_status',
+            [
+                'publish' => dokan_get_post_status( 'publish' ),
+                'draft'   => dokan_get_post_status( 'draft' ),
+            ],
+            $product_id
+        );
+    }
+}
