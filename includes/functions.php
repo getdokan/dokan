@@ -4694,4 +4694,3 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
 }
-
