@@ -4294,11 +4294,13 @@ function dokan_mask_email_address( $email ) {
  *
  * @return string
  */
-function dokan_mask_string( $text, $position = 1 ) {
-    $show_letters = substr( $text, 0, $position );
-    $hidden_letters = str_repeat( '*', strlen( $text ) - 2 );
+function dokan_mask_string( $text, $position = 1, $show_max_letters = 4 ) {
+    $first_letters = substr( $text, 0, $position );
+    $remaining_letters = substr( $text, 2 );
 
-    return $show_letters . $hidden_letters;
+    $masked_letters = str_repeat( '*', min( $show_max_letters, strlen( $remaining_letters ) ) );
+
+    return $first_letters . $masked_letters;
 }
 
 /**
