@@ -279,8 +279,9 @@ class Rewrites {
      * @return mixed
      */
     public function remove_h1_from_heading_in_edit_product_page( $args ) {
+        global $wp;
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( ! empty( $_GET['product_id'] ) && ! empty( $_GET['action'] ) && !empty( $_GET['_dokan_edit_product_nonce'] ) ) {
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) || ( ! empty( $_GET['product_id'] ) && ! empty( $_GET['action'] ) && ! empty( $_GET['_dokan_edit_product_nonce'] ) ) ) {
             // Just omit h1 from the list
             $args['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Pre=pre';
             return $args;
