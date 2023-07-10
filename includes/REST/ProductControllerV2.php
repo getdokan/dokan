@@ -194,7 +194,7 @@ class ProductControllerV2 extends ProductController {
         foreach ( $months as $key => $arc_row ) {
             $month = zeroise( $arc_row->month, 2 );
 
-            /* translators: 1: Month, 2: Year */
+            // translators: 1: month name, 2: 4-digit year
             $months [ $key ]->title = sprintf( esc_html__( '%1$s %2$d', 'dokan-lite' ), esc_html( $wp_locale->get_month( $month ) ), esc_html( $arc_row->year ) );
         }
         return [

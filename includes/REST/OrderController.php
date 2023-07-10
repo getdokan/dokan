@@ -612,7 +612,7 @@ class OrderController extends DokanRESTController {
      */
     public function create_order_note( $request ) {
         if ( ! empty( $request['note_id'] ) ) {
-            // translators: 1) post type name
+            // translators: 1) %s: post type name
             return new WP_Error( "dokan_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), $this->post_type ), array( 'status' => 400 ) );
         }
 
