@@ -22,11 +22,11 @@
                         endif;
                         ?>
                     </strong><br>
-                    <?php if ( $withdraw_limit !== - 1 ) : ?>
+                    <?php if ( $withdraw_limit !== 0 ) : ?>
                         <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
 						<?php
                     endif;
-                    if ( $threshold !== - 1 ) :
+                    if ( $threshold !== 0 ) :
                         ?>
                         <?php esc_html_e( 'Withdraw Threshold:', 'dokan-lite' ); ?>
                         <strong>

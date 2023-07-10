@@ -1,22 +1,21 @@
 .dokan-plugin-upgrade-notice {
-    padding: 14px 10px !important;
-    background: #f2624d !important;
-    color: #fff !important;
+  padding: 14px 10px !important;
+  background: #f2624d !important;
+  color: #fff !important;
 }
-
 .dokan-plugin-upgrade-notice a {
-    color: #fafafa !important;
-    text-decoration: underline !important;
+  color: #fafafa !important;
+  text-decoration: underline !important;
+}
+.dokan-plugin-upgrade-notice:before {
+  content: '\f348' !important;
+  display: inline-block !important;
+  font: 400 18px/1 dashicons !important;
+  speak: none !important;
+  margin: 0 8px 0 -2px !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  vertical-align: top !important;
+  color: #fff !important;
 }
 
-.dokan-plugin-upgrade-notice:before {
-    content: '\f348' !important;
-    display: inline-block !important;
-    font: 400 18px/1 dashicons !important;
-    speak: none !important;
-    margin: 0 8px 0 -2px !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    vertical-align: top !important;
-    color: #fff !important;
-}
