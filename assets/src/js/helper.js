@@ -351,7 +351,7 @@
    */
   window.dokan_sanitize_phone_number = function ( evt ) {
     // Allow: backspace, delete, tab, escape, enter and dot (.).
-    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190].indexOf( evt.keyCode ) !== -1 ) {
+    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190, 48, 57, 61, 169, 173].indexOf( evt.keyCode ) !== -1 ) {
       return;
     }
 
