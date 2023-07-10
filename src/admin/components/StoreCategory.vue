@@ -5,7 +5,7 @@
         id="store-category"
         class="dokan-form-input dokan-store-category"
         :options='storeCategoryList'
-        :close-on-select="false"
+        :close-on-select="!isCategoryMultiple"
         :clear-on-select="false"
         :preserve-search="true"
         label="name"
@@ -56,8 +56,8 @@ export default {
     },
 
     created() {
-        this.storeCategoryIds = this.categories;
         this.setStoreCategories();
+        this.storeCategoryIds = this.categories;
     },
 
     methods: {
