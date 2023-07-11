@@ -482,12 +482,14 @@ function dokan_get_product_list_by_order( $order, $glue = ',' ) {
  *
  * @since 2.4.11
  *
- * @param int $order_id
+ * @param int|WC_Abstract_Order $order
  *
  * @return boolean
  */
-function dokan_is_sub_order( $order_id ) {
-    $order = wc_get_order( $order_id );
+function dokan_is_sub_order( $order ) {
+    if ( is_numeric( $order ) ) {
+        $order = wc_get_order( $order );
+    }
 
     return ! ( ! $order || $order->get_parent_id() === 0 );
 }
