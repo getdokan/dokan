@@ -350,18 +350,23 @@
    * @return {void}
    */
   window.dokan_sanitize_phone_number = function ( evt ) {
-    // Allow: backspace, delete, tab, escape, enter and dot (.).
-    if ( [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190, 48, 57, 61, 169, 173].indexOf( evt.keyCode ) !== -1 ) {
+    // Allow: backspace, tab, enter and escape.
+    if ( [ "Backspace", "Tab", "Enter", "Escape" ].indexOf( evt.key ) !== -1 ) {
+      return;
+    }
+
+    // Allow: special characters.
+    if ( [ "(", ")", ".", "-", "_", "+" ].indexOf( evt.key ) !== -1  ) {
       return;
     }
 
     // Allow: Ctrl+A.
-    if ( evt.keyCode == 65 && evt.ctrlKey === true ) {
+    if ( "a" === evt.key && true === evt.ctrlKey ) {
       return;
     }
 
-    // Allow: home, end, left, right.
-    if ( evt.keyCode >= 35 && evt.keyCode <= 39 ) {
+    // Allow: arrow keys.
+    if ( [ "ArrowLeft", "ArrowRight" ].indexOf( evt.key ) !== -1  ) {
       return;
     }
 
