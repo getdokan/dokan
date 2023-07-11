@@ -53,7 +53,6 @@ test.describe('setup local site', () => {
 			const activePlugins = await apiUtils.updatePlugin(plugin, { status:'active' }, payloads.adminAuth);
 			console.log(activePlugins);}
 
-			
 	});
 
 });
