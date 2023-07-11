@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.21',
+        'released' => '2023-06-23',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added `Become A Vendor` feature to Dokan Lite.',
+                    'description' => 'Previously, this option was only available in Dokan Pro. This enhancement ensures that even customers of the Lite version can easily become vendors and start selling their products through the platform.',
+                ],
+                [
+                    'title'       => '[SellerSetupWizard] Added store location map on the seller setup wizard',
+                    'description' => 'Introducing a new enhancement in the seller setup wizard: seamless integration of a store location map. This enhancement allows sellers to effortlessly navigate and locate their store\'s position within the wizard interface.',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where gateway fees from WooCommerce PayPal Payments were not being deducted from vendors’ earnings.',
+                    'description' => 'Previously, Dokan deducted PayPal Checkout fees from vendors’ earnings but did not deduct PayPal Payments fees. This was due to the fact that PayPal Payments did not set transaction fee metadata at the time. With this fix, Dokan now correctly deducts PayPal Payments fees from vendors’ earnings.',
+                ],
+                [
+                    'title'       => '[VendorDashboard] Fixed some CSS issues under the vendor dashboard.',
+                    'description' => 'Previously, the positioning of the mobile navigation icon on the vendor dashboard was problematic on mobile screens. Additionally, there were inconsistencies in some table columns, including the order ID column, causing visual issues. These issues have now been fixed.',
+                ],
+                [
+                    'title'       => '[DokanVendorRegistration] Registration page\'s user selection modal is not working properly when any theme tries to use the modal for the vendor registration form.',
+                    'description' => 'In earlier versions, there was a lack of synchronization between the user registration form on the "My Account" page and the user registration forms inside the modal implemented within the theme. This inconsistency created confusion and hindered the seamless registration process. However, with the latest update, significant improvements have been made to address this issue.',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.20',
         'released' => '2023-06-08',
         'changes'  => [
