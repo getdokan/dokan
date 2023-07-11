@@ -10,6 +10,7 @@
             // Date range picker handler.
             $(".dokan-daterangepicker").daterangepicker({
                 autoUpdateInput : false,
+                showDropdowns   : true,
                 locale          : localeData,
             });
 
