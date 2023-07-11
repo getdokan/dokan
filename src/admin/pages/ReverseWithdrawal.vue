@@ -49,7 +49,8 @@
                 </template>
 
                 <template slot="filters">
-                    <span class="form-group">
+                    <div class="dokan-reverse-withdrawal-filters">
+                        <span class="form-group">
                     <multiselect
                         @search-change="fetchStoreLists"
                         v-model="filter.selected_store"
@@ -72,7 +73,7 @@
                         ><i class="dashicons dashicons-no"></i></button>
                     </span>
 
-                    <span class="form-group">
+                        <span class="form-group">
                         <date-range-picker
                             class="mr-5"
                             ref="picker"
@@ -95,9 +96,10 @@
                             </div>
                         </date-range-picker>
                     </span>
-                    <span class="form-group">
+                        <span class="form-group">
                         <button class="button action" v-on:click="this.clearFilters">{{ this.__( 'Clear', 'dokan-lite' ) }}</button>
                     </span>
+                    </div>
                 </template>
             </list-table>
         </div>
@@ -494,6 +496,16 @@ export default {
         margin: 0px -10px;
         display: flex;
         flex-wrap: wrap;
+    }
+}
+
+#dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
+    display: flex;
+}
+
+@media only screen and (max-width: 500px) {
+    #dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
+        flex-direction: column;
     }
 }
 

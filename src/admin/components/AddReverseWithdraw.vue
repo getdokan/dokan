@@ -1,6 +1,10 @@
 <template>
     <div class='dokan-add-new-rw'>
-        <modal :title='title' width='800px' @close='closeModal'>
+        <modal
+            :title='title'
+            width='800px'
+            @close='closeModal'
+        >
             <div slot='body' class='dokan-rw-body'>
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
@@ -509,5 +513,34 @@ export default {
             color: #b0a7a7;
         }
     }
+}
+
+@media only screen and (max-width: 800px) {
+    .dokan-add-new-rw .dokan-modal-content {
+        width: 80% !important;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .dokan-add-new-rw .dokan-modal-content {
+        width: 400px !important;
+        top: 50% !important;
+    }
+}
+
+@media only screen and (max-width: 376px) {
+    .dokan-add-new-rw .dokan-modal-content {
+        width: 90% !important;
+    }
+}
+
+.dokan-add-new-rw .dokan-modal-content {
+    height: 70% !important;
+    overflow: scroll;
+}
+
+.dokan-add-new-rw .modal-footer {
+    bottom: -55px;
+    position: relative;
 }
 </style>
