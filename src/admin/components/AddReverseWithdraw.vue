@@ -543,4 +543,8 @@ export default {
     bottom: -55px;
     position: relative;
 }
+
+.dokan-add-new-rw .modal-body {
+    overflow-y: hidden !important;
+}
 </style>
