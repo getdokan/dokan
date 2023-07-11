@@ -298,8 +298,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
 <style>
     .dokan-settings-content .dokan-settings-area .dokan-banner {
-        width: <?php echo esc_attr( $banner_width ) . 'px'; ?>;
-        height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
+        max-width: <?php echo esc_attr( $banner_width ) . 'px'; ?>;
+        max-height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
     }
 
     .dokan-settings-content .dokan-settings-area .dokan-banner .dokan-remove-banner-image {
