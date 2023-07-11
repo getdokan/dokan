@@ -519,7 +519,7 @@ class StoreController extends WP_REST_Controller {
     public function get_store_products( $request ) {
         $product_controller = new Dokan_REST_Product_Controller();
 
-        $request->set_param( 'post_status', [ 'publish' ] );
+        $request->set_param( 'status', [ 'publish' ] );
         $request->set_param( 'author', $request['id'] );
         $request->set_param( 'per_page', $request['per_page'] );
         $request->set_param( 'paged', $request['page'] );

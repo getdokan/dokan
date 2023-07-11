@@ -456,6 +456,12 @@ class WithdrawController extends WP_REST_Controller {
                 }
             }
 
+            $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
+
+            if ( is_wp_error( $validate_request ) ) {
+                throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
+            }
+
             $withdraw = $withdraw->save();
 
             if ( is_wp_error( $withdraw ) ) {
