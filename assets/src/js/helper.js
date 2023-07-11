@@ -339,4 +339,44 @@
     }
     return error_message;
   }
+
+  /**
+   * Sanitize phone number characters.
+   *
+   * @since DOKAN_SINCE
+   *
+   * @param evt Event Object
+   *
+   * @return {void}
+   */
+  window.dokan_sanitize_phone_number = function ( evt ) {
+    // Allow: backspace, tab, enter and escape.
+    if ( [ "Backspace", "Tab", "Enter", "Escape" ].indexOf( evt.key ) !== -1 ) {
+      return;
+    }
+
+    // Allow: special characters.
+    if ( [ "(", ")", ".", "-", "_", "+" ].indexOf( evt.key ) !== -1  ) {
+      return;
+    }
+
+    // Allow: Ctrl+A.
+    if ( "a" === evt.key && true === evt.ctrlKey ) {
+      return;
+    }
+
+    // Allow: arrow keys.
+    if ( [ "ArrowLeft", "ArrowRight" ].indexOf( evt.key ) !== -1  ) {
+      return;
+    }
+
+    // Ensure that it is a number and stop the keypress.
+    if ( ( evt.shiftKey && ! isNaN( Number( evt.key ) ) ) ) {
+      return;
+    }
+
+    if ( isNaN( Number( evt.key ) ) ) {
+      evt.preventDefault();
+    }
+  }
 })(document, window);
