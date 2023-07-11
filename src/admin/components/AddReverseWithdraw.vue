@@ -35,7 +35,7 @@
 
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
-                        <h3>{{ __('Transection Type', 'dokan-lite') }}</h3>
+                        <h3>{{ __('Transaction Type', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <dokan-radio-group
@@ -101,6 +101,11 @@
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading'>
                         <h3>{{ __('Withdrawal Balance Type', 'dokan-lite') }}</h3>
+                        <i
+                            class="dashicons dashicons-editor-help tips"
+                            :title="__( 'Adjust Balance by Creating a New Reverse Withdrawal Entry', 'dokan-lite' )"
+                            v-tooltip="__( 'Adjust Balance by Creating a New Reverse Withdrawal Entry', 'dokan-lite' )"
+                        ></i>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <dokan-radio-group
@@ -455,7 +460,13 @@ export default {
 }
 
 .dokan-rw-section {
-    .dokan-rw-section-body{
+    .dokan-rw-section-heading {
+        display: flex;
+        align-items: center;
+        column-gap: 5px;
+    }
+
+    .dokan-rw-section-body {
         .dokan-rw-note-area {
             textarea {
                 width: 100%;
