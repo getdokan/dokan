@@ -270,7 +270,7 @@ export default {
 
             if ( 'manual_product' === this.transectionType ) {
                 trn_id = this.selectedProduct.id ?? 0;
-            } else if ( 'order_product' === this.transectionType ) {
+            } else if ( 'manual_order' === this.transectionType ) {
                 trn_id = this.selectedOrder.id ?? 0;
             }
 
