@@ -343,7 +343,7 @@
   /**
    * Sanitize phone number characters.
    *
-   * @since DOKAN_SINCE
+   * @since 3.7.22
    *
    * @param evt Event Object
    *

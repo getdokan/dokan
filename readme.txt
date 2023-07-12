@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.4
 Tested up to: 6.2.2
 WC requires at least: 5.0.0
-WC tested up to: 7.8.0
+WC tested up to: 7.8.2
 Requires PHP: 7.2
-Stable tag: 3.7.21
+Stable tag: 3.7.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,30 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.22 ( Jul 12, 2023 ) =
+
+- **fix:** Fixed an issue where multiple withdrawal requests can be placed via API.
+If a withdrawal request was placed by a vendor until that request was approved or rejected by Admin, making another withdrawal request wasn’t possible via frontend. However, the admin was able to make a withdrawal request via REST API. With this fix, this problem now has been resolved.
+- **fix:** Fixed a PHP notice for importing dummy data without providing any data via REST API
+endpoint: {{SERVER_URL}}/wp-json/dokan/v1/dummy-data/import
+- **fix:** While updating the withdrawal request via REST API, the minimum withdrawal amount limit wasn’t considered. For example, if the minimum withdrawal limit was set to 50, for an existing withdrawal request, the admin can set the withdrawal value to less than 50. This issue has been fixed now.
+endpoint: {{SERVER_URL}}/wp-json/dokan/v1/withdraw/{withdraw_id}
+- **fix:** Fixed an issue where store products API was returning all products instead of published products.
+endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/{store_id}/products
+- **fix:** Fixed some CSS issues on the vendor store settings page for the store banner image.
+- **fix:** [Withdraw] Fixed an issue where PayPal withdraw method status was displaying default but the corresponding vendor didn’t set up the payment method yet. With this fix, we marked the payment method as needing setup instead of the default payment method.
+- **fix:** [Withdraw] After connecting to a payment method, the button text changes from `Setup` to `Make default` or `default` if selected. But after disconnecting that method button text doesn't change back to `Setup`. Now this issue has been fixed.
+- **update:** Updated vendor store API to support profile picture and banner delete feature. To delete one of these fields, one needs to set a 0 (zero) value while making the API request.
+endpoint: {{SERVER_URL}}/wp-json/dokan/{{version}}/stores/{store_Id}
+- **update:** Added various html tag support for rich text editors on various places of vendor dashboard.
+Previously, the product editor on the vendor's side was a lot more limited than the one available on the admin side. With this update, we’ve included various tags, like heading elements, paragraphs, etc support for rich text editors.
+- **update:** Added random ordering for store REST API endpoint,
+Previously, random ordering for stores wasn’t available for store API. With this update, we’ve added this feature.
+endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/
+- **update:** Added phone number validation for vendor dashboard store settings page and vendor registration form.
+Previously, for phone numbers only numeric values were accepted, now a valid phone number including spaces, -, _, (, ), etc also supports phone number fields.
+- **update:** [Withdraw] Fixed an issue where withdraw payment method wasn't enabled but can be used for both manual withdrawal and auto withdraw disbursement schedules from the vendor dashboard payment settings page.
 
 = v3.7.21 ( Jun 23, 2023 ) =
 
