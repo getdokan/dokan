@@ -4,6 +4,64 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.22',
+        'released' => '2023-07-12',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Updated vendor store API to support profile picture and banner delete feature. To delete one of these fields, one needs to set a 0 (zero) value while making the API request.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/{{version}}/stores/{store_Id}',
+                ],
+                [
+                    'title'       => 'Added various html tag support for rich text editors on various places of vendor dashboard.',
+                    'description' => 'Previously, the product editor on the vendor\'s side was a lot more limited than the one available on the admin side. With this update, we’ve included various tags, like heading elements, paragraphs, etc support for rich text editors.',
+                ],
+                [
+                    'title'       => 'Added random ordering for store REST API endpoint.',
+                    'description' => 'Previously, random ordering for stores wasn’t available for store API. With this update, we’ve added this feature. <br>endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/',
+                ],
+                [
+                    'title'       => 'Added phone number validation for vendor dashboard store settings page and vendor registration form.',
+                    'description' => 'Previously, for phone numbers only numeric values were accepted, now a valid phone number including spaces, -, _, (, ), etc also supports phone number fields.',
+                ],
+                [
+                    'title'       => '[Withdraw] Fixed an issue where withdraw payment method wasn\'t enabled but can be used for both manual withdrawal and auto withdraw disbursement schedules from the vendor dashboard payment settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where multiple withdrawal requests can be placed via API.',
+                    'description' => 'If a withdrawal request was placed by a vendor until that request was approved or rejected by Admin, making another withdrawal request wasn’t possible via frontend. However, the admin was able to make a withdrawal request via REST API. With this fix, this problem now has been resolved.',
+                ],
+                [
+                    'title'       => 'Fixed a PHP notice for importing dummy data without providing any data via REST API',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/dummy-data/import',
+                ],
+                [
+                    'title'       => 'While updating the withdrawal request via REST API, the minimum withdrawal amount limit wasn’t considered. For example, if the minimum withdrawal limit was set to 50, for an existing withdrawal request, the admin can set the withdrawal value to less than 50. This issue has been fixed now.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/withdraw/{withdraw_id}',
+                ],
+                [
+                    'title'       => 'Fixed an issue where store products API was returning all products instead of published products.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/{store_id}/products',
+                ],
+                [
+                    'title'       => 'Fixed some CSS issues on the vendor store settings page for the store banner image.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Withdraw] Fixed an issue where PayPal withdraw method status was displaying default but the corresponding vendor didn’t set up the payment method yet. With this fix, we marked the payment method as needing setup instead of the default payment method.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Withdraw] After connecting to a payment method, the button text changes from `Setup` to `Make default` or `default` if selected. But after disconnecting that method button text doesn\'t change back to `Setup`. Now this issue has been fixed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.21',
         'released' => '2023-06-23',
         'changes'  => [

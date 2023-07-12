@@ -401,8 +401,8 @@ class Manager {
             'trn_date'  => isset( $args['trn_date'] ) && ! $this->is_empty( $args['trn_date'] ) ? $args['trn_date'] : $default_transactions_date,
             'per_page'  => isset( $args['per_page'] ) ? $args['per_page'] : -1,
             'page'      => isset( $args['page'] ) ? $args['page'] : 1,
-            'orderby'   => isset( $args['orderby'] ) ? $args['orderby'] : 'id',
-            'order'     => isset( $args['order'] ) ? $args['order'] : 'DESC',
+            'orderby'   => 'id',
+            'order'     => 'ASC',
         ];
 
         if ( empty( $query_params['vendor_id'] ) || ! is_numeric( $query_params['vendor_id'] ) ) {
