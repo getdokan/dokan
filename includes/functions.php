@@ -4287,7 +4287,7 @@ function dokan_mask_email_address( $email ) {
 /**
  * Mask or hide part of string.
  *
- * @since DOKAN_SINCE
+ * @since 3.7.22
  *
  * @param string  $text text
  * @param integer $position

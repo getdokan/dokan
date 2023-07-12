@@ -953,7 +953,7 @@ class StoreController extends WP_REST_Controller {
     /**
      * Retrieves the query params for the collections.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.22
      *
      * @return array Query parameters for the collection.
      */
