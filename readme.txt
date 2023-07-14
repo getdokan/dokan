@@ -7,7 +7,7 @@ Tested up to: 6.2.2
 WC requires at least: 5.0.0
 WC tested up to: 7.8.2
 Requires PHP: 7.2
-Stable tag: 3.7.22
+Stable tag: 3.7.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.7.23 ( Jul 14, 2023 ) =
+
+- **fix:** Fixed an issue where the withdraw request could not be approved from the Admin Dashboard via REST API.
 
 = v3.7.22 ( Jul 12, 2023 ) =
 
