@@ -338,6 +338,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.7.23 ( Jul 14, 2023 ) ###
+
+- **fix:** Fixed an issue where the withdraw request could not be approved from the Admin Dashboard via REST API.
+
 ### v3.7.22 ( Jul 12, 2023 ) ###
 
 - **fix:** Fixed an issue where multiple withdrawal requests can be placed via API.
