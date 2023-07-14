@@ -413,19 +413,26 @@ class WithdrawController extends WP_REST_Controller {
      */
     public function update_item( $request ) {
         try {
-            global $wpdb;
+            /**
+             * @var $withdraw_manager \WeDevs\Dokan\Withdraw\Manager()
+             */
+            $withdraw_manager = dokan()->withdraw;
 
-            $withdraw = dokan()->withdraw->get( $request['id'] );
+            /**
+             * @var $withdraw \WeDevs\Dokan\Withdraw\Withdraw()
+             */
+            $withdraw = $withdraw_manager->get( $request['id'] );
 
+            // phpcs:ignore WordPress.WP.Capabilities.Unknown
             if ( ! current_user_can( 'manage_woocommerce' ) ) {
-                $validate_request = dokan()->withdraw->is_valid_cancellation_request( $withdraw->get_withdraw() );
+                $validate_request = $withdraw_manager->is_valid_cancellation_request( $withdraw->get_withdraw() );
 
                 if ( is_wp_error( $validate_request ) ) {
                     throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
                 }
 
                 // Vendors are allowed to cancel request only
-                $withdraw->set_status( dokan()->withdraw->get_status_code( 'cancelled' ) );
+                $withdraw->set_status( $withdraw_manager->get_status_code( 'cancelled' ) );
             } else {
                 if ( isset( $request['user_id'] ) ) {
                     $withdraw->set_user_id( $request['user_id'] );
@@ -435,18 +442,6 @@ class WithdrawController extends WP_REST_Controller {
                     $withdraw->set_amount( $request['amount'] );
                 }
 
-                if ( isset( $request['status'] ) ) {
-                    if ( 'approved' === $request['status'] ) {
-                        $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
-
-                        if ( is_wp_error( $validate_request ) ) {
-                            throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
-                        }
-                    }
-
-                    $withdraw->set_status( dokan()->withdraw->get_status_code( $request['status'] ) );
-                }
-
                 if ( isset( $request['method'] ) ) {
                     $withdraw->set_method( $request['method'] );
                 }
@@ -454,12 +449,29 @@ class WithdrawController extends WP_REST_Controller {
                 if ( isset( $request['note'] ) ) {
                     $withdraw->set_note( $request['note'] );
                 }
-            }
 
-            $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
+                /**
+                 * We are temporarily setting the withdrawal status null because in the `is_valid_approval_request` function
+                 * it throws error as 'Withdraw is already approved.' when status is 'approved'. If we don't set null we can't validate
+                 * the vendor's withdraw balance and withdrawal limit. If all this information validates properly we will set the real status code
+                 * that came from request.
+                 */
+                if ( isset( $request['status'] ) ) {
+                    $withdraw->set_status( $withdraw_manager->get_status_code( null ) );
+                }
 
-            if ( is_wp_error( $validate_request ) ) {
-                throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
+                $validate_request = $withdraw_manager->is_valid_approval_request( $withdraw->get_withdraw() );
+
+                if ( is_wp_error( $validate_request ) ) {
+                    throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
+                }
+
+                /**
+                 * Setting the real status code that came from request.
+                 */
+                if ( isset( $request['status'] ) ) {
+                    $withdraw->set_status( $withdraw_manager->get_status_code( $request['status'] ) );
+                }
             }
 
             $withdraw = $withdraw->save();
