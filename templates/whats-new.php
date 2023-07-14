@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.23',
+        'released' => '2023-07-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the withdraw request could not be approved from the Admin Dashboard via REST API.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.22',
         'released' => '2023-07-12',
         'changes'  => [
