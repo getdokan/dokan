@@ -106,7 +106,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      */
     public function get_default_column_names() {
         return apply_filters(
-            'dokan_withdraw_logs_export_columns', [
+            'dokan_withdraw_log_export_columns', [
                 'id'                  => __( 'ID', 'dokan' ),
                 'vendor_id'           => __( 'Vendor ID', 'dokan-lite' ),
                 'store_name'          => __( 'Store Name', 'dokan-lite' ),
@@ -208,11 +208,9 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
                 break;
 
             case "dokan_custom_method":
-                $column_value = $withdraw_item['details']['dokan_custom']['method'] ?? '';
-                break;
-
             case "dokan_custom_value":
-                $column_value = $withdraw_item['details']['dokan_custom']['value'] ?? '';
+                $field        = substr_replace( $key, '', 0, 13 );
+                $column_value = $withdraw_item['details']['dokan_custom'][ $field ] ?? '';
                 break;
 
             case "bank_ac_name":
@@ -224,7 +222,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
             case "bank_iban":
             case "bank_routing_number":
             case "bank_swift":
-                $field = substr_replace( $key, '', 0, 5 );
+                $field        = substr_replace( $key, '', 0, 5 );
                 $column_value = $withdraw_item['details']['bank'][ $field ] ?? '';
                 break;
 

@@ -36,7 +36,7 @@ class Hooks {
      * @return void
      */
     public function download_withdraw_log_export_file() {
-        if ( ! isset( $_GET['download-withdraw-log-csv'] ) || ! wp_verify_nonce( wp_unslash( $_GET['download-withdraw-log-csv'] ), 'download-withdraw-log-csv-nonce' ) ) {
+        if ( ! isset( $_GET['download-withdraw-log-csv'] ) || ! wp_verify_nonce( wp_unslash( $_GET['download-withdraw-log-csv'] ), 'download-withdraw-log-csv-nonce' ) ) { // phpcs:ignore
             return;
         }
 

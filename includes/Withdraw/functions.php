@@ -339,7 +339,7 @@ function dokan_get_withdraw_count( $user_id = null ) {
         $args['user_id'] = $user_id;
     }
 
-    //Return withdraw status counts.
+    // Return withdraw status counts.
     return dokan()->withdraw->all( $args );
 }
 

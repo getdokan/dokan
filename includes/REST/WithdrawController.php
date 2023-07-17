@@ -33,7 +33,7 @@ class WithdrawController extends WP_REST_Controller {
     protected $rest_base = 'withdraw';
 
     /**
-     * Register all routes releated with stores
+     * Register all routes related with withdraw.
      *
      * @return void
      */
@@ -587,6 +587,8 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since DOKAN_SINCE
      *
+     * @param  WP_REST_Request $request
+     *
      * @return WP_REST_Response
      */
     public function get_payment_method_items( $request ) {
@@ -745,6 +747,9 @@ class WithdrawController extends WP_REST_Controller {
      * Prepare Payment Method Item Data for Response.
      *
      * @since DOKAN_SINCE
+     *
+     * @param string          $payment_method
+     * @param WP_REST_Request $request
      *
      * @return WP_REST_Response|WP_Error
      */
@@ -919,7 +924,7 @@ class WithdrawController extends WP_REST_Controller {
                 'id' => [
                     'description' => __( 'Unique identifier for the payment method.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => [ 'view', 'edit' ],
+                    'context'     => [ 'view' ],
                     'readonly'    => true,
                     'required'    => true,
                 ],

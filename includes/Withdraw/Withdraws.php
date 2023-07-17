@@ -23,9 +23,9 @@ class Withdraws {
     /**
      * Total withdraw found
      *
-     * @var null|int
+     * @var int
      */
-    protected $total = null;
+    protected $total = 0;
 
     /**
      * Maximum number of pages
@@ -132,7 +132,7 @@ class Withdraws {
             $query_args[] = current_datetime()->modify( $args['end_date'] )->format( 'Y-m-d' );
         }
 
-        if ( 'count' !== $args['return'] &&  isset( $args['status'] ) ) {
+        if ( 'count' !== $args['return'] && isset( $args['status'] ) ) {
             $where        .= ' and status = %d';
             $query_args[] = $args['status'];
         }
@@ -147,7 +147,7 @@ class Withdraws {
             $query_args[] = $args['ip'];
         }
 
-        if ( 'count' !== $args['return'] &&  ! empty( $args['limit'] ) ) {
+        if ( 'count' !== $args['return'] && ! empty( $args['limit'] ) ) {
             $limit  = absint( $args['limit'] );
             $page   = absint( $args['page'] );
             $page   = $page ? $page : 1;
@@ -201,7 +201,7 @@ class Withdraws {
     }
 
     /**
-     * Get withdraw status count
+     * Get withdraw status count.
      *
      * @since DOKAN_SINCE
      *

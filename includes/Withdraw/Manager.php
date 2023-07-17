@@ -326,7 +326,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @param array $args
+     * @param  array $args
      *
      * @return array|object
      */
