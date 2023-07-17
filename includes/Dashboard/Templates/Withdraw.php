@@ -447,12 +447,12 @@ class Withdraw {
         }
 
         $args = [
-            'balance'         => dokan_get_seller_balance( dokan_get_current_user_id(), true ),
-            'withdraw_limit'  => dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 ),
-            'threshold'       => dokan_get_withdraw_threshold( dokan_get_current_user_id() ),
-            'payment_details' => $payment_details,
-            'active_methods'  => dokan_withdraw_get_withdrawable_active_methods(),
-            'default_method'  => dokan_withdraw_get_default_method(),
+            'balance'                 => dokan_get_seller_balance( dokan_get_current_user_id(), true ),
+            'withdraw_limit'          => dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 ),
+            'threshold'               => dokan_get_withdraw_threshold( dokan_get_current_user_id() ),
+            'payment_details'         => $payment_details,
+            'active_methods'          => dokan_withdraw_get_withdrawable_active_methods(),
+            'default_method'          => dokan_withdraw_get_default_method(),
         ];
         dokan_get_template_part( 'withdraw/withdraw-dashboard', '', $args );
     }

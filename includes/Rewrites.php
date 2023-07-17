@@ -27,6 +27,7 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
+        add_filter( 'tiny_mce_before_init', [ $this, 'remove_h1_from_heading_in_edit_product_page' ] );
     }
 
     /**
@@ -87,6 +88,7 @@ class Rewrites {
                 'reverse-withdrawal',
                 'settings',
                 'edit-account',
+                'account-migration',
             ]
         );
 
@@ -268,6 +270,25 @@ class Rewrites {
         $edit_product_url = dokan_locate_template( 'products/edit-product-single.php' );
 
         return apply_filters( 'dokan_get_product_edit_template', $edit_product_url );
+    }
+
+    /**
+     * Remove h1 tag in edit product page.
+     *
+     * @param $args
+     *
+     * @return mixed
+     */
+    public function remove_h1_from_heading_in_edit_product_page( $args ) {
+        global $wp;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) || ( ! empty( $_GET['product_id'] ) && ! empty( $_GET['action'] ) && ! empty( $_GET['_dokan_edit_product_nonce'] ) ) ) {
+            // Just omit h1 from the list
+            $args['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Pre=pre';
+            return $args;
+        }
+
+        return $args;
     }
 
     /**

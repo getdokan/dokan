@@ -7,8 +7,9 @@ var Dokan_Vendor_Registration = {
 
         // bind events
         $( '.user-role input[type=radio]', form ).on( 'change', this.showSellerForm );
+        $( document ).on( 'dokan_event_seller_registration_form', this.showSellerForm );
         $( '.tc_check_box', form ).on( 'click', this.onTOC );
-        $( '#shop-phone', form ).on( 'keydown', this.ensurePhoneNumber );
+        $( '#shop-phone', form ).on( 'keydown', dokan_sanitize_phone_number );
         $( '#company-name', form ).on( 'focusout', this.generateSlugFromCompany );
 
         $( '#seller-url', form ).on( 'keydown', this.constrainSlug );
@@ -18,6 +19,7 @@ var Dokan_Vendor_Registration = {
         this.validationLocalized();
         this.handlePasswordStrengthObserver();
         // this.validate(this);
+        $( document ).trigger( 'dokan_event_seller_registration_form' );
     },
 
     validate: function(self) {
@@ -46,7 +48,7 @@ var Dokan_Vendor_Registration = {
             if ( $( '.tc_check_box' ).length > 0 ) {
                 $('button[name=register]').attr('disabled','disabled');
             }
-
+            $('.user-role .dokan-role-seller').prop("checked",true);
         } else {
             $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
             $('.show_if_seller').slideUp();
@@ -54,6 +56,7 @@ var Dokan_Vendor_Registration = {
             if ( $( '.tc_check_box' ).length > 0 ) {
                 $( 'button[name=register]' ).removeAttr( 'disabled' );
             }
+            $('.user-role .dokan-role-customer').prop("checked",true);
         }
     },
 
@@ -68,33 +71,6 @@ var Dokan_Vendor_Registration = {
             $( 'input[name=register]' ).attr( 'disabled', 'disabled' );
             $( 'button[name=register]' ).attr( 'disabled', 'disabled' );
             $( 'input[name=dokan_migration]' ).attr( 'disabled', 'disabled' );
-        }
-    },
-
-    ensurePhoneNumber: function(e) {
-        // Allow: backspace, delete, tab, escape, enter and .
-        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 91, 107, 109, 110, 187, 189, 190]) !== -1 ||
-
-            // Allow: Ctrl+A
-            (e.keyCode == 65 && e.ctrlKey === true) ||
-
-            // Allow: home, end, left, right
-            (e.keyCode >= 35 && e.keyCode <= 39)) {
-                // let it happen, don't do anything
-                return;
-        }
-
-        if ( e.shiftKey && e.key === '.' ) {
-            return;
-        }
-
-        // Ensure that it is a number and stop the keypress
-        if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
-            return;
-        }
-
-        if ( isNaN( Number(e.key) ) ) {
-           e.preventDefault();
         }
     },
 
