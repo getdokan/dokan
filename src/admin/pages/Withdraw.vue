@@ -80,16 +80,9 @@
                         style="width: 190px;"
                         :data-placeholder="__('Filter by Vendor', 'dokan-lite')"
                     />
-<!--                    <button-->
-<!--                        v-if="filter.user_id"-->
-<!--                        type="button"-->
-<!--                        class="button"-->
-<!--                        @click="filter.user_id = 0"-->
-<!--                    >&times;</button>-->
 
                     <select
                         id="filter-payment-methods"
-                        style="width: 190px;"
                         :data-placeholder="__('Filter by Payment Methods', 'dokan-lite')"
                     />
 
@@ -161,7 +154,6 @@ const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
-// import {isEmpty} from "lodash";
 
 export default {
 
@@ -252,6 +244,10 @@ export default {
             this.fetchRequests();
         },
 
+        '$route.query.payment_method'() {
+            this.fetchRequests();
+        },
+
         'filter.user_id'(user_id) {
             if (user_id === 0) {
                 this.clearSelection('#filter-vendors');
@@ -265,7 +261,7 @@ export default {
                 this.clearSelection('#filter-payment-methods');
             }
 
-            this.fetchRequests();
+            this.goTo( this.query );
         },
 
         'filter.transaction_date.startDate'() {
@@ -488,10 +484,16 @@ export default {
         },
 
         fetchRequests() {
-            this.loading = true;
-            var user_id = '';
+            this.loading       = true;
+            let user_id        = '';
+            let payment_method = '';
+
             if (parseInt(this.filter.user_id) > 0) {
                 user_id = this.filter.user_id;
+            }
+
+            if ( this.filter.payment_method.id ) {
+                payment_method = this.filter.payment_method.id;
             }
 
             const data = {
@@ -499,7 +501,7 @@ export default {
                 page: this.currentPage,
                 status: this.currentStatus,
                 user_id: user_id,
-                payment_method: this.filter.payment_method.id,
+                payment_method: payment_method,
                 start_date: this.filterTransactionDate.start_date,
                 end_date: this.filterTransactionDate.end_date
             };
@@ -519,7 +521,8 @@ export default {
                 query: {
                     status: this.currentStatus,
                     page: page,
-                    user_id: this.filter.user_id
+                    user_id: this.filter.user_id,
+                    payment_method: this.filter.payment_method.id
                 }
             });
         },
@@ -529,7 +532,8 @@ export default {
                 name: 'Withdraw',
                 query: {
                     status: this.currentStatus,
-                    user_id: this.filter.user_id
+                    user_id: this.filter.user_id,
+                    payment_method: this.filter.payment_method.id
                 }
             });
         },
@@ -688,17 +692,11 @@ export default {
         },
 
         clearAllFiltering() {
-            // if ( isEmpty( this.$route.query ) ) {
-            //     return;
-            // }
-            //
-            // this.$router.replace({ 'query': null } );
-
-            this.filter.user_id = 0;
-            this.filter.payment_method.id = '';
-            this.filter.payment_method.title = '';
+            this.filter.user_id                    = 0;
+            this.filter.payment_method.id          = '';
+            this.filter.payment_method.title       = '';
             this.filter.transaction_date.startDate = '';
-            this.filter.transaction_date.endDate = '';
+            this.filter.transaction_date.endDate   = '';
         },
 
         exportAllLogs() {
@@ -891,6 +889,10 @@ export default {
         p {
             margin-bottom: 2px;
         }
+    }
+
+    select#filter-payment-methods {
+        width: 175px;
     }
 }
 
