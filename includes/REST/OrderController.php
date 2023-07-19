@@ -545,15 +545,16 @@ class OrderController extends DokanRESTController {
      * @return array|WP_Error
      */
     public function get_order_notes( $request ) {
-        $order           = wc_get_order( (int) $request['id'] );
+        $order = wc_get_order( (int) $request['id'] );
+
+        if ( ! $order || $this->post_type !== $order->get_type() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
-
-        if ( ! $order || $this->post_type !== $order->get_type() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $args = array(

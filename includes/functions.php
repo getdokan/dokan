@@ -1347,7 +1347,7 @@ function dokan_prepare_chart_data( $data, $date_key, $data_key, $interval, $star
         if ( $data_key ) {
             $prepared_data[ $time ][1] += $d->$data_key;
         } else {
-            $prepared_data[ $time ][1] ++;
+            ++$prepared_data[ $time ][1];
         }
     }
 
@@ -2129,7 +2129,7 @@ function dokan_get_products_listing_months_for_vendor( $user_id ) {
 function dokan_product_listing_filter_months_dropdown( $user_id ) {
     global $wp_locale;
 
-    $months      = dokan_get_products_listing_months_for_vendor($user_id);
+    $months      = dokan_get_products_listing_months_for_vendor( $user_id );
     $month_count = count( $months );
 
     if ( ! $month_count || ( 1 === $month_count && 0 === (int) $months[0]->month ) ) {
@@ -2916,7 +2916,7 @@ function dokan_get_translated_days( $day = '' ) {
     $day_keys       = array_keys( $all_days );
 
     // Make our start day of the week using by week starts settings.
-    for ( $i = 0; $i < $week_starts_on; $i ++ ) {
+    for ( $i = 0; $i < $week_starts_on; $i++ ) {
         $shifted_key   = $day_keys[ $i ];
         $shifted_value = $all_days[ $shifted_key ];
 
@@ -3182,7 +3182,7 @@ function dokan_generate_username( $name = 'store' ) {
         return $name;
     }
 
-    $new_name = sprintf( '%s-%d', $name, $i ++ );
+    $new_name = sprintf( '%s-%d', $name, $i++ );
 
     if ( ! username_exists( $new_name ) ) {
         return $new_name;
@@ -3868,6 +3868,25 @@ function dokan_mask_email_address( $email ) {
     $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
 
     return "{$first}@{$last_domain}.{$last['1']}";
+}
+
+/**
+ * Mask or hide part of string.
+ *
+ * @since 3.7.22
+ *
+ * @param string  $text text
+ * @param integer $position
+ *
+ * @return string
+ */
+function dokan_mask_string( $text, $position = 1, $show_max_letters = 4 ) {
+    $first_letters = substr( $text, 0, $position );
+    $remaining_letters = substr( $text, 2 );
+
+    $masked_letters = str_repeat( '*', min( $show_max_letters, strlen( $remaining_letters ) ) );
+
+    return $first_letters . $masked_letters;
 }
 
 /**
