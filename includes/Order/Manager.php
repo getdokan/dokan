@@ -338,7 +338,7 @@ class Manager {
                 );
                 // phpcs:enable
             } else {
-                // Traditional CPT-based orders are in use.
+                // traditional CPT-based orders are in use.
                 // phpcs:disable
                 $query = $wpdb->prepare(
                     "SELECT do.order_status as order_status, count(do.id) as order_count

@@ -126,7 +126,7 @@ final class WeDevs_Dokan {
      * Initializes the WeDevs_Dokan() class
      *
      * Checks for an existing WeDevs_WeDevs_Dokan() instance
-     * and if it doesn't find one, creates it.
+     * and if it doesn't find one, create it.
      */
     public static function init() {
         if ( self::$instance === null ) {
@@ -143,7 +143,7 @@ final class WeDevs_Dokan {
      *
      * @param string $prop
      *
-     * @return Class Instance
+     * @return object Class Instance
      */
     public function __get( $prop ) {
         if ( array_key_exists( $prop, $this->container ) ) {

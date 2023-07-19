@@ -884,21 +884,13 @@ function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = n
  * @return float
  */
 function dokan_author_total_sales( $seller_id ) {
-    global $wpdb;
+    $vendor = dokan()->vendor->get( $seller_id );
 
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = "earning_{$seller_id}";
-    $earnings    = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $earnings ) {
-        $earnings = (float) $wpdb->get_var(
-            $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
-        );
-
-        Cache::set( $cache_key, $earnings, $cache_group );
+    if ( $vendor->id === 0 ) {
+        return 0;
     }
 
-    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
+    return $vendor->get_total_sales();
 }
 
 if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
