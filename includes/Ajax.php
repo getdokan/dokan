@@ -321,9 +321,22 @@ class Ajax {
 
                 // Increase product stock qty based on order item qty.
                 wc_update_product_stock( $product, $order_qty, 'increase' );
+
+                // Add stock increasing note.
+                $new_stock_qty = $product->get_stock_quantity();
+                $old_stock_qty = $new_stock_qty - $order_qty;
+                $note_content  = sprintf(
+                    /* translators: 1: Formatted product name 2: Old stock qty 3: new stock qty */
+                    __( 'Stock levels increased: %1$s %2$d &rarr; %3$d', 'dokan-lite' ),
+                    $product->get_formatted_name(),
+                    $old_stock_qty,
+                    $new_stock_qty
+                );
+
+                $order->add_order_note( $note_content );
             }
         }
-        
+
         wp_send_json_success( $html );
     }
 
