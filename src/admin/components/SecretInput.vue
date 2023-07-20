@@ -1,25 +1,27 @@
 <template>
-    <div class='secret-input-box' :style="! showCopyBtn ? 'display: block' : 'display: flex; justify-content: end;'">
-        <input
-            class="regular-text large"
-            :class="[secret && hide && value ? 'secret-input blurry-input' : 'secret-input', inputClasses]"
-            @focus="removeBlurryEffect"
-            @blur="addBlurryEffect"
-            :type="inputType"
-            :value="value"
-            @input="handleInput"
-            ref="secretInput"
-            :disabled="isDisabled"
-            :id="inputId"
-            :name="inputName"
-        />
-        <div v-if="showCopyBtn" :title="copied ? __( 'Copied', 'dokan-lite' ) : __('Copy to clipboard', 'dokan-lite' )">
-            <button type='button' v-on:click="copyHandler(value)">
-                <i v-if="copied" class="fa fa-check" aria-hidden="true"></i>
-                <i v-else class="fa fa-clipboard" aria-hidden="true"></i>
-            </button>
+    <div class='secret-box-wraper'>
+        <div class='secret-input-box' :style="! showCopyBtn ? 'display: block' : 'display: flex; justify-content: end;'">
+            <input
+                class="secret-input"
+                :class="[secret && hide && value ? 'blurry-input' : '', inputClasses]"
+                @focus="removeBlurryEffect"
+                @blur="addBlurryEffect"
+                :type="inputType"
+                :value="value"
+                @input="handleInput"
+                ref="secretInput"
+                :disabled="isDisabled"
+                :id="inputId"
+                :name="inputName"
+            />
+            <div v-if="showCopyBtn" :title="copied ? __( 'Copied', 'dokan-lite' ) : __('Copy to clipboard', 'dokan-lite' )">
+                <button type='button' v-on:click="copyHandler(value)">
+                    <i v-if="copied" class="fa fa-check" aria-hidden="true"></i>
+                    <i v-else class="fa fa-clipboard" aria-hidden="true"></i>
+                </button>
+            </div>
+            <span v-if='secret && hide && value' v-on:click="handleClickView" ref="secretInputPlaceholder" class="secret-input-placeholder">{{__( 'Click to view', 'dokan-lite' )}}</span>
         </div>
-        <span v-if='secret && hide && value' v-on:click="handleClickView" ref="secretInputPlaceholder" class="secret-input-placeholder">{{__( 'Click to view', 'dokan-lite' )}}</span>
     </div>
 </template>
 
@@ -80,37 +82,54 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.secret-input-box {
-    div {
-        button {
-            cursor: pointer;
-            height: 20px;
-            min-height: 32px;
-            min-width: 32px;
-            border: 0.957434px solid #686666;
-            box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            background: white;
+.secret-box-wraper {
+    display: flex;
+    flex-direction: row-reverse;
+
+    .secret-input-box {
+        position: relative;
+        display: flex;
+        width: 25em;
+
+        div {
+            button {
+                cursor: pointer;
+                height: 20px;
+                min-height: 32px;
+                min-width: 32px;
+                border: 0.957434px solid #686666;
+                box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
+                border-radius: 5px;
+                background: white;
+                color: #686666;
+            }
+        }
+
+        .secret-input {
+            width: 100%;
+
+            &.blurry-input {
+                color: transparent;
+                text-shadow: 0 0 7px #333;
+            }
+        }
+
+        .secret-input-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             color: #686666;
         }
     }
 }
 
-.secret-input-box {
-    position: relative;
+@media only screen and (max-width: 768px) {
+    .secret-box-wraper {
 
-    .secret-input {
-        &.blurry-input {
-            color: transparent;
-            text-shadow: 0 0 7px #333;
+        .secret-input-box {
+            max-width: 125px !important;
         }
-    }
-
-    .secret-input-placeholder {
-        position: absolute;
-        left: 35%;
-        top: 25%;
-        color: #686666;
     }
 }
 </style>
