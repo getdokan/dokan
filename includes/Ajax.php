@@ -295,18 +295,6 @@ class Ajax {
         $order = dokan()->order->get( $order_id );
         $order->update_status( $order_status );
 
-        // Get the new order status. This is needed since plugin/theme authors might
-        // change the order status behind the scenes in certain cases.
-        // For example by moving `wc-paused` to `wc-cancelled` automatically or by
-        // moving `wc-pending` to `wc-processing`.
-        $order_status = "wc-{$order->get_status()}";
-
-        $statuses     = wc_get_order_statuses();
-        $status_label = isset( $statuses[ $order_status ] ) ? $statuses[ $order_status ] : $order_status;
-        $status_class = dokan_get_order_status_class( $order_status );
-
-        $html = '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
-
         // Re-adjust product stock via parent order in-case the order has been cancelled.
         if ( $order->get_parent_id() && 'wc-cancelled' === $order_status ) {
             foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
@@ -336,6 +324,18 @@ class Ajax {
                 $order->add_order_note( $note_content );
             }
         }
+
+        // Get the new order status. This is needed since plugin/theme authors might
+        // change the order status behind the scenes in certain cases.
+        // For example by moving `wc-paused` to `wc-cancelled` automatically or by
+        // moving `wc-pending` to `wc-processing`.
+        $order_status = "wc-{$order->get_status()}";
+
+        $statuses     = wc_get_order_statuses();
+        $status_label = isset( $statuses[ $order_status ] ) ? $statuses[ $order_status ] : $order_status;
+        $status_class = dokan_get_order_status_class( $order_status );
+
+        $html = '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
 
         wp_send_json_success( $html );
     }
