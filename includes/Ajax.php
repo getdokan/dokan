@@ -308,7 +308,7 @@ class Ajax {
         $html = '<label class="dokan-label dokan-label-' . esc_attr( $status_class ) . '">' . esc_attr( $status_label ) . '</label>';
 
         // Re-adjust product stock via parent order in-case the order has been cancelled.
-        if ( wp_get_post_parent_id( $order->get_id() ) && 'wc-cancelled' === $order_status ) {
+        if ( $order->get_parent_id() && 'wc-cancelled' === $order_status ) {
             foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
                 $item_id   = $line_item->get_variation_id() ? $line_item->get_variation_id() : $line_item->get_product_id();
                 $order_qty = $line_item->get_quantity();
