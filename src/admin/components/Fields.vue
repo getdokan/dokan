@@ -71,7 +71,8 @@
             </div>
         </template>
 
-        <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+        <template v-if="'combine' === fieldData.type &&
+            ( haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue ) || ! haveCondition( fieldData ) )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
@@ -867,7 +868,7 @@
 
                     a {
                         display: inline-block;
-                        
+
                         &:hover {
                             box-shadow: 0 0 0 1px transparent;
                         }
