@@ -14,9 +14,20 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <input :type="fieldData.type || 'text'" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
+                        <secret-input
+                            v-if="fieldData.secret_text"
+                            :type="fieldData.type || 'text'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"
+                        />
+                        <input
+                            v-else
+                            :type="fieldData.type || 'text'"
+                            class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                             :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
-                            :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" />
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            v-model="fieldValue[fieldData.name]"
+                        />
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -164,12 +175,18 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select
+                            v-if="!fieldData.grouped"
+                            class="regular medium"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            v-on:change="e => fieldValue[fieldData.name] = e.target.value"
+                            :value="fieldValue[fieldData.name] ?? fieldData.default ?? ''"
+                        >
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
-
-                        <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select v-else class="regular medium" :value="fieldData.default ?? ''" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                             <optgroup v-for="( optionGroup, optionGroupKey ) in fieldData.options" :key="optionGroupKey" :label="optionGroup.group_label">
                                 <option v-for="(option, optionKey ) in optionGroup.group_values" :key="optionKey" :value="option.value" v-html="option.label" />
@@ -366,8 +383,15 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <label class="social-switch-wraper" v-if="fieldData.enable_status">
+                        <switches
+                            @input="onSocialToggleSwitch"
+                            :enabled="socialChecked === 'on' ? true : false"
+                            value="isSocialChecked"
+                        ></switches>
+                    </label>
                 </fieldset>
-                <div class="field scl_fields">
+                <div class="field scl_fields" :class="fieldData.enable_status && 'off' === socialChecked ? 'scl_fields_disable' : ''">
                     <div class="scl_header">
                         <div class="scl_contents">
                             <div class="scl_icon">
@@ -376,7 +400,7 @@
                             <p class="scl_desc">{{ fieldData.social_desc }}</p>
                         </div>
                         <div class="expand_btn" @click="expandSocial">
-                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
+                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2', isSocialFieldActivated ? 'active-social-expend-btn' : '']"></span>
                         </div>
                     </div>
                     <template v-for="( fields, index ) in fieldData">
@@ -414,6 +438,7 @@
     import Switches from "admin/components/Switches.vue";
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
+    import SecretInput from './SecretInput.vue';
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -430,7 +455,8 @@
             colorPicker,
             FieldHeading,
             SocialFields,
-            RefreshSettingOptions
+            RefreshSettingOptions,
+            SecretInput
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
@@ -439,6 +465,7 @@
             return {
                 hideMap               : false,
                 checked               : this.isChecked(),
+                socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
                 repeatableItem        : {},
                 repeatableTime        : [],
@@ -560,6 +587,16 @@
 
             mapboxAccessToken() {
                 return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
+            },
+
+            isSocialFieldActivated() {
+                for (const data in this.fieldData) {
+                    if (this.fieldData[data].social_field && 'html' !== this.fieldData[data].type && ! this.fieldValue[this.fieldData[data].name]) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         },
 
@@ -623,8 +660,20 @@
             },
 
             isSocialChecked() {
-                return ! this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : this.fieldValue[ this.fieldData.name ];
+                /**
+                 * If social field has enabled status saved return it or return the default value or return 'on'
+                 *
+                 * @since DOKAN_SINCE
+                 */
+                if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['name'] && this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ) {
+                    return this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ];
+                } else if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['default'] ) {
+                    return this.fieldData[ 'enable_status' ]['default'];
+                }
+
+                return 'on';
             },
+
 
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
@@ -661,6 +710,15 @@
                 this.fieldValue[ this.fieldData.name ] = status ? 'on' : 'off';
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
+            },
+
+            onSocialToggleSwitch( status, key ) {
+                if ( 'isSocialChecked' !== key ) {
+                    return;
+                }
+
+                this.socialChecked                     = status ? 'on' : 'off';
+                this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ]          = status ? 'on' : 'off';
             },
 
             hasError( key ) {
@@ -881,6 +939,11 @@
                     }
                 }
             }
+
+            .social-switch-wraper {
+                display: flex;
+                align-items: center;
+            }
         }
 
         .combine_fields {
@@ -1086,6 +1149,10 @@
             }
         }
 
+        .scl_fields_disable {
+            filter: grayscale(1);
+        }
+
         .scl_fields {
             margin: 15px 0 4px 0px;
             border: 0.82px solid #E5E5E5;
@@ -1153,6 +1220,10 @@
                             position: absolute;
                             transform: translate(-50%, -50%);
                         }
+                    }
+
+                    .active-social-expend-btn {
+                        background: #4CAF4F;
                     }
                 }
             }
