@@ -89,12 +89,24 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field combine_fields">
                         <div class="percent_fee">
-                            <input type="text" class="wc_input_decimal regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                            <input
+                                type="text"
+                                class="wc_input_decimal regular-text medium"
+                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'"
+                                :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'"
+                                v-model="fieldValue[fieldData.fields.percent_fee.name]"
+                            >
                             {{ '%' }}
                         </div>
                         <div class="fixed_fee">
                             {{ '+' }}
-                            <input type="text" class="wc_input_price regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                            <input
+                                type="text"
+                                class="wc_input_price regular-text medium"
+                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'"
+                                :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'"
+                                v-model="fieldValue[fieldData.fields.fixed_fee.name]"
+                            >
                         </div>
                     </div>
                 </fieldset>
@@ -394,7 +406,7 @@
                 <div class="field scl_fields" :class="fieldData.enable_status && 'off' === socialChecked ? 'scl_fields_disable' : ''">
                     <div class="scl_header">
                         <div class="scl_contents">
-                            <div class="scl_icon">
+                            <div class="scl_icon" v-if="fieldData.icon_url">
                                 <img :src="fieldData.icon_url" :alt="fieldData.label" />
                             </div>
                             <p class="scl_desc">{{ fieldData.social_desc }}</p>
