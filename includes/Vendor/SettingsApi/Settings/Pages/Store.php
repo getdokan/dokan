@@ -525,17 +525,6 @@ class Store extends Page {
             'tab'       => 'advanced',
             'card'      => 'product_display',
         ];
-        $product_display_card[] = [
-            'id'        => 'store_ppp',
-            'title'     => __( 'Number of products displayed per page', 'dokan-lite' ),
-            'desc'      => __( 'Number of products that will be shown by default in your store page', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'number',
-            'default'   => 20,
-            'parent_id' => 'store',
-            'tab'       => 'advanced',
-            'card'      => 'product_display',
-        ];
         $product_display_card   = apply_filters( 'dokan_vendor_settings_api_product_display_card', $product_display_card );
         array_push( $advanced_tab, ...$product_display_card );
 

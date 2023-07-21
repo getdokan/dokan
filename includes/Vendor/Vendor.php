@@ -147,7 +147,6 @@ class Vendor {
             'gravatar'              => $this->get_avatar(),
             'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
-            'products_per_page'     => $this->get_per_page(),
             'show_more_product_tab' => $this->show_more_products_tab(),
             'toc_enabled'           => $this->toc_enabled(),
             'store_toc'             => $this->get_toc(),
@@ -233,7 +232,6 @@ class Vendor {
             'icon'                    => 0,
             'gravatar'                => 0,
             'show_more_ptab'          => 'yes',
-            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
@@ -487,23 +485,6 @@ class Vendor {
         $avatar_id = (int) $this->get_info_part( 'gravatar' );
 
         return $avatar_id ? $avatar_id : 0;
-    }
-
-    /**
-     * Get per page pagination
-     *
-     * @since 2.8
-     *
-     * @return integer
-     */
-    public function get_per_page() {
-        $per_page = (int) $this->get_info_part( 'store_ppp' );
-
-        if ( ! $per_page ) {
-            return 10;
-        }
-
-        return $per_page;
     }
 
     /**

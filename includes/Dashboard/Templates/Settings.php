@@ -609,7 +609,6 @@ class Settings {
             // Update store settings info.
             $dokan_settings = [
                 'store_name'               => isset( $_POST['dokan_store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_name'] ) ) : '',
-                'store_ppp'                => isset( $_POST['dokan_store_ppp'] ) ? absint( $_POST['dokan_store_ppp'] ) : 10,
                 'address'                  => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : $prev_dokan_settings['address'],
                 'location'                 => $location,
                 'find_address'             => $find_address,
