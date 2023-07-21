@@ -1265,3 +1265,25 @@ function dokan_modify_vendor_order_counts( $counts ) {
 }
 
 add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );
+
+
+/**
+ * PDF Invoices & Packing Slips for WooCommerce plugin integration on suborder section.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param $actions
+ * @param $order
+ *
+ * @return mixed
+ */
+function dokan_pdf_invoice_button( $actions, $order ) {
+    $woocommerce_all_actions = apply_filters( 'woocommerce_my_account_my_orders_actions', $actions, $order );
+
+    if ( isset( $woocommerce_all_actions['invoice'] ) ) {
+        $actions['action'] = $woocommerce_all_actions['invoice'];
+    }
+    return $actions;
+}
+
+add_filter( 'dokan_my_account_my_sub_orders_actions', 'dokan_pdf_invoice_button', 10, 2 ); // PDF invoice action button
