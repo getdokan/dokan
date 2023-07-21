@@ -442,7 +442,6 @@ class Settings {
                     'desc'    => __( 'Enable terms and conditions for vendor stores', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
-                    'tooltip' => __( 'Prompt terms and condition check for vendors when creating store on your site', 'dokan-lite' ),
                 ],
                 'store_products_per_page'            => [
                     'name'    => 'store_products_per_page',
