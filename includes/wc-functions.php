@@ -1071,11 +1071,11 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
  *
  * @param int|string $seller_id
- * @param int $posts_per_page
+ * @param int|string $posts_per_page
  *
  * @return void
  */
-function dokan_get_more_products_from_seller( $seller_id = 0, int $posts_per_page = 6 ) {
+function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 6 ) {
     global $product, $post;
 
     if ( $seller_id === 0 || 'more_seller_product' === $seller_id ) {
