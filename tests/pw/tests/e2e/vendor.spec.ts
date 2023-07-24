@@ -253,7 +253,7 @@ test.describe('Vendor functionality test 2', () => {
 		await vendorPage.editProduct({ ...data.product.simple, editProduct: productName });
 	});
 
-	test.only('vendor can quick edit product @pro', async ( ) => {
+	test('vendor can quick edit product @pro', async ( ) => {
 		await vendorPage.quickEditProduct({ ...data.product.simple, editProduct: productName });
 	});
 
