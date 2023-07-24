@@ -163,18 +163,6 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         </div>
     <?php endif; ?>
 
-    <div class="dokan-form-group">
-        <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'More products', 'dokan-lite' ); ?></label>
-        <div class="dokan-w5 dokan-text-left">
-            <div class="checkbox">
-                <label>
-                    <input type="hidden" name="setting_show_more_ptab" value="no">
-                    <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_more_ptab, 'yes' ); ?>> <?php esc_html_e( 'Enable tab on product single page view', 'dokan-lite' ); ?>
-                </label>
-            </div>
-        </div>
-    </div>
-
     <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
 
     <?php do_action( 'dokan_settings_before_store_map', $current_user, $profile_info ); ?>
