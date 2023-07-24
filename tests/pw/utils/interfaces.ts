@@ -839,6 +839,7 @@ export interface vendor {
 	}
 
 	payment: {
+		methodName: string;
 		email: () => string;
 		bankAccountName: string;
 		bankAccountType: string;

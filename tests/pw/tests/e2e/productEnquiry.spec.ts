@@ -41,8 +41,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Abuse report test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
-
 
 	test('customer can enquire product @pro', async ( ) => {
 		await productEnquiryCustomer.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);

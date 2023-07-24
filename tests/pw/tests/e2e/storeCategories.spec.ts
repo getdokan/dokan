@@ -22,7 +22,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Vendors test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	// store categories
 

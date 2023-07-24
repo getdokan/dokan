@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { payment } from 'utils/interfaces';
+import { payment, vendor } from 'utils/interfaces';
 
 
 export class PaymentsPage extends AdminPage {
@@ -11,7 +11,9 @@ export class PaymentsPage extends AdminPage {
 		super(page);
 	}
 
+
 	// Payment Methods
+
 
 	// Admin Setup Basic Payment Methods
 	async setupBasicPaymentMethods(payment: payment) {
@@ -215,6 +217,155 @@ export class PaymentsPage extends AdminPage {
 
 		await this.toContainText(selector.admin.wooCommerce.settings.updatedSuccessMessage, payment.saveSuccessMessage);
 	}
+
+
+	// vendor
+
+	// TODO: payment render properly
+
+
+	// vendor set basic payment settings
+	async setBasicPaymentSettings(payment: vendor['payment']): Promise<void> {
+		await this.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
+		await this.setBankTransfer(payment);
+		await this.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+		await this.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+	}
+
+
+	// set basic payment method [paypal, skrill, custom ]
+	async setBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+		switch (paymentMethod.methodName) {
+		case 'paypal' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
+			break;
+
+		case 'skrill' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.skrill);
+			break;
+
+		case 'custom' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.customPayment);
+			break;
+
+		default :
+			break;
+		}
+
+		await this.clearAndType(selector.vendor.vPaymentSettings.paymentEmail, paymentMethod.email());
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
+		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	}
+
+
+	// bank transfer payment settings
+	async setBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.bankTransfer);
+
+		await this.clickIfVisible(selector.vendor.vPaymentSettings.disconnectAccount);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountName, paymentMethod.bankAccountName);
+		await this.selectByValue(selector.vendor.vPaymentSettings.bankAccountType, paymentMethod.bankAccountType);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankAccountNumber, paymentMethod.bankAccountNumber);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankRoutingNumber, paymentMethod.bankRoutingNumber);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankName, paymentMethod.bankName);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankAddress, paymentMethod.bankAddress);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankIban, paymentMethod.bankIban);
+		await this.clearAndType(selector.vendor.vPaymentSettings.bankSwiftCode, paymentMethod.bankSwiftCode);
+		await this.check(selector.vendor.vSetup.declaration);
+
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.addAccount);
+		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	}
+
+
+	// disconnect basic payment method [paypal, skrill, custom ]
+	async disconnectBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+		switch (paymentMethod.methodName) {
+		case 'paypal' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
+			break;
+
+		case 'bank' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.bankTransfer);
+			break;
+
+		case 'skrill' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.skrill);
+			break;
+
+		case 'custom' :
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.customPayment);
+			break;
+
+		default :
+			break;
+		}
+
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.disconnectPayment);
+		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	}
+
+
+	// // paypal payment settings
+	// async setPaypal(paymentMethod: vendor['payment']): Promise<void> {
+	// 	await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.paypal, paymentMethod.email());
+	// 	await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
+	// 	await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	// }
+
+
+	// // skrill Payment Settings
+	// async setSkrill(paymentMethod: vendor['payment']): Promise<void> {
+
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.skrill, paymentMethod.email());
+	// 	await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
+	// 	await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	// }
+
+
+	// // custom payment settings
+	// async setCustom(paymentMethod: vendor['payment']): Promise<void> {
+
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.customPayment, paymentMethod.email());
+	// 	await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
+	// 	await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+	// }
+
+
+	// // stripe payment settings
+	// async setStripe(email): Promise<void> {
+	// // Stripe
+	// 	await this.click(selector.vendor.vPaymentSettings.ConnectWithStripe);
+	// }
+
+
+	// // paypal marketPlace payment settings
+	// async setPaypalMarketPlace(email): Promise<void> {
+	// 	 // paypal Marketplace
+	// 	 await this.clearAndType(selector.vendor.vPaymentSettings.paypalMarketplace, paypalMarketplace);
+	// 	 await this.click(selector.vendor.vPaymentSettings.paypalMarketplaceSignUp);
+	// }
+
+	// // razorpay payment settings
+	// async setRazorpay(razorpay): Promise<void> {
+	// 	// razorpay
+	// 	await this.click(selector.vendor.vPaymentSettings.rzSignup);
+	// 	// existing account info
+	// 	await this.click(selector.vendor.vPaymentSettings.rzIHaveAlreadyAnAccount);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountId, rzAccountId);
+	// 	await this.click(selector.vendor.vPaymentSettings.rzConnectExistingAccount);
+	// 	//new account info
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountName, rzAccountName);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzAccountEmail, rzAccountEmail);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzYourCompanyName, rzYourCompanyName);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzYourCompanyType, rzYourCompanyType);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountName, rzBankAccountName);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountNumber, rzBankAccountNumber);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzBankIfscCode, rzBankIfscCode);
+	// 	await this.clearAndType(selector.vendor.vPaymentSettings.rzBankAccountType, rzBankAccountType);
+	// 	await this.click(selector.vendor.vPaymentSettings.rzConnectAccount);
+	// }
 
 
 }

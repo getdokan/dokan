@@ -11,7 +11,6 @@ const PRODUCT_ID = '22';
 
 test.describe('Order functionality test', () => {
 
-	// test.use({ storageState: data.auth.vendorAuthFile });
 
 	let ordersPage: OrdersPage;
 	let vPage: Page;

@@ -33,7 +33,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Seller badge test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan seller badge menu page is rendering properly @pro @explo', async ( ) => {
 		await sellerBadgesAdmin.adminSellerBadgeRenderProperly();

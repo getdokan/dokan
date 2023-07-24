@@ -1067,6 +1067,7 @@ export const data = {
 		},
 
 		payment: {
+			methodName: '',
 			email: () => faker.internet.email(),
 			bankAccountName: 'accountName',
 			bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
@@ -1146,6 +1147,7 @@ export const data = {
 				skrill: 'Skrill',
 				bankTransfer: 'Bank Transfer',
 			},
+
 			preferredPaymentMethod: 'paypal',
 			preferredSchedule: 'weekly', // monthly,quarterly, biweekly,weekly
 			minimumWithdrawAmount: '5', // '0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'

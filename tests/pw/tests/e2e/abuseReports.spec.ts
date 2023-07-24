@@ -41,7 +41,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Abuse report test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan abuse report menu page is rendering properly @pro @explo', async ( ) => {
 		await abuseReportsAdmin.adminAbuseReportRenderProperly();

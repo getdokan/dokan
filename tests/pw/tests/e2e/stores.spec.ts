@@ -23,7 +23,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Stores test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	// stores
 

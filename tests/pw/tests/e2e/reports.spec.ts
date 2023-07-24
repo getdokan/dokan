@@ -25,7 +25,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Reports test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	// reports
 

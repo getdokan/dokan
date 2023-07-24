@@ -22,7 +22,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Announcements test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan announcements menu page is rendering properly @pro @explo', async ( ) => {
 		await announcementsPage.adminAnnouncementsRenderProperly();

@@ -5,9 +5,9 @@ import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
-// const { CUSTOMER_ID, PRODUCT_ID } = process.env;
-const CUSTOMER_ID = '2';
-const PRODUCT_ID = '22';
+
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+
 
 test.describe('Vendor user functionality test1', () => {
 
@@ -46,7 +46,6 @@ test.describe('Vendor user functionality test1', () => {
 
 test.describe('Vendor functionality test', () => {
 
-	// test.use({ storageState: data.auth.vendorAuthFile });
 
 	let vendorPage: VendorPage;
 	let vPage: Page;
@@ -94,30 +93,6 @@ test.describe('Vendor functionality test', () => {
 	test('vendor can add booking product @pro', async ( ) => {
 		await vendorPage.addBookingProduct(data.product.booking);
 	});
-
-
-	test('vendor can add payment method @lite @pro', async ( ) => {
-		await vendorPage.setPaymentSettings(data.vendor.payment);
-	});
-
-	test('vendor can request withdraw @lite @pro', async ( ) => {
-		await vendorPage.requestWithdraw(data.vendor.withdraw);
-	});
-
-	test('vendor can cancel request withdraw @lite @pro', async ( ) => {
-		await vendorPage.cancelRequestWithdraw( data.vendor.withdraw );
-	});
-
-	test.skip('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
-		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
-	});
-
-	test('vendor can add default withdraw payment methods @lite @pro', async ( ) => {
-		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
-		// Cleanup
-		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
-	});
-
 
 	test('vendor update account details @lite @pro', async ( ) => {
 		await vendorPage.setVendorDetails(data.vendor.vendorInfo);
@@ -185,9 +160,33 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.setRmaSettings(data.vendor.rma);
 	});
 
-
 	test('vendor can visit own Store @lite @pro', async ( ) => {
 		await vendorPage.visitStore(data.predefined.vendorStores.vendor1);
+	});
+
+
+	// withdraw
+
+	test('vendor withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
+		await vendorPage.vendorWithdrawRenderProperly();
+	});
+
+	test('vendor can request withdraw @lite @pro', async ( ) => {
+		await vendorPage.requestWithdraw(data.vendor.withdraw);
+	});
+
+	test('vendor can cancel request withdraw @lite @pro', async ( ) => {
+		await vendorPage.cancelWithdrawRequest( data.vendor.withdraw );
+	});
+
+	test.skip('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
+		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
+	});
+
+	test('vendor can add default withdraw payment methods @lite @pro', async ( ) => {
+		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
+		// Cleanup
+		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
 	});
 
 

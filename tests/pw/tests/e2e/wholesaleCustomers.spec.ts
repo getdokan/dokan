@@ -38,7 +38,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Wholesale customers test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan wholesale customers menu page is rendering properly @pro @explo', async ( ) => {
 		await wholesaleAdmin.adminWholesaleCustomersRenderProperly();

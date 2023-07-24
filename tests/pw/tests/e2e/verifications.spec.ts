@@ -19,7 +19,6 @@ test.afterAll(async ( ) => {
 test.describe('Verifications test', () => {
 	//TODO: need multiple verification request via admin
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('admin verifications menu page is rendering properly @pro @explo', async ( ) => {
 		await verificationsPage.adminVerificationsRenderProperly();

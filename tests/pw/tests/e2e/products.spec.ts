@@ -7,7 +7,6 @@ import { payloads } from 'utils/payloads';
 
 test.describe('Product functionality test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	let productsAdmin: ProductsPage;
 	let productsVendor: ProductsPage;

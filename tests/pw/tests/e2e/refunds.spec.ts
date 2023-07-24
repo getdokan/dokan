@@ -27,7 +27,6 @@ test.afterAll(async ( ) => {
 
 test.describe('refunds test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('admin refunds menu page is rendering properly @pro @explo', async ( ) => {
 		await refundsPage.adminRefundRequestsRenderProperly();

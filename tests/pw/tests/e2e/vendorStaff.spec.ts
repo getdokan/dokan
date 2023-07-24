@@ -27,7 +27,7 @@ test.describe('Vendor staff test', () => {
 		// 	meta:[
 		// 		{
 		// 			key: '_vendor_id'
-		// 			value: 
+		// 			value:
 		// 		}
 		// 	]
 		// };
@@ -39,7 +39,6 @@ test.describe('Vendor staff test', () => {
 		await vPage.close();
 	});
 
-	// test.use({ storageState: data.auth.vendorAuthFile });
 
 	test('vendor staff menu page is rendering properly @pro @explo', async ( ) => {
 		await vendorStaffPage.vendorStaffRenderProperly();

@@ -4536,6 +4536,22 @@ export const selector = {
 			addAccount: 'button.save.dokan-btn',
 			disconnectAccount: 'button.dokan_payment_disconnect_btn',
 
+			// Skrill
+			skrill: '//input[@name="settings[skrill][email]"]',
+
+			// Custom Payment Method
+			customPayment: '//input[@name="settings[dokan_custom][value]"]',
+
+			// payment email
+			paymentEmail: 'input.dokan-form-control',
+
+			// disconnect
+			disconnectPayment: '//button[normalize-space()="Disconnect"]',
+
+			// Update Settings
+			updateSettings: 'input.dokan-btn',
+			updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success p',
+
 			//Stripe
 			ConnectWithStripe: '.dokan-stripe-connect-link',
 
@@ -4617,6 +4633,7 @@ export const selector = {
 				submit: '#dokan-mp-bank-account-create',
 				cancel: '#dokan-mp-bank-account-cancel',
 			},
+
 			// Verification
 			kyc: {
 				documentType: '#dokan-kyc-file-type',
@@ -4643,15 +4660,7 @@ export const selector = {
 				submit: '#dokan-mangopay-submit-kyc',
 			},
 
-			// Custom Payment Method
-			customPayment: '//input[@name="settings[dokan_custom][value]"]',
 
-			// Skrill
-			skrill: '//input[@name="settings[skrill][email]"]',
-
-			// Update Settings
-			updateSettings: 'input.dokan-btn',
-			updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success p',
 		},
 
 		// Verification Settings

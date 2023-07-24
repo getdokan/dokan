@@ -45,7 +45,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Store Support test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan store support menu page is rendering properly @pro @explo', async ( ) => {
 		await storeSupportsAdmin.adminStoreSupportRenderProperly();

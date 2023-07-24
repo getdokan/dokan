@@ -22,7 +22,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Request for quotation test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	// quote rules
 

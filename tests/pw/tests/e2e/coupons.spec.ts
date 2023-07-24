@@ -9,7 +9,6 @@ const { PRODUCT_ID } = process.env;
 
 test.describe('Coupons test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	let couponsAdmin: CouponsPage;
 	let couponsVendor: CouponsPage;

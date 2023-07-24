@@ -35,7 +35,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Store Reviews test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan store reviews menu page is rendering properly @pro @explo', async ( ) => {
 		await storeReviewsAdmin.adminStoreReviewsRenderProperly();

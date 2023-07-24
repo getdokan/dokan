@@ -24,7 +24,6 @@ test.afterAll(async ( ) => {
 
 test.describe('Product Advertising test', () => {
 
-	// test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan product advertising menu page is rendering properly @pro @explo', async ( ) => {
 		await productAdvertisingPage.adminProductAdvertisingRenderProperly();
