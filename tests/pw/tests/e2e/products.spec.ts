@@ -1,17 +1,22 @@
 import { test, Page } from '@playwright/test';
 import { ProductsPage } from 'pages/productsPage';
+import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
+import { payloads } from 'utils/payloads';
 
 
-test.describe('Admin functionality test', () => {
+test.describe('Product functionality test', () => {
 
 	// test.use({ storageState: data.auth.adminAuthFile });
 
 	let productsAdmin: ProductsPage;
 	let productsVendor: ProductsPage;
 	let aPage: Page, vPage: Page;
+	let apiUtils: ApiUtils;
+	let productName: string;
 
-	test.beforeAll(async ({ browser }) => {
+
+	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
 		productsAdmin = new ProductsPage(aPage);
@@ -19,12 +24,18 @@ test.describe('Admin functionality test', () => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		productsVendor = new ProductsPage(vPage);
+
+		apiUtils = new ApiUtils(request);
+		[,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+
 	});
+
 
 	test.afterAll(async ( ) => {
 		await aPage.close();
 		await vPage.close();
 	});
+
 
 	test('admin can add product category @lite @pro', async ( ) => {
 		await productsAdmin.addCategory(data.product.category.randomCategory());
@@ -64,6 +75,59 @@ test.describe('Admin functionality test', () => {
 
 	test('admin can add booking product @pro', async ( ) => {
 		await productsAdmin.addBookingProduct(data.product.booking);
+	});
+
+
+	//vendors
+
+
+	test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
+		await productsVendor.vendorProductsRenderProperly();
+	});
+
+	test('vendor can export products @pro', async ( ) => {
+		await productsVendor.exportProducts();
+	});
+
+	test('vendor can search product @lite @pro', async ( ) => {
+		await productsVendor.searchProduct(data.predefined.simpleProduct.product1.name);
+	});
+
+	test('vendor can filter products by date @lite @pro', async ( ) => {
+		await productsVendor.filterProducts('by-date', '1');
+	});
+
+	test('vendor can filter products by category @lite @pro', async ( ) => {
+		await productsVendor.filterProducts('by-category', 'Uncategorized');
+	});
+
+	// test('vendor can filter products by type @lite @pro', async ( ) => { //TODO: dokan issue not fixed yet
+	// 	await productsVendor.filterProducts('by-other', 'simple');
+	// });
+
+	test('vendor can filter products by other @pro', async ( ) => {
+		await productsVendor.filterProducts('by-other', 'featured');
+	});
+
+	test('vendor can view product @lite @pro', async ( ) => {
+		await productsVendor.viewProduct(data.predefined.simpleProduct.product1.name);
+	});
+
+	test('vendor can edit product @lite @pro', async ( ) => {
+		await productsVendor.editProduct({ ...data.product.simple, editProduct: productName });
+	});
+
+	test('vendor can quick edit product @pro', async ( ) => {
+		await productsVendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
+	});
+
+	test('vendor can duplicate product @pro', async ( ) => {
+		await productsVendor.duplicateProduct(productName);
+	});
+
+	test('vendor can permanently delete product @lite @pro', async ( ) => {
+		const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+		await productsVendor.permanentlyDeleteProduct(productName);
 	});
 
 });

@@ -346,7 +346,7 @@ export const data = {
 		},
 		private:{
 			note:'test private order note',
-			noteType: 'Customer note',
+			noteType: 'Private note',
 		},
 
 	},

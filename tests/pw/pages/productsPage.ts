@@ -1,8 +1,13 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { product  } from 'utils/interfaces';
+import { helpers } from 'utils/helpers';
+import { product } from 'utils/interfaces';
+
+
+const { DOKAN_PRO } = process.env;
+
 
 export class ProductsPage extends AdminPage {
 
@@ -271,5 +276,185 @@ export class ProductsPage extends AdminPage {
 		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
+
+
+	//products
+
+
+	// products render properly
+	async vendorProductsRenderProperly(): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+
+		// product nav menus are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { draft, pendingReview, ...menus } = selector.vendor.product.menus;
+		await this.multipleElementVisible(menus);
+
+		// add new product is visible
+		await this.toBeVisible(selector.vendor.product.addNewProduct);
+
+		// import export is visible
+		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.product.importExport);
+
+		// product filters elements are visible
+		// await this.multipleElementVisible(selector.vendor.product.filters); //TODO: issue not fixed yet
+
+		// product search elements are visible
+		await this.multipleElementVisible(selector.vendor.product.search);
+
+		// bulk action elements are visible
+		await this.multipleElementVisible(selector.vendor.product.bulkActions);
+
+		// table elements are visible
+		await this.multipleElementVisible(selector.vendor.product.table);
+
+	}
+
+
+	//TODO: import product
+
+
+	// export product
+	async exportProducts(): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.csvExport, selector.vendor.product.importExport.export );
+		//TODO:
+	}
+
+
+	// search product
+	async searchProduct(productName: string): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+
+		await this.clearAndType(selector.vendor.product.search.searchInput, productName);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
+		await this.toBeVisible(selector.vendor.product.productLink(productName));
+	}
+
+
+	// filter products
+	async filterProducts(filterType: string, value: string): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+
+		switch(filterType){
+
+		case 'by-date' :
+			await this.selectByNumber(selector.vendor.product.filters.filterByDate, value);
+			break;
+
+		case 'by-category' :
+			await this.selectByLabel(selector.vendor.product.filters.filterByCategory, value);
+			break;
+
+		case 'by-type' :
+			await this.selectByValue(selector.vendor.product.filters.filterByType, value);
+			break;
+
+		case 'by-other' :
+			await this.selectByValue(selector.vendor.product.filters.filterByOther, value);
+			break;
+
+		default :
+			break;
+		}
+
+		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
+		await this.clickAndWaitForNavigation( selector.vendor.product.filters.filter);
+		await this.notToHaveCount(selector.vendor.product.numberOfRows, 0);
+
+	}
+
+
+	// view product
+	async viewProduct(productName: string): Promise<void> {
+		await this.searchProduct(productName);
+		await this.hover(selector.vendor.product.productCell(productName));
+		await this.clickAndWaitForNavigation(selector.vendor.product.view);
+		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
+	}
+
+
+	// edit product
+	async editProduct(product: product['simple']): Promise<void> {
+		await this.searchProduct(product.editProduct);
+		await this.hover(selector.vendor.product.productCell(product.editProduct));
+		await this.clickAndWaitForNavigation(selector.vendor.product.editProduct);
+
+		await this.clearAndType(selector.vendor.product.title, product.productName());
+		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
+		//TODO: add more fields
+
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
+	}
+
+
+	// quick edit product
+	async quickEditProduct(product: product['simple']): Promise<void> {
+		await this.searchProduct(product.editProduct);
+		await this.hover(selector.vendor.product.productCell(product.editProduct));
+		await this.click(selector.vendor.product.quickEdit);
+
+		await this.clearAndType(selector.vendor.product.title, product.productName());
+		//TODO: add more fields
+
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.saveProduct);
+
+	}
+
+
+	// duplicate product
+	async duplicateProduct(productName: string): Promise<void> {
+		await this.searchProduct(productName);
+		await this.hover(selector.vendor.product.productCell(productName));
+		await this.clickAndWaitForNavigation(selector.vendor.product.duplicate);
+		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
+
+	}
+
+
+	// permanently delete product
+	async permanentlyDeleteProduct(productName: string): Promise<void> {
+		await this.searchProduct(productName);
+		await this.hover(selector.vendor.product.productCell(productName));
+		await this.click(selector.vendor.product.permanentlyDelete);
+		await this.clickAndWaitForNavigation(selector.vendor.product.confirmAction);
+		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully deleted');
+
+	}
+
+
+	// product bulk action
+	async productBulkAction(action: string, productName?: string): Promise<void> {
+		if(productName){
+			await this.searchProduct(productName);  //TODO: use search like this for all
+		} else {
+			await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+		}
+
+		await this.click(selector.vendor.product.bulkActions.selectAll);
+		switch(action){
+
+		case 'edit' :
+			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
+			//TODO:
+			break;
+
+		case 'permanently-delete' :
+			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'permanently-delete');
+			break;
+
+		case 'publish' :
+			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'publish');
+			break;
+
+		default :
+			break;
+		}
+
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
+		//TODO:
+	}
+
 
 }

@@ -6,7 +6,7 @@ import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { helpers } from 'utils/helpers';
-import { product, vendor, vendorSetupWizard, orderNote, orderTrackingDetails, orderShipmentDetails } from 'utils/interfaces';
+import { product, vendor, vendorSetupWizard } from 'utils/interfaces';
 
 
 const { DOKAN_PRO } = process.env;
@@ -682,6 +682,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage, addon.saveSuccessMessage);
 	}
 
+
 	// vendor set payment settings
 	async setPaymentSettings(payment: vendor['payment']): Promise<void> {
 		await this.setPaypal(payment);
@@ -694,6 +695,7 @@ export class VendorPage extends BasePage {
 
 	}
 
+
 	// paypal payment settings
 	async setPaypal(paymentMethod: vendor['payment']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
@@ -703,6 +705,7 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
 		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
 	}
+
 
 	// bank transfer payment settings
 	async setBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
@@ -758,6 +761,7 @@ export class VendorPage extends BasePage {
 	//     await this.click(selector.vendor.vPaymentSettings.rzConnectAccount)
 	// }
 
+
 	// custom payment settings
 	async setCustom(paymentMethod: vendor['payment']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.customPayment);
@@ -768,6 +772,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
 	}
 
+
 	// skrill Payment Settings
 	async setSkrill(paymentMethod: vendor['payment']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.skrill);
@@ -777,6 +782,7 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vPaymentSettings.updateSettings);
 		await this.toContainText(selector.vendor.vPaymentSettings.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
 	}
+
 
 	// vendor send id verification request
 	async sendIdVerificationRequest(verification: vendor['verification']): Promise<void> {
@@ -804,6 +810,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vVerificationSettings.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
 	}
 
+
 	// vendor send address verification request
 	async sendAddressVerificationRequest(verification: vendor['verification']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
@@ -827,6 +834,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vVerificationSettings.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
 	}
 
+
 	// vendor send company verification request
 	async sendCompanyVerificationRequest(verification: vendor['verification']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
@@ -849,6 +857,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vVerificationSettings.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
 	}
 
+
 	// upload media
 	async uploadMedia(file: string) { //TODO: move uploadMedia to base page, try to make only one function for media upload for whole project
 		const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMedia);
@@ -861,12 +870,14 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set verification settings
 	async setVerificationSettings(verification: vendor['verification']): Promise<void> {
 		await this.sendIdVerificationRequest(verification);
 		await this.sendAddressVerificationRequest(verification);
 		await this.sendCompanyVerificationRequest(verification);
 	}
+
 
 	// vendor set delivery settings
 	async setDeliveryTimeSettings(deliveryTime: vendor['deliveryTime']): Promise<void> {
@@ -999,6 +1010,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vShippingSettings.updateSettingsSuccessMessage, shipping.saveSuccessMessage);
 	}
 
+
 	// vendor set social profile settings
 	async setSocialProfile(urls: vendor['socialProfileUrls']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSocialProfile);
@@ -1013,6 +1025,7 @@ export class VendorPage extends BasePage {
 		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
 		await this.toContainText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage, urls.saveSuccessMessage);
 	}
+
 
 	// vendor set rma settings
 	async setRmaSettings(rma: vendor['rma']): Promise<void> {
@@ -1032,7 +1045,9 @@ export class VendorPage extends BasePage {
 		await expect(this.page.getByText(rma.saveSuccessMessage)).toBeVisible();
 	}
 
+
 	// vendor functions
+
 
 	// vendor approve product review
 	async approveProductReview(reviewMessage: string): Promise<void> {
@@ -1050,6 +1065,7 @@ export class VendorPage extends BasePage {
 		// expect(reviewIsVisible).toBe(true);
 		await this.toBeVisible(selector.vendor.vReviews.reviewRow(reviewMessage));
 	}
+
 
 	// vendor approve return request
 	async approveReturnRequest(orderId: string, productName: string): Promise<void> {
@@ -1074,6 +1090,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vReturnRequest.sendRequestSuccessMessage, 'Already send refund request. Wait for admin approval' );
 	}
 
+
 	// delete return request
 	async deleteReturnRequest(orderId: string): Promise<void> {
 		await this.goToVendorDashboard();
@@ -1083,6 +1100,7 @@ export class VendorPage extends BasePage {
 		const successMessage = await this.getElementText(selector.customer.cWooSelector.wooCommerceSuccessMessage);
 		expect(successMessage).toMatch('Return Request has been deleted successfully');
 	}
+
 
 	// add quantity discount
 	async addQuantityDiscount(productName: string, minimumQuantity: string, discountPercentage: string): Promise<void> {
@@ -1119,17 +1137,6 @@ export class VendorPage extends BasePage {
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(data.product.createUpdateSaveSuccessMessage);
 	}
 
-	// vendor change order status
-	async changeOrderStatus(orderNumber: string, orderStatus: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-		//change order status
-		await this.click(selector.vendor.orders.orderLink(orderNumber));
-		await this.click(selector.vendor.orders.edit);
-		await this.selectByValue(selector.vendor.orders.orderStatus, orderStatus);
-		await this.click(selector.vendor.orders.updateOrderStatus);
-		const currentOrderStatus = await this.getElementText(selector.vendor.orders.currentOrderStatus);
-		expect(currentOrderStatus?.toLowerCase()).toMatch((orderStatus.replace(/(^wc)|(\W)/g, '')).toLowerCase());
-	}
 
 	// // vendor refund order
 	// async refundOrder(orderNumber: string, productName: string, partialRefund = false): Promise<void> {
@@ -1208,49 +1215,6 @@ export class VendorPage extends BasePage {
 	}
 
 
-	//products
-
-
-	// products render properly
-	async vendorProductsRenderProperly(): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-
-		// product nav menus are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { draft, pendingReview, ...menus } = selector.vendor.product.menus;
-		await this.multipleElementVisible(menus);
-
-		// add new product is visible
-		await this.toBeVisible(selector.vendor.product.addNewProduct);
-
-		// import export is visible
-		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.product.importExport);
-
-		// product filters elements are visible
-		// await this.multipleElementVisible(selector.vendor.product.filters); //TODO: issue not fixed yet
-
-		// product search elements are visible
-		await this.multipleElementVisible(selector.vendor.product.search);
-
-		// bulk action elements are visible
-		await this.multipleElementVisible(selector.vendor.product.bulkActions);
-
-		// table elements are visible
-		await this.multipleElementVisible(selector.vendor.product.table);
-
-	}
-
-	//TODO: import product
-
-
-	// export product
-	async exportProducts(): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.csvExport, selector.vendor.product.importExport.export );
-		//TODO:
-	}
-
-
 	// search product
 	async searchProduct(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
@@ -1258,347 +1222,6 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.product.search.searchInput, productName);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
 		await this.toBeVisible(selector.vendor.product.productLink(productName));
-	}
-
-
-	// filter products
-	async filterProducts(filterType: string, value: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-
-		switch(filterType){
-
-		case 'by-date' :
-			await this.selectByNumber(selector.vendor.product.filters.filterByDate, value);
-			break;
-
-		case 'by-category' :
-			await this.selectByLabel(selector.vendor.product.filters.filterByCategory, value);
-			break;
-
-		case 'by-type' :
-			await this.selectByValue(selector.vendor.product.filters.filterByType, value);
-			break;
-
-		case 'by-other' :
-			await this.selectByValue(selector.vendor.product.filters.filterByOther, value);
-			break;
-
-		default :
-			break;
-		}
-
-		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-		await this.clickAndWaitForNavigation( selector.vendor.product.filters.filter);
-		await this.notToHaveCount(selector.vendor.product.numberOfRows, 0);
-
-	}
-
-
-	// view product
-	async viewProduct(productName: string): Promise<void> {
-		await this.searchProduct(productName);
-		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndWaitForNavigation(selector.vendor.product.view);
-		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
-	}
-
-
-	// edit product
-	async editProduct(product: product['simple']): Promise<void> {
-		await this.searchProduct(product.editProduct);
-		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.clickAndWaitForNavigation(selector.vendor.product.editProduct);
-
-		await this.clearAndType(selector.vendor.product.title, product.productName());
-		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
-		//TODO: add more fields
-
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-		await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
-	}
-
-
-	// quick edit product
-	async quickEditProduct(product: product['simple']): Promise<void> {
-		await this.searchProduct(product.editProduct);
-		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.click(selector.vendor.product.quickEdit);
-
-		await this.clearAndType(selector.vendor.product.title, product.productName());
-		//TODO: add more fields
-
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.saveProduct);
-
-	}
-
-
-	// duplicate product
-	async duplicateProduct(productName: string): Promise<void> {
-		await this.searchProduct(productName);
-		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndWaitForNavigation(selector.vendor.product.duplicate);
-		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
-
-	}
-
-
-	// permanently delete product
-	async permanentlyDeleteProduct(productName: string): Promise<void> {
-		await this.searchProduct(productName);
-		await this.hover(selector.vendor.product.productCell(productName));
-		await this.click(selector.vendor.product.permanentlyDelete);
-		await this.clickAndWaitForNavigation(selector.vendor.product.confirmAction);
-		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully deleted');
-
-	}
-
-
-	// product bulk action
-	async productBulkAction(action: string, productName?: string): Promise<void> {
-		if(productName){
-			await this.searchProduct(productName);  //TODO: use search like this for all
-		} else {
-			await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-		}
-
-		await this.click(selector.vendor.product.bulkActions.selectAll);
-		switch(action){
-
-		case 'edit' :
-			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
-			//TODO:
-			break;
-
-		case 'permanently-delete' :
-			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'permanently-delete');
-			break;
-
-		case 'publish' :
-			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'publish');
-			break;
-
-		default :
-			break;
-		}
-
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
-		//TODO:
-	}
-
-
-	// orders
-
-
-	// orders render properly
-	async vendorOrdersRenderProperly(): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-
-		// order nav menus are visible
-		await this.multipleElementVisible(selector.vendor.orders.menus);
-
-		// export elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.export);
-
-		// order filters elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { filterByCustomer,  ...filters } = selector.vendor.orders.filters;
-		await this.multipleElementVisible(filters); //todo: add dropdown selector
-
-		// order search elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.search);
-
-		// bulk action elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.bulkActions);
-
-		// table elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.table);
-	}
-
-
-	// export product
-	async exportOrders(type: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-
-		switch(type){
-
-		case 'all' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportAll );
-			break;
-
-		case 'filtered' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportFiltered );
-			break;
-
-		default :
-			break;
-		}
-	}
-
-
-	// search order
-	async searchOrder(orderNumber: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-
-		await this.clearAndType(selector.vendor.orders.search.searchInput, orderNumber);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.search.searchBtn);
-		await this.toBeVisible(selector.vendor.orders.orderLink(orderNumber));
-	}
-
-
-	// filter orders
-	async filterOrders(filterType: string, value: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-
-		switch(filterType){
-
-		case 'by-customer' :
-			await this.click(selector.vendor.orders.filters.filterByCustomer.dropDown);
-			await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.filters.filterByCustomer.input, value);
-			await this.click(selector.vendor.orders.filters.filterByCustomer.searchedResult);
-			break;
-
-		case 'by-date' :
-			// await this.selectByLabel(selector.vendor.orders.filters.filterByDate, value); //TODO
-			break;
-
-		default :
-			break;
-		}
-
-		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-		await this.clickAndWaitForNavigation( selector.vendor.orders.filters.filter);
-		await this.notToHaveCount(selector.vendor.orders.numberOfRows, 0);
-
-	}
-
-
-	// go to order details
-	async goToOrderDetails(orderNumber: string): Promise<void> {
-		await this.searchOrder(orderNumber);
-		await this.clickAndWaitForNavigation(selector.vendor.orders.view(orderNumber));
-		await this.toContainText(selector.vendor.orders.orderNumber, orderNumber);
-	}
-
-
-	// view order details
-	async viewOrderDetails(orderNumber: string): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		//TODO: add more files to assert
-	}
-
-
-	// update order status on table
-	async updateOrderStatusOnTable(orderNumber: string, status: string): Promise<void> {
-		await this.searchOrder(orderNumber);
-		switch(status){
-
-		case 'processing' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.processing(orderNumber), 302);
-			await this.notToBeVisible(selector.vendor.orders.processing(orderNumber));
-			break;
-
-		case 'complete' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.complete(orderNumber), 302);
-			await this.notToBeVisible(selector.vendor.orders.complete(orderNumber));
-			break;
-
-		default :
-			break;
-		}
-	}
-
-
-	// update order status
-	async updateOrderStatus(orderNumber: string, status: string): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		await this.click(selector.vendor.orders.edit);
-		await this.selectByValue(selector.vendor.orders.orderStatus, status);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.updateOrderStatus);
-		const currentStatus = await this.getElementText( selector.vendor.orders.currentOrderStatus);
-		expect(currentStatus?.toLowerCase()).toBe(status.split('-').pop());
-	}
-
-
-	// add order note
-	async addOrderNote(orderNumber: string, orderNote: orderNote): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
-		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
-	}
-
-
-	// add tracking details
-	async addTrackingDetails(orderNumber: string, orderTrackingDetails: orderTrackingDetails): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
-		await this.clearAndType(selector.vendor.orders.trackingDetails.shippingProvider, orderTrackingDetails.shippingProvider);
-		await this.clearAndType(selector.vendor.orders.trackingDetails.trackingNumber, orderTrackingDetails.trackingNumber);
-		// await this.clearAndType(selector.vendor.orders.trackingDetails.dateShipped, orderTrackingDetails.dateShipped); //TODO: grab site date formate and based on that create date value
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.trackingDetails.addTrackingDetails);
-	}
-
-	// add shipment
-	async addShipment(orderNumber: string, shipmentDetails: orderShipmentDetails): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		await this.click(selector.vendor.orders.shipment.createNewShipment);
-		await this.click(selector.vendor.orders.shipment.shipmentOrderItem(shipmentDetails.shipmentOrderItem));
-		await this.clearAndType(selector.vendor.orders.shipment.shipmentOrderItemQty(shipmentDetails.shipmentOrderItem), shipmentDetails.shipmentOrderItemQty );
-		await this.selectByValue(selector.vendor.orders.shipment.shippingStatus, shipmentDetails.shippingStatus);
-		await this.selectByValue(selector.vendor.orders.shipment.shippingProvider, shipmentDetails.shippingProvider);
-		// await this.clearAndType(selector.vendor.orders.shipment.dateShipped, shipmentDetails.dateShipped); //TODO: grab site date formate and based on that create date value
-		await this.clearAndType(selector.vendor.orders.shipment.trackingNumber, shipmentDetails.shippingProvider);
-		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
-		await this.click(selector.vendor.orders.shipment.notifyCustomer);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.shipment.createShipment);
-	}
-
-
-	// add Downloadable Product
-	async addDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
-		await this.press(data.key.enter);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess);
-	}
-
-	// add Downloadable Product
-	async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-		// await this.addDownloadableProduct(orderNumber, downloadableProductName); // todo: do it via api
-		await this.click(selector.vendor.orders.downloadableProductPermission.revokeAccess);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.confirmAction);
-	}
-
-
-	// order bulk action
-	async orderBulkAction(action: string, orderNumber?: string): Promise<void> {
-		if(orderNumber){
-			await this.searchOrder(orderNumber);  //TODO: use search like this for all
-		} else {
-			await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-		}
-
-		await this.click(selector.vendor.orders.bulkActions.selectAll);
-		switch(action){
-
-		case 'onhold' :
-			await this.selectByValue(selector.vendor.orders.bulkActions.selectAction, 'wc-on-hold');
-			break;
-
-		case 'processing' :
-			await this.selectByValue(selector.vendor.orders.bulkActions.selectAction, 'wc-processing');
-			break;
-
-		case 'completed' :
-			await this.selectByValue(selector.vendor.orders.bulkActions.selectAction, 'wc-completed');
-			break;
-
-		default :
-			break;
-		}
-
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.bulkActions.applyAction);
-		//TODO:
 	}
 
 
