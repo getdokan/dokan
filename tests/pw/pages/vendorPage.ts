@@ -6,7 +6,7 @@ import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { helpers } from 'utils/helpers';
-import { product, vendor, vendorSetupWizard  } from 'utils/interfaces';
+import { product, vendor, vendorSetupWizard, orderNote, orderTrackingDetails, orderShipmentDetails } from 'utils/interfaces';
 
 
 const { DOKAN_PRO } = process.env;
@@ -1472,15 +1472,22 @@ export class VendorPage extends BasePage {
 	}
 
 
-	// view order
-	async viewOrder(orderNumber: string): Promise<void> {
+	// go to order details
+	async goToOrderDetails(orderNumber: string): Promise<void> {
 		await this.searchOrder(orderNumber);
 		await this.clickAndWaitForNavigation(selector.vendor.orders.view(orderNumber));
 		await this.toContainText(selector.vendor.orders.orderNumber, orderNumber);
 	}
 
 
-	// update order status
+	// view order details
+	async viewOrderDetails(orderNumber: string): Promise<void> {
+		await this.goToOrderDetails(orderNumber);
+		//TODO: add more files to assert
+	}
+
+
+	// update order status on table
 	async updateOrderStatusOnTable(orderNumber: string, status: string): Promise<void> {
 		await this.searchOrder(orderNumber);
 		switch(status){
@@ -1503,12 +1510,63 @@ export class VendorPage extends BasePage {
 
 	// update order status
 	async updateOrderStatus(orderNumber: string, status: string): Promise<void> {
-		await this.viewOrder(orderNumber);
+		await this.goToOrderDetails(orderNumber);
 		await this.click(selector.vendor.orders.edit);
 		await this.selectByValue(selector.vendor.orders.orderStatus, status);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.updateOrderStatus);
 		const currentStatus = await this.getElementText( selector.vendor.orders.currentOrderStatus);
 		expect(currentStatus?.toLowerCase()).toBe(status.split('-').pop());
+	}
+
+
+	// add order note
+	async addOrderNote(orderNumber: string, orderNote: orderNote): Promise<void> {
+		await this.goToOrderDetails(orderNumber);
+		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
+		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
+	}
+
+
+	// add tracking details
+	async addTrackingDetails(orderNumber: string, orderTrackingDetails: orderTrackingDetails): Promise<void> {
+		await this.goToOrderDetails(orderNumber);
+		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
+		await this.clearAndType(selector.vendor.orders.trackingDetails.shippingProvider, orderTrackingDetails.shippingProvider);
+		await this.clearAndType(selector.vendor.orders.trackingDetails.trackingNumber, orderTrackingDetails.trackingNumber);
+		// await this.clearAndType(selector.vendor.orders.trackingDetails.dateShipped, orderTrackingDetails.dateShipped); //TODO: grab site date formate and based on that create date value
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.trackingDetails.addTrackingDetails);
+	}
+
+	// add shipment
+	async addShipment(orderNumber: string, shipmentDetails: orderShipmentDetails): Promise<void> {
+		await this.goToOrderDetails(orderNumber);
+		await this.click(selector.vendor.orders.shipment.createNewShipment);
+		await this.click(selector.vendor.orders.shipment.shipmentOrderItem(shipmentDetails.shipmentOrderItem));
+		await this.clearAndType(selector.vendor.orders.shipment.shipmentOrderItemQty(shipmentDetails.shipmentOrderItem), shipmentDetails.shipmentOrderItemQty );
+		await this.selectByValue(selector.vendor.orders.shipment.shippingStatus, shipmentDetails.shippingStatus);
+		await this.selectByValue(selector.vendor.orders.shipment.shippingProvider, shipmentDetails.shippingProvider);
+		// await this.clearAndType(selector.vendor.orders.shipment.dateShipped, shipmentDetails.dateShipped); //TODO: grab site date formate and based on that create date value
+		await this.clearAndType(selector.vendor.orders.shipment.trackingNumber, shipmentDetails.shippingProvider);
+		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
+		await this.click(selector.vendor.orders.shipment.notifyCustomer);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.shipment.createShipment);
+	}
+
+
+	// add Downloadable Product
+	async addDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
+		await this.goToOrderDetails(orderNumber);
+		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
+		await this.press(data.key.enter);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess);
+	}
+
+	// add Downloadable Product
+	async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
+		// await this.addDownloadableProduct(orderNumber, downloadableProductName); // todo: do it via api
+		await this.click(selector.vendor.orders.downloadableProductPermission.revokeAccess);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.confirmAction);
 	}
 
 

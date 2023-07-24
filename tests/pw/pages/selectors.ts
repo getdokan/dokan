@@ -3476,6 +3476,7 @@ export const selector = {
 			complete: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='Complete']`,
 			view: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='View']`,
 
+
 			// Edit Order Status
 			currentOrderStatus: '.order-status .dokan-label',
 			selectedOrderStatus: '//select[@id="order_status"]//option[@selected="selected"]',
@@ -3514,6 +3515,50 @@ export const selector = {
 			refundRequestSuccessMessage: '#swal2-html-container',
 			refundRequestSuccessMessageOk: '.swal2-confirm.swal2-styled.swal2-default-outline',
 			cancelRefund: '.dokan-btn.cancel-action',
+
+			// add note
+			orderNote: {
+				orderNoteInput: '#add-note-content',
+				orderNoteType: '#order_note_type', // Customer note, Private note
+				addNote: 'input[value="Add Note"]',
+			},
+
+			// tracking number
+			trackingDetails:{
+				addTrackingNumber: '#dokan-add-tracking-number',
+				shippingProvider: '#shipping_provider',
+				trackingNumber: '#tracking_number',
+				dateShipped: '#shipped-date',
+				addTrackingDetails: '#add-tracking-details',
+				cancelAddTrackingDetails: '#dokan-cancel-tracking-note'
+			},
+
+			//shipment
+			shipment:{
+				createNewShipment: '#create-tracking-status-action',
+				shipmentOrderItem: (productName: string) => `//div[@id="dokan-order-shipping-status-tracking-panel"]//td//a[contains( text(),"${productName}")]/../..//input[@name="shipment_order_item_select"]`,
+				shipmentOrderItemQty: (productName: string) => `//div[@id="dokan-order-shipping-status-tracking-panel"]//td//a[contains( text(),"${productName}")]/../..//input[@class="shipping_order_item_qty"]`,
+				shippingStatus: '#shipping_status', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
+				shippingProvider: '#shipping_status_provider', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
+				dateShipped: '#shipped_status_date',
+				trackingNumber: '#tracking_status_number',
+				comments: '#tracking_status_comments',
+				notifyCustomer: '#shipped_status_is_notify',
+				createShipment: '#add-tracking-status-details',
+				cancelCreateShipment: '#cancel-tracking-status-details',
+			},
+
+			downloadableProductPermission: {
+				downloadableProductInput: '.select2-search__field',
+				grantAccess: '.grant_access',
+				revokeAccess: '.revoke_access',
+
+				confirmAction: '.swal2-actions .swal2-confirm',
+				cancelAction: '.swal2-actions .swal2-cancel',
+
+			},
+
+
 		},
 
 		// User Subscriptions

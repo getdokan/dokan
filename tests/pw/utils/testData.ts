@@ -338,6 +338,38 @@ export const data = {
 		},
 	},
 
+	// order  Note
+	orderNote:{
+		customer:{
+			note:'test order note',
+			noteType: 'Customer note',
+		},
+		private:{
+			note:'test private order note',
+			noteType: 'Customer note',
+		},
+
+	},
+
+
+	// order Tracking Details
+	orderTrackingDetails:{
+		shippingProvider: 'test shipping provider',
+		trackingNumber: '1234567890',
+		dateShipped: 'July 4, 2023' //TODO: f y, j
+	},
+
+	// order Shipment Details
+	orderShipmentDetails: {
+		shipmentOrderItem: 'p1_v1 (simple)',
+		shipmentOrderItemQty: '1',
+		shippingStatus: 'ss_proceccing', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
+		shippingProvider: 'sp-dhl', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
+		dateShipped: 'July 4, 2023', //TODO: f y, j
+		trackingNumber: '1234567890',
+		comments: 'test shipment comment'
+	},
+
 
 	// card
 	card: {

@@ -291,6 +291,27 @@ export interface order {
 	}
 }
 
+export interface orderNote {
+		note: string;
+		noteType: string;
+}
+
+export interface orderTrackingDetails {
+	shippingProvider: string;
+	trackingNumber: string;
+	dateShipped: string;
+}
+
+export interface orderShipmentDetails {
+	shipmentOrderItem: string;
+	shipmentOrderItemQty: string;
+	shippingStatus: string;
+	shippingProvider: string;
+	dateShipped: string;
+	trackingNumber: string;
+	comments: string;
+}
+
 
 // payment details
 export interface paymentDetails {

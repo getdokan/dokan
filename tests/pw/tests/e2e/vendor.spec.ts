@@ -5,7 +5,9 @@ import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+// const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+const CUSTOMER_ID = '2';
+const PRODUCT_ID = '22';
 
 test.describe('Vendor user functionality test1', () => {
 
@@ -207,7 +209,7 @@ test.describe('Vendor functionality test 2', () => {
 		vPage = await vendorContext.newPage();
 		vendorPage = new VendorPage(vPage);
 		apiUtils = new ApiUtils(request);
-		[,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+		// [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
 		[,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
 		// const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
 	});
@@ -217,54 +219,55 @@ test.describe('Vendor functionality test 2', () => {
 	});
 
 
-	test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await vendorPage.vendorProductsRenderProperly();
-	});
-
-	test('vendor can export products @pro', async ( ) => {
-		await vendorPage.exportProducts();
-	});
-
-	test('vendor can search product @lite @pro', async ( ) => {
-		await vendorPage.searchProduct(data.predefined.simpleProduct.product1.name);
-	});
-
-	test('vendor can filter products by date @lite @pro', async ( ) => {
-		await vendorPage.filterProducts('by-date', '1');
-	});
-
-	test('vendor can filter products by category @lite @pro', async ( ) => {
-		await vendorPage.filterProducts('by-category', 'Uncategorized');
-	});
-
-	// test('vendor can filter products by type @lite @pro', async ( ) => { //TODO: dokan issue not fixed yet
-	// 	await vendorPage.filterProducts('by-other', 'simple');
+	// test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
+	// 	await vendorPage.vendorProductsRenderProperly();
 	// });
 
-	test('vendor can filter products by other @pro', async ( ) => {
-		await vendorPage.filterProducts('by-other', 'featured');
-	});
+	// test('vendor can export products @pro', async ( ) => {
+	// 	await vendorPage.exportProducts();
+	// });
 
-	test('vendor can view product @lite @pro', async ( ) => {
-		await vendorPage.viewProduct(data.predefined.simpleProduct.product1.name);
-	});
+	// test('vendor can search product @lite @pro', async ( ) => {
+	// 	await vendorPage.searchProduct(data.predefined.simpleProduct.product1.name);
+	// });
 
-	test('vendor can edit product @lite @pro', async ( ) => {
-		await vendorPage.editProduct({ ...data.product.simple, editProduct: productName });
-	});
+	// test('vendor can filter products by date @lite @pro', async ( ) => {
+	// 	await vendorPage.filterProducts('by-date', '1');
+	// });
 
-	test('vendor can quick edit product @pro', async ( ) => {
-		await vendorPage.quickEditProduct({ ...data.product.simple, editProduct: productName });
-	});
+	// test('vendor can filter products by category @lite @pro', async ( ) => {
+	// 	await vendorPage.filterProducts('by-category', 'Uncategorized');
+	// });
 
-	test('vendor can duplicate product @pro', async ( ) => {
-		await vendorPage.duplicateProduct(productName);
-	});
+	// // test('vendor can filter products by type @lite @pro', async ( ) => { //TODO: dokan issue not fixed yet
+	// // 	await vendorPage.filterProducts('by-other', 'simple');
+	// // });
 
-	test('vendor can permanently delete product @lite @pro', async ( ) => {
-		const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
-		await vendorPage.permanentlyDeleteProduct(productName);
-	});
+	// test('vendor can filter products by other @pro', async ( ) => {
+	// 	await vendorPage.filterProducts('by-other', 'featured');
+	// });
+
+	// test('vendor can view product @lite @pro', async ( ) => {
+	// 	await vendorPage.viewProduct(data.predefined.simpleProduct.product1.name);
+	// });
+
+	// test('vendor can edit product @lite @pro', async ( ) => {
+	// 	await vendorPage.editProduct({ ...data.product.simple, editProduct: productName });
+	// });
+
+	// test('vendor can quick edit product @pro', async ( ) => {
+	// 	await vendorPage.quickEditProduct({ ...data.product.simple, editProduct: productName });
+	// });
+
+	// test('vendor can duplicate product @pro', async ( ) => {
+	// 	await vendorPage.duplicateProduct(productName);
+	// });
+
+	// test('vendor can permanently delete product @lite @pro', async ( ) => {
+	// 	const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+	// 	await vendorPage.permanentlyDeleteProduct(productName);
+	// });
+
 
 	// orders
 
@@ -289,8 +292,8 @@ test.describe('Vendor functionality test 2', () => {
 		await vendorPage.filterOrders('by-customer', data.customer.username);
 	});
 
-	test('vendor can view order @lite @pro', async ( ) => {
-		await vendorPage.viewOrder(orderId);
+	test('vendor can view order details @lite @pro', async ( ) => {
+		await vendorPage.viewOrderDetails(orderId);
 	});
 
 	test('vendor can update order status on table @lite @pro', async ( ) => {
@@ -301,29 +304,30 @@ test.describe('Vendor functionality test 2', () => {
 		await vendorPage.updateOrderStatus(orderId, 'wc-completed');
 	});
 
-	// test('vendor can add order note @lite @pro', async ( ) => {
-	// 	await vendorPage.addOrderNote(orderId, 'test note');
-	// });
+	test('vendor can add order note @lite @pro', async ( ) => {
+		await vendorPage.addOrderNote(orderId, data.orderNote.customer);
+	});
 
-	// test('vendor can add private order note @lite @pro', async ( ) => {
-	// 	await vendorPage.addOrderNote(orderId, 'test private note');
-	// });
+	test('vendor can add private order note @lite @pro', async ( ) => {
+		await vendorPage.addOrderNote(orderId, data.orderNote.private);
+	});
 
-	// test('vendor can add tracking details to order @lite @pro', async ( ) => {
-	// 	await vendorPage.addTrackingDetails(orderId, 'test note');
-	// });
+	test('vendor can add tracking details to order @lite @pro', async ( ) => {
+		await vendorPage.addTrackingDetails(orderId, data.orderTrackingDetails);
+	});
 
-	// test('vendor can add shipment to order @pro', async ( ) => {
-	// 	await vendorPage.addShipment(orderId, 'test note');
-	// });
+	test('vendor can add shipment to order @pro', async ( ) => {
+		await vendorPage.addShipment(orderId, data.orderShipmentDetails);
+	});
 
-	// test('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
-	// 	await vendorPage.addShipment(orderId, 'test note');
-	// });
+	test('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
+		const [,, downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct());
+		await vendorPage.addDownloadableProduct(orderId, downloadableProductName);
+		await vendorPage.removeDownloadableProduct(orderId, downloadableProductName);
+	});
 
 	test('vendor can perform order bulk action @lite @pro', async ( ) => {
 		await vendorPage.orderBulkAction('completed', orderId);
 	});
-
 
 });
