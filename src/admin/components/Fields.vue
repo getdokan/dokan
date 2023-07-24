@@ -501,6 +501,10 @@
                     this.checked = value;
                 }
             });
+
+            if ( this.fieldValue && this.fieldData.auto_open ) {
+                this.expandSocials = true;
+            }
         },
 
         computed: {
@@ -547,6 +551,13 @@
                             case 'contains':
                                 if ( ! Object.values( dependencyValue ).includes( value ) ) {
                                     shouldShow = false;
+                                }
+                                break;
+
+                            case 'contains-any':
+                                // Check if any item from value exists in dependencyValue
+                                if ( ! value.some(item => Object.values( dependencyValue ).includes(item)) ) {
+                                    return false;
                                 }
                                 break;
 

@@ -96,7 +96,7 @@ export default {
             set (data) {
                 this.fieldValue[this.fieldData.name] = data;
             }
-        }
+        },
     },
 
     methods: {
