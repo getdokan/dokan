@@ -163,6 +163,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         </div>
     <?php endif; ?>
 
+    <?php do_action( 'dokan_settings_after_store_email', $current_user, $profile_info ); ?>
+
     <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
 
     <?php do_action( 'dokan_settings_before_store_map', $current_user, $profile_info ); ?>
