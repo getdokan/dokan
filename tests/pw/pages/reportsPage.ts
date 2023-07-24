@@ -111,7 +111,7 @@ export class ReportsPage extends AdminPage {
 	async filterAllLogsByStatus(orderStatus: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);
+		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);  //TODO: add multiselect option
 		await this.clearAndType( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
 

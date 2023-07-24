@@ -259,6 +259,7 @@ export class RequestForQuotationsPage extends AdminPage {
 	async convertQuoteToOrder(quoteTitle: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuote);
 
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.approveQuote);
 		await this.hover(selector.admin.dokan.requestForQuotation.quotesList.quoteCell(quoteTitle));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.quoteEdit(quoteTitle));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.convertToOrder);

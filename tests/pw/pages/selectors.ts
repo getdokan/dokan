@@ -814,6 +814,7 @@ export const selector = {
 					quotePermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
 					quoteRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
+					approveQuote: 'input[value="Approve Quote"]',
 					convertToOrder: 'input[value="Convert to Order"]',
 
 					addNewQuote: {
@@ -1192,7 +1193,7 @@ export const selector = {
 						filterByStore: '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
 						filterByStoreInput: '.select2-search__field',
 						// filterByStoreValues: '.select2-results ul li',
-						filterByStatus: '//span[@id="select2-filter-status-container"]/..//span[@class="select2-selection__arrow"]',
+						filterByStatus: '//span[@class="select2-selection select2-selection--multiple"]',
 						filterByStatusInput: '.select2-search__field',
 						// filterByStatusValues: '.select2-results ul li',
 						filterByDate: '.form-control',

@@ -58,7 +58,7 @@ test.describe('Coupons test', () => {
 		await couponsVendor.addCoupon(data.coupon);
 	});
 
-	test('vendor can edit coupon', async ( ) => {  
+	test('vendor can edit coupon', async ( ) => {
 		await couponsVendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
 	});
 
